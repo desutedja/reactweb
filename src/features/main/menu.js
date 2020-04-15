@@ -8,7 +8,7 @@ function Page() {
 
     return (
         <div>
-            Menu
+            <div>Menu</div>
             <button onClick={() => dispatch(logout())}><Link to="/">Logout</Link></button>
         </div>
     )

@@ -1,3 +1,32 @@
 .App {
-  text-align: center;
+  background-color: #f3f3fa;
+  min-height: 100vh;
+}
+
+.Login {
+  background-image: linear-gradient(
+      rgba(30, 120, 255, 0.75),
+      rgba(30, 120, 255, 0.75)
+    ),
+    url("https://upload.wikimedia.org/wikipedia/commons/8/82/1_Singapore_city_skyline_2010_day_panorama.jpg");
+  background-size: cover;
+  /* background-color: rgba(50, 100, 255, 50); */
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Login-center {
+  background-color: #ffffff;
+  width: 40%;
+  height: 30vh;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
 }

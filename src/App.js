@@ -10,8 +10,8 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { Provider, useSelector } from 'react-redux';
 
 import './App.css';
-import Login from './features/auth/login';
-import Menu from './features/main/menu';
+import Login from './features/auth/Login';
+import Menu from './features/main/Menu';
 import {store, persistor} from './store';
 
 function MainRoute({ children, ...other }) {
