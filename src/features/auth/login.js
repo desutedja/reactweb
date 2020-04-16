@@ -1,21 +1,29 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { loginSuccess } from './slice';
 import Button from '../../components/Button';
+import Template from './template';
 
 function Page() {
-    const dispatch = useDispatch();
+    let dispatch = useDispatch();
+    let history = useHistory();
 
     return (
-        <div className="Login">
-            <div className="Login-center">
+        <Template>
+            <form className="Column" onSubmit={(e) => {
+                e.preventDefault();
+                dispatch(loginSuccess(history));
+            }}>
+                <label className="Auth-label" htmlFor="email">Email</label>
+                <input className="Auth-input" type="text" id="email" name="email" required
+                    minLength="4" maxLength="24" size="24">
+                </input>
                 <Button
-                    onClick={() => dispatch(loginSuccess())}
-                    label={<Link to="/">Login</Link>}
+                    label="Login"
                 />
-            </div>
-        </div>
+            </form>
+        </Template>
     )
 }
 

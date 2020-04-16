@@ -11,6 +11,7 @@ import { Provider, useSelector } from 'react-redux';
 
 import './App.css';
 import Login from './features/auth/Login';
+import OTP from './features/auth/OTP';
 import Menu from './features/main/Menu';
 import {store, persistor} from './store';
 
@@ -44,6 +45,9 @@ function App() {
             <Switch>
               <Route path="/login">
                 <Login />
+              </Route>
+              <Route path="/otp">
+                <OTP />
               </Route>
               <MainRoute path="/">
                 <Menu />

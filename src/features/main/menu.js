@@ -1,15 +1,21 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from '../auth/slice';
-import { Link } from 'react-router-dom';
+import Button from '../../components/Button';
+
 
 function Page() {
-    const dispatch = useDispatch();
+    let dispatch = useDispatch();
 
     return (
         <div>
-            <div>Menu</div>
-            <button onClick={() => dispatch(logout())}><Link to="/">Logout</Link></button>
+            <div style={{
+                position: 'absolute',
+                right: 0,
+                top: 0,
+            }}>
+            <Button onClick={() => dispatch(logout())} label="Logout" />
+            </div>
         </div>
     )
 }

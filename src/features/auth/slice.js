@@ -6,8 +6,16 @@ export const slice = createSlice({
     isAuthenticated: false,
   },
   reducers: {
-    loginSuccess: (state) => {
+    loginSuccess: (state, action) => {
+      let history = action.payload;
+
+      history.push("/otp");
+    },
+    otpSuccess: (state, action) => {
+      let history = action.payload;
+
       state.isAuthenticated = true;
+      history.push("/");
     },
     logout: (state) => {
       state.isAuthenticated = false;
@@ -17,6 +25,7 @@ export const slice = createSlice({
 
 export const {
   loginSuccess,
+  otpSuccess,
   logout
 } = slice.actions;
 

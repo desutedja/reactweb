@@ -1,8 +1,11 @@
 import React from 'react';
 
-function Component({label}) {
+function Component({label, onClick}) {
     return (
-    <button>{label}</button>
+    <button
+        className="Button"
+        onClick={onClick}
+    >{label}</button>
     )
 }
 
