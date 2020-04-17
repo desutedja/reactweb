@@ -1,21 +1,31 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import { post } from '../../utils';
+import { url } from '../../settings';
 
 export const slice = createSlice({
   name: 'auth',
   initialState: {
     isAuthenticated: false,
+    loading: false,
+    email: '',
+    user: {},
   },
   reducers: {
+    startAsync: (state) => {
+      state.loading = true;
+    },
+    stopAsync: (state) => {
+      state.loading = false;
+    },
     loginSuccess: (state, action) => {
-      let history = action.payload;
-
-      history.push("/otp");
+      state.loading = false;
+      state.email = action.payload;
     },
     otpSuccess: (state, action) => {
-      let history = action.payload;
-
+      state.loading = false;
       state.isAuthenticated = true;
-      history.push("/");
+
+      state.user = action.payload;
     },
     logout: (state) => {
       state.isAuthenticated = false;
@@ -24,9 +34,44 @@ export const slice = createSlice({
 });
 
 export const {
+  startAsync,
+  stopAsync,
   loginSuccess,
   otpSuccess,
   logout
 } = slice.actions;
+
+export const login = (email, history) => dispatch => {
+  dispatch(startAsync());
+
+  post(url + '/auth/centratama/login', {
+    email: email,
+  }, {}, res => {
+    dispatch(loginSuccess(email));
+
+    history.push("/otp");
+  }, () => {
+    dispatch(stopAsync());
+  })
+}
+
+export const otpCheck = (email, otp, history) => dispatch => {
+  console.log(email);
+
+  post(url + '/auth/centratama/otp', {
+    "email": email,
+    "otp": otp,
+    "device": "web",
+    "fcm_id": ""
+  }, {}, res => {
+    dispatch(otpSuccess(res.data.data));
+
+    history.push("/");
+  }, () => {
+    dispatch(stopAsync());
+  }, () => {
+
+  })
+}
 
 export default slice.reducer;

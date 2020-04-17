@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
@@ -10,7 +10,8 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { Provider, useSelector } from 'react-redux';
 
 import './App.css';
-import './features/auth/auth.css';
+import './features/auth/styles.css';
+import './components/styles.css';
 
 import Login from './features/auth/Login';
 import OTP from './features/auth/OTP';

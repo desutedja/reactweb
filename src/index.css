@@ -3,6 +3,7 @@
   --secondary-color: silver;
   font-size: 12px;
   font-family: 'Lato', sans-serif;
+  background-color: #f3f3fa;
 }
 
 body {
@@ -24,7 +25,9 @@ label {
 }
 
 p {
-  margin: 4px;
+  margin: 0;
+  margin-left: 4px;
+  margin-right: 4px;
 }
 
 a {
@@ -35,9 +38,15 @@ a {
 button {
   font-size: 1rem;
   font-family: 'Lato', sans-serif;
-  color: white;
-  margin: 4px;
   cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
 }
 
 input[type="text"] {
@@ -52,4 +61,28 @@ svg {
   width: 1.5rem;
   height: 1.5rem;
   cursor: pointer;
+}
+
+svg:hover {
+  color: var(--secondary-color);
+}
+
+table {
+  width: 100%;
+  background-color: white;
+  border-spacing: 0;
+}
+
+th {
+  padding: 8px;
+  text-align: left;
+}
+
+td {
+  border-bottom: 1px solid #f3f3fa;
+  padding: 12px;
+}
+
+th:last-child, td:last-child {
+  border-right: 0;
 }

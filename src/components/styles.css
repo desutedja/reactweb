@@ -1,0 +1,49 @@
+.Column {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.Row {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+}
+
+.Button {
+  background-color: var(--primary-color);
+  width: 100px;
+  height: 36px;
+  border-radius: 8px;
+  color: white;
+  margin: 4px;
+}
+
+.Pagination {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  padding-top: 16px;
+}
+
+.Pagination-range {
+  display: flex;
+  align-items: center;
+}
+
+.Pagination-control {
+  display: flex;
+  align-items: center;
+}
+
+.SelectRange {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.PageControl {
+  margin-left: 8px;
+  margin-right: 8px;
+}

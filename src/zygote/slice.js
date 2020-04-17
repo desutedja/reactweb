@@ -2,10 +2,22 @@ import {createSlice} from '@reduxjs/toolkit';
 
 export const slice = createSlice({
   name: 'name',
-  initialState: {},
-  reducers: {},
+  initialState: {
+    loading: false,
+  },
+  reducers: {
+    startAsync: (state) => {
+      state.loading = true;
+    },
+    stopAsync: (state) => {
+      state.loading = false;
+    },
+  },
 });
 
-export const {} = slice.actions;
+export const {
+  startAsync,
+  stopAsync
+} = slice.actions;
 
 export default slice.reducer;
