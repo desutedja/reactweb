@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link,
   Redirect
 } from "react-router-dom";
 import { PersistGate } from 'redux-persist/integration/react'
@@ -15,7 +14,7 @@ import './components/styles.css';
 
 import Login from './features/auth/Login';
 import OTP from './features/auth/OTP';
-import Menu from './features/main/Menu';
+import Home from './Home';
 import {store, persistor} from './store';
 
 function MainRoute({ children, ...other }) {
@@ -53,7 +52,7 @@ function App() {
                 <OTP />
               </Route>
               <MainRoute path="/">
-                <Menu />
+                <Home />
               </MainRoute>
             </Switch>
           </div>

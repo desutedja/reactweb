@@ -1,9 +1,10 @@
 :root {
-  --primary-color: grey;
-  --secondary-color: silver;
+  --primary-color: #999;
+  --secondary-color: #bbb;
+  --accent-color: #ddd;
   font-size: 12px;
   font-family: 'Lato', sans-serif;
-  background-color: #f3f3fa;
+  background-color: #f3f3f3;
 }
 
 body {
@@ -46,7 +47,8 @@ button {
 }
 
 button:hover {
-  background-color: var(--secondary-color);
+  background-color: var(--accent-color);
+  color: var(--primary-color)
 }
 
 input[type="text"] {
