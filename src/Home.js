@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
 import { FiMenu, FiUsers, FiHome } from "react-icons/fi";
@@ -8,6 +8,7 @@ import BuildingList from './features/building/List';
 
 import Button from './components/Button';
 import Row from './components/Row';
+import IconButton from './components/IconButton';
 
 
 const menu = [
@@ -24,28 +25,35 @@ const menu = [
 ]
 
 function Page() {
+    const [menuWide, setMenuWide] = useState(true);
+
     let dispatch = useDispatch();
     let history = useHistory();
 
     return (
         <div>
             <div className="TopBar">
-                <FiMenu className="MenuToggle" />
+                <IconButton
+                    className="MenuToggle"
+                    onClick={() => setMenuWide(!menuWide)}
+                >
+                    <FiMenu />
+                </IconButton>
                 <Button onClick={() => dispatch(logout())} label="Logout" />
             </div>
             <Row>
-                <div className="Menu">
+                <div className={menuWide ? "Menu" : "Menu-compact"}>
                     {menu.map((el, index) =>
                         <div
                             onClick={() => history.push(el.route)}
                             key={el.label}
                             className={history.location.pathname === el.route ? "MenuItem-active" : "MenuItem"}>
                             {el.icon}
-                            <p className="MenuItem-label">{el.label}</p>
+                            {menuWide && <p className="MenuItem-label">{el.label}</p>}
                         </div>
                     )}
                 </div>
-                <div className="Content">
+                <div className={menuWide ? "Content" : "Content-wide"}>
                     <Switch>
                         <Route exact path="/">
                             <BuildingList />

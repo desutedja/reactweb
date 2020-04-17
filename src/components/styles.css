@@ -33,6 +33,7 @@
 .Pagination {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding: 8px;
   padding-top: 16px;
 }
@@ -53,6 +54,18 @@
 }
 
 .PageControl {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.PageInfo {
+  display: flex;
   margin-left: 8px;
   margin-right: 8px;
+  align-items: center;
+}
+
+.IconButton {
+  background: none;
+  padding-bottom: 0;
 }

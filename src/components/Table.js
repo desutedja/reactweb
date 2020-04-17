@@ -1,6 +1,7 @@
 import React from 'react'
 import { useTable } from 'react-table'
 import { FiChevronsLeft, FiChevronLeft, FiChevronsRight, FiChevronRight } from 'react-icons/fi'
+import IconButton from './IconButton';
 
 function Component({ columns, data }) {
     // Use the state and functions returned from useTable to build your UI
@@ -53,13 +54,23 @@ function Component({ columns, data }) {
                     <p>pages</p>
                 </div>
                 <div className="Pagination-control">
-                    <FiChevronsLeft className="PageControl"/>
-                    <FiChevronLeft className="PageControl"/>
-                    <button><p>1</p></button>
-                    <p>of</p>
-                    <p>300</p>
-                    <FiChevronRight className="PageControl"/>
-                    <FiChevronsRight className="PageControl"/>
+                    <IconButton className="PageControl">
+                        <FiChevronsLeft />
+                    </IconButton>
+                    <IconButton className="PageControl">
+                        <FiChevronLeft />
+                    </IconButton>
+                    <div className="PageInfo">
+                        <button><p>1</p></button>
+                        <p>of</p>
+                        <p>300</p>
+                    </div>
+                    <IconButton className="PageControl">
+                        <FiChevronRight />
+                    </IconButton>
+                    <IconButton className="PageControl">
+                        <FiChevronsRight />
+                    </IconButton>
                 </div>
             </div>
         </div>

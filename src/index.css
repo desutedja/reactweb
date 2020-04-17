@@ -40,7 +40,7 @@ button {
   font-size: 1rem;
   font-family: 'Lato', sans-serif;
   cursor: pointer;
-  background: none;
+  background-color: var(--accent-color);
   border: none;
   border-radius: 8px;
   padding: 4px;
@@ -62,11 +62,6 @@ input[type="text"] {
 svg {
   width: 1.5rem;
   height: 1.5rem;
-  cursor: pointer;
-}
-
-svg:hover {
-  color: var(--secondary-color);
 }
 
 table {
