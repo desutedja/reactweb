@@ -1,0 +1,32 @@
+.Auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Auth-center {
+  background-color: #ffffff;
+  /* width: 40%; */
+  /* height: 30vh; */
+  padding: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
+}
+
+.Auth-label {
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.Auth-input {
+  font-size: 2rem;
+  margin: 20px;
+  text-align: center;
+}

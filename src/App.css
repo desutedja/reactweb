@@ -17,41 +17,6 @@
   display: flex;
   flex: 1;
   flex-direction: row;
-  align-items: center;
-  justify-content: space-evenly;
-}
-
-.Auth {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.Auth-center {
-  background-color: #ffffff;
-  /* width: 40%; */
-  /* height: 30vh; */
-  padding: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
-  -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
-  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.5);
-}
-
-.Auth-label {
-  font-size: 1.6rem;
-  font-weight: bold;
-}
-
-.Auth-input {
-  font-size: 2rem;
-  margin: 20px;
-  text-align: center;
 }
 
 .Button {
@@ -59,4 +24,47 @@
   width: 120px;
   height: 40px;
   border-radius: 8px;
+}
+
+.TopBar {
+  background-color: white;
+  padding: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.25);
+  z-index: 10;
+  position: absolute;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.MenuToggle {
+  margin-left: 16px;
+}
+
+.Menu {
+  background-color: white;
+  width: 200px;
+  padding-top: 72px;
+}
+
+.MenuItem {
+  padding: 16px;
+  display: flex;
+  cursor: pointer;
+}
+
+.MenuItem:hover {
+  background-color: var(--secondary-color);
+}
+
+.MenuItem-icon {
+  margin-right: 16px;
+}
+
+.Content {
+  min-height: 100vh;
 }

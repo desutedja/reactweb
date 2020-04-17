@@ -10,6 +10,8 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { Provider, useSelector } from 'react-redux';
 
 import './App.css';
+import './features/auth/auth.css';
+
 import Login from './features/auth/Login';
 import OTP from './features/auth/OTP';
 import Menu from './features/main/Menu';
