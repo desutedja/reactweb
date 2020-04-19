@@ -24,8 +24,7 @@ function Page() {
                     minLength="4" maxLength="24" size="30"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
-                >
-                </input>
+                />
                 <Button
                     label="Login"
                 />

@@ -1,11 +1,14 @@
 import React from 'react';
 
-function Component({label, onClick}) {
+function Component({icon, label, onClick}) {
     return (
     <button
         className="Button"
         onClick={onClick}
-    >{label}</button>
+    >
+        {icon}
+        <p>{label}</p>
+    </button>
     )
 }
 

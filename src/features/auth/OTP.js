@@ -27,8 +27,7 @@ function Page() {
                         required placeholder="####"
                         minLength="4" maxLength="4" size="30"
                         value={otp} onChange={(e) => setOtp(e.target.value)}
-                    >
-                    </input>
+                    />
                     <Button
                         label="Submit"
                     />

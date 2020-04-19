@@ -1,1 +1,1 @@
-export const url = 'http://centratama.okbabe.technology/clink-admin';
+export const endpoint = 'http://centratama.okbabe.technology/clink-admin';

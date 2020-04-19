@@ -11,6 +11,7 @@ import { Provider, useSelector } from 'react-redux';
 import './App.css';
 import './features/auth/styles.css';
 import './components/styles.css';
+import './components/input.css';
 
 import Login from './features/auth/Login';
 import OTP from './features/auth/OTP';

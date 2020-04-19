@@ -3,7 +3,7 @@
   --secondary-color: #bbb;
   --accent-color: #ddd;
   font-size: 12px;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   background-color: #f3f3f3;
 }
 
@@ -17,12 +17,13 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
 label {
   margin: 4px;
+  margin-left: 0;
 }
 
 p {
@@ -38,7 +39,7 @@ a {
 
 button {
   font-size: 1rem;
-  font-family: 'Lato', sans-serif;
+  font-family: "Lato", sans-serif;
   cursor: pointer;
   background-color: var(--accent-color);
   border: none;
@@ -48,15 +49,29 @@ button {
 
 button:hover {
   background-color: var(--accent-color);
-  color: var(--primary-color)
+  color: var(--primary-color);
 }
 
-input[type="text"] {
+input,
+textarea,
+select {
   padding: 8px;
   border-radius: 8px;
   border-style: solid;
   border-width: 0.5px;
   border-color: silver;
+}
+
+input[type="button"] {
+  background-color: var(--accent-color);
+  border: none;
+}
+
+select {
+  appearance: none;
+  padding: 8px;
+  background-color: white;
+  flex: 1;
 }
 
 svg {
@@ -70,16 +85,25 @@ table {
   border-spacing: 0;
 }
 
+thead {
+  background-color: #f3f3f3;
+}
+
 th {
   padding: 8px;
+  padding-left: 16px;
   text-align: left;
 }
 
 td {
-  border-bottom: 1px solid #f3f3fa;
-  padding: 12px;
+  border-bottom: 1px solid #f3f3f3;
+  padding: 8px;
+  padding-left: 16px;
+  padding-bottom: 12px;
+  padding-top: 12px;
 }
 
-th:last-child, td:last-child {
+th:last-child,
+td:last-child {
   border-right: 0;
 }

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { post } from '../../utils';
-import { url } from '../../settings';
+import { endpoint } from '../../settings';
 
 export const slice = createSlice({
   name: 'auth',
@@ -44,7 +44,7 @@ export const {
 export const login = (email, history) => dispatch => {
   dispatch(startAsync());
 
-  post(url + '/auth/centratama/login', {
+  post(endpoint + '/auth/centratama/login', {
     email: email,
   }, {}, res => {
     dispatch(loginSuccess(email));
@@ -58,7 +58,7 @@ export const login = (email, history) => dispatch => {
 export const otpCheck = (email, otp, history) => dispatch => {
   console.log(email);
 
-  post(url + '/auth/centratama/otp', {
+  post(endpoint + '/auth/centratama/otp', {
     "email": email,
     "otp": otp,
     "device": "web",

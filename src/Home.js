@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
 import { FiMenu, FiUsers, FiHome } from "react-icons/fi";
-import { Switch, Route, useHistory } from 'react-router-dom';
+import { Switch, Route, useHistory, Redirect, useRouteMatch, useLocation } from 'react-router-dom';
 
-import BuildingList from './features/building/List';
+import BuildingRoute from './features/building/Route';
 
 import Button from './components/Button';
 import Row from './components/Row';
@@ -15,7 +15,7 @@ const menu = [
     {
         icon: <FiHome className="MenuItem-icon" />,
         label: "Building",
-        route: "/"
+        route: "/building"
     },
     {
         icon: <FiUsers className="MenuItem-icon" />,
@@ -29,16 +29,22 @@ function Page() {
 
     let dispatch = useDispatch();
     let history = useHistory();
+    let location = useLocation();
 
     return (
         <div>
             <div className="TopBar">
-                <IconButton
-                    className="MenuToggle"
-                    onClick={() => setMenuWide(!menuWide)}
-                >
-                    <FiMenu />
-                </IconButton>
+                <div className="TopBar-left">
+                    <IconButton
+                        className="MenuToggle"
+                        onClick={() => setMenuWide(!menuWide)}
+                    >
+                        <FiMenu />
+                    </IconButton>
+                    <div className="PageTitle Title">
+                        {location.pathname}
+                    </div>
+                </div>
                 <Button onClick={() => dispatch(logout())} label="Logout" />
             </div>
             <Row>
@@ -55,11 +61,12 @@ function Page() {
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
                     <Switch>
-                        <Route exact path="/">
-                            <BuildingList />
+                        <Redirect exact from="/" to={menu[0].route}
+                        />
+                        <Route path="/building">
+                            <BuildingRoute />
                         </Route>
                         <Route path="/resident">
-
                         </Route>
                     </Switch>
                 </div>

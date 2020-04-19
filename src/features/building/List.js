@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { FiPlus } from 'react-icons/fi';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { get } from '../../utils';
-import { url } from '../../settings';
+import { endpoint } from '../../settings';
 import Table from '../../components/Table';
+import Button from '../../components/Button';
 
 const columns = [
     { Header: 'id', accessor: 'id' },
@@ -28,12 +31,18 @@ const columns = [
 ]
 
 function Component() {
+    const [loading, setLoading] = useState(false);
     const [data, setData] = useState([]);
 
     const token = useSelector(state => state.auth.user.token);
 
+    let history = useHistory();
+    let { url } = useRouteMatch();
+
     useEffect(() => {
-        get(url + '/building' +
+        setLoading(true);
+
+        get(endpoint + '/building' +
             '?page=' +
             '&limit=' +
             '&search=' +
@@ -45,12 +54,20 @@ function Component() {
             },
             res => {
                 setData(res.data.data.items);
+
+                setLoading(false);
             },
         )
     }, []);
 
     return (
-        <Table columns={columns} data={data} />
+        <Table columns={columns} data={data} loading={loading}
+            actions={[
+                <Button label="Add" icon={<FiPlus />}
+                    onClick={() => history.push(url + "/add")}
+                />
+            ]}
+        />
     )
 }
 
