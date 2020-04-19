@@ -1,17 +1,30 @@
 import React from 'react';
 import Input from '../../components/Input';
+import Form from '../../components/Form';
 import SectionSeparator from '../../components/SectionSeparator';
+import { useDispatch, useSelector } from 'react-redux';
+import { createBuilding } from './slice';
+import { useHistory } from 'react-router-dom';
 
 function Component() {
+    const token = useSelector(state => state.auth.user.token);
+    const loading = useSelector(state => state.building.loading);
+
+    let dispatch = useDispatch();
+    let history = useHistory();
+
     return (
         <div>
-            <form className="Form">
-                <Input label="Building Name" />
+            <Form
+                onSubmit={data => dispatch(createBuilding(token, data, history))}
+                loading={loading}
+            >
+                <Input label="Building Name" name="name" />
                 <Input label="Legal Name" />
                 <Input label="Code Name" />
-                <Input label="Available Units" />
-                <Input label="Available Floors" />
-                <Input label="Available Sections" />
+                <Input label="Max Units" />
+                <Input label="Max Floors" />
+                <Input label="Max Sections" />
                 <Input label="Website" type="url" />
                 <Input label="Logo" type="file" />
                 <SectionSeparator />
@@ -24,13 +37,23 @@ function Component() {
                 <Input label="Province" type="select" options={[
                     {
                         label: 'Jogja',
-                        value: 'jogja'
+                        value: '12'
                     }
                 ]} />
-                <Input label="City" type="select" />
-                <Input label="District" type="select" />
-                <Input label="ZIP Code" type="number" />
-            </form>
+                <Input label="City" type="select" options={[
+                    {
+                        label: 'Bantul',
+                        value: '13'
+                    }
+                ]}/>
+                <Input label="District" type="select" options={[
+                    {
+                        label: 'Srandakan',
+                        value: '14'
+                    }
+                ]}/>
+                <Input label="ZIP Code" type="number" name="zipcode" />
+            </Form>
         </div>
     )
 }

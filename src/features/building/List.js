@@ -9,25 +9,14 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 
 const columns = [
-    { Header: 'id', accessor: 'id' },
-    { Header: 'name', accessor: 'name' },
-    { Header: 'legal_name', accessor: 'legal_name' },
-    { Header: 'owner_name', accessor: 'owner_name' },
-    { Header: 'code_name', accessor: 'code_name' },
-    { Header: 'phone', accessor: 'phone' },
-    { Header: 'email', accessor: 'email' },
-    { Header: 'website', accessor: 'website' },
-    { Header: 'address', accessor: 'address' },
-    { Header: 'district', accessor: 'district' },
-    { Header: 'city', accessor: 'city' },
-    { Header: 'province', accessor: 'province' },
-    { Header: 'zipcode', accessor: 'zipcode' },
-    { Header: 'max_units', accessor: 'max_units' },
-    { Header: 'max_floors', accessor: 'max_floors' },
-    { Header: 'max_sections', accessor: 'max_sections' },
-    { Header: 'lat', accessor: 'lat' },
-    { Header: 'long', accessor: 'long' },
-    { Header: 'logo', accessor: 'logo' },
+    { Header: 'Name', accessor: 'name' },
+    { Header: 'Legal Name', accessor: 'legal_name' },
+    { Header: 'Code Name', accessor: 'code_name' },
+    { Header: 'Owner Name', accessor: 'owner_name' },
+    { Header: 'Phone', accessor: 'phone' },
+    { Header: 'Email', accessor: 'email' },
+    { Header: 'Website', accessor: 'website' },
+    { Header: 'Location', accessor: row => row.lat + ', ' + row.long  },
 ]
 
 function Component() {
@@ -63,7 +52,7 @@ function Component() {
     return (
         <Table columns={columns} data={data} loading={loading}
             actions={[
-                <Button label="Add" icon={<FiPlus />}
+                <Button key="Add" label="Add" icon={<FiPlus />}
                     onClick={() => history.push(url + "/add")}
                 />
             ]}

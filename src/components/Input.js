@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 
-function Component({ label, type = "text", rows = 1, options = [] }) {
+function Component({
+    label, name, required = false,
+    type = "text", rows = 2, options = [],
+}) {
     const [value, setValue] = useState(type === "button" ? label : "");
 
     return (
@@ -15,8 +18,8 @@ function Component({ label, type = "text", rows = 1, options = [] }) {
                     className="Input-input"
                     type={type}
                     id={label}
-                    name={label}
-                    required
+                    name={name ? name : label.toLowerCase().replace(' ', '_')}
+                    required={required}
                     placeholder={label}
                     maxLength="100"
                     rows={rows}
@@ -33,8 +36,8 @@ function Component({ label, type = "text", rows = 1, options = [] }) {
                             className="Input-input"
                             type={type}
                             id={label}
-                            name={label}
-                            required
+                            name={name ? name : label.toLowerCase().replace(' ', '_')}
+                            required={required}
                             placeholder={label}
                             value={value}
                             onChange={(e) => setValue(e.target.value)}
@@ -51,8 +54,8 @@ function Component({ label, type = "text", rows = 1, options = [] }) {
                         className="Input-input"
                         type={type}
                         id={label}
-                        name={label}
-                        required
+                        name={name ? name : label.toLowerCase().replace(' ', '_')}
+                        required={required}
                         placeholder={label}
                         maxLength="20"
                         value={value}

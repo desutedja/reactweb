@@ -25,7 +25,7 @@ const menu = [
 ]
 
 function Page() {
-    const [menuWide, setMenuWide] = useState(true);
+    const [menuWide, setMenuWide] = useState(false);
 
     let dispatch = useDispatch();
     let history = useHistory();
