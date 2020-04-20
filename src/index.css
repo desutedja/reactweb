@@ -53,8 +53,7 @@ button:hover {
 }
 
 input,
-textarea,
-select {
+textarea {
   padding: 8px;
   border-radius: 8px;
   border-style: solid;
@@ -65,13 +64,6 @@ select {
 input[type="button"] {
   background-color: var(--accent-color);
   border: none;
-}
-
-select {
-  appearance: none;
-  padding: 8px;
-  background-color: white;
-  flex: 1;
 }
 
 svg {

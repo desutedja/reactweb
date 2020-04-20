@@ -2,17 +2,18 @@ import React, { useState } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
 
 function Component({
-    label, name, required = false,
+    label, compact, name, required = false,
     type = "text", rows = 2, options = [],
+    inputValue
 }) {
-    const [value, setValue] = useState(type === "button" ? label : "");
+    const [value, setValue] = useState(type === "button" ? label : inputValue ? inputValue : "");
 
     return (
         <div className={"Input"
             + (type === "textarea" ? " textarea" : "")
             + (type === "select" ? " select" : "")
         }>
-            <label className="Input-label" htmlFor={label}>{label}</label>
+            {!compact && <label className="Input-label" htmlFor={label}>{label}</label>}
             {type === "textarea" ?
                 <textarea
                     className="Input-input"

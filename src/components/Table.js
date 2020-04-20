@@ -3,10 +3,10 @@ import { useTable } from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
-    FiChevronsRight, FiChevronRight, FiPlus
+    FiChevronsRight, FiChevronRight,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
-import Button from './Button';
+import Input from './Input';
 
 function Component({ columns, data, loading, actions }) {
     // Use the state and functions returned from useTable to build your UI

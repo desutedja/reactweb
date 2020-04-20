@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
 import { FiMenu, FiUsers, FiHome } from "react-icons/fi";
-import { Switch, Route, useHistory, Redirect, useRouteMatch, useLocation } from 'react-router-dom';
+import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom';
 
 import BuildingRoute from './features/building/Route';
 
@@ -22,6 +22,7 @@ const menu = [
         label: "Resident",
         route: "/resident"
     },
+
 ]
 
 function Page() {
