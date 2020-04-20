@@ -1,9 +1,9 @@
 import React from 'react';
 
-function Component({className = "", onClick, children}) {
+function Component({className = "", onClick, disabled, children}) {
     return (
         <button
-            className={"IconButton " + className}
+            className={"IconButton " + (disabled && "inactive ") + className}
             onClick={onClick}
         >
             {children}

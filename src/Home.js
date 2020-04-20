@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
-import { FiMenu, FiUsers, FiHome } from "react-icons/fi";
+import { FiMenu, FiUsers, FiHome, FiBarChart2, FiDollarSign, FiShoppingCart, FiZap, FiVolume2, FiRss, FiTarget } from "react-icons/fi";
 import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom';
 
 import BuildingRoute from './features/building/Route';
@@ -13,6 +13,11 @@ import IconButton from './components/IconButton';
 
 const menu = [
     {
+        icon: <FiBarChart2 className="MenuItem-icon" />,
+        label: "Dashboard",
+        route: "/dashboard"
+    },
+    {
         icon: <FiHome className="MenuItem-icon" />,
         label: "Building",
         route: "/building"
@@ -22,7 +27,36 @@ const menu = [
         label: "Resident",
         route: "/resident"
     },
-
+    {
+        icon: <FiZap className="MenuItem-icon" />,
+        label: "Billing",
+        route: "/billing"
+    },
+    {
+        icon: <FiShoppingCart className="MenuItem-icon" />,
+        label: "Merchant",
+        route: "/merchant"
+    },
+    {
+        icon: <FiTarget className="MenuItem-icon" />,
+        label: "Task",
+        route: "/task"
+    },
+    {
+        icon: <FiDollarSign className="MenuItem-icon" />,
+        label: "Settlement",
+        route: "/settlement"
+    },
+    {
+        icon: <FiRss className="MenuItem-icon" />,
+        label: "Advertisement",
+        route: "/advertisement"
+    },
+    {
+        icon: <FiVolume2 className="MenuItem-icon" />,
+        label: "Announcement",
+        route: "/announcement"
+    },
 ]
 
 function Page() {
@@ -62,7 +96,7 @@ function Page() {
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
                     <Switch>
-                        <Redirect exact from="/" to={menu[0].route}
+                        <Redirect exact from="/" to={"/building"}
                         />
                         <Route path="/building">
                             <BuildingRoute />

@@ -1,5 +1,9 @@
 import Axios from "axios";
 
+const staticHeaders = {
+    'X-User-Type': 'sa',
+}
+
 export function get(
     link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
 ) {

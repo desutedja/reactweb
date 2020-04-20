@@ -72,6 +72,15 @@
   padding-bottom: 0;
 }
 
+.IconButton.inactive {
+  color: silver;
+  cursor: default;
+}
+
+.IconButton.inactive:hover {
+  background-color: white;
+}
+
 .TableAction {
   padding: 8px;
 }

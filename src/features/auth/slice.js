@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { post } from '../../utils';
-import { endpoint } from '../../settings';
+import { endpointAdmin } from '../../settings';
 
 export const slice = createSlice({
   name: 'auth',
@@ -9,6 +9,7 @@ export const slice = createSlice({
     loading: false,
     email: '',
     user: {},
+    headers: {}
   },
   reducers: {
     startAsync: (state) => {
@@ -26,6 +27,12 @@ export const slice = createSlice({
       state.isAuthenticated = true;
 
       state.user = action.payload;
+      state.headers = {
+        'Authorization': 'Bearer ' + action.payload.token,
+        'X-User-Id': action.payload.id,
+        'X-Session': action.payload.session,
+        'X-User_Type': 'sa',
+      }
     },
     logout: (state) => {
       state.isAuthenticated = false;
@@ -44,7 +51,7 @@ export const {
 export const login = (email, history) => dispatch => {
   dispatch(startAsync());
 
-  post(endpoint + '/auth/centratama/login', {
+  post(endpointAdmin + '/auth/centratama/login', {
     email: email,
   }, {}, res => {
     dispatch(loginSuccess(email));
@@ -58,7 +65,7 @@ export const login = (email, history) => dispatch => {
 export const otpCheck = (email, otp, history) => dispatch => {
   console.log(email);
 
-  post(endpoint + '/auth/centratama/otp', {
+  post(endpointAdmin + '/auth/centratama/otp', {
     "email": email,
     "otp": otp,
     "device": "web",

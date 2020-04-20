@@ -7,7 +7,7 @@ import { createBuilding } from './slice';
 import { useHistory } from 'react-router-dom';
 
 function Component() {
-    const token = useSelector(state => state.auth.user.token);
+    const headers = useSelector(state => state.auth.headers);
     const loading = useSelector(state => state.building.loading);
 
     let dispatch = useDispatch();
@@ -16,7 +16,7 @@ function Component() {
     return (
         <div>
             <Form
-                onSubmit={data => dispatch(createBuilding(token, data, history))}
+                onSubmit={data => dispatch(createBuilding(headers, data, history))}
                 loading={loading}
             >
                 <Input label="Building Name" name="name" />
