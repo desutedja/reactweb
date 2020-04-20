@@ -25,7 +25,6 @@ function Component({
         page,
         canPreviousPage,
         canNextPage,
-        pageOptions,
         pageCount,
         gotoPage,
         setPageSize,
@@ -41,14 +40,14 @@ function Component({
     );
 
     const [search, setSearch] = useState("");
-    const [searchToggle, toggleSearch] = useState(true);
+    const [searchToggle, toggleSearch] = useState("");
 
     useEffect(() => {
-        fetchData(pageIndex, pageSize, search);
-    }, [pageIndex, pageSize, searchToggle, ...filters]);
+        fetchData(pageIndex, pageSize, searchToggle);
+    }, [fetchData, pageIndex, pageSize, searchToggle]);
 
     useEffect(() => {
-        let searchTimeout = setTimeout(() => toggleSearch(!searchToggle), 500);
+        let searchTimeout = setTimeout(() => toggleSearch(search), 500);
 
         return () => {
             clearTimeout(searchTimeout);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FiChevronDown, FiSearch } from 'react-icons/fi';
+import { FiChevronDown } from 'react-icons/fi';
 
 function Component({
     label, compact, name, required = false,

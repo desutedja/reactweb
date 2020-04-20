@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getBuilding } from './slice';
@@ -37,9 +37,9 @@ function Component() {
                         data={items}
                         loading={loading}
                         pageCount={total_pages}
-                        fetchData={(pageIndex, pageSize, search) =>
-                            dispatch(getBuilding(headers, pageIndex, pageSize, search))
-                        }
+                        fetchData={useCallback((pageIndex, pageSize, search) => {
+                            dispatch(getBuilding(headers, pageIndex, pageSize, search));
+                        }, [dispatch, headers])}
                         filters={[]}
                         actions={[
                             <Button key="Add" label="Add" icon={<FiPlus />}
