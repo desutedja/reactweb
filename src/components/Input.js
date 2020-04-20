@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { FiChevronDown } from 'react-icons/fi';
+import { FiChevronDown, FiSearch } from 'react-icons/fi';
 
 function Component({
     label, compact, name, required = false,
     type = "text", rows = 2, options = [],
-    inputValue
+    inputValue, setInputValue, icon
 }) {
     const [value, setValue] = useState(type === "button" ? label : inputValue ? inputValue : "");
 
@@ -25,11 +25,14 @@ function Component({
                     maxLength="100"
                     rows={rows}
                     value={value}
-                    onChange={(e) => setValue(e.target.value)}
+                    onChange={(e) => {
+                        setValue(e.target.value);
+                        setInputValue && setInputValue(e.target.value);
+                    }}
                 />
                 :
                 type === "select" ?
-                    <div className="Select">
+                    <div className="Input-container">
                         <select
                             style={{
                                 color: !value && 'grey'
@@ -41,27 +44,40 @@ function Component({
                             required={required}
                             placeholder={label}
                             value={value}
-                            onChange={(e) => setValue(e.target.value)}
+                            onChange={(e) => {
+                                setValue(e.target.value);
+                                setInputValue && setInputValue(e.target.value);
+                            }}
                         >
                             <option value="">{label}</option>
                             {options.map(el =>
                                 <option key={el.value} value={el.value}>{el.label}</option>
                             )}
                         </select>
-                        <FiChevronDown className="SelectArrow" />
+                        <div className="InputIcon">
+                            <FiChevronDown />
+                        </div>
                     </div>
                     :
-                    <input
-                        className="Input-input"
-                        type={type}
-                        id={label}
-                        name={name ? name : label.toLowerCase().replace(' ', '_')}
-                        required={required}
-                        placeholder={label}
-                        maxLength="20"
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                    />}
+                    <div className="Input-container">
+                        {icon && !value ? <div className="InputIcon">
+                            {icon}
+                        </div> : null}
+                        <input
+                            className="Input-input"
+                            type={type}
+                            id={label}
+                            name={name ? name : label.toLowerCase().replace(' ', '_')}
+                            required={required}
+                            placeholder={label}
+                            maxLength="20"
+                            value={value}
+                            onChange={(e) => {
+                                setValue(e.target.value);
+                                setInputValue && setInputValue(e.target.value);
+                            }}
+                        />
+                    </div>}
         </div>
     )
 }

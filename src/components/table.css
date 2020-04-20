@@ -1,0 +1,65 @@
+.Table {
+  background-color: white;
+  /* padding: 8px; */
+  border-radius: 8px;
+  -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.1);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.1);
+}
+
+.Table table {
+  position: relative;
+}
+
+.TableLoading {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffffaa;
+}
+
+.Pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+.Pagination-range {
+  display: flex;
+  align-items: center;
+}
+
+.Pagination-control {
+  display: flex;
+  align-items: center;
+}
+
+.SelectRange {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.PageControl {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.PageInfo {
+  display: flex;
+  margin-left: 8px;
+  margin-right: 8px;
+  align-items: center;
+}
+
+.TableAction {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

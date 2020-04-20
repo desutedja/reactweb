@@ -37,13 +37,16 @@ export const {
   setData
 } = slice.actions;
 
-export const getBuilding = (headers) => dispatch => {
+export const getBuilding = (
+  headers, pageIndex, pageSize,
+  search = '', province, city, district
+) => dispatch => {
   dispatch(startAsync());
 
   get(buildingEndpoint +
-    '?page=' +
-    '&limit=' +
-    '&search=' +
+    '?page=' + (pageIndex + 1) +
+    '&limit=' + pageSize +
+    '&search=' + search +
     '&province=' +
     '&city=' +
     '&district=',

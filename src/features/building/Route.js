@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getBuilding } from './slice';
@@ -28,10 +28,6 @@ function Component() {
     let history = useHistory();
     let { path, url } = useRouteMatch();
 
-    useEffect(() => {
-        dispatch(getBuilding(headers));
-    }, []);
-
     return (
         <div>
             <Switch>
@@ -41,7 +37,9 @@ function Component() {
                         data={items}
                         loading={loading}
                         pageCount={total_pages}
-                        fetchData={() => {}}
+                        fetchData={(pageIndex, pageSize, search) =>
+                            dispatch(getBuilding(headers, pageIndex, pageSize, search))
+                        }
                         filters={[]}
                         actions={[
                             <Button key="Add" label="Add" icon={<FiPlus />}

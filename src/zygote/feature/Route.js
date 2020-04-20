@@ -23,7 +23,13 @@ function Component() {
         <div>
             <Switch>
                 <Route exact path={path}>
-                    <Table columns={columns} data={[]} loading={true}
+                    <Table
+                        columns={columns}
+                        data={[]}
+                        loading={true}
+                        pageCount={1}
+                        fetchData={(pageIndex, pageSize) => { }}
+                        filters={[]}
                         actions={[]}
                     />
                 </Route>

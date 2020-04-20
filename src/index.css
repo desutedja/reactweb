@@ -59,6 +59,7 @@ textarea {
   border-style: solid;
   border-width: 0.5px;
   border-color: silver;
+  flex: 1;
 }
 
 input[type="button"] {

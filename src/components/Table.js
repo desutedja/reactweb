@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTable, usePagination } from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
-    FiChevronsRight, FiChevronRight,
+    FiChevronsRight, FiChevronRight, FiSearch,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
 import Input from './Input';
@@ -40,89 +40,129 @@ function Component({
         usePagination
     );
 
+    const [search, setSearch] = useState("");
+    const [searchToggle, toggleSearch] = useState(true);
+
     useEffect(() => {
-        fetchData({ pageIndex, pageSize });
-    }, [pageIndex, pageSize, ...filters]);
+        fetchData(pageIndex, pageSize, search);
+    }, [pageIndex, pageSize, searchToggle, ...filters]);
+
+    useEffect(() => {
+        let searchTimeout = setTimeout(() => toggleSearch(!searchToggle), 500);
+
+        return () => {
+            clearTimeout(searchTimeout);
+        }
+    }, [search])
 
     return (
         <div className="Table">
-            {loading ? (
-                <div className="Spinner">
-                    <MoonLoader
-                        size={24}
-                        color={"silver"}
-                        loading={loading}
-                    />
+            <div className="TableAction">
+                <div>
+                    {actions}
                 </div>
-            ) :
-                <>
-                    <div className="TableAction">
-                        {actions}
+                <div>
+                    <div className="TableSearch">
+                        <Input
+                            label="Search"
+                            compact
+                            icon={<FiSearch />}
+                            inputValue={search}
+                            setInputValue={setSearch}
+                        />
                     </div>
-                    <table {...getTableProps()}>
-                        <thead>
-                            {headerGroups.map(headerGroup => (
-                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                    {headerGroup.headers.map(column => (
-                                        <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-                                    ))}
-                                </tr>
+                </div>
+            </div>
+            <table {...getTableProps()}>
+                {loading &&
+                    <tbody className="TableLoading">
+                        <tr className="Spinner">
+                            <td><MoonLoader
+                                size={24}
+                                color={"grey"}
+                                loading={loading}
+                            />
+                            </td>
+                        </tr>
+                    </tbody>
+                }
+                <thead>
+                    {headerGroups.map(headerGroup => (
+                        <tr {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map(column => (
+                                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
                             ))}
-                        </thead>
-                        <tbody {...getTableBodyProps()}>
-                            {page.map((row, i) => {
-                                prepareRow(row);
-                                return (
-                                    <tr {...row.getRowProps()}>
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                            );
-                                        })}
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                    <div className="Pagination">
-                        <div className="Pagination-range">
-                            <p>Show</p>
-                            <select
-                                value={pageSize}
-                                className="SelectRange"
-                                onChange={e => setPageSize(e.target.value)}
-                            >
-                                <option value={10}>10</option>
-                                <option value={20}>20</option>
-                                <option value={50}>50</option>
-                                <option value={100}>100</option>
-                            </select>
-                            <p>pages</p>
-                        </div>
-                        <div className="Pagination-control">
-                            <IconButton disabled={!canPreviousPage} className="PageControl">
-                                <FiChevronsLeft />
-                            </IconButton>
-                            <IconButton disabled={!canPreviousPage} className="PageControl">
-                                <FiChevronLeft />
-                            </IconButton>
-                            <div className="PageInfo">
-                                <button>
-                                    <p>{pageIndex + 1}</p>
-                                </button>
-                                <p>of</p>
-                                <p>{pageCount}</p>
-                            </div>
-                            <IconButton disabled={!canNextPage} className="PageControl">
-                                <FiChevronRight />
-                            </IconButton>
-                            <IconButton disabled={!canNextPage} className="PageControl">
-                                <FiChevronsRight />
-                            </IconButton>
-                        </div>
+                        </tr>
+                    ))}
+                </thead>
+                <tbody {...getTableBodyProps()}>
+                    {page.map((row, i) => {
+                        prepareRow(row);
+                        return (
+                            <tr {...row.getRowProps()}>
+                                {row.cells.map(cell => {
+                                    return (
+                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                    );
+                                })}
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+            <div className="Pagination">
+                <div className="Pagination-range">
+                    <p>Show</p>
+                    <select
+                        value={pageSize}
+                        className="SelectRange"
+                        onChange={e => setPageSize(e.target.value)}
+                    >
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                    </select>
+                    <p>pages</p>
+                </div>
+                <div className="Pagination-control">
+                    <IconButton
+                        disabled={!canPreviousPage}
+                        className="PageControl"
+                        onClick={() => gotoPage(0)}
+                    >
+                        <FiChevronsLeft />
+                    </IconButton>
+                    <IconButton
+                        disabled={!canPreviousPage}
+                        className="PageControl"
+                        onClick={() => gotoPage(pageIndex - 1)}
+                    >
+                        <FiChevronLeft />
+                    </IconButton>
+                    <div className="PageInfo">
+                        <button>
+                            <p>{pageIndex + 1}</p>
+                        </button>
+                        <p>of</p>
+                        <p>{pageCount}</p>
                     </div>
-                </>
-            }
+                    <IconButton
+                        disabled={!canNextPage}
+                        className="PageControl"
+                        onClick={() => gotoPage(pageIndex + 1)}
+                    >
+                        <FiChevronRight />
+                    </IconButton>
+                    <IconButton
+                        disabled={!canNextPage}
+                        className="PageControl"
+                        onClick={() => gotoPage(pageCount - 1)}
+                    >
+                        <FiChevronsRight />
+                    </IconButton>
+                </div>
+            </div>
         </div>
     )
 }

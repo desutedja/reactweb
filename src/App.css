@@ -39,7 +39,7 @@
 .Menu-compact {
   background-color: white;
   width: 200px;
-  padding-top: 72px;
+  padding-top: 4.8rem;
   box-sizing: border-box;
   position: fixed;
   height: 100vh;
@@ -80,13 +80,13 @@
 .Content-wide {
   flex: 1;
   padding: 16px;
-  padding-top: 80px;
-  padding-left: 224px;
+  padding-top: 6rem;
+  padding-left: 220px;
   /* min-height: 100vh; */
   box-sizing: border-box;
   transition: all 0.3s ease;
 }
 
 .Content-wide {
-  padding-left: 92px;
+  padding-left: 80px;
 }

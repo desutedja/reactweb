@@ -21,6 +21,9 @@
 .Input {
   display: flex;
   flex-direction: column;
+}
+
+.Form .Input {
   margin-bottom: 8px;
   margin-right: 16px;
   width: calc(100% / 3 - 16px);
@@ -30,13 +33,13 @@
   width: 100%;
 }
 
-.Select {
+.Input-container {
   position: relative;
   display: flex;
   align-items: center;
 }
 
-.Select select {
+.Input-container select {
   padding: 8px;
   border-radius: 8px;
   border-style: solid;
@@ -48,7 +51,7 @@
   flex: 1;
 }
 
-.SelectArrow {
+.InputIcon {
   position: absolute;
   right: 8px;
   color: gray;

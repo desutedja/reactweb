@@ -15,56 +15,13 @@
 .Button {
   background-color: var(--primary-color);
   width: 100px;
-  height: 36px;
+  height: 2.4rem;
   border-radius: 8px;
   color: white;
   margin: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.Table {
-  background-color: white;
-  /* padding: 8px; */
-  border-radius: 8px;
-  -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.1);
-  -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.1);
-  box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.1);
-}
-
-.Pagination {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-}
-
-.Pagination-range {
-  display: flex;
-  align-items: center;
-}
-
-.Pagination-control {
-  display: flex;
-  align-items: center;
-}
-
-.SelectRange {
-  margin-left: 8px;
-  margin-right: 8px;
-}
-
-.PageControl {
-  margin-left: 4px;
-  margin-right: 4px;
-}
-
-.PageInfo {
-  display: flex;
-  margin-left: 8px;
-  margin-right: 8px;
-  align-items: center;
 }
 
 .IconButton {
@@ -79,10 +36,6 @@
 
 .IconButton.inactive:hover {
   background-color: white;
-}
-
-.TableAction {
-  padding: 8px;
 }
 
 .Spinner {
