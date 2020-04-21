@@ -1,13 +1,15 @@
 import React, { useCallback, useState } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getBuilding } from './slice';
 
+import { getBuilding } from './slice';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
+import Input from '../../components/Input';
+import Modal from '../../components/Modal';
 
 import Add from './Add';
-import { FiPlus } from 'react-icons/fi';
+import { FiPlus, FiSearch } from 'react-icons/fi';
 
 const columns = [
     { Header: 'Name', accessor: 'name' },
@@ -20,7 +22,9 @@ const columns = [
 ]
 
 function Component() {
+    const [modalOpen, toggleModal] = useState(false);
     const [province, setProvince] = useState("");
+    const [search, setSearch] = useState("");
 
     const headers = useSelector(state => state.auth.headers);
     const { loading, items, total_pages } = useSelector(state => state.building);
@@ -31,6 +35,22 @@ function Component() {
 
     return (
         <div>
+            <Modal
+                isOpen={modalOpen}
+            >
+                <Input
+                    label="Search"
+                    compact
+                    icon={<FiSearch />}
+                    inputValue={search}
+                    setInputValue={setSearch}
+                />
+                <Button label="Select"
+                    onClick={() => {
+                        toggleModal(!modalOpen)
+                    }}
+                />
+            </Modal>
             <Switch>
                 <Route exact path={path}>
                     <Table
@@ -43,7 +63,7 @@ function Component() {
                         }, [dispatch, headers])}
                         filters={[
                             <Button key="Select Province" label="Select Province"
-                                onClick={() => {}}
+                                onClick={() => toggleModal(!modalOpen)}
                             />
                         ]}
                         actions={[

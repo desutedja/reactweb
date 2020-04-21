@@ -71,6 +71,7 @@ function Component({
                             required={required}
                             placeholder={label}
                             maxLength="20"
+                            size="30"
                             value={value}
                             onChange={(e) => {
                                 setValue(e.target.value);
