@@ -1,7 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
+import { endpointResident } from '../../settings';
+import { get } from '../../utils';
+
+const residentEndpoint = endpointResident + '/management/resident/read';
 
 export const slice = createSlice({
-  name: 'name',
+  name: 'resident',
   initialState: {
     loading: false,
     items: [],
@@ -32,5 +36,23 @@ export const {
   stopAsync,
   setData
 } = slice.actions;
+
+export const getResident = (
+  headers, pageIndex, pageSize,
+  search = '',
+) => dispatch => {
+  dispatch(startAsync());
+
+  get(residentEndpoint +
+    '?page=' + (pageIndex + 1) +
+    '&limit=' + pageSize +
+    '&search=' + search,
+    headers,
+    res => {
+      dispatch(setData(res.data.data));
+
+      dispatch(stopAsync());
+    })
+}
 
 export default slice.reducer;

@@ -3,6 +3,7 @@ import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../components/Table';
+import { getAds } from './slice';
 
 const columns = [
     { Header: 'Name', accessor: 'name' },
@@ -10,7 +11,7 @@ const columns = [
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages } = useSelector(state => state.name);
+    const { loading, items, total_pages } = useSelector(state => state.ads);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -22,11 +23,11 @@ function Component() {
                 <Route exact path={path}>
                     <Table
                         columns={columns}
-                        data={[]}
-                        loading={true}
-                        pageCount={1}
+                        data={items}
+                        loading={loading}
+                        pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-
+                            dispatch(getAds(headers, pageIndex, pageSize, search));
                         }, [dispatch, headers])}
                         filters={[]}
                         actions={[]}

@@ -1,10 +1,15 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
-import { FiMenu, FiUsers, FiHome, FiBarChart2, FiDollarSign, FiShoppingCart, FiZap, FiVolume2, FiRss, FiTarget } from "react-icons/fi";
+import { FiMenu, FiUsers, FiHome, FiBarChart2, FiDollarSign, FiShoppingCart, FiZap, FiVolume2, FiRss, FiTarget, FiBriefcase, FiAward } from "react-icons/fi";
 import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom';
 
+import ManagementRoute from './features/management/Route';
 import BuildingRoute from './features/building/Route';
+import ResidentRoute from './features/resident/Route';
+import StaffRoute from './features/staff/Route';
+import TaskRoute from './features/task/Route';
+import AdsRoute from './features/ads/Route';
 
 import Button from './components/Button';
 import Row from './components/Row';
@@ -12,10 +17,15 @@ import IconButton from './components/IconButton';
 
 
 const menu = [
+    // {
+    //     icon: <FiBarChart2 className="MenuItem-icon" />,
+    //     label: "Dashboard",
+    //     route: "/dashboard"
+    // },
     {
-        icon: <FiBarChart2 className="MenuItem-icon" />,
-        label: "Dashboard",
-        route: "/dashboard"
+        icon: <FiBriefcase className="MenuItem-icon" />,
+        label: "Management",
+        route: "/management"
     },
     {
         icon: <FiHome className="MenuItem-icon" />,
@@ -28,35 +38,40 @@ const menu = [
         route: "/resident"
     },
     {
-        icon: <FiZap className="MenuItem-icon" />,
-        label: "Billing",
-        route: "/billing"
-    },
-    {
-        icon: <FiShoppingCart className="MenuItem-icon" />,
-        label: "Merchant",
-        route: "/merchant"
+        icon: <FiAward className="MenuItem-icon" />,
+        label: "Staff",
+        route: "/staff"
     },
     {
         icon: <FiTarget className="MenuItem-icon" />,
         label: "Task",
         route: "/task"
     },
-    {
-        icon: <FiDollarSign className="MenuItem-icon" />,
-        label: "Settlement",
-        route: "/settlement"
-    },
+    // {
+    //     icon: <FiZap className="MenuItem-icon" />,
+    //     label: "Billing",
+    //     route: "/billing"
+    // },
+    // {
+    //     icon: <FiShoppingCart className="MenuItem-icon" />,
+    //     label: "Merchant",
+    //     route: "/merchant"
+    // },
+    // {
+    //     icon: <FiDollarSign className="MenuItem-icon" />,
+    //     label: "Settlement",
+    //     route: "/settlement"
+    // },
     {
         icon: <FiRss className="MenuItem-icon" />,
         label: "Advertisement",
         route: "/advertisement"
     },
-    {
-        icon: <FiVolume2 className="MenuItem-icon" />,
-        label: "Announcement",
-        route: "/announcement"
-    },
+    // {
+    //     icon: <FiVolume2 className="MenuItem-icon" />,
+    //     label: "Announcement",
+    //     route: "/announcement"
+    // },
 ]
 
 function Page() {
@@ -96,12 +111,25 @@ function Page() {
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
                     <Switch>
-                        <Redirect exact from="/" to={"/building"}
+                        <Redirect exact from="/" to={"/management"}
                         />
+                        <Route path="/management">
+                            <ManagementRoute />
+                        </Route>
                         <Route path="/building">
                             <BuildingRoute />
                         </Route>
                         <Route path="/resident">
+                            <ResidentRoute />
+                        </Route>
+                        <Route path="/staff">
+                            <StaffRoute />
+                        </Route>
+                        <Route path="/task">
+                            <TaskRoute />
+                        </Route>
+                        <Route path="/advertisement">
+                            <AdsRoute />
                         </Route>
                     </Switch>
                 </div>

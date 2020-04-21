@@ -63,3 +63,12 @@
   align-items: center;
   justify-content: space-between;
 }
+
+.TableAction-right {
+  display: flex;
+  align-items: center;
+}
+
+.TableAction-right button {
+  margin-right: 8px;
+}

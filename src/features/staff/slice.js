@@ -1,7 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
+import { endpointManagement } from '../../settings';
+import { get } from '../../utils';
+
+const staffEndpoint = endpointManagement + '/admin/staff/list';
 
 export const slice = createSlice({
-  name: 'name',
+  name: 'staff',
   initialState: {
     loading: false,
     items: [],
@@ -32,5 +36,23 @@ export const {
   stopAsync,
   setData
 } = slice.actions;
+
+export const getStaff = (
+  headers, pageIndex, pageSize,
+  search = '', province, city, district
+) => dispatch => {
+  dispatch(startAsync());
+
+  get(staffEndpoint +
+    '?page=' + (pageIndex + 1) +
+    '&limit=' + pageSize +
+    '&search=' + search,
+    headers,
+    res => {
+      dispatch(setData(res.data.data));
+
+      dispatch(stopAsync());
+    })
+}
 
 export default slice.reducer;

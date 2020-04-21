@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getBuilding } from './slice';
@@ -13,14 +13,15 @@ const columns = [
     { Header: 'Name', accessor: 'name' },
     { Header: 'Legal Name', accessor: 'legal_name' },
     { Header: 'Code Name', accessor: 'code_name' },
-    { Header: 'Owner Name', accessor: 'owner_name' },
-    { Header: 'Phone', accessor: 'phone' },
-    { Header: 'Email', accessor: 'email' },
+    { Header: 'Owner', accessor: 'owner_name' },
+    { Header: 'Management', accessor: 'management_name' },
     { Header: 'Website', accessor: 'website' },
     { Header: 'Location', accessor: row => row.lat + ', ' + row.long },
 ]
 
 function Component() {
+    const [province, setProvince] = useState("");
+
     const headers = useSelector(state => state.auth.headers);
     const { loading, items, total_pages } = useSelector(state => state.building);
 
@@ -40,7 +41,11 @@ function Component() {
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getBuilding(headers, pageIndex, pageSize, search));
                         }, [dispatch, headers])}
-                        filters={[]}
+                        filters={[
+                            <Button key="Select Province" label="Select Province"
+                                onClick={() => {}}
+                            />
+                        ]}
                         actions={[
                             <Button key="Add" label="Add" icon={<FiPlus />}
                                 onClick={() => history.push(url + "/add")}

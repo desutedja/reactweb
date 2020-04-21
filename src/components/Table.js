@@ -60,7 +60,8 @@ function Component({
                 <div>
                     {actions}
                 </div>
-                <div>
+                <div className="TableAction-right">
+                    {filters}
                     <div className="TableSearch">
                         <Input
                             label="Search"

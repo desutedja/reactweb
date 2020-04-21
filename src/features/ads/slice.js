@@ -1,7 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
+import { endpointAds } from '../../settings';
+import { get } from '../../utils';
+
+const adsEndpoint = endpointAds + '/management/ads';
 
 export const slice = createSlice({
-  name: 'name',
+  name: 'ads',
   initialState: {
     loading: false,
     items: [],
@@ -32,5 +36,23 @@ export const {
   stopAsync,
   setData
 } = slice.actions;
+
+export const getAds = (
+  headers, pageIndex, pageSize,
+  search = '', province, city, district
+) => dispatch => {
+  dispatch(startAsync());
+
+  get(adsEndpoint +
+    '?page=' + (pageIndex + 1) +
+    '&limit=' + pageSize +
+    '&search=' + search,
+    headers,
+    res => {
+      dispatch(setData(res.data.data));
+
+      dispatch(stopAsync());
+    })
+}
 
 export default slice.reducer;
