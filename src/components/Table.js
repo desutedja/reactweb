@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useTable, usePagination } from 'react-table'
+import { useTable, usePagination, useSortBy } from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
-    FiChevronsRight, FiChevronRight, FiSearch,
+    FiChevronsRight, FiChevronRight, FiSearch, FiChevronsDown, FiChevronDown, FiChevronUp,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
 import Input from './Input';
+import Modal from './Modal';
 
 function Component({
     columns,
@@ -34,17 +35,27 @@ function Component({
         data,
         initialState: { pageIndex: 0 },
         manualPagination: true,
-        pageCount: controlledPageCount
+        pageCount: controlledPageCount,
+        autoResetSortBy: false,
+        autoResetPage: false,
     },
-        usePagination
+        useSortBy,
+        usePagination,
     );
 
     const [search, setSearch] = useState("");
     const [searchToggle, toggleSearch] = useState("");
 
+    const [activeFilter, setFilter] = useState(0);
+    const [modalOpen, toggleModal] = useState(false);
+
     useEffect(() => {
         fetchData(pageIndex, pageSize, searchToggle);
     }, [fetchData, pageIndex, pageSize, searchToggle]);
+
+    useEffect(() => {
+        gotoPage(0);
+    }, [fetchData]);
 
     useEffect(() => {
         let searchTimeout = setTimeout(() => toggleSearch(search), 500);
@@ -56,12 +67,23 @@ function Component({
 
     return (
         <div className="Table">
+            <Modal
+                isOpen={modalOpen}
+                onRequestClose={() => toggleModal(false)}
+            >
+                {filters.length > 0 ? filters[activeFilter].component(toggleModal) : null}
+            </Modal>
             <div className="TableAction">
                 <div>
                     {actions}
                 </div>
                 <div className="TableAction-right">
-                    {filters}
+                    {filters.map((el, index) => <div onClick={() => {
+                        toggleModal(true);
+                        setFilter(index)
+                    }}>
+                        {el.button}
+                    </div>)}
                     <div className="TableSearch">
                         <Input
                             label="Search"
@@ -90,7 +112,17 @@ function Component({
                     {headerGroups.map(headerGroup => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
-                                <th {...column.getHeaderProps()}>{column.render('Header')}</th>
+                                <th {...column.getHeaderProps(
+                                    column.getSortByToggleProps()
+                                )}><div className="TableHeader">
+                                        {column.render('Header')}
+                                        {column.isSorted
+                                            ? column.isSortedDesc
+                                                ? <FiChevronDown className="SortIcon" />
+                                                : <FiChevronUp className="SortIcon" />
+                                            : ''}
+                                    </div>
+                                </th>
                             ))}
                         </tr>
                     ))}

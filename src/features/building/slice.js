@@ -47,9 +47,9 @@ export const getBuilding = (
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search +
-    '&province=' +
-    '&city=' +
-    '&district=',
+    '&province=' + province +
+    '&city=' + city + 
+    '&district=' + district,
     headers,
     res => {
       dispatch(setData(res.data.data));

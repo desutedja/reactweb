@@ -39,14 +39,15 @@ export const {
 
 export const getStaff = (
   headers, pageIndex, pageSize,
-  search = '', province, city, district
+  search = '', role
 ) => dispatch => {
   dispatch(startAsync());
 
   get(staffEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
-    '&search=' + search,
+    '&search=' + search +
+    '&staff_role=' + role,
     headers,
     res => {
       dispatch(setData(res.data.data));

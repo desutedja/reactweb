@@ -46,7 +46,8 @@ export const getResident = (
   get(residentEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
-    '&search=' + search,
+    '&search=' + search +
+    '&status=',
     headers,
     res => {
       dispatch(setData(res.data.data));

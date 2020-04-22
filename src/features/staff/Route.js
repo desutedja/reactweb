@@ -1,9 +1,11 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getStaff } from './slice';
 
 import Table from '../../components/Table';
+import Button from '../../components/Button';
+import Filter from '../../components/Filter';
 
 const columns = [
     { Header: "Name", accessor: row => row.firstname + ' ' + row.lastname },
@@ -19,7 +21,18 @@ const columns = [
     { Header: "Status", accessor: "status" },
 ]
 
+const roles = [
+    { label: 'GM BM', value: 'gm_bm' },
+    { label: 'PIC BM', value: 'pic_bm' },
+    { label: 'Technician', value: 'technician' },
+    { label: 'Courier', value: 'courier' },
+    { label: 'Security', value: 'security' }
+];
+
 function Component() {
+    const [role, setRole] = useState('');
+    const [roleLabel, setRoleLabel] = useState('');
+
     const headers = useSelector(state => state.auth.headers);
     const { loading, items, total_pages } = useSelector(state => state.staff);
 
@@ -37,9 +50,30 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getStaff(headers, pageIndex, pageSize, search));
-                        }, [dispatch, headers])}
-                        filters={[]}
+                            dispatch(getStaff(headers, pageIndex, pageSize, search, role));
+                        }, [dispatch, headers, role])}
+                        filters={[
+                            {
+                                button: <Button key="Select Role"
+                                    label={role ? roleLabel : "Select Role"}
+                                    selected={role}
+                                />,
+                                component: toggleModal =>
+                                    <Filter
+                                        data={roles}
+                                        onClickAll={() => {
+                                            setRole("");
+                                            setRoleLabel("");
+                                            toggleModal(false);
+                                        }}
+                                        onClick={el => {
+                                            setRole(el.value);
+                                            setRoleLabel(el.label);
+                                            toggleModal(false);
+                                        }}
+                                    />
+                            }
+                        ]}
                         actions={[]}
                     />
                 </Route>

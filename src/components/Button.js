@@ -1,9 +1,9 @@
 import React from 'react';
 
-function Component({icon, label, onClick}) {
+function Component({icon, label, onClick, selected}) {
     return (
     <button
-        className="Button"
+        className={selected ? "Button selected" : "Button"}
         onClick={onClick}
     >
         {icon}

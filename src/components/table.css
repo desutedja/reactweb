@@ -73,3 +73,12 @@
 .TableAction-right button {
   margin-right: 8px;
 }
+
+.TableHeader {
+  display: flex;
+  align-items: center;
+}
+
+.SortIcon {
+  margin-left: 8px;
+}

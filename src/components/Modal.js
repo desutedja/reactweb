@@ -3,10 +3,12 @@ import ReactModal from 'react-modal';
 
 ReactModal.setAppElement('#root');
 
-function Component({isOpen, children}) {
+function Component({ isOpen, onRequestClose, children }) {
     return (
         <div>
             <ReactModal
+                shouldCloseOnOverlayClick
+                onRequestClose={onRequestClose}
                 isOpen={isOpen}
                 style={{
                     content: {

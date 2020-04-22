@@ -39,14 +39,17 @@ export const {
 
 export const getTask = (
   headers, pageIndex, pageSize,
-  search = '', province, city, district
+  search = '', type, prio, status
 ) => dispatch => {
   dispatch(startAsync());
 
   get(taskEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
-    '&search=' + search,
+    '&search=' + search + 
+    '&type=' + type +
+    '&priority=' + prio +
+    '&status=' + status,
     headers,
     res => {
       dispatch(setData(res.data.data));
