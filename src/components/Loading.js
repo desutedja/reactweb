@@ -7,7 +7,7 @@ function Component({ loading, children }) {
             <div className="Spinner">
                 <MoonLoader
                     size={24}
-                    color={"silver"}
+                    color={"grey"}
                     loading={loading}
                 />
             </div>

@@ -56,7 +56,7 @@ export const login = (email, history) => dispatch => {
   }, {}, res => {
     dispatch(loginSuccess(email));
 
-    history.push("/otp");
+    history && history.push("/otp");
   }, () => {
     dispatch(stopAsync());
   })

@@ -66,6 +66,9 @@ export const createBuilding = (headers, data, history) => dispatch => {
       history.push("/building");
 
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     })
 }
 

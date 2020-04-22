@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
-import { FiChevronDown } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import { FiChevronDown, FiCheck } from 'react-icons/fi';
+import MoonLoader from "react-spinners/MoonLoader";
 
 function Component({
-    label, compact, name, required = false,
+    label, compact, name, optional = true,
     type = "text", rows = 2, options = [],
     inputValue, setInputValue, icon
 }) {
     const [value, setValue] = useState(type === "button" ? label : inputValue ? inputValue : "");
+    // const [uploading, setUploading] = useState(false);
+    // const [succcess, setSuccess] = useState(false);
+
+    // function upload() {
+    //     setUploading(true)
+    // }
+
+    // useEffect(() => {
+    //     type === 'file' && value && upload();
+    // }, [value])
 
     return (
         <div className={"Input"
@@ -20,7 +31,7 @@ function Component({
                     type={type}
                     id={label}
                     name={name ? name : label.toLowerCase().replace(' ', '_')}
-                    required={required}
+                    required={!optional}
                     placeholder={label}
                     maxLength="100"
                     rows={rows}
@@ -41,7 +52,7 @@ function Component({
                             type={type}
                             id={label}
                             name={name ? name : label.toLowerCase().replace(' ', '_')}
-                            required={required}
+                            required={!optional}
                             placeholder={label}
                             value={value}
                             onChange={(e) => {
@@ -65,10 +76,11 @@ function Component({
                         </div> : null}
                         <input
                             className="Input-input"
+                            accept="image/*"
                             type={type}
                             id={label}
                             name={name ? name : label.toLowerCase().replace(' ', '_')}
-                            required={required}
+                            required={!optional}
                             placeholder={label}
                             maxLength="20"
                             size="30"
@@ -78,6 +90,17 @@ function Component({
                                 setInputValue && setInputValue(e.target.value);
                             }}
                         />
+                        {/* {type === 'file' && <div className="InputIcon">
+                            {uploading ?
+                                <MoonLoader
+                                    size={16}
+                                    color={"grey"}
+                                    loading={true}
+                                /> :
+                                succcess ?
+                                    <FiCheck /> : null
+                            }
+                        </div>} */}
                     </div>}
         </div>
     )
