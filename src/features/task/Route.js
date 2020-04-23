@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getTask } from './slice';
@@ -6,6 +6,10 @@ import { getTask } from './slice';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
+import Input from '../../components/Input';
+import { get } from '../../utils';
+import { endpointAdmin } from '../../settings';
+import { FiSearch } from 'react-icons/fi';
 
 const columns = [
     { Header: "Assigned on", accessor: "assigned_on" },
@@ -41,6 +45,11 @@ const prios = [
 ]
 
 function Component() {
+    const [search, setSearch] = useState('');
+    const [building, setBuilding] = useState('');
+    const [buildingName, setBuildingName] = useState('');
+    const [buildings, setBuildings] = useState('');
+
     const [type, setType] = useState('');
     const [typeLabel, setTypeLabel] = useState('');
 
@@ -57,6 +66,18 @@ function Component() {
     let history = useHistory();
     let { path, url } = useRouteMatch();
 
+    useEffect(() => {
+        search.length >= 3 && get(endpointAdmin + '/building' +
+        '?limit=5&page=1' +
+        '&search=' + search, headers, res => {
+            let data = res.data.data.items;
+
+            let formatted = data.map(el => ({label: el.name, value: el.id}));
+
+            setBuildings(formatted);
+        })
+    }, [search])
+
     return (
         <div>
             <Switch>
@@ -67,9 +88,38 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getTask(headers, pageIndex, pageSize, search, type, prio, status));
-                        }, [dispatch, headers, type, prio, status])}
+                            dispatch(getTask(headers, pageIndex, pageSize, search, type, prio, status, building));
+                        }, [dispatch, headers, type, prio, status, building])}
                         filters={[
+                            {
+                                button: <Button key="Select Building"
+                                    label={building ? buildingName : "Select Building"}
+                                    selected={building}
+                                />,
+                                component: (toggleModal) =>
+                                    <>
+                                        <Input
+                                            label="Search"
+                                            compact
+                                            icon={<FiSearch />}
+                                            inputValue={search}
+                                            setInputValue={setSearch}
+                                        />
+                                        <Filter
+                                            data={buildings}
+                                            onClick={(el) => {
+                                                setBuilding(el.value);
+                                                setBuildingName(el.label);
+                                                toggleModal(false);
+                                            }}
+                                            onClickAll={() => {
+                                                setBuilding("");
+                                                setBuildingName("");
+                                                toggleModal(false);
+                                            }}
+                                        />
+                                    </>
+                            },
                             {
                                 button: <Button key="Select Type"
                                     label={type ? typeLabel : "Select Type"}

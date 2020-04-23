@@ -11,7 +11,7 @@ function Component({ data, onClick, onClickAll }) {
                 >
                     All
                 </button>
-                {data.map(el =>
+                {data && data.map(el =>
                     <button
                         key={el.value}
                         className="ListItem"

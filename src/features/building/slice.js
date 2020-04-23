@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
-import { post, get } from '../../utils';
+import { post, get, del } from '../../utils';
 
 const buildingEndpoint = endpointAdmin + '/building';
 
@@ -48,7 +48,7 @@ export const getBuilding = (
     '&limit=' + pageSize +
     '&search=' + search +
     '&province=' + province +
-    '&city=' + city + 
+    '&city=' + city +
     '&district=' + district,
     headers,
     res => {
@@ -69,6 +69,15 @@ export const createBuilding = (headers, data, history) => dispatch => {
     },
     err => {
       dispatch(stopAsync());
+    })
+}
+
+export const deleteBuilding = (id, headers) => dispatch => {
+  dispatch(startAsync());
+
+  del(buildingEndpoint + '/' + id, headers,
+    res => {
+      dispatch(stopAsync())
     })
 }
 

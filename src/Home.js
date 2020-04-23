@@ -23,14 +23,14 @@ const menu = [
     //     route: "/dashboard"
     // },
     {
-        icon: <FiBriefcase className="MenuItem-icon" />,
-        label: "Management",
-        route: "/management"
-    },
-    {
         icon: <FiHome className="MenuItem-icon" />,
         label: "Building",
         route: "/building"
+    },
+    {
+        icon: <FiBriefcase className="MenuItem-icon" />,
+        label: "Management",
+        route: "/management"
     },
     {
         icon: <FiUsers className="MenuItem-icon" />,
@@ -103,7 +103,8 @@ function Page() {
                         <div
                             onClick={() => history.push(el.route)}
                             key={el.label}
-                            className={history.location.pathname === el.route ? "MenuItem-active" : "MenuItem"}>
+                            className={('/' + history.location.pathname.split('/')[1])
+                                === el.route ? "MenuItem-active" : "MenuItem"}>
                             {el.icon}
                             {menuWide && <p className="MenuItem-label">{el.label}</p>}
                         </div>
@@ -111,13 +112,13 @@ function Page() {
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
                     <Switch>
-                        <Redirect exact from="/" to={"/management"}
+                        <Redirect exact from="/" to={"/building"}
                         />
-                        <Route path="/management">
-                            <ManagementRoute />
-                        </Route>
                         <Route path="/building">
                             <BuildingRoute />
+                        </Route>
+                        <Route path="/management">
+                            <ManagementRoute />
                         </Route>
                         <Route path="/resident">
                             <ResidentRoute />

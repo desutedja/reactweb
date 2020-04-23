@@ -1,8 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointResident } from '../../settings';
-import { get } from '../../utils';
+import { get, post } from '../../utils';
 
-const residentEndpoint = endpointResident + '/management/resident/read';
+const residentEndpoint = endpointResident + '/management/resident';
 
 export const slice = createSlice({
   name: 'resident',
@@ -43,7 +43,7 @@ export const getResident = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(residentEndpoint +
+  get(residentEndpoint + '/read' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search +
@@ -52,6 +52,20 @@ export const getResident = (
     res => {
       dispatch(setData(res.data.data));
 
+      dispatch(stopAsync());
+    })
+}
+
+export const createResident = (headers, data, history) => dispatch => {
+  dispatch(startAsync());
+
+  post(residentEndpoint + '/register/parent', data, headers,
+    res => {
+      history.push("/resident");
+
+      dispatch(stopAsync());
+    },
+    err => {
       dispatch(stopAsync());
     })
 }

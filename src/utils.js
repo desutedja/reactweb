@@ -41,3 +41,24 @@ export function post(
             finallyDo();
         })
 }
+
+export function del(
+    link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) {
+    Axios.delete(link, {
+        headers: headers
+    })
+        .then(res => {
+            console.log(res);
+
+            ifSuccess(res);
+        })
+        .catch(err => {
+            console.log(err);
+
+            ifError(err);
+        })
+        .finally(() => {
+            finallyDo();
+        })
+}

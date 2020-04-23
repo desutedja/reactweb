@@ -3,7 +3,7 @@ import { useTable, usePagination, useSortBy } from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
-    FiChevronsRight, FiChevronRight, FiSearch, FiChevronsDown, FiChevronDown, FiChevronUp,
+    FiChevronsRight, FiChevronRight, FiSearch, FiChevronDown, FiChevronUp, FiTrash,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
 import Input from './Input';
@@ -17,6 +17,7 @@ function Component({
     loading,
     pageCount: controlledPageCount,
     actions,
+    onClickDelete,
 }) {
     const {
         getTableProps,
@@ -109,7 +110,7 @@ function Component({
                     </tbody>
                 }
                 <thead>
-                    {headerGroups.map(headerGroup => (
+                    {headerGroups.map((headerGroup, i) => (
                         <tr {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
                                 <th {...column.getHeaderProps(
@@ -124,6 +125,9 @@ function Component({
                                     </div>
                                 </th>
                             ))}
+                            <th key={i}>
+                                Options
+                            </th>
                         </tr>
                     ))}
                 </thead>
@@ -137,6 +141,11 @@ function Component({
                                         <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                                     );
                                 })}
+                                <td key={i}>
+                                    <IconButton onClick={() => onClickDelete(row)}>
+                                        <FiTrash />
+                                    </IconButton>
+                                </td>
                             </tr>
                         );
                     })}

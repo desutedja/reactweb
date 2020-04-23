@@ -39,7 +39,8 @@ export const {
 
 export const getTask = (
   headers, pageIndex, pageSize,
-  search = '', type, prio, status
+  search = '', type, prio, status,
+  building
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -49,6 +50,7 @@ export const getTask = (
     '&search=' + search + 
     '&type=' + type +
     '&priority=' + prio +
+    '&requester_building_id=' + building +
     '&status=' + status,
     headers,
     res => {

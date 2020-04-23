@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
-import { get } from '../../utils';
+import { get, post } from '../../utils';
 
 const managementEndpoint = endpointAdmin + '/management';
 
@@ -51,6 +51,20 @@ export const getManagement = (
     res => {
       dispatch(setData(res.data.data));
 
+      dispatch(stopAsync());
+    })
+}
+
+export const createManagement = (headers, data, history) => dispatch => {
+  dispatch(startAsync());
+
+  post(managementEndpoint, data, headers,
+    res => {
+      history.push("/management");
+
+      dispatch(stopAsync());
+    },
+    err => {
       dispatch(stopAsync());
     })
 }

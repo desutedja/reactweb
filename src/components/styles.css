@@ -69,3 +69,16 @@
 .ReactModalPortal .Input {
   width: 100%;
 }
+
+.MapForm {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+.MapForm .Input {
+  margin-left: 4px;
+  margin-right: 4px;
+}

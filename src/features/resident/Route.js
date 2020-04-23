@@ -1,9 +1,12 @@
 import React, { useCallback } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { FiPlus } from 'react-icons/fi';
 
 import Table from '../../components/Table';
+import Button from '../../components/Button';
 import { getResident } from './slice';
+import Add from './Add';
 
 const columns = [
     { Header: "Name", accessor: row => row.firstname + ' ' + row.lastname },
@@ -37,8 +40,15 @@ function Component() {
                             dispatch(getResident(headers, pageIndex, pageSize, search));
                         }, [dispatch, headers])}
                         filters={[]}
-                        actions={[]}
+                        actions={[
+                            <Button key="Add" label="Add" icon={<FiPlus />}
+                                onClick={() => history.push(url + "/add")}
+                            />
+                        ]}
                     />
+                </Route>
+                <Route path={`${path}/add`}>
+                    <Add />
                 </Route>
             </Switch>
         </div>

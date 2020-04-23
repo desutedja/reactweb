@@ -5,19 +5,13 @@ import MoonLoader from "react-spinners/MoonLoader";
 function Component({
     label, compact, name, optional = true,
     type = "text", rows = 2, options = [],
-    inputValue, setInputValue, icon
+    inputValue, setInputValue, icon, onClick
 }) {
     const [value, setValue] = useState(type === "button" ? label : inputValue ? inputValue : "");
-    // const [uploading, setUploading] = useState(false);
-    // const [succcess, setSuccess] = useState(false);
 
-    // function upload() {
-    //     setUploading(true)
-    // }
-
-    // useEffect(() => {
-    //     type === 'file' && value && upload();
-    // }, [value])
+    useEffect(() => {
+        inputValue && setValue(inputValue);
+    }, [inputValue])
 
     return (
         <div className={"Input"
@@ -89,18 +83,8 @@ function Component({
                                 setValue(e.target.value);
                                 setInputValue && setInputValue(e.target.value);
                             }}
+                            onClick={onClick}
                         />
-                        {/* {type === 'file' && <div className="InputIcon">
-                            {uploading ?
-                                <MoonLoader
-                                    size={16}
-                                    color={"grey"}
-                                    loading={true}
-                                /> :
-                                succcess ?
-                                    <FiCheck /> : null
-                            }
-                        </div>} */}
                     </div>}
         </div>
     )

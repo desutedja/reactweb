@@ -1,18 +1,18 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { FiPlus, FiSearch, FiCheckSquare, FiSquare } from 'react-icons/fi';
 
-import { getBuilding } from './slice';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-
 import Add from './Add';
-import { FiPlus, FiSearch } from 'react-icons/fi';
+import { getBuilding, deleteBuilding } from './slice';
 import { get } from '../../utils';
 import { endpointResident } from '../../settings';
 
 const columns = [
+    // { Header: '', accessor: 'checkbox', disableSortBy: true },
     { Header: 'Name', accessor: 'name' },
     { Header: 'Legal Name', accessor: 'legal_name' },
     { Header: 'Code Name', accessor: 'code_name' },
@@ -203,6 +203,7 @@ function Component() {
                                 onClick={() => history.push(url + "/add")}
                             />
                         ]}
+                        onClickDelete={row => dispatch(deleteBuilding(row.original.id, headers))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

@@ -67,6 +67,7 @@ textarea {
 input[type="button"] {
   background-color: var(--accent-color);
   border: none;
+  cursor: pointer;
 }
 
 svg {
