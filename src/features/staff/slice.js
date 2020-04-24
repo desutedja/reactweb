@@ -39,7 +39,7 @@ export const {
 
 export const getStaff = (
   headers, pageIndex, pageSize,
-  search = '', role
+  search = '', role, building
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -47,6 +47,7 @@ export const getStaff = (
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search +
+    '&building_id=' + building +
     '&staff_role=' + role,
     headers,
     res => {

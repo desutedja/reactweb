@@ -1,4 +1,5 @@
-import * as firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/storage";
 
 // Set the configuration for your app
 // TODO: Replace with your app's config object

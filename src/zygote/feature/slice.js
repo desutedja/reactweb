@@ -9,6 +9,7 @@ export const slice = createSlice({
     total_pages: 1,
     page: 1,
     range: 10,
+    refreshToggle: true,
   },
   reducers: {
     startAsync: (state) => {
@@ -23,14 +24,18 @@ export const slice = createSlice({
       state.items = data.items;
       state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
-    }
+    },
+    refresh: (state) => {
+      state.refreshToggle = !state.refreshToggle;
+    },
   },
 });
 
 export const {
   startAsync,
   stopAsync,
-  setData
+  setData,
+  refresh
 } = slice.actions;
 
 export default slice.reducer;

@@ -21,7 +21,7 @@ function Component() {
                 loading={loading}
             >
                 <Input label="Name" />
-                <Input label="Legal Name" />
+                <Input label="Legal Name" name="name_legal" />
                 <Input label="Phone" type="tel" />
                 <Input label="Email" type="email" />
                 <Input label="Website" type="url" />

@@ -79,7 +79,7 @@ function Component({
                     {actions}
                 </div>
                 <div className="TableAction-right">
-                    {filters.map((el, index) => <div onClick={() => {
+                    {filters.map((el, index) => <div key={index} onClick={() => {
                         toggleModal(true);
                         setFilter(index)
                     }}>
@@ -141,11 +141,11 @@ function Component({
                                         <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                                     );
                                 })}
-                                <td key={i}>
-                                    <IconButton onClick={() => onClickDelete(row)}>
+                                {onClickDelete && <td key={i}>
+                                    <IconButton onClick={() => onClickDelete(row.original.id)}>
                                         <FiTrash />
                                     </IconButton>
-                                </td>
+                                </td>}
                             </tr>
                         );
                     })}

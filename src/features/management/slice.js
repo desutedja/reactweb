@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
-import { get, post } from '../../utils';
+import { get, post, del } from '../../utils';
 
 const managementEndpoint = endpointAdmin + '/management';
 
@@ -13,6 +13,7 @@ export const slice = createSlice({
     total_pages: 1,
     page: 1,
     range: 10,
+    refreshToggle: true,
   },
   reducers: {
     startAsync: (state) => {
@@ -27,14 +28,18 @@ export const slice = createSlice({
       state.items = data.items;
       state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
-    }
+    },
+    refresh: (state) => {
+      state.refreshToggle = !state.refreshToggle;
+    },
   },
 });
 
 export const {
   startAsync,
   stopAsync,
-  setData
+  setData,
+  refresh,
 } = slice.actions;
 
 export const getManagement = (
@@ -66,6 +71,16 @@ export const createManagement = (headers, data, history) => dispatch => {
     },
     err => {
       dispatch(stopAsync());
+    })
+}
+
+export const deleteManagement = (id, headers) => dispatch => {
+  dispatch(startAsync());
+
+  del(managementEndpoint + '/' + id, headers,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync())
     })
 }
 

@@ -3,7 +3,7 @@ import { FiChevronDown, FiCheck } from 'react-icons/fi';
 import MoonLoader from "react-spinners/MoonLoader";
 
 function Component({
-    label, compact, name, optional = true,
+    label, compact, name, optional = false,
     type = "text", rows = 2, options = [],
     inputValue, setInputValue, icon, onClick
 }) {
@@ -80,8 +80,13 @@ function Component({
                             size="30"
                             value={value}
                             onChange={(e) => {
-                                setValue(e.target.value);
-                                setInputValue && setInputValue(e.target.value);
+                                if (type === 'url') {
+                                    setValue('http://' + e.target.value.replace('http://', ''));
+                                    setInputValue && setInputValue('http://' + e.target.value.replace('http://', ''));
+                                } else {
+                                    setValue(e.target.value);
+                                    setInputValue && setInputValue(e.target.value);
+                                }
                             }}
                             onClick={onClick}
                         />

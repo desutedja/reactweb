@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getManagement } from './slice';
+import { getManagement, deleteManagement } from './slice';
 import { FiPlus } from 'react-icons/fi';
 
 import Table from '../../components/Table';
@@ -22,7 +22,7 @@ const columns = [
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages } = useSelector(state => state.management);
+    const { loading, items, total_pages, refreshToggle } = useSelector(state => state.management);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -39,13 +39,14 @@ function Component() {
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getManagement(headers, pageIndex, pageSize, search));
-                        }, [dispatch, headers])}
+                        }, [dispatch, headers, refreshToggle])}
                         filters={[]}
                         actions={[
                             <Button key="Add" label="Add" icon={<FiPlus />}
                                 onClick={() => history.push(url + "/add")}
                             />
                         ]}
+                        onClickDelete={rowID => dispatch(deleteManagement(rowID, headers))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

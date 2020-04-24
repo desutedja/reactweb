@@ -43,7 +43,7 @@ function Component() {
     const [filteredProvinces, setFilteredProvinces] = useState([]);
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages } = useSelector(state => state.building);
+    const { loading, items, total_pages, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -168,7 +168,7 @@ function Component() {
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getBuilding(headers, pageIndex, pageSize, search, province, city, district));
-                        }, [dispatch, headers, province, city, district])}
+                        }, [dispatch, refreshToggle, headers, province, city, district])}
                         filters={[
                             {
                                 button: city && <Button key="Select District" label={district ? districtName : "Select District"}
@@ -203,7 +203,7 @@ function Component() {
                                 onClick={() => history.push(url + "/add")}
                             />
                         ]}
-                        onClickDelete={row => dispatch(deleteBuilding(row.original.id, headers))}
+                        onClickDelete={rowID => dispatch(deleteBuilding(rowID, headers))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

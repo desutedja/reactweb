@@ -43,7 +43,7 @@ export function post(
 }
 
 export function del(
-    link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+    link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
 ) {
     Axios.delete(link, {
         headers: headers

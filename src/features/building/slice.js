@@ -13,6 +13,7 @@ export const slice = createSlice({
     total_pages: 1,
     page: 1,
     range: 10,
+    refreshToggle: true,
   },
   reducers: {
     startAsync: (state) => {
@@ -27,6 +28,9 @@ export const slice = createSlice({
       state.items = data.items;
       state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
+    },
+    refresh: (state) => {
+      state.refreshToggle = !state.refreshToggle;
     }
   },
 });
@@ -34,7 +38,8 @@ export const slice = createSlice({
 export const {
   startAsync,
   stopAsync,
-  setData
+  setData,
+  refresh,
 } = slice.actions;
 
 export const getBuilding = (
@@ -77,6 +82,7 @@ export const deleteBuilding = (id, headers) => dispatch => {
 
   del(buildingEndpoint + '/' + id, headers,
     res => {
+      dispatch(refresh());
       dispatch(stopAsync())
     })
 }

@@ -10,6 +10,8 @@ function Component({ children, onSubmit, loading }) {
 
     return (
         <form ref={formRef} className="Form" onSubmit={async e => {
+            // console.log('sth');
+
             e.preventDefault();
 
             const formData = new FormData(formRef.current);
@@ -56,7 +58,9 @@ function Component({ children, onSubmit, loading }) {
             <SectionSeparator />
             <div className="Form-control">
                 <Loading loading={loading}>
-                    <Button label="Submit" />
+                    <Button label="Submit" onClick={() => {
+                        // console.log('sth');
+                    }} />
                 </Loading>
             </div>
         </form>

@@ -12,13 +12,14 @@ import { endpointAdmin } from '../../settings';
 import { FiSearch } from 'react-icons/fi';
 
 const columns = [
-    { Header: "Assigned on", accessor: "assigned_on" },
-    { Header: "Task Type", accessor: "task_type" },
-    { Header: "Requester Name", accessor: "requester_name" },
+    { Header: "Title", accessor: "title" },
+    { Header: "Type", accessor: "task_type" },
+    { Header: "Requester", accessor: "requester_name" },
+    { Header: "Building", accessor: "requester_building_name" },
     { Header: "Priority", accessor: "priority" },
-    { Header: "Lokasi", accessor: row => row.r_lat + ", " + row.r_long },
-    { Header: "Assigned by", accessor: "assigned_by" },
-    { Header: "Remarks", accessor: "remarks" },
+    { Header: "Assigned by", accessor: row => row.assigner_first_name + ' ' + row.assigner_last_name },
+    { Header: "Assignee", accessor: row => row.assignee_first_name + ' ' + row.assignee_last_name },
+    { Header: "Assigned on", accessor: "assigned_on" },
     { Header: "Status", accessor: "status" },
 ]
 
@@ -76,7 +77,7 @@ function Component() {
 
             setBuildings(formatted);
         })
-    }, [search])
+    }, [search]);
 
     return (
         <div>
