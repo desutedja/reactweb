@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FiChevronDown, FiCheck } from 'react-icons/fi';
-import MoonLoader from "react-spinners/MoonLoader";
+import { FiChevronDown } from 'react-icons/fi';
 
 function Component({
-    label, compact, name, optional = false,
+    label, compact, name, optional = true,
     type = "text", rows = 2, options = [],
     inputValue, setInputValue, icon, onClick
 }) {
@@ -76,7 +75,7 @@ function Component({
                             name={name ? name : label.toLowerCase().replace(' ', '_')}
                             required={!optional}
                             placeholder={label}
-                            maxLength="20"
+                            maxLength="30"
                             size="30"
                             value={value}
                             onChange={(e) => {

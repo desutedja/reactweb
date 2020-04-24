@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import GoogleMapReact from 'google-map-react';
@@ -10,6 +10,8 @@ import SectionSeparator from '../../components/SectionSeparator';
 import Modal from '../../components/Modal';
 import Button from '../../components/Button';
 import { createBuilding } from './slice';
+import { endpointResident } from '../../settings';
+import { get } from '../../utils';
 
 
 function Component() {
@@ -17,11 +19,52 @@ function Component() {
     const [lat, setLat] = useState('');
     const [lng, setLng] = useState('');
 
+    const [district, setDistrict] = useState("");
+    const [districts, setDistricts] = useState([]);
+
+    const [city, setCity] = useState("");
+    const [cities, setCities] = useState([]);
+
+    const [province, setProvince] = useState("");
+    const [provinces, setProvinces] = useState([]);
+
     const headers = useSelector(state => state.auth.headers);
     const loading = useSelector(state => state.building.loading);
 
     let dispatch = useDispatch();
     let history = useHistory();
+
+    useEffect(() => {
+        get(endpointResident + '/geo/province',
+            headers,
+            res => {
+                let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
+                setProvinces(formatted);
+            }
+        )
+    }, [headers]);
+
+    useEffect(() => {
+        setCity("");
+        province && get(endpointResident + '/geo/province/' + province,
+            headers,
+            res => {
+                let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
+                setCities(formatted);
+            }
+        )
+    }, [headers, province]);
+
+    useEffect(() => {
+        setDistrict("");
+        city && get(endpointResident + '/geo/city/' + city,
+            headers,
+            res => {
+                let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
+                setDistricts(formatted);
+            }
+        )
+    }, [city, headers]);
 
     return (
         <div>
@@ -76,24 +119,15 @@ function Component() {
                 <Input label="Latitude" inputValue={lat} setInputValue={setLat} />
                 <Input label="Longitude" inputValue={lng} setInputValue={setLng} />
                 <Input label="Address" type="textarea" />
-                <Input label="Province" type="select" options={[
-                    {
-                        label: 'Jogja',
-                        value: '12'
-                    }
-                ]} />
-                <Input label="City" type="select" options={[
-                    {
-                        label: 'Bantul',
-                        value: '13'
-                    }
-                ]} />
-                <Input label="District" type="select" options={[
-                    {
-                        label: 'Srandakan',
-                        value: '14'
-                    }
-                ]} />
+                <Input label="Province" type="select" options={provinces}
+                    inputValue={province} setInputValue={setProvince}
+                />
+                <Input label="City" type="select" options={cities}
+                    inputValue={city} setInputValue={setCity}
+                />
+                <Input label="District" type="select" options={districts}
+                    inputValue={district} setInputValue={setDistrict}
+                />
                 <Input label="ZIP Code" type="number" name="zipcode" />
             </Form>
         </div>

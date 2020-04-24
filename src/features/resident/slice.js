@@ -9,10 +9,12 @@ export const slice = createSlice({
   initialState: {
     loading: false,
     items: [],
+    selected: {},
     total_items: 0,
     total_pages: 1,
     page: 1,
     range: 10,
+    refreshToggle: true,
   },
   reducers: {
     startAsync: (state) => {
@@ -27,6 +29,12 @@ export const slice = createSlice({
       state.items = data.items;
       state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
+    },
+    setSelected: (state, action) => {
+      state.selected = action.payload;
+    },
+    refresh: (state) => {
+      state.refreshToggle = !state.refreshToggle;
     }
   },
 });
@@ -34,7 +42,9 @@ export const slice = createSlice({
 export const {
   startAsync,
   stopAsync,
-  setData
+  setData,
+  setSelected,
+  refresh
 } = slice.actions;
 
 export const getResident = (
@@ -67,6 +77,18 @@ export const createResident = (headers, data, history) => dispatch => {
     },
     err => {
       dispatch(stopAsync());
+    })
+}
+
+export const getResidentDetails = (id, headers, history, url) => dispatch => {
+  dispatch(startAsync());
+
+  get(residentEndpoint + '/detail/' + id, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push(url + '/details');
+
+      dispatch(stopAsync())
     })
 }
 

@@ -5,8 +5,9 @@ import { FiPlus } from 'react-icons/fi';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
-import { getResident } from './slice';
+import { getResident, getResidentDetails } from './slice';
 import Add from './Add';
+import Details from './Details';
 
 const columns = [
     { Header: "Name", accessor: row => row.firstname + ' ' + row.lastname },
@@ -45,10 +46,14 @@ function Component() {
                                 onClick={() => history.push(url + "/add")}
                             />
                         ]}
+                        onClickRow={rowID => dispatch(getResidentDetails(rowID, headers, history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>
                     <Add />
+                </Route>
+                <Route path={`${path}/details`}>
+                    <Details />
                 </Route>
             </Switch>
         </div>

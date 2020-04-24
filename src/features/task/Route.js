@@ -1,7 +1,8 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getTask } from './slice';
+import { getTask, getTaskDetails } from './slice';
+import { FiSearch } from 'react-icons/fi';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
@@ -9,7 +10,7 @@ import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import { get } from '../../utils';
 import { endpointAdmin } from '../../settings';
-import { FiSearch } from 'react-icons/fi';
+import Details from './Details';
 
 const columns = [
     { Header: "Title", accessor: "title" },
@@ -17,8 +18,8 @@ const columns = [
     { Header: "Requester", accessor: "requester_name" },
     { Header: "Building", accessor: "requester_building_name" },
     { Header: "Priority", accessor: "priority" },
-    { Header: "Assigned by", accessor: row => row.assigner_first_name + ' ' + row.assigner_last_name },
-    { Header: "Assignee", accessor: row => row.assignee_first_name + ' ' + row.assignee_last_name },
+    { Header: "Assigned by", accessor: row => row.assigner_firstname + ' ' + row.assigner_lastname },
+    { Header: "Assignee", accessor: row => row.assignee_firstname + ' ' + row.assignee_lastname },
     { Header: "Assigned on", accessor: "assigned_on" },
     { Header: "Status", accessor: "status" },
 ]
@@ -77,7 +78,7 @@ function Component() {
 
             setBuildings(formatted);
         })
-    }, [search]);
+    }, [headers, search]);
 
     return (
         <div>
@@ -183,7 +184,11 @@ function Component() {
                             },
                         ]}
                         actions={[]}
+                        onClickRow={rowID => dispatch(getTaskDetails(rowID, headers, history, url))}
                     />
+                </Route>
+                <Route path={`${path}/details`}>
+                    <Details />
                 </Route>
             </Switch>
         </div>

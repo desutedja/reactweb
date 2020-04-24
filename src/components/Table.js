@@ -18,6 +18,7 @@ function Component({
     pageCount: controlledPageCount,
     actions,
     onClickDelete,
+    onClickRow,
 }) {
     const {
         getTableProps,
@@ -56,7 +57,7 @@ function Component({
 
     useEffect(() => {
         gotoPage(0);
-    }, [fetchData]);
+    }, [fetchData, gotoPage]);
 
     useEffect(() => {
         let searchTimeout = setTimeout(() => toggleSearch(search), 500);
@@ -135,17 +136,20 @@ function Component({
                     {page.map((row, i) => {
                         prepareRow(row);
                         return (
-                            <tr {...row.getRowProps()}>
+                            <tr
+                                onClick={onClickRow ? () => onClickRow(row.original.id) : null}
+                                {...row.getRowProps()}
+                            >
                                 {row.cells.map(cell => {
                                     return (
                                         <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                                     );
                                 })}
-                                {onClickDelete && <td key={i}>
-                                    <IconButton onClick={() => onClickDelete(row.original.id)}>
+                                <td key={i}>
+                                    {onClickDelete && <IconButton onClick={() => onClickDelete(row.original.id)}>
                                         <FiTrash />
-                                    </IconButton>
-                                </td>}
+                                    </IconButton>}
+                                </td>
                             </tr>
                         );
                     })}

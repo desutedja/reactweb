@@ -2,17 +2,19 @@ import {createSlice} from '@reduxjs/toolkit';
 import { endpointTask } from '../../settings';
 import { get } from '../../utils';
 
-const taskEndpoint = endpointTask + '/admin/list';
+const taskEndpoint = endpointTask + '/admin';
 
 export const slice = createSlice({
   name: 'task',
   initialState: {
     loading: false,
     items: [],
+    selected: {},
     total_items: 0,
     total_pages: 1,
     page: 1,
     range: 10,
+    refreshToggle: true,
   },
   reducers: {
     startAsync: (state) => {
@@ -27,6 +29,12 @@ export const slice = createSlice({
       state.items = data.items;
       state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
+    },
+    setSelected: (state, action) => {
+      state.selected = action.payload;
+    },
+    refresh: (state) => {
+      state.refreshToggle = !state.refreshToggle;
     }
   },
 });
@@ -34,7 +42,9 @@ export const slice = createSlice({
 export const {
   startAsync,
   stopAsync,
-  setData
+  setData,
+  setSelected,
+  refresh
 } = slice.actions;
 
 export const getTask = (
@@ -44,7 +54,7 @@ export const getTask = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(taskEndpoint +
+  get(taskEndpoint + '/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search + 
@@ -57,6 +67,18 @@ export const getTask = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
+    })
+}
+
+export const getTaskDetails = (id, headers, history, url) => dispatch => {
+  dispatch(startAsync());
+
+  get(taskEndpoint + '/' + id, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push(url + '/details');
+
+      dispatch(stopAsync())
     })
 }
 

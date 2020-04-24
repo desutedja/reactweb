@@ -85,6 +85,14 @@ thead {
   background-color: #f3f3f3;
 }
 
+tbody tr {
+  cursor: pointer;
+}
+
+tbody tr:hover {
+  background-color: var(--accent-color);
+}
+
 th {
   padding: 8px;
   padding-left: 16px;

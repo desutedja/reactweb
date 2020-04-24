@@ -10,7 +10,7 @@ const columns = [
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refresh } = useSelector(state => state.name);
+    const { loading, items, total_pages, refreshToggle } = useSelector(state => state.name);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -27,7 +27,8 @@ function Component() {
                         pageCount={1}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
 
-                        }, [dispatch, refresh, headers])}
+                            // eslint-disable-next-line react-hooks/exhaustive-deps
+                        }, [dispatch, refreshToggle, headers])}
                         filters={[]}
                         actions={[]}
                     />

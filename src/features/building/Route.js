@@ -1,18 +1,18 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiPlus, FiSearch, FiCheckSquare, FiSquare } from 'react-icons/fi';
+import { FiPlus, FiSearch } from 'react-icons/fi';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Add from './Add';
-import { getBuilding, deleteBuilding } from './slice';
+import Details from './Details';
+import { getBuilding, deleteBuilding, getBuildingDetails } from './slice';
 import { get } from '../../utils';
 import { endpointResident } from '../../settings';
 
 const columns = [
-    // { Header: '', accessor: 'checkbox', disableSortBy: true },
     { Header: 'Name', accessor: 'name' },
     { Header: 'Legal Name', accessor: 'legal_name' },
     { Header: 'Code Name', accessor: 'code_name' },
@@ -57,7 +57,7 @@ function Component() {
                 setFilteredProvinces(res.data.data);
             }
         )
-    }, []);
+    }, [headers]);
 
     useEffect(() => {
         setCity("");
@@ -69,7 +69,7 @@ function Component() {
                 setFilteredCities(res.data.data);
             }
         )
-    }, [province]);
+    }, [headers, province]);
 
     useEffect(() => {
         setDistrict("");
@@ -81,15 +81,17 @@ function Component() {
                 setFilteredDistricts(res.data.data);
             }
         )
-    }, [city]);
+    }, [city, headers]);
 
     useEffect(() => {
         let filtered = (modalType === "province" ? provinces :
             modalType === "city" ? cities : districts
         ).filter(el => el.name.toLowerCase().includes(search));
 
-        setFilteredProvinces(filtered);
-    }, [search]);
+        modalType === "province" ? setFilteredProvinces(filtered) :
+            modalType === "city" ? setFilteredCities(filtered) :
+                setFilteredDistricts(filtered);
+    }, [cities, districts, modalType, provinces, search]);
 
     function select(item) {
         modalType === "province" ? setProvince(item.id) :
@@ -168,6 +170,7 @@ function Component() {
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getBuilding(headers, pageIndex, pageSize, search, province, city, district));
+                            // eslint-disable-next-line react-hooks/exhaustive-deps
                         }, [dispatch, refreshToggle, headers, province, city, district])}
                         filters={[
                             {
@@ -204,10 +207,14 @@ function Component() {
                             />
                         ]}
                         onClickDelete={rowID => dispatch(deleteBuilding(rowID, headers))}
+                        onClickRow={rowID => dispatch(getBuildingDetails(rowID, headers, history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>
                     <Add />
+                </Route>
+                <Route path={`${path}/details`}>
+                    <Details />
                 </Route>
             </Switch>
         </div>

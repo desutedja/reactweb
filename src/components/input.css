@@ -1,7 +1,5 @@
 .Form {
-  background-color: white;
-  padding: 16px;
-  border-radius: 8px;
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 16px;

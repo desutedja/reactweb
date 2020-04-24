@@ -17,6 +17,8 @@ const columns = [
     { Header: "Email", accessor: "email" },
     { Header: "Phone", accessor: "phone" },
     { Header: "Gender", accessor: "gender" },
+    { Header: "Building", accessor: "building_name" },
+    { Header: "Management", accessor: "management_name" },
     { Header: "On Shift", accessor: "on_shift" },
     { Header: "Status", accessor: "status" },
 ]
@@ -55,7 +57,7 @@ function Component() {
 
             setBuildings(formatted);
         })
-    }, [search]);
+    }, [headers, search]);
 
     return (
         <div>

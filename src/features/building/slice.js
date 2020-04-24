@@ -9,6 +9,7 @@ export const slice = createSlice({
   initialState: {
     loading: false,
     items: [],
+    selected: {},
     total_items: 0,
     total_pages: 1,
     page: 1,
@@ -29,6 +30,9 @@ export const slice = createSlice({
       state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
     },
+    setSelected: (state, action) => {
+      state.selected = action.payload;
+    },
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     }
@@ -39,6 +43,7 @@ export const {
   startAsync,
   stopAsync,
   setData,
+  setSelected,
   refresh,
 } = slice.actions;
 
@@ -83,6 +88,18 @@ export const deleteBuilding = (id, headers) => dispatch => {
   del(buildingEndpoint + '/' + id, headers,
     res => {
       dispatch(refresh());
+      dispatch(stopAsync())
+    })
+}
+
+export const getBuildingDetails = (id, headers, history, url) => dispatch => {
+  dispatch(startAsync());
+
+  get(buildingEndpoint + '/' + id, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push(url + '/details');
+
       dispatch(stopAsync())
     })
 }
