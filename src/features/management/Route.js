@@ -28,7 +28,7 @@ function Component() {
     const [selectedRow, setRow] = useState({});
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refreshToggle } = useSelector(state => state.management);
+    const { loading, items, total_pages, refreshToggle, alert } = useSelector(state => state.management);
 
     let dispatch = useDispatch();
     let history = useHistory();

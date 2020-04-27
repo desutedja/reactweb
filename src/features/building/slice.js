@@ -15,7 +15,19 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
-    alert: {},
+    alert: {
+      type: 'normal',
+      message: '',
+    },
+    unit: {
+      items: [],
+      total_items: 0,
+      total_pages: 1,
+      page: 1,
+      range: 10,
+    },
+    unit_type: {},
+    section: {},
   },
   reducers: {
     startAsync: (state) => {
@@ -41,6 +53,13 @@ export const slice = createSlice({
       state.alert.type = action.payload.type;
       state.alert.message = action.payload.message;
     },
+    setUnitData: (state, action) => {
+      const data = action.payload;
+
+      state.unit.items = data.items;
+      state.unit.total_items = data.filtered_item;
+      state.unit.total_pages = data.filtered_page;
+    },
   },
 });
 
@@ -51,6 +70,7 @@ export const {
   setSelected,
   refresh,
   setAlert,
+  setUnitData,
 } = slice.actions;
 
 export const getBuilding = (
@@ -105,12 +125,29 @@ export const deleteBuilding = (row, headers) => dispatch => {
 export const getBuildingDetails = (row, headers, history, url) => dispatch => {
   dispatch(startAsync());
 
-  get(buildingEndpoint + '/' + row.id, headers,
+  get(buildingEndpoint + '/details/' + row.id, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
 
       dispatch(stopAsync())
+    })
+}
+
+export const getBuildingUnit = (
+  headers, pageIndex, pageSize, row
+) => dispatch => {
+  dispatch(startAsync());
+
+  get(buildingEndpoint + '/unit' +
+    '?page=' + (pageIndex + 1) +
+    '&building_id=' + row.id +
+    '&limit=' + pageSize,
+    headers,
+    res => {
+      dispatch(setUnitData(res.data.data));
+
+      dispatch(stopAsync());
     })
 }
 

@@ -11,7 +11,7 @@ import resident from './features/resident/slice';
 import staff from './features/staff/slice';
 import task from './features/task/slice';
 import ads from './features/ads/slice';
-import hardSet from 'redux-persist/es/stateReconciler/hardSet';
+import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 
 const logger = createLogger({
   predicate: (getState, action) => 
@@ -32,7 +32,7 @@ const reducers = combineReducers({
 const persistConfig = {
   key: 'root',
   storage,
-  stateReconciler: hardSet,
+  stateReconciler: autoMergeLevel2,
 };
 
 const rootReducer = (state, action) => {

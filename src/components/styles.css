@@ -104,3 +104,23 @@
 .Alert .IconButton:hover {
   color: var(--secondary-color);
 }
+
+.Tab {
+  display: flex;
+  margin-bottom: 16px;
+}
+
+.TabItem-Text {
+  padding-left: 8px;
+  padding-right: 8px;
+  font-size: 1.2rem;
+  background: none;
+  color: #113;
+}
+
+.TabIndicator {
+  height: 4px;
+  border-radius: 8px;
+  width: 100%;
+  background-color: var(--primary-color);
+}
