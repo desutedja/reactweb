@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
 import { FiMenu, FiUsers, FiHome, FiBarChart2, FiDollarSign, FiShoppingCart, FiZap, FiVolume2, FiRss, FiTarget, FiBriefcase, FiAward } from "react-icons/fi";
-import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom';
+import { Switch, Route, useHistory, Redirect, useLocation, Link } from 'react-router-dom';
 
 import ManagementRoute from './features/management/Route';
 import BuildingRoute from './features/building/Route';
@@ -92,7 +92,21 @@ function Page() {
                         <FiMenu />
                     </IconButton>
                     <div className="PageTitle Title">
-                        {location.pathname}
+                        {location.pathname.split('/').map((el, index) =>
+                            <div 
+                            key={el + index}
+                            className="Crumbs" 
+                            onClick={() => {
+                                let array = location.pathname.split('/');
+
+                                if (array[1] === el && array.length > 2) {
+                                    history.push('/' + el);
+                                } else {
+                                    history.push(el);
+                                }
+                            }}>
+                                {index > 0 && '/'}{el}
+                            </div>)}
                     </div>
                 </div>
                 <Button onClick={() => dispatch(logout())} label="Logout" />

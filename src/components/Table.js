@@ -3,7 +3,7 @@ import { useTable, usePagination, useSortBy } from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
-    FiChevronsRight, FiChevronRight, FiSearch, FiChevronDown, FiChevronUp, FiTrash,
+    FiChevronsRight, FiChevronRight, FiSearch, FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
 import Input from './Input';
@@ -18,7 +18,7 @@ function Component({
     pageCount: controlledPageCount,
     actions,
     onClickDelete,
-    onClickRow,
+    onClickDetails,
 }) {
     const {
         getTableProps,
@@ -137,7 +137,6 @@ function Component({
                         prepareRow(row);
                         return (
                             <tr
-                                onClick={onClickRow ? () => onClickRow(row.original.id) : null}
                                 {...row.getRowProps()}
                             >
                                 {row.cells.map(cell => {
@@ -146,9 +145,16 @@ function Component({
                                     );
                                 })}
                                 <td key={i}>
-                                    {onClickDelete && <IconButton onClick={() => onClickDelete(row.original.id)}>
-                                        <FiTrash />
-                                    </IconButton>}
+                                    <div style={{
+                                        display: 'flex',
+                                    }}>
+                                        {onClickDetails && <IconButton onClick={() => onClickDetails(row.original)}>
+                                            <FiMoreHorizontal />
+                                        </IconButton>}
+                                        {onClickDelete && <IconButton onClick={() => onClickDelete(row.original)}>
+                                            <FiTrash />
+                                        </IconButton>}
+                                    </div>
                                 </td>
                             </tr>
                         );

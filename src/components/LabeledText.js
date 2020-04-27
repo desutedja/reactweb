@@ -16,7 +16,11 @@ function Component({ label, value }) {
                 flex: 1,
                 display: 'flex',
             }}>
-                <p>{value ? value : '-'}</p>
+                {value ? 
+                (value + '').includes('http') ?
+                <a target="_blank" rel="noopener noreferrer" href={value}>{value}</a>
+                :
+                <p>{value}</p> : <p>-</p>}
             </div>
         </div>
     )

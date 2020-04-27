@@ -15,6 +15,7 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
+    alert: {},
   },
   reducers: {
     startAsync: (state) => {
@@ -35,7 +36,11 @@ export const slice = createSlice({
     },
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
-    }
+    },
+    setAlert: (state, action) => {
+      state.alert.type = action.payload.type;
+      state.alert.message = action.payload.message;
+    },
   },
 });
 
@@ -45,6 +50,7 @@ export const {
   setData,
   setSelected,
   refresh,
+  setAlert,
 } = slice.actions;
 
 export const getBuilding = (
@@ -82,20 +88,24 @@ export const createBuilding = (headers, data, history) => dispatch => {
     })
 }
 
-export const deleteBuilding = (id, headers) => dispatch => {
+export const deleteBuilding = (row, headers) => dispatch => {
   dispatch(startAsync());
 
-  del(buildingEndpoint + '/' + id, headers,
+  del(buildingEndpoint + '/' + row.id, headers,
     res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Building ' + row.name + ' has been deleted.'
+      }))
       dispatch(refresh());
       dispatch(stopAsync())
     })
 }
 
-export const getBuildingDetails = (id, headers, history, url) => dispatch => {
+export const getBuildingDetails = (row, headers, history, url) => dispatch => {
   dispatch(startAsync());
 
-  get(buildingEndpoint + '/' + id, headers,
+  get(buildingEndpoint + '/' + row.id, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');

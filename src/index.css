@@ -1,10 +1,14 @@
 :root {
-  --primary-color: #999;
+  /* --primary-color: #999;
   --secondary-color: #bbb;
-  --accent-color: #ddd;
+  --accent-color: #ddd; */
+  --primary-color: rgba(5, 83, 149, 1);
+  --secondary-color: rgba(0, 116, 255, 1);
+  --accent-color: rgba(0, 197, 255, 1);
   font-size: 12px;
   font-family: "Lato", sans-serif;
-  background-color: #f3f3f3;
+  /* background-color: #f3f3f3; */
+  background-color: rgba(245, 245, 245, 1);
 }
 
 body {
@@ -26,14 +30,14 @@ label {
   margin-left: 0;
 }
 
-p {
+p, a {
   margin: 0;
   margin-left: 4px;
   margin-right: 4px;
 }
 
 a {
-  text-decoration: none;
+  /* text-decoration: none; */
   color: black;
 }
 
@@ -41,7 +45,8 @@ button {
   font-size: 1rem;
   font-family: "Lato", sans-serif;
   cursor: pointer;
-  background-color: var(--accent-color);
+  background-color: var(--primary-color);
+  color: white;
   border: none;
   border-radius: 8px;
   padding: 4px;
@@ -65,7 +70,8 @@ textarea {
 }
 
 input[type="button"] {
-  background-color: var(--accent-color);
+  background-color: var(--primary-color);
+  color: white;
   border: none;
   cursor: pointer;
 }
@@ -83,14 +89,6 @@ table {
 
 thead {
   background-color: #f3f3f3;
-}
-
-tbody tr {
-  cursor: pointer;
-}
-
-tbody tr:hover {
-  background-color: var(--accent-color);
 }
 
 th {

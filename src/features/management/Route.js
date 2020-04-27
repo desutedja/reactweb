@@ -1,11 +1,13 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getManagement, deleteManagement, getManagementDetails } from './slice';
-import { FiPlus } from 'react-icons/fi';
+import { getManagement, deleteManagement, getManagementDetails, setAlert } from './slice';
+import { FiPlus, FiX } from 'react-icons/fi';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
+import Modal from '../../components/Modal';
+import IconButton from '../../components/IconButton';
 import Add from './Add';
 import Details from './Details';
 
@@ -22,6 +24,9 @@ const columns = [
 ]
 
 function Component() {
+    const [confirm, setConfirm] = useState(false);
+    const [selectedRow, setRow] = useState({});
+
     const headers = useSelector(state => state.auth.headers);
     const { loading, items, total_pages, refreshToggle } = useSelector(state => state.management);
 
@@ -31,8 +36,31 @@ function Component() {
 
     return (
         <div>
+            <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+                Are you sure you want to delete?
+                <div style={{
+                    display: 'flex',
+                    marginTop: 16,
+                }}>
+                    <Button label="No" secondary
+                        onClick={() => setConfirm(false)}
+                    />
+                    <Button label="Yes"
+                        onClick={() => {
+                            setConfirm(false);
+                            dispatch(deleteManagement(selectedRow, headers));
+                        }}
+                    />
+                </div>
+            </Modal>
             <Switch>
                 <Route exact path={path}>
+                    {alert.message && <div className={"Alert " + alert.type}>
+                        <p>{alert.message}</p>
+                        <IconButton onClick={() => dispatch(setAlert({}))}>
+                            <FiX />
+                        </IconButton>
+                    </div>}
                     <Table
                         columns={columns}
                         data={items}
@@ -48,8 +76,11 @@ function Component() {
                                 onClick={() => history.push(url + "/add")}
                             />
                         ]}
-                        onClickDelete={rowID => dispatch(deleteManagement(rowID, headers))}
-                        onClickRow={rowID => dispatch(getManagementDetails(rowID, headers, history, url))}
+                        onClickDelete={row => {
+                            setRow(row);
+                            setConfirm(true);
+                        }}
+                        onClickDetails={row => dispatch(getManagementDetails(row, headers, history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

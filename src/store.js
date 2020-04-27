@@ -11,6 +11,7 @@ import resident from './features/resident/slice';
 import staff from './features/staff/slice';
 import task from './features/task/slice';
 import ads from './features/ads/slice';
+import hardSet from 'redux-persist/es/stateReconciler/hardSet';
 
 const logger = createLogger({
   predicate: (getState, action) => 
@@ -30,10 +31,20 @@ const reducers = combineReducers({
 
 const persistConfig = {
   key: 'root',
-  storage
+  storage,
+  stateReconciler: hardSet,
 };
 
-const persistedReducer = persistReducer(persistConfig, reducers);
+const rootReducer = (state, action) => {
+  // when a logout action is dispatched it will reset redux state
+  if (action.type === "auth/logout") {
+    state = undefined;
+  }
+
+  return reducers(state, action);
+};
+
+const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,

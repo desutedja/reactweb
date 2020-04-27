@@ -15,6 +15,7 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
+    alert: {},
   },
   reducers: {
     startAsync: (state) => {
@@ -36,6 +37,10 @@ export const slice = createSlice({
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     },
+    setAlert: (state, action) => {
+      state.alert.type = action.payload.type;
+      state.alert.message = action.payload.message;
+    },
   },
 });
 
@@ -45,6 +50,7 @@ export const {
   setData,
   setSelected,
   refresh,
+  setAlert,
 } = slice.actions;
 
 export const getManagement = (
@@ -79,20 +85,24 @@ export const createManagement = (headers, data, history) => dispatch => {
     })
 }
 
-export const deleteManagement = (id, headers) => dispatch => {
+export const deleteManagement = (row, headers) => dispatch => {
   dispatch(startAsync());
 
-  del(managementEndpoint + '/' + id, headers,
+  del(managementEndpoint + '/' + row.id, headers,
     res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Management ' + row.name + ' has been deleted.'
+      }))
       dispatch(refresh());
       dispatch(stopAsync())
     })
 }
 
-export const getManagementDetails = (id, headers, history, url) => dispatch => {
+export const getManagementDetails = (row, headers, history, url) => dispatch => {
   dispatch(startAsync());
 
-  get(managementEndpoint + '/' + id, headers,
+  get(managementEndpoint + '/' + row.id, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');

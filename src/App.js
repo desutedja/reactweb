@@ -17,7 +17,7 @@ import './components/table.css';
 import Login from './features/auth/Login';
 import OTP from './features/auth/OTP';
 import Home from './Home';
-import {store, persistor} from './store';;
+import { store, persistor } from './store';;
 
 function MainRoute({ children, ...other }) {
   const { isAuthenticated } = useSelector(state => state.auth);

@@ -1,14 +1,16 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiPlus, FiSearch } from 'react-icons/fi';
+import { FiPlus, FiSearch, FiX } from 'react-icons/fi';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
+import Modal from '../../components/Modal';
+import IconButton from '../../components/IconButton';
 import Add from './Add';
 import Details from './Details';
-import { getBuilding, deleteBuilding, getBuildingDetails } from './slice';
+import { getBuilding, deleteBuilding, getBuildingDetails, setAlert } from './slice';
 import { get } from '../../utils';
 import { endpointResident } from '../../settings';
 
@@ -23,6 +25,9 @@ const columns = [
 ]
 
 function Component() {
+    const [confirm, setConfirm] = useState(false);
+    const [selectedRow, setRow] = useState({});
+
     const [modalType, setType] = useState("province");
 
     const [search, setSearch] = useState("");
@@ -43,7 +48,7 @@ function Component() {
     const [filteredProvinces, setFilteredProvinces] = useState([]);
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refreshToggle } = useSelector(state => state.building);
+    const { loading, items, total_pages, refreshToggle, alert } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -161,8 +166,31 @@ function Component() {
 
     return (
         <div>
+            <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+                Are you sure you want to delete?
+                <div style={{
+                    display: 'flex',
+                    marginTop: 16,
+                }}>
+                    <Button label="No" secondary
+                        onClick={() => setConfirm(false)}
+                    />
+                    <Button label="Yes"
+                        onClick={() => {
+                            setConfirm(false);
+                            dispatch(deleteBuilding(selectedRow, headers));
+                        }}
+                    />
+                </div>
+            </Modal>
             <Switch>
                 <Route exact path={path}>
+                    {alert.message && <div className={"Alert " + alert.type}>
+                        <p>{alert.message}</p>
+                        <IconButton onClick={() => dispatch(setAlert({}))}>
+                            <FiX />
+                        </IconButton>
+                    </div>}
                     <Table
                         columns={columns}
                         data={items}
@@ -206,8 +234,12 @@ function Component() {
                                 onClick={() => history.push(url + "/add")}
                             />
                         ]}
-                        onClickDelete={rowID => dispatch(deleteBuilding(rowID, headers))}
-                        onClickRow={rowID => dispatch(getBuildingDetails(rowID, headers, history, url))}
+                        onClickDelete={row => {
+                            setRow(row);
+                            setConfirm(true);
+                        }}
+                        onClickDetails={row => dispatch(getBuildingDetails(row, headers, history, url))}
+
                     />
                 </Route>
                 <Route path={`${path}/add`}>
