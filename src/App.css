@@ -130,9 +130,13 @@
 
 .Details {
   flex: 1;
+  margin-right: 16px;
 }
 
 .Photos {
   /* flex: 1; */
-  margin-right: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
 }

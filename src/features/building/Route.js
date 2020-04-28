@@ -10,7 +10,7 @@ import Modal from '../../components/Modal';
 import IconButton from '../../components/IconButton';
 import Add from './Add';
 import Details from './Details';
-import { getBuilding, deleteBuilding, getBuildingDetails, setAlert } from './slice';
+import { getBuilding, deleteBuilding, getBuildingDetails, setAlert, setSelected } from './slice';
 import { get } from '../../utils';
 import { endpointResident } from '../../settings';
 
@@ -231,7 +231,10 @@ function Component() {
                         ]}
                         actions={[
                             <Button key="Add" label="Add" icon={<FiPlus />}
-                                onClick={() => history.push(url + "/add")}
+                                onClick={() => {
+                                    dispatch(setSelected({}));
+                                    history.push(url + "/add");
+                                }}
                             />
                         ]}
                         onClickDelete={row => {
@@ -243,6 +246,9 @@ function Component() {
                     />
                 </Route>
                 <Route path={`${path}/add`}>
+                    <Add />
+                </Route>
+                <Route path={`${path}/edit`}>
                     <Add />
                 </Route>
                 <Route path={`${path}/details`}>

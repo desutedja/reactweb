@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FiChevronDown } from 'react-icons/fi';
+import MoonLoader from "react-spinners/MoonLoader";
+
+import { storageRef } from '../firebase';
 
 function Component({
     label, compact, name, optional = true,
@@ -7,6 +10,9 @@ function Component({
     inputValue, setInputValue, icon, onClick
 }) {
     const [value, setValue] = useState(type === "button" ? label : inputValue ? inputValue : "");
+    const [uploading, setUploading] = useState(false);
+
+    let uploader = useRef();
 
     useEffect(() => {
         inputValue && setValue(inputValue);
@@ -63,33 +69,87 @@ function Component({
                         </div>
                     </div>
                     :
-                    <div className="Input-container">
-                        {icon && !value ? <div className="InputIcon">
-                            {icon}
-                        </div> : null}
-                        <input
-                            className="Input-input"
-                            accept="image/*"
-                            type={type}
-                            id={label}
-                            name={name ? name : label.toLowerCase().replace(' ', '_')}
-                            required={!optional}
-                            placeholder={label}
-                            maxLength="30"
-                            size="30"
-                            value={value}
-                            onChange={(e) => {
-                                if (type === 'url') {
+                    type === "file" ?
+                        <div className="Input-container">
+                            {uploading && <div className="InputIcon">
+                                <MoonLoader
+                                    size={14}
+                                    color={"grey"}
+                                    loading={uploading}
+                                />
+                            </div>}
+                            <input
+                                className="Input-input"
+                                type="url"
+                                id={label}
+                                name={name ? name : label.toLowerCase().replace(' ', '_')}
+                                required={!optional}
+                                placeholder={label}
+                                size="40"
+                                value={value}
+                                onChange={(e) => {
                                     setValue('http://' + e.target.value.replace('http://', ''));
                                     setInputValue && setInputValue('http://' + e.target.value.replace('http://', ''));
-                                } else {
-                                    setValue(e.target.value);
-                                    setInputValue && setInputValue(e.target.value);
-                                }
-                            }}
-                            onClick={onClick}
-                        />
-                    </div>}
+                                }}
+                                onClick={onClick}
+                            />
+                            <input
+                                ref={uploader}
+                                className="Input-input"
+                                accept="image/*"
+                                type="file"
+                                id={label}
+                                name="uploader"
+                                required={false}
+                                onChange={async (e) => {
+                                    let file = uploader.current.files[0];
+
+                                    setValue('Uploading file...');
+                                    setInputValue && setInputValue('Uploading file...');
+                                    setUploading(true);
+
+                                    let ref = storageRef.child('building_logo/' + Date.now() + '-' + file.name);
+                                    await ref.put(file).then(function (snapshot) {
+                                        console.log(snapshot, 'File uploaded!');
+
+                                        snapshot.ref.getDownloadURL().then(url => {
+                                            setValue(url);
+                                            setInputValue && setInputValue(url);
+                                        });
+
+                                        setUploading(false);
+                                    })
+                                }}
+                                onClick={onClick}
+                            />
+                        </div>
+                        :
+                        <div className="Input-container">
+                            {icon && !value ? <div className="InputIcon">
+                                {icon}
+                            </div> : null}
+                            <input
+                                className="Input-input"
+                                type={type}
+                                id={label}
+                                name={name ? name : label.toLowerCase().replace(' ', '_')}
+                                required={!optional}
+                                placeholder={label}
+                                maxLength="30"
+                                size="30"
+                                value={value}
+                                onChange={(e) => {
+                                    if (type === 'url') {
+                                        setValue('http://' + e.target.value.replace('http://', ''));
+                                        setInputValue && setInputValue('http://' + e.target.value.replace('http://', ''));
+                                    } else {
+                                        setValue(e.target.value);
+                                        setInputValue && setInputValue(e.target.value);
+                                    }
+                                }}
+                                onClick={onClick}
+                            />
+                        </div>}
         </div>
     )
 }

@@ -76,6 +76,12 @@ input[type="button"] {
   cursor: pointer;
 }
 
+input[type="file"] {
+  border: none;
+  padding: 4px;
+  margin-left: 12px;
+}
+
 svg {
   width: 1.5rem;
   height: 1.5rem;

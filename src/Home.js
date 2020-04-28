@@ -23,14 +23,14 @@ const menu = [
     //     route: "/dashboard"
     // },
     {
-        icon: <FiHome className="MenuItem-icon" />,
-        label: "Building",
-        route: "/building"
-    },
-    {
         icon: <FiBriefcase className="MenuItem-icon" />,
         label: "Management",
         route: "/management"
+    },
+    {
+        icon: <FiHome className="MenuItem-icon" />,
+        label: "Building",
+        route: "/building"
     },
     {
         icon: <FiUsers className="MenuItem-icon" />,

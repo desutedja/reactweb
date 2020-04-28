@@ -42,6 +42,27 @@ export function post(
         })
 }
 
+export function put(
+    link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) {
+    Axios.put(link, data, {
+        headers: headers
+    })
+        .then(res => {
+            console.log(res);
+
+            ifSuccess(res);
+        })
+        .catch(err => {
+            console.log(err);
+
+            ifError(err);
+        })
+        .finally(() => {
+            finallyDo();
+        })
+}
+
 export function del(
     link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
 ) {
