@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getManagement, deleteManagement, getManagementDetails, setAlert } from './slice';
+import { getManagement, deleteManagement, getManagementDetails, setAlert, setSelected } from './slice';
 import { FiPlus, FiX } from 'react-icons/fi';
 
 import Table from '../../components/Table';
@@ -20,7 +20,6 @@ const columns = [
     { Header: "PIC Name", accessor: "pic_name" },
     { Header: "PIC Phone", accessor: "pic_phone" },
     { Header: "PIC Email", accessor: "pic_email" },
-    { Header: "Logo", accessor: "logo" },
 ]
 
 function Component() {
@@ -73,7 +72,9 @@ function Component() {
                         filters={[]}
                         actions={[
                             <Button key="Add" label="Add" icon={<FiPlus />}
-                                onClick={() => history.push(url + "/add")}
+                                onClick={() => {
+                                    dispatch(setSelected({}));
+                                    history.push(url + "/add")}}
                             />
                         ]}
                         onClickDelete={row => {
@@ -84,6 +85,9 @@ function Component() {
                     />
                 </Route>
                 <Route path={`${path}/add`}>
+                    <Add />
+                </Route>
+                <Route path={`${path}/edit`}>
                     <Add />
                 </Route>
                 <Route path={`${path}/details`}>

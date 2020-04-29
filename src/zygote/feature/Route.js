@@ -3,6 +3,8 @@ import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../components/Table';
+import Add from './Add';
+import Details from './Details';
 
 const columns = [
     { Header: 'Name', accessor: 'name' },
@@ -10,7 +12,7 @@ const columns = [
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refreshToggle } = useSelector(state => state.name);
+    const { loading, items, total_pages, refreshToggle, alert } = useSelector(state => state.name);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -32,6 +34,15 @@ function Component() {
                         filters={[]}
                         actions={[]}
                     />
+                </Route>
+                <Route path={`${path}/add`}>
+                    <Add />
+                </Route>
+                <Route path={`${path}/edit`}>
+                    <Add />
+                </Route>
+                <Route path={`${path}/details`}>
+                    <Details />
                 </Route>
             </Switch>
         </div>

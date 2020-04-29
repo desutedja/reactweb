@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
-import { FiMenu, FiUsers, FiHome, FiBarChart2, FiDollarSign, FiShoppingCart, FiZap, FiVolume2, FiRss, FiTarget, FiBriefcase, FiAward } from "react-icons/fi";
+import { FiMenu, FiUsers, FiHome, FiBarChart2, FiDollarSign, FiShoppingCart, FiZap, FiVolume2, FiRss, FiTarget, FiBriefcase, FiAward, FiKey } from "react-icons/fi";
 import { Switch, Route, useHistory, Redirect, useLocation, Link } from 'react-router-dom';
 
 import ManagementRoute from './features/management/Route';
 import BuildingRoute from './features/building/Route';
+import BuildingManagementRoute from './features/building_management/Route';
 import ResidentRoute from './features/resident/Route';
 import StaffRoute from './features/staff/Route';
 import TaskRoute from './features/task/Route';
@@ -31,6 +32,11 @@ const menu = [
         icon: <FiHome className="MenuItem-icon" />,
         label: "Building",
         route: "/building"
+    },
+    {
+        icon: <FiKey className="MenuItem-icon" />,
+        label: "Building Management",
+        route: "/building_management"
     },
     {
         icon: <FiUsers className="MenuItem-icon" />,
@@ -130,6 +136,9 @@ function Page() {
                         />
                         <Route path="/building">
                             <BuildingRoute />
+                        </Route>
+                        <Route path="/building_management">
+                            <BuildingManagementRoute />
                         </Route>
                         <Route path="/management">
                             <ManagementRoute />

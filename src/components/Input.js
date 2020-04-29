@@ -7,7 +7,8 @@ import { storageRef } from '../firebase';
 function Component({
     label, compact, name, optional = true,
     type = "text", rows = 2, options = [],
-    inputValue, setInputValue, icon, onClick
+    inputValue, setInputValue, icon, onClick,
+    hidden,
 }) {
     const [value, setValue] = useState(type === "button" ? label : inputValue ? inputValue : "");
     const [uploading, setUploading] = useState(false);
@@ -22,6 +23,7 @@ function Component({
         <div className={"Input"
             + (type === "textarea" ? " textarea" : "")
             + (type === "select" ? " select" : "")
+            + (hidden ? " hidden" : "")
         }>
             {!compact && <label className="Input-label" htmlFor={label}>{label}</label>}
             {type === "textarea" ?
@@ -29,7 +31,7 @@ function Component({
                     className="Input-input"
                     type={type}
                     id={label}
-                    name={name ? name : label.toLowerCase().replace(' ', '_')}
+                    name={name ? name : label.toLowerCase().replace(/ /g, '_')}
                     required={!optional}
                     placeholder={label}
                     maxLength="100"
@@ -50,7 +52,7 @@ function Component({
                             className="Input-input"
                             type={type}
                             id={label}
-                            name={name ? name : label.toLowerCase().replace(' ', '_')}
+                            name={name ? name : label.toLowerCase().replace(/ /g, '_')}
                             required={!optional}
                             placeholder={label}
                             value={value}
@@ -82,14 +84,14 @@ function Component({
                                 className="Input-input"
                                 type="url"
                                 id={label}
-                                name={name ? name : label.toLowerCase().replace(' ', '_')}
+                                name={name ? name : label.toLowerCase().replace(/ /g, '_')}
                                 required={!optional}
                                 placeholder={label}
                                 size="40"
                                 value={value}
                                 onChange={(e) => {
-                                    setValue('http://' + e.target.value.replace('http://', ''));
-                                    setInputValue && setInputValue('http://' + e.target.value.replace('http://', ''));
+                                    setValue(e.target.value);
+                                    setInputValue && setInputValue(e.target.value);
                                 }}
                                 onClick={onClick}
                             />
@@ -132,7 +134,7 @@ function Component({
                                 className="Input-input"
                                 type={type}
                                 id={label}
-                                name={name ? name : label.toLowerCase().replace(' ', '_')}
+                                name={name ? name : label.toLowerCase().replace(/ /g, '_')}
                                 required={!optional}
                                 placeholder={label}
                                 maxLength="30"
@@ -148,7 +150,14 @@ function Component({
                                     }
                                 }}
                                 onClick={onClick}
+                                list={type === 'searchable' ? ('options-' + label) : null}
                             />
+                            {type === 'searchable' &&
+                                <datalist id={"options-" + label}>
+                                    {options.map(el =>
+                                        <option key={el.value} value={el.label} />
+                                    )}
+                                </datalist>}
                         </div>}
         </div>
     )

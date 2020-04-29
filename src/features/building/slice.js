@@ -139,7 +139,7 @@ export const createBuilding = (headers, data, history) => dispatch => {
 export const editBuilding = (headers, data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  put(buildingEndpoint, {...data, id: id}, headers,
+  put(buildingEndpoint, { ...data, id: id }, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/building/details");
@@ -160,6 +160,9 @@ export const deleteBuilding = (row, headers) => dispatch => {
         type: 'normal',
         message: 'Building ' + row.name + ' has been deleted.'
       }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
       dispatch(refresh());
       dispatch(stopAsync())
     })
@@ -184,7 +187,7 @@ export const getBuildingUnit = (
 
   get(buildingEndpoint + '/unit' +
     '?page=' + (pageIndex + 1) +
-    '&building_id=' + row.id + 
+    '&building_id=' + row.id +
     '&search=' + search +
     '&limit=' + pageSize,
     headers,
@@ -202,7 +205,7 @@ export const getBuildingUnitType = (
 
   get(buildingEndpoint + '/unit/type' +
     '?page=' + (pageIndex + 1) +
-    '&building_id=' + row.id + 
+    '&building_id=' + row.id +
     '&search=' + search +
     '&limit=' + pageSize,
     headers,
@@ -220,7 +223,7 @@ export const getBuildingSection = (
 
   get(buildingEndpoint + '/section' +
     '?page=' + (pageIndex + 1) +
-    '&building_id=' + row.id + 
+    '&building_id=' + row.id +
     '&search=' + search +
     '&limit=' + pageSize,
     headers,
@@ -279,6 +282,9 @@ export const deleteBuildingUnit = (row, headers) => dispatch => {
         type: 'normal',
         message: 'Unit has been deleted.'
       }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
       dispatch(refresh());
       dispatch(stopAsync())
     })
@@ -293,6 +299,9 @@ export const deleteBuildingUnitType = (row, headers) => dispatch => {
         type: 'normal',
         message: 'Unit Type has been deleted.'
       }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
       dispatch(refresh());
       dispatch(stopAsync())
     })
@@ -307,6 +316,9 @@ export const deleteBuildingSection = (row, headers) => dispatch => {
         type: 'normal',
         message: 'Section has been deleted.'
       }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
       dispatch(refresh());
       dispatch(stopAsync())
     })

@@ -1,11 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
-import { get, post, del, put } from '../../utils';
+import { get, post } from '../../utils';
 
-const managementEndpoint = endpointAdmin + '/management';
+const buildingManagementEndpoint = endpointAdmin + '/management/building';
 
 export const slice = createSlice({
-  name: 'management',
+  name: 'building_management',
   initialState: {
     loading: false,
     items: [],
@@ -15,7 +15,10 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
-    alert: {},
+    alert: {
+      type: 'normal',
+      message: '',
+    },
   },
   reducers: {
     startAsync: (state) => {
@@ -37,10 +40,6 @@ export const slice = createSlice({
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     },
-    setAlert: (state, action) => {
-      state.alert.type = action.payload.type;
-      state.alert.message = action.payload.message;
-    },
   },
 });
 
@@ -49,17 +48,16 @@ export const {
   stopAsync,
   setData,
   setSelected,
-  refresh,
-  setAlert,
+  refresh
 } = slice.actions;
 
-export const getManagement = (
+export const getBuildingManagement = (
   headers, pageIndex, pageSize,
-  search = '',
+  search = ''
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(managementEndpoint +
+  get(buildingManagementEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search,
@@ -71,12 +69,12 @@ export const getManagement = (
     })
 }
 
-export const createManagement = (headers, data, history) => dispatch => {
+export const createBuildingManagement = (headers, data, history) => dispatch => {
   dispatch(startAsync());
 
-  post(managementEndpoint, data, headers,
+  post(buildingManagementEndpoint, data, headers,
     res => {
-      history.push("/management");
+      history.push("/building_management");
 
       dispatch(stopAsync());
     },
@@ -85,47 +83,18 @@ export const createManagement = (headers, data, history) => dispatch => {
     })
 }
 
-export const editManagement = (headers, data, history, id) => dispatch => {
+export const editBuildingManagement = (headers, data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  put(managementEndpoint, {...data, id: id}, headers,
+  post(buildingManagementEndpoint, {...data, id: id}, headers,
     res => {
       dispatch(setSelected(res.data.data));
-      history.push("/management/details");
+      history.push("/building_management/details");
 
       dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());
-    })
-}
-
-export const deleteManagement = (row, headers) => dispatch => {
-  dispatch(startAsync());
-
-  del(managementEndpoint + '/' + row.id, headers,
-    res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Management ' + row.name + ' has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
-      dispatch(refresh());
-      dispatch(stopAsync())
-    })
-}
-
-export const getManagementDetails = (row, headers, history, url) => dispatch => {
-  dispatch(startAsync());
-
-  get(managementEndpoint + '/details/' + row.id, headers,
-    res => {
-      dispatch(setSelected(res.data.data));
-      history.push(url + '/details');
-
-      dispatch(stopAsync())
     })
 }
 

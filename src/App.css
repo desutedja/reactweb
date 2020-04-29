@@ -140,3 +140,7 @@
   justify-content: space-between;
   align-items: flex-end;
 }
+
+.Input.hidden {
+  display: none;
+}

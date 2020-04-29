@@ -7,11 +7,10 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 const exception = [
     'created_on', 'modified_on', 'deleted',
-    'logo'
 ];
 
 function Component() {
-    const selected = useSelector(state => state.management.selected);
+    const selected = useSelector(state => state.name.selected);
 
     let history = useHistory();
     let { path, url } = useRouteMatch();
@@ -19,11 +18,6 @@ function Component() {
     return (
         <div>
             <div className="Container">
-                {selected.logo ?
-                    <img className="Logo" src={selected.logo} alt="logo" />
-                    :
-                    <img src={'https://via.placeholder.com/200'} alt="logo" />
-                }
                 <div className="Details" style={{
                     marginLeft: 16
                 }}>
@@ -39,7 +33,6 @@ function Component() {
                     <Button label="Edit" onClick={() => history.push(
                         url.split('/').slice(0, -1).join('/') + "/edit"
                     )} />
-
                 </div>
             </div>
         </div>

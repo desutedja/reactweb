@@ -7,6 +7,7 @@ import storage from 'redux-persist/lib/storage'
 import auth, { startAsync, stopAsync }  from './features/auth/slice';
 import management from './features/management/slice';
 import building from './features/building/slice';
+import building_management from './features/building_management/slice';
 import resident from './features/resident/slice';
 import staff from './features/staff/slice';
 import task from './features/task/slice';
@@ -23,6 +24,7 @@ const reducers = combineReducers({
   auth,
   management,
   building,
+  building_management,
   resident,
   staff,
   task,

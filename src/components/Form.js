@@ -17,36 +17,37 @@ function Component({ children, onSubmit, loading }) {
 
                 const formData = new FormData(formRef.current);
 
-                const getData = async () => {
-                    return Promise.all([...formData.entries()].map(async entry => {
-                        if (entry[1] instanceof File) {
-                            console.log(entry[0], 'is a file, uploading...');
+                // const getData = async () => {
+                //     return Promise.all([...formData.entries()].map(async entry => {
+                //         if (entry[1] instanceof File) {
+                //             console.log(entry[0], 'is a file, uploading...');
 
-                            let ref = storageRef.child('building_logo/' + Date.now() + '-' + entry[1].name);
-                            await ref.put(entry[1]).then(function (snapshot) {
-                                console.log(snapshot, 'File uploaded!');
+                //             let ref = storageRef.child('building_logo/' + Date.now() + '-' + entry[1].name);
+                //             await ref.put(entry[1]).then(function (snapshot) {
+                //                 console.log(snapshot, 'File uploaded!');
 
-                                snapshot.ref.getDownloadURL().then(url => entry[1] = url);
-                            })
+                //                 snapshot.ref.getDownloadURL().then(url => entry[1] = url);
+                //             })
 
-                        }
-                        return entry;
-                    }))
-                }
+                //         }
+                //         return entry;
+                //     }))
+                // }
 
-                let arrayData;
+                // let arrayData;
 
-                await getData().then(data => {
-                    arrayData = data
-                })
+                // await getData().then(data => {
+                //     arrayData = data
+                // })
 
-                console.log(arrayData);
+                // console.log(arrayData);
 
-                let dataObject = [...formData.entries()].reduce((all, entry) => {
+                let dataObject = [...formData.entries()]
+                .filter(el => el[0] !== 'uploader')
+                .reduce((all, entry) => {
                     all[entry[0]] =
                         isNaN(parseFloat(entry[1])) || parseFloat(entry[1]) > 999999
                             ? entry[1] : parseFloat(entry[1]);
-                    console.log(entry[1]);
 
                     return all
                 }, {});

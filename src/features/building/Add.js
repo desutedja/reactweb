@@ -98,7 +98,7 @@ function Component() {
             </Modal>
             <Form
                 onSubmit={data =>
-                    selected ?
+                    selected.id ?
                         dispatch(editBuilding(headers, data, history, selected.id))
                         :
                         dispatch(createBuilding(headers, data, history))

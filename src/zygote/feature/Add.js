@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const loading = useSelector(state => state.name.loading);
+    const { loading, selected } = useSelector(state => state.name);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -16,7 +16,10 @@ function Component() {
     return (
         <div>
             <Form
-                onSubmit={data => dispatch(createName(headers, data, history))}
+                onSubmit={data => selected.id ?
+                    dispatch(editName(headers, data, history, selected.id))
+                    :
+                    dispatch(createName(headers, data, history))}
                 loading={loading}
             >
                 <Input label="Name" />
