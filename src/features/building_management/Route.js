@@ -4,14 +4,15 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
-import { getBuildingManagement, setSelected } from './slice';
+import IconButton from '../../components/IconButton';
+import { getBuildingManagement, setSelected, deleteBuildingMangement, setAlert } from './slice';
 import Add from './Add';
-import { FiPlus } from 'react-icons/fi';
+import { FiPlus, FiX } from 'react-icons/fi';
 // import Details from './Details';
 
 const columns = [
-    { Header: "Management", accessor: "management_name" },
     { Header: "Building", accessor: "building_name" },
+    { Header: "Management", accessor: "management_name" },
     { Header: "Billing Published", accessor: "billing_published" },
     { Header: "Billing Due", accessor: "billing_duedate" },
     { Header: "Penalty Fee", accessor: "penalty_fee" },
@@ -31,6 +32,12 @@ function Component() {
         <div>
             <Switch>
                 <Route exact path={path}>
+                    {alert.message && <div className={"Alert " + alert.type}>
+                        <p>{alert.message}</p>
+                        <IconButton onClick={() => dispatch(setAlert({}))}>
+                            <FiX />
+                        </IconButton>
+                    </div>}
                     <Table
                         columns={columns}
                         data={items}
@@ -49,6 +56,7 @@ function Component() {
                                 }}
                             />
                         ]}
+                        onClickDelete={row => dispatch(deleteBuildingMangement(row, headers))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

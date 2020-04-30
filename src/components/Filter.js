@@ -4,13 +4,13 @@ function Component({ data, onClick, onClickAll }) {
     return (
         <div className="Filter">
             <div className="List">
-                <button
+                {onClickAll && <button
                     key="all"
                     className="ListItem"
                     onClick={onClickAll}
                 >
                     All
-                </button>
+                </button>}
                 {data && data.map(el =>
                     <button
                         key={el.value}

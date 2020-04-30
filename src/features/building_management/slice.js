@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
-import { get, post } from '../../utils';
+import { get, post, del } from '../../utils';
 
 const buildingManagementEndpoint = endpointAdmin + '/management/building';
 
@@ -40,6 +40,10 @@ export const slice = createSlice({
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     },
+    setAlert: (state, action) => {
+      state.alert.type = action.payload.type;
+      state.alert.message = action.payload.message;
+    },
   },
 });
 
@@ -48,7 +52,8 @@ export const {
   stopAsync,
   setData,
   setSelected,
-  refresh
+  refresh,
+  setAlert
 } = slice.actions;
 
 export const getBuildingManagement = (
@@ -95,6 +100,24 @@ export const editBuildingManagement = (headers, data, history, id) => dispatch =
     },
     err => {
       dispatch(stopAsync());
+    })
+}
+
+export const deleteBuildingMangement = (row, headers) => dispatch => {
+  dispatch(startAsync());
+
+  del(buildingManagementEndpoint + '/' + row.id, headers,
+    res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Building ' + row.building_name + ' with Management ' + 
+        row.management_name + ' has been deleted.'
+      }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
+      dispatch(refresh());
+      dispatch(stopAsync())
     })
 }
 

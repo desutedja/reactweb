@@ -36,6 +36,10 @@ export const slice = createSlice({
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     },
+    setAlert: (state, action) => {
+      state.alert.type = action.payload.type;
+      state.alert.message = action.payload.message;
+    },
   },
 });
 
