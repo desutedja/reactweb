@@ -1,14 +1,14 @@
 import React, { useCallback } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { FiPlus, FiX } from 'react-icons/fi';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import IconButton from '../../components/IconButton';
-import { getBuildingManagement, setSelected, deleteBuildingMangement, setAlert } from './slice';
+import { getBuildingManagement, setSelected, deleteBuildingMangement, setAlert, getBuildingManagementDetails } from './slice';
 import Add from './Add';
-import { FiPlus, FiX } from 'react-icons/fi';
-// import Details from './Details';
+import Details from './Details';
 
 const columns = [
     { Header: "Building", accessor: "building_name" },
@@ -57,17 +57,18 @@ function Component() {
                             />
                         ]}
                         onClickDelete={row => dispatch(deleteBuildingMangement(row, headers))}
+                        onClickDetails={row => dispatch(getBuildingManagementDetails(row, headers, history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>
                     <Add />
                 </Route>
-                {/* <Route path={`${path}/edit`}>
+                <Route path={`${path}/edit`}>
                     <Add />
                 </Route>
                 <Route path={`${path}/details`}>
                     <Details />
-                </Route> */}
+                </Route>
             </Switch>
         </div>
     )

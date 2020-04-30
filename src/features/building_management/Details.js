@@ -7,10 +7,11 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 
 const exception = [
     'created_on', 'modified_on', 'deleted',
+    'Building'
 ];
 
 function Component() {
-    const selected = useSelector(state => state.name.selected);
+    const selected = useSelector(state => state.building_management.selected);
 
     let history = useHistory();
     let { path, url } = useRouteMatch();
@@ -24,7 +25,7 @@ function Component() {
                     {Object.keys(selected).filter(el => !exception.includes(el))
                         .map(el =>
                             <LabeledText
-                                label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
+                                label={el.length > 2 ? el.replace(/_/g, ' ') : el.toUpperCase()}
                                 value={selected[el]}
                             />
                         )}

@@ -17,7 +17,6 @@ const columns = [
     { Header: "Nationality", accessor: "nationality" },
     { Header: "Status", accessor: "status" },
     { Header: "KYC Status", accessor: "status_kyc" },
-    { Header: "Remarks", accessor: "remarks" },
 ]
 
 function Component() {

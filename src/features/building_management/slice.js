@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
-import { get, post, del } from '../../utils';
+import { get, post, del, put } from '../../utils';
 
 const buildingManagementEndpoint = endpointAdmin + '/management/building';
 
@@ -91,7 +91,7 @@ export const createBuildingManagement = (headers, data, history) => dispatch => 
 export const editBuildingManagement = (headers, data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  post(buildingManagementEndpoint, {...data, id: id}, headers,
+  put(buildingManagementEndpoint, {...data, id: id}, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/building_management/details");
@@ -120,5 +120,18 @@ export const deleteBuildingMangement = (row, headers) => dispatch => {
       dispatch(stopAsync())
     })
 }
+
+export const getBuildingManagementDetails = (row, headers, history, url) => dispatch => {
+  dispatch(startAsync());
+
+  get(buildingManagementEndpoint + '/details/' + row.id, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push(url + '/details');
+
+      dispatch(stopAsync())
+    })
+}
+
 
 export default slice.reducer;
