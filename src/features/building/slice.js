@@ -273,6 +273,45 @@ export const createBuildingSection = (headers, data) => dispatch => {
     })
 }
 
+export const editBuildingUnit = (headers, data, id) => dispatch => {
+  dispatch(startAsync());
+
+  put(buildingEndpoint + '/unit', {...data, id: id}, headers,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
+export const editBuildingUnitType = (headers, data, id) => dispatch => {
+  dispatch(startAsync());
+
+  put(buildingEndpoint + '/unit/type', {...data, id: id}, headers,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
+export const editBuildingSection = (headers, data, id) => dispatch => {
+  dispatch(startAsync());
+
+  put(buildingEndpoint + '/section', {...data, id: id}, headers,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
 export const deleteBuildingUnit = (row, headers) => dispatch => {
   dispatch(startAsync());
 
@@ -286,7 +325,10 @@ export const deleteBuildingUnit = (row, headers) => dispatch => {
         message: '',
       })), 3000);
       dispatch(refresh());
-      dispatch(stopAsync())
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     })
 }
 
@@ -303,7 +345,10 @@ export const deleteBuildingUnitType = (row, headers) => dispatch => {
         message: '',
       })), 3000);
       dispatch(refresh());
-      dispatch(stopAsync())
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     })
 }
 
@@ -320,7 +365,10 @@ export const deleteBuildingSection = (row, headers) => dispatch => {
         message: '',
       })), 3000);
       dispatch(refresh());
-      dispatch(stopAsync())
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     })
 }
 

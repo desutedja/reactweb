@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
     getBuildingUnit, getBuildingUnitType, getBuildingSection,
     createBuildingUnit, createBuildingUnitType, createBuildingSection,
-    deleteBuildingUnit, deleteBuildingUnitType, deleteBuildingSection,
+    deleteBuildingUnit, deleteBuildingUnitType, deleteBuildingSection, editBuildingUnit, editBuildingUnitType, editBuildingSection,
 } from './slice';
 import { FiPlus } from 'react-icons/fi';
 import { useHistory, useRouteMatch } from 'react-router-dom';
@@ -24,20 +24,24 @@ const tabs = [
 ]
 
 const columnsUnit = [
+    { Header: "Number", accessor: "number" },
+    { Header: "Floor", accessor: "floor" },
     { Header: "Section", accessor: "section_name" },
-    { Header: "Unit Type", accessor: row => row.unit_type_name + " - " + row.unit_size },
-    { Header: "Floor", accessor: "Floor" },
-    { Header: "Number", accessor: "Number" },
+    { Header: "Type", accessor: row => row.unit_type_name + " - " + row.unit_size },
 ]
 
 const columnsUnitType = [
     { Header: "Name", accessor: "unit_type" },
-    { Header: "Size", accessor: "unit_size" },
+    {
+        Header: "Size", accessor: row => <div>
+            {row.unit_size + ' m'}<sup>2</sup>
+        </div>
+    },
 ]
 
 const columnsSection = [
-    { Header: "Type", accessor: "section_type" },
     { Header: "Name", accessor: "section_name" },
+    { Header: "Type", accessor: "section_type" },
 ]
 
 function Component() {
@@ -48,6 +52,8 @@ function Component() {
     const [addUnit, setAddUnit] = useState(false);
     const [addUnitType, setAddUnitType] = useState(false);
     const [addSection, setAddSection] = useState(false);
+
+    const [edit, setEdit] = useState(false);
 
     const [sectionID, setSectionID] = useState('');
     const [unitTypeID, setUnitTypeID] = useState('');
@@ -99,9 +105,13 @@ function Component() {
                 </div>
             </Modal>
             <Modal isOpen={addUnit} onRequestClose={() => setAddUnit(false)}>
-                Add Unit
+                {edit ? "Edit Unit" : "Add Unit"}
+                <Input label="Number" inputValue={selectedRow.number ? selectedRow.number : number}
+                    setInputValue={setNumber} />
+                <Input label="Floor" inputValue={selectedRow.floor ? selectedRow.floor : floor}
+                    setInputValue={setFloor} />
                 <Input label="Section" type="select"
-                    inputValue={sectionID}
+                    inputValue={selectedRow.building_section ? selectedRow.building_section : sectionID}
                     setInputValue={setSectionID}
                     options={section.items.map(el => ({
                         label: el.section_name,
@@ -109,15 +119,13 @@ function Component() {
                     }))}
                 />
                 <Input label="Unit Type" type="select"
-                    inputValue={unitTypeID}
+                    inputValue={selectedRow.unit_type ? selectedRow.unit_type : unitTypeID}
                     setInputValue={setUnitTypeID}
                     options={unit_type.items.map(el => ({
                         label: el.unit_type + ' - ' + el.unit_size,
                         value: el.id
                     }))}
                 />
-                <Input label="Floor" inputValue={floor} setInputValue={setFloor} />
-                <Input label="Number" inputValue={number} setInputValue={setNumber} />
                 <div style={{
                     display: 'flex',
                     marginTop: 16,
@@ -125,23 +133,40 @@ function Component() {
                     <Button label="Cancel" secondary
                         onClick={() => setAddUnit(false)}
                     />
-                    <Button label="Add"
+                    <Button label={edit ? "Save" : "Add"}
                         onClick={() => {
-                            dispatch(createBuildingUnit(headers, {
-                                "building_id": selected.id,
-                                "building_section": parseFloat(sectionID),
-                                "unit_type": parseFloat(unitTypeID),
-                                "floor": parseFloat(floor),
-                                "number": number,
-                            }))
+                            edit ?
+                                dispatch(editBuildingUnit(headers, {
+                                    "building_id": selected.id,
+                                    "building_section": parseFloat(sectionID ? sectionID : selectedRow.building_section),
+                                    "unit_type": parseFloat(unitTypeID ? unitTypeID : selectedRow.unit_type),
+                                    "floor": parseFloat(floor ? floor : selectedRow.floor),
+                                    "number": number ? number : selectedRow.number,
+                                }, selectedRow.id))
+                                :
+                                dispatch(createBuildingUnit(headers, {
+                                    "building_id": selected.id,
+                                    "building_section": parseFloat(sectionID),
+                                    "unit_type": parseFloat(unitTypeID),
+                                    "floor": parseFloat(floor),
+                                    "number": number,
+                                }))
                             setAddUnit(false);
+                            setEdit(false);
+                            setRow({});
+                            setSectionID('');
+                            setUnitTypeID('');
+                            setFloor('');
+                            setNumber('');
                         }}
                     />
                 </div>
             </Modal>
             <Modal isOpen={addUnitType} onRequestClose={() => setAddUnitType(false)}>
-                Add Unit Type
-                <Input label="Type Name" inputValue={typeName} setInputValue={setTypeName}
+                {edit ? "Add" : "Edit"} Unit Type
+                <Input label="Type Name"
+                    inputValue={selectedRow.unit_type ? selectedRow.unit_type : typeName}
+                    setInputValue={setTypeName}
                     type="select" options={[
                         { label: 'Studio', value: 'studio' },
                         { label: '1BR', value: '1BR' },
@@ -151,7 +176,9 @@ function Component() {
                         { label: '5BR', value: '5BR' },
                     ]}
                 />
-                <Input label="Type Size" inputValue={typeSize} setInputValue={setTypeSize} />
+                <Input label="Type Size"
+                    inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeSize}
+                    setInputValue={setTypeSize} />
                 <div style={{
                     display: 'flex',
                     marginTop: 16,
@@ -161,25 +188,40 @@ function Component() {
                     />
                     <Button label="Add"
                         onClick={() => {
-                            dispatch(createBuildingUnitType(headers, {
-                                "building_id": selected.id,
-                                "unit_type": typeName,
-                                "unit_size": parseFloat(typeSize),
-                            }))
+                            edit ?
+                                dispatch(editBuildingUnitType(headers, {
+                                    "building_id": selected.id,
+                                    "unit_type": typeName ? typeName : selectedRow.unit_type,
+                                    "unit_size": parseFloat(typeSize ? typeSize : selectedRow.unit_size),
+                                }, selectedRow.id))
+                                :
+                                dispatch(createBuildingUnitType(headers, {
+                                    "building_id": selected.id,
+                                    "unit_type": typeName ? typeName : selectedRow.unit_type,
+                                    "unit_size": parseFloat(typeSize ? typeSize : selectedRow.unit_size),
+                                }))
                             setAddUnitType(false);
+                            setEdit(false);
+                            setRow({});
+                            setTypeName('');
+                            setTypeSize('');
                         }}
                     />
                 </div>
             </Modal>
             <Modal isOpen={addSection} onRequestClose={() => setAddSection(false)}>
-                Add Section
-                <Input label="Section Type" inputValue={sectionType} setInputValue={setSectionType}
+                {edit ? "Edit" : "Add"} Section
+                <Input label="Section Name"
+                    inputValue={selectedRow.section_name ? selectedRow.section_name : sectionName}
+                    setInputValue={setSectionName} />
+                <Input label="Section Type"
+                    inputValue={selectedRow.section_type ? selectedRow.section_type : sectionType}
+                    setInputValue={setSectionType}
                     type="select" options={[
                         { label: 'Tower', value: 'tower' },
                         { label: 'Wing', value: 'wing' },
                     ]}
                 />
-                <Input label="Section Name" inputValue={sectionName} setInputValue={setSectionName} />
                 <div style={{
                     display: 'flex',
                     marginTop: 16,
@@ -189,12 +231,23 @@ function Component() {
                     />
                     <Button label="Add"
                         onClick={() => {
+                            edit?
+                            dispatch(editBuildingSection(headers, {
+                                "building_id": selected.id,
+                                "section_type": sectionType ? sectionType : selectedRow.section_type,
+                                "section_name": sectionName ? sectionName : selectedRow.section_name,
+                            }, selectedRow.id))
+                            :
                             dispatch(createBuildingSection(headers, {
                                 "building_id": selected.id,
-                                "section_type": sectionType,
-                                "section_name": sectionName,
+                                "section_type": sectionType ? sectionType : selectedRow.section_type,
+                                "section_name": sectionName ? sectionName : selectedRow.section_name,
                             }))
                             setAddSection(false);
+                            setEdit(false);
+                            setRow({});
+                            setSectionType('');
+                            setSectionName('');
                         }}
                     />
                 </div>
@@ -265,6 +318,11 @@ function Component() {
                         dispatch(deleteBuildingUnit(row, headers))
                         // setConfirm(true);
                     }}
+                    onClickEdit={row => {
+                        setRow(row);
+                        setEdit(true);
+                        setAddUnit(true);
+                    }}
                 />}
                 {tab === 1 && <Table
                     columns={columnsUnitType}
@@ -283,6 +341,11 @@ function Component() {
                         dispatch(deleteBuildingUnitType(row, headers))
                         // setConfirm(true);
                     }}
+                    onClickEdit={row => {
+                        setRow(row);
+                        setEdit(true);
+                        setAddUnitType(true);
+                    }}
                 />}
                 {tab === 2 && <Table
                     columns={columnsSection}
@@ -300,6 +363,11 @@ function Component() {
                         // setRow(row);
                         dispatch(deleteBuildingSection(row, headers))
                         // setConfirm(true);
+                    }}
+                    onClickEdit={row => {
+                        setRow(row);
+                        setEdit(true);
+                        setAddSection(true);
                     }}
                 />}
             </div>
