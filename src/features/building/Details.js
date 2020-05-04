@@ -5,6 +5,7 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
+import Filter from '../../components/Filter';
 import { useSelector, useDispatch } from 'react-redux';
 import {
     getBuildingUnit, getBuildingUnitType, getBuildingSection,
@@ -21,6 +22,20 @@ const exception = [
 
 const tabs = [
     'Unit', 'Unit Type', 'Section'
+]
+
+const unitTypes = [
+    { label: 'Studio', value: 'studio' },
+    { label: '1BR', value: '1BR' },
+    { label: '2BR', value: '2BR' },
+    { label: '3BR', value: '3BR' },
+    { label: '4BR', value: '4BR' },
+    { label: '5BR', value: '5BR' },
+]
+
+const sectionTypes = [
+    { label: 'Tower', value: 'tower' },
+    { label: 'Wing', value: 'wing' },
 ]
 
 const columnsUnit = [
@@ -66,6 +81,9 @@ function Component() {
     const [sectionType, setSectionType] = useState('');
     const [sectionName, setSectionName] = useState('');
 
+    const [utNameFilter, setUtNameFilter] = useState({});
+    const [sTypeFilter, setSTypeFilter] = useState({});
+
     const headers = useSelector(state => state.auth.headers);
     const { selected, unit, unit_type, section, loading, refreshToggle } = useSelector(state => state.building);
 
@@ -75,10 +93,10 @@ function Component() {
 
     const fetchData = useCallback((pageIndex, pageSize, search) => {
         tab === 0 && dispatch(getBuildingUnit(headers, pageIndex, pageSize, search, selected));
-        tab === 1 && dispatch(getBuildingUnitType(headers, pageIndex, pageSize, search, selected));
-        tab === 2 && dispatch(getBuildingSection(headers, pageIndex, pageSize, search, selected));
+        tab === 1 && dispatch(getBuildingUnitType(headers, pageIndex, pageSize, search, selected, utNameFilter.value));
+        tab === 2 && dispatch(getBuildingSection(headers, pageIndex, pageSize, search, selected, sTypeFilter.value));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, refreshToggle, headers, tab])
+    }, [dispatch, refreshToggle, headers, tab, utNameFilter, sTypeFilter])
 
     useEffect(() => {
         dispatch(getBuildingUnitType(headers, 0, 10, '', selected));
@@ -167,14 +185,7 @@ function Component() {
                 <Input label="Type Name"
                     inputValue={selectedRow.unit_type ? selectedRow.unit_type : typeName}
                     setInputValue={setTypeName}
-                    type="select" options={[
-                        { label: 'Studio', value: 'studio' },
-                        { label: '1BR', value: '1BR' },
-                        { label: '2BR', value: '2BR' },
-                        { label: '3BR', value: '3BR' },
-                        { label: '4BR', value: '4BR' },
-                        { label: '5BR', value: '5BR' },
-                    ]}
+                    type="select" options={unitTypes}
                 />
                 <Input label="Type Size"
                     inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeSize}
@@ -217,10 +228,7 @@ function Component() {
                 <Input label="Section Type"
                     inputValue={selectedRow.section_type ? selectedRow.section_type : sectionType}
                     setInputValue={setSectionType}
-                    type="select" options={[
-                        { label: 'Tower', value: 'tower' },
-                        { label: 'Wing', value: 'wing' },
-                    ]}
+                    type="select" options={sectionTypes}
                 />
                 <div style={{
                     display: 'flex',
@@ -231,18 +239,18 @@ function Component() {
                     />
                     <Button label="Add"
                         onClick={() => {
-                            edit?
-                            dispatch(editBuildingSection(headers, {
-                                "building_id": selected.id,
-                                "section_type": sectionType ? sectionType : selectedRow.section_type,
-                                "section_name": sectionName ? sectionName : selectedRow.section_name,
-                            }, selectedRow.id))
-                            :
-                            dispatch(createBuildingSection(headers, {
-                                "building_id": selected.id,
-                                "section_type": sectionType ? sectionType : selectedRow.section_type,
-                                "section_name": sectionName ? sectionName : selectedRow.section_name,
-                            }))
+                            edit ?
+                                dispatch(editBuildingSection(headers, {
+                                    "building_id": selected.id,
+                                    "section_type": sectionType ? sectionType : selectedRow.section_type,
+                                    "section_name": sectionName ? sectionName : selectedRow.section_name,
+                                }, selectedRow.id))
+                                :
+                                dispatch(createBuildingSection(headers, {
+                                    "building_id": selected.id,
+                                    "section_type": sectionType ? sectionType : selectedRow.section_type,
+                                    "section_name": sectionName ? sectionName : selectedRow.section_name,
+                                }))
                             setAddSection(false);
                             setEdit(false);
                             setRow({});
@@ -330,7 +338,26 @@ function Component() {
                     loading={loading}
                     pageCount={unit_type.total_pages}
                     fetchData={fetchData}
-                    filters={[]}
+                    filters={[
+                        {
+                            button: <Button key="Select Name"
+                                label={utNameFilter.label ? utNameFilter.label : "Select Name"}
+                                selected={utNameFilter.label}
+                            />,
+                            component: (toggleModal) =>
+                                <Filter
+                                    data={unitTypes}
+                                    onClick={(el) => {
+                                        setUtNameFilter(el);
+                                        toggleModal(false);
+                                    }}
+                                    onClickAll={() => {
+                                        setUtNameFilter("");
+                                        toggleModal(false);
+                                    }}
+                                />
+                        },
+                    ]}
                     actions={[
                         <Button key="Add" label="Add" icon={<FiPlus />}
                             onClick={() => setAddUnitType(true)}
@@ -353,7 +380,26 @@ function Component() {
                     loading={loading}
                     pageCount={section.total_pages}
                     fetchData={fetchData}
-                    filters={[]}
+                    filters={[
+                        {
+                            button: <Button key="Select Type"
+                                label={sTypeFilter.label ? sTypeFilter.label : "Select Type"}
+                                selected={sTypeFilter.label}
+                            />,
+                            component: (toggleModal) =>
+                                <Filter
+                                    data={sectionTypes}
+                                    onClick={(el) => {
+                                        setSTypeFilter(el);
+                                        toggleModal(false);
+                                    }}
+                                    onClickAll={() => {
+                                        setSTypeFilter("");
+                                        toggleModal(false);
+                                    }}
+                                />
+                        },
+                    ]}
                     actions={[
                         <Button key="Add" label="Add" icon={<FiPlus />}
                             onClick={() => setAddSection(true)}

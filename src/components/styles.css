@@ -57,7 +57,7 @@
   overflow-y: scroll;
   margin-top: 4px;
   margin-bottom: 4px;
-  width: calc(100% + 15px);
+  /* width: calc(100% + 15px); */
   min-width: 200px;
 }
 

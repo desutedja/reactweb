@@ -199,7 +199,7 @@ export const getBuildingUnit = (
 }
 
 export const getBuildingUnitType = (
-  headers, pageIndex, pageSize, search, row
+  headers, pageIndex, pageSize, search, row, unit_type = ""
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -207,6 +207,7 @@ export const getBuildingUnitType = (
     '?page=' + (pageIndex + 1) +
     '&building_id=' + row.id +
     '&search=' + search +
+    '&unit_type=' + unit_type +
     '&limit=' + pageSize,
     headers,
     res => {
@@ -217,13 +218,14 @@ export const getBuildingUnitType = (
 }
 
 export const getBuildingSection = (
-  headers, pageIndex, pageSize, search, row
+  headers, pageIndex, pageSize, search, row, section_type = ""
 ) => dispatch => {
   dispatch(startAsync());
 
   get(buildingEndpoint + '/section' +
     '?page=' + (pageIndex + 1) +
     '&building_id=' + row.id +
+    '&section_type=' + section_type +
     '&search=' + search +
     '&limit=' + pageSize,
     headers,

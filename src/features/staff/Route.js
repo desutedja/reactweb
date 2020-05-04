@@ -1,15 +1,18 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getStaff } from './slice';
+import { FiSearch, FiPlus } from 'react-icons/fi';
+
+import { getStaff, setSelected } from './slice';
+import { get } from '../../utils';
+import { endpointAdmin } from '../../settings';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
-import { FiSearch } from 'react-icons/fi';
-import { endpointAdmin } from '../../settings';
-import { get } from '../../utils';
+import Add from './Add';
+import Details from './Details';
 
 const columns = [
     { Header: "Name", accessor: row => row.firstname + ' ' + row.lastname },
@@ -49,14 +52,14 @@ function Component() {
 
     useEffect(() => {
         search.length >= 3 && get(endpointAdmin + '/building' +
-        '?limit=5&page=1' +
-        '&search=' + search, headers, res => {
-            let data = res.data.data.items;
+            '?limit=5&page=1' +
+            '&search=' + search, headers, res => {
+                let data = res.data.data.items;
 
-            let formatted = data.map(el => ({label: el.name, value: el.id}));
+                let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
-            setBuildings(formatted);
-        })
+                setBuildings(formatted);
+            })
     }, [headers, search]);
 
     return (
@@ -122,8 +125,24 @@ function Component() {
                                     />
                             },
                         ]}
-                        actions={[]}
+                        actions={[
+                            <Button key="Add" label="Add" icon={<FiPlus />}
+                                onClick={() => {
+                                    dispatch(setSelected({}));
+                                    history.push(url + "/add")
+                                }}
+                            />
+                        ]}
                     />
+                </Route>
+                <Route path={`${path}/add`}>
+                    <Add />
+                </Route>
+                <Route path={`${path}/edit`}>
+                    <Add />
+                </Route>
+                <Route path={`${path}/details`}>
+                    <Details />
                 </Route>
             </Switch>
         </div>
