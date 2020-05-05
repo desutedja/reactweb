@@ -124,81 +124,67 @@ function Component() {
             </Modal>
             <Modal isOpen={addUnit} onRequestClose={() => setAddUnit(false)}>
                 {edit ? "Edit Unit" : "Add Unit"}
-                <Input label="Number" inputValue={selectedRow.number ? selectedRow.number : number}
-                    setInputValue={setNumber} />
-                <Input label="Floor" inputValue={selectedRow.floor ? selectedRow.floor : floor}
-                    setInputValue={setFloor} />
-                <Input label="Section" type="select"
-                    inputValue={selectedRow.building_section ? selectedRow.building_section : sectionID}
-                    setInputValue={setSectionID}
-                    options={section.items.map(el => ({
-                        label: el.section_name,
-                        value: el.id
-                    }))}
-                />
-                <Input label="Unit Type" type="select"
-                    inputValue={selectedRow.unit_type ? selectedRow.unit_type : unitTypeID}
-                    setInputValue={setUnitTypeID}
-                    options={unit_type.items.map(el => ({
-                        label: el.unit_type + ' - ' + el.unit_size,
-                        value: el.id
-                    }))}
-                />
-                <div style={{
-                    display: 'flex',
-                    marginTop: 16,
-                }}>
-                    <Button label="Cancel" secondary
-                        onClick={() => setAddUnit(false)}
+                <form
+                    onSubmit={() => {
+                        edit ?
+                            dispatch(editBuildingUnit(headers, {
+                                "building_id": selected.id,
+                                "building_section": parseFloat(sectionID ? sectionID : selectedRow.building_section),
+                                "unit_type": parseFloat(unitTypeID ? unitTypeID : selectedRow.unit_type),
+                                "floor": parseFloat(floor ? floor : selectedRow.floor),
+                                "number": number ? number : selectedRow.number,
+                            }, selectedRow.id))
+                            :
+                            dispatch(createBuildingUnit(headers, {
+                                "building_id": selected.id,
+                                "building_section": parseFloat(sectionID),
+                                "unit_type": parseFloat(unitTypeID),
+                                "floor": parseFloat(floor),
+                                "number": number,
+                            }))
+                        setAddUnit(false);
+                        setEdit(false);
+                        setRow({});
+                        setSectionID('');
+                        setUnitTypeID('');
+                        setFloor('');
+                        setNumber('');
+                    }}
+                >
+                    <Input label="Number" inputValue={selectedRow.number ? selectedRow.number : number}
+                        setInputValue={setNumber} />
+                    <Input label="Floor" inputValue={selectedRow.floor ? selectedRow.floor : floor}
+                        setInputValue={setFloor} />
+                    <Input label="Section" type="select"
+                        inputValue={selectedRow.building_section ? selectedRow.building_section : sectionID}
+                        setInputValue={setSectionID}
+                        options={section.items.map(el => ({
+                            label: el.section_name,
+                            value: el.id
+                        }))}
                     />
-                    <Button label={edit ? "Save" : "Add"}
-                        onClick={() => {
-                            edit ?
-                                dispatch(editBuildingUnit(headers, {
-                                    "building_id": selected.id,
-                                    "building_section": parseFloat(sectionID ? sectionID : selectedRow.building_section),
-                                    "unit_type": parseFloat(unitTypeID ? unitTypeID : selectedRow.unit_type),
-                                    "floor": parseFloat(floor ? floor : selectedRow.floor),
-                                    "number": number ? number : selectedRow.number,
-                                }, selectedRow.id))
-                                :
-                                dispatch(createBuildingUnit(headers, {
-                                    "building_id": selected.id,
-                                    "building_section": parseFloat(sectionID),
-                                    "unit_type": parseFloat(unitTypeID),
-                                    "floor": parseFloat(floor),
-                                    "number": number,
-                                }))
-                            setAddUnit(false);
-                            setEdit(false);
-                            setRow({});
-                            setSectionID('');
-                            setUnitTypeID('');
-                            setFloor('');
-                            setNumber('');
-                        }}
+                    <Input label="Unit Type" type="select"
+                        inputValue={selectedRow.unit_type ? selectedRow.unit_type : unitTypeID}
+                        setInputValue={setUnitTypeID}
+                        options={unit_type.items.map(el => ({
+                            label: el.unit_type + ' - ' + el.unit_size,
+                            value: el.id
+                        }))}
                     />
-                </div>
+                    <div style={{
+                        display: 'flex',
+                        marginTop: 16,
+                    }}>
+                        <Button label="Cancel" secondary
+                            onClick={() => setAddUnit(false)}
+                        />
+                        <Button label={edit ? "Save" : "Add"} />
+                    </div>
+                </form>
             </Modal>
             <Modal isOpen={addUnitType} onRequestClose={() => setAddUnitType(false)}>
-                {edit ? "Add" : "Edit"} Unit Type
-                <Input label="Type Name"
-                    inputValue={selectedRow.unit_type ? selectedRow.unit_type : typeName}
-                    setInputValue={setTypeName}
-                    type="select" options={unitTypes}
-                />
-                <Input label="Type Size"
-                    inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeSize}
-                    setInputValue={setTypeSize} />
-                <div style={{
-                    display: 'flex',
-                    marginTop: 16,
-                }}>
-                    <Button label="Cancel" secondary
-                        onClick={() => setAddUnitType(false)}
-                    />
-                    <Button label="Add"
-                        onClick={() => {
+                {edit ? "Edit" : "Add"} Unit Type
+                <form onSubmit={() => {
                             edit ?
                                 dispatch(editBuildingUnitType(headers, {
                                     "building_id": selected.id,
@@ -216,29 +202,29 @@ function Component() {
                             setRow({});
                             setTypeName('');
                             setTypeSize('');
-                        }}
-                    />
-                </div>
-            </Modal>
-            <Modal isOpen={addSection} onRequestClose={() => setAddSection(false)}>
-                {edit ? "Edit" : "Add"} Section
-                <Input label="Section Name"
-                    inputValue={selectedRow.section_name ? selectedRow.section_name : sectionName}
-                    setInputValue={setSectionName} />
-                <Input label="Section Type"
-                    inputValue={selectedRow.section_type ? selectedRow.section_type : sectionType}
-                    setInputValue={setSectionType}
-                    type="select" options={sectionTypes}
+                        }}>
+                <Input label="Type Name"
+                    inputValue={selectedRow.unit_type ? selectedRow.unit_type : typeName}
+                    setInputValue={setTypeName}
+                    type="select" options={unitTypes}
                 />
+                <Input label="Type Size"
+                    inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeSize}
+                    setInputValue={setTypeSize} />
                 <div style={{
                     display: 'flex',
                     marginTop: 16,
                 }}>
                     <Button label="Cancel" secondary
-                        onClick={() => setAddSection(false)}
+                        onClick={() => setAddUnitType(false)}
                     />
-                    <Button label="Add"
-                        onClick={() => {
+                    <Button label={edit ? "Save" : "Add"} />
+                </div>
+                </form>
+            </Modal>
+            <Modal isOpen={addSection} onRequestClose={() => setAddSection(false)}>
+                {edit ? "Edit" : "Add"} Section
+                <form onSubmit={() => {
                             edit ?
                                 dispatch(editBuildingSection(headers, {
                                     "building_id": selected.id,
@@ -256,9 +242,25 @@ function Component() {
                             setRow({});
                             setSectionType('');
                             setSectionName('');
-                        }}
+                        }}>
+                <Input label="Section Name"
+                    inputValue={selectedRow.section_name ? selectedRow.section_name : sectionName}
+                    setInputValue={setSectionName} />
+                <Input label="Section Type"
+                    inputValue={selectedRow.section_type ? selectedRow.section_type : sectionType}
+                    setInputValue={setSectionType}
+                    type="select" options={sectionTypes}
+                />
+                <div style={{
+                    display: 'flex',
+                    marginTop: 16,
+                }}>
+                    <Button label="Cancel" secondary
+                        onClick={() => setAddSection(false)}
                     />
+                    <Button label={edit ? "Save" : "Add"} />
                 </div>
+                </form>
             </Modal>
             <div style={{
                 display: 'flex'
