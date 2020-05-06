@@ -5,7 +5,7 @@ import MoonLoader from "react-spinners/MoonLoader";
 import { storageRef } from '../firebase';
 
 function Component({
-    label, compact, name, optional = false,
+    label, compact, name, optional = true,
     type = "text", rows = 2, options = [],
     inputValue, setInputValue, icon, onClick,
     hidden,

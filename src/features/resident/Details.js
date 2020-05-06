@@ -1,20 +1,39 @@
 import React from 'react';
-
-import LabeledText from '../../components/LabeledText';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-function Component() {
-    const data = useSelector(state => state.resident.selected);
+import LabeledText from '../../components/LabeledText';
+import Button from '../../components/Button';
 
+const exception = [
+    'created_on', 'modified_on', 'deleted',
+];
+
+function Component() {
+    const selected = useSelector(state => state.resident.selected);
+
+    let history = useHistory();
+    let { path, url } = useRouteMatch();
+    
     return (
         <div>
             <div className="Container">
-                {Object.keys(data).map(el =>
-                    <LabeledText
-                        label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                        value={data[el]}
-                    />
-                )}
+                <div className="Details" style={{
+                    marginLeft: 16
+                }}>
+                    {Object.keys(selected).filter(el => !exception.includes(el))
+                        .map(el =>
+                            <LabeledText
+                                label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
+                                value={selected[el]}
+                            />
+                        )}
+                </div>
+                <div className="Photos">
+                    <Button label="Edit" onClick={() => history.push(
+                        url.split('/').slice(0, -1).join('/') + "/edit"
+                    )} />
+                </div>
             </div>
         </div>
     )

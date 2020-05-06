@@ -1,8 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointManagement } from '../../settings';
-import { get, post, put } from '../../utils';
+import { get, post, put, del } from '../../utils';
 
-const staffEndpoint = endpointManagement + '/admin/staff/list';
+const staffEndpoint = endpointManagement + '/admin/staff';
 
 export const slice = createSlice({
   name: 'staff',
@@ -52,7 +52,8 @@ export const {
   stopAsync,
   setData,
   setSelected,
-  refresh
+  refresh,
+  setAlert
 } = slice.actions;
 
 export const getStaff = (
@@ -61,7 +62,7 @@ export const getStaff = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(staffEndpoint +
+  get(staffEndpoint + '/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search +
@@ -78,7 +79,7 @@ export const getStaff = (
 export const createStaff = (headers, data, history) => dispatch => {
   dispatch(startAsync());
 
-  post(staffEndpoint, data, headers,
+  post(staffEndpoint + '/create', data, headers,
     res => {
       history.push("/staff");
 
@@ -92,7 +93,7 @@ export const createStaff = (headers, data, history) => dispatch => {
 export const editStaff = (headers, data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  put(staffEndpoint, { ...data, id: id }, headers,
+  put(staffEndpoint + '/update', { ...data, id: id }, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/staff/details");
@@ -101,6 +102,35 @@ export const editStaff = (headers, data, history, id) => dispatch => {
     },
     err => {
       dispatch(stopAsync());
+    })
+}
+
+export const deleteStaff = (row, headers) => dispatch => {
+  dispatch(startAsync());
+
+  del(staffEndpoint + '/delete/' + row.id, headers,
+    res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Staff ' + row.name + ' has been deleted.'
+      }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
+      dispatch(refresh());
+      dispatch(stopAsync())
+    })
+}
+
+export const getStaffDetails = (row, headers, history, url) => dispatch => {
+  dispatch(startAsync());
+
+  get(staffEndpoint + '/' + row.id, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push(url + '/details');
+
+      dispatch(stopAsync())
     })
 }
 

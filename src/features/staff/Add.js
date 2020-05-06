@@ -2,16 +2,25 @@ import React, { useEffect, useState } from 'react';
 
 import Input from '../../components/Input';
 import Form from '../../components/Form';
+import Modal from '../../components/Modal';
+import Filter from '../../components/Filter';
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { editStaff, createStaff } from './slice';
-import { endpointResident } from '../../settings';
+import { endpointResident, endpointAdmin } from '../../settings';
 import { get } from '../../utils';
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
     const { loading, selected } = useSelector(state => state.staff);
+
+    const [bManagementID, setBManagementID] = useState('');
+    const [bManagementName, setBManagementName] = useState('');
+    const [bManagements, setBManagements] = useState([]);
+
+    const [search, setSearch] = useState('');
+    const [modal, setModal] = useState(false);
 
     const [district, setDistrict] = useState("");
     const [districts, setDistricts] = useState([]);
@@ -24,6 +33,21 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
+
+    useEffect(() => {
+        (!search || search >= 3) && get(endpointAdmin + '/management/building' +
+            '?limit=10&page=1' +
+            '&search=' + search, headers, res => {
+                let data = res.data.data.items;
+
+                let formatted = data.map(el => ({
+                    label: el.building_name + ' by ' + el.management_name,
+                    value: el.id
+                }));
+
+                setBManagements(formatted);
+            })
+    }, [headers, search]);
 
     useEffect(() => {
         get(endpointResident + '/geo/province',
@@ -59,6 +83,19 @@ function Component() {
 
     return (
         <div>
+            <Modal isOpen={modal} onRequestClose={() => setModal(false)}>
+                <Input label="Search"
+                    inputValue={search} setInputValue={setSearch}
+                />
+                <Filter
+                    data={bManagements}
+                    onClick={(el) => {
+                        setBManagementID(el.value);
+                        setBManagementName(el.label);
+                        setModal(false);
+                    }}
+                />
+            </Modal>
             <Form
                 onSubmit={data => selected.id ?
                     dispatch(editStaff(headers, data, history, selected.id))
@@ -66,45 +103,64 @@ function Component() {
                     dispatch(createStaff(headers, data, history))}
                 loading={loading}
             >
-                <Input label="Firstname" />
-                <Input label="Lastname" />
-                <Input label="Email" type="email" />
-                <Input label="Phone" type="tel" />
+                <Input label="Firstname" inputValue={selected.firstname} />
+                <Input label="Lastname" inputValue={selected.lastname} />
+                <Input label="Email" type="email" inputValue={selected.email} />
+                <Input label="Phone" type="tel" inputValue={selected.phone} />
+                <SectionSeparator />
+
+                <Input label="Nationality" inputValue={selected.nationality} />
                 <Input label="Gender" type="select" options={[
                     { value: 'P', label: 'Perempuan' },
                     { value: 'L', label: 'Laki-Laki' },
-                ]} />
+                ]} inputValue={selected.gender} />
                 <Input label="Marital Status" type="select" options={[
                     { value: 'single', label: 'Single' },
                     { value: 'married', label: 'Married' },
                     { value: 'divorce', label: 'Divorced' },
                     { value: 'other', label: 'Other' },
-                ]} />
+                ]} inputValue={selected.marital_status} />
                 <SectionSeparator />
 
-                <Input label="Select Building" type="button" />
-                <Input label="Select Management" type="button" />
+                <Input label="Building Management ID" hidden
+                    inputValue={bManagementID ? bManagementID : selected.building_management_id}
+                    setInputValue={setBManagementID}
+                />
+                <Input label="Building Management Name" hidden
+                    inputValue={bManagementName ? bManagementName : bManagements.length > 0 ?
+                        bManagements.find(el => el.value === selected.building_management_id).label
+                        : null}
+                    setInputValue={setBManagementName}
+                />
+                <Input label="Select Building Management" type="button"
+                    inputValue={bManagementName ? bManagementName : bManagements.length > 0 ?
+                        bManagements.find(el => el.value === selected.building_management_id).label
+                        : null}
+                    onClick={() => setModal(true)}
+                />
                 <Input label="Is Internal?" type="select"
                     name="on_centratama"
                     options={[
                         { value: 1, label: 'Yes' },
                         { value: 0, label: 'No' },
-                    ]} />
-                <Input label="Staff ID" />
+                    ]} inputValue={selected.on_centratama} />
+                <SectionSeparator />
+
+                <Input label="Staff ID" inputValue={selected.staff_id} />
                 <Input label="Staff Role" type="select" options={[
                     { value: 'gm_bm', label: 'GM BM' },
                     { value: 'pic_bm', label: 'PIC BM' },
                     { value: 'technician', label: 'Technician' },
                     { value: 'courier', label: 'Courier' },
                     { value: 'security', label: 'Security' },
-                ]} />
+                ]} inputValue={selected.staff_role} />
                 <Input label="Status" type="select" options={[
                     { value: 'active', label: 'Active' },
                     { value: 'inactive', label: 'Inactive' },
-                ]} />
+                ]} inputValue={selected.status} />
                 <SectionSeparator />
 
-                <Input label="Address" type="textarea" />
+                <Input label="Address" type="textarea" inputValue={selected.address} />
                 <Input label="Province" type="select" options={provinces}
                     inputValue={province ? province : selected.province} setInputValue={setProvince}
                 />

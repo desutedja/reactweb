@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointResident } from '../../settings';
-import { get, post } from '../../utils';
+import { get, post, del } from '../../utils';
 
 const residentEndpoint = endpointResident + '/management/resident';
 
@@ -15,6 +15,10 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
+    alert: {
+      type: 'normal',
+      message: '',
+    },
   },
   reducers: {
     startAsync: (state) => {
@@ -35,7 +39,11 @@ export const slice = createSlice({
     },
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
-    }
+    },
+    setAlert: (state, action) => {
+      state.alert.type = action.payload.type;
+      state.alert.message = action.payload.message;
+    },
   },
 });
 
@@ -44,7 +52,8 @@ export const {
   stopAsync,
   setData,
   setSelected,
-  refresh
+  refresh,
+  setAlert
 } = slice.actions;
 
 export const getResident = (
@@ -80,10 +89,27 @@ export const createResident = (headers, data, history) => dispatch => {
     })
 }
 
-export const getResidentDetails = (id, headers, history, url) => dispatch => {
+export const deleteResident = (row, headers) => dispatch => {
   dispatch(startAsync());
 
-  get(residentEndpoint + '/detail/' + id, headers,
+  del(residentEndpoint + '/delete/' + row.id, headers,
+    res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Resident ' + row.name + ' has been deleted.'
+      }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
+      dispatch(refresh());
+      dispatch(stopAsync())
+    })
+}
+
+export const getResidentDetails = (row, headers, history, url) => dispatch => {
+  dispatch(startAsync());
+
+  get(residentEndpoint + '/detail/' + row.id, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');

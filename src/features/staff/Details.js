@@ -1,16 +1,16 @@
 import React from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
-import { useSelector } from 'react-redux';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 
 const exception = [
     'created_on', 'modified_on', 'deleted',
 ];
 
 function Component() {
-    const selected = useSelector(state => state.name.selected);
+    const selected = useSelector(state => state.staff.selected);
 
     let history = useHistory();
     let { path, url } = useRouteMatch();
@@ -24,6 +24,7 @@ function Component() {
                     {Object.keys(selected).filter(el => !exception.includes(el))
                         .map(el =>
                             <LabeledText
+                                key={el}
                                 label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
                                 value={selected[el]}
                             />

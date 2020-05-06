@@ -3,7 +3,7 @@ import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch, FiPlus } from 'react-icons/fi';
 
-import { getStaff, setSelected } from './slice';
+import { getStaff, setSelected, getStaffDetails, deleteStaff } from './slice';
 import { get } from '../../utils';
 import { endpointAdmin } from '../../settings';
 
@@ -11,6 +11,7 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
+import Modal from '../../components/Modal';
 import Add from './Add';
 import Details from './Details';
 
@@ -35,6 +36,9 @@ const roles = [
 ];
 
 function Component() {
+    const [confirm, setConfirm] = useState(false);
+    const [selectedRow, setRow] = useState({});
+
     const [search, setSearch] = useState('');
     const [building, setBuilding] = useState('');
     const [buildingName, setBuildingName] = useState('');
@@ -44,7 +48,7 @@ function Component() {
     const [roleLabel, setRoleLabel] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages } = useSelector(state => state.staff);
+    const { loading, items, total_pages, refreshToggle, } = useSelector(state => state.staff);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -64,6 +68,23 @@ function Component() {
 
     return (
         <div>
+            <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+                Are you sure you want to delete?
+                <div style={{
+                    display: 'flex',
+                    marginTop: 16,
+                }}>
+                    <Button label="No" secondary
+                        onClick={() => setConfirm(false)}
+                    />
+                    <Button label="Yes"
+                        onClick={() => {
+                            setConfirm(false);
+                            dispatch(deleteStaff(selectedRow, headers));
+                        }}
+                    />
+                </div>
+            </Modal>
             <Switch>
                 <Route exact path={path}>
                     <Table
@@ -73,7 +94,8 @@ function Component() {
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getStaff(headers, pageIndex, pageSize, search, role, building));
-                        }, [dispatch, headers, role, building])}
+                        // eslint-disable-next-line react-hooks/exhaustive-deps
+                        }, [dispatch, refreshToggle, headers, role, building])}
                         filters={[
                             {
                                 button: <Button key="Select Building"
@@ -133,6 +155,11 @@ function Component() {
                                 }}
                             />
                         ]}
+                        onClickDelete={row => {
+                            setRow(row);
+                            setConfirm(true);
+                        }}
+                        onClickDetails={row => dispatch(getStaffDetails(row, headers, history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>
