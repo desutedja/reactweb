@@ -1,20 +1,59 @@
-import React from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
+import { FiPlus } from 'react-icons/fi';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { dateFormatter } from '../../utils';
 
 import LabeledText from '../../components/LabeledText';
+
 import Button from '../../components/Button';
+import Table from '../../components/Table';
+import Modal from '../../components/Modal';
+import Filter from '../../components/Filter';
+import Input from '../../components/Input';
+import Form from '../../components/Form';
+
+import {
+    getResidentUnit
+} from './slice';
 
 const exception = [
     'modified_on', 'deleted',
 ];
 
-function Component() {
-    const selected = useSelector(state => state.resident.selected);
+const tabs = [
+    'Unit', 'Sub Accounts'
+]
 
+const columnsUnit = [
+    { Header: "ID", accessor: "unit_id" },
+    { Header: "Building", accessor: "building_name" },
+    { Header: "Number", accessor: "number" },
+    { Header: "Floor", accessor: "floor" },
+    { Header: "Section", accessor: "section_name" },
+    { Header: "Type", accessor: row => row.unit_type + " - " + row.unit_size },
+]
+
+function Component() {
+    const [tab, setTab] = useState(0);
+    const [selectedRow, setRow] = useState({});
+    const [addUnit, setAddUnit] = useState(false);
+
+    const [edit, setEdit] = useState(false);
+    const [search, setSearch] = useState('');
+
+    const { selected, unit, loading, refreshToggle } = useSelector(state => state.resident);
+
+    let dispatch = useDispatch();
     let history = useHistory();
     let { path, url } = useRouteMatch();
+
+    const headers = useSelector(state => state.auth.headers);
+    const fetchData = useCallback((pageIndex, pageSize) => {
+        tab === 0 && dispatch(getResidentUnit(headers, pageIndex, pageSize, search, selected));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, headers, tab])
+
     
     return (
         <div>
@@ -35,6 +74,39 @@ function Component() {
                         url.split('/').slice(0, -1).join('/') + "/edit"
                     )} />
                 </div>
+            </div>
+            <div className="Container" style={{
+                marginTop: 16,
+                flex: 1,
+                flexDirection: 'column',
+            }}>
+                <div className="Tab">
+                    {tabs.map((el, index) =>
+                        <div key={el} className="TabItem">
+                            <button className="TabItem-Text"
+                                onClick={() => setTab(index)}
+                            >{el}</button>
+                            {tab === index && <div className="TabIndicator"></div>}
+                        </div>)}
+                </div>
+                {tab === 0 && <Table
+                    columns={columnsUnit}
+                    data={unit.items}
+                    loading={loading}
+                    pageCount={unit.total_pages}
+                    fetchData={fetchData}
+                    filters={[]}
+                    actions={[
+                        <Button key="Add" label="Add" icon={<FiPlus />}
+                            onClick={() => setAddUnit(true)}
+                        />
+                    ]}
+                    onClickDelete={row => {
+                        // setRow(row);
+                        //dispatch(deleteResidentUnit(row, headers))
+                        // setConfirm(true);
+                    }}
+                />}
             </div>
         </div>
     )

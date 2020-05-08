@@ -108,7 +108,7 @@ const columnsManagement = [
 
 function Component() {
     const [selectedRow, setRow] = useState({});
-    const [tab, setTab] = useState(4);
+    const [tab, setTab] = useState(0);
 
     const [confirm, setConfirm] = useState(false);
     const [addUnit, setAddUnit] = useState(false);

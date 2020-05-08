@@ -19,6 +19,13 @@ export const slice = createSlice({
       type: 'normal',
       message: '',
     },
+    unit: {
+      items: [],
+      total_items: 0,
+      total_pages: 1,
+      page: 1,
+      range: 10,
+    },
   },
   reducers: {
     startAsync: (state) => {
@@ -33,6 +40,15 @@ export const slice = createSlice({
       state.items = data.items;
       state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
+    },
+    setUnitData: (state, action) => {
+      const data = action.payload;
+
+      console.log("Setting");
+
+      state.unit.items = data.items;
+      state.unit.total_items = data.filtered_item;
+      state.unit.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {
       state.selected = action.payload;
@@ -51,6 +67,7 @@ export const {
   startAsync,
   stopAsync,
   setData,
+  setUnitData,
   setSelected,
   refresh,
   setAlert
@@ -131,6 +148,24 @@ export const getResidentDetails = (row, headers, history, url) => dispatch => {
 
       dispatch(stopAsync())
     })
+}
+
+export const getResidentUnit = (headers, pageIndex, pageSize, search, row) => dispatch => {
+    dispatch(startAsync());
+
+    get(residentEndpoint + '/unit' + 
+        '?page=' + (pageIndex + 1) +
+        '&id=' + row.id + 
+        '&limit=' + pageSize +
+        '&search=' + search,
+        headers,
+        res => {
+            dispatch(setUnitData(res.data.data));
+
+            dispatch(stopAsync())
+        }
+    )
+        
 }
 
 export default slice.reducer;
