@@ -63,7 +63,8 @@ const columnsUnit = [
 
 const columnsUnitType = [
     { Header: "ID", accessor: "id" },
-    { Header: "Name", accessor: "unit_type" },
+    { Header: "Name", accessor: row => row.unit_type + " - " + row.unit_size },
+    { Header: "Type Name", accessor: "unit_type" },
     {
         Header: "Size", accessor: row => <div>
             {row.unit_size + ' m'}<sup>2</sup>
