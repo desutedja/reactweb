@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointTask } from '../../settings';
-import { get } from '../../utils';
+import { get, post } from '../../utils';
 
 const taskEndpoint = endpointTask + '/admin';
 
@@ -66,6 +66,32 @@ export const getTask = (
     res => {
       dispatch(setData(res.data.data));
 
+      dispatch(stopAsync());
+    })
+}
+
+export const resolveTask = (headers, row) => dispatch => {
+  dispatch(startAsync());
+
+  post(taskEndpoint + '/resolve/' + row.id, {}, headers,
+    res => {
+      dispatch(stopAsync());
+      dispatch(refresh());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
+export const reassignTask = (headers, data) => dispatch => {
+  dispatch(startAsync());
+
+  post(taskEndpoint + '/assign', data, headers,
+    res => {
+      dispatch(stopAsync());
+      dispatch(refresh());
+    },
+    err => {
       dispatch(stopAsync());
     })
 }

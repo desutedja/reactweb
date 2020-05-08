@@ -1,15 +1,16 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getTask, getTaskDetails } from './slice';
+import { getTask, getTaskDetails, resolveTask, reassignTask } from './slice';
 import { FiSearch } from 'react-icons/fi';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
+import Modal from '../../components/Modal';
 import { get } from '../../utils';
-import { endpointAdmin } from '../../settings';
+import { endpointAdmin, endpointManagement } from '../../settings';
 import Details from './Details';
 
 const columns = [
@@ -47,6 +48,13 @@ const prios = [
 ]
 
 function Component() {
+    const [selectedRow, setRow] = useState({});
+    const [resolve, setResolve] = useState(false);
+    const [assign, setAssign] = useState(false);
+    const [role, setRole] = useState('');
+    const [staff, setStaff] = useState({});
+    const [staffs, setStaffs] = useState([]);
+
     const [search, setSearch] = useState('');
     const [building, setBuilding] = useState('');
     const [buildingName, setBuildingName] = useState('');
@@ -62,26 +70,89 @@ function Component() {
     const [prioLabel, setPrioLabel] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages } = useSelector(state => state.task);
+    const { loading, items, total_pages, refreshToggle } = useSelector(state => state.task);
 
     let dispatch = useDispatch();
     let history = useHistory();
     let { path, url } = useRouteMatch();
 
     useEffect(() => {
-        search.length >= 3 && get(endpointAdmin + '/building' +
-        '?limit=5&page=1' +
-        '&search=' + search, headers, res => {
-            let data = res.data.data.items;
+        console.log(selectedRow);
+        selectedRow.task_type === 'security' && setRole('security');
+        selectedRow.task_type === 'service' && setRole('technician');
+        selectedRow.task_type === 'delivery' && setRole('courier');
+    }, [selectedRow])
 
-            let formatted = data.map(el => ({label: el.name, value: el.id}));
+    useEffect(() => {
+        (!search || search.length >= 3) && get(endpointAdmin + '/building' +
+            '?limit=5&page=1' +
+            '&search=' + search, headers, res => {
+                let data = res.data.data.items;
 
-            setBuildings(formatted);
-        })
+                let formatted = data.map(el => ({ label: el.name, value: el.id }));
+
+                setBuildings(formatted);
+            })
     }, [headers, search]);
+
+    useEffect(() => {
+        (!search || search.length >= 3) && get(endpointManagement + '/admin/staff/list' +
+            '?limit=5&page=1&max_ongoing_task=2' +
+            '&staff_role=' + role +
+            '&search=' + search, headers, res => {
+                let data = res.data.data.items;
+
+                let formatted = data.map(el => ({
+                    label: el.firstname + ' ' + el.lastname,
+                    value: el.id
+                }));
+
+                setStaffs(formatted);
+            })
+    }, [headers, role, search]);
 
     return (
         <div>
+            <Modal isOpen={resolve} onRequestClose={() => setResolve(false)}>
+                Are you sure you want to resolve this task?
+                <div style={{
+                    display: 'flex',
+                    marginTop: 16,
+                }}>
+                    <Button label="No" secondary
+                        onClick={() => setResolve(false)}
+                    />
+                    <Button label="Yes"
+                        onClick={() => {
+                            setResolve(false);
+                            dispatch(resolveTask(headers, selectedRow));
+                        }}
+                    />
+                </div>
+            </Modal>
+            <Modal isOpen={assign} onRequestClose={() => setAssign(false)}>
+                Choose assignee:
+                {!staff.value && <Input label="Search" compact inputValue={search} setInputValue={setSearch} />}
+                <Filter data={staff.value ? [staff] : staffs} onClick={el => setStaff(el)} />
+                <div style={{
+                    display: 'flex',
+                    marginTop: 16,
+                }}>
+                    <Button label="No" secondary
+                        onClick={() => setAssign(false)}
+                    />
+                    <Button label="Yes"
+                        onClick={() => {
+                            setStaff({});
+                            setAssign(false);
+                            dispatch(reassignTask(headers, {
+                                "task_id": selectedRow.id,
+                                "assignee_id": staff.value,
+                            }));
+                        }}
+                    />
+                </div>
+            </Modal>
             <Switch>
                 <Route exact path={path}>
                     <Table
@@ -91,7 +162,8 @@ function Component() {
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getTask(headers, pageIndex, pageSize, search, type, prio, status, building));
-                        }, [dispatch, headers, type, prio, status, building])}
+                            // eslint-disable-next-line react-hooks/exhaustive-deps
+                        }, [dispatch, headers, refreshToggle, type, prio, status, building])}
                         filters={[
                             {
                                 button: <Button key="Select Building"
@@ -185,6 +257,15 @@ function Component() {
                         ]}
                         actions={[]}
                         onClickDetails={row => dispatch(getTaskDetails(row, headers, history, url))}
+                        onClickResolve={row => {
+                            setRow(row);
+                            setResolve(true);
+                        }}
+                        onClickReassign={row => {
+                            setRow(row);
+                            setAssign(true);
+                        }}
+
                     />
                 </Route>
                 <Route path={`${path}/details`}>

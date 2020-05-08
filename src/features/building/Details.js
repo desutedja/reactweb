@@ -350,44 +350,44 @@ function Component() {
                         />
                     </Modal>
                     <Input label="Management ID" hidden
-                        inputValue={managementID ? managementID : selected.management_id}
+                        inputValue={managementID ? managementID : selectedRow.management_id}
                         setInputValue={setManagementID}
                     />
                     <Input label="Management Name" hidden
-                        inputValue={managementName ? managementName : selected.management_name}
+                        inputValue={managementName ? managementName : selectedRow.management_name}
                         setInputValue={setManagementName}
                     />
                     <Input label="Select Management" type="button"
-                        inputValue={managementName ? managementName : selected.management_name}
+                        inputValue={managementName ? managementName : selectedRow.management_name}
                         onClick={() => setModalManagement(true)}
                     />
-                    <Input label="Status" type="select" inputValue={selected.status}
+                    <Input label="Status" type="select" inputValue={selectedRow.status}
                         options={[
                             { label: 'Active', value: 'active' },
                             { label: 'Inactive', value: 'inactive' },
                         ]} />
                     <SectionSeparator />
-                    <Input label="Settlement Bank" inputValue={selected.settlement_bank} />
-                    <Input label="Settlement Account No" inputValue={selected.settlement_account_no} />
+                    <Input label="Settlement Bank" inputValue={selectedRow.settlement_bank} />
+                    <Input label="Settlement Account No" inputValue={selectedRow.settlement_account_no} />
                     <Input label="Settlement Account Name"
-                        inputValue={selected.settlement_account_name} />
+                        inputValue={selectedRow.settlement_account_name} />
                     <SectionSeparator />
                     <Input label="Billing Published (Date)" name="billing_published" type="number"
-                        inputValue={selected.billing_published}
+                        inputValue={selectedRow.billing_published}
                     />
                     <Input label="Billing Due (Date)" name="billing_duedate" type="number"
-                        inputValue={selected.billing_duedate} />
+                        inputValue={selectedRow.billing_duedate} />
                     <Input label="Penalty Fee" type="number"
-                        inputValue={selected.penalty_fee} />
+                        inputValue={selectedRow.penalty_fee} />
                     <SectionSeparator />
                     <Input label="Courier Fee" type="number"
-                        inputValue={selected.courier_fee}
+                        inputValue={selectedRow.courier_fee}
                     />
                     <Input label="Courier Internal Markup" type="number"
-                        inputValue={selected.courier_internal_markup}
+                        inputValue={selectedRow.courier_internal_markup}
                     />
                     <Input label="Courier External Markup" type="number"
-                        inputValue={selected.courier_external_markup}
+                        inputValue={selectedRow.courier_external_markup}
                     />
                 </Form>
             </Modal>
@@ -591,6 +591,11 @@ function Component() {
                         // setRow(row);
                         dispatch(deleteBuildingManagement(row, headers))
                         // setConfirm(true);
+                    }}
+                    onClickEdit={row => {
+                        setRow(row);
+                        setEdit(true);
+                        setAddManagement(true);
                     }}
                 />}
             </div>

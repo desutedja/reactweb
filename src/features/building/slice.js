@@ -294,6 +294,8 @@ export const getBuildingManagement = (
     '?page=' + (pageIndex + 1) +
     '&building_id=' + row.id +
     '&search=' + search +
+    '&sort_type=desc' +
+    '&sort_field=created_on' +
     '&limit=' + pageSize,
     headers,
     res => {

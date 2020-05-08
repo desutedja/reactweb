@@ -47,6 +47,7 @@
 
 .Filter {
   overflow: hidden;
+  width: 100%;
 }
 
 .List {

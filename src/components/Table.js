@@ -3,7 +3,7 @@ import { useTable, usePagination, useSortBy } from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
-    FiChevronsRight, FiChevronRight, FiSearch, FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal, FiPenTool, FiEdit,
+    FiChevronsRight, FiChevronRight, FiSearch, FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal, FiPenTool, FiEdit, FiCheck, FiUserPlus,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
 import Input from './Input';
@@ -17,6 +17,8 @@ function Component({
     loading,
     pageCount: controlledPageCount,
     actions,
+    onClickReassign,
+    onClickResolve,
     onClickDelete,
     onClickDetails,
     onClickEdit,
@@ -127,7 +129,7 @@ function Component({
                                     </div>
                                 </th>
                             ))}
-                            {(onClickDelete || onClickDetails || onClickEdit) && <th key={i}>
+                            {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) && <th key={i}>
                                 Options
                             </th>}
                         </tr>
@@ -145,10 +147,18 @@ function Component({
                                         <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                                     );
                                 })}
-                                {(onClickDelete || onClickDetails || onClickEdit) && <td key={i}>
+                                {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) && <td key={i}>
                                     <div style={{
                                         display: 'flex',
                                     }}>
+                                        {onClickReassign && <IconButton disabled={row.original.status !==
+                                            ('created' || 'rejected')}
+                                            onClick={() => onClickReassign(row.original)}>
+                                            <FiUserPlus />
+                                        </IconButton>}
+                                        {onClickResolve && <IconButton disabled={row.original.status === 'completed'} onClick={() => onClickResolve(row.original)}>
+                                            <FiCheck />
+                                        </IconButton>}
                                         {onClickDetails && <IconButton onClick={() => onClickDetails(row.original)}>
                                             <FiMoreHorizontal />
                                         </IconButton>}

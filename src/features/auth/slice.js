@@ -32,6 +32,7 @@ export const slice = createSlice({
         'X-User-Id': action.payload.id,
         'X-Session': action.payload.session,
         'X-User_Type': 'sa',
+        'Content-Type': 'application/json',
       }
     },
     logout: (state) => {

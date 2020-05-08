@@ -4,7 +4,7 @@ function Component({className = "", onClick, disabled, children}) {
     return (
         <button
             className={"IconButton " + (disabled && "inactive ") + className}
-            onClick={onClick}
+            onClick={disabled ? null : onClick}
         >
             {children}
         </button>

@@ -132,7 +132,7 @@ function Page() {
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
                     <Switch>
-                        <Redirect exact from="/" to={"/building"}
+                        <Redirect exact from="/" to={"/task"}
                         />
                         <Route path="/building">
                             <BuildingRoute />

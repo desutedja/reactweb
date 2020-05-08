@@ -13,7 +13,7 @@ export function get(
         })
         .catch(err => {
             console.log(err);
-            alert(err.response.data.error_message);
+            alert(err.response?.data.error_message);
 
             ifError(err);
         })
@@ -35,7 +35,7 @@ export function post(
         })
         .catch(err => {
             console.log(err);
-            alert(err.response.data.error_message);
+            alert(err.response?.data.error_message);
 
             ifError(err);
         })
@@ -57,7 +57,7 @@ export function put(
         })
         .catch(err => {
             console.log(err);
-            alert(err.response.data.error_message);
+            alert(err.response?.data.error_message);
 
             ifError(err);
         })
