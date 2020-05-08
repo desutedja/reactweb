@@ -2,6 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { dateFormatter } from '../../utils';
 
 import LabeledText from '../../components/LabeledText';
 import Table from '../../components/Table';
@@ -25,7 +26,7 @@ import { get } from '../../utils';
 
 
 const exception = [
-    'created_on', 'modified_on', 'deleted',
+    'modified_on', 'deleted',
     'Tasks', 'lat', 'long', 'logo'
 ];
 
@@ -410,7 +411,7 @@ function Component() {
                                 <LabeledText
                                     key={el}
                                     label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                                    value={selected[el]}
+                                    value={el == "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
                                 />
                             )}
                     </div>

@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { dateFormatter } from '../../utils';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
@@ -8,7 +9,7 @@ import Table from '../../components/Table';
 import Modal from '../../components/Modal';
 
 const exception = [
-    'created_on', 'modified_on', 'deleted',
+    'modified_on', 'deleted',
     'task_reports', 'attachments',
     'attachment_1', 'attachment_2', 'attachment_3', 'attachment_4', 'attachment_5',
 ];
@@ -93,7 +94,7 @@ function Component() {
                             <LabeledText
                                 key={el}
                                 label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                                value={selected[el]}
+                                    value={el == "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
                             />
                         )}
                 </div>

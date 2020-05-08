@@ -4,9 +4,10 @@ import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
 import { useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { dateFormatter } from '../../utils';
 
 const exception = [
-    'created_on', 'modified_on', 'deleted',
+    'modified_on', 'deleted',
     'Building'
 ];
 
@@ -26,7 +27,7 @@ function Component() {
                         .map(el =>
                             <LabeledText
                                 label={el.length > 2 ? el.replace(/_/g, ' ') : el.toUpperCase()}
-                                value={selected[el]}
+                                value={el == "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
                             />
                         )}
                 </div>

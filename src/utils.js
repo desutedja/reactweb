@@ -87,3 +87,55 @@ export function del(
             finallyDo();
         })
 }
+
+export function dateTimeFormatter(serverDateTime) {
+    let date = serverDateTime.split('T')[0];
+    let time = serverDateTime.split('T')[1].split('Z')[0];
+  
+    let year = date.split('-')[0];
+    let month = parseInt(date.split('-')[1], 10);
+    let day = date.split('-')[2];
+  
+    let months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+  
+    return day + ' ' + months[month - 1] + ' ' + year + ', ' + time + ' WIB';
+  }
+
+export function dateFormatter(serverDateTime) {
+    let date = serverDateTime.split('T')[0];
+    let time = serverDateTime.split('T')[1].split('Z')[0];
+  
+    let year = date.split('-')[0];
+    let month = parseInt(date.split('-')[1], 10);
+    let day = date.split('-')[2];
+  
+    let months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+  
+    return day + ' ' + months[month - 1] + ' ' + year;
+  }
