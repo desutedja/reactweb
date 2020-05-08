@@ -16,6 +16,7 @@ import Add from './Add';
 import Details from './Details';
 
 const columns = [
+    { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: row => row.firstname + ' ' + row.lastname },
     { Header: "Role", accessor: "staff_role" },
     { Header: "Email", accessor: "email" },

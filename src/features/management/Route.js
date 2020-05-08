@@ -12,6 +12,7 @@ import Add from './Add';
 import Details from './Details';
 
 const columns = [
+    { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: "name" },
     { Header: "Legal Name", accessor: "name_legal" },
     { Header: "Phone", accessor: "phone" },

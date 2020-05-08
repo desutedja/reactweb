@@ -15,6 +15,7 @@ import { get } from '../../utils';
 import { endpointResident } from '../../settings';
 
 const columns = [
+    { Header: 'ID', accessor: 'id' },
     { Header: 'Name', accessor: 'name' },
     { Header: 'Legal Name', accessor: 'legal_name' },
     { Header: 'Code Name', accessor: 'code_name' },

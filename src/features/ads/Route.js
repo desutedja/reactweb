@@ -6,6 +6,7 @@ import Table from '../../components/Table';
 import { getAds } from './slice';
 
 const columns = [
+    { Header: "ID", accessor: "id" },
     { Header: "Title", accessor: "content_name" },
     {
         Header: "Target", accessor: row =>

@@ -53,6 +53,7 @@ const serviceGroup = [
 ]
 
 const columnsUnit = [
+    { Header: "ID", accessor: "id" },
     { Header: "Number", accessor: "number" },
     { Header: "Floor", accessor: "floor" },
     { Header: "Section", accessor: "section_name" },
@@ -60,6 +61,7 @@ const columnsUnit = [
 ]
 
 const columnsUnitType = [
+    { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: "unit_type" },
     {
         Header: "Size", accessor: row => <div>
@@ -69,11 +71,13 @@ const columnsUnitType = [
 ]
 
 const columnsSection = [
+    { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: "section_name" },
     { Header: "Type", accessor: "section_type" },
 ]
 
 const columnsService = [
+    { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: "name" },
     { Header: "Group", accessor: "group" },
     { Header: "Description", accessor: "description" },
@@ -86,6 +90,7 @@ const columnsService = [
 ]
 
 const columnsManagement = [
+    { Header: "ID", accessor: "id" },
     { Header: "Management_name", accessor: "management_name" },
     { Header: "Billing Duedate", accessor: "billing_duedate" },
     { Header: "Billing Published", accessor: "billing_published" },

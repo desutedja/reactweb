@@ -14,12 +14,13 @@ import { endpointAdmin, endpointManagement } from '../../settings';
 import Details from './Details';
 
 const columns = [
+    { Header: "ID", accessor: "id" },
     { Header: "Title", accessor: "title" },
     { Header: "Type", accessor: "task_type" },
     { Header: "Requester", accessor: "requester_name" },
     { Header: "Building", accessor: "requester_building_name" },
     { Header: "Priority", accessor: "priority" },
-    { Header: "Assigned by", accessor: row => row.assigner_firstname + ' ' + row.assigner_lastname },
+    { Header: "Assigned by", accessor: row => row.assigner_firstname == null ? "Auto" : row.assigner_firstname + ' ' + row.assigner_lastname },
     { Header: "Assignee", accessor: row => row.assignee_firstname + ' ' + row.assignee_lastname },
     { Header: "Assigned on", accessor: "assigned_on" },
     { Header: "Status", accessor: "status" },
