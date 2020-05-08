@@ -67,6 +67,8 @@ textarea {
   border-width: 0.5px;
   border-color: silver;
   flex: 1;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 input[type="button"] {

@@ -19,7 +19,7 @@ function Component() {
         <div>
             <div className="Container">
                 <div className="Details" style={{
-                    marginLeft: 16
+                    
                 }}>
                     {Object.keys(selected).filter(el => !exception.includes(el))
                         .map(el =>

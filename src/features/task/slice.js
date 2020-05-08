@@ -70,10 +70,10 @@ export const getTask = (
     })
 }
 
-export const getTaskDetails = (id, headers, history, url) => dispatch => {
+export const getTaskDetails = (row, headers, history, url) => dispatch => {
   dispatch(startAsync());
 
-  get(taskEndpoint + '/' + id, headers,
+  get(taskEndpoint + '/' + row.id, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');

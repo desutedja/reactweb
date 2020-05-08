@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointResident } from '../../settings';
-import { get, post, del } from '../../utils';
+import { get, post, del, put } from '../../utils';
 
 const residentEndpoint = endpointResident + '/management/resident';
 
@@ -81,6 +81,21 @@ export const createResident = (headers, data, history) => dispatch => {
   post(residentEndpoint + '/register/parent', data, headers,
     res => {
       history.push("/resident");
+
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
+export const editResident = (headers, data, history, id) => dispatch => {
+  dispatch(startAsync());
+
+  put(residentEndpoint + '/edit', { ...data, id: id }, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push("/resident/details");
 
       dispatch(stopAsync());
     },

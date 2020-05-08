@@ -1,4 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
+import { FiPlus } from 'react-icons/fi';
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import LabeledText from '../../components/LabeledText';
 import Table from '../../components/Table';
@@ -6,14 +9,20 @@ import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
-import { useSelector, useDispatch } from 'react-redux';
+import Form from '../../components/Form';
+import SectionSeparator from '../../components/SectionSeparator';
+
 import {
     getBuildingUnit, getBuildingUnitType, getBuildingSection,
+    editBuildingManagement, createBuildingManagement,
     createBuildingUnit, createBuildingUnitType, createBuildingSection,
-    deleteBuildingUnit, deleteBuildingUnitType, deleteBuildingSection, editBuildingUnit, editBuildingUnitType, editBuildingSection,
+    deleteBuildingUnit, deleteBuildingUnitType, deleteBuildingSection, 
+    editBuildingUnit, editBuildingUnitType, editBuildingSection, 
+    getBuildingService, getBuildingManagement, deleteBuildingManagement,
 } from './slice';
-import { FiPlus } from 'react-icons/fi';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { endpointAdmin } from '../../settings';
+import { get } from '../../utils';
+
 
 const exception = [
     'created_on', 'modified_on', 'deleted',
@@ -21,7 +30,7 @@ const exception = [
 ];
 
 const tabs = [
-    'Unit', 'Unit Type', 'Section'
+    'Unit', 'Unit Type', 'Section', 'Service', 'Management'
 ]
 
 const unitTypes = [
@@ -36,6 +45,11 @@ const unitTypes = [
 const sectionTypes = [
     { label: 'Tower', value: 'tower' },
     { label: 'Wing', value: 'wing' },
+]
+
+const serviceGroup = [
+    { label: 'IPL', value: 'ipl' },
+    { label: 'Non-IPL', value: 'nonipl' },
 ]
 
 const columnsUnit = [
@@ -59,14 +73,41 @@ const columnsSection = [
     { Header: "Type", accessor: "section_type" },
 ]
 
+const columnsService = [
+    { Header: "Name", accessor: "name" },
+    { Header: "Group", accessor: "group" },
+    { Header: "Description", accessor: "description" },
+    { Header: "Denom Unit", accessor: "denom_unit" },
+    { Header: "Price Fixed", accessor: "price_fixed" },
+    { Header: "Price Unit", accessor: "price_unit" },
+    { Header: "Tax", accessor: "tax" },
+    { Header: "Tax Amount", accessor: "tax_amount" },
+    { Header: "Tax Value", accessor: "tax_value" },
+]
+
+const columnsManagement = [
+    { Header: "Management_name", accessor: "management_name" },
+    { Header: "Billing Duedate", accessor: "billing_duedate" },
+    { Header: "Billing Published", accessor: "billing_published" },
+    { Header: "Courier Fee", accessor: "courier_fee" },
+    { Header: "Courier Internal Markup", accessor: "courier_internal_markup" },
+    { Header: "Courier External Markup", accessor: "courier_external_markup" },
+    { Header: "Penalty Fee", accessor: "penalty_fee" },
+    { Header: "Settlement Account Name", accessor: "settlement_account_name" },
+    { Header: "Settlement Account No", accessor: "settlement_account_no" },
+    { Header: "Settlement Bank", accessor: "settlement_bank" },
+    { Header: "Status", accessor: "status" },
+]
+
 function Component() {
     const [selectedRow, setRow] = useState({});
-    const [tab, setTab] = useState(0);
+    const [tab, setTab] = useState(4);
 
     const [confirm, setConfirm] = useState(false);
     const [addUnit, setAddUnit] = useState(false);
     const [addUnitType, setAddUnitType] = useState(false);
     const [addSection, setAddSection] = useState(false);
+    const [addManagement, setAddManagement] = useState(false);
 
     const [edit, setEdit] = useState(false);
 
@@ -81,11 +122,19 @@ function Component() {
     const [sectionType, setSectionType] = useState('');
     const [sectionName, setSectionName] = useState('');
 
+    const [search, setSearch] = useState('');
+    const [managementID, setManagementID] = useState('');
+    const [managementName, setManagementName] = useState('');
+    const [modalManagement, setModalManagement] = useState(false);
+    const [managements, setManagements] = useState([]);
+
     const [utNameFilter, setUtNameFilter] = useState({});
     const [sTypeFilter, setSTypeFilter] = useState({});
+    const [sGroupFilter, setSGroupFilter] = useState({});
 
     const headers = useSelector(state => state.auth.headers);
-    const { selected, unit, unit_type, section, loading, refreshToggle } = useSelector(state => state.building);
+    const { selected, unit, unit_type, section, service, management,
+        loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -95,13 +144,27 @@ function Component() {
         tab === 0 && dispatch(getBuildingUnit(headers, pageIndex, pageSize, search, selected));
         tab === 1 && dispatch(getBuildingUnitType(headers, pageIndex, pageSize, search, selected, utNameFilter.value));
         tab === 2 && dispatch(getBuildingSection(headers, pageIndex, pageSize, search, selected, sTypeFilter.value));
+        tab === 3 && dispatch(getBuildingService(headers, pageIndex, pageSize, search, selected, sGroupFilter.value));
+        tab === 4 && dispatch(getBuildingManagement(headers, pageIndex, pageSize, search, selected));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, refreshToggle, headers, tab, utNameFilter, sTypeFilter])
+    }, [dispatch, refreshToggle, headers, tab, utNameFilter, sTypeFilter, sGroupFilter])
 
     useEffect(() => {
         dispatch(getBuildingUnitType(headers, 0, 10, '', selected));
         dispatch(getBuildingSection(headers, 0, 10, '', selected));
-    }, [dispatch, headers, selected])
+    }, [dispatch, headers, selected]);
+
+    useEffect(() => {
+        (!search || search >= 3) && get(endpointAdmin + '/management' +
+            '?limit=5&page=1' +
+            '&search=' + search, headers, res => {
+                let data = res.data.data.items;
+
+                let formatted = data.map(el => ({ label: el.name, value: el.id }));
+
+                setManagements(formatted);
+            })
+    }, [headers, search]);
 
     return (
         <div>
@@ -185,82 +248,148 @@ function Component() {
             <Modal isOpen={addUnitType} onRequestClose={() => setAddUnitType(false)}>
                 {edit ? "Edit" : "Add"} Unit Type
                 <form onSubmit={() => {
-                            edit ?
-                                dispatch(editBuildingUnitType(headers, {
-                                    "building_id": selected.id,
-                                    "unit_type": typeName ? typeName : selectedRow.unit_type,
-                                    "unit_size": parseFloat(typeSize ? typeSize : selectedRow.unit_size),
-                                }, selectedRow.id))
-                                :
-                                dispatch(createBuildingUnitType(headers, {
-                                    "building_id": selected.id,
-                                    "unit_type": typeName ? typeName : selectedRow.unit_type,
-                                    "unit_size": parseFloat(typeSize ? typeSize : selectedRow.unit_size),
-                                }))
-                            setAddUnitType(false);
-                            setEdit(false);
-                            setRow({});
-                            setTypeName('');
-                            setTypeSize('');
-                        }}>
-                <Input label="Type Name"
-                    inputValue={selectedRow.unit_type ? selectedRow.unit_type : typeName}
-                    setInputValue={setTypeName}
-                    type="select" options={unitTypes}
-                />
-                <Input label="Type Size"
-                    inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeSize}
-                    setInputValue={setTypeSize} />
-                <div style={{
-                    display: 'flex',
-                    marginTop: 16,
+                    edit ?
+                        dispatch(editBuildingUnitType(headers, {
+                            "building_id": selected.id,
+                            "unit_type": typeName ? typeName : selectedRow.unit_type,
+                            "unit_size": parseFloat(typeSize ? typeSize : selectedRow.unit_size),
+                        }, selectedRow.id))
+                        :
+                        dispatch(createBuildingUnitType(headers, {
+                            "building_id": selected.id,
+                            "unit_type": typeName ? typeName : selectedRow.unit_type,
+                            "unit_size": parseFloat(typeSize ? typeSize : selectedRow.unit_size),
+                        }))
+                    setAddUnitType(false);
+                    setEdit(false);
+                    setRow({});
+                    setTypeName('');
+                    setTypeSize('');
                 }}>
-                    <Button label="Cancel" secondary
-                        onClick={() => setAddUnitType(false)}
+                    <Input label="Type Name"
+                        inputValue={selectedRow.unit_type ? selectedRow.unit_type : typeName}
+                        setInputValue={setTypeName}
+                        type="select" options={unitTypes}
                     />
-                    <Button label={edit ? "Save" : "Add"} />
-                </div>
+                    <Input label="Type Size"
+                        inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeSize}
+                        setInputValue={setTypeSize} />
+                    <div style={{
+                        display: 'flex',
+                        marginTop: 16,
+                    }}>
+                        <Button label="Cancel" secondary
+                            onClick={() => setAddUnitType(false)}
+                        />
+                        <Button label={edit ? "Save" : "Add"} />
+                    </div>
                 </form>
             </Modal>
             <Modal isOpen={addSection} onRequestClose={() => setAddSection(false)}>
                 {edit ? "Edit" : "Add"} Section
                 <form onSubmit={() => {
-                            edit ?
-                                dispatch(editBuildingSection(headers, {
-                                    "building_id": selected.id,
-                                    "section_type": sectionType ? sectionType : selectedRow.section_type,
-                                    "section_name": sectionName ? sectionName : selectedRow.section_name,
-                                }, selectedRow.id))
-                                :
-                                dispatch(createBuildingSection(headers, {
-                                    "building_id": selected.id,
-                                    "section_type": sectionType ? sectionType : selectedRow.section_type,
-                                    "section_name": sectionName ? sectionName : selectedRow.section_name,
-                                }))
-                            setAddSection(false);
-                            setEdit(false);
-                            setRow({});
-                            setSectionType('');
-                            setSectionName('');
-                        }}>
-                <Input label="Section Name"
-                    inputValue={selectedRow.section_name ? selectedRow.section_name : sectionName}
-                    setInputValue={setSectionName} />
-                <Input label="Section Type"
-                    inputValue={selectedRow.section_type ? selectedRow.section_type : sectionType}
-                    setInputValue={setSectionType}
-                    type="select" options={sectionTypes}
-                />
-                <div style={{
-                    display: 'flex',
-                    marginTop: 16,
+                    edit ?
+                        dispatch(editBuildingSection(headers, {
+                            "building_id": selected.id,
+                            "section_type": sectionType ? sectionType : selectedRow.section_type,
+                            "section_name": sectionName ? sectionName : selectedRow.section_name,
+                        }, selectedRow.id))
+                        :
+                        dispatch(createBuildingSection(headers, {
+                            "building_id": selected.id,
+                            "section_type": sectionType ? sectionType : selectedRow.section_type,
+                            "section_name": sectionName ? sectionName : selectedRow.section_name,
+                        }))
+                    setAddSection(false);
+                    setEdit(false);
+                    setRow({});
+                    setSectionName('');
+                    setSectionType('');
                 }}>
-                    <Button label="Cancel" secondary
-                        onClick={() => setAddSection(false)}
-                    />
-                    <Button label={edit ? "Save" : "Add"} />
-                </div>
+
+                    <div style={{
+                        display: 'flex',
+                        marginTop: 16,
+                    }}>
+                        <Button label="Cancel" secondary
+                            onClick={() => setAddSection(false)}
+                        />
+                        <Button label={edit ? "Save" : "Add"} />
+                    </div>
                 </form>
+            </Modal>
+            <Modal isOpen={addManagement} onRequestClose={() => setAddManagement(false)}>
+                {edit ? "Edit" : "Add"} Management
+                <Form
+                    onSubmit={data => {
+                        edit ?
+                            dispatch(editBuildingManagement(headers, {
+                                "building_id": selected.id, ...data,
+                            }, selectedRow.id))
+                            :
+                            dispatch(createBuildingManagement(headers, {
+                                "building_id": selected.id, ...data,
+                            }))
+                        setAddManagement(false);
+                        setEdit(false);
+                        setRow({});
+                    }}
+                    loading={loading}
+                >
+                    <Modal isOpen={modalManagement} onRequestClose={() => setModalManagement(false)}>
+                        <Input label="Search"
+                            inputValue={search} setInputValue={setSearch}
+                        />
+                        <Filter
+                            data={managements}
+                            onClick={(el) => {
+                                setManagementID(el.value);
+                                setManagementName(el.label);
+                                setModalManagement(false);
+                            }}
+                        />
+                    </Modal>
+                    <Input label="Management ID" hidden
+                        inputValue={managementID ? managementID : selected.management_id}
+                        setInputValue={setManagementID}
+                    />
+                    <Input label="Management Name" hidden
+                        inputValue={managementName ? managementName : selected.management_name}
+                        setInputValue={setManagementName}
+                    />
+                    <Input label="Select Management" type="button"
+                        inputValue={managementName ? managementName : selected.management_name}
+                        onClick={() => setModalManagement(true)}
+                    />
+                    <Input label="Status" type="select" inputValue={selected.status}
+                        options={[
+                            { label: 'Active', value: 'active' },
+                            { label: 'Inactive', value: 'inactive' },
+                        ]} />
+                    <SectionSeparator />
+                    <Input label="Settlement Bank" inputValue={selected.settlement_bank} />
+                    <Input label="Settlement Account No" inputValue={selected.settlement_account_no} />
+                    <Input label="Settlement Account Name"
+                        inputValue={selected.settlement_account_name} />
+                    <SectionSeparator />
+                    <Input label="Billing Published (Date)" name="billing_published" type="number"
+                        inputValue={selected.billing_published}
+                    />
+                    <Input label="Billing Due (Date)" name="billing_duedate" type="number"
+                        inputValue={selected.billing_duedate} />
+                    <Input label="Penalty Fee" type="number"
+                        inputValue={selected.penalty_fee} />
+                    <SectionSeparator />
+                    <Input label="Courier Fee" type="number"
+                        inputValue={selected.courier_fee}
+                    />
+                    <Input label="Courier Internal Markup" type="number"
+                        inputValue={selected.courier_internal_markup}
+                    />
+                    <Input label="Courier External Markup" type="number"
+                        inputValue={selected.courier_external_markup}
+                    />
+                </Form>
             </Modal>
             <div style={{
                 display: 'flex'
@@ -416,6 +545,52 @@ function Component() {
                         setRow(row);
                         setEdit(true);
                         setAddSection(true);
+                    }}
+                />}
+                {tab === 3 && <Table
+                    columns={columnsService}
+                    data={service.items}
+                    loading={loading}
+                    pageCount={service.total_pages}
+                    fetchData={fetchData}
+                    filters={[
+                        {
+                            button: <Button key="Select Group"
+                                label={sGroupFilter.label ? sGroupFilter.label : "Select Group"}
+                                selected={sGroupFilter.label}
+                            />,
+                            component: (toggleModal) =>
+                                <Filter
+                                    data={serviceGroup}
+                                    onClick={(el) => {
+                                        setSGroupFilter(el);
+                                        toggleModal(false);
+                                    }}
+                                    onClickAll={() => {
+                                        setSGroupFilter("");
+                                        toggleModal(false);
+                                    }}
+                                />
+                        },
+                    ]}
+                    actions={[]}
+                />}
+                {tab === 4 && <Table
+                    columns={columnsManagement}
+                    data={management.items}
+                    loading={loading}
+                    pageCount={management.total_pages}
+                    fetchData={fetchData}
+                    filters={[]}
+                    actions={[
+                        <Button key="Add" label="Add" icon={<FiPlus />}
+                            onClick={() => setAddManagement(true)}
+                        />
+                    ]}
+                    onClickDelete={row => {
+                        // setRow(row);
+                        dispatch(deleteBuildingManagement(row, headers))
+                        // setConfirm(true);
                     }}
                 />}
             </div>

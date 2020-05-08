@@ -127,15 +127,13 @@ function Component() {
                     setInputValue={setBManagementID}
                 />
                 <Input label="Building Management Name" hidden
-                    inputValue={bManagementName ? bManagementName : bManagements.length > 0 ?
-                        bManagements.find(el => el.value === selected.building_management_id).label
-                        : null}
+                    inputValue={bManagementName ? bManagementName : selected.id ?
+                        selected.building_name + ' by ' + selected.management_name : null}
                     setInputValue={setBManagementName}
                 />
                 <Input label="Select Building Management" type="button"
-                    inputValue={bManagementName ? bManagementName : bManagements.length > 0 ?
-                        bManagements.find(el => el.value === selected.building_management_id).label
-                        : null}
+                    inputValue={bManagementName ? bManagementName : selected.id ?
+                        selected.building_name + ' by ' + selected.management_name : null}
                     onClick={() => setModal(true)}
                 />
                 <Input label="Is Internal?" type="select"

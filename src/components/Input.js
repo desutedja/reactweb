@@ -60,6 +60,7 @@ function Component({
                                 setValue(e.target.value);
                                 setInputValue && setInputValue(e.target.value);
                             }}
+                            onClick={onClick}
                         >
                             <option value="">{label}</option>
                             {options.map(el =>

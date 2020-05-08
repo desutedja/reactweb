@@ -33,11 +33,11 @@ const menu = [
         label: "Building",
         route: "/building"
     },
-    {
-        icon: <FiKey className="MenuItem-icon" />,
-        label: "Building Management",
-        route: "/building_management"
-    },
+    // {
+    //     icon: <FiKey className="MenuItem-icon" />,
+    //     label: "Building Management",
+    //     route: "/building_management"
+    // },
     {
         icon: <FiUsers className="MenuItem-icon" />,
         label: "Resident",
@@ -132,7 +132,7 @@ function Page() {
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
                     <Switch>
-                        <Redirect exact from="/" to={"/staff"}
+                        <Redirect exact from="/" to={"/building"}
                         />
                         <Route path="/building">
                             <BuildingRoute />

@@ -19,13 +19,8 @@ function Component() {
     return (
         <div>
             <div className="Container">
-                {selected.logo ?
-                    <img className="Logo" src={selected.logo} alt="logo" />
-                    :
-                    <img src={'https://via.placeholder.com/200'} alt="logo" />
-                }
                 <div className="Details" style={{
-                    marginLeft: 16
+
                 }}>
                     {Object.keys(selected).filter(el => !exception.includes(el))
                         .map(el =>
@@ -39,7 +34,11 @@ function Component() {
                     <Button label="Edit" onClick={() => history.push(
                         url.split('/').slice(0, -1).join('/') + "/edit"
                     )} />
-
+                    {selected.logo ?
+                        <img className="Logo" src={selected.logo} alt="logo" />
+                        :
+                        <img src={'https://via.placeholder.com/200'} alt="logo" />
+                    }
                 </div>
             </div>
         </div>

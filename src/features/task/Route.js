@@ -184,7 +184,7 @@ function Component() {
                             },
                         ]}
                         actions={[]}
-                        onClickRow={rowID => dispatch(getTaskDetails(rowID, headers, history, url))}
+                        onClickDetails={row => dispatch(getTaskDetails(row, headers, history, url))}
                     />
                 </Route>
                 <Route path={`${path}/details`}>

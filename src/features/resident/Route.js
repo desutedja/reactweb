@@ -6,7 +6,7 @@ import { FiPlus } from 'react-icons/fi';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
-import { getResident, getResidentDetails, deleteResident } from './slice';
+import { getResident, getResidentDetails, deleteResident, setSelected } from './slice';
 import Add from './Add';
 import Details from './Details';
 
@@ -64,7 +64,10 @@ function Component() {
                         filters={[]}
                         actions={[
                             <Button key="Add" label="Add" icon={<FiPlus />}
-                                onClick={() => history.push(url + "/add")}
+                                onClick={() => {
+                                    dispatch(setSelected({}));
+                                    history.push(url + "/add");
+                                }}
                             />
                         ]}
                         onClickDelete={row => {

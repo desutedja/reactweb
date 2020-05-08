@@ -127,9 +127,9 @@ function Component({
                                     </div>
                                 </th>
                             ))}
-                            <th key={i}>
+                            {(onClickDelete || onClickDetails || onClickEdit) && <th key={i}>
                                 Options
-                            </th>
+                            </th>}
                         </tr>
                     ))}
                 </thead>
@@ -145,7 +145,7 @@ function Component({
                                         <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                                     );
                                 })}
-                                <td key={i}>
+                                {(onClickDelete || onClickDetails || onClickEdit) && <td key={i}>
                                     <div style={{
                                         display: 'flex',
                                     }}>
@@ -159,7 +159,7 @@ function Component({
                                             <FiTrash />
                                         </IconButton>}
                                     </div>
-                                </td>
+                                </td>}
                             </tr>
                         );
                     })}

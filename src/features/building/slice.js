@@ -40,6 +40,20 @@ export const slice = createSlice({
       page: 1,
       range: 10,
     },
+    service: {
+      items: [],
+      total_items: 0,
+      total_pages: 1,
+      page: 1,
+      range: 10,
+    },
+    management: {
+      items: [],
+      total_items: 0,
+      total_pages: 1,
+      page: 1,
+      range: 10,
+    },
   },
   reducers: {
     startAsync: (state) => {
@@ -86,6 +100,20 @@ export const slice = createSlice({
       state.section.total_items = data.filtered_item;
       state.section.total_pages = data.filtered_page;
     },
+    setServiceData: (state, action) => {
+      const data = action.payload;
+
+      state.service.items = data.items;
+      state.service.total_items = data.filtered_item;
+      state.service.total_pages = data.filtered_page;
+    },
+    setManagementData: (state, action) => {
+      const data = action.payload;
+
+      state.management.items = data.items;
+      state.management.total_items = data.filtered_item;
+      state.management.total_pages = data.filtered_page;
+    },
   },
 });
 
@@ -98,7 +126,9 @@ export const {
   setAlert,
   setUnitData,
   setUnitTypeData,
-  setSectionData
+  setSectionData,
+  setServiceData,
+  setManagementData
 } = slice.actions;
 
 export const getBuilding = (
@@ -236,6 +266,43 @@ export const getBuildingSection = (
     })
 }
 
+export const getBuildingService = (
+  headers, pageIndex, pageSize, search, row, group = ""
+) => dispatch => {
+  dispatch(startAsync());
+
+  get(buildingEndpoint + '/service' +
+    '?page=' + (pageIndex + 1) +
+    '&building_id=' + row.id +
+    '&group=' + group +
+    '&search=' + search +
+    '&limit=' + pageSize,
+    headers,
+    res => {
+      dispatch(setServiceData(res.data.data));
+
+      dispatch(stopAsync());
+    })
+}
+
+export const getBuildingManagement = (
+  headers, pageIndex, pageSize, search, row
+) => dispatch => {
+  dispatch(startAsync());
+
+  get(buildingEndpoint + '/management' +
+    '?page=' + (pageIndex + 1) +
+    '&building_id=' + row.id +
+    '&search=' + search +
+    '&limit=' + pageSize,
+    headers,
+    res => {
+      dispatch(setManagementData(res.data.data));
+
+      dispatch(stopAsync());
+    })
+}
+
 export const createBuildingUnit = (headers, data) => dispatch => {
   dispatch(startAsync());
 
@@ -275,6 +342,19 @@ export const createBuildingSection = (headers, data) => dispatch => {
     })
 }
 
+export const createBuildingManagement = (headers, data) => dispatch => {
+  dispatch(startAsync());
+
+  post(buildingEndpoint + '/management', data, headers,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
 export const editBuildingUnit = (headers, data, id) => dispatch => {
   dispatch(startAsync());
 
@@ -305,6 +385,19 @@ export const editBuildingSection = (headers, data, id) => dispatch => {
   dispatch(startAsync());
 
   put(buildingEndpoint + '/section', {...data, id: id}, headers,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
+export const editBuildingManagement = (headers, data, id) => dispatch => {
+  dispatch(startAsync());
+
+  put(buildingEndpoint + '/management', {...data, id: id}, headers,
     res => {
       dispatch(refresh());
       dispatch(stopAsync());
@@ -362,6 +455,26 @@ export const deleteBuildingSection = (row, headers) => dispatch => {
       dispatch(setAlert({
         type: 'normal',
         message: 'Section has been deleted.'
+      }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
+export const deleteBuildingManagement = (row, headers) => dispatch => {
+  dispatch(startAsync());
+
+  del(buildingEndpoint + '/management/' + row.id, headers,
+    res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Building Management has been deleted.'
       }))
       setTimeout(() => dispatch(setAlert({
         message: '',
