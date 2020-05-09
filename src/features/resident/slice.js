@@ -26,6 +26,13 @@ export const slice = createSlice({
       page: 1,
       range: 10,
     },
+    subaccount: {
+      items: [],
+      total_items: 0,
+      total_pages: 1,
+      page: 1,
+      range: 10,
+    },
   },
   reducers: {
     startAsync: (state) => {
@@ -44,11 +51,16 @@ export const slice = createSlice({
     setUnitData: (state, action) => {
       const data = action.payload;
 
-      console.log("Setting");
-
       state.unit.items = data.items;
       state.unit.total_items = data.filtered_item;
       state.unit.total_pages = data.filtered_page;
+    },
+    setSubaccountData: (state, action) => {
+      const data = action.payload;
+
+      state.subaccount.items = data.items;
+      state.subaccount.total_items = data.filtered_item;
+      state.subaccount.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {
       state.selected = action.payload;
@@ -68,6 +80,7 @@ export const {
   stopAsync,
   setData,
   setUnitData,
+  setSubaccountData,
   setSelected,
   refresh,
   setAlert
@@ -150,9 +163,28 @@ export const getResidentDetails = (row, headers, history, url) => dispatch => {
     })
 }
 
+export const getSubaccount = (headers, pageIndex, pageSize, search, row) => dispatch => {
+    dispatch(startAsync());
+
+    get(residentEndpoint + '/subaccount' +
+        '?page=' + (pageIndex + 1) +
+        '&id=' + row.id + 
+        '&limit=' + pageSize +
+        '&search=' + search,
+        headers,
+        res => {
+            dispatch(setSubaccountData(res.data.data));
+            console.log("->", res);
+
+            dispatch(stopAsync())
+        }
+    )
+}
+
 export const getResidentUnit = (headers, pageIndex, pageSize, search, row) => dispatch => {
     dispatch(startAsync());
 
+    console.log("Getting");
     get(residentEndpoint + '/unit' + 
         '?page=' + (pageIndex + 1) +
         '&id=' + row.id + 
@@ -160,6 +192,7 @@ export const getResidentUnit = (headers, pageIndex, pageSize, search, row) => di
         '&search=' + search,
         headers,
         res => {
+            console.log(res.data.data);
             dispatch(setUnitData(res.data.data));
 
             dispatch(stopAsync())

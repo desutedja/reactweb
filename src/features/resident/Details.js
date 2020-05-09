@@ -14,7 +14,8 @@ import Input from '../../components/Input';
 import Form from '../../components/Form';
 
 import {
-    getResidentUnit
+    getResidentUnit,
+    getSubaccount
 } from './slice';
 
 const exception = [
@@ -28,11 +29,19 @@ const tabs = [
 const columnsUnit = [
     { Header: "ID", accessor: "unit_id" },
     { Header: "Building", accessor: "building_name" },
-    { Header: "Number", accessor: "number" },
-    { Header: "Floor", accessor: "floor" },
-    { Header: "Section", accessor: "section_name" },
+    { Header: "Room Number", accessor: "number" },
+    { Header: "Level", accessor: "level" },
+    { Header: "Status", accessor: "status" },
     { Header: "Type", accessor: row => row.unit_type + " - " + row.unit_size },
 ]
+
+const columnsSubaccount = [
+    { Header: "ID", accessor: "id" },
+    { Header: "Name", accessor: row => row.firstname + " " + row.lastname },
+    { Header: "Email", accessor: "email" },
+    { Header: "Phone", accessor: "phone" },
+]
+
 
 function Component() {
     const [tab, setTab] = useState(0);
@@ -42,7 +51,7 @@ function Component() {
     const [edit, setEdit] = useState(false);
     const [search, setSearch] = useState('');
 
-    const { selected, unit, loading, refreshToggle } = useSelector(state => state.resident);
+    const { selected, unit, subaccount, loading, refreshToggle } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -51,8 +60,9 @@ function Component() {
     const headers = useSelector(state => state.auth.headers);
     const fetchData = useCallback((pageIndex, pageSize) => {
         tab === 0 && dispatch(getResidentUnit(headers, pageIndex, pageSize, search, selected));
+        tab === 1 && dispatch(getSubaccount(headers, pageIndex, pageSize, search, selected));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, headers, tab])
+    }, [dispatch, refreshToggle, headers, tab])
 
     
     return (
@@ -64,8 +74,7 @@ function Component() {
                     {Object.keys(selected).filter(el => !exception.includes(el))
                         .map(el =>
                             <LabeledText
-                                label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                                value={el == "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
+                                label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()} value={el == "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
                             />
                         )}
                 </div>
@@ -94,6 +103,24 @@ function Component() {
                     data={unit.items}
                     loading={loading}
                     pageCount={unit.total_pages}
+                    fetchData={fetchData}
+                    filters={[]}
+                    actions={[
+                        <Button key="Add" label="Add" icon={<FiPlus />}
+                            onClick={() => setAddUnit(true)}
+                        />
+                    ]}
+                    onClickDelete={row => {
+                        // setRow(row);
+                        //dispatch(deleteResidentUnit(row, headers))
+                        // setConfirm(true);
+                    }}
+                />}
+                {tab === 1 && <Table
+                    columns={columnsSubaccount}
+                    data={subaccount.items}
+                    loading={loading}
+                    pageCount={subaccount.total_pages}
                     fetchData={fetchData}
                     filters={[]}
                     actions={[
