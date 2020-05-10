@@ -29,7 +29,7 @@ const tabs = [
 const columnsUnit = [
     { Header: "ID", accessor: "unit_id" },
     { Header: "Building", accessor: "building_name" },
-    { Header: "Room Number", accessor: "number" },
+    { Header: "Unit Number", accessor: "number" },
     { Header: "Level", accessor: "level" },
     { Header: "Status", accessor: "status" },
     { Header: "Type", accessor: row => row.unit_type + " - " + row.unit_size },
@@ -38,6 +38,8 @@ const columnsUnit = [
 const columnsSubaccount = [
     { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: row => row.firstname + " " + row.lastname },
+    { Header: "Building", accessor: "building_name" },
+    { Header: "Unit Number", accessor: "unit_number" },
     { Header: "Email", accessor: "email" },
     { Header: "Phone", accessor: "phone" },
 ]
