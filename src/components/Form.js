@@ -20,6 +20,7 @@ function Component({ children, onSubmit, loading }) {
                     .reduce((all, entry) => {
                         all[entry[0]] =
                         entry[1].includes('-') ? (entry[1] + ' 00:00:00') :
+                        entry[1].includes(':') ? (entry[1] + ':00') :
                             isNaN(parseFloat(entry[1])) || parseFloat(entry[1]) > 999999 ?
                                 entry[1] : parseFloat(entry[1]);
 

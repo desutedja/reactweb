@@ -27,7 +27,7 @@ function Component() {
                         .map(el =>
                             <LabeledText
                                 label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                                value={el == "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
+                                value={el === "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
                             />
                         )}
                 </div>

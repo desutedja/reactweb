@@ -46,6 +46,7 @@ function Component() {
                     { value: "popup", label: "Popup" },
                     { value: "banner", label: "Banner" },
                 ]} inputValue={selected.appear_as} />
+                <Input label="Title" name="content_name" type="textarea" />
                 <SectionSeparator />
 
                 <Input optional label="Gender" type="select" options={[

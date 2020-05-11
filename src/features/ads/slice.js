@@ -1,6 +1,6 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { endpointAds } from '../../settings';
-import { get, post, put } from '../../utils';
+import { get, post, put, del } from '../../utils';
 
 const adsEndpoint = endpointAds + '/management/ads';
 
@@ -92,7 +92,9 @@ export const getAds = (
 export const createAds = (headers, data, history) => dispatch => {
   dispatch(startAsync());
 
-  post(adsEndpoint, data, headers,
+  post(adsEndpoint, {
+    ads: data
+  }, headers,
     res => {
       history.push("/advertisement");
 
@@ -115,6 +117,23 @@ export const editAds = (headers, data, history, id) => dispatch => {
     },
     err => {
       dispatch(stopAsync());
+    })
+}
+
+export const deleteAds = (row, headers) => dispatch => {
+  dispatch(startAsync());
+
+  del(adsEndpoint + '/' + row.id, headers,
+    res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Advertisement ' + row.name + ' has been deleted.'
+      }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
+      dispatch(refresh());
+      dispatch(stopAsync())
     })
 }
 
@@ -150,7 +169,7 @@ export const getAdsSchedule = (
 export const createAdsSchedule = (headers, data) => dispatch => {
   dispatch(startAsync());
 
-  post(adsEndpoint + '/unit', data, headers,
+  post(adsEndpoint + '/schedule', data, headers,
     res => {
       dispatch(refresh());
       dispatch(stopAsync());

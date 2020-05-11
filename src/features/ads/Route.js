@@ -1,13 +1,15 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { FiPlus, FiX } from 'react-icons/fi';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
-import { getAds, getAdsDetails, setSelected } from './slice';
+import Modal from '../../components/Modal';
+import IconButton from '../../components/IconButton';
+import { getAds, getAdsDetails, setSelected, deleteAds, setAlert } from './slice';
 import Details from './Details';
 import Add from './Add';
-import { FiPlus } from 'react-icons/fi';
 
 const columns = [
     { Header: "ID", accessor: "id" },
@@ -21,14 +23,17 @@ const columns = [
     { Header: "Image", accessor: "" },
     { Header: "Media Type", accessor: "media" },
     { Header: "Media URL", accessor: "media_url" },
-    { Header: "Start Date", accessor: "start_date" },
-    { Header: "End Date", accessor: "end_date" },
+    { Header: "Start Date", accessor: row => row.start_date?.split("T")[0] },
+    { Header: "End Date", accessor: row => row.end_date?.split("T")[0] },
     { Header: "Status", accessor: "published" },
 ]
 
 function Component() {
+    const [confirm, setConfirm] = useState(false);
+    const [selectedRow, setRow] = useState({});
+
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages } = useSelector(state => state.ads);
+    const { loading, items, total_pages, refreshToggle } = useSelector(state => state.ads);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -36,8 +41,31 @@ function Component() {
 
     return (
         <div>
+            <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+                Are you sure you want to delete?
+                <div style={{
+                    display: 'flex',
+                    marginTop: 16,
+                }}>
+                    <Button label="No" secondary
+                        onClick={() => setConfirm(false)}
+                    />
+                    <Button label="Yes"
+                        onClick={() => {
+                            setConfirm(false);
+                            dispatch(deleteAds(selectedRow, headers));
+                        }}
+                    />
+                </div>
+            </Modal>
             <Switch>
                 <Route exact path={path}>
+                    {alert.message && <div className={"Alert " + alert.type}>
+                        <p>{alert.message}</p>
+                        <IconButton onClick={() => dispatch(setAlert({}))}>
+                            <FiX />
+                        </IconButton>
+                    </div>}
                     <Table
                         columns={columns}
                         data={items}
@@ -45,7 +73,8 @@ function Component() {
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getAds(headers, pageIndex, pageSize, search));
-                        }, [dispatch, headers])}
+                            // eslint-disable-next-line react-hooks/exhaustive-deps
+                        }, [dispatch, headers, refreshToggle])}
                         filters={[]}
                         actions={[
                             <Button key="Add" label="Add" icon={<FiPlus />}
@@ -55,6 +84,10 @@ function Component() {
                                 }}
                             />
                         ]}
+                        onClickDelete={row => {
+                            setRow(row);
+                            setConfirm(true);
+                        }}
                         onClickDetails={row => dispatch(getAdsDetails(row, headers, history, url))}
                     />
                 </Route>

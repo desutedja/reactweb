@@ -1,12 +1,15 @@
 import React, { useState, useCallback } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { FiPlus } from 'react-icons/fi';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
 import Table from '../../components/Table';
-import { FiPlus } from 'react-icons/fi';
-import { getAdsSchedule } from './slice';
+import Modal from '../../components/Modal';
+import Form from '../../components/Form';
+import Input from '../../components/Input';
+import { getAdsSchedule, editAdsSchedule, createAdsSchedule } from './slice';
 
 const exception = [
     'created_on', 'modified_on', 'deleted',
@@ -19,14 +22,25 @@ const tabs = [
     'Content', 'Schedules',
 ]
 
+const days = [
+    {value: 1, label: "Senin"},
+    {value: 2, label: "Selasa"},
+    {value: 3, label: "Rabu"},
+    {value: 4, label: "Kamis"},
+    {value: 5, label: "Jumat"},
+    {value: 6, label: "Sabtu"},
+    {value: 7, label: "Minggu"},
+]
+
 const columns = [
-    { Header: "Day", accessor: "day" },
+    { Header: "Day", accessor: row => days.find(el => el.value === row.day)?.label },
     { Header: "Hour From", accessor: "hour_from" },
     { Header: "Hour To", accessor: "hour_to" },
 ]
 
 function Component() {
     const [tab, setTab] = useState(0);
+    const [addSchedule, setAddSchedule] = useState(false);
 
     const headers = useSelector(state => state.auth.headers);
     const { selected, loading, schedule, refreshToggle } = useSelector(state => state.ads);
@@ -38,10 +52,23 @@ function Component() {
     const fetchData = useCallback((pageIndex, pageSize, search) => {
         tab === 1 && dispatch(getAdsSchedule(headers, pageIndex, pageSize, search, selected));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, refreshToggle, headers, tab])
+    }, [dispatch, refreshToggle, headers, tab]);
 
     return (
         <div>
+            <Modal isOpen={addSchedule} onRequestClose={() => setAddSchedule(false)}>
+                Add Schedule
+                <Form
+                    onSubmit={data => {
+                        dispatch(createAdsSchedule(headers, {...data, adv_id: selected.id}))
+                        setAddSchedule(false);
+                    }}
+                >
+                    <Input label="Day" type="select" options={days} />
+                    <Input label="Hour From" type="time" />
+                    <Input label="Hour To" type="time" />
+                </Form>
+            </Modal>
             <div className="Container">
                 <div className="Details" style={{
 
@@ -118,7 +145,11 @@ function Component() {
                     pageCount={schedule.total_pages}
                     fetchData={fetchData}
                     filters={[]}
-                    actions={[]}
+                    actions={[
+                        <Button key="Add" label="Add" icon={<FiPlus />}
+                            onClick={() => setAddSchedule(true)}
+                        />
+                    ]}
                 />}
             </div>
         </div>
