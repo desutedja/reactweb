@@ -427,11 +427,6 @@ function Component() {
                         }
                     </div>
                 </div>
-                <div className="Container" style={{
-                    flex: 2
-                }}>
-
-                </div>
             </div>
             <div className="Container" style={{
                 marginTop: 16,
