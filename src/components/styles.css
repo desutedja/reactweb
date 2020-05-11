@@ -35,6 +35,12 @@
   cursor: default;
 }
 
+.Button.inactive {
+  color: grey;
+  cursor: default;
+  background-color: silver;
+}
+
 .IconButton.inactive:hover {
   background-color: white;
 }

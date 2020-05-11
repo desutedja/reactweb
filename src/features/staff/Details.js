@@ -7,7 +7,7 @@ import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
 
 const exception = [
-    'modified_on', 'deleted',
+    'created_on', 'modified_on', 'deleted', 'photo'
 ];
 
 function Component() {
@@ -20,7 +20,7 @@ function Component() {
         <div>
             <div className="Container">
                 <div className="Details" style={{
-                    
+
                 }}>
                     {Object.keys(selected).filter(el => !exception.includes(el))
                         .map(el =>
@@ -35,6 +35,11 @@ function Component() {
                     <Button label="Edit" onClick={() => history.push(
                         url.split('/').slice(0, -1).join('/') + "/edit"
                     )} />
+                    {selected.photo ?
+                        <img className="Logo" src={selected.photo} alt="photo_staff" />
+                        :
+                        <img src={'https://via.placeholder.com/200'} alt="photo_staff" />
+                    }
                 </div>
             </div>
         </div>

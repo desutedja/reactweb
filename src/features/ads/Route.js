@@ -3,7 +3,11 @@ import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../components/Table';
-import { getAds } from './slice';
+import Button from '../../components/Button';
+import { getAds, getAdsDetails, setSelected } from './slice';
+import Details from './Details';
+import Add from './Add';
+import { FiPlus } from 'react-icons/fi';
 
 const columns = [
     { Header: "ID", accessor: "id" },
@@ -43,8 +47,25 @@ function Component() {
                             dispatch(getAds(headers, pageIndex, pageSize, search));
                         }, [dispatch, headers])}
                         filters={[]}
-                        actions={[]}
+                        actions={[
+                            <Button key="Add" label="Add" icon={<FiPlus />}
+                                onClick={() => {
+                                    dispatch(setSelected({}));
+                                    history.push(url + "/add");
+                                }}
+                            />
+                        ]}
+                        onClickDetails={row => dispatch(getAdsDetails(row, headers, history, url))}
                     />
+                </Route>
+                <Route path={`${path}/add`}>
+                    <Add />
+                </Route>
+                <Route path={`${path}/edit`}>
+                    <Add />
+                </Route>
+                <Route path={`${path}/details`}>
+                    <Details />
                 </Route>
             </Switch>
         </div>

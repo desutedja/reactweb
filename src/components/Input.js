@@ -8,7 +8,7 @@ function Component({
     label, compact, name, optional = true,
     type = "text", rows = 2, options = [],
     inputValue, setInputValue, icon, onClick,
-    hidden,
+    hidden, max, min
 }) {
     const [value, setValue] = useState(type === "button" ? label : inputValue ? inputValue : "");
     const [uploading, setUploading] = useState(false);
@@ -140,8 +140,11 @@ function Component({
                                 placeholder={label}
                                 maxLength="30"
                                 size="30"
+                                min={min}
+                                max={max}
                                 value={value}
                                 onChange={(e) => {
+                                    console.log(e.target.value);
                                     if (type === 'url') {
                                         setValue('http://' + e.target.value.replace('http://', ''));
                                         setInputValue && setInputValue('http://' + e.target.value.replace('http://', ''));

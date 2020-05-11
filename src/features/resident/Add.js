@@ -141,7 +141,9 @@ function Component() {
                     dispatch(createResident(headers, data, history))}
                 loading={loading}
             >
-                <div>
+                <div style={{
+                    width: '100%'
+                }}>
                     <Input label="Email" type="email" inputValue={email} setInputValue={setEmail} />
                     <Input label="Check" type="button" compact
                         onClick={() => {

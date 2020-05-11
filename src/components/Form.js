@@ -11,46 +11,20 @@ function Component({ children, onSubmit, loading }) {
     return (
         <div className="Container">
             <form ref={formRef} className="Form" onSubmit={async e => {
-                // console.log('sth');
-
                 e.preventDefault();
 
                 const formData = new FormData(formRef.current);
 
-                // const getData = async () => {
-                //     return Promise.all([...formData.entries()].map(async entry => {
-                //         if (entry[1] instanceof File) {
-                //             console.log(entry[0], 'is a file, uploading...');
-
-                //             let ref = storageRef.child('building_logo/' + Date.now() + '-' + entry[1].name);
-                //             await ref.put(entry[1]).then(function (snapshot) {
-                //                 console.log(snapshot, 'File uploaded!');
-
-                //                 snapshot.ref.getDownloadURL().then(url => entry[1] = url);
-                //             })
-
-                //         }
-                //         return entry;
-                //     }))
-                // }
-
-                // let arrayData;
-
-                // await getData().then(data => {
-                //     arrayData = data
-                // })
-
-                // console.log(arrayData);
-
                 let dataObject = [...formData.entries()]
-                .filter(el => el[0] !== 'uploader')
-                .reduce((all, entry) => {
-                    all[entry[0]] =
-                        isNaN(parseFloat(entry[1])) || parseFloat(entry[1]) > 999999
-                            ? entry[1] : parseFloat(entry[1]);
+                    .filter(el => el[0] !== 'uploader')
+                    .reduce((all, entry) => {
+                        all[entry[0]] =
+                        entry[1].includes('-') ? (entry[1] + ' 00:00:00') :
+                            isNaN(parseFloat(entry[1])) || parseFloat(entry[1]) > 999999 ?
+                                entry[1] : parseFloat(entry[1]);
 
-                    return all
-                }, {});
+                        return all
+                    }, {});
 
                 console.log(dataObject);
 

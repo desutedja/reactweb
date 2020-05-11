@@ -31,6 +31,8 @@ function Component() {
     const [province, setProvince] = useState("");
     const [provinces, setProvinces] = useState([]);
 
+    const [role, setRole] = useState("");
+
     let dispatch = useDispatch();
     let history = useHistory();
 
@@ -103,6 +105,46 @@ function Component() {
                     dispatch(createStaff(headers, data, history))}
                 loading={loading}
             >
+                <Input label="Staff Role" type="select"
+                    options={[
+                        { value: 'gm_bm', label: 'GM BM' },
+                        { value: 'pic_bm', label: 'PIC BM' },
+                        { value: 'technician', label: 'Technician' },
+                        { value: 'courier', label: 'Courier' },
+                        { value: 'security', label: 'Security' },
+                    ]}
+                    inputValue={role ? role : selected.staff_role}
+                    setInputValue={setRole}
+                />
+                {role === "courier" && <Input label="Is Internal?" type="select"
+                    name="on_centratama"
+                    options={[
+                        { value: 1, label: 'Yes' },
+                        { value: 0, label: 'No' },
+                    ]} inputValue={selected.on_centratama} />}
+                <SectionSeparator />
+
+                <Input label="Building Management ID" hidden
+                    inputValue={bManagementID ? bManagementID : selected.building_management_id}
+                    setInputValue={setBManagementID}
+                />
+                <Input label="Building Management Name" hidden
+                    inputValue={bManagementName ? bManagementName : selected.id ?
+                        selected.building_name + ' by ' + selected.management_name : null}
+                    setInputValue={setBManagementName}
+                />
+                <Input label="Select Building Management" type="button"
+                    inputValue={bManagementName ? bManagementName : selected.id ?
+                        selected.building_name + ' by ' + selected.management_name : null}
+                    onClick={() => setModal(true)}
+                />
+                <Input label="Staff ID" inputValue={selected.staff_id} />
+                <Input label="Status" type="select" options={[
+                    { value: 'active', label: 'Active' },
+                    { value: 'inactive', label: 'Inactive' },
+                ]} inputValue={selected.status ? selected.status : 'active'} />
+                <SectionSeparator />
+
                 <Input label="Firstname" inputValue={selected.firstname} />
                 <Input label="Lastname" inputValue={selected.lastname} />
                 <Input label="Email" type="email" inputValue={selected.email} />
@@ -120,42 +162,6 @@ function Component() {
                     { value: 'divorce', label: 'Divorced' },
                     { value: 'other', label: 'Other' },
                 ]} inputValue={selected.marital_status} />
-                <SectionSeparator />
-
-                <Input label="Building Management ID" hidden
-                    inputValue={bManagementID ? bManagementID : selected.building_management_id}
-                    setInputValue={setBManagementID}
-                />
-                <Input label="Building Management Name" hidden
-                    inputValue={bManagementName ? bManagementName : selected.id ?
-                        selected.building_name + ' by ' + selected.management_name : null}
-                    setInputValue={setBManagementName}
-                />
-                <Input label="Select Building Management" type="button"
-                    inputValue={bManagementName ? bManagementName : selected.id ?
-                        selected.building_name + ' by ' + selected.management_name : null}
-                    onClick={() => setModal(true)}
-                />
-                <Input label="Is Internal?" type="select"
-                    name="on_centratama"
-                    options={[
-                        { value: 1, label: 'Yes' },
-                        { value: 0, label: 'No' },
-                    ]} inputValue={selected.on_centratama} />
-                <SectionSeparator />
-
-                <Input label="Staff ID" inputValue={selected.staff_id} />
-                <Input label="Staff Role" type="select" options={[
-                    { value: 'gm_bm', label: 'GM BM' },
-                    { value: 'pic_bm', label: 'PIC BM' },
-                    { value: 'technician', label: 'Technician' },
-                    { value: 'courier', label: 'Courier' },
-                    { value: 'security', label: 'Security' },
-                ]} inputValue={selected.staff_role} />
-                <Input label="Status" type="select" options={[
-                    { value: 'active', label: 'Active' },
-                    { value: 'inactive', label: 'Inactive' },
-                ]} inputValue={selected.status} />
                 <SectionSeparator />
 
                 <Input label="Address" type="textarea" inputValue={selected.address} />
