@@ -6,6 +6,8 @@ import { FiPlus } from 'react-icons/fi';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
+import Filter from '../../components/Filter';
+import Input from '../../components/Input';
 import { getResident, getResidentDetails, deleteResident, setSelected } from './slice';
 import Add from './Add';
 import Details from './Details';
@@ -60,7 +62,7 @@ function Component() {
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getResident(headers, pageIndex, pageSize, search));
-                        // eslint-disable-next-line react-hooks/exhaustive-deps
+                            // eslint-disable-next-line react-hooks/exhaustive-deps
                         }, [dispatch, headers, refreshToggle])}
                         filters={[]}
                         actions={[
@@ -79,6 +81,9 @@ function Component() {
                     />
                 </Route>
                 <Route path={`${path}/add`}>
+                    <Add />
+                </Route>
+                <Route path={`${path}/edit`}>
                     <Add />
                 </Route>
                 <Route path={`${path}/details`}>

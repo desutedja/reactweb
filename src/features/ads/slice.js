@@ -73,13 +73,15 @@ export const {
 
 export const getAds = (
   headers, pageIndex, pageSize,
-  search = '', province, city, district
+  search = '', age_from, age_to
 ) => dispatch => {
   dispatch(startAsync());
 
   get(adsEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
+    '&age_from=' + age_from +
+    '&age_to=' + age_to +
     '&search=' + search,
     headers,
     res => {

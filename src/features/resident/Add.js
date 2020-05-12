@@ -13,7 +13,7 @@ import { endpointResident } from '../../settings';
 import { FiSearch } from 'react-icons/fi';
 
 function Component() {
-    const [exist, setExist] = useState(false);
+    const [exist, setExist] = useState(true);
     const [search, setSearch] = useState('');
     const [modal, setModal] = useState(false);
 
@@ -104,7 +104,7 @@ function Component() {
     useEffect(() => {
         if (!search) {
             setBCLoading(true);
-            get(endpointResident + '/geo/city',
+            get(endpointResident + '/geo/province',
                 headers,
                 res => {
                     let formatted = res.data.data.map(el => ({ label: el.name, value: el.name }));
@@ -144,34 +144,37 @@ function Component() {
                 <div style={{
                     width: '100%'
                 }}>
-                    <Input label="Email" type="email" inputValue={email} setInputValue={setEmail} />
-                    <Input label="Check" type="button" compact
+                    <Input label="Email" type="email" inputValue={email ? email : selected.email}
+                        setInputValue={setEmail} />
+                    {!selected.id && <Input label="Check" type="button" compact
                         onClick={() => {
                             post(endpointResident + '/management/resident/check', {
                                 email: email
                             }, headers,
                                 res => {
-                                    res.data.data.id ?
-                                        setModal(true)
+                                    res.data.data.id
+                                        ?
+                                        // setModal(true);
+                                        alert("User sudah terdaftar.")
                                         :
                                         setExist(false);
                                 },
                             )
                         }}
-                    />
+                    />}
                     <SectionSeparator />
                 </div>
-                {!exist && <>
+                {(!exist || selected.email) && <>
                     <SectionSeparator />
-                    <Input label="First Name" name="firstname" />
-                    <Input label="Last Name" name="lastname" />
-                    <Input label="Phone" type="tel" />
+                    <Input label="First Name" name="firstname" inputValue={selected.firstname} />
+                    <Input label="Last Name" name="lastname" inputValue={selected.lastname} />
+                    <Input label="Phone" type="tel" inputValue={selected.phone} />
                     <Select label="Birth Place" type="select" options={bcitiesSearched}
                         search={search} setSearch={setSearch}
-                        inputValue={bcity ? bcity : selected.bcity} setInputValue={setBCity}
+                        inputValue={bcity ? bcity : selected.birth_place} setInputValue={setBCity}
                         loading={bcloading}
                     />
-                    <Input label="Birth Date" type="date" />
+                    <Input label="Birth Date" type="date" inputValue={selected.birth_date} />
                     <SectionSeparator />
 
                     <Input label="Nationality" inputValue={selected.nationality} />

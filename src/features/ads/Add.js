@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Input from '../../components/Input';
@@ -21,6 +21,7 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
+    let { path, url } = useRouteMatch();
 
     useEffect(() => {
         let i = 0;
@@ -36,17 +37,19 @@ function Component() {
     return (
         <div>
             <Form
-                onSubmit={data => selected.id ?
-                    dispatch(editAds(headers, data, history, selected.id))
+                onSubmit={data => !selected.id || url.split('/').reverse()[0] === 'add' ?
+                    dispatch(createAds(headers, data, history))
                     :
-                    dispatch(createAds(headers, data, history))}
+                    dispatch(editAds(headers, data, history, selected.id))
+                }
                 loading={loading}
             >
                 <Input label="Appear as" type="select" options={[
                     { value: "popup", label: "Popup" },
                     { value: "banner", label: "Banner" },
                 ]} inputValue={selected.appear_as} />
-                <Input label="Title" name="content_name" type="textarea" />
+                <Input label="Title" name="content_name" type="textarea"
+                    inputValue={selected.content_name} />
                 <SectionSeparator />
 
                 <Input optional label="Gender" type="select" options={[

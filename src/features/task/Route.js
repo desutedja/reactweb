@@ -99,7 +99,7 @@ function Component() {
     useEffect(() => {
         (!search || search.length >= 3) && get(endpointManagement + '/admin/staff/list' +
             '?limit=5&page=1&max_ongoing_task=2' +
-            '&staff_role=' + role +
+            '&staff_role=' + role + "status=active" +
             '&search=' + search, headers, res => {
                 let data = res.data.data.items;
 
@@ -110,7 +110,7 @@ function Component() {
 
                 setStaffs(formatted);
             })
-    }, [headers, role, search]);
+    }, [headers, role, search, selectedRow]);
 
     return (
         <div>

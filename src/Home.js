@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
-import { FiMenu, FiUsers, FiHome, FiBarChart2, FiDollarSign, FiShoppingCart, FiZap, FiVolume2, FiRss, FiTarget, FiBriefcase, FiAward, FiKey } from "react-icons/fi";
+import { FiMenu, FiUsers, FiHome, FiBarChart2, FiDollarSign, FiShoppingCart, FiZap, FiVolume2, 
+    FiRss, FiTarget, FiBriefcase, FiAward, FiKey } from "react-icons/fi";
 import { Switch, Route, useHistory, Redirect, useLocation, Link } from 'react-router-dom';
 
 import ManagementRoute from './features/management/Route';
@@ -132,7 +133,7 @@ function Page() {
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
                     <Switch>
-                        <Redirect exact from="/" to={"/task"}
+                        <Redirect exact from="/" to={"/resident"}
                         />
                         <Route path="/building">
                             <BuildingRoute />

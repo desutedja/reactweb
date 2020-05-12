@@ -7,6 +7,7 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import IconButton from '../../components/IconButton';
+import Input from '../../components/Input';
 import { getAds, getAdsDetails, setSelected, deleteAds, setAlert } from './slice';
 import Details from './Details';
 import Add from './Add';
@@ -31,6 +32,10 @@ const columns = [
 function Component() {
     const [confirm, setConfirm] = useState(false);
     const [selectedRow, setRow] = useState({});
+
+    const [age, setAge] = useState("");
+    const [agef, setAgef] = useState("");
+    const [aget, setAget] = useState("");
 
     const headers = useSelector(state => state.auth.headers);
     const { loading, items, total_pages, refreshToggle } = useSelector(state => state.ads);
@@ -72,10 +77,53 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getAds(headers, pageIndex, pageSize, search));
+                            dispatch(getAds(headers, pageIndex, pageSize, search, agef, aget));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, headers, refreshToggle])}
-                        filters={[]}
+                        }, [dispatch, headers, refreshToggle, agef, aget])}
+                        filters={[
+                            {
+                                button: <Button key="Set Age From"
+                                    label={agef ? ("Age from: " + agef) : "Set Age From"}
+                                    selected={agef}
+                                />,
+                                component: toggleModal =>
+                                    <form style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                    }} onSubmit={() => {
+                                        setAgef(age);
+                                        setAge("");
+                                        toggleModal();
+                                    }} >
+                                        <Input type="number" min={10}
+                                            label="Age From" inputValue={age}
+                                            setInputValue={setAge} />
+                                        <Button label="Set" />
+                                    </form>
+                            },
+                            {
+                                button: <Button key="Set Age To"
+                                    label={aget ? ("Age to: " + aget) : "Set Age To"}
+                                    selected={aget}
+                                />,
+                                component: toggleModal =>
+                                    <form style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                    }} onSubmit={() => {
+                                        setAget(age);
+                                        setAge("");
+                                        toggleModal();
+                                    }} >
+                                        <Input type="number" max={85}
+                                            label="Age To" inputValue={age}
+                                            setInputValue={setAge} />
+                                        <Button label="Set" />
+                                    </form>
+                            },
+                        ]}
                         actions={[
                             <Button key="Add" label="Add" icon={<FiPlus />}
                                 onClick={() => {

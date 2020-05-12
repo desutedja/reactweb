@@ -23,13 +23,13 @@ const tabs = [
 ]
 
 const days = [
-    {value: 1, label: "Senin"},
-    {value: 2, label: "Selasa"},
-    {value: 3, label: "Rabu"},
-    {value: 4, label: "Kamis"},
-    {value: 5, label: "Jumat"},
-    {value: 6, label: "Sabtu"},
-    {value: 7, label: "Minggu"},
+    { value: 1, label: "Senin" },
+    { value: 2, label: "Selasa" },
+    { value: 3, label: "Rabu" },
+    { value: 4, label: "Kamis" },
+    { value: 5, label: "Jumat" },
+    { value: 6, label: "Sabtu" },
+    { value: 7, label: "Minggu" },
 ]
 
 const columns = [
@@ -60,7 +60,7 @@ function Component() {
                 Add Schedule
                 <Form
                     onSubmit={data => {
-                        dispatch(createAdsSchedule(headers, {...data, adv_id: selected.id}))
+                        dispatch(createAdsSchedule(headers, { ...data, adv_id: selected.id }))
                         setAddSchedule(false);
                     }}
                 >
@@ -88,7 +88,11 @@ function Component() {
                     <div style={{
                         display: 'flex'
                     }}>
-                        <Button label="Create New" onClick={() => { }} />
+                        <Button label="Create New" onClick={() => {
+                            history.push(
+                                url.split('/').slice(0, -1).join('/') + "/add"
+                            );
+                        }} />
                         <Button label="Preview" onClick={() => { }} />
                         <Button label="Edit" onClick={() => history.push(
                             url.split('/').slice(0, -1).join('/') + "/edit"
@@ -112,7 +116,7 @@ function Component() {
                             {tab === index && <div className="TabIndicator"></div>}
                         </div>)}
                 </div>
-                {tab === 0 && <p>
+                {tab === 0 && <div>
                     <Button label="Edit" onClick={() => { }} />
                     <div style={{
                         display: 'flex',
@@ -132,12 +136,12 @@ function Component() {
                             flex: 3
                         }}>
                             <p style={{ fontWeight: 'bold', fontSize: '1.2rem', marginBottom: 8 }}>
-                                {selected.content_name}
+                                {selected.content_name ? selected.content_name : "(No Title)"}
                             </p>
-                            <p>{selected.content_description}</p>
+                            <p>{selected.content_description ? selected.content_description : "(No content)"}</p>
                         </div>
                     </div>
-                </p>}
+                </div>}
                 {tab === 1 && <Table
                     columns={columns}
                     data={schedule.items}

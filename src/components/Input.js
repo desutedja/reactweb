@@ -144,7 +144,7 @@ function Component({
                                 max={max}
                                 value={value}
                                 onChange={(e) => {
-                                    console.log(e.target.value);
+                                    // console.log(e.target.value);
                                     if (type === 'url') {
                                         setValue('http://' + e.target.value.replace('http://', ''));
                                         setInputValue && setInputValue('http://' + e.target.value.replace('http://', ''));
