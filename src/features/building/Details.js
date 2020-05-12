@@ -19,7 +19,7 @@ import {
     createBuildingUnit, createBuildingUnitType, createBuildingSection,
     deleteBuildingUnit, deleteBuildingUnitType, deleteBuildingSection,
     editBuildingUnit, editBuildingUnitType, editBuildingSection,
-    getBuildingService, getBuildingManagement, deleteBuildingManagement,
+    getBuildingService, getBuildingManagement, deleteBuildingManagement, deleteBuildingService, createBuildingService,
 } from './slice';
 import { endpointAdmin } from '../../settings';
 import { get } from '../../utils';
@@ -111,17 +111,19 @@ function Component() {
     const [tab, setTab] = useState(0);
 
     const [confirm, setConfirm] = useState(false);
+    const [edit, setEdit] = useState(false);
+
     const [addUnit, setAddUnit] = useState(false);
     const [addUnitType, setAddUnitType] = useState(false);
     const [addSection, setAddSection] = useState(false);
     const [addManagement, setAddManagement] = useState(false);
-
-    const [edit, setEdit] = useState(false);
+    const [addService, setAddService] = useState(false);
 
     const [sectionID, setSectionID] = useState('');
     const [unitTypeID, setUnitTypeID] = useState('');
     const [floor, setFloor] = useState('');
     const [number, setNumber] = useState('');
+    const [type, setType] = useState('');
 
     const [typeName, setTypeName] = useState('');
     const [typeSize, setTypeSize] = useState('');
@@ -338,11 +340,11 @@ function Component() {
                     onSubmit={data => {
                         edit ?
                             dispatch(editBuildingManagement(headers, {
-                                "building_id": selected.id, ...data,
+                                "building_id": selected.id, building_name: selected.name, ...data,
                             }, selectedRow.id))
                             :
                             dispatch(createBuildingManagement(headers, {
-                                "building_id": selected.id, ...data,
+                                "building_id": selected.id, building_name: selected.name, ...data,
                             }))
                         setAddManagement(false);
                         setEdit(false);
@@ -405,6 +407,22 @@ function Component() {
                     />
                 </Form>
             </Modal>
+            <Modal isOpen={addService} onRequestClose={() => setAddService(false)}>
+                {edit ? "Edit" : "Add"} Section
+                <Form onSubmit={data => {
+                    dispatch(createBuildingService(headers, data));
+                    setAddService(false);
+                }}>
+                    <Input label="Group" />
+                    <Input label="Name" />
+                    <Input label="Description" />
+                    <Input label="Price (fixed)" />
+                    <Input label="Price (unit)" />
+                    <Input label="Unit Denom" name="denom_unit" />
+                    <Input label="Tax Type" name="tax" inputValue={type} setInputValue={setType} />
+                    <Input label="Tax Value" name={type === "value" && "tax_amount"} />
+                </Form>
+            </Modal>
             <div style={{
                 display: 'flex'
             }}>
@@ -419,7 +437,7 @@ function Component() {
                                 <LabeledText
                                     key={el}
                                     label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                                    value={el == "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
+                                    value={el === "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
                                 />
                             )}
                     </div>
@@ -582,7 +600,16 @@ function Component() {
                                 />
                         },
                     ]}
-                    actions={[]}
+                    actions={[
+                        <Button key="Add" label="Add" icon={<FiPlus />}
+                            onClick={() => setAddService(true)}
+                        />
+                    ]}
+                    onClickDelete={row => {
+                        // setRow(row);
+                        dispatch(deleteBuildingService(row, headers))
+                        // setConfirm(true);
+                    }}
                 />}
                 {tab === 4 && <Table
                     columns={columnsManagement}

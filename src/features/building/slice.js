@@ -357,6 +357,19 @@ export const createBuildingManagement = (headers, data) => dispatch => {
     })
 }
 
+export const createBuildingService = (headers, data) => dispatch => {
+  dispatch(startAsync());
+
+  post(buildingEndpoint + '/service', data, headers,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
 export const editBuildingUnit = (headers, data, id) => dispatch => {
   dispatch(startAsync());
 
@@ -477,6 +490,26 @@ export const deleteBuildingManagement = (row, headers) => dispatch => {
       dispatch(setAlert({
         type: 'normal',
         message: 'Building Management has been deleted.'
+      }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
+export const deleteBuildingService = (row, headers) => dispatch => {
+  dispatch(startAsync());
+
+  del(buildingEndpoint + '/service/' + row.id, headers,
+    res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Building billing service has been deleted.'
       }))
       setTimeout(() => dispatch(setAlert({
         message: '',

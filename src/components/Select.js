@@ -7,7 +7,7 @@ import Modal from './Modal';
 import Filter from './Filter';
 
 function Component({
-    label, compact, options = [],
+    label, name, compact, options = [],
     search, setSearch, loading,
     inputValue, setInputValue,
 }) {
@@ -37,7 +37,7 @@ function Component({
                     }}
                 />
             </Modal>
-            <Input label={label} type="select" options={options} onClick={() => setModal(true)}
+            <Input label={label} name={name} type="select" options={options} onClick={() => setModal(true)}
                 inputValue={inputValue} setInputValue={setInputValue}
             />
         </>

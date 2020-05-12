@@ -98,7 +98,7 @@ function Component() {
 
     useEffect(() => {
         (!search || search.length >= 3) && get(endpointManagement + '/admin/staff/list' +
-            '?limit=5&page=1&max_ongoing_task=2' +
+            '?limit=5&page=1&max_ongoing_task=1' +
             '&staff_role=' + role + "status=active" +
             '&search=' + search, headers, res => {
                 let data = res.data.data.items;
@@ -133,9 +133,12 @@ function Component() {
             </Modal>
             <Modal isOpen={assign} onRequestClose={() => setAssign(false)}>
                 Choose assignee:
-                {!staff.value && <Input label="Search" compact inputValue={search} setInputValue={setSearch} />}
+                {staffs.length !== 0 && !staff.value && <Input label="Search" icon={<FiSearch />}
+                    compact inputValue={search} setInputValue={setSearch} />}
                 <Filter data={staff.value ? [staff] : staffs} onClick={el => setStaff(el)} />
-                <div style={{
+                {staffs.length === 0 ? <p style={{
+                    fontStyle: 'italic'
+                }}>No elligible staff found.</p> : <div style={{
                     display: 'flex',
                     marginTop: 16,
                 }}>
@@ -152,7 +155,7 @@ function Component() {
                             }));
                         }}
                     />
-                </div>
+                </div>}
             </Modal>
             <Switch>
                 <Route exact path={path}>
