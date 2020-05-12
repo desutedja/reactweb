@@ -17,8 +17,8 @@ import {
     getBuildingUnit, getBuildingUnitType, getBuildingSection,
     editBuildingManagement, createBuildingManagement,
     createBuildingUnit, createBuildingUnitType, createBuildingSection,
-    deleteBuildingUnit, deleteBuildingUnitType, deleteBuildingSection, 
-    editBuildingUnit, editBuildingUnitType, editBuildingSection, 
+    deleteBuildingUnit, deleteBuildingUnitType, deleteBuildingSection,
+    editBuildingUnit, editBuildingUnitType, editBuildingSection,
     getBuildingService, getBuildingManagement, deleteBuildingManagement,
 } from './slice';
 import { endpointAdmin } from '../../settings';
@@ -313,7 +313,14 @@ function Component() {
                     setSectionName('');
                     setSectionType('');
                 }}>
-
+                    <Input label="Section Name"
+                        inputValue={selectedRow.section_name ? selectedRow.section_name : sectionName}
+                        setInputValue={setSectionName} />
+                    <Input label="Section Type"
+                        inputValue={selectedRow.section_type ? selectedRow.section_type : sectionType}
+                        setInputValue={setSectionType}
+                        type="select" options={sectionTypes}
+                    />
                     <div style={{
                         display: 'flex',
                         marginTop: 16,

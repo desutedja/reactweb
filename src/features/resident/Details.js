@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { FiPlus } from 'react-icons/fi';
+import { FiPlus, FiSearch } from 'react-icons/fi';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { dateFormatter } from '../../utils';
@@ -68,12 +68,44 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, refreshToggle, headers, tab])
 
-    
+
     return (
         <div>
+            <Modal isOpen={addUnit} onRequestClose={() => setAddUnit(false)}>
+                {edit ? "Edit Unit" : "Add Unit"}
+                <form
+                    onSubmit={e => {
+                        setAddUnit(false);
+                    }}
+                >
+                    <Input label="Select Building" icon={<FiSearch />} />
+                    <Input label="Select Unit" icon={<FiSearch />} />
+                    <Input label="Level" type="select"
+                        options={[
+                            {value: 'main', label: 'Main'},
+                            {value: 'sub', label: 'Sub'},
+                        ]}
+                    />
+                    <Input label="Status" type="select"
+                        options={[
+                            {value: 'own', label: 'Own'},
+                            {value: 'rent', label: 'Rent'},
+                        ]}
+                    />
+                    <div style={{
+                        display: 'flex',
+                        marginTop: 16,
+                    }}>
+                        <Button label="Cancel" secondary
+                            onClick={() => setAddUnit(false)}
+                        />
+                        <Button label={edit ? "Save" : "Add"} />
+                    </div>
+                </form>
+            </Modal>
             <div className="Container">
                 <div className="Details" style={{
-                    
+
                 }}>
                     {Object.keys(selected).filter(el => !exception.includes(el))
                         .map(el =>
@@ -114,11 +146,6 @@ function Component() {
                             onClick={() => setAddUnit(true)}
                         />
                     ]}
-                    onClickDelete={row => {
-                        // setRow(row);
-                        //dispatch(deleteResidentUnit(row, headers))
-                        // setConfirm(true);
-                    }}
                 />}
                 {tab === 1 && <Table
                     columns={columnsSubaccount}
@@ -132,11 +159,6 @@ function Component() {
                             onClick={() => setAddSub(true)}
                         />
                     ]}
-                    onClickDelete={row => {
-                        // setRow(row);
-                        //dispatch(deleteResidentUnit(row, headers))
-                        // setConfirm(true);
-                    }}
                 />}
             </div>
         </div>

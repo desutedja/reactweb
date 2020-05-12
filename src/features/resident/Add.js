@@ -169,12 +169,12 @@ function Component() {
                     <Input label="First Name" name="firstname" inputValue={selected.firstname} />
                     <Input label="Last Name" name="lastname" inputValue={selected.lastname} />
                     <Input label="Phone" type="tel" inputValue={selected.phone} />
-                    <Select label="Birth Place" type="select" options={bcitiesSearched}
+                    <Select label="Birth Place" name="birthplace" type="select" options={bcitiesSearched}
                         search={search} setSearch={setSearch}
-                        inputValue={bcity ? bcity : selected.birth_place} setInputValue={setBCity}
+                        inputValue={bcity ? bcity : selected.birthplace} setInputValue={setBCity}
                         loading={bcloading}
                     />
-                    <Input label="Birth Date" type="date" inputValue={selected.birth_date} />
+                    <Input label="Birth Date" name="birthdate" type="date" inputValue={selected.birthdate} />
                     <SectionSeparator />
 
                     <Input label="Nationality" inputValue={selected.nationality} />
