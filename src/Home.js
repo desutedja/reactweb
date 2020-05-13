@@ -13,8 +13,10 @@ import BillingRoute from './features/billing/Route';
 import StaffRoute from './features/staff/Route';
 import TaskRoute from './features/task/Route';
 import MerchantRoute from './features/merchant/Route';
+import ProductRoute from './features/product/Route';
 import TransactionRoute from './features/transaction/Route';
 import AdsRoute from './features/ads/Route';
+import AnnouncementRoute from './features/announcement/Route';
 
 import Button from './components/Button';
 import Row from './components/Row';
@@ -162,11 +164,17 @@ function Page() {
                         <Route path="/merchant">
                             <MerchantRoute />
                         </Route>
+                        <Route path="/product">
+                            <ProductRoute />
+                        </Route>
                         <Route path="/transaction">
                             <TransactionRoute />
                         </Route>
                         <Route path="/advertisement">
                             <AdsRoute />
+                        </Route>
+                        <Route path="/announcement">
+                            <AnnouncementRoute />
                         </Route>
                     </Switch>
                 </div>

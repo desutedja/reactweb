@@ -412,7 +412,7 @@ function Component() {
             <Modal isOpen={addService} onRequestClose={() => setAddService(false)}>
                 {edit ? "Edit" : "Add"} Section
                 <Form onSubmit={data => {
-                    dispatch(createBuildingService(headers, data));
+                    dispatch(createBuildingService(headers, {...data, building_id: selected.id}));
                     setAddService(false);
                 }}>
                     <Input label="Group" type="select" options={[

@@ -13,8 +13,10 @@ import billing from './features/billing/slice';
 import staff from './features/staff/slice';
 import task from './features/task/slice';
 import merchant from './features/merchant/slice';
+import product from './features/product/slice';
 import transaction from './features/transaction/slice';
 import ads from './features/ads/slice';
+import announcement from './features/announcement/slice';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 
 const logger = createLogger({
@@ -33,7 +35,9 @@ const reducers = combineReducers({
   staff,
   task,
   merchant,
+  product,
   transaction,
+  announcement,
   ads,
 });
 
