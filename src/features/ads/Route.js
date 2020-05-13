@@ -33,9 +33,10 @@ function Component() {
     const [confirm, setConfirm] = useState(false);
     const [selectedRow, setRow] = useState({});
 
-    const [age, setAge] = useState("");
     const [agef, setAgef] = useState("");
     const [aget, setAget] = useState("");
+    const [agefSet, setAgefSet] = useState("");
+    const [agetSet, setAgetSet] = useState("");
 
     const headers = useSelector(state => state.auth.headers);
     const { loading, items, total_pages, refreshToggle } = useSelector(state => state.ads);
@@ -77,14 +78,16 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getAds(headers, pageIndex, pageSize, search, agef, aget));
+                            dispatch(getAds(headers, pageIndex, pageSize, search, agefSet, agetSet));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, headers, refreshToggle, agef, aget])}
+                        }, [dispatch, headers, refreshToggle, agefSet, agetSet])}
                         filters={[
                             {
-                                button: <Button key="Set Age From"
-                                    label={agef ? ("Age from: " + agef) : "Set Age From"}
-                                    selected={agef}
+                                button: <Button key="Set Age Range"
+                                    label={(agefSet || agetSet) ?
+                                        ("Age: " + (agefSet ? agefSet : 10) + " - " +
+                                            (agetSet ? agetSet : 85)) : "Set Age Range"}
+                                    selected={agefSet || agetSet}
                                 />,
                                 component: toggleModal =>
                                     <form style={{
@@ -92,34 +95,16 @@ function Component() {
                                         flexDirection: 'column',
                                         alignItems: 'center',
                                     }} onSubmit={() => {
-                                        setAgef(age);
-                                        setAge("");
+                                        setAgefSet(agef);
+                                        setAgetSet(aget);
                                         toggleModal();
                                     }} >
                                         <Input type="number" min={10}
-                                            label="Age From" inputValue={age}
-                                            setInputValue={setAge} />
-                                        <Button label="Set" />
-                                    </form>
-                            },
-                            {
-                                button: <Button key="Set Age To"
-                                    label={aget ? ("Age to: " + aget) : "Set Age To"}
-                                    selected={aget}
-                                />,
-                                component: toggleModal =>
-                                    <form style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                    }} onSubmit={() => {
-                                        setAget(age);
-                                        setAge("");
-                                        toggleModal();
-                                    }} >
+                                            label="Age From" inputValue={agef}
+                                            setInputValue={setAgef} />
                                         <Input type="number" max={85}
-                                            label="Age To" inputValue={age}
-                                            setInputValue={setAge} />
+                                            label="Age To" inputValue={aget}
+                                            setInputValue={setAget} />
                                         <Button label="Set" />
                                     </form>
                             },

@@ -9,8 +9,11 @@ import management from './features/management/slice';
 import building from './features/building/slice';
 import building_management from './features/building_management/slice';
 import resident from './features/resident/slice';
+import billing from './features/billing/slice';
 import staff from './features/staff/slice';
 import task from './features/task/slice';
+import merchant from './features/merchant/slice';
+import transaction from './features/transaction/slice';
 import ads from './features/ads/slice';
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 
@@ -26,8 +29,11 @@ const reducers = combineReducers({
   building,
   building_management,
   resident,
+  billing,
   staff,
   task,
+  merchant,
+  transaction,
   ads,
 });
 

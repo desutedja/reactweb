@@ -62,7 +62,7 @@ function Component({
                             }}
                             onClick={onClick}
                         >
-                            <option value="">{label}</option>
+                            {!inputValue && <option value="">{label}</option>}
                             {options.map(el =>
                                 <option key={el.value} value={el.value}>{el.label}</option>
                             )}

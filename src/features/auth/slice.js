@@ -31,7 +31,7 @@ export const slice = createSlice({
         'Authorization': 'Bearer ' + action.payload.token,
         'X-User-Id': action.payload.id,
         'X-Session': action.payload.session,
-        'X-User_Type': 'sa',
+        'X-User-Type': 'sa',
         'Content-Type': 'application/json',
       }
     },

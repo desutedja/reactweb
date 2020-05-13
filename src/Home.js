@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
-import { FiMenu, FiUsers, FiHome, FiBarChart2, FiDollarSign, FiShoppingCart, FiZap, FiVolume2, 
-    FiRss, FiTarget, FiBriefcase, FiAward, FiKey } from "react-icons/fi";
-import { Switch, Route, useHistory, Redirect, useLocation, Link } from 'react-router-dom';
+import { FiMenu, FiUsers, FiHome, FiBarChart2, FiShoppingCart, FiZap, FiVolume2, 
+    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign } from "react-icons/fi";
+import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom';
 
 import ManagementRoute from './features/management/Route';
 import BuildingRoute from './features/building/Route';
 import BuildingManagementRoute from './features/building_management/Route';
 import ResidentRoute from './features/resident/Route';
+import BillingRoute from './features/billing/Route';
 import StaffRoute from './features/staff/Route';
 import TaskRoute from './features/task/Route';
+import MerchantRoute from './features/merchant/Route';
+import TransactionRoute from './features/transaction/Route';
 import AdsRoute from './features/ads/Route';
 
 import Button from './components/Button';
@@ -19,11 +22,11 @@ import IconButton from './components/IconButton';
 
 
 const menu = [
-    // {
-    //     icon: <FiBarChart2 className="MenuItem-icon" />,
-    //     label: "Dashboard",
-    //     route: "/dashboard"
-    // },
+    {
+        icon: <FiBarChart2 className="MenuItem-icon" />,
+        label: "Dashboard",
+        route: "/dashboard"
+    },
     {
         icon: <FiBriefcase className="MenuItem-icon" />,
         label: "Management",
@@ -34,15 +37,15 @@ const menu = [
         label: "Building",
         route: "/building"
     },
-    // {
-    //     icon: <FiKey className="MenuItem-icon" />,
-    //     label: "Building Management",
-    //     route: "/building_management"
-    // },
     {
         icon: <FiUsers className="MenuItem-icon" />,
         label: "Resident",
         route: "/resident"
+    },
+    {
+        icon: <FiZap className="MenuItem-icon" />,
+        label: "Billing",
+        route: "/billing"
     },
     {
         icon: <FiAward className="MenuItem-icon" />,
@@ -54,31 +57,31 @@ const menu = [
         label: "Task",
         route: "/task"
     },
-    // {
-    //     icon: <FiZap className="MenuItem-icon" />,
-    //     label: "Billing",
-    //     route: "/billing"
-    // },
-    // {
-    //     icon: <FiShoppingCart className="MenuItem-icon" />,
-    //     label: "Merchant",
-    //     route: "/merchant"
-    // },
-    // {
-    //     icon: <FiDollarSign className="MenuItem-icon" />,
-    //     label: "Settlement",
-    //     route: "/settlement"
-    // },
+    {
+        icon: <FiShoppingCart className="MenuItem-icon" />,
+        label: "Merchant",
+        route: "/merchant"
+    },
+    {
+        icon: <FiShoppingBag className="MenuItem-icon" />,
+        label: "Product",
+        route: "/product"
+    },
+    {
+        icon: <FiDollarSign className="MenuItem-icon" />,
+        label: "Transaction",
+        route: "/transaction"
+    },
     {
         icon: <FiRss className="MenuItem-icon" />,
         label: "Advertisement",
         route: "/advertisement"
     },
-    // {
-    //     icon: <FiVolume2 className="MenuItem-icon" />,
-    //     label: "Announcement",
-    //     route: "/announcement"
-    // },
+    {
+        icon: <FiVolume2 className="MenuItem-icon" />,
+        label: "Announcement",
+        route: "/announcement"
+    },
 ]
 
 function Page() {
@@ -147,11 +150,20 @@ function Page() {
                         <Route path="/resident">
                             <ResidentRoute />
                         </Route>
+                        <Route path="/billing">
+                            <BillingRoute />
+                        </Route>
                         <Route path="/staff">
                             <StaffRoute />
                         </Route>
                         <Route path="/task">
                             <TaskRoute />
+                        </Route>
+                        <Route path="/merchant">
+                            <MerchantRoute />
+                        </Route>
+                        <Route path="/transaction">
+                            <TransactionRoute />
                         </Route>
                         <Route path="/advertisement">
                             <AdsRoute />

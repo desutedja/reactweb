@@ -24,7 +24,7 @@ const columns = [
     { Header: "Gender", accessor: "gender" },
     { Header: "Building", accessor: "building_name" },
     { Header: "Management", accessor: "management_name" },
-    { Header: "On Shift", accessor: "on_shift" },
+    { Header: "On Shift", accessor: row => !row.on_shift_until ? 'yes' : new Date(row.on_shift_until) > new Date() ? row.on_shift : 'no'},
     { Header: "Status", accessor: "status" },
 ]
 
@@ -39,6 +39,8 @@ const roles = [
 function Component() {
     const [confirm, setConfirm] = useState(false);
     const [selectedRow, setRow] = useState({});
+
+    const [onShift, setOnShift] = useState(true);
 
     const [search, setSearch] = useState('');
     const [building, setBuilding] = useState('');
@@ -94,10 +96,17 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getStaff(headers, pageIndex, pageSize, search, role, building));
-                        // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers, role, building])}
+                            dispatch(getStaff(headers, pageIndex, pageSize, search, role, building, onShift));
+                            // eslint-disable-next-line react-hooks/exhaustive-deps
+                        }, [dispatch, refreshToggle, headers, role, building, onShift])}
                         filters={[
+                            {
+                                button: <Button key="Toggle Shift"
+                                    label={"Toggle Shift: " + (onShift ? "Yes" : "No")}
+                                    // selected={onShift}
+                                    onClick={() => setOnShift(!onShift)}
+                                />
+                            },
                             {
                                 button: <Button key="Select Building"
                                     label={building ? buildingName : "Select Building"}

@@ -76,7 +76,8 @@ function Component({
                 isOpen={modalOpen}
                 onRequestClose={() => toggleModal(false)}
             >
-                {filters.length > 0 ? filters[activeFilter].component(toggleModal) : null}
+                {(filters.length > 0 && filters[activeFilter].component) ?
+                    filters[activeFilter].component(toggleModal) : null}
             </Modal>
             <div className="TableAction">
                 <div>
@@ -84,8 +85,8 @@ function Component({
                 </div>
                 <div className="TableAction-right">
                     {filters.map((el, index) => <div key={index} onClick={() => {
-                        toggleModal(true);
-                        setFilter(index)
+                        el.component && toggleModal(true);
+                        setFilter(index);
                     }}>
                         {el.button}
                     </div>)}

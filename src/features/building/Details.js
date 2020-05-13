@@ -123,7 +123,9 @@ function Component() {
     const [unitTypeID, setUnitTypeID] = useState('');
     const [floor, setFloor] = useState('');
     const [number, setNumber] = useState('');
-    const [type, setType] = useState('');
+
+    const [priceType, setPriceType] = useState('fixed');
+    const [taxType, setTaxType] = useState('percentage');
 
     const [typeName, setTypeName] = useState('');
     const [typeSize, setTypeSize] = useState('');
@@ -413,14 +415,30 @@ function Component() {
                     dispatch(createBuildingService(headers, data));
                     setAddService(false);
                 }}>
-                    <Input label="Group" />
+                    <Input label="Group" type="select" options={[
+                        { value: 'ipl', label: 'IPL' },
+                        { value: 'nonipl', label: 'non-IPL' },
+                    ]} />
                     <Input label="Name" />
                     <Input label="Description" />
-                    <Input label="Price (fixed)" />
-                    <Input label="Price (unit)" />
-                    <Input label="Unit Denom" name="denom_unit" />
-                    <Input label="Tax Type" name="tax" inputValue={type} setInputValue={setType} />
-                    <Input label="Tax Value" name={type === "value" && "tax_amount"} />
+                    <Input label="Price Type" type="select" options={[
+                        { value: 'unit', label: 'Unit' },
+                        { value: 'fixed', label: 'Fixed' },
+                    ]} inputValue={priceType} setInputValue={setPriceType} />
+                    <Input label="Price" name="price_unit" type="number"
+                        hidden={priceType === 'fixed'} />
+                    <Input label="Unit" name="denom_unit"
+                        hidden={priceType === 'fixed'} />
+                    <Input label="Price" name="price_fixed" type="number"
+                        hidden={priceType === 'unit'} />
+                    <Input label="Tax Type" name="tax" type="select"
+                        options={[
+                            { value: 'value', label: 'Value' },
+                            { value: 'percentage', label: 'Percentage' },
+                        ]}
+                        inputValue={taxType} setInputValue={setTaxType} />
+                    <Input label="Tax Value" hidden={taxType === 'value'} />
+                    <Input label="Tax Amount" hidden={taxType === 'percentage'} />
                 </Form>
             </Modal>
             <div style={{
