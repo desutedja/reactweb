@@ -1,11 +1,17 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../components/Table';
+import Button from '../../components/Button';
+import Filter from '../../components/Filter';
+import Input from '../../components/Input';
 import Add from './Add';
 import Details from './Details';
 import { getMerchant } from './slice';
+import { get } from '../../utils';
+import { endpointMerchant } from '../../settings';
+import { FiSearch } from 'react-icons/fi';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -18,13 +24,37 @@ const columns = [
     { Header: 'Status', accessor: 'status' },
 ]
 
+const types = [
+    { label: 'Goods', value: 'goods' },
+    { label: 'Services', value: 'services' },
+];
+
 function Component() {
+    const [type, setType] = useState('');
+    const [typeLabel, setTypeLabel] = useState('');
+
+    const [search, setSearch] = useState('');
+
+    const [cat, setCat] = useState('');
+    const [catName, setCatName] = useState('');
+    const [cats, setCats] = useState('');
+
     const headers = useSelector(state => state.auth.headers);
     const { loading, items, total_pages, refreshToggle, alert } = useSelector(state => state.merchant);
 
     let dispatch = useDispatch();
     let history = useHistory();
     let { path, url } = useRouteMatch();
+
+    useEffect(() => {
+        get(endpointMerchant + '/admin/categories', headers, res => {
+                let data = res.data.data;
+
+                let formatted = data.map(el => ({ label: el.name, value: el.name }));
+
+                setCats(formatted);
+            })
+    }, [headers]);
 
     return (
         <div>
@@ -36,10 +66,62 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getMerchant(headers, pageIndex, pageSize, search));
+                            dispatch(getMerchant(headers, pageIndex, pageSize, search, type, cat));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers])}
-                        filters={[]}
+                        }, [dispatch, refreshToggle, headers, type, cat])}
+                        filters={[
+                            {
+                                button: <Button key="Select Type"
+                                    label={type ? typeLabel : "Select Type"}
+                                    selected={type}
+                                />,
+                                component: toggleModal =>
+                                    <Filter
+                                        data={types}
+                                        onClickAll={() => {
+                                            setType("");
+                                            setTypeLabel("");
+                                            toggleModal(false);
+                                        }}
+                                        onClick={el => {
+                                            setType(el.value);
+                                            setTypeLabel(el.label);
+                                            toggleModal(false);
+                                        }}
+                                    />
+                            },
+                            {
+                                button: <Button key="Select Catgeory"
+                                    label={cat ? catName : "Select Category"}
+                                    selected={cat}
+                                />,
+                                component: (toggleModal) =>
+                                    <>
+                                        <Input
+                                            label="Search"
+                                            compact
+                                            icon={<FiSearch />}
+                                            inputValue={search}
+                                            setInputValue={setSearch}
+                                        />
+                                        <Filter
+                                            data={cats}
+                                            onClick={(el) => {
+                                                setCat(el.value);
+                                                setCatName(el.label);
+                                                toggleModal(false);
+                                                setSearch("");
+                                            }}
+                                            onClickAll={() => {
+                                                setCat("");
+                                                setCatName("");
+                                                toggleModal(false);
+                                                setSearch("");
+                                            }}
+                                        />
+                                    </>
+                            },
+                        ]}
                         actions={[]}
                     />
                 </Route>

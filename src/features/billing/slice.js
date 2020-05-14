@@ -1,8 +1,8 @@
 import {createSlice} from '@reduxjs/toolkit';
-import { endpointAdmin } from '../../settings';
+import { endpointBilling } from '../../settings';
 import { get } from '../../utils';
 
-const billingEndpoint = endpointAdmin + '/management/billing';
+const billingEndpoint = endpointBilling + '/management/billing';
 
 export const slice = createSlice({
   name: 'billing',
@@ -58,14 +58,17 @@ export const {
 export default slice.reducer;
 
 export const getBilling = (
-  headers, pageIndex, pageSize,
-  search = '',
+  headers, pageIndex, pageSize, search = '', building, unit, month, year
 ) => dispatch => {
   dispatch(startAsync());
 
   get(billingEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
+    '&building_id=' + building +
+    '&unit_id=' + unit +
+    '&month=' + (month) +
+    '&year=' + year +
     '&search=' + search,
     headers,
     res => {

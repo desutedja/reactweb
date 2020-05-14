@@ -8,7 +8,13 @@ import Details from './Details';
 import { getAnnoucement } from './slice';
 
 const columns = [
-    { Header: 'Name', accessor: 'name' },
+    { Header: 'ID', accessor: 'id' },
+    { Header: 'Title', accessor: 'title' },
+    { Header: 'Topic', accessor: 'topic' },
+    { Header: 'Consumer', accessor: 'consumer_role' },
+    { Header: 'Description', accessor: row => row.description.length > 100 ?
+     row.description.slice(0, 100) + '...' : row.description },
+    { Header: 'Publisher', accessor: 'publisher' },
 ]
 
 function Component() {
@@ -25,9 +31,9 @@ function Component() {
                 <Route exact path={path}>
                     <Table
                         columns={columns}
-                        data={[]}
-                        loading={true}
-                        pageCount={1}
+                        data={items}
+                        loading={loading}
+                        pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getAnnoucement(headers, pageIndex, pageSize, search));
                             // eslint-disable-next-line react-hooks/exhaustive-deps

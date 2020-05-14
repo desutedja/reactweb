@@ -59,13 +59,15 @@ export default slice.reducer;
 
 export const getProduct = (
   headers, pageIndex, pageSize,
-  search = '',
+  search = '', merchant, category
 ) => dispatch => {
   dispatch(startAsync());
 
   get(merchantEndpoint + '/items/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
+    '&merchant_id=' + merchant +
+    '&category=' + category +
     '&search=' + search,
     headers,
     res => {
