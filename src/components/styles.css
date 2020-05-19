@@ -27,7 +27,7 @@
 
 .IconButton:hover {
   background: none;
-  color: var(--accent-color);
+  color: var(--primary-color);
 }
 
 .IconButton.inactive {

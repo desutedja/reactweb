@@ -101,81 +101,83 @@ function Component({
                     </div>
                 </div>
             </div>
-            <table {...getTableProps()}>
-                {loading &&
-                    <tbody className="TableLoading">
-                        <tr className="Spinner">
-                            <td><MoonLoader
-                                size={24}
-                                color={"grey"}
-                                loading={loading}
-                            />
-                            </td>
-                        </tr>
-                    </tbody>
-                }
-                <thead>
-                    {headerGroups.map((headerGroup, i) => (
-                        <tr {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => (
-                                <th {...column.getHeaderProps(
-                                    column.getSortByToggleProps()
-                                )}><div className="TableHeader">
-                                        {column.render('Header')}
-                                        {column.isSorted
-                                            ? column.isSortedDesc
-                                                ? <FiChevronDown className="SortIcon" />
-                                                : <FiChevronUp className="SortIcon" />
-                                            : ''}
-                                    </div>
-                                </th>
-                            ))}
-                            {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) && <th key={i}>
-                                Options
-                            </th>}
-                        </tr>
-                    ))}
-                </thead>
-                <tbody {...getTableBodyProps()}>
-                    {page.map((row, i) => {
-                        prepareRow(row);
-                        return (
-                            <tr
-                                {...row.getRowProps()}
-                            >
-                                {row.cells.map(cell => {
-                                    return (
-                                        <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                    );
-                                })}
-                                {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) && <td key={i}>
-                                    <div style={{
-                                        display: 'flex',
-                                    }}>
-                                        {onClickReassign && <IconButton disabled={row.original.status !==
-                                            ('created' || 'rejected')}
-                                            onClick={() => onClickReassign(row.original)}>
-                                            <FiUserPlus />
-                                        </IconButton>}
-                                        {onClickResolve && <IconButton disabled={row.original.status === 'completed'} onClick={() => onClickResolve(row.original)}>
-                                            <FiCheck />
-                                        </IconButton>}
-                                        {onClickDetails && <IconButton onClick={() => onClickDetails(row.original)}>
-                                            <FiMoreHorizontal />
-                                        </IconButton>}
-                                        {onClickEdit && <IconButton onClick={() => onClickEdit(row.original)}>
-                                            <FiEdit />
-                                        </IconButton>}
-                                        {onClickDelete && <IconButton onClick={() => onClickDelete(row.original)}>
-                                            <FiTrash />
-                                        </IconButton>}
-                                    </div>
-                                </td>}
+            <div className="Table-content">
+                <table {...getTableProps()}>
+                    {loading &&
+                        <tbody className="TableLoading">
+                            <tr className="Spinner">
+                                <td><MoonLoader
+                                    size={24}
+                                    color={"grey"}
+                                    loading={loading}
+                                />
+                                </td>
                             </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+                        </tbody>
+                    }
+                    <thead>
+                        {headerGroups.map((headerGroup, i) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => (
+                                    <th {...column.getHeaderProps(
+                                        column.getSortByToggleProps()
+                                    )}><div className="TableHeader">
+                                            {column.render('Header')}
+                                            {column.isSorted
+                                                ? column.isSortedDesc
+                                                    ? <FiChevronDown className="SortIcon" />
+                                                    : <FiChevronUp className="SortIcon" />
+                                                : ''}
+                                        </div>
+                                    </th>
+                                ))}
+                                {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) && <th key={i}>
+                                    Options
+                            </th>}
+                            </tr>
+                        ))}
+                    </thead>
+                    <tbody {...getTableBodyProps()}>
+                        {page.map((row, i) => {
+                            prepareRow(row);
+                            return (
+                                <tr
+                                    {...row.getRowProps()}
+                                >
+                                    {row.cells.map(cell => {
+                                        return (
+                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                        );
+                                    })}
+                                    {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) && <td key={i}>
+                                        <div style={{
+                                            display: 'flex',
+                                        }}>
+                                            {onClickReassign && <IconButton disabled={row.original.status !==
+                                                ('created' || 'rejected')}
+                                                onClick={() => onClickReassign(row.original)}>
+                                                <FiUserPlus />
+                                            </IconButton>}
+                                            {onClickResolve && <IconButton disabled={row.original.status === 'completed'} onClick={() => onClickResolve(row.original)}>
+                                                <FiCheck />
+                                            </IconButton>}
+                                            {onClickDetails && <IconButton onClick={() => onClickDetails(row.original)}>
+                                                <FiMoreHorizontal />
+                                            </IconButton>}
+                                            {onClickEdit && <IconButton onClick={() => onClickEdit(row.original)}>
+                                                <FiEdit />
+                                            </IconButton>}
+                                            {onClickDelete && <IconButton onClick={() => onClickDelete(row.original)}>
+                                                <FiTrash />
+                                            </IconButton>}
+                                        </div>
+                                    </td>}
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
             <div className="Pagination">
                 <div className="Pagination-range">
                     <p>Show</p>

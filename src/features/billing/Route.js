@@ -26,6 +26,8 @@ const columns = [
     },
     { Header: 'Additional Charges', accessor: row => 0 },
     { Header: 'Total', accessor: 'total' },
+    { Header: 'Month', accessor: 'month' },
+    { Header: 'Year', accessor: 'year' },
     { Header: 'Due Date', accessor: 'due_date' },
     { Header: 'Payment Date', accessor: row => row.payment_date ? row.payment_date : '-' },
     { Header: 'Settlement Date', accessor: row => row.settlement_date ? row.settlement_date : '-' },

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
-import { FiMenu, FiUsers, FiHome, FiBarChart2, FiShoppingCart, FiZap, FiVolume2, 
-    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign } from "react-icons/fi";
+import {
+    FiMenu, FiUsers, FiHome, FiBarChart2, FiShoppingCart, FiZap, FiVolume2,
+    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign, FiLogOut, FiChevronRight
+} from "react-icons/fi";
 import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom';
 
 import ManagementRoute from './features/management/Route';
@@ -95,7 +97,7 @@ function Page() {
 
     return (
         <div>
-            <div className="TopBar">
+            <div className={menuWide ? "TopBar" : "TopBar-wide"}>
                 <div className="TopBar-left">
                     <IconButton
                         className="MenuToggle"
@@ -105,34 +107,55 @@ function Page() {
                     </IconButton>
                     <div className="PageTitle Title">
                         {location.pathname.split('/').map((el, index) =>
-                            <div 
-                            key={el + index}
-                            className="Crumbs" 
-                            onClick={() => {
-                                let array = location.pathname.split('/');
+                            <>
+                                {index > 1 && <FiChevronRight style={{
+                                    paddingLeft: 8,
+                                    paddingRight: 8,
+                                    paddingTop: 4,
+                                }} />}
+                                <div
+                                    key={el + index}
+                                    className="Crumbs"
+                                    onClick={() => {
+                                        let array = location.pathname.split('/');
 
-                                if (array[1] === el && array.length > 2) {
-                                    history.push('/' + el);
-                                } else {
-                                    history.push(el);
-                                }
-                            }}>
-                                {index > 0 && '/'}{el}
-                            </div>)}
+                                        if (array[1] === el && array.length > 2) {
+                                            history.push('/' + el);
+                                        } else {
+                                            history.push(el);
+                                        }
+                                    }}>
+                                    {el.slice(0, 1).toUpperCase() + el.slice(1)}
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
-                <Button onClick={() => dispatch(logout())} label="Logout" />
+                <IconButton
+                    onClick={() => dispatch(logout())}
+                >
+                    <FiLogOut />
+                </IconButton>
             </div>
             <Row>
-                <div className={menuWide ? "Menu" : "Menu-compact"}>
+                <div className="Menu">
+                    <div className="Logo-container">
+                        {menuWide ? <img className="Logo-main"
+                            src="clink_logo.png" alt="logo" />
+                            : <img className="Logo-main-small"
+                                src="clink_logo_small.png" alt="logo" />}
+                    </div>
                     {menu.map((el, index) =>
                         <div
                             onClick={() => history.push(el.route)}
                             key={el.label}
-                            className={('/' + history.location.pathname.split('/')[1])
-                                === el.route ? "MenuItem-active" : "MenuItem"}>
-                            {el.icon}
-                            {menuWide && <p className="MenuItem-label">{el.label}</p>}
+                            className={(('/' + history.location.pathname.split('/')[1])
+                                === el.route ? "MenuItem-active" : "MenuItem") +
+                                (menuWide ? "" : " compact")}>
+                            <div className="MenuItem-icon">{el.icon}</div>
+                            <div className={menuWide ? "MenuItem-label" : "MenuItem-label-hidden"}>
+                                {el.label}
+                            </div>
                         </div>
                     )}
                 </div>
