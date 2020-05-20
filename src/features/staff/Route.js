@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch, FiPlus } from 'react-icons/fi';
 
 import { getStaff, setSelected, getStaffDetails, deleteStaff } from './slice';
-import { get } from '../../utils';
+import { get, toSentenceCase } from '../../utils';
 import { endpointAdmin } from '../../settings';
 
 import Table from '../../components/Table';
@@ -12,20 +12,33 @@ import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
+import Pills from '../../components/Pills';
 import Add from './Add';
 import Details from './Details';
 
 const columns = [
     { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: row => row.firstname + ' ' + row.lastname },
-    { Header: "Role", accessor: "staff_role" },
+    { Header: "Role", accessor: row => toSentenceCase(row.staff_role) },
     { Header: "Email", accessor: "email" },
     { Header: "Phone", accessor: "phone" },
     { Header: "Gender", accessor: "gender" },
     { Header: "Building", accessor: "building_name" },
     { Header: "Management", accessor: "management_name" },
-    { Header: "On Shift", accessor: row => !row.on_shift_until ? 'yes' : new Date(row.on_shift_until) > new Date() ? row.on_shift : 'no'},
-    { Header: "Status", accessor: "status" },
+    {
+        Header: "On Shift", accessor: row => !row.on_shift_until ? <Pills color="dodgerblue">
+            Yes
+    </Pills> : new Date(row.on_shift_until) > new Date() ? <Pills color="dodgerblue">
+                {toSentenceCase(row.on_shift)}
+            </Pills> : <Pills color="silver">
+                    No
+    </Pills>
+    },
+    {
+        Header: "Status", accessor: row => <Pills color={
+            row.status === 'active' ? "limegreen" : 'silver'
+        }>{row.status}</Pills>
+    },
 ]
 
 const roles = [

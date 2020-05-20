@@ -9,21 +9,29 @@ import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
+import Pills from '../../components/Pills';
 import { get, toSentenceCase, dateTimeFormatter } from '../../utils';
-import { endpointAdmin, endpointManagement } from '../../settings';
+import { endpointAdmin, endpointManagement, mainColor, statusColor } from '../../settings';
 import Details from './Details';
 
 const columns = [
     { Header: "ID", accessor: "id" },
     { Header: "Title", accessor: "title" },
-    { Header: "Type", accessor: "task_type" },
+    { Header: "Type", accessor: row => toSentenceCase(row.task_type) },
     { Header: "Requester", accessor: "requester_name" },
     { Header: "Building", accessor: "building_name" },
-    { Header: "Priority", accessor: "priority" },
+    {
+        Header: "Priority", accessor: row => <Pills color={
+            row.priority === "emergency" ? "crimson" : row.priority === "high" ? "orange" : "limegreen"
+        }>{toSentenceCase(row.priority)}</Pills>
+    },
     { Header: "Assigned by", accessor: row => row.assigner_firstname == null ? "Auto" : row.assigner_firstname + ' ' + row.assigner_lastname },
     { Header: "Assignee", accessor: row => row.assignee_firstname + ' ' + row.assignee_lastname },
-    { Header: "Assigned on", accessor: row => dateTimeFormatter(row.assigned_on) },
-    { Header: "Status", accessor: row => toSentenceCase(row.status) },
+    { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
+    {
+        Header: "Status", accessor: row => row.status ? <Pills color={statusColor[row.status]}>
+            {toSentenceCase(row.status)}</Pills> : "-"
+    },
 ]
 
 const types = [
@@ -142,20 +150,20 @@ function Component() {
                     display: 'flex',
                     marginTop: 16,
                 }}>
-                    <Button label="No" secondary
-                        onClick={() => setAssign(false)}
-                    />
-                    <Button label="Yes"
-                        onClick={() => {
-                            setStaff({});
-                            setAssign(false);
-                            dispatch(reassignTask(headers, {
-                                "task_id": selectedRow.id,
-                                "assignee_id": staff.value,
-                            }));
-                        }}
-                    />
-                </div>}
+                        <Button label="No" secondary
+                            onClick={() => setAssign(false)}
+                        />
+                        <Button label="Yes"
+                            onClick={() => {
+                                setStaff({});
+                                setAssign(false);
+                                dispatch(reassignTask(headers, {
+                                    "task_id": selectedRow.id,
+                                    "assignee_id": staff.value,
+                                }));
+                            }}
+                        />
+                    </div>}
             </Modal>
             <Switch>
                 <Route exact path={path}>
