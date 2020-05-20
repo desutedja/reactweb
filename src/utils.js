@@ -111,7 +111,7 @@ export function dateTimeFormatter(serverDateTime) {
     let month = parseInt(date.split('-')[1], 10);
     let day = date.split('-')[2];
 
-    return day + ' ' + months[month] + ' ' + year + ', ' + time + ' WIB';
+    return day + ' ' + months[month].label + ' ' + year + ', ' + time + ' WIB';
 }
 
 export function dateFormatter(serverDateTime) {
@@ -123,5 +123,14 @@ export function dateFormatter(serverDateTime) {
 
 
 
-    return day + ' ' + months[month] + ' ' + year;
+    return day + ' ' + months[month].label + ' ' + year;
+}
+
+export function toSentenceCase(sentence) {
+    let words = sentence.split(' ');
+
+    return words.map(el => {
+        let newEl = el.slice(0, 1).toUpperCase() + el.slice(1);
+        return newEl;
+    })
 }

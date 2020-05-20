@@ -8,9 +8,11 @@ import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
+import Pills from '../../components/Pills';
 import { getResident, getResidentDetails, deleteResident, setSelected } from './slice';
 import Add from './Add';
 import Details from './Details';
+import { toSentenceCase } from '../../utils';
 
 const columns = [
     { Header: "ID", accessor: "id" },
@@ -19,8 +21,16 @@ const columns = [
     { Header: "Email", accessor: "email" },
     { Header: "Gender", accessor: "gender" },
     { Header: "Nationality", accessor: "nationality" },
-    { Header: "Status", accessor: "status" },
-    { Header: "KYC Status", accessor: "status_kyc" },
+    {
+        Header: "Status", accessor: row => row.status ?
+            <Pills color="limegreen">{toSentenceCase(row.status)}</Pills>
+            :
+            <Pills color="crimson">Inactive</Pills>
+    },
+    {
+        Header: "KYC Status", accessor: row => row.status_kyc ? row.status_kyc :
+            <Pills color="crimson">None</Pills>
+    },
 ]
 
 function Component() {

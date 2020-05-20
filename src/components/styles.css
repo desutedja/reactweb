@@ -22,12 +22,13 @@
 .IconButton {
   background: none;
   padding-bottom: 0;
-  color: #113;
+  color: grey;
+  /* color: #113; */
 }
 
 .IconButton:hover {
   background: none;
-  color: var(--primary-color);
+  color: var(--accent-color);
 }
 
 .IconButton.inactive {

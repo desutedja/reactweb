@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
 import {
@@ -107,7 +107,7 @@ function Page() {
                     </IconButton>
                     <div className="PageTitle Title">
                         {location.pathname.split('/').map((el, index) =>
-                            <>
+                            <Fragment key={el + index}>
                                 {index > 1 && <FiChevronRight style={{
                                     paddingLeft: 8,
                                     paddingRight: 8,
@@ -127,7 +127,7 @@ function Page() {
                                     }}>
                                     {el.slice(0, 1).toUpperCase() + el.slice(1)}
                                 </div>
-                            </>
+                            </Fragment>
                         )}
                     </div>
                 </div>
@@ -139,7 +139,7 @@ function Page() {
             </div>
             <Row>
                 <div className="Menu">
-                    <div className="Logo-container">
+                    <div className={menuWide ?"Logo-container" : "Logo-container-small"}>
                         {menuWide ? <img className="Logo-main"
                             src="clink_logo.png" alt="logo" />
                             : <img className="Logo-main-small"

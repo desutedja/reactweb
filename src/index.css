@@ -103,6 +103,8 @@ thead {
 
 th {
   padding: 8px;
+  padding-bottom: 12px;
+  padding-top: 12px;
   padding-left: 16px;
   text-align: left;
 }

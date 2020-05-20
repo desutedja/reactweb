@@ -7,6 +7,7 @@ import { FiPlus, FiX } from 'react-icons/fi';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
+import Link from '../../components/Link';
 import IconButton from '../../components/IconButton';
 import Add from './Add';
 import Details from './Details';
@@ -17,10 +18,10 @@ const columns = [
     { Header: "Legal Name", accessor: "name_legal" },
     { Header: "Phone", accessor: "phone" },
     { Header: "Email", accessor: "email" },
-    { Header: "Website", accessor: "website" },
-    { Header: "PIC Name", accessor: "pic_name" },
-    { Header: "PIC Phone", accessor: "pic_phone" },
-    { Header: "PIC Email", accessor: "pic_email" },
+    { Header: "Website", accessor: row => <Link>{row.website}</Link> },
+    // { Header: "PIC Name", accessor: "pic_name" },
+    // { Header: "PIC Phone", accessor: "pic_phone" },
+    // { Header: "PIC Email", accessor: "pic_email" },
 ]
 
 function Component() {

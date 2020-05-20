@@ -153,8 +153,8 @@ function Component({
                                         <div style={{
                                             display: 'flex',
                                         }}>
-                                            {onClickReassign && <IconButton disabled={row.original.status !==
-                                                ('created' || 'rejected')}
+                                            {onClickReassign && <IconButton disabled={(row.original.status !== 'created')
+                                                && (row.original.status !== 'rejected')}
                                                 onClick={() => onClickReassign(row.original)}>
                                                 <FiUserPlus />
                                             </IconButton>}

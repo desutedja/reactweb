@@ -9,7 +9,7 @@ import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
-import { get } from '../../utils';
+import { get, toSentenceCase, dateTimeFormatter } from '../../utils';
 import { endpointAdmin, endpointManagement } from '../../settings';
 import Details from './Details';
 
@@ -18,12 +18,12 @@ const columns = [
     { Header: "Title", accessor: "title" },
     { Header: "Type", accessor: "task_type" },
     { Header: "Requester", accessor: "requester_name" },
-    { Header: "Building", accessor: "requester_building_name" },
+    { Header: "Building", accessor: "building_name" },
     { Header: "Priority", accessor: "priority" },
     { Header: "Assigned by", accessor: row => row.assigner_firstname == null ? "Auto" : row.assigner_firstname + ' ' + row.assigner_lastname },
     { Header: "Assignee", accessor: row => row.assignee_firstname + ' ' + row.assignee_lastname },
-    { Header: "Assigned on", accessor: "assigned_on" },
-    { Header: "Status", accessor: "status" },
+    { Header: "Assigned on", accessor: row => dateTimeFormatter(row.assigned_on) },
+    { Header: "Status", accessor: row => toSentenceCase(row.status) },
 ]
 
 const types = [

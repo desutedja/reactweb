@@ -3,12 +3,16 @@
   overflow: scroll;
 }
 
-.Logo-container {
+.Logo-container, .Logo-container-small {
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: center;
   height: 108px;
+}
+
+.Logo-container-small {
+  height: 80px;
 }
 
 .Logo-main {

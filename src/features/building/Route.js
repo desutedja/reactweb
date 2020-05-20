@@ -7,6 +7,7 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
+import Link from '../../components/Link';
 import IconButton from '../../components/IconButton';
 import Add from './Add';
 import Details from './Details';
@@ -20,9 +21,8 @@ const columns = [
     { Header: 'Legal Name', accessor: 'legal_name' },
     { Header: 'Code Name', accessor: 'code_name' },
     { Header: 'Owner', accessor: 'owner_name' },
-    { Header: 'Management', accessor: 'management_name' },
-    { Header: 'Website', accessor: 'website' },
-    { Header: 'Location', accessor: row => row.lat + ', ' + row.long },
+    { Header: 'Website', accessor: row => <Link>{row.website}</Link> },
+    // { Header: 'Location', accessor: row => row.lat + ', ' + row.long },
 ]
 
 function Component() {

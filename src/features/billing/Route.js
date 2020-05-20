@@ -11,13 +11,13 @@ import Details from './Details';
 import { getBilling } from './slice';
 import { FiSearch } from 'react-icons/fi';
 import { endpointAdmin } from '../../settings';
-import { get, months } from '../../utils';
+import { get, months, dateTimeFormatter, dateFormatter } from '../../utils';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
     { Header: 'Resident', accessor: 'resident_name' },
     { Header: 'Name', accessor: 'name' },
-    { Header: 'Group', accessor: 'group' },
+    { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
     { Header: 'Remarks', accessor: 'remarks' },
     { Header: 'Subtotal', accessor: 'subtotal' },
     {
@@ -26,9 +26,9 @@ const columns = [
     },
     { Header: 'Additional Charges', accessor: row => 0 },
     { Header: 'Total', accessor: 'total' },
-    { Header: 'Month', accessor: 'month' },
+    { Header: 'Month', accessor: row => months[row.month].label },
     { Header: 'Year', accessor: 'year' },
-    { Header: 'Due Date', accessor: 'due_date' },
+    { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
     { Header: 'Payment Date', accessor: row => row.payment_date ? row.payment_date : '-' },
     { Header: 'Settlement Date', accessor: row => row.settlement_date ? row.settlement_date : '-' },
     { Header: 'Disbursement Date', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
