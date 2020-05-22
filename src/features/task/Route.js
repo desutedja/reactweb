@@ -61,6 +61,7 @@ function Component() {
     const [resolve, setResolve] = useState(false);
     const [assign, setAssign] = useState(false);
     const [role, setRole] = useState('');
+    const [priority, setPriority] = useState('');
     const [staff, setStaff] = useState({});
     const [staffs, setStaffs] = useState([]);
 
@@ -107,7 +108,8 @@ function Component() {
     useEffect(() => {
         (!search || search.length >= 3) && get(endpointManagement + '/admin/staff/list' +
             '?limit=5&page=1&max_ongoing_task=1' +
-            '&staff_role=' + role + "status=active" +
+            '&staff_role=' + role + "&status=active" +
+            '&task_priority=' + priority +
             '&search=' + search, headers, res => {
                 let data = res.data.data.items;
 
@@ -118,7 +120,7 @@ function Component() {
 
                 setStaffs(formatted);
             })
-    }, [headers, role, search, selectedRow]);
+    }, [headers, role, search, priority, selectedRow]);
 
     return (
         <div>
@@ -274,6 +276,7 @@ function Component() {
                             setResolve(true);
                         }}
                         onClickReassign={row => {
+                            setPriority(row.priority);
                             setRow(row);
                             setAssign(true);
                         }}
