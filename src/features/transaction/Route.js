@@ -6,11 +6,12 @@ import Table from '../../components/Table';
 import Add from './Add';
 import Details from './Details';
 import { getTransaction } from './slice';
+import { toSentenceCase } from '../../utils';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
     { Header: 'Trx Code', accessor: 'trx_code' },
-    { Header: 'Type', accessor: 'type' },
+    { Header: 'Type', accessor: row => toSentenceCase(row.type) },
     { Header: 'Merchant', accessor: 'merchant_name' },
     { Header: 'Resident', accessor: 'resident_name' },
     // { Header: 'Selling Price', accessor: 'total_selling_price' },

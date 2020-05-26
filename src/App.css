@@ -3,18 +3,6 @@
   overflow: scroll;
 }
 
-.Logo-container, .Logo-container-small {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  height: 108px;
-}
-
-.Logo-container-small {
-  height: 80px;
-}
-
 .Logo-main {
   width: 120px;
 }
@@ -104,7 +92,20 @@
   align-items: flex-start;
   transition: all 0.3s ease;
   z-index: 10;
+  overflow-y: scroll;
 }
+
+.Logo-container, .Logo-container-small {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  min-height: 108px;
+}
+/* 
+.Logo-container-small {
+  min-height: 80px;
+} */
 
 .MenuItem,
 .MenuItem-active {
@@ -114,7 +115,7 @@
   color: grey;
   width: 200px;
   overflow: hidden;
-  height: 48px;
+  min-height: 48px;
 }
 
 .compact {
@@ -182,6 +183,7 @@
   transition: all 0.3s ease;
   width: 100%;
   padding-left: 216px;
+  overflow-y: scroll;
 }
 
 .Content-wide {

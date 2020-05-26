@@ -80,7 +80,12 @@ const menu = [
     {
         icon: <FiDollarSign className="MenuItem-icon" />,
         label: "Transaction",
-        route: "/transaction"
+        route: "/transaction",
+        subroutes: [
+            '/list',
+            '/settlement',
+            '/disbursement',
+        ]
     },
     {
         icon: <FiRss className="MenuItem-icon" />,
@@ -160,7 +165,9 @@ function Page() {
                                 src={require("./assets/clink_logo_small.png")} alt="logo" />}
                     </div>
                     {menu.map((el, index) =>
-                        <>
+                        <Fragment
+                            key={el.label}
+                        >
                             <div
                                 onClick={expanded === el.label ? () => setExpanded("")
                                     : el.subroutes ? () => {
@@ -171,7 +178,6 @@ function Page() {
                                             history.push(el.route);
                                             setExpanded("");
                                         }}
-                                key={el.label}
                                 className={(isSelected(el) ? "MenuItem-active" : "MenuItem") +
                                     (menuWide ? "" : " compact")}>
                                 <div className="MenuItem-icon">{el.icon}</div>
@@ -189,6 +195,7 @@ function Page() {
                             </div>
                             {menuWide && expanded === el.label && <div className="Submenu">
                                 {el.subroutes.map(sub => <div
+                                    key={sub}
                                     onClick={() => history.push(el.route + sub)}
                                     className={('/' + history.location.pathname.split('/')[2]) === sub
                                         ? "SubmenuItem-active" : "SubmenuItem"}
@@ -196,7 +203,7 @@ function Page() {
                                     {toSentenceCase(sub.slice(1))}
                                 </div>)}
                             </div>}
-                        </>
+                        </Fragment>
                     )}
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
@@ -215,7 +222,7 @@ function Page() {
                         <Route path="/resident">
                             <ResidentRoute />
                         </Route>
-                        <Route path="/billing/unit">
+                        <Route path="/billing/*">
                             <BillingRoute />
                         </Route>
                         <Route path="/staff">
@@ -230,7 +237,7 @@ function Page() {
                         <Route path="/product">
                             <ProductRoute />
                         </Route>
-                        <Route path="/transaction">
+                        <Route path="/transaction/*">
                             <TransactionRoute />
                         </Route>
                         <Route path="/advertisement">

@@ -76,3 +76,15 @@ export const getProduct = (
       dispatch(stopAsync());
     })
 }
+
+export const getProductDetails = (row, headers, history, url) => dispatch => {
+  dispatch(startAsync());
+
+  get(merchantEndpoint + '/items?id=' + row.id, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push(url + '/details');
+
+      dispatch(stopAsync())
+    })
+}
