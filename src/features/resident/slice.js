@@ -201,4 +201,17 @@ export const getResidentUnit = (headers, pageIndex, pageSize, search, row) => di
         
 }
 
+export const addResidentUnit = (headers, data) => dispatch => {
+  dispatch(startAsync());
+
+  post(residentEndpoint + '/add_unit', data, headers,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
 export default slice.reducer;

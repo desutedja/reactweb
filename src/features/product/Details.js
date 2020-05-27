@@ -60,8 +60,9 @@ function Component() {
                     display: 'flex',
                     marginTop: 16,
                 }}>
-                    {selected.images.map(el =>
+                    {selected.images.map((el, id) =>
                         <img src={el} alt="product images"
+                            key={id}
                             height={100}
                             style={{
                                 marginRight: 16,

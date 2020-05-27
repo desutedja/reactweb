@@ -5,12 +5,12 @@ import MoonLoader from "react-spinners/MoonLoader";
 import { storageRef } from '../firebase';
 
 function Component({
-    label, compact, name, optional = true,
+    label = "", compact, name, optional = true,
     type = "text", rows = 2, options = [],
     inputValue, setInputValue, icon, onClick,
     hidden, max, min
 }) {
-    const [value, setValue] = useState(type === "button" ? label : inputValue ? inputValue : "");
+    const [value, setValue] = useState(inputValue ? inputValue : "");
     const [uploading, setUploading] = useState(false);
 
     let uploader = useRef();
@@ -142,7 +142,7 @@ function Component({
                                 size="30"
                                 min={min}
                                 max={max}
-                                value={value}
+                                value={value ? value : label}
                                 onChange={(e) => {
                                     // console.log(e.target.value);
                                     if (type === 'url') {
