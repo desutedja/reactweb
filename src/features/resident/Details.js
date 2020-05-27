@@ -191,6 +191,7 @@ function Component() {
                                 status: status
                             }))
                             setAddUnit(false);
+                            setAddUnitStep(1);
                         }}
                     >
                         <Input type="button" inputValue={selectedBuilding.name} onClick={() => {
