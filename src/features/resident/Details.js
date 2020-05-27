@@ -70,7 +70,7 @@ function Component() {
     const [tab, setTab] = useState(0);
     const [selectedRow, setRow] = useState({});
 
-    const [addUnit, setAddUnit] = useState(true);
+    const [addUnit, setAddUnit] = useState(false);
     const [addSub, setAddSub] = useState(false);
 
     const [edit, setEdit] = useState(false);

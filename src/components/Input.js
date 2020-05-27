@@ -142,7 +142,7 @@ function Component({
                                 size="30"
                                 min={min}
                                 max={max}
-                                value={value ? value : label}
+                                value={value ? value : type === "button" ? label : ""}
                                 onChange={(e) => {
                                     // console.log(e.target.value);
                                     if (type === 'url') {
