@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Table from '../../components/Table';
 import Add from './Add';
 import Details from './Details';
-import { getTransaction } from './slice';
+import { getTransaction, getTransactionDetails } from './slice';
 import { toSentenceCase } from '../../utils';
 
 const columns = [
@@ -52,6 +52,7 @@ function Component() {
                         }, [dispatch, refreshToggle, headers])}
                         filters={[]}
                         actions={[]}
+                        onClickDetails={row => dispatch(getTransactionDetails(row, headers, history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

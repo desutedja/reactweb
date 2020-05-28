@@ -152,7 +152,7 @@ export function toSentenceCase(sentence) {
     let words = sentence.split(' ');
 
     return words.map(el => {
-        let newEl = el.slice(0, 1).toUpperCase() + el.slice(1);
+        let newEl = el.slice(0, 1).toUpperCase() + el.slice(1) + ' ';
         return newEl;
     })
 }

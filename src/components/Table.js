@@ -55,7 +55,7 @@ function Component({
     const [modalOpen, toggleModal] = useState(false);
 
     useEffect(() => {
-        fetchData(pageIndex, pageSize, searchToggle);
+        fetchData && fetchData(pageIndex, pageSize, searchToggle);
     }, [fetchData, pageIndex, pageSize, searchToggle]);
 
     useEffect(() => {

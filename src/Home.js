@@ -140,11 +140,13 @@ function Page() {
 
                                         if (array[1] === el && array.length > 2) {
                                             history.push('/' + el);
-                                        } else {
+                                        } else if (array[2] === el && array.length > 2) {
+                                            history.push('/' + array[1] + '/' + el);
+                                        } else{
                                             history.push(el);
                                         }
                                     }}>
-                                    {el.slice(0, 1).toUpperCase() + el.slice(1)}
+                                    {toSentenceCase(el.replace(/-/g, ' '))}
                                 </div>
                             </Fragment>
                         )}
@@ -222,7 +224,7 @@ function Page() {
                         <Route path="/resident">
                             <ResidentRoute />
                         </Route>
-                        <Route path="/billing/*">
+                        <Route path="/billing/unit">
                             <BillingRoute />
                         </Route>
                         <Route path="/staff">
@@ -237,7 +239,7 @@ function Page() {
                         <Route path="/product">
                             <ProductRoute />
                         </Route>
-                        <Route path="/transaction/*">
+                        <Route path="/transaction/list">
                             <TransactionRoute />
                         </Route>
                         <Route path="/advertisement">

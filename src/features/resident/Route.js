@@ -11,6 +11,7 @@ import Input from '../../components/Input';
 import Pills from '../../components/Pills';
 import { getResident, getResidentDetails, deleteResident, setSelected } from './slice';
 import Add from './Add';
+import AddSub from './AddSub';
 import Details from './Details';
 import { toSentenceCase } from '../../utils';
 
@@ -96,8 +97,11 @@ function Component() {
                 <Route path={`${path}/edit`}>
                     <Add />
                 </Route>
-                <Route path={`${path}/details`}>
+                <Route exact path={`${path}/details`}>
                     <Details />
+                </Route>
+                <Route path={`${path}/details/add-subaccount`}>
+                    <AddSub />
                 </Route>
             </Switch>
         </div>

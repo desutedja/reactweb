@@ -214,4 +214,18 @@ export const addResidentUnit = (headers, data) => dispatch => {
     })
 }
 
+export const createSubaccount = (headers, data, history) => dispatch => {
+  dispatch(startAsync());
+
+  post(residentEndpoint + '/register/subaccount', data, headers,
+    res => {
+      history.push("/resident");
+
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
 export default slice.reducer;

@@ -74,3 +74,15 @@ export const getTransaction = (
       dispatch(stopAsync());
     })
 }
+
+export const getTransactionDetails = (row, headers, history, url) => dispatch => {
+  dispatch(startAsync());
+
+  get(transactionEndpoint + '/' + row.trx_code, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push(url + '/details');
+
+      dispatch(stopAsync())
+    })
+}

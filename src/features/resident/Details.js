@@ -17,7 +17,8 @@ import Link from '../../components/Link';
 import {
     getResidentUnit,
     getSubaccount,
-    addResidentUnit
+    addResidentUnit,
+    setSelected
 } from './slice';
 import { endpointAdmin } from '../../settings';
 
@@ -289,7 +290,9 @@ function Component() {
                     filters={[]}
                     actions={[
                         <Button key="Add" label="Add" icon={<FiPlus />}
-                            onClick={() => setAddSub(true)}
+                            onClick={() => {
+                                history.push(url + "/add-subaccount");
+                            }}
                         />
                     ]}
                 />}

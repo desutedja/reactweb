@@ -8,7 +8,7 @@ import Select from '../../components/Select';
 import Form from '../../components/Form';
 import Modal from '../../components/Modal';
 import SectionSeparator from '../../components/SectionSeparator';
-import { createResident, editResident } from './slice';
+import { createResident, editResident, createSubaccount } from './slice';
 import { post, get } from '../../utils';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';
@@ -17,6 +17,8 @@ function Component() {
     const [exist, setExist] = useState(true);
     const [search, setSearch] = useState('');
     const [modal, setModal] = useState(false);
+
+    const [data, setData] = useState({});
 
     const [email, setEmail] = useState('');
     const [residents, setResidents] = useState([]);
@@ -42,7 +44,7 @@ function Component() {
     const [nat, setNat] = useState("");
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, selected } = useSelector(state => state.resident);
+    const { loading, selected, unit } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -68,25 +70,25 @@ function Component() {
 
     useEffect(() => {
         setCity("");
-        (province || selected.province) && get(endpointResident + '/geo/province/' + (province ? province : selected.province),
+        province && get(endpointResident + '/geo/province/' + province,
             headers,
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setCities(formatted);
             }
         )
-    }, [headers, province, selected.province]);
+    }, [headers, province]);
 
     useEffect(() => {
         setDistrict("");
-        (city || selected.city) && get(endpointResident + '/geo/city/' + (city ? city : selected.city),
+        city && get(endpointResident + '/geo/city/' + city,
             headers,
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setDistricts(formatted);
             }
         )
-    }, [headers, city, selected.city]);
+    }, [headers, city]);
 
     useEffect(() => {
         setBCLoading(true);
@@ -121,30 +123,47 @@ function Component() {
         <div>
             <Modal isOpen={modal} onRequestClose={() => setModal(false)}>
                 <p>Resident with the provided email already exist.</p>
-                <p style={{ marginBottom: 16 }}>Add as sub account to another resident?</p>
-                <Input label="Search Resident" icon={<FiSearch />} compact
-                    inputValue={searchRes} setInputValue={setSearchRes}
-                />
+                <p style={{ marginBottom: 16 }}>Add as sub account to
+                {' ' + selected.firstname + ' ' + selected.lastname}
+                ?</p>
+                <Input label="Unit" type="select" options={unit.items.map(el => ({
+                        label: el.number,
+                        value: el.unit_id
+                    }))} inputValue={unitID} setInputValue={setUnitID} />
+                    <div style={{marginTop: 16}} />
+                {unitID && <Input type="button" label="Add as Subaccount" compact
+                    onClick={() => {
+                        dispatch(createSubaccount(headers, {
+                            ...data,
+                            parent_id: selected.id,
+                            unit_id: parseInt(unitID),
+                        }, history))
+                    }}
+                />}
             </Modal>
             <Form
                 showSubmit={!exist}
-                onSubmit={data => selected.id ?
-                    dispatch(editResident(headers, data, history, selected.id))
-                    :
-                    dispatch(createResident(headers, data, history))}
+                onSubmit={data => {
+                    dispatch(createSubaccount(headers, {
+                        ...data,
+                        parent_id: selected.id,
+                        unit_id: parseInt(unitID),
+                    }, history))
+                }}
                 loading={loading}
             >
                 <div style={{
                     width: '100%'
                 }}>
-                    <Input label="Email" type="email" inputValue={email ? email : selected.email}
+                    <Input label="Email" type="email" inputValue={email}
                         setInputValue={setEmail} />
-                    {!selected.id && exist && <Input label="Check" type="button" compact
+                    {exist && <Input label="Check" type="button" compact
                         onClick={() => {
                             post(endpointResident + '/management/resident/check', {
                                 email: email
                             }, headers,
                                 res => {
+                                    setData(res.data.data);
                                     res.data.data.id
                                         ?
                                         setModal(true)
@@ -156,48 +175,54 @@ function Component() {
                     />}
                     <SectionSeparator />
                 </div>
-                {(!exist || selected.email) && <>
-                    <Input label="First Name" name="firstname" inputValue={selected.firstname} />
-                    <Input label="Last Name" name="lastname" inputValue={selected.lastname} />
-                    <Input label="Phone" type="tel" inputValue={selected.phone} />
+                {(!exist) && <>
+                    <Input label="Unit" type="select" options={unit.items.map(el => ({
+                        label: el.number,
+                        value: el.unit_id,
+                    }))} inputValue={unitID} setInputValue={setUnitID} />
+                    <SectionSeparator />
+                    
+                    <Input label="First Name" name="firstname" />
+                    <Input label="Last Name" name="lastname" />
+                    <Input label="Phone" type="tel" />
                     <Select label="Birth Place" name="birthplace" options={bcities}
-                        inputValue={bcity ? bcity : selected.birthplace} setInputValue={setBCity}
+                        inputValue={bcity} setInputValue={setBCity}
                         loading={bcloading}
                     />
-                    <Input label="Birth Date" name="birthdate" type="date" inputValue={selected.birthdate} />
+                    <Input label="Birth Date" name="birthdate" type="date" />
                     <SectionSeparator />
                     <Select label="Nationality" options={countries}
-                        inputValue={nat ? nat : selected.nationality}
+                        inputValue={nat}
                         setInputValue={setNat}
                     />
                     <Input label="Gender" type="select" options={[
                         { value: 'P', label: 'Perempuan' },
                         { value: 'L', label: 'Laki-Laki' },
-                    ]} inputValue={selected.gender} />
+                    ]} />
                     <Input label="Marital Status" type="select" options={[
                         { value: 'single', label: 'Single' },
                         { value: 'married', label: 'Married' },
                         { value: 'divorce', label: 'Divorced' },
                         { value: 'other', label: 'Other' },
-                    ]} inputValue={selected.marital_status} />
+                    ]} />
                     <SectionSeparator />
 
-                    <Input label="Address" type="textarea" inputValue={selected.address} />
+                    <Input label="Address" type="textarea" />
                     <Input label="Province" type="select" options={provinces}
-                        inputValue={province ? province : selected.province} setInputValue={setProvince}
+                        inputValue={province} setInputValue={setProvince}
                     />
                     <Input label="City" type="select" options={cities}
-                        inputValue={city ? city : selected.city} setInputValue={setCity}
+                        inputValue={city} setInputValue={setCity}
                     />
                     <Input label="District" type="select" options={districts}
-                        inputValue={district ? district : selected.district} setInputValue={setDistrict}
+                        inputValue={district} setInputValue={setDistrict}
                     />
                     <SectionSeparator />
 
-                    <Input label="Account Bank" type="select" options={banks} inputValue={selected.account_bank} />
-                    <Input label="Account Number" inputValue={selected.account_no} />
+                    <Input label="Account Bank" type="select" options={banks} />
+                    <Input label="Account Number" />
                     <Input label="Account Name"
-                        inputValue={selected.account_name} />
+                    />
                 </>}
             </Form>
         </div>

@@ -4,7 +4,7 @@ import SectionSeparator from './SectionSeparator';
 import Loading from './Loading';
 import { storageRef } from '../firebase';
 
-function Component({ children, onSubmit, loading }) {
+function Component({ children, onSubmit, loading, showSubmit = true }) {
 
     let formRef = useRef();
 
@@ -33,13 +33,13 @@ function Component({ children, onSubmit, loading }) {
             }}>
                 {children}
                 <SectionSeparator />
-                <div className="Form-control">
+                {showSubmit && <div className="Form-control">
                     <Loading loading={loading}>
                         <Button label="Submit" onClick={() => {
                             // console.log('sth');
                         }} />
                     </Loading>
-                </div>
+                </div>}
             </form>
         </div>
     )
