@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from './features/auth/slice';
 import {
     FiMenu, FiUsers, FiHome, FiBarChart2, FiShoppingCart, FiZap, FiVolume2,
-    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign, FiLogOut, FiChevronRight
+    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign, FiLogOut, FiChevronRight, FiChevronDown, FiChevronUp
 } from "react-icons/fi";
 import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom';
 
@@ -23,6 +23,7 @@ import AnnouncementRoute from './features/announcement/Route';
 import Button from './components/Button';
 import Row from './components/Row';
 import IconButton from './components/IconButton';
+import { toSentenceCase } from './utils';
 
 
 const menu = [
@@ -49,7 +50,12 @@ const menu = [
     {
         icon: <FiZap className="MenuItem-icon" />,
         label: "Billing",
-        route: "/billing"
+        route: "/billing",
+        subroutes: [
+            '/unit',
+            '/settlement',
+            '/disbursement',
+        ]
     },
     {
         icon: <FiAward className="MenuItem-icon" />,
@@ -74,7 +80,12 @@ const menu = [
     {
         icon: <FiDollarSign className="MenuItem-icon" />,
         label: "Transaction",
-        route: "/transaction"
+        route: "/transaction",
+        subroutes: [
+            '/list',
+            '/settlement',
+            '/disbursement',
+        ]
     },
     {
         icon: <FiRss className="MenuItem-icon" />,
@@ -89,11 +100,16 @@ const menu = [
 ]
 
 function Page() {
-    const [menuWide, setMenuWide] = useState(false);
+    const [menuWide, setMenuWide] = useState(true);
+    const [expanded, setExpanded] = useState("");
 
     let dispatch = useDispatch();
     let history = useHistory();
     let location = useLocation();
+
+    function isSelected(menu) {
+        return ('/' + history.location.pathname.split('/')[1]) === menu.route;
+    }
 
     return (
         <div>
@@ -101,7 +117,10 @@ function Page() {
                 <div className="TopBar-left">
                     <IconButton
                         className="MenuToggle"
-                        onClick={() => setMenuWide(!menuWide)}
+                        onClick={() => {
+                            setMenuWide(!menuWide);
+                            setExpanded("");
+                        }}
                     >
                         <FiMenu />
                     </IconButton>
@@ -139,24 +158,52 @@ function Page() {
             </div>
             <Row>
                 <div className="Menu">
-                    <div className={menuWide ?"Logo-container" : "Logo-container-small"}>
+                    <div className={menuWide ? "Logo-container" : "Logo-container-small"}>
                         {menuWide ? <img className="Logo-main"
-                            src="clink_logo.png" alt="logo" />
+                            src={require("./assets/clink_logo.png")} alt="logo" />
                             : <img className="Logo-main-small"
-                                src="clink_logo_small.png" alt="logo" />}
+                                src={require("./assets/clink_logo_small.png")} alt="logo" />}
                     </div>
                     {menu.map((el, index) =>
-                        <div
-                            onClick={() => history.push(el.route)}
+                        <Fragment
                             key={el.label}
-                            className={(('/' + history.location.pathname.split('/')[1])
-                                === el.route ? "MenuItem-active" : "MenuItem") +
-                                (menuWide ? "" : " compact")}>
-                            <div className="MenuItem-icon">{el.icon}</div>
-                            <div className={menuWide ? "MenuItem-label" : "MenuItem-label-hidden"}>
-                                {el.label}
+                        >
+                            <div
+                                onClick={expanded === el.label ? () => setExpanded("")
+                                    : el.subroutes ? () => {
+                                        setExpanded(el.label);
+                                        setMenuWide(true);
+                                    } :
+                                        () => {
+                                            history.push(el.route);
+                                            setExpanded("");
+                                        }}
+                                className={(isSelected(el) ? "MenuItem-active" : "MenuItem") +
+                                    (menuWide ? "" : " compact")}>
+                                <div className="MenuItem-icon">{el.icon}</div>
+                                <div className={menuWide ? "MenuItem-label" : "MenuItem-label-hidden"}>
+                                    {el.label}
+                                </div>
+                                {menuWide && el.subroutes ? expanded === el.label ?
+                                    <FiChevronUp style={{
+                                        marginRight: 16,
+                                        width: '2rem'
+                                    }} /> : <FiChevronDown style={{
+                                        marginRight: 16,
+                                        width: '2rem'
+                                    }} /> : null}
                             </div>
-                        </div>
+                            {menuWide && expanded === el.label && <div className="Submenu">
+                                {el.subroutes.map(sub => <div
+                                    key={sub}
+                                    onClick={() => history.push(el.route + sub)}
+                                    className={('/' + history.location.pathname.split('/')[2]) === sub
+                                        ? "SubmenuItem-active" : "SubmenuItem"}
+                                >
+                                    {toSentenceCase(sub.slice(1))}
+                                </div>)}
+                            </div>}
+                        </Fragment>
                     )}
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
@@ -175,7 +222,7 @@ function Page() {
                         <Route path="/resident">
                             <ResidentRoute />
                         </Route>
-                        <Route path="/billing">
+                        <Route path="/billing/*">
                             <BillingRoute />
                         </Route>
                         <Route path="/staff">
@@ -190,7 +237,7 @@ function Page() {
                         <Route path="/product">
                             <ProductRoute />
                         </Route>
-                        <Route path="/transaction">
+                        <Route path="/transaction/*">
                             <TransactionRoute />
                         </Route>
                         <Route path="/advertisement">

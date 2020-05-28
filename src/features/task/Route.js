@@ -47,6 +47,7 @@ const statuses = [
     { label: 'Reported', value: 'reported', },
     { label: 'Rejected', value: 'rejected', },
     { label: 'Approved', value: 'approved', },
+    { label: 'Completed', value: 'completed', },
 ]
 
 const prios = [
@@ -60,7 +61,6 @@ function Component() {
     const [selectedRow, setRow] = useState({});
     const [resolve, setResolve] = useState(false);
     const [assign, setAssign] = useState(false);
-    const [role, setRole] = useState('');
     const [staff, setStaff] = useState({});
     const [staffs, setStaffs] = useState([]);
 
@@ -86,13 +86,6 @@ function Component() {
     let { path, url } = useRouteMatch();
 
     useEffect(() => {
-        console.log(selectedRow);
-        selectedRow.task_type === 'security' && setRole('security');
-        selectedRow.task_type === 'service' && setRole('technician');
-        selectedRow.task_type === 'delivery' && setRole('courier');
-    }, [selectedRow])
-
-    useEffect(() => {
         (!search || search.length >= 3) && get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
             '&search=' + search, headers, res => {
@@ -105,9 +98,15 @@ function Component() {
     }, [headers, search]);
 
     useEffect(() => {
-        (!search || search.length >= 3) && get(endpointManagement + '/admin/staff/list' +
+        console.log(selectedRow);
+
+        let role = selectedRow.task_type === 'security' ? 'security' : 
+        selectedRow.task_type === 'service' ? 'technician' : 'courier';
+
+        assign && (!search || search.length >= 3) && get(endpointManagement + '/admin/staff/list' +
             '?limit=5&page=1&max_ongoing_task=1' +
-            '&staff_role=' + role + "status=active" +
+            '&staff_role=' + role + "&status=active" +
+            '&task_priority=' + selectedRow.priority +
             '&search=' + search, headers, res => {
                 let data = res.data.data.items;
 
@@ -118,7 +117,8 @@ function Component() {
 
                 setStaffs(formatted);
             })
-    }, [headers, role, search, selectedRow]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [headers, search, selectedRow]);
 
     return (
         <div>

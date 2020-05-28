@@ -3,18 +3,6 @@
   overflow: scroll;
 }
 
-.Logo-container, .Logo-container-small {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  height: 108px;
-}
-
-.Logo-container-small {
-  height: 80px;
-}
-
 .Logo-main {
   width: 120px;
 }
@@ -104,7 +92,20 @@
   align-items: flex-start;
   transition: all 0.3s ease;
   z-index: 10;
+  overflow-y: scroll;
 }
+
+.Logo-container, .Logo-container-small {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  min-height: 108px;
+}
+/* 
+.Logo-container-small {
+  min-height: 80px;
+} */
 
 .MenuItem,
 .MenuItem-active {
@@ -114,14 +115,14 @@
   color: grey;
   width: 200px;
   overflow: hidden;
-  height: 48px;
+  min-height: 48px;
 }
 
 .compact {
   width: 72px;
 }
 
-.MenuItem:hover {
+.MenuItem:hover, .MenuItem-active:hover {
   background-color: var(--accent-color);
   overflow: visible;
   /* color: var(--primary-color); */
@@ -153,6 +154,25 @@
   border-top-right-radius: 8px;
 }
 
+.Submenu {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.SubmenuItem, .SubmenuItem-active {
+  padding: 8px;
+  padding-left: 72px;
+  color: grey;
+}
+
+.SubmenuItem-active {
+  color: var(--secondary-color);
+}
+
+.SubmenuItem:hover {
+  background-color: var(--accent-color);
+}
+
 .Content,
 .Content-wide {
   flex: 1;
@@ -163,6 +183,7 @@
   transition: all 0.3s ease;
   width: 100%;
   padding-left: 216px;
+  overflow-y: scroll;
 }
 
 .Content-wide {

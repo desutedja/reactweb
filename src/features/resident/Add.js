@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import { FiSearch } from 'react-icons/fi';
 
 import Input from '../../components/Input';
 import Select from '../../components/Select';
@@ -9,8 +10,8 @@ import Modal from '../../components/Modal';
 import SectionSeparator from '../../components/SectionSeparator';
 import { createResident, editResident } from './slice';
 import { post, get } from '../../utils';
-import { endpointResident } from '../../settings';
-import { FiSearch } from 'react-icons/fi';
+import { endpointResident, banks } from '../../settings';
+import countries from '../../countries';
 
 function Component() {
     const [exist, setExist] = useState(true);
@@ -36,8 +37,9 @@ function Component() {
 
     const [bcity, setBCity] = useState("");
     const [bcities, setBCities] = useState([]);
-    const [bcitiesSearched, setBCitiesSearched] = useState([]);
     const [bcloading, setBCLoading] = useState(true);
+
+    const [nat, setNat] = useState("");
 
     const headers = useSelector(state => state.auth.headers);
     const { loading, selected } = useSelector(state => state.resident);
@@ -102,28 +104,18 @@ function Component() {
     }, [headers, city, selected.city]);
 
     useEffect(() => {
-        if (!search) {
-            setBCLoading(true);
-            get(endpointResident + '/geo/province',
-                headers,
-                res => {
-                    let formatted = res.data.data.map(el => ({ label: el.name, value: el.name }));
-                    setBCities(formatted);
-                    setBCitiesSearched(formatted);
-                    setBCLoading(false);
-                }
-            )
-        }
+        setBCLoading(true);
+        get(endpointResident + '/geo/province',
+            headers,
+            res => {
+                let formatted = res.data.data.map(el => ({ label: el.name, value: el.name }));
+                console.log(formatted)
+
+                setBCities(formatted);
+                setBCLoading(false);
+            }
+        )
     }, [headers, search]);
-
-    useEffect(() => {
-        if (search.length >= 3) {
-            let result = bcities.filter(el => el.value.toLowerCase().includes(search.toLowerCase()));
-
-            setBCitiesSearched(result);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search]);
 
     return (
         <div>
@@ -146,7 +138,7 @@ function Component() {
                 }}>
                     <Input label="Email" type="email" inputValue={email ? email : selected.email}
                         setInputValue={setEmail} />
-                    {!selected.id && <Input label="Check" type="button" compact
+                    {!selected.id && exist && <Input label="Check" type="button" compact
                         onClick={() => {
                             post(endpointResident + '/management/resident/check', {
                                 email: email
@@ -165,19 +157,19 @@ function Component() {
                     <SectionSeparator />
                 </div>
                 {(!exist || selected.email) && <>
-                    <SectionSeparator />
                     <Input label="First Name" name="firstname" inputValue={selected.firstname} />
                     <Input label="Last Name" name="lastname" inputValue={selected.lastname} />
                     <Input label="Phone" type="tel" inputValue={selected.phone} />
-                    <Select label="Birth Place" name="birthplace" type="select" options={bcitiesSearched}
-                        search={search} setSearch={setSearch}
+                    <Select label="Birth Place" name="birthplace" options={bcities}
                         inputValue={bcity ? bcity : selected.birthplace} setInputValue={setBCity}
                         loading={bcloading}
                     />
                     <Input label="Birth Date" name="birthdate" type="date" inputValue={selected.birthdate} />
                     <SectionSeparator />
-
-                    <Input label="Nationality" inputValue={selected.nationality} />
+                    <Select label="Nationality" options={countries}
+                        inputValue={nat ? nat : selected.nationality}
+                        setInputValue={setNat}
+                    />
                     <Input label="Gender" type="select" options={[
                         { value: 'P', label: 'Perempuan' },
                         { value: 'L', label: 'Laki-Laki' },
@@ -202,7 +194,7 @@ function Component() {
                     />
                     <SectionSeparator />
 
-                    <Input label="Account Bank" inputValue={selected.account_bank} />
+                    <Input label="Account Bank" type="select" options={banks} inputValue={selected.account_bank} />
                     <Input label="Account Number" inputValue={selected.account_no} />
                     <Input label="Account Name"
                         inputValue={selected.account_name} />
