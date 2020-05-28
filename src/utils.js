@@ -66,6 +66,28 @@ export function put(
         })
 }
 
+export function patch(
+    link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) {
+    Axios.patch(link, data, {
+        headers: headers
+    })
+        .then(res => {
+            console.log(res);
+
+            ifSuccess(res);
+        })
+        .catch(err => {
+            console.log(err);
+            alert(err.response?.data.error_message);
+
+            ifError(err);
+        })
+        .finally(() => {
+            finallyDo();
+        })
+}
+
 export function del(
     link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
 ) {

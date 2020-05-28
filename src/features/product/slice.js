@@ -1,6 +1,6 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { endpointMerchant } from '../../settings';
-import { get } from '../../utils';
+import { get, patch } from '../../utils';
 
 const merchantEndpoint = endpointMerchant + '/admin';
 
@@ -44,6 +44,9 @@ export const slice = createSlice({
       state.alert.type = action.payload.type;
       state.alert.message = action.payload.message;
     },
+    setAdminFee: (state, action) => {
+      state.selected.admin_fee = action.payload;
+    },
   },
 });
 
@@ -52,7 +55,9 @@ export const {
   stopAsync,
   setData,
   setSelected,
-  refresh
+  refresh,
+  setAlert,
+  setAdminFee,
 } = slice.actions;
 
 export default slice.reducer;
@@ -87,4 +92,17 @@ export const getProductDetails = (row, headers, history, url) => dispatch => {
 
       dispatch(stopAsync())
     })
+}
+
+export const patchAdminFee = (headers, data, item) => dispatch => {
+  dispatch(startAsync());
+
+  patch(merchantEndpoint + '/items/adjust_fee', data, headers,
+    res => {
+      dispatch(setAdminFee(res.data.data.admin_fee));
+    },
+    err => {
+
+    }
+  )
 }
