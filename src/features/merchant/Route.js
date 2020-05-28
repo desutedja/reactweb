@@ -8,10 +8,11 @@ import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Add from './Add';
 import Details from './Details';
-import { getMerchant } from './slice';
+import { getMerchant,setSelected} from './slice';
 import { get } from '../../utils';
 import { endpointMerchant } from '../../settings';
 import { FiSearch } from 'react-icons/fi';
+import { FiPlus } from 'react-icons/fi';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -122,7 +123,14 @@ function Component() {
                                     </>
                             },
                         ]}
-                        actions={[]}
+                        actions={[
+                            <Button key="Add" label="Add" icon={<FiPlus />}
+                                onClick={() => {
+                                    dispatch(setSelected({}));
+                                    history.push(url + "/add");
+                                }}
+                            />
+                        ]}
                     />
                 </Route>
                 <Route path={`${path}/add`}>
