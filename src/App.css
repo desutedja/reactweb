@@ -43,7 +43,7 @@
   position: fixed;
   width: 100%;
   box-sizing: border-box;
-  padding-left: 212px;
+  padding-left: 252px;
   transition: all 0.3s ease;
   color: white;
   height: 60px;
@@ -113,7 +113,7 @@
   cursor: pointer;
   align-items: center;
   color: grey;
-  width: 200px;
+  width: 240px;
   overflow: hidden;
   min-height: 48px;
 }
@@ -182,7 +182,7 @@
   box-sizing: border-box;
   transition: all 0.3s ease;
   width: 100%;
-  padding-left: 216px;
+  padding-left: 256px;
   overflow-y: scroll;
 }
 

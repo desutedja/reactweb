@@ -128,9 +128,9 @@ function Component({
                         </div>
                         :
                         <div className="Input-container">
-                            {icon && !value ? <div className="InputIcon">
+                            {icon && <div className="InputIcon">
                                 {icon}
-                            </div> : null}
+                            </div>}
                             <input
                                 className="Input-input"
                                 type={type}
@@ -149,7 +149,7 @@ function Component({
                                         setValue('http://' + e.target.value.replace('http://', ''));
                                         setInputValue && setInputValue('http://' + e.target.value.replace('http://', ''));
                                     } else {
-                                        setValue(e.target.value);
+                                        !onClick && setValue(e.target.value);
                                         setInputValue && setInputValue(e.target.value);
                                     }
                                 }}

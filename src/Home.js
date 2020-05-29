@@ -138,10 +138,12 @@ function Page() {
                                     onClick={() => {
                                         let array = location.pathname.split('/');
 
-                                        if (array[1] === el && array.length > 2) {
+                                        if (array[1] === el && array.length > 1) {
                                             history.push('/' + el);
                                         } else if (array[2] === el && array.length > 2) {
                                             history.push('/' + array[1] + '/' + el);
+                                        } else if (array[3] === el && array.length > 3) {
+                                            history.push('/' + array[1] + '/' + array[2] + '/' + el);
                                         } else{
                                             history.push(el);
                                         }

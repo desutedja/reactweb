@@ -7,7 +7,7 @@ import Filter from '../../components/Filter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { months, dateFormatter, toSentenceCase } from '../../utils';
-import { getBillingUnitItem, setSelected } from './slice';
+import { getBillingUnitItem, setSelected, getBillingUnitItemDetails } from './slice';
 import { FiPlus } from 'react-icons/fi';
 
 const exception = [
@@ -114,6 +114,9 @@ function Component() {
                             }}
                         />
                     ]}
+                    onClickDetails={row => {
+                        dispatch(getBillingUnitItemDetails(row, headers, history, url))
+                    }}
                 />
             </div>
         </div>

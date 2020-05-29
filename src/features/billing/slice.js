@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointBilling } from '../../settings';
-import { get } from '../../utils';
+import { get, post } from '../../utils';
 
 const billingEndpoint = endpointBilling + '/management/billing';
 
@@ -57,6 +57,9 @@ export const slice = createSlice({
       state.unit.total_items = data.filtered_item;
       state.unit.total_pages = data.filtered_page;
     },
+    setSelectedUnit: (state, action) => {
+      state.unit.selected = action.payload;
+    },
   },
 });
 
@@ -67,7 +70,8 @@ export const {
   setSelected,
   refresh,
   setAlert,
-  setUnit
+  setUnit,
+  setSelectedUnit
 } = slice.actions;
 
 export default slice.reducer;
@@ -92,7 +96,7 @@ export const getBillingUnit = (
 
 export const getBillingUnitDetails = (row, headers, history, url) => dispatch => {
   dispatch(setSelected(row));
-  history.push(url + '/details');
+  history.push(url + '/item');
 }
 
 export const getBillingUnitItem = (
@@ -112,6 +116,25 @@ export const getBillingUnitItem = (
     res => {
       dispatch(setUnit(res.data.data));
 
+      dispatch(stopAsync());
+    })
+}
+
+export const getBillingUnitItemDetails = (row, headers, history, url) => dispatch => {
+  dispatch(setSelectedUnit(row));
+  history.push(url + '/details');
+}
+
+export const createBillingUnitItem = (headers, data, history) => dispatch => {
+  dispatch(startAsync());
+
+  post(billingEndpoint, {'billing': data}, headers,
+    res => {
+      history.goBack();
+
+      dispatch(stopAsync());
+    },
+    err => {
       dispatch(stopAsync());
     })
 }
