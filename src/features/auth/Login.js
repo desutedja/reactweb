@@ -21,7 +21,7 @@ function Page() {
                 <input
                     className="Auth-input" type="text" id="email"
                     required placeholder="example@email.com"
-                    minLength="4" maxLength="24" size="30"
+                    minLength="4" size="30"
                     value={email}
                     onChange={e => setEmail(e.target.value)}
                 />

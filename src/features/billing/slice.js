@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { endpointBilling } from '../../settings';
 import { get } from '../../utils';
 
@@ -19,6 +19,12 @@ export const slice = createSlice({
       type: 'normal',
       message: '',
     },
+    unit: {
+      items: [],
+      selected: {},
+      total_items: 0,
+      total_pages: 1,
+    }
   },
   reducers: {
     startAsync: (state) => {
@@ -44,6 +50,13 @@ export const slice = createSlice({
       state.alert.type = action.payload.type;
       state.alert.message = action.payload.message;
     },
+    setUnit: (state, action) => {
+      const data = action.payload;
+
+      state.unit.items = data.items;
+      state.unit.total_items = data.filtered_item;
+      state.unit.total_pages = data.filtered_page;
+    },
   },
 });
 
@@ -52,27 +65,52 @@ export const {
   stopAsync,
   setData,
   setSelected,
-  refresh
+  refresh,
+  setAlert,
+  setUnit
 } = slice.actions;
 
 export default slice.reducer;
 
-export const getBilling = (
-  headers, pageIndex, pageSize, search = '', building, unit, month, year
+export const getBillingUnit = (
+  headers, pageIndex, pageSize, search = '', building, unit,
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(billingEndpoint +
+  get(billingEndpoint + '/unit/unpaid' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
-    '&building_id=' + building +
-    '&unit_id=' + unit +
-    '&month=' + (month) +
-    '&year=' + year +
+    '&resident_building=' + building +
     '&search=' + search,
     headers,
     res => {
       dispatch(setData(res.data.data));
+
+      dispatch(stopAsync());
+    })
+}
+
+export const getBillingUnitDetails = (row, headers, history, url) => dispatch => {
+  dispatch(setSelected(row));
+  history.push(url + '/details');
+}
+
+export const getBillingUnitItem = (
+  headers, pageIndex, pageSize, search = '', selected, status
+) => dispatch => {
+  dispatch(startAsync());
+
+  get(billingEndpoint + '/unit/item' +
+    '?page=' + (pageIndex + 1) +
+    '&limit=' + pageSize +
+    '&resident_unit=' + selected.resident_unit +
+    '&resident_building=' + selected.resident_building +
+    '&resident_id=' + selected.resident_id +
+    '&payment=' + status +
+    '&search=' + search,
+    headers,
+    res => {
+      dispatch(setUnit(res.data.data));
 
       dispatch(stopAsync());
     })

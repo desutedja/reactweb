@@ -8,30 +8,17 @@ import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Add from './Add';
 import Details from './Details';
-import { getBilling } from './slice';
+import { getBillingUnit, getBillingUnitDetails } from './slice';
 import { FiSearch } from 'react-icons/fi';
 import { endpointAdmin } from '../../settings';
 import { get, months, dateTimeFormatter, dateFormatter } from '../../utils';
 
 const columns = [
-    { Header: 'ID', accessor: 'id' },
+    { Header: 'ID', accessor: 'code' },
+    { Header: 'Unit', accessor: 'resident_unit' },
+    { Header: 'Building', accessor: 'building_name' },
     { Header: 'Resident', accessor: 'resident_name' },
-    { Header: 'Name', accessor: 'name' },
-    { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
-    { Header: 'Remarks', accessor: 'remarks' },
-    { Header: 'Subtotal', accessor: 'subtotal' },
-    {
-        Header: 'Tax', accessor: row => row.tax === 'percentage' ?
-            (row.tax_value + '%') : row.tax_amount
-    },
-    { Header: 'Additional Charges', accessor: row => 0 },
-    { Header: 'Total', accessor: 'total' },
-    { Header: 'Month', accessor: row => months[row.month].label },
-    { Header: 'Year', accessor: 'year' },
-    { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
-    { Header: 'Payment Date', accessor: row => row.payment_date ? row.payment_date : '-' },
-    { Header: 'Settlement Date', accessor: row => row.settlement_date ? row.settlement_date : '-' },
-    { Header: 'Disbursement Date', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
+    { Header: 'Unpaid Amount', accessor: 'billing_amount' },
 ]
 
 function Component() {
@@ -97,7 +84,7 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getBilling(headers, pageIndex, pageSize, search,
+                            dispatch(getBillingUnit(headers, pageIndex, pageSize, search,
                                 building, unit, month, yearSet));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
                         }, [dispatch, refreshToggle, headers, building, unit, month, yearSet])}
@@ -133,100 +120,103 @@ function Component() {
                                         />
                                     </>
                             },
-                            {
-                                button: <Button key="Select Unit"
-                                    label={unit ? unitName : "Select Unit"}
-                                    selected={unit}
-                                />,
-                                component: (toggleModal) =>
-                                    !building ?
-                                        <p>Please select building first.</p>
-                                        :
-                                        <>
-                                            <Input
-                                                label="Search"
-                                                compact
-                                                icon={<FiSearch />}
-                                                inputValue={search}
-                                                setInputValue={setSearch}
-                                            />
-                                            <Filter
-                                                data={units}
-                                                onClick={(el) => {
-                                                    setUnit(el.value);
-                                                    setUnitName(el.label);
-                                                    toggleModal(false);
-                                                    setSearch("");
-                                                }}
-                                                onClickAll={() => {
-                                                    setUnit("");
-                                                    setUnitName("");
-                                                    toggleModal(false);
-                                                    setSearch("");
-                                                }}
-                                            />
-                                        </>
-                            },
-                            {
-                                button: <Button key="Select Month"
-                                    label={month ? monthName : "Select Month"}
-                                    selected={month}
-                                />,
-                                component: (toggleModal) =>
-                                    <>
-                                        <Input
-                                            label="Search"
-                                            compact
-                                            icon={<FiSearch />}
-                                            inputValue={search}
-                                            setInputValue={setSearch}
-                                        />
-                                        <Filter
-                                            data={months}
-                                            onClick={(el) => {
-                                                setMonth(el.value);
-                                                setMonthName(el.label);
-                                                toggleModal(false);
-                                                setSearch("");
-                                            }}
-                                            onClickAll={() => {
-                                                setMonth("");
-                                                setMonthName("");
-                                                toggleModal(false);
-                                                setSearch("");
-                                            }}
-                                        />
-                                    </>
-                            },
-                            {
-                                button: <Button key="Select Year"
-                                    label={yearSet ? yearSet : "Select Year"}
-                                    selected={yearSet}
-                                />,
-                                component: (toggleModal) =>
-                                    <form style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center',
-                                    }} onSubmit={() => {
-                                        setYearSet(year);
-                                        toggleModal(false);
-                                    }}>
-                                        <Input
-                                            label="Year"
-                                            type="number"
-                                            max={new Date().getFullYear()}
-                                            inputValue={year}
-                                            setInputValue={setYear}
-                                        />
-                                        <Button label="Set" />
-                                    </form>
-                            },
+                            // {
+                            //     button: <Button key="Select Unit"
+                            //         label={unit ? unitName : "Select Unit"}
+                            //         selected={unit}
+                            //     />,
+                            //     component: (toggleModal) =>
+                            //         !building ?
+                            //             <p>Please select building first.</p>
+                            //             :
+                            //             <>
+                            //                 <Input
+                            //                     label="Search"
+                            //                     compact
+                            //                     icon={<FiSearch />}
+                            //                     inputValue={search}
+                            //                     setInputValue={setSearch}
+                            //                 />
+                            //                 <Filter
+                            //                     data={units}
+                            //                     onClick={(el) => {
+                            //                         setUnit(el.value);
+                            //                         setUnitName(el.label);
+                            //                         toggleModal(false);
+                            //                         setSearch("");
+                            //                     }}
+                            //                     onClickAll={() => {
+                            //                         setUnit("");
+                            //                         setUnitName("");
+                            //                         toggleModal(false);
+                            //                         setSearch("");
+                            //                     }}
+                            //                 />
+                            //             </>
+                            // },
+                            // {
+                            //     button: <Button key="Select Month"
+                            //         label={month ? monthName : "Select Month"}
+                            //         selected={month}
+                            //     />,
+                            //     component: (toggleModal) =>
+                            //         <>
+                            //             <Input
+                            //                 label="Search"
+                            //                 compact
+                            //                 icon={<FiSearch />}
+                            //                 inputValue={search}
+                            //                 setInputValue={setSearch}
+                            //             />
+                            //             <Filter
+                            //                 data={months}
+                            //                 onClick={(el) => {
+                            //                     setMonth(el.value);
+                            //                     setMonthName(el.label);
+                            //                     toggleModal(false);
+                            //                     setSearch("");
+                            //                 }}
+                            //                 onClickAll={() => {
+                            //                     setMonth("");
+                            //                     setMonthName("");
+                            //                     toggleModal(false);
+                            //                     setSearch("");
+                            //                 }}
+                            //             />
+                            //         </>
+                            // },
+                            // {
+                            //     button: <Button key="Select Year"
+                            //         label={yearSet ? yearSet : "Select Year"}
+                            //         selected={yearSet}
+                            //     />,
+                            //     component: (toggleModal) =>
+                            //         <form style={{
+                            //             display: 'flex',
+                            //             flexDirection: 'column',
+                            //             alignItems: 'center',
+                            //         }} onSubmit={() => {
+                            //             setYearSet(year);
+                            //             toggleModal(false);
+                            //         }}>
+                            //             <Input
+                            //                 label="Year"
+                            //                 type="number"
+                            //                 max={new Date().getFullYear()}
+                            //                 inputValue={year}
+                            //                 setInputValue={setYear}
+                            //             />
+                            //             <Button label="Set" />
+                            //         </form>
+                            // },
                         ]}
                         actions={[]}
+                        onClickDetails={row => {
+                            dispatch(getBillingUnitDetails(row, headers, history, url))
+                        }}
                     />
                 </Route>
-                <Route path={`${path}/add`}>
+                <Route path={`${path}/details/add`}>
                     <Add />
                 </Route>
                 <Route path={`${path}/edit`}>

@@ -22,10 +22,11 @@
 }
 
 .Form .Input {
-  margin-bottom: 8px;
-  margin-right: 16px;
-  min-width: calc(100% / 3 - 16px);
-  max-width: calc(100% / 3 - 16px);
+  margin-bottom: 16px;
+  margin-right: 8px;
+  margin-left: 8px;
+  min-width: calc(100% / 2 - 16px);
+  max-width: calc(100% / 2 - 16px);
 }
 
 .Input.textarea {
@@ -55,4 +56,8 @@
   position: absolute;
   right: 8px;
   color: gray;
+}
+
+.Input-label {
+  margin-bottom: 8px;
 }
