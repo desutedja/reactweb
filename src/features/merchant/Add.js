@@ -88,8 +88,8 @@ function Component() {
     (province || selected.province) &&
       get(
         endpointResident +
-          "/geo/province/" +
-          (province ? province : selected.province),
+        "/geo/province/" +
+        (province ? province : selected.province),
         headers,
         (res) => {
           let formatted = res.data.data.map((el) => ({
@@ -164,7 +164,7 @@ function Component() {
           type="select"
           options={categories}
           inputValue={category ? category : selected.category}
-          inputValue={setCategory}
+          setInputValue={setCategory}
         />
         <Input
           label="Province"

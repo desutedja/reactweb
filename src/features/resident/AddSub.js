@@ -8,7 +8,7 @@ import Select from '../../components/Select';
 import Form from '../../components/Form';
 import Modal from '../../components/Modal';
 import SectionSeparator from '../../components/SectionSeparator';
-import { createResident, editResident, createSubaccount } from './slice';
+import { addSubaccount, createSubaccount } from './slice';
 import { post, get } from '../../utils';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';
@@ -19,6 +19,7 @@ function Component() {
     const [modal, setModal] = useState(false);
 
     const [data, setData] = useState({});
+    const [status, setStatus] = useState('');
 
     const [email, setEmail] = useState('');
     const [residents, setResidents] = useState([]);
@@ -127,17 +128,24 @@ function Component() {
                 {' ' + selected.firstname + ' ' + selected.lastname}
                 ?</p>
                 <Input label="Unit" type="select" options={unit.items.map(el => ({
-                        label: el.number,
-                        value: el.unit_id
-                    }))} inputValue={unitID} setInputValue={setUnitID} />
-                    <div style={{marginTop: 16}} />
-                {unitID && <Input type="button" label="Add as Subaccount" compact
+                    label: el.number,
+                    value: el.unit_id
+                }))} inputValue={unitID} setInputValue={setUnitID} />
+                <Input label="Status" type="select" options={[
+                    { value: 'own', label: 'Own' },
+                    { value: 'rent', label: 'Rent' },
+                ]} inputValue={status} setInputValue={setStatus} />
+                <div style={{ marginTop: 16 }} />
+                {unitID && status && <Input type="button" label="Add as Subaccount" compact
                     onClick={() => {
-                        dispatch(createSubaccount(headers, {
-                            ...data,
-                            parent_id: selected.id,
+                        dispatch(addSubaccount(headers, {
                             unit_id: parseInt(unitID),
-                        }, history))
+                            parent_id: selected.id,
+                            owner_id: data.id,
+                            level: 'sub',
+                            status: status
+                        }, history));
+                        history.goBack();
                     }}
                 />}
             </Modal>
@@ -146,6 +154,9 @@ function Component() {
                 onSubmit={data => {
                     dispatch(createSubaccount(headers, {
                         ...data,
+                        birthdate: data.birthdate.replace('T', ' ').replace('Z', ''),
+                        status: status,
+                        account_status: data.status,
                         parent_id: selected.id,
                         unit_id: parseInt(unitID),
                     }, history))
@@ -180,8 +191,12 @@ function Component() {
                         label: el.number,
                         value: el.unit_id,
                     }))} inputValue={unitID} setInputValue={setUnitID} />
+                    <Input label="Status" type="select" options={[
+                        { value: 'own', label: 'Own' },
+                        { value: 'rent', label: 'Rent' },
+                    ]} inputValue={status} setInputValue={setStatus} />
                     <SectionSeparator />
-                    
+
                     <Input label="First Name" name="firstname" />
                     <Input label="Last Name" name="lastname" />
                     <Input label="Phone" type="tel" />

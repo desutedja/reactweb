@@ -214,6 +214,19 @@ export const addResidentUnit = (headers, data) => dispatch => {
     })
 }
 
+export const addSubaccount = (headers, data) => dispatch => {
+  dispatch(startAsync());
+
+  post(residentEndpoint + '/add_unit', data, headers,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
 export const createSubaccount = (headers, data, history) => dispatch => {
   dispatch(startAsync());
 
