@@ -6,9 +6,10 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
+import Modal from '../../components/Modal';
 import Add from './Add';
 import Details from './Details';
-import { getMerchant,setSelected} from './slice';
+import { getMerchant,setSelected, deleteMerchant} from './slice';
 import { get } from '../../utils';
 import { endpointMerchant } from '../../settings';
 import { FiSearch } from 'react-icons/fi';
@@ -31,6 +32,9 @@ const types = [
 ];
 
 function Component() {
+    const [confirm, setConfirm] = useState(false);
+    const [selectedRow, setRow] = useState({});
+
     const [type, setType] = useState('');
     const [typeLabel, setTypeLabel] = useState('');
 
@@ -59,6 +63,23 @@ function Component() {
 
     return (
         <div>
+            <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+                Are you sure you want to delete?
+                <div style={{
+                    display: 'flex',
+                    marginTop: 16,
+                }}>
+                    <Button label="No" secondary
+                        onClick={() => setConfirm(false)}
+                    />
+                    <Button label="Yes"
+                        onClick={() => {
+                            setConfirm(false);
+                            dispatch(deleteMerchant(selectedRow, headers));
+                        }}
+                    />
+                </div>
+            </Modal>
             <Switch>
                 <Route exact path={path}>
                     <Table
@@ -131,6 +152,10 @@ function Component() {
                                 }}
                             />
                         ]}
+                        onClickDelete={row => {
+                            setRow(row);
+                            setConfirm(true);
+                        }}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

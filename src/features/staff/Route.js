@@ -49,11 +49,18 @@ const roles = [
     { label: 'Security', value: 'security' }
 ];
 
+
+const shifts = [
+    { label: 'Yes', value: 'yes', },
+    { label: 'No', value: 'no', },
+]
+
 function Component() {
     const [confirm, setConfirm] = useState(false);
     const [selectedRow, setRow] = useState({});
 
-    const [onShift, setOnShift] = useState(true);
+    const [shift, setShift] = useState('');
+    const [shiftLabel, setShiftLabel] = useState('');
 
     const [search, setSearch] = useState('');
     const [building, setBuilding] = useState('');
@@ -109,16 +116,29 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getStaff(headers, pageIndex, pageSize, search, role, building, onShift));
+                            dispatch(getStaff(headers, pageIndex, pageSize, search, role, building, shift));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers, role, building, onShift])}
+                        }, [dispatch, refreshToggle, headers, role, building, shift])}
                         filters={[
                             {
-                                button: <Button key="Toggle Shift"
-                                    label={"Toggle Shift: " + (onShift ? "Yes" : "No")}
-                                    // selected={onShift}
-                                    onClick={() => setOnShift(!onShift)}
-                                />
+                                button: <Button key="Select Shift"
+                                    label={shiftLabel ? shiftLabel : "Select Shift"}
+                                    selected={shift}
+                                />,
+                                component: (toggleModal) => 
+                                <Filter
+                                            data={shifts}
+                                            onClick={(el) => {
+                                                setShift(el.value);
+                                                setShiftLabel(el.label);
+                                                toggleModal(false);
+                                            }}
+                                            onClickAll={() => {
+                                                setShift("");
+                                                setShiftLabel("");
+                                                toggleModal(false);
+                                            }}
+                                        />
                             },
                             {
                                 button: <Button key="Select Building"

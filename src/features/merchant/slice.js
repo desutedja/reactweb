@@ -53,7 +53,8 @@ export const {
   stopAsync,
   setData,
   setSelected,
-  refresh
+  refresh,
+  setAlert
 } = slice.actions;
 
 export default slice.reducer;
@@ -91,7 +92,19 @@ export const createMerchant = (headers, data, history) => dispatch => {
     })
 }
 
+export const deleteMerchant = (row, headers) => dispatch => {
+  dispatch(startAsync());
 
-// export const getBuildings=(
-//   district,city,province
-// )
+  del(merchantEndpoint + '?id=' + row.id, headers,
+    res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Merchant ' + row.name + ' has been deleted.'
+      }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
+      dispatch(refresh());
+      dispatch(stopAsync())
+    })
+}

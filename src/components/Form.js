@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import Button from './Button';
 import SectionSeparator from './SectionSeparator';
 import Loading from './Loading';
-import { storageRef } from '../firebase';
 
 function Component({ children, onSubmit, loading, showSubmit = true }) {
 
