@@ -7,7 +7,7 @@ import Filter from '../../components/Filter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { months, dateFormatter, toSentenceCase } from '../../utils';
-import { getBillingUnitItem, setSelected, getBillingUnitItemDetails } from './slice';
+import { getBillingUnitItem, setSelected, getBillingUnitItemDetails, setSelectedUnit } from './slice';
 import { FiPlus } from 'react-icons/fi';
 
 const exception = [
@@ -26,7 +26,7 @@ const columns = [
     // },
     // { Header: 'Additional Charges', accessor: row => 0 },
     { Header: 'Total', accessor: 'total' },
-    { Header: 'Month', accessor: row => months[row.month].label },
+    { Header: 'Month', accessor: row => months.find(el => el.value === row.month).label },
     { Header: 'Year', accessor: 'year' },
     { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
     { Header: 'Payment', accessor: row => toSentenceCase(row.payment) },
@@ -110,6 +110,7 @@ function Component() {
                     actions={[
                         <Button key="Add" label="Add" icon={<FiPlus />}
                             onClick={() => {
+                                dispatch(setSelectedUnit({}));
                                 history.push(url + "/add");
                             }}
                         />

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointBilling } from '../../settings';
-import { get, post } from '../../utils';
+import { get, post, put } from '../../utils';
 
 const billingEndpoint = endpointBilling + '/management/billing';
 
@@ -129,6 +129,20 @@ export const createBillingUnitItem = (headers, data, history) => dispatch => {
   dispatch(startAsync());
 
   post(billingEndpoint, {'billing': data}, headers,
+    res => {
+      history.goBack();
+
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
+export const editBillingUnitItem = (headers, data, history, id) => dispatch => {
+  dispatch(startAsync());
+
+  put(billingEndpoint, {'billing': {id: id ,...data}}, headers,
     res => {
       history.goBack();
 

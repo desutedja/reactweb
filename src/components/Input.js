@@ -34,7 +34,6 @@ function Component({
                     name={name ? name : label.toLowerCase().replace(/ /g, '_')}
                     required={!optional}
                     placeholder={label}
-                    maxLength="100"
                     rows={rows}
                     value={value}
                     onChange={(e) => {

@@ -223,6 +223,9 @@ function Component() {
                 <Route path={`${path}/item/add`}>
                     <Add />
                 </Route>
+                <Route path={`${path}/item/edit`}>
+                    <Add />
+                </Route>
                 <Route path={`${path}/item/details`}>
                     <DetailsItem />
                 </Route>

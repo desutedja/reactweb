@@ -71,6 +71,7 @@ textarea {
   flex: 1;
   text-overflow: ellipsis;
   overflow: hidden;
+  font-family: "Lato", sans-serif;
 }
 
 input[type="button"] {

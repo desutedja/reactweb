@@ -7,10 +7,10 @@ import Table from '../../components/Table';
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { get } from '../../utils';
+import { get, months } from '../../utils';
 import { endpointAdmin } from '../../settings';
 import { FiChevronRight } from 'react-icons/fi';
-import { createBillingUnitItem } from './slice';
+import { createBillingUnitItem, editBillingUnitItem } from './slice';
 
 const columnsService = [
     { Header: "ID", accessor: "id" },
@@ -36,7 +36,8 @@ function Component() {
     const [servicesGroup, setServicesGroup] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, selected } = useSelector(state => state.billing);
+    const { loading, selected, unit } = useSelector(state => state.billing);
+    const selectedUnit = unit.selected;
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -78,27 +79,29 @@ function Component() {
                 />
             </Modal>
             <Form
-                onSubmit={data =>
-                    { 
-                    //  selected.id ?
-                    // dispatch(editName(headers, data, history, selected.id))
-                    // :
-                    dispatch(createBillingUnitItem(headers, data, history))
-                    }}
-                    loading = { loading }
-                    >
-                    <Input label="Name" />
-                    <Input label="Service" hidden inputValue={service} />
-                    <Input label="Select Service" icon={<FiChevronRight />} inputValue={serviceName}
-                        onClick={() => setModal(true)}
-                    />
-                    <Input label="Previous Usage" type="number" />
-                    <Input label="Recent Usage" type="number" />
-                    <Input label="Remarks" type="textarea" />
-                    <Input label="Month" type="number" />
-                    <Input label="Year" type="number" />
-                    <Input label="Due Date" type="date" />
-                    <SectionSeparator />
+                onSubmit={data => {
+                    selectedUnit.id ?
+                        dispatch(editBillingUnitItem(headers, data, history, selectedUnit.id))
+                        :
+                        dispatch(createBillingUnitItem(headers, data, history))
+                }}
+                loading={loading}
+            >
+                <Input label="Name" inputValue={selectedUnit?.name} />
+                <Input label="Service" hidden inputValue={selectedUnit.service ? selectedUnit.service
+                    : service} />
+                <Input label="Select Service" icon={<FiChevronRight />} inputValue={
+                    selectedUnit.service_name ? selectedUnit.service_name :
+                    serviceName}
+                    onClick={() => setModal(true)}
+                />
+                <Input label="Previous Usage" type="number" inputValue={selectedUnit?.previous_usage + ''} />
+                <Input label="Recent Usage" type="number" inputValue={selectedUnit?.recent_usage + ''} />
+                <Input label="Remarks" type="textarea" inputValue={selectedUnit?.remarks} />
+                <Input label="Month" type="select" options={months} inputValue={selectedUnit?.month} />
+                <Input label="Year" type="number" inputValue={selectedUnit?.year} />
+                <Input label="Due Date" type="date" inputValue={selectedUnit?.due_date.split('T')[0]} />
+                <SectionSeparator />
             </Form>
         </div>
     )
