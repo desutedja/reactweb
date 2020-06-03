@@ -9,7 +9,7 @@ import Table from '../../components/Table';
 import Modal from '../../components/Modal';
 
 const exception = [
-    'modified_on', 'deleted',
+    'modified_on', 'deleted', 'pic_profile',
     'task_reports', 'attachments',
     'attachment_1', 'attachment_2', 'attachment_3', 'attachment_4', 'attachment_5',
 ];
@@ -78,6 +78,7 @@ function Component() {
         },
     ]), [])
 
+    console.log(selected);
     return (
         <div>
             <Modal isOpen={modal} onRequestClose={() => setModal(false)}>
@@ -87,7 +88,6 @@ function Component() {
             </Modal>
             <div className="Container">
                 <div className="Details" style={{
-
                 }}>
                     {Object.keys(selected).filter(el => !exception.includes(el))
                         .map(el =>
@@ -96,7 +96,8 @@ function Component() {
                                 label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
                                     value={el == "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
                             />
-                        )}
+                         )
+                    }
                 </div>
                 <div className="Photos">
                     <Button label="Edit" onClick={() => history.push(
