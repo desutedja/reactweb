@@ -37,7 +37,7 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.filtered_item;
+      state.total_items = data.total_items;
       state.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {
@@ -54,7 +54,7 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.unit.items = data.items;
-      state.unit.total_items = data.filtered_item;
+      state.unit.total_items = data.total_items;
       state.unit.total_pages = data.filtered_page;
     },
     setSelectedUnit: (state, action) => {

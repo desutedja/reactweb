@@ -38,7 +38,7 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.filtered_item;
+      state.total_items = data.total_items;
       state.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {
@@ -55,7 +55,7 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.schedule.items = data.items;
-      state.schedule.total_items = data.filtered_item;
+      state.schedule.total_items = data.total_items;
       state.schedule.total_pages = data.filtered_page;
     },
   },

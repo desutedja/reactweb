@@ -417,7 +417,7 @@ function Component() {
                 }}>
                     <Input label="Group" type="select" options={[
                         { value: 'ipl', label: 'IPL' },
-                        { value: 'nonipl', label: 'non-IPL' },
+                        { value: 'nonipl', label: 'Non-IPL' },
                     ]} />
                     <Input label="Name" />
                     <Input label="Description" />

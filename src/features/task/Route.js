@@ -42,6 +42,7 @@ const types = [
 
 const statuses = [
     { label: 'Created', value: 'created', },
+    { label: 'Canceled', value: 'canceled', },
     { label: 'Assigned', value: 'assigned', },
     { label: 'In Progress', value: 'in_progress', },
     { label: 'Reported', value: 'reported', },
@@ -79,7 +80,7 @@ function Component() {
     const [prioLabel, setPrioLabel] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refreshToggle } = useSelector(state => state.task);
+    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.task);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -167,7 +168,7 @@ function Component() {
             </Modal>
             <Switch>
                 <Route exact path={path}>
-                    <Table
+                    <Table totalItems={total_items}
                         columns={columns}
                         data={items}
                         loading={loading}
@@ -185,7 +186,7 @@ function Component() {
                                 component: (toggleModal) =>
                                     <>
                                         <Input
-                                            label="Search"
+                                            label="Search Building"
                                             compact
                                             icon={<FiSearch />}
                                             inputValue={search}

@@ -39,7 +39,7 @@ function Component() {
     const [agetSet, setAgetSet] = useState("");
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refreshToggle } = useSelector(state => state.ads);
+    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.ads);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -72,7 +72,7 @@ function Component() {
                             <FiX />
                         </IconButton>
                     </div>}
-                    <Table
+                    <Table totalItems={total_items}
                         columns={columns}
                         data={items}
                         loading={loading}

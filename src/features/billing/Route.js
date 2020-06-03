@@ -25,7 +25,7 @@ const columns = [
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refreshToggle, alert } = useSelector(state => state.billing);
+    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.billing);
 
     const [search, setSearch] = useState('');
 
@@ -81,7 +81,7 @@ function Component() {
             <Switch>
                 <Redirect exact from={path} to={`${path}/unit`} />
                 <Route path={`${path}/unit`}>
-                    <Table
+                    <Table totalItems={total_items}
                         columns={columns}
                         data={items}
                         loading={loading}

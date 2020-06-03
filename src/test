@@ -1,0 +1,21 @@
+
+                                            {        /*
+                                            {onClickReassign && <IconButton disabled={(row.original.status !== 'created')
+                                                && (row.original.status !== 'rejected')}
+                                                onClick={() => onClickReassign(row.original)}>
+                                                <FiUserPlus /> Reassign
+                                            </IconButton>}
+                                            {onClickResolve && <IconButton disabled={row.original.status === 'completed'} onClick={() => onClickResolve(row.original)}>
+                                                <FiCheck /> Resolve
+                                            </IconButton>}
+                                            {onClickDetails && <IconButton onClick={() => onClickDetails(row.original)}>
+                                                <FiMoreHorizontal /> Details
+                                            </IconButton>}
+                                            {onClickEdit && <IconButton onClick={() => onClickEdit(row.original)}>
+                                                <FiEdit /> Edit
+                                            </IconButton>}
+                                            {onClickDelete && <IconButton onClick={() => onClickDelete(row.original)}>
+                                                <FiTrash /> Delete
+                                            </IconButton>}
+                                            */
+                                    }

@@ -31,7 +31,7 @@ const columns = [
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refreshToggle, alert } = useSelector(state => state.transaction);
+    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -41,7 +41,7 @@ function Component() {
         <div>
             <Switch>
                 <Route exact path={path}>
-                    <Table
+                    <Table totalItems={total_items}
                         columns={columns}
                         data={items}
                         loading={loading}

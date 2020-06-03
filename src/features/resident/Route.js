@@ -9,6 +9,7 @@ import Modal from '../../components/Modal';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Pills from '../../components/Pills';
+import { Badge } from 'reactstrap';
 import { getResident, getResidentDetails, deleteResident, setSelected } from './slice';
 import Add from './Add';
 import AddSub from './AddSub';
@@ -24,13 +25,13 @@ const columns = [
     { Header: "Nationality", accessor: "nationality" },
     {
         Header: "Status", accessor: row => row.status ?
-            <Pills color="limegreen">{toSentenceCase(row.status)}</Pills>
+            <Badge pill color="success">{toSentenceCase(row.status)}</Badge>
             :
-            <Pills color="crimson">Inactive</Pills>
+            <Badge pill color="secondary">Inactive</Badge>
     },
     {
         Header: "KYC Status", accessor: row => row.status_kyc ? row.status_kyc :
-            <Pills color="crimson">None</Pills>
+            <Badge pill color="secondary">None</Badge>
     },
 ]
 
@@ -39,7 +40,7 @@ function Component() {
     const [selectedRow, setRow] = useState({});
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refreshToggle } = useSelector(state => state.resident);
+    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -48,7 +49,7 @@ function Component() {
     return (
         <div>
             <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
-                Are you sure you want to delete?
+                Are you sure you want to delete this resident?
                 <div style={{
                     display: 'flex',
                     marginTop: 16,
@@ -66,7 +67,7 @@ function Component() {
             </Modal>
             <Switch>
                 <Route exact path={path}>
-                    <Table
+                    <Table totalItems={total_items}
                         columns={columns}
                         data={items}
                         loading={loading}

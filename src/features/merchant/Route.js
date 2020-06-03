@@ -45,7 +45,7 @@ function Component() {
     const [cats, setCats] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refreshToggle, alert } = useSelector(state => state.merchant);
+    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.merchant);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -82,7 +82,7 @@ function Component() {
             </Modal>
             <Switch>
                 <Route exact path={path}>
-                    <Table
+                    <Table totalItems={total_items}
                         columns={columns}
                         data={items}
                         loading={loading}

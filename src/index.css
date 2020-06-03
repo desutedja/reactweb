@@ -15,9 +15,14 @@
 
 body {
   margin: 0;
-  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-size: 14px;
+  font-family: "Lato", sans-serif;
+  background-color: #f3f3fa;
+  /*
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif; */
+    sans-serif; 
+    */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -46,19 +51,23 @@ a {
 button {
   font-size: 1rem;
   font-family: "Lato", sans-serif;
+/*
   cursor: pointer;
   background-color: var(--primary-color);
+  border-radius: 16px;
+*/
   color: white;
   border: none;
-  border-radius: 16px;
   padding: 4px;
   padding-left: 8px;
   padding-right: 8px;
 }
 
 button:hover {
+    /*
   background-color: var(--accent-color);
   color: var(--primary-color);
+  */
 }
 
 input,

@@ -22,7 +22,7 @@ const columns = [
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refreshToggle, alert } = useSelector(state => state.building_management);
+    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.building_management);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -38,7 +38,7 @@ function Component() {
                             <FiX />
                         </IconButton>
                     </div>}
-                    <Table
+                    <Table totalItems={total_items}
                         columns={columns}
                         data={items}
                         loading={loading}

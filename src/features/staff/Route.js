@@ -13,6 +13,7 @@ import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Pills from '../../components/Pills';
+import { Badge } from 'reactstrap';
 import Add from './Add';
 import Details from './Details';
 
@@ -26,18 +27,18 @@ const columns = [
     { Header: "Building", accessor: "building_name" },
     { Header: "Management", accessor: "management_name" },
     {
-        Header: "On Shift", accessor: row => !row.on_shift_until ? <Pills color="dodgerblue">
+        Header: "On Shift", accessor: row => !row.on_shift_until ? <Badge pill color="success">
             Yes
-    </Pills> : new Date(row.on_shift_until) > new Date() ? <Pills color="dodgerblue">
+    </Badge> : new Date(row.on_shift_until) > new Date() ? <Badge pill color="success">
                 {toSentenceCase(row.on_shift)}
-            </Pills> : <Pills color="silver">
+            </Badge> : <Badge pill color="secondary">
                     No
-    </Pills>
+    </Badge>
     },
     {
-        Header: "Status", accessor: row => <Pills color={
-            row.status === 'active' ? "limegreen" : 'silver'
-        }>{row.status}</Pills>
+        Header: "Status", accessor: row => <Badge pill color={
+            row.status === 'active' ? "success" : 'secondary'
+        }>{row.status}</Badge>
     },
 ]
 
@@ -71,7 +72,7 @@ function Component() {
     const [roleLabel, setRoleLabel] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, refreshToggle, } = useSelector(state => state.staff);
+    const { loading, items, total_pages, total_items, refreshToggle, } = useSelector(state => state.staff);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -110,7 +111,7 @@ function Component() {
             </Modal>
             <Switch>
                 <Route exact path={path}>
-                    <Table
+                    <Table totalItems={total_items}
                         columns={columns}
                         data={items}
                         loading={loading}

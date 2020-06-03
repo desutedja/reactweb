@@ -6,12 +6,15 @@ import {
     FiChevronsRight, FiChevronRight, FiSearch, FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal, FiPenTool, FiEdit, FiCheck, FiUserPlus,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
+import ActionButton from './ActionButton';
 import Input from './Input';
 import Modal from './Modal';
+import Dropdown from './DropDown';
 
 function Component({
     columns,
     data,
+    totalItems,
     fetchData,
     filters = [],
     loading,
@@ -140,38 +143,62 @@ function Component({
                     <tbody {...getTableBodyProps()}>
                         {page.map((row, i) => {
                             prepareRow(row);
+
+                            const MenuActions = [
+                                (onClickResolve ? { 
+                                    name: "Set As Resolved",
+                                    onClick: () => onClickResolve(row.original), 
+                                    disabled: row.original.status === 'completed',
+                                    icon: <FiCheck/>,
+                                } : ""),
+                                (onClickReassign ? { 
+                                    name: "Assign Staff",
+                                    onClick:() => onClickReassign(row.original), 
+                                    disabled: row.original.status === 'completed' || row.original.status === 'canceled',
+                                    icon: <FiUserPlus/>
+                                } : ""),
+                                (onClickDetails ? { 
+                                    onClick:() => onClickDetails(row.original), 
+                                    name: "Details",
+                                    icon: <FiMoreHorizontal/>,
+                                }: ""),
+                                (onClickEdit ? { 
+                                    onClick:() => onClickEdit(row.original), 
+                                    name: "Edit",
+                                    icon: <FiEdit/>,
+                                }: ""),
+                                (onClickDelete ? { 
+                                    name: "Delete",
+                                    onClick:() => onClickDelete(row.original), 
+                                    color: "danger",
+                                    icon: <FiTrash/>,
+                                }: ""),
+                            ].filter(x => x !== "")
+
                             return (
-                                <tr
-                                    {...row.getRowProps()}
-                                >
+                                    <tr {...row.getRowProps()} >
+
                                     {row.cells.map(cell => {
                                         return (
                                             <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
                                         );
                                     })}
-                                    {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) && <td key={i}>
+
+                                    {(MenuActions.length > 0) && 
+                                    <td key={i}>
                                         <div style={{
                                             display: 'flex',
                                         }}>
-                                            {onClickReassign && <IconButton disabled={(row.original.status !== 'created')
-                                                && (row.original.status !== 'rejected')}
-                                                onClick={() => onClickReassign(row.original)}>
-                                                <FiUserPlus />
-                                            </IconButton>}
-                                            {onClickResolve && <IconButton disabled={row.original.status === 'completed'} onClick={() => onClickResolve(row.original)}>
-                                                <FiCheck />
-                                            </IconButton>}
-                                            {onClickDetails && <IconButton onClick={() => onClickDetails(row.original)}>
-                                                <FiMoreHorizontal />
-                                            </IconButton>}
-                                            {onClickEdit && <IconButton onClick={() => onClickEdit(row.original)}>
-                                                <FiEdit />
-                                            </IconButton>}
-                                            {onClickDelete && <IconButton onClick={() => onClickDelete(row.original)}>
-                                                <FiTrash />
-                                            </IconButton>}
+                                        { (MenuActions.length > 2) ? (<Dropdown label="Actions" items={MenuActions}/>) : (
+                                            MenuActions.map((item, key) => 
+                                                <ActionButton icon={item.icon} color={item.color} onClick={item.onClick}>{item.name}
+                                                </ActionButton>
+                                            )
+                                        )}
                                         </div>
-                                    </td>}
+                                    </td>
+                                    }
+
                                 </tr>
                             );
                         })}
@@ -180,6 +207,7 @@ function Component({
             </div>
             <div className="Pagination">
                 <div className="Pagination-range">
+                    <p><b>{totalItems}</b> Results</p>
                     <p>Show</p>
                     <select
                         value={pageSize}
@@ -191,7 +219,6 @@ function Component({
                         <option value={50}>50</option>
                         <option value={100}>100</option>
                     </select>
-                    <p>pages</p>
                 </div>
                 <div className="Pagination-control">
                     <IconButton
@@ -209,9 +236,7 @@ function Component({
                         <FiChevronLeft />
                     </IconButton>
                     <div className="PageInfo">
-                        <button>
-                            <p>{pageIndex + 1}</p>
-                        </button>
+                        <p>{pageIndex + 1}</p>
                         <p>of</p>
                         <p>{pageCount}</p>
                     </div>
