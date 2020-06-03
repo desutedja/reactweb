@@ -149,7 +149,7 @@ export function dateFormatter(serverDateTime) {
 }
 
 export function toSentenceCase(sentence) {
-    let words = sentence.split(' ');
+    let words = sentence.toLowerCase().split(' ');
 
     return words.map(el => {
         let newEl = el.slice(0, 1).toUpperCase() + el.slice(1) + ' ';

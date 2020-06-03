@@ -74,3 +74,15 @@ export const getAnnoucement = (
       dispatch(stopAsync());
     })
 }
+
+export const getAnnouncementDetails = (row, headers, history, url) => dispatch => {
+  dispatch(startAsync());
+
+  get(announcementEndpoint + '/preview/' + row.id, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push(url + '/details');
+
+      dispatch(stopAsync())
+    })
+}

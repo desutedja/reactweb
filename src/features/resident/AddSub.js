@@ -131,10 +131,6 @@ function Component() {
                     label: el.number,
                     value: el.unit_id
                 }))} inputValue={unitID} setInputValue={setUnitID} />
-                <Input label="Status" type="select" options={[
-                    { value: 'own', label: 'Own' },
-                    { value: 'rent', label: 'Rent' },
-                ]} inputValue={status} setInputValue={setStatus} />
                 <div style={{ marginTop: 16 }} />
                 {unitID && status && <Input type="button" label="Add as Subaccount" compact
                     onClick={() => {
@@ -143,14 +139,13 @@ function Component() {
                             parent_id: selected.id,
                             owner_id: data.id,
                             level: 'sub',
-                            status: status
                         }, history));
                         history.goBack();
                     }}
                 />}
             </Modal>
             <Form
-                showSubmit={!exist}
+                showSubmit={!exist || !!selected.id}
                 onSubmit={data => {
                     dispatch(createSubaccount(headers, {
                         ...data,

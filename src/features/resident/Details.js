@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { FiPlus, FiSearch } from 'react-icons/fi';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { dateFormatter, get } from '../../utils';
+import { dateFormatter, get, toSentenceCase } from '../../utils';
 
 import LabeledText from '../../components/LabeledText';
 
@@ -23,7 +23,7 @@ import {
 import { endpointAdmin } from '../../settings';
 
 const exception = [
-    'modified_on', 'deleted',
+    'modified_on', 'deleted', 'district', 'city', 'province'
 ];
 
 const tabs = [
@@ -242,9 +242,9 @@ function Component() {
                         .map(el =>
                             <LabeledText
                                 key={el}
-                                label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
+                                label={el.length > 2 ? el.replace(/_/g, ' ') : el.toUpperCase()}
                                 value={el === "created_on" ? dateFormatter(selected["created_on"])
-                                    : selected[el]}
+                                    : toSentenceCase(selected[el] ? selected[el] + '' : '-')}
                             />
                         )}
                 </div>

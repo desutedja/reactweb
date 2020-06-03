@@ -8,7 +8,7 @@ function Component({
     label = "", compact, name, optional = true,
     type = "text", rows = 2, options = [],
     inputValue, setInputValue, icon, onClick,
-    hidden, max, min
+    hidden, max, min, disabled
 }) {
     const [value, setValue] = useState(inputValue ? inputValue : "");
     const [uploading, setUploading] = useState(false);
@@ -131,6 +131,7 @@ function Component({
                                 {icon}
                             </div>}
                             <input
+                                disabled={disabled}
                                 className="Input-input"
                                 type={type}
                                 id={label}

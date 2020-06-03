@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Table from '../../components/Table';
 import Add from './Add';
 import Details from './Details';
-import { getAnnoucement } from './slice';
+import { getAnnoucement, getAnnouncementDetails } from './slice';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -40,6 +40,7 @@ function Component() {
                         }, [dispatch, refreshToggle, headers])}
                         filters={[]}
                         actions={[]}
+                        onClickDetails={row => dispatch(getAnnouncementDetails(row, headers, history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

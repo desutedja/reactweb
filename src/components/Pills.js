@@ -11,9 +11,9 @@ function Component({ children, color }) {
                 color: 'white',
                 paddingTop: 4,
                 paddingBottom: 4,
-                paddingLeft: 8,
-                paddingRight: 8,
-                borderRadius: 8,
+                paddingLeft: 16,
+                paddingRight: 16,
+                borderRadius: 16,
             }}>{children}</p>
         </div>
     )

@@ -130,7 +130,7 @@ function Page() {
                                 {index > 1 && <FiChevronRight style={{
                                     paddingLeft: 8,
                                     paddingRight: 8,
-                                    paddingTop: 4,
+                                    paddingTop: 8,
                                 }} />}
                                 <div
                                     key={el + index}

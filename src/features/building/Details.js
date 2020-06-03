@@ -81,14 +81,14 @@ const columnsSection = [
 const columnsService = [
     { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: "name" },
-    { Header: "Group", accessor: "group" },
-    { Header: "Description", accessor: "description" },
-    { Header: "Denom Unit", accessor: "denom_unit" },
-    { Header: "Price Fixed", accessor: "price_fixed" },
-    { Header: "Price Unit", accessor: "price_unit" },
-    { Header: "Tax", accessor: "tax" },
-    { Header: "Tax Amount", accessor: "tax_amount" },
+    { Header: "Group", accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
+    { Header: "Description", accessor: row => row.description ? row.description : '-' },
+    { Header: "Fixed Price (IDR)", accessor: "price_fixed" },
+    { Header: "Unit Price", accessor: 'price_unit' },
+    { Header: "Denom Unit", accessor: row => row.denom_unit ? row.denom_unit : 'rupiah' },
+    { Header: "Fixed Tax (IDR)", accessor: "tax_amount" },
     { Header: "Tax Value", accessor: "tax_value" },
+    { Header: "Tax Type", accessor: "tax" },
 ]
 
 const columnsManagement = [
