@@ -12,15 +12,18 @@ import Details from './Details';
 import DetailsItem from './DetailsItem';
 import { getBillingUnit, getBillingUnitDetails } from './slice';
 import { endpointAdmin } from '../../settings';
-import { get, months, dateTimeFormatter, dateFormatter } from '../../utils';
+import { get, months, dateTimeFormatter, dateFormatter, toSentenceCase } from '../../utils';
 
 const columns = [
     // { Header: 'ID', accessor: 'code' },
-    { Header: 'ID', accessor: 'resident_unit' },
-    { Header: 'Unit', accessor: '' },
+    { Header: 'ID', accessor: 'id' },
+    {
+        Header: 'Unit', accessor: row => toSentenceCase(row.section_type) + ' '
+            + row.section_name + ' ' + row.number
+    },
     { Header: 'Building', accessor: 'building_name' },
-    { Header: 'Resident', accessor: 'resident_name' },
-    { Header: 'Unpaid Amount', accessor: 'billing_amount' },
+    { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
+    { Header: 'Unpaid Amount', accessor: 'unpaid_amount' },
 ]
 
 function Component() {

@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 const exception = [
-    'created_on', 'modified_on', 'deleted',
+    'created_on', 'modified_on', 'deleted', 'title', 'description'
 ];
 
 function Component() {
@@ -19,20 +19,33 @@ function Component() {
         <div>
             <div className="Container">
                 <div className="Details" style={{
-                    
+
                 }}>
                     {Object.keys(selected).filter(el => !exception.includes(el))
                         .map(el =>
                             <LabeledText
-                                label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
+                                label={el.length > 2 ? el.replace(/_/g, ' ') : el.toUpperCase()}
                                 value={selected[el]}
                             />
                         )}
                 </div>
                 <div className="Photos">
-                    <Button label="Edit" onClick={() => history.push(
+                    <div>
+                    <Button label="Edit Settings" onClick={() => history.push(
                         url.split('/').slice(0, -1).join('/') + "/edit"
                     )} />
+                    <Button label="Edit Content" onClick={() => history.push(
+                        url.split('/').slice(0, -1).join('/') + "/edit"
+                    )} />
+                    </div>
+                </div>
+            </div>
+            <div className="Container">
+                <div>
+                    <p className="Title">{selected.title}</p>
+                    <p style={{
+                        paddingTop: 8,
+                    }}>{selected.description}</p>
                 </div>
             </div>
         </div>

@@ -41,6 +41,7 @@ p, a {
   margin: 0;
   margin-left: 4px;
   margin-right: 4px;
+  text-align: justify;
 }
 
 a {
@@ -73,6 +74,7 @@ button:hover {
 input,
 textarea {
   padding: 8px;
+  padding-left: 16px;
   border-radius: 16px;
   border-style: solid;
   border-width: 0.5px;

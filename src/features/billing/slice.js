@@ -81,7 +81,7 @@ export const getBillingUnit = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(billingEndpoint + '/unit/unpaid' +
+  get(billingEndpoint + '/unit' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&resident_building=' + building +
@@ -107,8 +107,8 @@ export const getBillingUnitItem = (
   get(billingEndpoint + '/unit/item' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
-    '&resident_unit=' + selected.resident_unit +
-    '&resident_building=' + selected.resident_building +
+    '&resident_unit=' + selected.id +
+    '&resident_building=' + selected.building_id +
     '&resident_id=' + selected.resident_id +
     '&payment=' + status +
     '&search=' + search,

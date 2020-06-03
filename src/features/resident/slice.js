@@ -184,8 +184,7 @@ export const getSubaccount = (headers, pageIndex, pageSize, search, row) => disp
 
 export const getResidentUnit = (headers, pageIndex, pageSize, search, row) => dispatch => {
     dispatch(startAsync());
-
-    console.log("Getting");
+    
     get(residentEndpoint + '/unit' + 
         '?page=' + (pageIndex + 1) +
         '&id=' + row.id + 
@@ -199,7 +198,6 @@ export const getResidentUnit = (headers, pageIndex, pageSize, search, row) => di
             dispatch(stopAsync())
         }
     )
-        
 }
 
 export const addResidentUnit = (headers, data) => dispatch => {
