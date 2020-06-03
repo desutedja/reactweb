@@ -9,7 +9,7 @@ function Component({ icon, label, onClick, selected, secondary, disabled }) {
             onClick={onClick}
         >
             {icon}
-            <p>{label}</p>
+            <p className="Button-label">{label}</p>
         </button>
     )
 }

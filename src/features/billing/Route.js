@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
+import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch } from 'react-icons/fi';
 
@@ -15,8 +15,9 @@ import { endpointAdmin } from '../../settings';
 import { get, months, dateTimeFormatter, dateFormatter } from '../../utils';
 
 const columns = [
-    { Header: 'ID', accessor: 'code' },
-    { Header: 'Unit', accessor: 'resident_unit' },
+    // { Header: 'ID', accessor: 'code' },
+    { Header: 'ID', accessor: 'resident_unit' },
+    { Header: 'Unit', accessor: '' },
     { Header: 'Building', accessor: 'building_name' },
     { Header: 'Resident', accessor: 'resident_name' },
     { Header: 'Unpaid Amount', accessor: 'billing_amount' },
@@ -78,7 +79,8 @@ function Component() {
     return (
         <div>
             <Switch>
-                <Route exact path={path}>
+                <Redirect exact from={path} to={`${path}/unit`} />
+                <Route path={`${path}/unit`}>
                     <Table
                         columns={columns}
                         data={items}

@@ -479,7 +479,7 @@ function Component() {
                 <div className="Tab">
                     {tabs.map((el, index) =>
                         <div key={el} className="TabItem">
-                            <button className="TabItem-Text"
+                            <button className={tab === index ? "TabItem-Text" : "TabItem-Text-inactive"}
                                 onClick={() => setTab(index)}
                             >{el}</button>
                             {tab === index && <div className="TabIndicator"></div>}

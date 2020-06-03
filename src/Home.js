@@ -185,9 +185,9 @@ function Page() {
                                 className={(isSelected(el) ? "MenuItem-active" : "MenuItem") +
                                     (menuWide ? "" : " compact")}>
                                 <div className="MenuItem-icon">{el.icon}</div>
-                                <div className={menuWide ? "MenuItem-label" : "MenuItem-label-hidden"}>
+                                {menuWide && <div className={menuWide ? "MenuItem-label" : "MenuItem-label-hidden"}>
                                     {el.label}
-                                </div>
+                                </div>}
                                 {menuWide && el.subroutes ? expanded === el.label ?
                                     <FiChevronUp style={{
                                         marginRight: 16,
@@ -226,7 +226,7 @@ function Page() {
                         <Route path="/resident">
                             <ResidentRoute />
                         </Route>
-                        <Route path="/billing/unit">
+                        <Route path="/billing">
                             <BillingRoute />
                         </Route>
                         <Route path="/staff">

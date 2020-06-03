@@ -90,9 +90,10 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  transition: all 0.3s ease;
   z-index: 10;
   overflow-y: scroll;
+  border-top-right-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 
 .Logo-container, .Logo-container-small {
@@ -116,6 +117,7 @@
   width: 240px;
   overflow: hidden;
   min-height: 48px;
+  transition: all 0.3s ease;
 }
 
 .compact {
@@ -137,6 +139,7 @@
 
 .MenuItem-icon {
   width: 72px;
+  margin-top: 2px;
 }
 
 .MenuItem-label, .MenuItem-label-hidden {
@@ -193,7 +196,7 @@
 .Container {
   background-color: white;
   padding: 16px;
-  border-radius: 8px;
+  border-radius: 16px;
   display: flex;
   flex: 1;
 }
