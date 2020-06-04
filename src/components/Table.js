@@ -3,7 +3,9 @@ import { useTable, usePagination, useSortBy, useRowSelect, useExpanded } from 'r
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
-    FiChevronsRight, FiChevronRight, FiSearch, FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal, FiPenTool, FiEdit, FiCheck, FiUserPlus,
+    FiChevronsRight, FiChevronRight, FiSearch, 
+    FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal, 
+    FiPenTool, FiEdit, FiCheck, FiUserPlus,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
 import ActionButton from './ActionButton';
