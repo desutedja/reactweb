@@ -5,6 +5,7 @@ import Form from '../../components/Form';
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
+import { FiChevronRight } from 'react-icons/fi';
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
@@ -24,7 +25,14 @@ function Component() {
                     // dispatch(createName(headers, data, history))}
                 loading={loading}
             >
-                <Input label="Name" />
+                <Input label="Title" />
+                <Input label="Topic" />
+                <Input label="Building" hidden />
+                <Input label="Select Building" icon={<FiChevronRight />}  />
+                <Input label="Consumer Role" />
+                <Input label="Consumer ID" />
+                <Input label="Image" />
+                <Input label="Description" />
                 <SectionSeparator />
             </Form>
         </div>

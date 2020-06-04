@@ -113,7 +113,7 @@
   display: flex;
   cursor: pointer;
   align-items: center;
-  color: grey;
+  color: #afafcf;
   width: 240px;
   overflow: hidden;
   min-height: 48px;
@@ -125,7 +125,7 @@
 }
 
 .MenuItem:hover, .MenuItem-active:hover {
-  background-color: var(--accent-color);
+  background-color: var(--primary-color);
   overflow: visible;
   /* color: var(--primary-color); */
   color: white;
@@ -165,7 +165,7 @@
 .SubmenuItem, .SubmenuItem-active {
   padding: 8px;
   padding-left: 72px;
-  color: grey;
+  color: #afafcf;
 }
 
 .SubmenuItem-active {

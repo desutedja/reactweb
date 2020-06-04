@@ -24,6 +24,7 @@ function Component() {
                     {Object.keys(selected).filter(el => !exception.includes(el))
                         .map(el =>
                             <LabeledText
+                                key={el}
                                 label={el.length > 2 ? el.replace(/_/g, ' ') : el.toUpperCase()}
                                 value={selected[el]}
                             />
@@ -31,12 +32,12 @@ function Component() {
                 </div>
                 <div className="Photos">
                     <div>
-                    <Button label="Edit Settings" onClick={() => history.push(
-                        url.split('/').slice(0, -1).join('/') + "/edit"
-                    )} />
-                    <Button label="Edit Content" onClick={() => history.push(
-                        url.split('/').slice(0, -1).join('/') + "/edit"
-                    )} />
+                        <Button label="Edit Settings" onClick={() => history.push(
+                            url.split('/').slice(0, -1).join('/') + "/edit"
+                        )} />
+                        <Button label="Edit Content" onClick={() => history.push(
+                            url.split('/').slice(0, -1).join('/') + "/edit"
+                        )} />
                     </div>
                 </div>
             </div>

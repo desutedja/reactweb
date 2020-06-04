@@ -3,9 +3,11 @@ import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../components/Table';
+import Button from '../../components/Button';
 import Add from './Add';
 import Details from './Details';
-import { getAnnoucement, getAnnouncementDetails } from './slice';
+import { getAnnoucement, getAnnouncementDetails, setSelected } from './slice';
+import { FiPlus } from 'react-icons/fi';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -39,7 +41,14 @@ function Component() {
                             // eslint-disable-next-line react-hooks/exhaustive-deps
                         }, [dispatch, refreshToggle, headers])}
                         filters={[]}
-                        actions={[]}
+                        actions={[
+                            <Button key="Add" label="Add" icon={<FiPlus />}
+                                onClick={() => {
+                                    dispatch(setSelected({}));
+                                    history.push(url + "/add");
+                                }}
+                            />,
+                        ]}
                         onClickDetails={row => dispatch(getAnnouncementDetails(row, headers, history, url))}
                     />
                 </Route>
