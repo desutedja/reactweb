@@ -102,8 +102,9 @@ const menu = [
 function Page() {
     const [menuWide, setMenuWide] = useState(true);
     const [expanded, setExpanded] = useState("");
+    const [profile, setProfile] = useState(true);
 
-  const { user } = useSelector(state => state.auth);
+    const { user } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -146,7 +147,7 @@ function Page() {
                                             history.push('/' + array[1] + '/' + el);
                                         } else if (array[3] === el && array.length > 3) {
                                             history.push('/' + array[1] + '/' + array[2] + '/' + el);
-                                        } else{
+                                        } else {
                                             history.push(el);
                                         }
                                     }}>
@@ -156,14 +157,24 @@ function Page() {
                         )}
                     </div>
                 </div>
-                <div className="ProfileButton">
-
+                <div className="ProfileButton" onClick={() => {
+                    setProfile(!profile)
+                }}>
+                    {user.firstname + ' ' + user.lastname}
+                    <FiChevronDown style={{
+                        marginLeft: 8,
+                    }} />
                 </div>
-                {/* <IconButton
-                    onClick={() => dispatch(logout())}
-                >
-                    <FiLogOut />
-                </IconButton> */}
+                <div className={profile ? "ProfileButton-menu" : "ProfileButton-menu-hide"}>
+                    <div className="ProfileButton-menuItem" onClick={() => {
+                        dispatch(logout());
+                    }}>
+                        <FiLogOut style={{
+                            marginRight: 8
+                        }} />
+                        Logout
+                    </div>
+                </div>
             </div>
             <Row>
                 <div className="Menu">

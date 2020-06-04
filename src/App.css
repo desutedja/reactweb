@@ -29,10 +29,16 @@
   font-size: 1.6rem;
 }
 
-.TopBar, .TopBar-wide {
+.TopBar,
+.TopBar-wide {
   /* background-color: white; */
-  background: linear-gradient(90deg, var(--primary-color) 0%, var(--accent-color) 100%);
-  padding: 8px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color) 0%,
+    var(--accent-color) 100%
+  );
+  padding-left: 8px;
+  padding-right: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -58,7 +64,8 @@
   align-items: center;
 }
 
-.TopBar .IconButton, .TopBar-wide .IconButton {
+.TopBar .IconButton,
+.TopBar-wide .IconButton {
   color: white;
 }
 
@@ -96,7 +103,8 @@
   border-bottom-right-radius: 16px;
 }
 
-.Logo-container, .Logo-container-small {
+.Logo-container,
+.Logo-container-small {
   display: flex;
   width: 100%;
   align-items: center;
@@ -124,7 +132,8 @@
   width: 72px;
 }
 
-.MenuItem:hover, .MenuItem-active:hover {
+.MenuItem:hover,
+.MenuItem-active:hover {
   background-color: var(--primary-color);
   overflow: visible;
   /* color: var(--primary-color); */
@@ -142,7 +151,8 @@
   margin-top: 2px;
 }
 
-.MenuItem-label, .MenuItem-label-hidden {
+.MenuItem-label,
+.MenuItem-label-hidden {
   height: 100%;
   width: 200px;
   display: flex;
@@ -162,7 +172,8 @@
   box-sizing: border-box;
 }
 
-.SubmenuItem, .SubmenuItem-active {
+.SubmenuItem,
+.SubmenuItem-active {
   padding: 8px;
   padding-left: 72px;
   color: #afafcf;
@@ -217,4 +228,48 @@
 
 .Input.hidden {
   display: none;
+}
+
+.ProfileButton {
+  padding-right: 8px;
+  padding-left: 16px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.ProfileButton:hover {
+  background-color: var(--accent-color);
+}
+
+.ProfileButton-menu, .ProfileButton-menu-hide {
+  position: fixed;
+  right: 16px;
+
+  background-color: white;
+  top: 60px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  box-shadow: 0px 1px 4px grey;
+  transition: all 0.1s ease;
+  height: 0;
+  overflow: hidden;
+}
+
+.ProfileButton-menu {
+  height: auto;
+  padding-bottom: 8px;
+  padding-top: 8px;
+}
+
+.ProfileButton-menuItem {
+  color: grey;
+  padding: 8px;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.ProfileButton-menuItem:hover {
+  background-color: silver;
 }
