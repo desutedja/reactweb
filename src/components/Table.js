@@ -3,8 +3,8 @@ import { useTable, usePagination, useSortBy, useRowSelect, useExpanded } from 'r
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
-    FiChevronsRight, FiChevronRight, FiSearch, 
-    FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal, 
+    FiChevronsRight, FiChevronRight, FiSearch,
+    FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
     FiPenTool, FiEdit, FiCheck, FiUserPlus,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
@@ -171,38 +171,38 @@ function Component({
                             prepareRow(row);
 
                             const MenuActions = [
-                                (onClickResolve ? { 
+                                (onClickResolve ? {
                                     name: "Set As Resolved",
-                                    onClick: () => onClickResolve(row.original), 
+                                    onClick: () => onClickResolve(row.original),
                                     disabled: row.original.status === 'completed',
-                                    icon: <FiCheck/>,
+                                    icon: <FiCheck />,
                                 } : ""),
-                                (onClickReassign ? { 
+                                (onClickReassign ? {
                                     name: "Assign Staff",
-                                    onClick:() => onClickReassign(row.original), 
+                                    onClick: () => onClickReassign(row.original),
                                     disabled: row.original.status === 'completed' || row.original.status === 'canceled',
-                                    icon: <FiUserPlus/>
+                                    icon: <FiUserPlus />
                                 } : ""),
-                                (onClickDetails ? { 
-                                    onClick:() => onClickDetails(row.original), 
+                                (onClickDetails ? {
+                                    onClick: () => onClickDetails(row.original),
                                     name: "Details",
-                                    icon: <FiMoreHorizontal/>,
-                                }: ""),
-                                (onClickEdit ? { 
-                                    onClick:() => onClickEdit(row.original), 
+                                    icon: <FiMoreHorizontal />,
+                                } : ""),
+                                (onClickEdit ? {
+                                    onClick: () => onClickEdit(row.original),
                                     name: "Edit",
-                                    icon: <FiEdit/>,
-                                }: ""),
-                                (onClickDelete ? { 
+                                    icon: <FiEdit />,
+                                } : ""),
+                                (onClickDelete ? {
                                     name: "Delete",
-                                    onClick:() => onClickDelete(row.original), 
+                                    onClick: () => onClickDelete(row.original),
                                     color: "danger",
-                                    icon: <FiTrash/>,
-                                }: ""),
+                                    icon: <FiTrash />,
+                                } : ""),
                             ].filter(x => x !== "")
 
                             return (
-                                    <tr {...row.getRowProps()} >
+                                <tr {...row.getRowProps()} >
 
                                     {row.cells.map(cell => {
                                         return (
@@ -210,19 +210,19 @@ function Component({
                                         );
                                     })}
 
-                                    {(MenuActions.length > 0) && 
-                                    <td key={i}>
-                                        <div style={{
-                                            display: 'flex',
-                                        }}>
-                                        { (MenuActions.length > 2) ? (<Dropdown label="Actions" items={MenuActions}/>) : (
-                                            MenuActions.map((item, key) => 
-                                                <ActionButton key={key} icon={item.icon} color={item.color} onClick={item.onClick}>{item.name}
-                                                </ActionButton>
-                                            )
-                                        )}
-                                        </div>
-                                    </td>
+                                    {(MenuActions.length > 0) &&
+                                        <td key={i}>
+                                            <div style={{
+                                                display: 'flex',
+                                            }}>
+                                                {(MenuActions.length > 2) ? (<Dropdown label="Actions" items={MenuActions} />) : (
+                                                    MenuActions.map((item, key) =>
+                                                        <ActionButton key={key} icon={item.icon} color={item.color} onClick={item.onClick}>{item.name}
+                                                        </ActionButton>
+                                                    )
+                                                )}
+                                            </div>
+                                        </td>
                                     }
 
                                 </tr>
@@ -282,34 +282,24 @@ function Component({
                     </IconButton>
                 </div>
             </div>
-        <pre>
-            <code>
-                {JSON.stringify(
-                    {
-                        selectedRowIds: selectedRowIds,
-                    },
-                    null,
-                    2
-                )}
-            </code>
-        </pre>
         </div>
     )
 }
 
 const IndeterminateCheckbox = forwardRef(
-        ({ indeterminate, ...rest }, ref) => {
-            const defaultRef = useRef()
-            const resolvedRef = ref || defaultRef
+    ({ indeterminate, ...rest }, ref) => {
+        const defaultRef = useRef()
+        const resolvedRef = ref || defaultRef
 
-            useEffect(
-                () => { resolvedRef.current.indeterminate = indeterminate }, [resolvedRef, indeterminate]  
-            )
+        useEffect(() => { 
+            resolvedRef.current.indeterminate = indeterminate 
+        }, 
+        [resolvedRef, indeterminate])
 
-            return (
-                <input type="checkbox" ref={resolvedRef} {...rest} />
-            )
-        }
+        return (
+            <input type="checkbox" ref={resolvedRef} {...rest} />
+        )
+    }
 );
 
 export default Component;

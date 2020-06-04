@@ -102,7 +102,7 @@ const menu = [
 function Page() {
     const [menuWide, setMenuWide] = useState(true);
     const [expanded, setExpanded] = useState("");
-    const [profile, setProfile] = useState(true);
+    const [profile, setProfile] = useState(false);
 
     const { user } = useSelector(state => state.auth);
 

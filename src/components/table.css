@@ -1,12 +1,12 @@
 .Table {
-  border-radius: 16px;
+  border-radius: 4px;
   background-color: white;
 }
 
 .Table-content {
   overflow: scroll;
   border-top: 1px solid #f3f3fa;
-  /* border-radius: 16px; */
+  /* border-radius: 4px; */
 }
 
 .Table table {
