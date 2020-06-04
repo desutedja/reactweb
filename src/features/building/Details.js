@@ -490,6 +490,7 @@ function Component() {
                     data={unit.items}
                     loading={loading}
                     pageCount={unit.total_pages}
+                    totalItems={unit.total_items}
                     fetchData={fetchData}
                     filters={[]}
                     actions={[
@@ -513,6 +514,7 @@ function Component() {
                     data={unit_type.items}
                     loading={loading}
                     pageCount={unit_type.total_pages}
+                    totalItems={unit_type.total_items}
                     fetchData={fetchData}
                     filters={[
                         {
@@ -555,6 +557,7 @@ function Component() {
                     data={section.items}
                     loading={loading}
                     pageCount={section.total_pages}
+                    totalItems={section.total_items}
                     fetchData={fetchData}
                     filters={[
                         {
@@ -598,6 +601,7 @@ function Component() {
                     loading={loading}
                     pageCount={service.total_pages}
                     fetchData={fetchData}
+                    totalItems={service.total_items}
                     filters={[
                         {
                             button: <Button key="Select Group"
@@ -634,6 +638,7 @@ function Component() {
                     data={management.items}
                     loading={loading}
                     pageCount={management.total_pages}
+                    totalItems={management.total_items}
                     fetchData={fetchData}
                     filters={[]}
                     actions={[
@@ -642,9 +647,9 @@ function Component() {
                         />
                     ]}
                     onClickDelete={row => {
-                        // setRow(row);
+                        setRow(row);
                         dispatch(deleteBuildingManagement(row, headers))
-                        // setConfirm(true);
+                        setConfirm(true);
                     }}
                     onClickEdit={row => {
                         setRow(row);

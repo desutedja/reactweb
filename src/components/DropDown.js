@@ -7,7 +7,7 @@ import {
 function Component({color = "", label, labelIcon = "", items}) {
     const listitem = items.map((item, key) => {
             if (!item.disabled)
-                return <DropdownItem onClick={item.onClick}>{item.icon} {item.name}</DropdownItem>
+                return <DropdownItem onClick={item.onClick}>{item.icon}  {item.name}</DropdownItem>
     });
 
     const [dropdownOpen, setOpen] = useState(false);

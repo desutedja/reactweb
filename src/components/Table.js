@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useTable, usePagination, useSortBy } from 'react-table'
+import React, { useEffect, useState, forwardRef, useRef } from 'react'
+import { useTable, usePagination, useSortBy, useRowSelect, useExpanded } from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
@@ -10,6 +10,8 @@ import ActionButton from './ActionButton';
 import Input from './Input';
 import Modal from './Modal';
 import Dropdown from './DropDown';
+
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 function Component({
     columns,
@@ -37,7 +39,7 @@ function Component({
         pageCount,
         gotoPage,
         setPageSize,
-        state: { pageIndex, pageSize }
+        state: { pageIndex, pageSize, selectedRowIds }
     } = useTable({
         columns,
         data,
@@ -46,9 +48,31 @@ function Component({
         pageCount: controlledPageCount,
         autoResetSortBy: false,
         autoResetPage: false,
+        autoResetSelectedRows: false,
     },
         useSortBy,
         usePagination,
+        useRowSelect,
+        hooks => {
+            hooks.visibleColumns.push(columns => {
+                return [
+                    {
+                        id: 'selection',
+                        Header: ({ getToggleAllRowsSelectedProps }) => (
+                            <div>
+                                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                            </div>
+                        ),
+                        Cell: ({ row }) => (
+                            <div>
+                                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                            </div>
+                        ),
+                    },
+                    ...columns,
+                ]
+            })
+        }
     );
 
     const [search, setSearch] = useState("");
@@ -135,7 +159,7 @@ function Component({
                                     </th>
                                 ))}
                                 {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) && <th key={i}>
-                                    Options
+                                    Actions
                             </th>}
                             </tr>
                         ))}
@@ -191,7 +215,7 @@ function Component({
                                         }}>
                                         { (MenuActions.length > 2) ? (<Dropdown label="Actions" items={MenuActions}/>) : (
                                             MenuActions.map((item, key) => 
-                                                <ActionButton icon={item.icon} color={item.color} onClick={item.onClick}>{item.name}
+                                                <ActionButton key={key} icon={item.icon} color={item.color} onClick={item.onClick}>{item.name}
                                                 </ActionButton>
                                             )
                                         )}
@@ -207,8 +231,8 @@ function Component({
             </div>
             <div className="Pagination">
                 <div className="Pagination-range">
-                    <p><b>{totalItems}</b> Results</p>
-                    <p>Show</p>
+                    <p><b>{totalItems} Results</b></p>
+                    <p>Show: </p>
                     <select
                         value={pageSize}
                         className="SelectRange"
@@ -256,8 +280,34 @@ function Component({
                     </IconButton>
                 </div>
             </div>
+        <pre>
+            <code>
+                {JSON.stringify(
+                    {
+                        selectedRowIds: selectedRowIds,
+                    },
+                    null,
+                    2
+                )}
+            </code>
+        </pre>
         </div>
     )
 }
+
+const IndeterminateCheckbox = forwardRef(
+        ({ indeterminate, ...rest }, ref) => {
+            const defaultRef = useRef()
+            const resolvedRef = ref || defaultRef
+
+            useEffect(
+                () => { resolvedRef.current.indeterminate = indeterminate }, [resolvedRef, indeterminate]  
+            )
+
+            return (
+                <input type="checkbox" ref={resolvedRef} {...rest} />
+            )
+        }
+);
 
 export default Component;
