@@ -29,6 +29,7 @@ function Component({
     onClickDelete,
     onClickDetails,
     onClickEdit,
+    renderActions
 }) {
     const {
         getTableProps,
@@ -109,8 +110,11 @@ function Component({
                     filters[activeFilter].component(toggleModal) : null}
             </Modal>
             <div className="TableAction">
-                <div>
+                <div style={{
+                    display: 'flex',
+                }}>
                     {actions}
+                    {renderActions(selectedRowIds, page)}
                 </div>
                 <div className="TableAction-right">
                     {filters.map((el, index) => <div key={index} onClick={() => {
