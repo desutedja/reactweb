@@ -1,5 +1,5 @@
 import React, { useState, Fragment } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { logout } from './features/auth/slice';
 import {
     FiMenu, FiUsers, FiHome, FiBarChart2, FiShoppingCart, FiZap, FiVolume2,
@@ -103,6 +103,8 @@ function Page() {
     const [menuWide, setMenuWide] = useState(true);
     const [expanded, setExpanded] = useState("");
 
+  const { user } = useSelector(state => state.auth);
+
     let dispatch = useDispatch();
     let history = useHistory();
     let location = useLocation();
@@ -154,11 +156,14 @@ function Page() {
                         )}
                     </div>
                 </div>
-                <IconButton
+                <div className="ProfileButton">
+
+                </div>
+                {/* <IconButton
                     onClick={() => dispatch(logout())}
                 >
                     <FiLogOut />
-                </IconButton>
+                </IconButton> */}
             </div>
             <Row>
                 <div className="Menu">

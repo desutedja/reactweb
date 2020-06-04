@@ -100,7 +100,7 @@ function Component() {
                 <Input label="Remarks" type="textarea" inputValue={selectedUnit?.remarks} />
                 <Input label="Month" type="select" options={months} inputValue={selectedUnit?.month} />
                 <Input label="Year" type="number" inputValue={selectedUnit?.year} />
-                <Input label="Due Date" type="date" inputValue={selectedUnit?.due_date.split('T')[0]} />
+                <Input label="Due Date" type="date" inputValue={selectedUnit.due_date?.split('T')[0]} />
                 <SectionSeparator />
             </Form>
         </div>

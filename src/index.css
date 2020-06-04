@@ -7,7 +7,7 @@
   --secondary-color: rgba(0, 116, 255, 1);
   --accent-color: rgba(0, 197, 255, 1);
   font-size: 14px;
-  font-family: "Lato", sans-serif;
+  font-family: "Noto Sans", sans-serif;
   --background-color: #f3f3fa;
   background-color: #f3f3fa;
   /* background-color: rgba(245, 245, 245, 1); */
@@ -51,12 +51,10 @@ a {
 
 button {
   font-size: 1rem;
-  font-family: "Lato", sans-serif;
-/*
-  cursor: pointer;
+  font-family: "Noto Sans", sans-serif;
+  /* cursor: pointer;
   background-color: var(--primary-color);
-  border-radius: 16px;
-*/
+  border-radius: 16px; */
   color: white;
   border: none;
   padding: 4px;
@@ -65,7 +63,7 @@ button {
 }
 
 button:hover {
-    /*
+  /*
   background-color: var(--accent-color);
   color: var(--primary-color);
   */
@@ -82,7 +80,7 @@ textarea {
   flex: 1;
   text-overflow: ellipsis;
   overflow: hidden;
-  font-family: "Lato", sans-serif;
+  font-family: "Noto Sans", sans-serif;
 }
 
 input[type="button"] {
