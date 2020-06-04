@@ -3,6 +3,7 @@ import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiPlus } from 'react-icons/fi';
 
+import UserAvatar from '../../components/UserAvatar';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
@@ -18,9 +19,14 @@ import { toSentenceCase } from '../../utils';
 
 const columns = [
     { Header: "ID", accessor: "id" },
-    { Header: "Name", accessor: row => row.firstname + ' ' + row.lastname },
+    { 
+        Header: "Resident", 
+        accessor: row => [row.firstname + ' ' + row.lastname, row.email],
+        Cell: props => {
+            return <UserAvatar fullname={props.value[0]} email={props.value[1]} />
+        }
+    },
     { Header: "Phone", accessor: "phone" },
-    { Header: "Email", accessor: "email" },
     { Header: "Gender", accessor: "gender" },
     { Header: "Nationality", accessor: "nationality" },
     {
