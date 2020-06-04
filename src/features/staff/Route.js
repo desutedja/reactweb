@@ -7,6 +7,7 @@ import { getStaff, setSelected, getStaffDetails, deleteStaff } from './slice';
 import { get, toSentenceCase } from '../../utils';
 import { endpointAdmin } from '../../settings';
 
+import UserAvatar from '../../components/UserAvatar';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
@@ -19,9 +20,14 @@ import Details from './Details';
 
 const columns = [
     { Header: "ID", accessor: "id" },
-    { Header: "Name", accessor: row => row.firstname + ' ' + row.lastname },
+    { 
+        Header: "Staff", 
+        accessor: row => [row.firstname + ' ' + row.lastname, row.email],
+        Cell: acc => {
+            return <UserAvatar fullname={acc.value[0]} email={acc.value[1]} />;
+        }
+    },
     { Header: "Role", accessor: row => toSentenceCase(row.staff_role) },
-    { Header: "Email", accessor: "email" },
     { Header: "Phone", accessor: "phone" },
     { Header: "Gender", accessor: "gender" },
     { Header: "Building", accessor: "building_name" },

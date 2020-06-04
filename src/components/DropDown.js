@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import {
     FiCheck,
 } from 'react-icons/fi'
@@ -14,14 +14,14 @@ function Component({color = "", label, labelIcon = "", items}) {
     const toggle = () => setOpen(!dropdownOpen)
     
     return (
-       <Dropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
-        <DropdownToggle caret color="primary">
+       <ButtonDropdown size="sm" isOpen={dropdownOpen} toggle={toggle}>
+        <DropdownToggle caret color="primary" outline>
             {labelIcon} {label} 
         </DropdownToggle> 
         <DropdownMenu>
             { listitem }
         </DropdownMenu>
-       </Dropdown>
+       </ButtonDropdown>
     )
 }
 
