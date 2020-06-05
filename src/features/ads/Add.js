@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Input from '../../components/Input';
 import Form from '../../components/Form';
+import Editor from '../../components/Editor';
 import SectionSeparator from '../../components/SectionSeparator';
 import { editAds, createAds } from './slice';
 
@@ -48,8 +49,6 @@ function Component() {
                     { value: "popup", label: "Popup" },
                     { value: "banner", label: "Banner" },
                 ]} inputValue={selected.appear_as} />
-                <Input label="Title" name="content_name" type="textarea"
-                    inputValue={selected.content_name} />
                 <SectionSeparator />
 
                 <Input optional label="Gender" type="select" options={[
@@ -72,18 +71,18 @@ function Component() {
                     { value: "android", label: "Android" },
                     { value: "ios", label: "iOS" },
                 ]} inputValue={os ? os : selected.os} setInputValue={setOS} />
-                <SectionSeparator />
-
                 <Input label="Start Date" type="date" inputValue={selected.start_date?.split('T')[0]} />
                 <Input label="End Date" type="date" inputValue={selected.end_date?.split('T')[0]} />
-                <SectionSeparator />
-
                 <Input label="Priority" name="total_priority_score"
                     type="number"
                     inputValue={score ? score : selected.total_priority_score}
                     setInputValue={setScore}
                 />
                 <SectionSeparator />
+
+                <Input label="Title" name="content_name" type="textarea"
+                    inputValue={selected.content_name} />
+                <Editor label="Description" />
             </Form>
         </div>
     )

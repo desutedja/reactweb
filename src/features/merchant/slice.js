@@ -79,6 +79,18 @@ export const getMerchant = (
     })
 }
 
+export const getMerchantDetails = (row, headers, history, url) => dispatch => {
+  dispatch(startAsync());
+
+  get(merchantEndpoint + '?id=' + row.id, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push(url + '/details');
+
+      dispatch(stopAsync())
+    })
+}
+
 export const createMerchant = (headers, data, history) => dispatch => {
   dispatch(startAsync());
 

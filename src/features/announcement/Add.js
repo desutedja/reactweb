@@ -6,6 +6,7 @@ import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Link from '../../components/Link';
+import Editor from '../../components/Editor';
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -21,6 +22,25 @@ const columns = [
     { Header: 'Code Name', accessor: 'code_name' },
     { Header: 'Owner', accessor: 'owner_name' },
     { Header: 'Website', accessor: row => <Link>{row.website}</Link> },
+]
+
+const roles = [
+    { value: 'centratama', label: 'Centratama' }, 
+    { value: 'management', label: 'Management' }, 
+    { value: 'staff', label: 'Staff' }, 
+    { value: 'staff_courier', label: 'Staff Courier' }, 
+    { value: 'staff_security', label: 'Staff Security' }, 
+    { value: 'staff_technician', label: 'Staff Technician' }, 
+    { value: 'resident', label: 'Resident' }, 
+    { value: 'merchant', label: 'Merchant' },
+]
+
+const topics = [
+    {value: 'emergency', label: 'Emergency'},
+    {value: 'transaction', label: 'Transaction'},
+    {value: 'task', label: 'Task'},
+    {value: 'billing', label: 'Billing'},
+    {value: 'announcement', label: 'Announcement'},
 ]
 
 function Component() {
@@ -105,7 +125,7 @@ function Component() {
                 loading={loading}
             >
                 <Input label="Title" />
-                <Input label="Topic" />
+                <Input label="Topic" type="select" options={topics} />
                 <Input label="Building" hidden inputValue={JSON.stringify(buildingsSelected.map(el =>
                     el.id
                 ))} />
@@ -119,11 +139,10 @@ function Component() {
                             setBuildingsSelected(buildingsSelected.filter(el2 => el2.id !== el.id))
                         }
                     }))} />
-                <Input label="Consumer Role" />
-                <Input label="Consumer ID" />
-                <Input label="Image" />
-                <Input label="Description" />
-                <SectionSeparator />
+                <Input label="Consumer Role" type="select" options={roles} />
+                {/* <Input label="Consumer ID" /> */}
+                <Input label="Image" type="file" />
+                <Editor label="Description" />
             </Form>
         </div>
     )
