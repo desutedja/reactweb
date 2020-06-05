@@ -12,6 +12,7 @@ function Component({ isOpen, onRequestClose, children }) {
                 isOpen={isOpen}
                 style={{
                     content: {
+                        maxWidth: '50%',
                         position: 'unset',
                         display: 'flex',
                         flexDirection: 'column',
@@ -21,6 +22,7 @@ function Component({ isOpen, onRequestClose, children }) {
                     },
                     overlay: {
                         zIndex: 99,
+                        backgroundColor: 'rgba(0,0,0,0.5)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
