@@ -9,7 +9,7 @@ import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Add from './Add';
 import Details from './Details';
-import { getMerchant,setSelected, deleteMerchant} from './slice';
+import { getMerchant, setSelected, deleteMerchant, getMerchantDetails } from './slice';
 import { get } from '../../utils';
 import { endpointMerchant } from '../../settings';
 import { FiSearch } from 'react-icons/fi';
@@ -45,7 +45,8 @@ function Component() {
     const [cats, setCats] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.merchant);
+    const { loading, items, total_pages, total_items, refreshToggle, alert } =
+        useSelector(state => state.merchant);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -53,12 +54,12 @@ function Component() {
 
     useEffect(() => {
         get(endpointMerchant + '/admin/categories', headers, res => {
-                let data = res.data.data;
+            let data = res.data.data;
 
-                let formatted = data.map(el => ({ label: el.name, value: el.name }));
+            let formatted = data.map(el => ({ label: el.name, value: el.name }));
 
-                setCats(formatted);
-            })
+            setCats(formatted);
+        })
     }, [headers]);
 
     return (
@@ -156,6 +157,7 @@ function Component() {
                             setRow(row);
                             setConfirm(true);
                         }}
+                        onClickDetails={row => dispatch(getMerchantDetails(row, headers, history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
@@ -38,6 +38,8 @@ const columns = [
 
 function Component() {
     const [status, setStatus] = useState('');
+    const [items, setItems] = useState([]);
+    const [active, setActive] = useState(0);
 
     const headers = useSelector(state => state.auth.headers);
     const { selected, loading, unit, refreshToggle } = useSelector(state => state.billing);
@@ -45,6 +47,15 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
     let { path, url } = useRouteMatch();
+
+    useEffect(() => {
+            dispatch(getBillingUnitItem(headers, 0, 100, '',
+                selected, status));
+    }, [dispatch, refreshToggle, headers, selected, status])
+
+    useEffect(() => {
+        setItems(unit.items[active].billing_item);
+    }, [unit.items, active])
 
     return (
         <div>
@@ -67,58 +78,69 @@ function Component() {
                     )} />
                 </div>
             </div>
-            <div className="Container" style={{
+            <div style={{
+                display: 'flex',
                 marginTop: 16,
-                flex: 1,
-                flexDirection: 'column',
             }}>
-                <Table
-                    columns={columns}
-                    data={unit.items}
-                    loading={loading}
-                    pageCount={unit.total_pages}
-                    fetchData={useCallback((pageIndex, pageSize, search) => {
-                        dispatch(getBillingUnitItem(headers, pageIndex, pageSize, search,
-                            selected, status));
-                        // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [dispatch, refreshToggle, headers, selected, status])}
-                    filters={[
-                        {
-                            button: <Button key="Payment Status"
-                                label={status ? toSentenceCase(status) : "Payment Status"}
-                                selected={status}
-                            />,
-                            component: (toggleModal) =>
-                                <>
-                                    <Filter
-                                        data={[
-                                            { label: 'Paid', value: 'paid' },
-                                            { label: 'Unpaid', value: 'unpaid' },
-                                        ]}
-                                        onClick={(el) => {
-                                            setStatus(el.value);
-                                            toggleModal(false);
-                                        }}
-                                        onClickAll={() => {
-                                            setStatus('');
-                                            toggleModal(false);
-                                        }}
-                                    />
-                                </>
-                        },
-                    ]}
-                    actions={[
-                        <Button key="Add" label="Add" icon={<FiPlus />}
-                            onClick={() => {
-                                dispatch(setSelectedUnit({}));
-                                history.push(url + "/add");
-                            }}
-                        />
-                    ]}
-                    onClickDetails={row => {
-                        dispatch(getBillingUnitItemDetails(row, headers, history, url))
-                    }}
-                />
+                <div className="Container" style={{
+                    flexDirection: 'column'
+                }}>
+                    {unit.items.map((el, index) => <div
+                        className={index === active ? "GroupActive" : "Group"}
+                        onClick={() => setActive(index)}
+                    >
+                        {el.billing_month}
+                    </div>)}
+                </div>
+                <div className="Container" style={{
+                    flex: 3,
+                    flexDirection: 'column',
+                    marginLeft: 16,
+                }}>
+                    <Table
+                        columns={columns}
+                        data={items}
+                        loading={loading}
+                        pageCount={unit.total_pages}
+                        // fetchData={}
+                        filters={[
+                            {
+                                button: <Button key="Payment Status"
+                                    label={status ? toSentenceCase(status) : "Payment Status"}
+                                    selected={status}
+                                />,
+                                component: (toggleModal) =>
+                                    <>
+                                        <Filter
+                                            data={[
+                                                { label: 'Paid', value: 'paid' },
+                                                { label: 'Unpaid', value: 'unpaid' },
+                                            ]}
+                                            onClick={(el) => {
+                                                setStatus(el.value);
+                                                toggleModal(false);
+                                            }}
+                                            onClickAll={() => {
+                                                setStatus('');
+                                                toggleModal(false);
+                                            }}
+                                        />
+                                    </>
+                            },
+                        ]}
+                        actions={[
+                            <Button key="Add" label="Add" icon={<FiPlus />}
+                                onClick={() => {
+                                    dispatch(setSelectedUnit({}));
+                                    history.push(url + "/add");
+                                }}
+                            />
+                        ]}
+                        onClickDetails={row => {
+                            dispatch(getBillingUnitItemDetails(row, headers, history, url))
+                        }}
+                    />
+                </div>
             </div>
         </div>
     )
