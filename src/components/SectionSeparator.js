@@ -4,7 +4,6 @@ function Component() {
     return (
         <>
         <div className="SectionSeparator">
-         <hr/>
         </div>
         </>
     )

@@ -11,7 +11,7 @@ import { getBillingUnitItem, setSelected, getBillingUnitItemDetails, setSelected
 import { FiPlus } from 'react-icons/fi';
 
 const exception = [
-    'created_on', 'modified_on', 'deleted',
+    'created_on', 'modified_on', 'deleted', 'billing_item'
 ];
 
 const columns = [

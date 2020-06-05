@@ -104,13 +104,11 @@ export const getBillingUnitItem = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(billingEndpoint + '/unit/item' +
+  get(billingEndpoint + '/unit/group' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
-    '&resident_unit=' + selected.id +
-    '&resident_building=' + selected.building_id +
-    '&resident_id=' + selected.resident_id +
-    '&payment=' + status +
+    '&unit_id=' + selected.id +
+    '&building_id=' + selected.building_id +
     '&search=' + search,
     headers,
     res => {
