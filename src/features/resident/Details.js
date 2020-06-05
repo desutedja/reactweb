@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { dateFormatter, get, toSentenceCase } from '../../utils';
 
 import LabeledText from '../../components/LabeledText';
+import Profile from '../../components/Profile';
 
 import Button from '../../components/Button';
 import Table from '../../components/Table';
@@ -238,7 +239,10 @@ function Component() {
                 <div className="Details" style={{
 
                 }}>
-                    {Object.keys(selected).filter(el => !exception.includes(el))
+                    {
+                        <Profile type={"Resident"} email={selected['email']} fullname={selected['firstname'] + " " + selected["lastname"]} data={selected} />
+
+                        /*Object.keys(selected).filter(el => !exception.includes(el))
                         .map(el =>
                             <LabeledText
                                 key={el}
@@ -246,7 +250,9 @@ function Component() {
                                 value={el === "created_on" ? dateFormatter(selected["created_on"])
                                     : toSentenceCase(selected[el] ? selected[el] + '' : '-')}
                             />
-                        )}
+                        ) 
+                        */     
+                    }
                 </div>
                 <div className="Photos">
                     <Button label="Edit" onClick={() => history.push(

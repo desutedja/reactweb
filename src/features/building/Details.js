@@ -85,7 +85,8 @@ const columnsService = [
     { Header: "Group", accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
     { Header: "Description", accessor: row => row.description ? row.description : '-' },
     { Header: "Price", accessor: (row) => {
-        return (row.price_fixed > 0 ? toMoney(row.price_fixed) + " (Fixed)" : toMoney(row.price_unit) + " / " + row.denom_unit) }
+        return (row.price_fixed > 0 ? toMoney(row.price_fixed) + " (Fixed)" : toMoney(row.price_unit) + " / " + row.denom_unit) },
+
     },
     { Header: "Tax", accessor: row => (row.tax == "percentage" ? row.tax_value + "%" : toMoney(row.tax_amount) + " (Fixed)")} ,
 ]
