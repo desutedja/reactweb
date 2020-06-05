@@ -410,7 +410,6 @@ function Component() {
             </Modal>
             <Modal isOpen={addService} onRequestClose={() => setAddService(false)}>
                 <h4>{edit ? "Edit" : "Add"} Service</h4>
-                <SectionSeparator/>
                 <Form onSubmit={data => {
                     edit ? 
                         dispatch(editBuildingService(headers, {

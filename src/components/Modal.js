@@ -12,6 +12,7 @@ function Component({ isOpen, onRequestClose, children }) {
                 isOpen={isOpen}
                 style={{
                     content: {
+                        maxWidth: '50%',
                         position: 'unset',
                         display: 'flex',
                         flexDirection: 'column',

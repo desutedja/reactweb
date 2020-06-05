@@ -8,6 +8,8 @@ function Component({ children, onSubmit, loading, showSubmit = true }) {
     let formRef = useRef();
 
     return (
+        <>
+        <SectionSeparator /> 
         <div className="Container">
             <form ref={formRef} className="Form" onSubmit={async e => {
                 e.preventDefault();
@@ -41,6 +43,7 @@ function Component({ children, onSubmit, loading, showSubmit = true }) {
                 </div>}
             </form>
         </div>
+        </>
     )
 }
 
