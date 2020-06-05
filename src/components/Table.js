@@ -3,8 +3,8 @@ import { useTable, usePagination, useSortBy, useRowSelect, useExpanded } from 'r
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
-    FiChevronsRight, FiChevronRight, FiSearch, 
-    FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal, 
+    FiChevronsRight, FiChevronRight, FiSearch,
+    FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
     FiPenTool, FiEdit, FiCheck, FiUserPlus,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
@@ -29,6 +29,7 @@ function Component({
     onClickDelete,
     onClickDetails,
     onClickEdit,
+    renderActions
 }) {
     const {
         getTableProps,
@@ -109,8 +110,11 @@ function Component({
                     filters[activeFilter].component(toggleModal) : null}
             </Modal>
             <div className="TableAction">
-                <div>
+                <div style={{
+                    display: 'flex',
+                }}>
                     {actions}
+                    {renderActions != null ? renderActions(selectedRowIds, page) : []}
                 </div>
                 <div className="TableAction-right">
                     {filters.map((el, index) => <div key={index} onClick={() => {
@@ -171,34 +175,34 @@ function Component({
                             prepareRow(row);
 
                             const MenuActions = [
-                                (onClickResolve ? { 
+                                (onClickResolve ? {
                                     name: "Set As Resolved",
-                                    onClick: () => onClickResolve(row.original), 
+                                    onClick: () => onClickResolve(row.original),
                                     disabled: row.original.status === 'completed',
-                                    icon: <FiCheck/>,
+                                    icon: <FiCheck />,
                                 } : ""),
-                                (onClickReassign ? { 
+                                (onClickReassign ? {
                                     name: "Assign Staff",
                                     onClick:() => onClickReassign(row.original), 
                                     disabled: !(row.original.status === 'created' || row.original.status === 'rejected'),
                                     icon: <FiUserPlus/>
                                 } : ""),
-                                (onClickDetails ? { 
-                                    onClick:() => onClickDetails(row.original), 
+                                (onClickDetails ? {
+                                    onClick: () => onClickDetails(row.original),
                                     name: "Details",
-                                    icon: <FiMoreHorizontal/>,
-                                }: ""),
-                                (onClickEdit ? { 
-                                    onClick:() => onClickEdit(row.original), 
+                                    icon: <FiMoreHorizontal />,
+                                } : ""),
+                                (onClickEdit ? {
+                                    onClick: () => onClickEdit(row.original),
                                     name: "Edit",
-                                    icon: <FiEdit/>,
-                                }: ""),
-                                (onClickDelete ? { 
+                                    icon: <FiEdit />,
+                                } : ""),
+                                (onClickDelete ? {
                                     name: "Delete",
-                                    onClick:() => onClickDelete(row.original), 
+                                    onClick: () => onClickDelete(row.original),
                                     color: "danger",
-                                    icon: <FiTrash/>,
-                                }: ""),
+                                    icon: <FiTrash />,
+                                } : ""),
                             ].filter(x => x !== "")
 
                             return (
@@ -282,34 +286,24 @@ function Component({
                     </IconButton>
                 </div>
             </div>
-        <pre>
-            <code>
-                {JSON.stringify(
-                    {
-                        selectedRowIds: selectedRowIds,
-                    },
-                    null,
-                    2
-                )}
-            </code>
-        </pre>
         </div>
     )
 }
 
 const IndeterminateCheckbox = forwardRef(
-        ({ indeterminate, ...rest }, ref) => {
-            const defaultRef = useRef()
-            const resolvedRef = ref || defaultRef
+    ({ indeterminate, ...rest }, ref) => {
+        const defaultRef = useRef()
+        const resolvedRef = ref || defaultRef
 
-            useEffect(
-                () => { resolvedRef.current.indeterminate = indeterminate }, [resolvedRef, indeterminate]  
-            )
+        useEffect(() => { 
+            resolvedRef.current.indeterminate = indeterminate 
+        }, 
+        [resolvedRef, indeterminate])
 
-            return (
-                <input type="checkbox" ref={resolvedRef} {...rest} />
-            )
-        }
+        return (
+            <input type="checkbox" ref={resolvedRef} {...rest} />
+        )
+    }
 );
 
 export default Component;

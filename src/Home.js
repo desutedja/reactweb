@@ -102,7 +102,7 @@ const menu = [
 function Page() {
     const [menuWide, setMenuWide] = useState(true);
     const [expanded, setExpanded] = useState("");
-    const [profile, setProfile] = useState(true);
+    const [profile, setProfile] = useState(false);
 
     const { user } = useSelector(state => state.auth);
 
@@ -131,9 +131,9 @@ function Page() {
                         {location.pathname.split('/').map((el, index) =>
                             <Fragment key={el + index}>
                                 {index > 1 && <FiChevronRight style={{
-                                    paddingLeft: 8,
-                                    paddingRight: 8,
-                                    paddingTop: 8,
+                                    marginLeft: 8,
+                                    marginRight: 8,
+                                    marginTop: 8,
                                 }} />}
                                 <div
                                     key={el + index}

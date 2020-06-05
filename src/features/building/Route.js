@@ -22,7 +22,6 @@ const columns = [
     { Header: 'Code Name', accessor: 'code_name' },
     { Header: 'Owner', accessor: 'owner_name' },
     { Header: 'Website', accessor: row => <Link>{row.website}</Link> },
-    // { Header: 'Location', accessor: row => row.lat + ', ' + row.long },
 ]
 
 function Component() {
