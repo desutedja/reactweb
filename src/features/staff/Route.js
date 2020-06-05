@@ -33,18 +33,18 @@ const columns = [
     { Header: "Building", accessor: "building_name" },
     { Header: "Management", accessor: "management_name" },
     {
-        Header: "On Shift", accessor: row => !row.on_shift_until ? <Badge pill color="success">
+        Header: "On Shift", accessor: row => !row.on_shift_until ? <h5><Badge pill color="success">
             Yes
-    </Badge> : new Date(row.on_shift_until) > new Date() ? <Badge pill color="success">
+            </Badge></h5> : new Date(row.on_shift_until) > new Date() ? <h5><Badge pill color="success">
                 {toSentenceCase(row.on_shift)}
-            </Badge> : <Badge pill color="secondary">
+            </Badge></h5> : <h5><Badge pill color="secondary">
                     No
-    </Badge>
+            </Badge></h5>
     },
     {
-        Header: "Status", accessor: row => <Badge pill color={
+        Header: "Status", accessor: row => <h5><Badge pill color={
             row.status === 'active' ? "success" : 'secondary'
-        }>{row.status}</Badge>
+        }>{row.status}</Badge></h5>
     },
 ]
 

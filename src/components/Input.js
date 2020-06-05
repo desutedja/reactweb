@@ -5,7 +5,7 @@ import MoonLoader from "react-spinners/MoonLoader";
 import { storageRef } from '../firebase';
 
 function Component({
-    label = "", compact, name, optional = true,
+    label = "", placeholder = null, compact, name, optional = true,
     type = "text", rows = 2, options = [],
     inputValue, setInputValue, icon, onClick,
     hidden, max, min, disabled
@@ -33,7 +33,7 @@ function Component({
                     id={label}
                     name={name ? name : label.toLowerCase().replace(/ /g, '_')}
                     required={!optional}
-                    placeholder={label}
+                    placeholder={placeholder == null ? label : placeholder}
                     rows={rows}
                     value={value}
                     onChange={(e) => {
@@ -53,7 +53,7 @@ function Component({
                             id={label}
                             name={name ? name : label.toLowerCase().replace(/ /g, '_')}
                             required={!optional}
-                            placeholder={label}
+                            placeholder={placeholder == null ? label : placeholder}
                             value={value}
                             onChange={(e) => {
                                 setValue(e.target.value);
@@ -86,7 +86,7 @@ function Component({
                                 id={label}
                                 name={name ? name : label.toLowerCase().replace(/ /g, '_')}
                                 required={!optional}
-                                placeholder={label}
+                                placeholder={placeholder == null ? label : placeholder}
                                 size="40"
                                 value={value}
                                 onChange={(e) => {
@@ -137,7 +137,7 @@ function Component({
                                 id={label}
                                 name={name ? name : label.toLowerCase().replace(/ /g, '_')}
                                 required={!optional}
-                                placeholder={label}
+                                placeholder={placeholder == null ? label : placeholder}
                                 maxLength="30"
                                 size="30"
                                 min={min}

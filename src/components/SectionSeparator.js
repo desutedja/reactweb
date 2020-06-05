@@ -2,7 +2,11 @@ import React from 'react';
 
 function Component() {
     return (
-        <div className="SectionSeparator" />
+        <>
+        <div className="SectionSeparator">
+         <hr/>
+        </div>
+        </>
     )
 }
 

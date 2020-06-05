@@ -156,3 +156,7 @@ export function toSentenceCase(sentence) {
         return newEl;
     })
 }
+
+export function toMoney(money) {
+    return "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+}

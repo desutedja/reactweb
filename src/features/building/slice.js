@@ -146,6 +146,8 @@ export const getBuilding = (
     '&district=' + district,
     headers,
     res => {
+      console.log(res);
+
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
@@ -413,6 +415,19 @@ export const editBuildingManagement = (headers, data, id) => dispatch => {
   dispatch(startAsync());
 
   put(buildingEndpoint + '/management', {...data, id: id}, headers,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
+export const editBuildingService = (headers, data, id) => dispatch => {
+  dispatch(startAsync());
+
+  put(buildingEndpoint + '/service', {...data, id: id}, headers,
     res => {
       dispatch(refresh());
       dispatch(stopAsync());

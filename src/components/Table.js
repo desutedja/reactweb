@@ -180,7 +180,7 @@ function Component({
                                 (onClickReassign ? { 
                                     name: "Assign Staff",
                                     onClick:() => onClickReassign(row.original), 
-                                    disabled: row.original.status === 'completed' || row.original.status === 'canceled',
+                                    disabled: !(row.original.status === 'created' || row.original.status === 'rejected'),
                                     icon: <FiUserPlus/>
                                 } : ""),
                                 (onClickDetails ? { 
@@ -202,7 +202,7 @@ function Component({
                             ].filter(x => x !== "")
 
                             return (
-                                    <tr {...row.getRowProps()} >
+                                <tr {...row.getRowProps()} >
 
                                     {row.cells.map(cell => {
                                         return (
@@ -217,14 +217,14 @@ function Component({
                                         }}>
                                         { (MenuActions.length > 2) ? (<Dropdown label="Actions" items={MenuActions}/>) : (
                                             MenuActions.map((item, key) => 
-                                                <ActionButton key={key} icon={item.icon} color={item.color} onClick={item.onClick}>{item.name}
+                                            <ActionButton key={key} icon={item.icon} color={item.color} 
+                                                onClick={item.onClick}>{item.name}
                                                 </ActionButton>
                                             )
                                         )}
                                         </div>
                                     </td>
                                     }
-
                                 </tr>
                             );
                         })}

@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { dateFormatter } from '../../utils';
+import { toMoney, dateFormatter, toSentenceCase } from '../../utils';
 
 import LabeledText from '../../components/LabeledText';
 import Table from '../../components/Table';
@@ -19,7 +19,8 @@ import {
     createBuildingUnit, createBuildingUnitType, createBuildingSection,
     deleteBuildingUnit, deleteBuildingUnitType, deleteBuildingSection,
     editBuildingUnit, editBuildingUnitType, editBuildingSection,
-    getBuildingService, getBuildingManagement, deleteBuildingManagement, deleteBuildingService, createBuildingService,
+    getBuildingService, getBuildingManagement, deleteBuildingManagement, 
+    deleteBuildingService, createBuildingService, editBuildingService,
 } from './slice';
 import { endpointAdmin } from '../../settings';
 import { get } from '../../utils';
@@ -57,7 +58,7 @@ const columnsUnit = [
     { Header: "ID", accessor: "id" },
     { Header: "Number", accessor: "number" },
     { Header: "Floor", accessor: "floor" },
-    { Header: "Section", accessor: "section_name" },
+    { Header: "Section", accessor: row => toSentenceCase(row.section_type) + " " + row.section_name  },
     { Header: "Type", accessor: row => row.unit_type_name + " - " + row.unit_size },
 ]
 
@@ -75,7 +76,7 @@ const columnsUnitType = [
 const columnsSection = [
     { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: "section_name" },
-    { Header: "Type", accessor: "section_type" },
+    { Header: "Type", accessor: row => toSentenceCase(row.section_type) },
 ]
 
 const columnsService = [
@@ -83,12 +84,10 @@ const columnsService = [
     { Header: "Name", accessor: "name" },
     { Header: "Group", accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
     { Header: "Description", accessor: row => row.description ? row.description : '-' },
-    { Header: "Fixed Price (IDR)", accessor: "price_fixed" },
-    { Header: "Unit Price", accessor: 'price_unit' },
-    { Header: "Denom Unit", accessor: row => row.denom_unit ? row.denom_unit : 'rupiah' },
-    { Header: "Fixed Tax (IDR)", accessor: "tax_amount" },
-    { Header: "Tax Value", accessor: "tax_value" },
-    { Header: "Tax Type", accessor: "tax" },
+    { Header: "Price", accessor: (row) => {
+        return (row.price_fixed > 0 ? toMoney(row.price_fixed) + " (Fixed)" : toMoney(row.price_unit) + " / " + row.denom_unit) }
+    },
+    { Header: "Tax", accessor: row => (row.tax == "percentage" ? row.tax_value + "%" : toMoney(row.tax_value) + " (Fixed)")} ,
 ]
 
 const columnsManagement = [
@@ -410,35 +409,44 @@ function Component() {
                 </Form>
             </Modal>
             <Modal isOpen={addService} onRequestClose={() => setAddService(false)}>
-                {edit ? "Edit" : "Add"} Section
+                <h4>{edit ? "Edit" : "Add"} Service</h4>
+                <SectionSeparator/>
                 <Form onSubmit={data => {
-                    dispatch(createBuildingService(headers, {...data, building_id: selected.id}));
+                    edit ? 
+                        dispatch(editBuildingService(headers, {
+                            "building_id": selected.id, building_name: selected.name, ...data,
+                        }, selectedRow.id))
+                        : dispatch(createBuildingService(headers, {...data, building_id: selected.id}));
+
                     setAddService(false);
+                    setEdit(false);
+                    setRow({});
                 }}>
-                    <Input label="Group" type="select" options={[
+                    <Input label="Name" inputValue={selectedRow.name}/>
+                    <Input label="Group" type="select" inputValue={selectedRow.group} options={[
                         { value: 'ipl', label: 'IPL' },
                         { value: 'nonipl', label: 'Non-IPL' },
                     ]} />
-                    <Input label="Name" />
-                    <Input label="Description" />
-                    <Input label="Price Type" type="select" options={[
+                    <Input label="Description" inputValue={selectedRow.description} />
+                    <Input label="Price Type" type="select" inputValue={priceType ? priceType : selectedRow.price_type} options={[
                         { value: 'unit', label: 'Unit' },
                         { value: 'fixed', label: 'Fixed' },
-                    ]} inputValue={priceType} setInputValue={setPriceType} />
+                    ]} setInputValue={setPriceType} />
                     <Input label="Price" name="price_unit" type="number"
-                        hidden={priceType === 'fixed'} />
-                    <Input label="Unit" name="denom_unit"
-                        hidden={priceType === 'fixed'} />
+                        hidden={priceType === 'fixed'} inputValue={selectedRow.price_unit} />
+                    <Input label="Unit" placeholder="Denom Unit Name, ex: kWh, m^3" name="denom_unit"
+                        hidden={priceType === 'fixed'} inputValue={selectedRow.denom_unit}
+                            />
                     <Input label="Price" name="price_fixed" type="number"
-                        hidden={priceType === 'unit'} />
+                        hidden={priceType === 'unit'} inputValue={selectedRow.price_fixed} />
                     <Input label="Tax Type" name="tax" type="select"
                         options={[
                             { value: 'value', label: 'Value' },
                             { value: 'percentage', label: 'Percentage' },
                         ]}
-                        inputValue={taxType} setInputValue={setTaxType} />
-                    <Input label="Tax Value" hidden={taxType === 'value'} />
-                    <Input label="Tax Amount" hidden={taxType === 'percentage'} />
+                        inputValue={taxType} setInputValue={setTaxType} inputValue={taxType ? taxType : selectedRow.tax} />
+                    <Input label="Tax Value" hidden={taxType === 'value'} inputValue={selectedRow.tax_value} />
+                    <Input label="Tax Amount" hidden={taxType === 'percentage'} inputValue={selectedRow.tax_amount} />
                 </Form>
             </Modal>
             <div style={{
@@ -627,6 +635,14 @@ function Component() {
                             onClick={() => setAddService(true)}
                         />
                     ]}
+                    onClickEdit={row => {
+                        setRow(row);
+                        console.log(row);
+                        setPriceType(row.price_fixed > 0 ? 'fixed' : 'unit');
+                        setTaxType(row.tax);
+                        setEdit(true);
+                        setAddService(true);
+                    }}
                     onClickDelete={row => {
                         // setRow(row);
                         dispatch(deleteBuildingService(row, headers))

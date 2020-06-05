@@ -31,13 +31,13 @@ const columns = [
     { Header: "Nationality", accessor: "nationality" },
     {
         Header: "Status", accessor: row => row.status ?
-            <Badge pill color="success">{toSentenceCase(row.status)}</Badge>
+            <h5><Badge pill color="success">{toSentenceCase(row.status)}</Badge></h5>
             :
-            <Badge pill color="secondary">Inactive</Badge>
+            <h5><Badge pill color="secondary">Inactive</Badge></h5>
     },
     {
         Header: "KYC Status", accessor: row => row.status_kyc ? row.status_kyc :
-            <Badge pill color="secondary">None</Badge>
+        <h5><Badge pill color="secondary">None</Badge></h5>
     },
 ]
 
