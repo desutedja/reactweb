@@ -4,6 +4,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { toMoney, dateFormatter, toSentenceCase } from '../../utils';
 
+import Profile from '../../components/Profile';
 import LabeledText from '../../components/LabeledText';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
@@ -458,24 +459,8 @@ function Component() {
                 }}>
 
                     <div className="Details">
-                        {Object.keys(selected).filter(el => !exception.includes(el))
-                            .map(el =>
-                                <LabeledText
-                                    key={el}
-                                    label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                                    value={el === "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
-                                />
-                            )}
-                    </div>
-                    <div className="Photos">
-                        <Button label="Edit" onClick={() => history.push(
-                            url.split('/').slice(0, -1).join('/') + "/edit"
-                        )} />
-                        {selected.logo ?
-                            <img className="Logo" src={selected.logo} alt="logo" />
-                            :
-                            <img src={'https://via.placeholder.com/200'} alt="logo" />
-                        }
+                            <Profile type="building" title={selected["name"]} website={selected["website"]} picture={selected["logo"]}
+                               data={selected}/>
                     </div>
                 </div>
             </div>

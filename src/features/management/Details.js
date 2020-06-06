@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Profile from '../../components/Profile';
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
 import { useSelector } from 'react-redux';
@@ -23,23 +24,8 @@ function Component() {
                 <div className="Details" style={{
 
                 }}>
-                    {Object.keys(selected).filter(el => !exception.includes(el))
-                        .map(el =>
-                            <LabeledText
-                                label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                                value={el === "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
-                            />
-                        )}
-                </div>
-                <div className="Photos">
-                    <Button label="Edit" onClick={() => history.push(
-                        url.split('/').slice(0, -1).join('/') + "/edit"
-                    )} />
-                    {selected.logo ?
-                        <img className="Logo" src={selected.logo} alt="logo" />
-                        :
-                        <img src={'https://via.placeholder.com/200'} alt="logo" />
-                    }
+                    <Profile type="management" title={selected["name"]} website={selected["website"]} phone={selected["phone"]}
+                        picture={selected["logo"]} data={selected} />
                 </div>
             </div>
         </div>

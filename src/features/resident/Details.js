@@ -236,23 +236,9 @@ function Component() {
                 </>}
             </Modal>
             <div className="Container">
-                <div className="Details" style={{
-
-                }}>
-                    {
-                        <Profile type={"Resident"} email={selected['email']} fullname={selected['firstname'] + " " + selected["lastname"]} data={selected} />
-
-                        /*Object.keys(selected).filter(el => !exception.includes(el))
-                        .map(el =>
-                            <LabeledText
-                                key={el}
-                                label={el.length > 2 ? el.replace(/_/g, ' ') : el.toUpperCase()}
-                                value={el === "created_on" ? dateFormatter(selected["created_on"])
-                                    : toSentenceCase(selected[el] ? selected[el] + '' : '-')}
-                            />
-                        ) 
-                        */     
-                    }
+                <div className="Details" style={{}}>
+                    {<Profile type="resident" email={selected['email']} phone={selected["phone"]}
+                        title={selected['firstname'] + " " + selected["lastname"]} data={selected} />}
                 </div>
                 <div className="Photos">
                     <Button label="Edit" onClick={() => history.push(
