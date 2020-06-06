@@ -130,6 +130,9 @@ function Component() {
                     el.id
                 ))} />
                 <Input label="Select Building"
+                    actionlabels={
+                        buildingsSelected.length > 0 ? {"Deselect All": () => setBuildingsSelected([]) } : {}
+                    }
                     type="multiselect"
                     icon={<FiChevronRight />}
                     onClick={() => setModal(true)}

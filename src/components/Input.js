@@ -14,7 +14,7 @@ const MultiSelectItem = ({ value, onClickDelete }) => {
 }
 
 function Component({
-    label = "", placeholder = null, compact, name, optional = true,
+    label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
     type = "text", rows = 2, options = [],
     inputValue, setInputValue, icon, onClick,
     hidden, max, min, disabled
@@ -30,17 +30,18 @@ function Component({
 
     const renderInput = type => {
         switch (type) {
-            case 'multiselect': return <div
-                className="MultiSelect"
-                onClick={inputValue.length === 0 ? onClick : undefined}
-            >
-                {inputValue.length > 0 ? inputValue.map((el, index) => <MultiSelectItem
-                    key={index}
-                    value={el.value}
-                    onClickDelete={el.onClickDelete} />) :
-                    <p style={{
-                        color: 'grey'
-                    }}>{label}</p>}
+            case 'multiselect': 
+                return <div className="MultiSelect" onClick={inputValue.length === 0 ? onClick : undefined}>
+                        {inputValue.length > 0 ? inputValue.map((el, index) => 
+                        <MultiSelectItem
+                            key={index}
+                            value={el.value}
+                            onClickDelete={el.onClickDelete} />) :
+                            <p style={{ color: 'grey' }}>
+                                {label}
+                            </p>
+        
+            }
             </div>;
 
             case 'textarea': return <textarea
@@ -188,7 +189,16 @@ function Component({
             + (type === "multiselect" ? " multiselect" : "")
             + (hidden ? " hidden" : "")
         }>
-            {!compact && <label className="Input-label" htmlFor={label}>{label}</label>}
+            {!compact && <>
+                <div style={{ display: 'flex' }} >
+                    <label className="Input-label" htmlFor={label}>{label}
+                    </label>
+                    { Object.keys(actionlabels).map( action =>
+                        <a style={{ margin: '4px' }}  href="#" onClick={actionlabels[action]} >{action}</a>
+                )}
+                </div>
+                </>}
+
             {renderInput(type)}
         </div>
     )
