@@ -35,14 +35,6 @@ const roles = [
     { value: 'merchant', label: 'Merchant' },
 ]
 
-const topics = [
-    {value: 'emergency', label: 'Emergency'},
-    {value: 'transaction', label: 'Transaction'},
-    {value: 'task', label: 'Task'},
-    {value: 'billing', label: 'Billing'},
-    {value: 'announcement', label: 'Announcement'},
-]
-
 function Component() {
     const [modal, setModal] = useState(false);
 
@@ -124,8 +116,7 @@ function Component() {
                 // dispatch(createName(headers, data, history))}
                 loading={loading}
             >
-                <Input label="Title" />
-                <Input label="Topic" type="select" options={topics} />
+                <Input label="Title" type="textarea" />
                 <Input label="Building" hidden inputValue={JSON.stringify(buildingsSelected.map(el =>
                     el.id
                 ))} />
