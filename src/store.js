@@ -5,6 +5,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
 
 import auth, { startAsync, stopAsync }  from './features/auth/slice';
+import dashboard from './features/dashboard/slice';
 import management from './features/management/slice';
 import building from './features/building/slice';
 import building_management from './features/building_management/slice';
@@ -27,6 +28,7 @@ const logger = createLogger({
 
 const reducers = combineReducers({
   auth,
+  dashboard,
   management,
   building,
   building_management,

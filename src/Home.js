@@ -7,6 +7,7 @@ import {
 } from "react-icons/fi";
 import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom';
 
+import DashboardRoute from './features/dashboard/Route';
 import ManagementRoute from './features/management/Route';
 import BuildingRoute from './features/building/Route';
 import BuildingManagementRoute from './features/building_management/Route';
@@ -228,8 +229,11 @@ function Page() {
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
                     <Switch>
-                        <Redirect exact from="/" to={"/resident"}
+                        <Redirect exact from="/" to={"/dashboard"}
                         />
+                        <Route path="/dashboard">
+                            <DashboardRoute />
+                        </Route>
                         <Route path="/building">
                             <BuildingRoute />
                         </Route>
