@@ -141,7 +141,7 @@ function Component() {
             </Modal>
       <Form
         onSubmit={(data) => {
-          selected ?
+          selected.id ?
             dispatch(editMerchant(headers, data, history, selected.id))
             :
             dispatch(createMerchant(headers, data, history));
@@ -172,7 +172,7 @@ function Component() {
           name="type"
           type="select"
           options={[
-            { value: "services", label: "Service" },
+            { value: "service", label: "Service" },
             { value: "goods", label: "Goods" },
           ]}
           inputValue={selected.type}
