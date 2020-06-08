@@ -81,16 +81,16 @@ function Component() {
             <Form
                 onSubmit={data => {
                     selectedUnit.id ?
-                        dispatch(editBillingUnitItem(headers, data, history, selectedUnit.id))
+                        dispatch(editBillingUnitItem(headers, data, selected, history, selectedUnit.id))
                         :
-                        dispatch(createBillingUnitItem(headers, data, history))
+                        dispatch(createBillingUnitItem(headers, data, selected, history))
                 }}
                 loading={loading}
             >
                 <Input label="Name" inputValue={selectedUnit?.name} />
                 <Input label="Service" hidden inputValue={selectedUnit.service ? selectedUnit.service
                     : service} />
-                <Input label="Select Service" icon={<FiChevronRight />} inputValue={
+                <Input label="Select Service" name="service" icon={<FiChevronRight />} inputValue={
                     selectedUnit.service_name ? selectedUnit.service_name :
                     serviceName}
                     onClick={() => setModal(true)}

@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointMerchant } from '../../settings';
-import { get, post, del, put } from '../../utils';
+import { get, post, del, put, patch } from '../../utils';
 
 
 const merchantEndpoint = endpointMerchant + '/admin';
@@ -97,6 +97,21 @@ export const createMerchant = (headers, data, history) => dispatch => {
   post(merchantEndpoint , data, headers,
     res => {
       history.push("/merchant");
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
+export const editMerchant = (headers, data, history, id) => dispatch => {
+  dispatch(startAsync());
+
+  patch(merchantEndpoint, { ...data, id: id }, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push("/merchant/details");
+
       dispatch(stopAsync());
     },
     err => {

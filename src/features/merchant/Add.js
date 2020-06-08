@@ -2,6 +2,8 @@ import React, { useState, useEffect, Profiler } from "react";
 
 import Input from "../../components/Input";
 import Form from "../../components/Form";
+import Modal from "../../components/Modal";
+import Button from "../../components/Button";
 import SectionSeparator from "../../components/SectionSeparator";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -11,10 +13,14 @@ import {
   endpointAdmin,
   endpointMerchant,
 } from "../../settings";
-import { createMerchant } from "./slice";
+import { createMerchant, editMerchant } from "./slice";
+import GoogleMapReact from "google-map-react";
+import { FiMapPin } from "react-icons/fi";
 function Component() {
-  const headers = useSelector((state) => state.auth.headers);
-  const { loading, selected } = useSelector((state) => state.merchant);
+  const [modal, setModal] = useState(false);
+  const [lat, setLat] = useState('');
+  const [lng, setLng] = useState('');
+
   const [district, setDistrict] = useState("");
   const [districts, setDistricts] = useState([]);
 
@@ -31,22 +37,8 @@ function Component() {
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState([]);
 
-  const [bcity, setBCity] = useState("");
-  const [bcities, setBCities] = useState([]);
-  const [bcitiesSearched, setBCitiesSearched] = useState([]);
-  const [bcloading, setBCLoading] = useState(true);
-
-  const ColoredLine = ({ color }) => (
-    <hr
-      style={{
-        color: color,
-        backgroundColor: color,
-        height: 0.2,
-        width: "100%",
-        alignSelf: "left",
-      }}
-    />
-  );
+  const headers = useSelector((state) => state.auth.headers);
+  const { loading, selected } = useSelector((state) => state.merchant);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -119,10 +111,40 @@ function Component() {
 
   return (
     <div>
+      <Modal isOpen={modal} onRequestClose={() => {
+                setLat('');
+                setLng('');
+                setModal(false);
+            }}>
+                <div style={{ height: '20rem', width: '60rem' }}>
+                    <GoogleMapReact
+                        bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
+                        center={{
+                            lat: lat,
+                            lng: lng,
+                        }}
+                        zoom={12}
+                        onClick={({ x, y, lat, lng, event }) => {
+                            setLat(lat);
+                            setLng(lng);
+                            console.log(lat, lng);
+                        }}
+                    >
+                        <FiMapPin size={40} />
+                    </GoogleMapReact>
+                </div>
+                <div className="MapForm">
+                    <Input label='Latitude' compact inputValue={lat} setInputValue={setLat} />
+                    <Input label='Longitude' compact inputValue={lng} setInputValue={setLng} />
+                </div>
+                <Button label='Select' onClick={() => setModal(false)} />
+            </Modal>
       <Form
         onSubmit={(data) => {
-          console.log(data);
-          dispatch(createMerchant(headers, data, history));
+          selected ?
+            dispatch(editMerchant(headers, data, history, selected.id))
+            :
+            dispatch(createMerchant(headers, data, history));
         }}
         loading={loading}
       >
@@ -133,20 +155,17 @@ function Component() {
         >
           Merchant Info
         </h2>
-        <ColoredLine color="black"></ColoredLine>
         <SectionSeparator />
-        <Input label="Name" />
-        <Input label="Phone" type="phone" />
-
+        <Input label="Name" inputValue={selected.name} />
+        <Input label="Phone" type="phone" inputValue={selected.phone} />
         <Input
           label="Legal"
-          name="legal"
           type="select"
           options={[
             { value: "individual", label: "Individu" },
             { value: "company", label: "Perusahaan" },
           ]}
-          inputValue={selected.individual}
+          inputValue={selected.legal}
         />
         <Input
           label="Type"
@@ -156,11 +175,10 @@ function Component() {
             { value: "services", label: "Service" },
             { value: "goods", label: "Goods" },
           ]}
-          inputValue={selected.individual}
+          inputValue={selected.type}
         />
         <Input
           label="Category"
-          name="category"
           type="select"
           options={categories}
           inputValue={category ? category : selected.category}
@@ -169,7 +187,6 @@ function Component() {
         <Input
           label="Province"
           type="select"
-          name="province"
           options={provinces}
           inputValue={province ? province : selected.province}
           setInputValue={setProvince}
@@ -177,7 +194,6 @@ function Component() {
         <Input
           label="City"
           type="select"
-          name="city"
           options={cities}
           inputValue={city ? city : selected.city}
           setInputValue={setCity}
@@ -185,7 +201,6 @@ function Component() {
         <Input
           label="District"
           type="select"
-          name="district"
           options={districts}
           inputValue={district ? district : selected.district}
           setInputValue={setDistrict}
@@ -195,7 +210,7 @@ function Component() {
           type="select"
           name="in_building"
           options={inBuildings}
-          inputValue={inBuilding ? inBuilding : selected.inBuilding}
+          inputValue={inBuilding ? inBuilding : selected.in_building}
           setInputValue={setBuilding}
         />
         <SectionSeparator />
@@ -206,14 +221,24 @@ function Component() {
         >
           PIC Info
         </h2>
-        <ColoredLine color="black"></ColoredLine>
         <SectionSeparator />
-        <Input label="Name" name="pic_name" />
-        <Input label="Open Time" type="time" /> {/* still not used */}
-        <Input label="Phone" name="pic_phone" />
-        <Input label="Close Time" type="time" /> {/* still not used */}
-        <Input label="Description" name="description" type="textarea" />
-        <Input label="Address" name="address" type="textarea" />
+        <Input label="Name" name="pic_name" inputValue={selected.pic_name} />
+        <Input label="Phone" name="pic_phone" inputValue={selected.pic_phone} />
+        <Input label="Open Time" name="open_at" type="time"
+          inputValue={selected.open_at} />
+        <Input label="Close Time" name="closed_at" type="time"
+          inputValue={selected.closed_at} />
+        <Input label="Description" type="textarea" inputValue={selected.description} />
+        <Input label="Select Location" type="button"
+                    onClick={() => {
+                        setLat(-6.2107863);
+                        setLng(106.8137977);
+                        setModal(true);
+                    }}
+                />
+                <Input label="Latitude" name="lat" inputValue={lat ? lat : selected.lat} setInputValue={setLat} />
+                <Input label="Longitude" name="long" inputValue={lng ? lng : selected.long} setInputValue={setLng} />
+        <Input label="Address" type="textarea" inputValue={selected.address} />
         <SectionSeparator />
         <h2
           style={{
@@ -222,11 +247,10 @@ function Component() {
         >
           Account Info
         </h2>
-        <ColoredLine color="black"></ColoredLine>
         <SectionSeparator />
-        <Input label="Account No" name="account_no" />
-        <Input label="Account Name" name="account_name" />
-        <Input label="Account Bank" name="account_bank" />
+        <Input label="Account No" name="account_no" inputValue={selected.account_no} />
+        <Input label="Account Name" name="account_name" inputValue={selected.account_name} />
+        <Input label="Account Bank" name="account_bank" inputValue={selected.account_bank} />
         <SectionSeparator />
       </Form>
     </div>

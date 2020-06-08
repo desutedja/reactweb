@@ -24,7 +24,19 @@ export const slice = createSlice({
       selected: {},
       total_items: 0,
       total_pages: 1,
-    }
+    },
+    settlement: {
+      items: [],
+      selected: {},
+      total_items: 0,
+      total_pages: 1,
+    },
+    disbursement: {
+      items: [],
+      selected: {},
+      total_items: 0,
+      total_pages: 1,
+    },
   },
   reducers: {
     startAsync: (state) => {
@@ -57,6 +69,20 @@ export const slice = createSlice({
       state.unit.total_items = data.total_items;
       state.unit.total_pages = data.filtered_page;
     },
+    setSettlement: (state, action) => {
+      const data = action.payload;
+
+      state.settlement.items = data.items;
+      state.settlement.total_items = data.total_items;
+      state.settlement.total_pages = data.filtered_page;
+    },
+    setDisbursement: (state, action) => {
+      const data = action.payload;
+
+      state.disbursement.items = data.items;
+      state.disbursement.total_items = data.total_items;
+      state.disbursement.total_pages = data.filtered_page;
+    },
     setSelectedUnit: (state, action) => {
       state.unit.selected = action.payload;
     },
@@ -71,6 +97,8 @@ export const {
   refresh,
   setAlert,
   setUnit,
+  setSettlement,
+  setDisbursement,
   setSelectedUnit
 } = slice.actions;
 
@@ -89,6 +117,24 @@ export const getBillingUnit = (
     headers,
     res => {
       dispatch(setData(res.data.data));
+
+      dispatch(stopAsync());
+    })
+}
+
+export const getBillingSettlement = (
+  headers, pageIndex, pageSize, search = '', building, unit,
+) => dispatch => {
+  dispatch(startAsync());
+
+  get(billingEndpoint + '/settlement' +
+    '?page=' + (pageIndex + 1) +
+    '&limit=' + pageSize +
+    '&resident_building=' + building +
+    '&search=' + search,
+    headers,
+    res => {
+      dispatch(setSettlement(res.data.data));
 
       dispatch(stopAsync());
     })
@@ -123,10 +169,19 @@ export const getBillingUnitItemDetails = (row, headers, history, url) => dispatc
   history.push(url + '/details');
 }
 
-export const createBillingUnitItem = (headers, data, history) => dispatch => {
+export const createBillingUnitItem = (headers, data, selected, history) => dispatch => {
   dispatch(startAsync());
 
-  post(billingEndpoint, {'billing': data}, headers,
+  post(billingEndpoint, {
+    'billing': {
+      ...data,
+      "resident_building": selected.building_id,
+      "resident_unit": selected.id,
+      "resident_id": selected.resident_id,
+      "resident_name": selected.resident_name,
+    },
+    'additional_charge': []
+  }, headers,
     res => {
       history.goBack();
 
@@ -137,10 +192,10 @@ export const createBillingUnitItem = (headers, data, history) => dispatch => {
     })
 }
 
-export const editBillingUnitItem = (headers, data, history, id) => dispatch => {
+export const editBillingUnitItem = (headers, data, selected, history, id) => dispatch => {
   dispatch(startAsync());
 
-  put(billingEndpoint, {'billing': {id: id ,...data}}, headers,
+  put(billingEndpoint, { 'billing': { id: id, ...data } }, headers,
     res => {
       history.goBack();
 

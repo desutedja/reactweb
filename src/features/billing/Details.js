@@ -54,7 +54,7 @@ function Component() {
     }, [dispatch, refreshToggle, headers, selected, status])
 
     useEffect(() => {
-        setItems(unit.items[active].billing_item);
+        unit.items[active] && setItems(unit.items[active].billing_item);
     }, [unit.items, active])
 
     return (
@@ -72,18 +72,19 @@ function Component() {
                             />
                         )}
                 </div>
-                <div className="Photos">
+                {/* <div className="Photos">
                     <Button label="Edit" onClick={() => history.push(
                         url.split('/').slice(0, -1).join('/') + "/edit"
                     )} />
-                </div>
+                </div> */}
             </div>
             <div style={{
                 display: 'flex',
                 marginTop: 16,
             }}>
-                <div className="Container" style={{
-                    flexDirection: 'column'
+                {unit.items.length > 0 && <div className="Container" style={{
+                    flexDirection: 'column',
+                    marginRight: 16,
                 }}>
                     {unit.items.map((el, index) => <div
                         className={index === active ? "GroupActive" : "Group"}
@@ -91,11 +92,10 @@ function Component() {
                     >
                         {el.billing_month}
                     </div>)}
-                </div>
+                </div>}
                 <div className="Container" style={{
                     flex: 3,
                     flexDirection: 'column',
-                    marginLeft: 16,
                 }}>
                     <Table
                         columns={columns}

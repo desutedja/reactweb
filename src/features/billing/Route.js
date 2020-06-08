@@ -10,6 +10,7 @@ import Filter from '../../components/Filter';
 import Add from './Add';
 import Details from './Details';
 import DetailsItem from './DetailsItem';
+import RouteSettlement from './RouteSettlement';
 import { getBillingUnit, getBillingUnitDetails } from './slice';
 import { endpointAdmin } from '../../settings';
 import { get, months, dateTimeFormatter, dateFormatter, toSentenceCase } from '../../utils';
@@ -236,6 +237,9 @@ function Component() {
                 </Route>
                 <Route path={`${path}/item`}>
                     <Details />
+                </Route>
+                <Route path={`${path}/settlement`}>
+                    <RouteSettlement />
                 </Route>
             </Switch>
         </div>

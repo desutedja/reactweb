@@ -100,7 +100,7 @@ function Component() {
     let { path, url } = useRouteMatch();
 
     const headers = useSelector(state => state.auth.headers);
-    const fetchData = useCallback((pageIndex, pageSize) => {
+    const fetchData = useCallback((pageIndex, pageSize, search) => {
         tab === 0 && dispatch(getResidentUnit(headers, pageIndex, pageSize, search, selected));
         tab === 1 && dispatch(getSubaccount(headers, pageIndex, pageSize, search, selected));
         // eslint-disable-next-line react-hooks/exhaustive-deps
