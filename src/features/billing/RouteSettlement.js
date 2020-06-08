@@ -7,28 +7,25 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
-import Add from './Add';
-import Details from './Details';
-import DetailsItem from './DetailsItem';
-import { getBillingUnit, getBillingUnitDetails, getBillingSettlement } from './slice';
+import { getBillingUnitDetails, getBillingSettlement } from './slice';
 import { endpointAdmin } from '../../settings';
-import { get, months, dateTimeFormatter, dateFormatter, toSentenceCase } from '../../utils';
+import { get, toMoney } from '../../utils';
 
 const columns = [
-    // { Header: 'ID', accessor: 'code' },
     { Header: 'ID', accessor: 'id' },
-    {
-        Header: 'Unit', accessor: row => toSentenceCase(row.section_type) + ' '
-            + row.section_name + ' ' + row.number
-    },
+    { Header: 'Trx Code', accessor: 'trx_code' },
     { Header: 'Building', accessor: 'building_name' },
-    { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
-    { Header: 'Unpaid Amount', accessor: 'unpaid_amount' },
+    { Header: 'Unit', accessor: 'unit_id' },
+    { Header: 'Management', accessor: 'management_name' },
+    { Header: 'Resident', accessor: 'resident_name' },
+    { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
+    { Header: 'Settlement', accessor: row => row.payment_settled_date ? row.payment_settled_date : '-' },
+    { Header: 'Disbursement', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
 ]
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.billing);
+    const { loading, settlement, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.billing);
 
     const [search, setSearch] = useState('');
 
@@ -86,7 +83,7 @@ function Component() {
                 <Route path={`${path}`}>
                     <Table totalItems={total_items}
                         columns={columns}
-                        data={items}
+                        data={settlement.items}
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
