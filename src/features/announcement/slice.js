@@ -44,6 +44,9 @@ export const slice = createSlice({
       state.alert.type = action.payload.type;
       state.alert.message = action.payload.message;
     },
+    publish: (state) => {
+      state.selected.publish = 1;
+    }
   },
 });
 
@@ -53,7 +56,8 @@ export const {
   setData,
   setSelected,
   refresh,
-  setAlert
+  setAlert,
+  publish
 } = slice.actions;
 
 export default slice.reducer;
@@ -131,5 +135,19 @@ export const deleteAnnouncement = (row, headers) => dispatch => {
       })), 3000);
       dispatch(refresh());
       dispatch(stopAsync())
+    })
+}
+
+export const publishAnnouncement = (headers, data) => dispatch => {
+  dispatch(startAsync());
+
+  post(announcementEndpoint + '/publish', { id: data.id }, headers,
+    res => {
+      dispatch(publish());
+
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     })
 }

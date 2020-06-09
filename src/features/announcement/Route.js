@@ -11,7 +11,7 @@ import Details from './Details';
 import { getAnnoucement, getAnnouncementDetails, setSelected, deleteAnnouncement } from './slice';
 import { FiPlus } from 'react-icons/fi';
 import { toSentenceCase } from '../../utils';
-import { Badge } from 'reactstrap';
+import { Badge, Alert } from 'reactstrap';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -83,7 +83,8 @@ function Component() {
                         ]}
                         onClickDelete={row => {
                             setRow(row);
-                            setConfirm(true);
+                            row.publish ? alert('You cannot delete a published announcement.')
+                                : setConfirm(true);
                         }}
                         onClickDetails={row =>
                             dispatch(getAnnouncementDetails(row, headers, history, url))}

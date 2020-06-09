@@ -70,7 +70,7 @@ export const otpCheck = (email, otp, history) => dispatch => {
     "email": email,
     "otp": otp,
     "device": "web",
-    "fcm_id": ""
+    "fcm_id": "1:10663666241:web:f3a844afac4e2025a6dcc0"
   }, {}, res => {
     dispatch(otpSuccess(res.data.data));
 
