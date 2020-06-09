@@ -52,7 +52,7 @@ function Component({
         pageCount: controlledPageCount,
         autoResetSortBy: false,
         autoResetPage: false,
-        autoResetSelectedRows: false,
+        autoResetSelectedRows: true,
     },
         useSortBy,
         usePagination,
