@@ -96,3 +96,50 @@
 .SortIcon {
   margin-left: 8px;
 }
+
+.SelectActions {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 4px;
+}
+
+.SelectActions-toggle {
+  border: 1px solid var(--primary-color);
+  border-radius: 4px;
+  padding: 4px 8px 4px 8px;
+  cursor: pointer;
+  height: 2.4rem;
+  align-items: center;
+  display: flex;
+}
+
+.SelectActions-options, .SelectActions-options-hide {
+  position: absolute;
+  top: 36px;
+  background-color: white;
+  box-shadow: 0px 1px 4px grey;
+  z-index: 99;
+  /* width: 100%; */
+  border-radius: 4px;
+  transition: all 0.1s ease;
+  height: auto;
+  overflow: hidden;
+}
+
+.SelectActions-options-hide {
+  height: 0;
+}
+
+.SelectActions-item {
+  padding: 4px 8px 4px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.SelectActions-item:hover {
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 4px;
+}

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointBilling } from '../../settings';
-import { get, post, put } from '../../utils';
+import { get, post, put, del } from '../../utils';
 
 const billingEndpoint = endpointBilling + '/management/billing';
 
@@ -201,5 +201,22 @@ export const editBillingUnitItem = (headers, data, selected, history, id) => dis
     },
     err => {
       dispatch(stopAsync());
+    })
+}
+
+export const deleteBillingUnitItem = (id, headers) => dispatch => {
+  dispatch(startAsync());
+
+  del(billingEndpoint + '/' + id, headers,
+    res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Billing Item with id: ' + id + ' has been deleted.'
+      }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
+      dispatch(refresh());
+      dispatch(stopAsync())
     })
 }
