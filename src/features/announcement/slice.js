@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
-import { get, post } from '../../utils';
+import { get, post, put, del } from '../../utils';
 
 const announcementEndpoint = endpointAdmin + '/announcement';
 
@@ -52,7 +52,8 @@ export const {
   stopAsync,
   setData,
   setSelected,
-  refresh
+  refresh,
+  setAlert
 } = slice.actions;
 
 export default slice.reducer;
@@ -98,5 +99,37 @@ export const createAnnouncement = (headers, data, history) => dispatch => {
     },
     err => {
       dispatch(stopAsync());
+    })
+}
+
+export const editAnnouncement = (headers, data, history, id) => dispatch => {
+  dispatch(startAsync());
+
+  put(announcementEndpoint, { ...data, topic: "announcement", id: id }, headers,
+    res => {
+      dispatch(setSelected(res.data.data));
+      history.push("/announcement/details");
+
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    })
+}
+
+export const deleteAnnouncement = (row, headers) => dispatch => {
+  dispatch(startAsync());
+
+  del(announcementEndpoint + '/' + row.id, headers,
+    res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Announcement ' + row.name + ' has been deleted.'
+      }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
+      dispatch(refresh());
+      dispatch(stopAsync())
     })
 }

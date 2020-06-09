@@ -40,7 +40,6 @@ function Component({
                         <p style={{ color: 'grey' }}>
                             {label}
                         </p>
-
                     }
                 </div>;
 

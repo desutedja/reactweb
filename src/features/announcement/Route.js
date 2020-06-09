@@ -1,13 +1,14 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import parse from 'html-react-parser';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
+import Modal from '../../components/Modal';
 import Add from './Add';
 import Details from './Details';
-import { getAnnoucement, getAnnouncementDetails, setSelected } from './slice';
+import { getAnnoucement, getAnnouncementDetails, setSelected, deleteAnnouncement } from './slice';
 import { FiPlus } from 'react-icons/fi';
 import { toSentenceCase } from '../../utils';
 import { Badge } from 'reactstrap';
@@ -31,6 +32,9 @@ const columns = [
 ]
 
 function Component() {
+    const [confirm, setConfirm] = useState(false);
+    const [selectedRow, setRow] = useState({});
+
     const headers = useSelector(state => state.auth.headers);
     const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.announcement);
 
@@ -40,6 +44,23 @@ function Component() {
 
     return (
         <div>
+            <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+                Are you sure you want to delete?
+                <div style={{
+                    display: 'flex',
+                    marginTop: 16,
+                }}>
+                    <Button label="No" secondary
+                        onClick={() => setConfirm(false)}
+                    />
+                    <Button label="Yes"
+                        onClick={() => {
+                            setConfirm(false);
+                            dispatch(deleteAnnouncement(selectedRow, headers));
+                        }}
+                    />
+                </div>
+            </Modal>
             <Switch>
                 <Route exact path={path}>
                     <Table totalItems={total_items}
@@ -60,7 +81,12 @@ function Component() {
                                 }}
                             />,
                         ]}
-                        onClickDetails={row => dispatch(getAnnouncementDetails(row, headers, history, url))}
+                        onClickDelete={row => {
+                            setRow(row);
+                            setConfirm(true);
+                        }}
+                        onClickDetails={row =>
+                            dispatch(getAnnouncementDetails(row, headers, history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

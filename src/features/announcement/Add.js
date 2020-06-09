@@ -14,7 +14,7 @@ import { FiChevronRight, FiX } from 'react-icons/fi';
 import { RiCheckDoubleLine, RiCheckLine } from 'react-icons/ri';
 import { get, toSentenceCase } from '../../utils';
 import { endpointAdmin } from '../../settings';
-import { createAnnouncement } from './slice';
+import { createAnnouncement, editAnnouncement } from './slice';
 
 const columnsBuilding = [
     { Header: 'ID', accessor: 'id' },
@@ -66,7 +66,27 @@ function Component() {
 
     useEffect(() => {
         console.log(buildingsSelected[0])
-    }, [buildingsSelected])
+    }, [buildingsSelected]);
+
+    useEffect(() => {
+        // get(endpointAdmin + '/building' +
+        //     '?page=' + 1 +
+        //     '&search=' +
+        //     '&limit=' + 100,
+        //     headers,
+        //     res => {
+        //         const { items } = res.data.data;
+
+        //         let selectedBuildings = items.filter(el => selected.building.includes(el.id));
+        //         setBuildingsSelected(selectedBuildings);
+        //     });
+
+        let selectedBuildings = selected.building?.map(el => ({
+            id: el.building_id,
+            name: el.building_name
+        }));
+        selected.building && setBuildingsSelected(selectedBuildings);
+    }, [headers, selected.building]);
 
     return (
         <div>
@@ -154,7 +174,6 @@ function Component() {
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [headers, buildingsSelected])}
                     renderActions={(selectedRowIds, page) => {
-                        // console.log(selectedRowIds, page);
                         return ([
                             <Button
                                 disabled={Object.keys(selectedRowIds).length === 0}
@@ -187,14 +206,14 @@ function Component() {
             </Modal>
             <Form
                 onSubmit={data => {
-                    // selected.id ?
-                    // dispatch(editName(headers, data, history, selected.id))
-                    // :
-                    dispatch(createAnnouncement(headers, data, history));
+                    selected.id ?
+                        dispatch(editAnnouncement(headers, data, history, selected.id))
+                        :
+                        dispatch(createAnnouncement(headers, data, history));
                 }}
                 loading={loading}
             >
-                <Input label="Title" type="textarea" />
+                <Input label="Title" type="textarea" inputValue={selected.title} />
                 <Input label="Building" hidden inputValue={JSON.stringify(buildingsSelected.map(el =>
                     el.id
                 ))} />
@@ -231,10 +250,11 @@ function Component() {
                             setUnitsSelected(unitsSelected.filter(el2 => el2.id !== el.id))
                         }
                     }))} />}
-                <Input label="Consumer Role" type="select" options={roles} />
-                {/* <Input label="Consumer ID" /> */}
-                <Input label="Image" type="file" />
-                <Editor label="Description" />
+                <Input label="Consumer Role" type="select" options={roles}
+                    inputValue={selected.consumer_role}
+                />
+                <Input label="Image" type="file" inputValue={selected.image} />
+                <Editor label="Description" inputValue={selected.description} />
             </Form>
         </div>
     )

@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
-import { EditorState, convertToRaw } from 'draft-js';
+import React, { useState } from 'react';
+import { EditorState, ContentState } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
 
 import Input from './Input';
+import htmlToDraft from 'html-to-draftjs';
 
 function Component({
-    label, name, inputValue, setInputValue,
+    label, name, inputValue = "", setInputValue,
 }) {
-    const [editorState, setEditorState] = useState(
-        () => EditorState.createEmpty(),
+    const blocksFromHtml = htmlToDraft(inputValue);
+    const { contentBlocks, entityMap } = blocksFromHtml;
+
+    const [contentState, setContentState] = useState(
+        () => ContentState.createFromBlockArray(contentBlocks, entityMap)
     );
-    // const [raw, setRaw] = useState({});
-
-    // useEffect(() => {
-    //     setRaw(convertToRaw(editorState.getCurrentContent()));
-    // }, [editorState]);
-
-    const [contentState, setContentState] = useState({});
+    const [editorState, setEditorState] = useState(
+        () => EditorState.createWithContent(contentState)
+    );
 
     return (
         <>
@@ -34,7 +34,7 @@ function Component({
                 </div>
             </div>
             <Input hidden label={label} name={name} type="textarea"
-            inputValue={draftToHtml(contentState)} />
+                inputValue={inputValue ? inputValue : draftToHtml(contentState)} />
         </>
     )
 }
