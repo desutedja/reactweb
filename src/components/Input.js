@@ -30,19 +30,19 @@ function Component({
 
     const renderInput = type => {
         switch (type) {
-            case 'multiselect': 
+            case 'multiselect':
                 return <div className="MultiSelect" onClick={inputValue.length === 0 ? onClick : undefined}>
-                        {inputValue.length > 0 ? inputValue.map((el, index) => 
+                    {inputValue.length > 0 ? inputValue.map((el, index) =>
                         <MultiSelectItem
                             key={index}
                             value={el.value}
                             onClickDelete={el.onClickDelete} />) :
-                            <p style={{ color: 'grey' }}>
-                                {label}
-                            </p>
-        
-            }
-            </div>;
+                        <p style={{ color: 'grey' }}>
+                            {label}
+                        </p>
+
+                    }
+                </div>;
 
             case 'textarea': return <textarea
                 className="Input-input"
@@ -193,11 +193,13 @@ function Component({
                 <div style={{ display: 'flex' }} >
                     <label className="Input-label" htmlFor={label}>{label}
                     </label>
-                    { Object.keys(actionlabels).map( action =>
-                        <a style={{ margin: '4px' }}  href="#" onClick={actionlabels[action]} >{action}</a>
-                )}
+                    {Object.keys(actionlabels).map(action =>
+                        // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                        <a key={action} style={{ margin: '4px' }}
+                            href="#" onClick={actionlabels[action]} >{action}</a>
+                    )}
                 </div>
-                </>}
+            </>}
 
             {renderInput(type)}
         </div>

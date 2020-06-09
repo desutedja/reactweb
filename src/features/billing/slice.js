@@ -130,7 +130,7 @@ export const getBillingSettlement = (
   get(billingEndpoint + '/settlement' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
-    '&resident_building=' + building +
+    '&building_id=' + building +
     '&search=' + search,
     headers,
     res => {
@@ -173,13 +173,11 @@ export const createBillingUnitItem = (headers, data, selected, history) => dispa
   dispatch(startAsync());
 
   post(billingEndpoint, {
-    'billing': {
-      ...data,
-      "resident_building": selected.building_id,
-      "resident_unit": selected.id,
-      "resident_id": selected.resident_id,
-      "resident_name": selected.resident_name,
-    },
+    ...data,
+    "resident_building": selected.building_id,
+    "resident_unit": selected.id,
+    "resident_id": selected.resident_id,
+    "resident_name": selected.resident_name,
     'additional_charge': []
   }, headers,
     res => {

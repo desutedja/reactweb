@@ -90,7 +90,7 @@ function Component() {
                 <Input label="Name" inputValue={selectedUnit?.name} />
                 <Input label="Service" hidden inputValue={selectedUnit.service ? selectedUnit.service
                     : service} />
-                <Input label="Select Service" name="service" icon={<FiChevronRight />} inputValue={
+                <Input label="Select Service" icon={<FiChevronRight />} inputValue={
                     selectedUnit.service_name ? selectedUnit.service_name :
                     serviceName}
                     onClick={() => setModal(true)}
@@ -100,7 +100,7 @@ function Component() {
                 <Input label="Remarks" type="textarea" inputValue={selectedUnit?.remarks} />
                 <Input label="Month" type="select" options={months} inputValue={selectedUnit?.month} />
                 <Input label="Year" type="number" inputValue={selectedUnit?.year} />
-                <Input label="Due Date" type="date" inputValue={selectedUnit.due_date?.split('T')[0]} />
+                {/* <Input label="Due Date" type="date" inputValue={selectedUnit.due_date?.split('T')[0]} /> */}
                 <SectionSeparator />
             </Form>
         </div>

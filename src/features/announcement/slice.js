@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
-import { get } from '../../utils';
+import { get, post } from '../../utils';
 
 const announcementEndpoint = endpointAdmin + '/announcement';
 
@@ -84,5 +84,19 @@ export const getAnnouncementDetails = (row, headers, history, url) => dispatch =
       history.push(url + '/details');
 
       dispatch(stopAsync())
+    })
+}
+
+export const createAnnouncement = (headers, data, history) => dispatch => {
+  dispatch(startAsync());
+
+  post(announcementEndpoint, {...data, topic: "announcement"}, headers,
+    res => {
+      history.push("/announcement");
+
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     })
 }

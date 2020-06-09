@@ -1,4 +1,5 @@
 import React from 'react';
+import parse from 'html-react-parser';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
@@ -6,7 +7,8 @@ import { useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 const exception = [
-    'created_on', 'modified_on', 'deleted', 'title', 'description'
+    'created_on', 'modified_on', 'deleted', 'title', 'description',
+    'building', 'building_unit'
 ];
 
 function Component() {
@@ -44,9 +46,9 @@ function Component() {
             <div className="Container">
                 <div>
                     <p className="Title">{selected.title}</p>
-                    <p style={{
+                    <div style={{
                         paddingTop: 8,
-                    }}>{selected.description}</p>
+                    }}>{parse(selected.description)}</div>
                 </div>
             </div>
         </div>

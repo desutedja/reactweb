@@ -25,7 +25,7 @@ const columns = [
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, settlement, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.billing);
+    const { loading, settlement, refreshToggle, alert } = useSelector(state => state.billing);
 
     const [search, setSearch] = useState('');
 
@@ -81,11 +81,11 @@ function Component() {
             <Switch>
                 {/* <Redirect exact from={path} to={`${path}`} /> */}
                 <Route path={`${path}`}>
-                    <Table totalItems={total_items}
+                    <Table totalItems={settlement.total_items}
                         columns={columns}
                         data={settlement.items}
                         loading={loading}
-                        pageCount={total_pages}
+                        pageCount={settlement.total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getBillingSettlement(headers, pageIndex, pageSize, search,
                                 building, unit, month, yearSet));
@@ -125,9 +125,9 @@ function Component() {
                             },
                         ]}
                         actions={[]}
-                        onClickDetails={row => {
-                            dispatch(getBillingUnitDetails(row, headers, history, url))
-                        }}
+                        // onClickDetails={row => {
+                        //     dispatch(getBillingUnitDetails(row, headers, history, url))
+                        // }}
                     />
                 </Route>
             </Switch>
