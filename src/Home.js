@@ -20,8 +20,8 @@ import ProductRoute from './features/product/Route';
 import TransactionRoute from './features/transaction/Route';
 import AdsRoute from './features/ads/Route';
 import AnnouncementRoute from './features/announcement/Route';
+import ChatRoute from './features/chat/Route';
 
-import Button from './components/Button';
 import Row from './components/Row';
 import IconButton from './components/IconButton';
 import { toSentenceCase } from './utils';
@@ -31,7 +31,13 @@ const menu = [
     {
         icon: <FiBarChart2 className="MenuItem-icon" />,
         label: "Dashboard",
-        route: "/dashboard"
+        route: "/dashboard",
+        subroutes: [
+            '/billing',
+            '/transaction',
+            '/task',
+            '/advertisement',
+        ]
     },
     {
         icon: <FiBriefcase className="MenuItem-icon" />,
@@ -179,7 +185,9 @@ function Page() {
             </div>
             <Row>
                 <div className="Menu">
-                    <div className={menuWide ? "Logo-container" : "Logo-container-small"}>
+                    <div className={menuWide ? "Logo-container" : "Logo-container-small"}
+                        onClick={() => history.push('/')}
+                    >
                         {menuWide ? <img className="Logo-main"
                             src={require("./assets/clink_logo.png")} alt="logo" />
                             : <img className="Logo-main-small"
@@ -229,8 +237,7 @@ function Page() {
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
                     <Switch>
-                        <Redirect exact from="/" to={"/dashboard"}
-                        />
+                        <Redirect exact from="/" to={"/chat"} />
                         <Route path="/dashboard">
                             <DashboardRoute />
                         </Route>
@@ -269,6 +276,9 @@ function Page() {
                         </Route>
                         <Route path="/announcement">
                             <AnnouncementRoute />
+                        </Route>
+                        <Route path="/chat">
+                            <ChatRoute />
                         </Route>
                     </Switch>
                 </div>

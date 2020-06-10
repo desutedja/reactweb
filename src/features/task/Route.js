@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getTask, getTaskDetails, resolveTask, reassignTask } from './slice';
+import { getTask, getTaskDetails, resolveTask, reassignTask, setSelected } from './slice';
 import { FiSearch } from 'react-icons/fi';
 
 import Table from '../../components/Table';
@@ -278,7 +278,10 @@ function Component() {
                             setRow(row);
                             setAssign(true);
                         }}
-
+                        onClickChat={row => {
+                            dispatch(setSelected(row));
+                            history.push("/chat");
+                        }}
                     />
                 </Route>
                 <Route path={`${path}/details`}>

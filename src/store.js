@@ -3,6 +3,7 @@ import thunk from 'redux-thunk';
 import { createLogger } from 'redux-logger'
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
+import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 
 import auth, { startAsync, stopAsync }  from './features/auth/slice';
 import dashboard from './features/dashboard/slice';
@@ -18,7 +19,7 @@ import product from './features/product/slice';
 import transaction from './features/transaction/slice';
 import ads from './features/ads/slice';
 import announcement from './features/announcement/slice';
-import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
+import chat from './features/chat/slice';
 
 const logger = createLogger({
   predicate: (getState, action) => 
@@ -41,6 +42,7 @@ const reducers = combineReducers({
   transaction,
   announcement,
   ads,
+  chat,
 });
 
 const persistConfig = {

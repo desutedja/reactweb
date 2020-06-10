@@ -5,7 +5,7 @@ import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
-    FiPenTool, FiEdit, FiCheck, FiUserPlus, FiDelete,
+    FiPenTool, FiEdit, FiCheck, FiUserPlus, FiDelete, FiMessageSquare,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
 import ActionButton from './ActionButton';
@@ -24,6 +24,7 @@ function Component({
     loading,
     pageCount: controlledPageCount,
     actions = [],
+    onClickChat,
     onClickReassign,
     onClickResolve,
     onClickDelete,
@@ -207,6 +208,11 @@ function Component({
                             prepareRow(row);
 
                             const MenuActions = [
+                                (onClickChat ? {
+                                    onClick: () => onClickChat(row.original),
+                                    name: "Chat",
+                                    icon: <FiMessageSquare />,
+                                } : ""),
                                 (onClickResolve ? {
                                     name: "Set As Resolved",
                                     onClick: () => onClickResolve(row.original),

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
+import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../components/Table';
@@ -31,7 +31,8 @@ function Component() {
     return (
         <div>
             <Switch>
-                <Route exact path={path}>
+                <Redirect exact from="/" to={"/task"} />
+                <Route path={`${path}/task`}>
                     <div className="Row">
                         <div className="Container" style={{
                             flexDirection: 'column'
@@ -87,15 +88,6 @@ function Component() {
                         }}>
                         </div>
                     </div>
-                </Route>
-                <Route path={`${path}/add`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/edit`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/details`}>
-                    <Details />
                 </Route>
             </Switch>
         </div>
