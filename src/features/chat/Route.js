@@ -10,6 +10,8 @@ import { post, get } from '../../utils';
 import { setRoomID } from './slice';
 import { FiSend } from 'react-icons/fi';
 
+import './chat.css';
+
 const columns = [
     { Header: 'Name', accessor: 'name' },
 ]
@@ -97,7 +99,10 @@ function Component() {
                 }}>
                     <Loading loading={loading}>
                         {messages.map(el =>
-                            <div key={el.timestamp}>{el.message}</div>
+                            <div key={el.timestamp} className="MessageContainer">
+                                <img alt="avatar" className="MessageAvatar" src={el.user.avatar_url} />
+                                <div className="Message">{el.message}</div>
+                            </div>
                         )}
                     </Loading>
                 </div>
@@ -117,6 +122,7 @@ function Component() {
                                 "message": message,
                             }, qheaders, res => {
                                 setRefresh(!refresh);
+                                setMessage('');
                             })
                         }}>
                             <FiSend />
