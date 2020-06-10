@@ -196,7 +196,7 @@
   flex: 1;
   padding: 16px;
   padding-top: 6rem;
-  /* min-height: 100vh; */
+  min-height: 100vh;
   box-sizing: border-box;
   transition: all 0.3s ease;
   width: 100%;

@@ -15,12 +15,16 @@ export const slice = createSlice({
     stopAsync: (state) => {
       state.loading = false;
     },
+    setRoomID: (state, action) => {
+      state.roomID = action.payload;
+    }
   },
 });
 
 export const {
   startAsync,
   stopAsync,
+  setRoomID
 } = slice.actions;
 
 export default slice.reducer;
