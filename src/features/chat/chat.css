@@ -1,6 +1,7 @@
 .MessageContainer, .MessageContainer-own {
     display: flex;
     flex-direction: row;
+    margin-bottom: 4px;
 }
 
 .MessageContainer-own {
@@ -13,7 +14,7 @@
     border-radius: 4px;
     margin-right: 8px;
     margin-left: 8px;
-    max-width: 240px;
+    max-width: 300px;
     background-color: var(--primary-color);
     color: white;
 }
@@ -25,6 +26,7 @@
 
 .MessageAvatar {
     max-height: 2rem;
+    width: 2rem;
 }
 
 .MessageUsername {
@@ -34,11 +36,9 @@
 }
 
 .MessageTime {
-    margin-bottom: 16px;
-    margin-left: 8px;
-    margin-right: 8px;
-    margin-top: 4px;
     font-size: 0.8rem;
+    display: flex;
+    align-items: flex-end;
 }
 
 .Participant {

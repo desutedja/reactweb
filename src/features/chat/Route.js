@@ -103,23 +103,41 @@ function Component() {
                     overflow: 'scroll',
                 }}>
                     <Loading loading={loadingMessages}>
-                        {messages.map(el =>
+                        {messages.map((el, index) =>
                             <div key={el.timestamp} className={
                                 el.email === "superadmin" + user.id + user.email ?
                                     "MessageContainer-own" : "MessageContainer"}>
-                                <img alt="avatar" className="MessageAvatar" src={el.user_avatar_url} />
+                                {index > 0 && messages[index - 1].username === el.username ?
+                                    <div className="MessageAvatar" /> :
+                                    <img alt="avatar" className="MessageAvatar" src={el.user_avatar_url} />}
                                 <div style={{
                                     display: 'flex',
                                     flexDirection: 'column',
                                     alignItems: el.email === "superadmin" + user.id + user.email ?
                                         'flex-end' : 'flex-start',
                                 }}>
-                                    <div className="MessageUsername">{el.username}</div>
-                                    <div className={
-                                        el.email === "superadmin" + user.id + user.email ?
-                                            "Message-own" : "Message"}>{el.message}
+                                    {index > 0 && messages[index - 1].username === el.username ?
+                                        null :
+                                        <div className="MessageUsername">{el.username}</div>}
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: el.email === "superadmin" + user.id + user.email ?
+                                            'row-reverse' : 'row',
+                                    }}>
+                                        <div className={
+                                            el.email === "superadmin" + user.id + user.email ?
+                                                "Message-own" : "Message"}>{el.message}
+                                        </div>
+                                        <div className="MessageTime">
+                                            {dateTimeFormatter(el.timestamp).split(',')[1].split(':')[0]
+                                                + ':' +
+                                                dateTimeFormatter(el.timestamp).split(',')[1].split(':')[1]}
+                                        </div>
                                     </div>
-                                    <div className="MessageTime">{dateTimeFormatter(el.timestamp)}</div>
+                                    {messages[index + 1]?.username !== el.username && 
+                                        <div style={{
+                                            height: 12
+                                        }} />}
                                 </div>
                             </div>
                         )}
