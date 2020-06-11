@@ -1,14 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import AnimatedNumber from "animated-number-react";
 
 import { getSOS } from './slice';
-import { AreaChart, XAxis, YAxis, CartesianGrid, Area, Tooltip } from 'recharts';
+import { AreaChart, XAxis, YAxis, CartesianGrid, Area, Tooltip, PieChart, Pie } from 'recharts';
 import { dateFormatter, get } from '../../utils';
 import { endpointTask } from '../../settings';
 
+import './style.css';
+
+const formatValue = (value) => value.toFixed(0);
+
 function Component() {
     const [range, setRange] = useState('daily');
+    const [pieData, setPieData] = useState([]);
+    const [data, setData] = useState({});
 
     const headers = useSelector(state => state.auth.headers);
     const { loading, sosData } = useSelector(state => state.dashboard);
@@ -23,7 +30,8 @@ function Component() {
 
     useEffect(() => {
         get(endpointTask + '/admin/sa/statistics', headers, res => {
-
+            setPieData(res.data.data.ticket_by_category);
+            setData(res.data.data);
         })
     }, []);
 
@@ -82,11 +90,45 @@ function Component() {
                         </AreaChart>
                     </div>
                     <div className="Row">
-                        <div className="Container">
+                        <div className="Container" style={{
+                            flexDirection: 'column'
+                        }}>
+                            <h5>Task Categories</h5>
+                            <PieChart width={730} height={250}>
+                                <Pie data={pieData} dataKey="num_of_task" nameKey="task_type"
+                                    cx="50%" cy="50%" innerRadius={60} outerRadius={80}
+                                    fill="#8884d8" label />
+                                <Tooltip />
+                            </PieChart>
                         </div>
                         <div className="Container" style={{
                             marginLeft: 16,
+                            flexDirection: 'column',
                         }}>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Total Task
+                                <AnimatedNumber className="BigNumber" value={data.total_task}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1
+                            }}>
+                                Unresolved Task
+                                <AnimatedNumber className="BigNumber" value={data.total_unresolved_task}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1
+                            }}>
+                                Resolved Task
+                                <AnimatedNumber className="BigNumber" value={data.total_resolved_task}
+                                    formatValue={formatValue}
+                                />
+                            </div>
                         </div>
                     </div>
                 </Route>

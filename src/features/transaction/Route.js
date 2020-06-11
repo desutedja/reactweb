@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Table from '../../components/Table';
 import Add from './Add';
 import Details from './Details';
-import { getTransaction, getTransactionDetails } from './slice';
+import { getTransaction, getTransactionDetails, setSelected } from './slice';
 import { toSentenceCase } from '../../utils';
 
 const columns = [
@@ -53,6 +53,10 @@ function Component() {
                         filters={[]}
                         actions={[]}
                         onClickDetails={row => dispatch(getTransactionDetails(row, headers, history, url))}
+                        onClickChat={row => {
+                            dispatch(setSelected(row));
+                            history.push("/chat");
+                        }}
                     />
                 </Route>
                 <Route path={`${path}/add`}>
