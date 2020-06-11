@@ -15,3 +15,11 @@
 .MessageAvatar {
     max-height: 2rem;
 }
+
+.Participant {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 4px;
+    margin-bottom: 4px;
+}

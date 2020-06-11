@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState, Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from './features/auth/slice';
 import {
@@ -6,6 +6,7 @@ import {
     FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign, FiLogOut, FiChevronRight, FiChevronDown, FiChevronUp
 } from "react-icons/fi";
 import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom';
+import QiscusSDKCore from 'qiscus-sdk-core';
 
 import DashboardRoute from './features/dashboard/Route';
 import ManagementRoute from './features/management/Route';
@@ -25,7 +26,9 @@ import ChatRoute from './features/chat/Route';
 import Row from './components/Row';
 import IconButton from './components/IconButton';
 import { toSentenceCase } from './utils';
+import { setQiscus, updateMessages } from './features/chat/slice';
 
+const qiscus = new QiscusSDKCore();
 
 const menu = [
     {
@@ -106,7 +109,7 @@ const menu = [
     },
 ]
 
-function Page() {
+function Component() {
     const [menuWide, setMenuWide] = useState(true);
     const [expanded, setExpanded] = useState("");
     const [profile, setProfile] = useState(false);
@@ -116,6 +119,36 @@ function Page() {
     let dispatch = useDispatch();
     let history = useHistory();
     let location = useLocation();
+
+    useEffect(() => {
+        const userID = "superadmin" + user.id + user.email;
+
+        qiscus.init({
+            AppId: 'fastelsar-tvx6nj235zm',
+            options: {
+                newMessagesCallback: message => dispatch(updateMessages(message)),
+            },
+        }).then(() => {
+            console.log('init success');
+
+            !qiscus.isLogin && qiscus.setUser(userID, 'kucing', user.firstname + ' ' + user.lastname,
+                'https://avatars.dicebear.com/api/male/' + user.email + '.svg', user)
+                .then(function (authData) {
+                    // On success
+                    console.log(authData);
+                    console.log(qiscus.isLogin);
+
+                    dispatch(setQiscus(qiscus));
+                })
+                .catch(function (error) {
+                    // On error
+                    alert('setUser: ' + error);
+                })
+        }).catch(error => {
+            alert('init: ' + error);
+        });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
 
     function isSelected(menu) {
         return ('/' + history.location.pathname.split('/')[1]) === menu.route;
@@ -174,6 +207,7 @@ function Page() {
                 </div>
                 <div className={profile ? "ProfileButton-menu" : "ProfileButton-menu-hide"}>
                     <div className="ProfileButton-menuItem" onClick={() => {
+                        qiscus.isLogin && qiscus.disconnect();
                         dispatch(logout());
                     }}>
                         <FiLogOut style={{
@@ -237,7 +271,7 @@ function Page() {
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
                     <Switch>
-                        <Redirect exact from="/" to={"/chat"} />
+                        <Redirect exact from="/" to={"/dashboard/task"} />
                         <Route path="/dashboard">
                             <DashboardRoute />
                         </Route>
@@ -287,4 +321,4 @@ function Page() {
     )
 }
 
-export default Page;
+export default Component;

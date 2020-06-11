@@ -51,7 +51,7 @@ function Component({
                 required={!optional}
                 placeholder={label}
                 rows={rows}
-                value={value}
+                value={inputValue === '' ? '' : value}
                 onChange={(e) => {
                     setValue(e.target.value);
                     setInputValue && setInputValue(e.target.value);

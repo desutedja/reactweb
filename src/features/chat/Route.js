@@ -7,7 +7,7 @@ import Input from '../../components/Input';
 import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
 import { post, get } from '../../utils';
-import { setRoomID } from './slice';
+import { setRoomID, setMessages } from './slice';
 import { FiSend } from 'react-icons/fi';
 
 import './chat.css';
@@ -17,13 +17,18 @@ const columns = [
 ]
 
 function Component() {
-    const [loading, setLoading] = useState(false);
+    const [loadingMessages, setLoadingMessages] = useState(false);
+    const [loadingSend, setLoadingSend] = useState(false);
+    const [loadingParticipants, setLoadingParticipants] = useState(false);
+
     const [refresh, setRefresh] = useState(false);
     const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([]);
+
+    // const [messages, setMessages] = useState([]);
+    const [participants, setParticipants] = useState([]);
 
     const { headers, user } = useSelector(state => state.auth);
-    const { source, roomID } = useSelector(state => state.chat);
+    const { qiscus, source, roomID, messages } = useSelector(state => state.chat);
     const selectedTask = useSelector(state => state.task.selected);
     const selectedTrx = useSelector(state => state.transaction.selected);
 
@@ -38,50 +43,49 @@ function Component() {
     let history = useHistory();
     let { path, url } = useRouteMatch();
 
+    // useEffect(() => {
+    //     // get messages
+    //     setLoadingMessages(true);
+    //     get('https://api.qiscus.com/api/v2.1/rest/load_comments?room_id=' + roomID, qheaders, res => {
+    //         setMessages(res.data.results.comments ? res.data.results.comments : []);
+    //         setLoadingMessages(false);
+    //     })
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [refresh]);
+
     useEffect(() => {
-        // register/login
-        // post('https://api.qiscus.com/api/v2.1/rest/login_or_register', {
-        //     "user_id": userID,
-        //     "username": "Superadmin " + user.firstname,
-        // }, qheaders)
+        setLoadingParticipants(true);
+        qiscus.getParticipants && qiscus.getParticipants("1641e1a7-6ec4-487b-be44-3e5ad584b54c")
+            .then(function (participants) {
+                // Do something with participants
+                console.log("participants", participants);
+                setParticipants(participants.participants);
+                setLoadingParticipants(false);
+            })
+            .catch(function (error) {
+                // Do something if error occured
+            })
+    }, [qiscus, roomID]);
 
-        // create room
-        // post('https://api.qiscus.com/api/v2.1/rest/create_room', {
-        //     "room_name": "Superadmin " + source + " Chat",
-        //     "creator": userID,
-        //     "participants": [userID],
-        // }, qheaders, res => {
-        //     dispatch(setRoomID(res.data.results.room.room_id));
-        // })
+    useEffect(() => {
+        var options = {
+            // last_comment_id: 10,
+            // after: false,
+            // limit: 20
+        }
 
-        // {
-        //     "results":
-        //     {
-        //         "room":
-        //         {
-        //             "room_avatar_url": "",
-        //                 "room_channel_id": "",
-        //                     "room_id": "17118073",
-        //                         "room_name": "Superadmin task Chat",
-        //                             "room_options": "{}",
-        //                                 "room_type": "group"
-        //         }
-        //     },
-        //     "status": 200
-        // }
-
-        // get rooms list
-        // get('https://api.qiscus.com/api/v2.1/rest/get_user_rooms?user_id=' + userID, qheaders)
-
-        setLoading(true);
-
-        // get messages
-        get('https://api.qiscus.com/api/v2.1/rest/load_comments?room_id=' + roomID, qheaders, res => {
-            setMessages(res.data.results.comments);
-            setLoading(false);
-        })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [roomID, refresh])
+        setLoadingMessages(true);
+        qiscus.loadComments && qiscus.loadComments(roomID, options)
+            .then(function (comments) {
+                // On success
+                dispatch(setMessages(comments));
+                setLoadingMessages(false);
+            })
+            .catch(function (error) {
+                // On error
+            })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [qiscus, roomID]);
 
     return (
         <div style={{
@@ -94,13 +98,14 @@ function Component() {
                 flex: 2,
             }}>
                 <div style={{
-                    flex: 1,
+                    height: 584,
+                    paddingRight: 16,
                     overflow: 'scroll',
                 }}>
-                    <Loading loading={loading}>
+                    <Loading loading={loadingMessages}>
                         {messages.map(el =>
                             <div key={el.timestamp} className="MessageContainer">
-                                <img alt="avatar" className="MessageAvatar" src={el.user.avatar_url} />
+                                <img alt="avatar" className="MessageAvatar" src={el.user_avatar_url} />
                                 <div className="Message">{el.message}</div>
                             </div>
                         )}
@@ -109,21 +114,33 @@ function Component() {
                 <div className="Container" style={{
                     flex: 0,
                     marginBottom: 0,
+                    marginTop: 16,
                 }}>
                     <Input compact label="Send a message.." type="textarea"
                         inputValue={message} setInputValue={setMessage}
                     />
-                    <Loading loading={loading} >
+                    <Loading loading={qiscus ? (loadingSend || !qiscus.sendComment) : true} >
                         <IconButton onClick={() => {
-                            setLoading(true);
-                            post('https://api.qiscus.com/api/v2.1/rest/post_comment', {
-                                "user_id": userID,
-                                "room_id": roomID,
-                                "message": message,
-                            }, qheaders, res => {
-                                setRefresh(!refresh);
-                                setMessage('');
-                            })
+                            setLoadingSend(true);
+                            qiscus.sendComment(roomID, message)
+                                .then(function (comment) {
+                                    // On success
+                                    setRefresh(!refresh);
+                                    setMessage('');
+                                    setLoadingSend(false);
+                                })
+                                .catch(function (error) {
+                                    // On error
+                                })
+                            // post('https://api.qiscus.com/api/v2.1/rest/post_comment', {
+                            //     "user_id": userID,
+                            //     "room_id": roomID,
+                            //     "message": message,
+                            // }, qheaders, res => {
+                            //     setRefresh(!refresh);
+                            //     setMessage('');
+                            //     setLoadingSend(false);
+                            // })
                         }}>
                             <FiSend />
                         </IconButton>
@@ -133,10 +150,27 @@ function Component() {
             <div className="Container" style={{
                 height: '100%',
                 marginLeft: 16,
+                flexDirection: 'column',
             }}>
-                <div className="TextField">
-                    Room ID: {roomID}
-                </div>
+                <p style={{
+                    fontWeight: 'bold',
+                }}>Room ID</p>
+                <p style={{
+                    marginBottom: 16,
+                }}>{roomID}</p>
+                <p style={{
+                    fontWeight: 'bold',
+                }}>Participants</p>
+                <Loading loading={loadingParticipants}>
+                    {participants.map((el, index) =>
+                        <div key={index} className="Participant">
+                            <img alt="avatar" className="MessageAvatar" src={el.avatar_url} style={{
+                                marginRight: 8,
+                            }} />
+                            {el.username}
+                        </div>
+                    )}
+                </Loading>
             </div>
         </div>
     )
