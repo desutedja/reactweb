@@ -9,7 +9,6 @@
 
 .Message, .Message-own {
     background-color: white;
-    margin-bottom: 16px;
     padding: 4px 8px 4px 8px;
     border-radius: 4px;
     margin-right: 8px;
@@ -31,6 +30,15 @@
 .MessageUsername {
     margin-left: 8px;
     margin-right: 8px;
+    font-weight: bold;
+}
+
+.MessageTime {
+    margin-bottom: 16px;
+    margin-left: 8px;
+    margin-right: 8px;
+    margin-top: 4px;
+    font-size: 0.8rem;
 }
 
 .Participant {

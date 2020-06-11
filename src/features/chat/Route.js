@@ -6,7 +6,7 @@ import Table from '../../components/Table';
 import Input from '../../components/Input';
 import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
-import { post, get } from '../../utils';
+import { post, get, dateTimeFormatter } from '../../utils';
 import { setRoomID, setMessages } from './slice';
 import { FiSend } from 'react-icons/fi';
 
@@ -119,6 +119,7 @@ function Component() {
                                         el.email === "superadmin" + user.id + user.email ?
                                             "Message-own" : "Message"}>{el.message}
                                     </div>
+                                    <div className="MessageTime">{dateTimeFormatter(el.timestamp)}</div>
                                 </div>
                             </div>
                         )}
