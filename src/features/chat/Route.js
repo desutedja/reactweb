@@ -84,7 +84,7 @@ function Component() {
             .catch(function (error) {
                 // On error
             })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [qiscus, roomID]);
 
     return (
@@ -104,9 +104,22 @@ function Component() {
                 }}>
                     <Loading loading={loadingMessages}>
                         {messages.map(el =>
-                            <div key={el.timestamp} className="MessageContainer">
+                            <div key={el.timestamp} className={
+                                el.email === "superadmin" + user.id + user.email ?
+                                    "MessageContainer-own" : "MessageContainer"}>
                                 <img alt="avatar" className="MessageAvatar" src={el.user_avatar_url} />
-                                <div className="Message">{el.message}</div>
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: el.email === "superadmin" + user.id + user.email ?
+                                        'flex-end' : 'flex-start',
+                                }}>
+                                    <div className="MessageUsername">{el.username}</div>
+                                    <div className={
+                                        el.email === "superadmin" + user.id + user.email ?
+                                            "Message-own" : "Message"}>{el.message}
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </Loading>

@@ -1,19 +1,36 @@
-.MessageContainer {
+.MessageContainer, .MessageContainer-own {
     display: flex;
+    flex-direction: row;
+}
+
+.MessageContainer-own {
     flex-direction: row-reverse;
 }
 
-.Message {
+.Message, .Message-own {
     background-color: white;
     margin-bottom: 16px;
     padding: 4px 8px 4px 8px;
     border-radius: 4px;
     margin-right: 8px;
+    margin-left: 8px;
     max-width: 240px;
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.Message-own {
+    background-color: white;
+    color: black;
 }
 
 .MessageAvatar {
     max-height: 2rem;
+}
+
+.MessageUsername {
+    margin-left: 8px;
+    margin-right: 8px;
 }
 
 .Participant {
