@@ -13,7 +13,6 @@ import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
-import Pills from '../../components/Pills';
 import { Badge } from 'reactstrap';
 import Add from './Add';
 import Details from './Details';
@@ -44,7 +43,7 @@ const columns = [
     {
         Header: "Status", accessor: row => <h5><Badge pill color={
             row.status === 'active' ? "success" : 'secondary'
-        }>{row.status}</Badge></h5>
+        }>{toSentenceCase(row.status)}</Badge></h5>
     },
 ]
 

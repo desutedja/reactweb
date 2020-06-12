@@ -30,7 +30,7 @@ function GroupedItems({tabs, type, data}) {
                 <TabContent activeTab={activeTab}>
                     <TabPane style={{ paddingTop: '20px' }} tabId={i} >
                     { tabs[el].map( el => 
-                                <Row style={{ padding: '4px' }} >
+                                <Row style={{ padding: '4px' }} key={el} >
                                     <Col style={{ fontWeight: 'normal', fontSize: '0.8em',  }}>
                                         {(
                                             el === 'id' ? (type === '' ? el : type + " " + el) :
@@ -66,7 +66,7 @@ function GroupedItems({tabs, type, data}) {
 
 function GroupedItemsStatus({keys, data}) {
     return keys.map( el => 
-        <Row>
+        <Row key={el} >
             <Col>
                 {data[el]}
             </Col>
