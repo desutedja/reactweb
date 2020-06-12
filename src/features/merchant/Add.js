@@ -12,6 +12,7 @@ import {
   endpointResident,
   endpointAdmin,
   endpointMerchant,
+  banks,
 } from "../../settings";
 import { createMerchant, editMerchant } from "./slice";
 import GoogleMapReact from "google-map-react";
@@ -251,7 +252,7 @@ function Component() {
         <SectionSeparator />
         <Input label="Account No" name="account_no" inputValue={selected.account_no} />
         <Input label="Account Name" name="account_name" inputValue={selected.account_name} />
-        <Input label="Account Bank" name="account_bank" inputValue={selected.account_bank} />
+        <Input label="Account Bank" name="account_bank"  type="select" options={banks} inputValue={selected.account_bank} />
         <SectionSeparator />
       </Form>
     </div>

@@ -164,7 +164,7 @@ export function dateTimeFormatter(serverDateTime) {
     let month = parseInt(date.split('-')[1], 10);
     let day = date.split('-')[2];
 
-    return day + ' ' + months[month].label + ' ' + year + ', ' + time + ' WIB';
+    return day + ' ' + months[month - 1].label + ' ' + year + ', ' + time + ' WIB';
 }
 
 export function dateFormatter(serverDateTime) {
@@ -176,10 +176,14 @@ export function dateFormatter(serverDateTime) {
 
 
 
-    return day + ' ' + months[month].label + ' ' + year;
+    return day + ' ' + months[month - 1].label + ' ' + year;
 }
 
 export function toSentenceCase(sentence) {
+    if (sentence.length < 4) {
+        return sentence;
+    }
+
     let words = sentence.toLowerCase().replace(/_/g, ' ').split(' ');
 
     return words.reduce((result, el) => {

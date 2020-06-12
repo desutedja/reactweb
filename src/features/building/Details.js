@@ -20,10 +20,10 @@ import {
     createBuildingUnit, createBuildingUnitType, createBuildingSection,
     deleteBuildingUnit, deleteBuildingUnitType, deleteBuildingSection,
     editBuildingUnit, editBuildingUnitType, editBuildingSection,
-    getBuildingService, getBuildingManagement, deleteBuildingManagement, 
+    getBuildingService, getBuildingManagement, deleteBuildingManagement,
     deleteBuildingService, createBuildingService, editBuildingService,
 } from './slice';
-import { endpointAdmin } from '../../settings';
+import { endpointAdmin, banks } from '../../settings';
 import { get } from '../../utils';
 
 
@@ -59,14 +59,14 @@ const columnsUnit = [
     { Header: "ID", accessor: "id" },
     { Header: "Number", accessor: "number" },
     { Header: "Floor", accessor: "floor" },
-    { Header: "Section", accessor: row => toSentenceCase(row.section_type) + " " + row.section_name  },
-    { Header: "Type", accessor: row => row.unit_type_name + " - " + row.unit_size },
+    { Header: "Section", accessor: row => toSentenceCase(row.section_type) + " " + row.section_name },
+    { Header: "Type", accessor: row => toSentenceCase(row.unit_type_name) + " - " + row.unit_size },
 ]
 
 const columnsUnitType = [
     { Header: "ID", accessor: "id" },
-    { Header: "Name", accessor: row => row.unit_type + " - " + row.unit_size },
-    { Header: "Type Name", accessor: "unit_type" },
+    { Header: "Name", accessor: row => toSentenceCase(row.unit_type) + " - " + row.unit_size },
+    { Header: "Type Name", accessor: row => toSentenceCase(row.unit_type) },
     {
         Header: "Size", accessor: row => <div>
             {row.unit_size + ' m'}<sup>2</sup>
@@ -85,11 +85,13 @@ const columnsService = [
     { Header: "Name", accessor: "name" },
     { Header: "Group", accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
     { Header: "Description", accessor: row => row.description ? row.description : '-' },
-    { Header: "Price", accessor: (row) => {
-        return (row.price_fixed > 0 ? toMoney(row.price_fixed) + " (Fixed)" : toMoney(row.price_unit) + " / " + row.denom_unit) },
+    {
+        Header: "Price", accessor: (row) => {
+            return (row.price_fixed > 0 ? toMoney(row.price_fixed) + " (Fixed)" : toMoney(row.price_unit) + " / " + row.denom_unit)
+        },
 
     },
-    { Header: "Tax", accessor: row => (row.tax == "percentage" ? row.tax_value + "%" : toMoney(row.tax_amount) + " (Fixed)")} ,
+    { Header: "Tax", accessor: row => (row.tax == "percentage" ? row.tax_value + "%" : toMoney(row.tax_amount) + " (Fixed)") },
 ]
 
 const columnsManagement = [
@@ -249,6 +251,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         marginTop: 16,
+                        justifyContent: 'center',
                     }}>
                         <Button label="Cancel" secondary
                             onClick={() => setAddUnit(false)}
@@ -289,6 +292,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         marginTop: 16,
+                        justifyContent: 'center',
                     }}>
                         <Button label="Cancel" secondary
                             onClick={() => setAddUnitType(false)}
@@ -329,6 +333,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         marginTop: 16,
+                        justifyContent: 'center',
                     }}>
                         <Button label="Cancel" secondary
                             onClick={() => setAddSection(false)}
@@ -386,7 +391,7 @@ function Component() {
                             { label: 'Inactive', value: 'inactive' },
                         ]} />
                     <SectionSeparator />
-                    <Input label="Settlement Bank" inputValue={selectedRow.settlement_bank} />
+                    <Input label="Settlement Bank" type="select" options={banks} inputValue={selectedRow.settlement_bank} />
                     <Input label="Settlement Account No" inputValue={selectedRow.settlement_account_no} />
                     <Input label="Settlement Account Name"
                         inputValue={selectedRow.settlement_account_name} />
@@ -413,17 +418,17 @@ function Component() {
             <Modal isOpen={addService} onRequestClose={() => setAddService(false)}>
                 <h4>{edit ? "Edit" : "Add"} Service</h4>
                 <Form onSubmit={data => {
-                    edit ? 
+                    edit ?
                         dispatch(editBuildingService(headers, {
                             "building_id": selected.id, building_name: selected.name, ...data,
                         }, selectedRow.id))
-                        : dispatch(createBuildingService(headers, {...data, building_id: selected.id}));
+                        : dispatch(createBuildingService(headers, { ...data, building_id: selected.id }));
 
                     setAddService(false);
                     setEdit(false);
                     setRow({});
                 }}>
-                    <Input label="Name" inputValue={selectedRow.name}/>
+                    <Input label="Name" inputValue={selectedRow.name} />
                     <Input label="Group" type="select" inputValue={selectedRow.group} options={[
                         { value: 'ipl', label: 'IPL' },
                         { value: 'nonipl', label: 'Non-IPL' },
@@ -437,7 +442,7 @@ function Component() {
                         hidden={priceType === 'fixed'} inputValue={selectedRow.price_unit} />
                     <Input label="Unit" placeholder="Denom Unit Name, ex: kWh, m^3" name="denom_unit"
                         hidden={priceType === 'fixed'} inputValue={selectedRow.denom_unit}
-                            />
+                    />
                     <Input label="Price" name="price_fixed" type="number"
                         hidden={priceType === 'unit'} inputValue={selectedRow.price_fixed} />
                     <Input label="Tax Type" name="tax" type="select"
@@ -445,7 +450,7 @@ function Component() {
                             { value: 'value', label: 'Value' },
                             { value: 'percentage', label: 'Percentage' },
                         ]}
-                        inputValue={taxType} setInputValue={setTaxType} inputValue={taxType ? taxType : selectedRow.tax} />
+                        setInputValue={setTaxType} inputValue={taxType ? taxType : selectedRow.tax} />
                     <Input label="Tax Value" hidden={taxType === 'value'} inputValue={selectedRow.tax_value} />
                     <Input label="Tax Amount" hidden={taxType === 'percentage'} inputValue={selectedRow.tax_amount} />
                 </Form>
@@ -459,8 +464,8 @@ function Component() {
                 }}>
 
                     <div className="Details">
-                            <Profile type="building" title={selected["name"]} website={selected["website"]} picture={selected["logo"]}
-                               data={selected}/>
+                        <Profile type="building" title={selected["name"]} website={selected["website"]} picture={selected["logo"]}
+                            data={selected} />
                     </div>
                 </div>
             </div>
@@ -488,7 +493,16 @@ function Component() {
                     filters={[]}
                     actions={[
                         <Button key="Add" label="Add" icon={<FiPlus />}
-                            onClick={() => setAddUnit(true)}
+                            onClick={() => {
+                                setEdit(false);
+                                setRow({});
+                                setSectionID('');
+                                setUnitTypeID('');
+                                setFloor('');
+                                setNumber('');
+
+                                setAddUnit(true);
+                            }}
                         />
                     ]}
                     onClickDelete={row => {
@@ -531,7 +545,14 @@ function Component() {
                     ]}
                     actions={[
                         <Button key="Add" label="Add" icon={<FiPlus />}
-                            onClick={() => setAddUnitType(true)}
+                            onClick={() => {
+                                setEdit(false);
+                                setRow({});
+                                setTypeName('');
+                                setTypeSize('');
+
+                                setAddUnitType(true);
+                            }}
                         />
                     ]}
                     onClickDelete={row => {
@@ -574,7 +595,14 @@ function Component() {
                     ]}
                     actions={[
                         <Button key="Add" label="Add" icon={<FiPlus />}
-                            onClick={() => setAddSection(true)}
+                            onClick={() => {
+                                setEdit(false);
+                                setRow({});
+                                setSectionName('');
+                                setSectionType('');
+
+                                setAddSection(true);
+                            }}
                         />
                     ]}
                     onClickDelete={row => {
@@ -617,7 +645,12 @@ function Component() {
                     ]}
                     actions={[
                         <Button key="Add" label="Add" icon={<FiPlus />}
-                            onClick={() => setAddService(true)}
+                            onClick={() => {
+                                setEdit(false);
+                                setRow({});
+
+                                setAddService(true);
+                            }}
                         />
                     ]}
                     onClickEdit={row => {
@@ -644,7 +677,12 @@ function Component() {
                     filters={[]}
                     actions={[
                         <Button key="Add" label="Add" icon={<FiPlus />}
-                            onClick={() => setAddManagement(true)}
+                            onClick={() => {
+                                setEdit(false);
+                                setRow({});
+
+                                setAddManagement(true);
+                            }}
                         />
                     ]}
                     onClickDelete={row => {
