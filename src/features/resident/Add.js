@@ -276,6 +276,13 @@ function Component() {
                         { value: 'divorce', label: 'Divorced' },
                         { value: 'other', label: 'Other' },
                     ]} inputValue={selected.marital_status} />
+                    <Input label="Occupation" type="select" options={[
+                        {value: 'unemployed', label: 'Unemployed'},
+                        {value: 'student', label: 'Student'},
+                        {value: 'university_student', label: 'University Student'},
+                        {value: 'professional', label: 'Professional'},
+                        {value: 'housewife', label: 'Housewife'},
+                    ]} inputValue={selected.occupation} />
                     <SectionSeparator />
 
                     <Input label="Address" type="textarea" inputValue={selected.address} />

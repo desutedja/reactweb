@@ -149,12 +149,12 @@ export function dateFormatter(serverDateTime) {
 }
 
 export function toSentenceCase(sentence) {
-    let words = sentence.toLowerCase().split(' ');
+    let words = sentence.toLowerCase().replace(/_/g, ' ').split(' ');
 
-    return words.map(el => {
+    return words.reduce((result, el) => {
         let newEl = el.slice(0, 1).toUpperCase() + el.slice(1) + ' ';
-        return newEl;
-    })
+        return result + newEl;
+    }, '')
 }
 
 export function toMoney(money) {

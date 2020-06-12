@@ -172,7 +172,7 @@ function Component() {
           name="type"
           type="select"
           options={[
-            { value: "service", label: "Service" },
+            { value: "services", label: "Services" },
             { value: "goods", label: "Goods" },
           ]}
           inputValue={selected.type}
@@ -224,6 +224,7 @@ function Component() {
         <SectionSeparator />
         <Input label="Name" name="pic_name" inputValue={selected.pic_name} />
         <Input label="Phone" name="pic_phone" inputValue={selected.pic_phone} />
+        <Input label="Email" name="pic_mail" inputValue={selected.pic_mail} />
         <Input label="Open Time" name="open_at" type="time"
           inputValue={selected.open_at} />
         <Input label="Close Time" name="closed_at" type="time"

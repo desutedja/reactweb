@@ -13,6 +13,7 @@ import Pills from '../../components/Pills';
 import { get, toSentenceCase, dateTimeFormatter } from '../../utils';
 import { endpointAdmin, endpointManagement, mainColor, statusColor } from '../../settings';
 import Details from './Details';
+import { Badge } from 'reactstrap';
 
 const columns = [
     { Header: "ID", accessor: "id" },
@@ -21,16 +22,23 @@ const columns = [
     { Header: "Requester", accessor: "requester_name" },
     { Header: "Building", accessor: "building_name" },
     {
-        Header: "Priority", accessor: row => <Pills color={
-            row.priority === "emergency" ? "crimson" : row.priority === "high" ? "orange" : "limegreen"
-        }>{toSentenceCase(row.priority)}</Pills>
+        Header: "Priority", accessor: row =>
+            <h5><Badge pill color={
+                row.priority === "emergency" ? "danger" :
+                    row.priority === "high" ? "warning" : "success"
+            }>
+                {toSentenceCase(row.priority)}
+            </Badge></h5>
     },
     { Header: "Assigned by", accessor: row => row.assigner_firstname == null ? "Auto" : row.assigner_firstname + ' ' + row.assigner_lastname },
     { Header: "Assignee", accessor: row => row.assignee_firstname + ' ' + row.assignee_lastname },
     { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
     {
-        Header: "Status", accessor: row => row.status ? <Pills color={statusColor[row.status]}>
-            {toSentenceCase(row.status)}</Pills> : "-"
+        Header: "Status", accessor: row => row.status ?
+            <h5><Badge pill color={statusColor[row.status]}>
+                {toSentenceCase(row.status) + (row.status === 'rejected' ? 
+                ' by ' + row.rejected_by : '')}
+            </Badge></h5> : "-"
     },
 ]
 
@@ -101,8 +109,8 @@ function Component() {
     useEffect(() => {
         console.log(selectedRow);
 
-        let role = selectedRow.task_type === 'security' ? 'security' : 
-        selectedRow.task_type === 'service' ? 'technician' : 'courier';
+        let role = selectedRow.task_type === 'security' ? 'security' :
+            selectedRow.task_type === 'service' ? 'technician' : 'courier';
 
         assign && (!search || search.length >= 3) && get(endpointManagement + '/admin/staff/list' +
             '?limit=5&page=1&max_ongoing_task=1' +
@@ -118,7 +126,7 @@ function Component() {
 
                 setStaffs(formatted);
             })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [headers, search, selectedRow]);
 
     return (
