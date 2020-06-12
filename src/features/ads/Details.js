@@ -10,7 +10,7 @@ import Table from '../../components/Table';
 import Modal from '../../components/Modal';
 import Form from '../../components/Form';
 import Input from '../../components/Input';
-import { getAdsSchedule, editAdsSchedule, createAdsSchedule } from './slice';
+import { getAdsSchedule, deleteAdsSchedule, createAdsSchedule } from './slice';
 
 const exception = [
     'created_on', 'modified_on', 'deleted',
@@ -118,7 +118,6 @@ function Component() {
                         </div>)}
                 </div>
                 {tab === 0 && <div>
-                    <Button label="Edit" onClick={() => { }} />
                     <div style={{
                         display: 'flex',
                         marginTop: 16,
@@ -139,7 +138,7 @@ function Component() {
                             <p style={{ fontWeight: 'bold', fontSize: '1.2rem', marginBottom: 8 }}>
                                 {selected.content_name ? selected.content_name : "(No Title)"}
                             </p>
-                            <p>{selected.content_description ? parse(selected.content_description) : "(No content)"}</p>
+                            {selected.content_description ? parse(selected.content_description) : "(No content)"}
                         </div>
                     </div>
                 </div>}
@@ -155,6 +154,11 @@ function Component() {
                             onClick={() => setAddSchedule(true)}
                         />
                     ]}
+                    onClickDelete={row => dispatch(deleteAdsSchedule(row, headers))}
+                    deleteSelection={(selectedRows, rows) => {
+                        Object.keys(selectedRows).map(el => dispatch(deleteAdsSchedule(
+                            rows[el].original, headers)));
+                    }}
                 />}
             </div>
         </div>

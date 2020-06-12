@@ -52,8 +52,18 @@ function Component() {
                         setModalFee(false);
                     }}
                 >
-                    <Input compact label="Admin Fee" type="number" inputValue={adminFee}
-                        setInputValue={setAdminFee} />
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <Input compact label="Admin Fee" type="number" inputValue={adminFee}
+                            setInputValue={setAdminFee} />
+                        <span style={{
+                            margin: 4
+                        }}>
+                            %
+                        </span>
+                    </div>
                     <div style={{
                         display: 'flex',
                         marginTop: 16,

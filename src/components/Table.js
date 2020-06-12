@@ -121,31 +121,33 @@ function Component({
                 <div style={{
                     display: 'flex',
                 }}>
-                    <div className="SelectActions">
-                        {Object.keys(selectedRowIds).length > 0 && <div className="SelectActions-toggle"
-                            onClick={() => setShowActions(!showActions)}
-                        >
-                            Action
-                            <FiChevronDown style={{
-                                marginLeft: 8,
-                                marginBottom: 2,
-                            }} />
-                        </div>}
-                        <div className={showActions ?
-                            "SelectActions-options" : "SelectActions-options-hide"}>
-                            <div className="SelectActions-item"
-                                onClick={() => {
-                                    deleteSelection(selectedRowIds, page);
-                                }}
+                    {Object.keys(selectedRowIds).length > 0 &&
+                        <div className="SelectActions">
+                            <div className="SelectActions-toggle"
+                                onClick={() => setShowActions(!showActions)}
                             >
-                                <FiTrash style={{
-                                    marginRight: 8,
+                                Action
+                            <FiChevronDown style={{
+                                    marginLeft: 8,
                                     marginBottom: 2,
                                 }} />
+                            </div>
+                            <div className={showActions ?
+                                "SelectActions-options" : "SelectActions-options-hide"}>
+                                <div className="SelectActions-item"
+                                    onClick={() => {
+                                        deleteSelection(selectedRowIds, page);
+                                    }}
+                                >
+                                    <FiTrash style={{
+                                        marginRight: 8,
+                                        marginBottom: 2,
+                                    }} />
                                 Delete
                             </div>
+                            </div>
                         </div>
-                    </div>
+                    }
                     {actions}
                     {renderActions != null ? renderActions(selectedRowIds, page) : []}
                 </div>

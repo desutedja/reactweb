@@ -82,7 +82,8 @@ function Component() {
 
                 <Input label="Title" name="content_name" type="textarea"
                     inputValue={selected.content_name} />
-                <Editor label="Content" name="content_description" />
+                <Editor label="Content" name="content_description"
+                    inputValue={selected.content_description} />
             </Form>
         </div>
     )
