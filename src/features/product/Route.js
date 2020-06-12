@@ -59,7 +59,7 @@ function Component() {
         get(endpointMerchant + '/admin/categories', headers, res => {
                 let data = res.data.data;
 
-                let formatted = data.map(el => ({ label: el.name, value: el.name }));
+                let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setCats(formatted);
             })

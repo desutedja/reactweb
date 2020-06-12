@@ -57,7 +57,7 @@ function Component() {
                         setServicesLoading(true);
                         get(endpointAdmin + '/building/service' +
                             '?page=' + (pageIndex + 1) +
-                            '&building_id=' + selected.resident_building +
+                            '&building_id=' + selected.building_id +
                             '&group=' + servicesGroup +
                             '&search=' + search +
                             '&limit=' + pageSize,

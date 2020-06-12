@@ -122,7 +122,7 @@ function Component({
                     display: 'flex',
                 }}>
                     <div className="SelectActions">
-                        <div className="SelectActions-toggle"
+                        {Object.keys(selectedRowIds).length > 0 && <div className="SelectActions-toggle"
                             onClick={() => setShowActions(!showActions)}
                         >
                             Action
@@ -130,7 +130,7 @@ function Component({
                                 marginLeft: 8,
                                 marginBottom: 2,
                             }} />
-                        </div>
+                        </div>}
                         <div className={showActions ?
                             "SelectActions-options" : "SelectActions-options-hide"}>
                             <div className="SelectActions-item"

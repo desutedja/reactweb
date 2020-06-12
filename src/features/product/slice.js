@@ -72,7 +72,7 @@ export const getProduct = (
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&merchant_id=' + merchant +
-    '&category=' + category +
+    '&category_id=' + category +
     '&search=' + search,
     headers,
     res => {

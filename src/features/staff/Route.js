@@ -19,8 +19,8 @@ import Details from './Details';
 
 const columns = [
     { Header: "ID", accessor: "id" },
-    { 
-        Header: "Staff", 
+    {
+        Header: "Staff",
         accessor: row => [row.firstname + ' ' + row.lastname, row.email],
         Cell: acc => {
             return <UserAvatar fullname={acc.value[0]} email={acc.value[1]} />;
@@ -32,12 +32,11 @@ const columns = [
     { Header: "Building", accessor: "building_name" },
     { Header: "Management", accessor: "management_name" },
     {
-        Header: "On Shift", accessor: row => !row.on_shift_until ? <h5><Badge pill color="success">
-            Yes
-            </Badge></h5> : new Date(row.on_shift_until) > new Date() ? <h5><Badge pill color="success">
-                {toSentenceCase(row.on_shift)}
+        Header: "Shift", accessor: row => row.current_shift_status ?
+            <h5><Badge pill color="success">
+                Yes
             </Badge></h5> : <h5><Badge pill color="secondary">
-                    No
+                No
             </Badge></h5>
     },
     {
@@ -131,20 +130,20 @@ function Component() {
                                     label={shiftLabel ? shiftLabel : "Select Shift"}
                                     selected={shift}
                                 />,
-                                component: (toggleModal) => 
-                                <Filter
-                                            data={shifts}
-                                            onClick={(el) => {
-                                                setShift(el.value);
-                                                setShiftLabel(el.label);
-                                                toggleModal(false);
-                                            }}
-                                            onClickAll={() => {
-                                                setShift("");
-                                                setShiftLabel("");
-                                                toggleModal(false);
-                                            }}
-                                        />
+                                component: (toggleModal) =>
+                                    <Filter
+                                        data={shifts}
+                                        onClick={(el) => {
+                                            setShift(el.value);
+                                            setShiftLabel(el.label);
+                                            toggleModal(false);
+                                        }}
+                                        onClickAll={() => {
+                                            setShift("");
+                                            setShiftLabel("");
+                                            toggleModal(false);
+                                        }}
+                                    />
                             },
                             {
                                 button: <Button key="Select Building"

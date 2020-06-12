@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiPlus } from 'react-icons/fi';
+import parse from 'html-react-parser';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
@@ -138,7 +139,7 @@ function Component() {
                             <p style={{ fontWeight: 'bold', fontSize: '1.2rem', marginBottom: 8 }}>
                                 {selected.content_name ? selected.content_name : "(No Title)"}
                             </p>
-                            <p>{selected.content_description ? selected.content_description : "(No content)"}</p>
+                            <p>{selected.content_description ? parse(selected.content_description) : "(No content)"}</p>
                         </div>
                     </div>
                 </div>}

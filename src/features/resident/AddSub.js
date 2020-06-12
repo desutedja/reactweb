@@ -132,7 +132,7 @@ function Component() {
                     value: el.unit_id
                 }))} inputValue={unitID} setInputValue={setUnitID} />
                 <div style={{ marginTop: 16 }} />
-                {unitID && status && <Input type="button" label="Add as Subaccount" compact
+                {unitID && <Input type="button" label="Add as Subaccount" compact
                     onClick={() => {
                         dispatch(addSubaccount(headers, {
                             unit_id: parseInt(unitID),
@@ -150,7 +150,7 @@ function Component() {
                     dispatch(createSubaccount(headers, {
                         ...data,
                         birthdate: data.birthdate.replace('T', ' ').replace('Z', ''),
-                        status: status,
+                        status: unit.items.find(el => el.unit_id === unitID).status,
                         account_status: data.status,
                         parent_id: selected.id,
                         unit_id: parseInt(unitID),
