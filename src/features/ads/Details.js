@@ -89,7 +89,7 @@ function Component() {
                     <div style={{
                         display: 'flex'
                     }}>
-                        <Button label="Create New" onClick={() => {
+                        <Button label="Duplicate" onClick={() => {
                             history.push(
                                 url.split('/').slice(0, -1).join('/') + "/add"
                             );
