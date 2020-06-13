@@ -69,7 +69,7 @@ function Component({
                             </div>
                         ),
                         Cell: ({ row }) => (
-                            <div>
+                            <div >
                                 <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
                             </div>
                         ),
@@ -246,7 +246,7 @@ function Component({
                             ].filter(x => x !== "")
 
                             return (
-                                <tr {...row.getRowProps()} >
+                                <tr {...row.getRowProps()} className={ row.isSelected ? 'SelectedRow' : ''  } >
 
                                     {row.cells.map(cell => {
                                         return (
