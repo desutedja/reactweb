@@ -4,18 +4,27 @@ import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
 import { getSOS } from './slice';
-import { AreaChart, XAxis, YAxis, CartesianGrid, Area, Tooltip, PieChart, Pie } from 'recharts';
-import { dateFormatter, get } from '../../utils';
-import { endpointTask } from '../../settings';
+import { AreaChart, XAxis, YAxis, CartesianGrid, Area, Tooltip, PieChart, Pie, BarChart, Legend, Bar } from 'recharts';
+import { dateFormatter, get, toMoney } from '../../utils';
+import { endpointTask, endpointAdmin, endpointAds, endpointBilling, endpointManagement } from '../../settings';
 
 import './style.css';
 
 const formatValue = (value) => value.toFixed(0);
+const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
 
 function Component() {
+    // task
     const [range, setRange] = useState('daily');
     const [pieData, setPieData] = useState([]);
-    const [data, setData] = useState({});
+    const [taskData, setTaskData] = useState({});
+
+    // ads
+    const [adsData, setAdsData] = useState([]);
+
+    // billing
+    const [billingData, setBillingData] = useState({});
+    const [staffData, setStaffData] = useState({});
 
     const headers = useSelector(state => state.auth.headers);
     const { loading, sosData } = useSelector(state => state.dashboard);
@@ -31,7 +40,25 @@ function Component() {
     useEffect(() => {
         get(endpointTask + '/admin/sa/statistics', headers, res => {
             setPieData(res.data.data.ticket_by_category);
-            setData(res.data.data);
+            setTaskData(res.data.data);
+        })
+    }, []);
+
+    useEffect(() => {
+        get(endpointAds + '/management/ads/report/overview', headers, res => {
+            setAdsData(res.data.data);
+        })
+    }, []);
+
+    useEffect(() => {
+        get(endpointBilling + '/management/billing/statistic', headers, res => {
+            setBillingData(res.data.data);
+        })
+    }, []);
+
+    useEffect(() => {
+        get(endpointManagement + '/admin/staff/statistics', headers, res => {
+            setStaffData(res.data.data);
         })
     }, []);
 
@@ -109,7 +136,7 @@ function Component() {
                                 flex: 1,
                             }}>
                                 Total Task
-                                <AnimatedNumber className="BigNumber" value={data.total_task}
+                                <AnimatedNumber className="BigNumber" value={taskData.total_task}
                                     formatValue={formatValue}
                                 />
                             </div>
@@ -117,7 +144,7 @@ function Component() {
                                 flex: 1
                             }}>
                                 Unresolved Task
-                                <AnimatedNumber className="BigNumber" value={data.total_unresolved_task}
+                                <AnimatedNumber className="BigNumber" value={taskData.total_unresolved_task}
                                     formatValue={formatValue}
                                 />
                             </div>
@@ -125,8 +152,174 @@ function Component() {
                                 flex: 1
                             }}>
                                 Resolved Task
-                                <AnimatedNumber className="BigNumber" value={data.total_resolved_task}
+                                <AnimatedNumber className="BigNumber" value={taskData.total_resolved_task}
                                     formatValue={formatValue}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </Route>
+                <Route path={`${path}/advertisement`}>
+                    <div className="Container">
+                        <BarChart width={1000} height={600} data={adsData}
+                            layout='vertical'
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis type='number' />
+                            <YAxis type='category' dataKey="content_name" />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="total_click" fill="#8884d8" />
+                            <Bar dataKey="total_view" fill="#82ca9d" />
+                        </BarChart>
+                    </div>
+                </Route>
+                <Route path={`${path}/billing`}>
+                <div className="Container" style={{
+                            // flexDirection: 'column'
+                        }}>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Resident
+                                <AnimatedNumber className="BigNumber" value={staffData.num_of_building}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Technician
+                                <AnimatedNumber className="BigNumber" value={staffData.num_of_unit}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Security
+                                <AnimatedNumber className="BigNumber" value={staffData.num_of_unit
+                                    / staffData.num_of_building}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Merchant
+                                <AnimatedNumber className="BigNumber" value={staffData.num_of_unit
+                                    / staffData.num_of_building}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Courier
+                                <AnimatedNumber className="BigNumber" value={staffData.num_of_unit
+                                    / staffData.num_of_building}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Building Manager
+                                <AnimatedNumber className="BigNumber" value={staffData.num_of_unit
+                                    / staffData.num_of_building}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                General Manager
+                                <AnimatedNumber className="BigNumber" value={staffData.num_of_unit
+                                    / staffData.num_of_building}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                        </div>
+                    <div className="Row">
+                        <div className="Container" style={{
+                            // flexDirection: 'column'
+                        }}>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Total Building
+                                <AnimatedNumber className="BigNumber" value={staffData.num_of_building}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Total Unit
+                                <AnimatedNumber className="BigNumber" value={staffData.num_of_unit}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Average Unit
+                                <AnimatedNumber className="BigNumber" value={staffData.num_of_unit
+                                    / staffData.num_of_building}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                        </div>
+                        <div className="Container" style={{
+                            marginLeft: 16,
+                            flexDirection: 'column',
+                        }}>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Paid Amount
+                                <AnimatedNumber className="BigNumber" value={billingData.total_paid_amount}
+                                    formatValue={formatValuetoMoney}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Unpaid Amount
+                                <AnimatedNumber className="BigNumber" value={billingData.total_unpaid_amount}
+                                    formatValue={formatValuetoMoney}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Settled Amount
+                                <AnimatedNumber className="BigNumber" value={billingData.total_settle_amount}
+                                    formatValue={formatValuetoMoney}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1,
+                            }}>
+                                Unsettled Amount
+                                <AnimatedNumber className="BigNumber" value={billingData.total_unsettled_amount}
+                                    formatValue={formatValuetoMoney}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1
+                            }}>
+                                Disbursed Amount
+                                <AnimatedNumber className="BigNumber" value={billingData.total_disburse_amount}
+                                    formatValue={formatValuetoMoney}
+                                />
+                            </div>
+                            <div style={{
+                                flex: 1
+                            }}>
+                                Undisbursed Amount
+                                <AnimatedNumber className="BigNumber" value={billingData.total_undisburse_amount}
+                                    formatValue={formatValuetoMoney}
                                 />
                             </div>
                         </div>
