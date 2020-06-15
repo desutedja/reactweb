@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import Button from './Button';
 import SectionSeparator from './SectionSeparator';
 import Loading from './Loading';
+import { Form } from 'reactstrap';
 
 function Component({ children, onSubmit, loading, showSubmit = true }) {
 
@@ -11,7 +12,7 @@ function Component({ children, onSubmit, loading, showSubmit = true }) {
         <>
         <SectionSeparator /> 
         <div className="Container">
-            <form ref={formRef} className="Form" onSubmit={async e => {
+            <Form innerRef={formRef} className="Form" onSubmit={async e => {
                 e.preventDefault();
 
                 const formData = new FormData(formRef.current);
@@ -46,7 +47,7 @@ function Component({ children, onSubmit, loading, showSubmit = true }) {
                         }} />
                     </Loading>
                 </div>}
-            </form>
+            </Form>
         </div>
         </>
     )

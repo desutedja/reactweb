@@ -1,8 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiPlus } from 'react-icons/fi';
+import { FiPlus, FiTrash } from 'react-icons/fi';
 import parse from 'html-react-parser';
+import { Button as RButton } from 'reactstrap';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
@@ -99,7 +100,7 @@ function Component() {
                             url.split('/').slice(0, -1).join('/') + "/edit"
                         )} />
                     </div>
-                    <Button disabled={selected.published}
+                    <Button disabled={!!selected.published}
                         label={selected.published ? "Published" : "Publish"} onClick={() => { }} />
                 </div>
             </div>
@@ -154,11 +155,21 @@ function Component() {
                             onClick={() => setAddSchedule(true)}
                         />
                     ]}
-                    onClickDelete={row => dispatch(deleteAdsSchedule(row, headers))}
-                    deleteSelection={(selectedRows, rows) => {
-                        Object.keys(selectedRows).map(el => dispatch(deleteAdsSchedule(
-                            rows[el].original, headers)));
+                    renderActions={(selectedRowIds, page) => {
+                        // console.log(selectedRowIds, page);
+                        return ([
+                            <Button color="danger"
+                            disabled={Object.keys(selectedRowIds).length === 0}
+                            onClick={() => {
+                                Object.keys(selectedRowIds).map(el => dispatch(deleteAdsSchedule(
+                                    page[el].original, headers)));
+                            }}
+                            icon={<FiTrash />}
+                            label="Delete"
+                        />,
+                        ])
                     }}
+                    onClickDelete={row => dispatch(deleteAdsSchedule(row, headers))}
                 />}
             </div>
         </div>

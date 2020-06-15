@@ -15,7 +15,7 @@ export function get(
         .catch(err => {
             console.log(err);
 
-            if (err.response.status === 401) {
+            if (err.response && err.response.status === 401) {
                 history.push('/login');
                 window.location.reload();
             }
@@ -43,7 +43,7 @@ export function post(
         .catch(err => {
             console.log(err);
             
-            if (err.response.status === 401) {
+            if (err.response && err.response.status === 401) {
                 history.push('/login');
                 window.location.reload();
             }
@@ -71,7 +71,7 @@ export function put(
         .catch(err => {
             console.log(err);
             
-            if (err.response.status === 401) {
+            if (err.response && err.response.status === 401) {
                 history.push('/login');
                 window.location.reload();
             }
@@ -99,7 +99,7 @@ export function patch(
         .catch(err => {
             console.log(err);
             
-            if (err.response.status === 401) {
+            if (err.response && err.response.status === 401) {
                 history.push('/login');
                 window.location.reload();
             }
@@ -127,7 +127,7 @@ export function del(
         .catch(err => {
             console.log(err);
             
-            if (err.response.status === 401) {
+            if (err.response && err.response.status === 401) {
                 history.push('/login');
                 window.location.reload();
             }

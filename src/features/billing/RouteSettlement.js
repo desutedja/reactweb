@@ -1,14 +1,15 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch, FiCheck, FiFile } from 'react-icons/fi';
+import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import { getBillingUnitDetails, getBillingSettlement } from './slice';
-import { endpointAdmin } from '../../settings';
+import { endpointAdmin, endpointBilling } from '../../settings';
 import { get, toMoney } from '../../utils';
 
 const columns = [
@@ -22,6 +23,8 @@ const columns = [
     { Header: 'Settlement', accessor: row => row.payment_settled_date ? row.payment_settled_date : '-' },
     { Header: 'Disbursement', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
 ]
+
+const formatValue = (value) => toMoney(value.toFixed(0));
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
@@ -42,6 +45,8 @@ function Component() {
 
     const [year, setYear] = useState('');
     const [yearSet, setYearSet] = useState('');
+
+    const [info, setInfo] = useState({});
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -76,11 +81,55 @@ function Component() {
             })
     }, [headers, search, building]);
 
+    useEffect(() => {
+        get(endpointBilling + '/management/billing/settlement/info', headers, res => {
+            setInfo(res.data.data);
+        })
+    }, []);
+
     return (
         <div>
             <Switch>
                 {/* <Redirect exact from={path} to={`${path}`} /> */}
                 <Route path={`${path}`}>
+                    <div className="Container">
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            flex: 1,
+                        }}>
+                            <div>
+                                Settled Amount
+                            <AnimatedNumber className="BigNumber" value={info.settled_amount}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div>
+                                Unsettled Amount
+                            <AnimatedNumber className="BigNumber" value={info.unsettled_amount}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                        </div>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            flex: 1,
+                        }}>
+                            <div>
+                                Disbursed Amount
+                            <AnimatedNumber className="BigNumber" value={info.disbured_amount}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                            <div>
+                                Undisbursed Amount
+                            <AnimatedNumber className="BigNumber" value={info.undisbursed_amount}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                        </div>
+                    </div>
                     <Table totalItems={settlement.total_items}
                         columns={columns}
                         data={settlement.items}
@@ -125,9 +174,22 @@ function Component() {
                             },
                         ]}
                         actions={[]}
-                        // onClickDetails={row => {
-                        //     dispatch(getBillingUnitDetails(row, headers, history, url))
-                        // }}
+                        renderActions={(selectedRowIds, page) => {
+                            // console.log(selectedRowIds, page);
+                            return ([
+                                <Button
+                                    disabled={Object.keys(selectedRowIds).length === 0}
+                                    onClick={() => { }}
+                                    icon={<FiCheck />}
+                                    label="Settle"
+                                />,
+                                <Button
+                                    onClick={() => { }}
+                                    icon={<FiFile />}
+                                    label="Settle From File"
+                                />,
+                            ])
+                        }}
                     />
                 </Route>
             </Switch>
