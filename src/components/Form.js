@@ -25,7 +25,7 @@ function Component({ children, onSubmit, loading, showSubmit = true }) {
                         entry[1].includes('[') ? JSON.parse(entry[1]) :
                         entry[1].includes('/') ? entry[1] :
                         entry[1].includes('.') ? (parseFloat(entry[1])) :
-                        // entry[1].includes('-') ? (entry[1] + ' 00:00:00') :
+                        entry[1].includes('-') ? entry[1] :
                         entry[1].includes(':/') ? entry[1] :
                         entry[1].includes(':') ? (entry[1] + ':00') :
                             isNaN(parseFloat(entry[1])) || parseFloat(entry[1]) > 999999 ?
