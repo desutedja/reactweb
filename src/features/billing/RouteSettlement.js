@@ -56,6 +56,12 @@ function Component() {
     let history = useHistory();
     let { path, url } = useRouteMatch();
 
+    const getSum = items => {
+        return items.reduce((sum, el) => {
+            return sum + el.selling_price
+        }, 0)
+    }
+
     useEffect(() => {
         (!search || search.length >= 3) && get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
@@ -93,8 +99,8 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={settleModal} onRequestClose={() => setSettleModal(false)}>
-                <h4>Settlement Selection</h4>
+            <Modal isOpen={settleModal} toggle={() => setSettleModal(!settleModal)}
+                title="Settlement Selection">
                 <div style={{
                     display: 'flex',
                     marginBottom: 16,
@@ -102,25 +108,33 @@ function Component() {
                     <Input compact label="Search" icon={<FiSearch />} />
                     <Button label="Add" />
                 </div>
-                {selected.map(el => <div key={el.id} style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                    padding: 8,
-                    marginBottom: 4,
-                    border: '1px solid silver',
-                    borderRadius: 4,
+                <div style={{
+                    minHeight: 300,
                 }}>
-                    <div>
-                        <div>Trx Code</div>
-                        {el.trx_code}
-                    </div>
-                    <div>
-                        {toMoney(el.selling_price)}
-                    </div>
-                </div>)}
-                <div>
-                    {el.}
+                    {selected.map(el => <div key={el.id} style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        padding: 8,
+                        marginBottom: 4,
+                        border: '1px solid silver',
+                        borderRadius: 4,
+                    }}>
+                        <div>
+                            <div>Trx Code</div>
+                            {el.trx_code}
+                        </div>
+                        <div style={{
+                            fontWeight: 'bold'
+                        }}>
+                            {toMoney(el.selling_price)}
+                        </div>
+                    </div>)}
+                </div>
+                <div style={{
+                    marginTop: 16,
+                }}>
+                    <h5>Total {toMoney(getSum(selected))}</h5>
                 </div>
             </Modal>
             <Switch>

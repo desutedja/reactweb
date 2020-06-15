@@ -1,37 +1,25 @@
 import React from 'react';
-import ReactModal from 'react-modal';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+// import ReactModal from 'react-modal';
 
-ReactModal.setAppElement('#root');
+// ReactModal.setAppElement('#root');
 
-function Component({ isOpen, onRequestClose, children }) {
+function Component({ isOpen, toggle, title, onClick, children }) {
     return (
         <div>
-            <ReactModal
-                shouldCloseOnOverlayClick
-                onRequestClose={onRequestClose}
+            <Modal
                 isOpen={isOpen}
-                style={{
-                    content: {
-                        maxWidth: '70%',
-                        maxHeight: '60vh',
-                        position: 'unset',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        borderRadius: 8,
-                        padding: 16,
-                    },
-                    overlay: {
-                        zIndex: 99,
-                        backgroundColor: 'rgba(0,0,0,0.5)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                    }
-                }}
+                toggle={toggle}
             >
-                {children}
-            </ReactModal>
+                <ModalHeader><h3>{title}</h3></ModalHeader>
+                <ModalBody>
+                    {children}
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="primary" onClick={onClick}>Do Something</Button>{' '}
+                    <Button color="secondary" onClick={toggle}>Cancel</Button>
+                </ModalFooter>
+            </Modal>
         </div>
     )
 }
