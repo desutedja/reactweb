@@ -10,7 +10,7 @@ import Add from './Add';
 import Details from './Details';
 import { getProduct, getProductDetails } from './slice';
 import { endpointMerchant } from '../../settings';
-import { get, toSentenceCase } from '../../utils';
+import { get, toSentenceCase, toMoney } from '../../utils';
 import { FiSearch } from 'react-icons/fi';
 
 const columns = [
@@ -18,11 +18,11 @@ const columns = [
     { Header: 'Name', accessor: 'name' },
     { Header: 'Merchant Name', accessor: 'merchant_name' },
     { Header: 'Type', accessor: row => toSentenceCase(row.item_type) },
-    { Header: 'Base Price', accessor: 'base_price' },
+    { Header: 'Base Price', accessor: row => toMoney(row.base_price) },
     { Header: 'Admin Fee', accessor: row => row.admin_fee + '%' },
     { Header: 'Discount Fee', accessor: row => row.discount_fee + '%' },
     { Header: 'PG Fee', accessor: row => row.pg_fee + '%' },
-    { Header: 'Selling Price', accessor: 'selling_price' },
+    { Header: 'Selling Price', accessor: row => toMoney(row.selling_price) },
 ]
 
 function Component() {

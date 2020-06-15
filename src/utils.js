@@ -193,5 +193,5 @@ export function toSentenceCase(sentence) {
 }
 
 export function toMoney(money) {
-    return "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+    return money === null || money === undefined ? "-" : "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
 }
