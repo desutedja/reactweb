@@ -86,6 +86,9 @@ export const slice = createSlice({
     setSelectedUnit: (state, action) => {
       state.unit.selected = action.payload;
     },
+    setUnitPaid: (state) => {
+      state.unit.selected.payment = 'paid';
+    },
   },
 });
 
@@ -99,7 +102,8 @@ export const {
   setUnit,
   setSettlement,
   setDisbursement,
-  setSelectedUnit
+  setSelectedUnit,
+  setUnitPaid,
 } = slice.actions;
 
 export default slice.reducer;
@@ -135,6 +139,23 @@ export const getBillingSettlement = (
     headers,
     res => {
       dispatch(setSettlement(res.data.data));
+
+      dispatch(stopAsync());
+    })
+}
+
+export const getBillingDisbursement = (
+  headers, pageIndex, pageSize, search = '', building, unit,
+) => dispatch => {
+  dispatch(startAsync());
+
+  get(billingEndpoint + '/disbursement/list/management' +
+    '?page=' + (pageIndex + 1) +
+    '&limit=' + pageSize +
+    '&search=' + search,
+    headers,
+    res => {
+      dispatch(setDisbursement(res.data.data));
 
       dispatch(stopAsync());
     })
@@ -219,4 +240,13 @@ export const deleteBillingUnitItem = (id, headers) => dispatch => {
       dispatch(refresh());
       dispatch(stopAsync())
     })
+}
+
+export const payByCash = (headers, data) => dispatch => {
+  dispatch(startAsync());
+
+  post(billingEndpoint + '/cash', data, headers, res => {
+    dispatch(setUnitPaid());
+    dispatch(stopAsync());
+  })
 }

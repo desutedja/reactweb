@@ -11,6 +11,7 @@ import Add from './Add';
 import Details from './Details';
 import DetailsItem from './DetailsItem';
 import RouteSettlement from './RouteSettlement';
+import RouteDisbursement from './RouteDisbursement';
 import { getBillingUnit, getBillingUnitDetails } from './slice';
 import { endpointAdmin } from '../../settings';
 import { get, months, dateTimeFormatter, dateFormatter, toSentenceCase } from '../../utils';
@@ -127,95 +128,6 @@ function Component() {
                                         />
                                     </>
                             },
-                            // {
-                            //     button: <Button key="Select Unit"
-                            //         label={unit ? unitName : "Select Unit"}
-                            //         selected={unit}
-                            //     />,
-                            //     component: (toggleModal) =>
-                            //         !building ?
-                            //             <p>Please select building first.</p>
-                            //             :
-                            //             <>
-                            //                 <Input
-                            //                     label="Search"
-                            //                     compact
-                            //                     icon={<FiSearch />}
-                            //                     inputValue={search}
-                            //                     setInputValue={setSearch}
-                            //                 />
-                            //                 <Filter
-                            //                     data={units}
-                            //                     onClick={(el) => {
-                            //                         setUnit(el.value);
-                            //                         setUnitName(el.label);
-                            //                         toggleModal(false);
-                            //                         setSearch("");
-                            //                     }}
-                            //                     onClickAll={() => {
-                            //                         setUnit("");
-                            //                         setUnitName("");
-                            //                         toggleModal(false);
-                            //                         setSearch("");
-                            //                     }}
-                            //                 />
-                            //             </>
-                            // },
-                            // {
-                            //     button: <Button key="Select Month"
-                            //         label={month ? monthName : "Select Month"}
-                            //         selected={month}
-                            //     />,
-                            //     component: (toggleModal) =>
-                            //         <>
-                            //             <Input
-                            //                 label="Search"
-                            //                 compact
-                            //                 icon={<FiSearch />}
-                            //                 inputValue={search}
-                            //                 setInputValue={setSearch}
-                            //             />
-                            //             <Filter
-                            //                 data={months}
-                            //                 onClick={(el) => {
-                            //                     setMonth(el.value);
-                            //                     setMonthName(el.label);
-                            //                     toggleModal(false);
-                            //                     setSearch("");
-                            //                 }}
-                            //                 onClickAll={() => {
-                            //                     setMonth("");
-                            //                     setMonthName("");
-                            //                     toggleModal(false);
-                            //                     setSearch("");
-                            //                 }}
-                            //             />
-                            //         </>
-                            // },
-                            // {
-                            //     button: <Button key="Select Year"
-                            //         label={yearSet ? yearSet : "Select Year"}
-                            //         selected={yearSet}
-                            //     />,
-                            //     component: (toggleModal) =>
-                            //         <form style={{
-                            //             display: 'flex',
-                            //             flexDirection: 'column',
-                            //             alignItems: 'center',
-                            //         }} onSubmit={() => {
-                            //             setYearSet(year);
-                            //             toggleModal(false);
-                            //         }}>
-                            //             <Input
-                            //                 label="Year"
-                            //                 type="number"
-                            //                 max={new Date().getFullYear()}
-                            //                 inputValue={year}
-                            //                 setInputValue={setYear}
-                            //             />
-                            //             <Button label="Set" />
-                            //         </form>
-                            // },
                         ]}
                         actions={[]}
                         onClickDetails={row => {
@@ -240,6 +152,9 @@ function Component() {
                 </Route>
                 <Route path={`${path}/settlement`}>
                     <RouteSettlement />
+                </Route>
+                <Route path={`${path}/disbursement`}>
+                    <RouteDisbursement />
                 </Route>
             </Switch>
         </div>

@@ -8,6 +8,7 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
+import Modal from '../../components/Modal';
 import { getBillingUnitDetails, getBillingSettlement } from './slice';
 import { endpointAdmin, endpointBilling } from '../../settings';
 import { get, toMoney } from '../../utils';
@@ -47,6 +48,9 @@ function Component() {
     const [yearSet, setYearSet] = useState('');
 
     const [info, setInfo] = useState({});
+
+    const [settleModal, setSettleModal] = useState(true);
+    const [selected, setSelected] = useState([]);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -89,6 +93,18 @@ function Component() {
 
     return (
         <div>
+            <Modal isOpen={settleModal} onRequestClose={() => setSettleModal(false)}>
+                <h4>Settlement Selection</h4>
+                <div style={{
+                    display: 'flex',
+                }}>
+                    <Input compact label="Search" icon={<FiSearch />} />
+                    <Button label="Add" />
+                </div>
+                {selected.map(el => <div key={el.id}>
+                    {el.id}
+                </div>)}
+            </Modal>
             <Switch>
                 {/* <Redirect exact from={path} to={`${path}`} /> */}
                 <Route path={`${path}`}>
@@ -118,7 +134,7 @@ function Component() {
                         }}>
                             <div>
                                 Disbursed Amount
-                            <AnimatedNumber className="BigNumber" value={info.disbured_amount}
+                            <AnimatedNumber className="BigNumber" value={info.disbursed_amount}
                                     formatValue={formatValue}
                                 />
                             </div>
@@ -131,6 +147,9 @@ function Component() {
                         </div>
                     </div>
                     <Table totalItems={settlement.total_items}
+                        onSelection={(selectedRows) => {
+                            setSelected(selectedRows);
+                        }}
                         columns={columns}
                         data={settlement.items}
                         loading={loading}
@@ -179,7 +198,9 @@ function Component() {
                             return ([
                                 <Button
                                     disabled={Object.keys(selectedRowIds).length === 0}
-                                    onClick={() => { }}
+                                    onClick={() => {
+                                        setSettleModal(true);
+                                    }}
                                     icon={<FiCheck />}
                                     label="Settle"
                                 />,

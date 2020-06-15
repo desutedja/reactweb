@@ -32,7 +32,8 @@ function Component({
     onClickDetails,
     onClickEdit,
     renderActions,
-    deleteSelection
+    deleteSelection,
+    onSelection,
 }) {
     const {
         getTableProps,
@@ -106,8 +107,13 @@ function Component({
     }, [search])
 
     useEffect(() => {
-        console.log(selectedRowIds);
-    }, [selectedRowIds]);
+        const selectedRows = selectedRowIds ?
+         Object.keys(selectedRowIds).map(el => page[el].original) : [];
+
+        console.log(selectedRows);
+        onSelection && onSelection(selectedRows);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, selectedRowIds]);
 
     return (
         <div className="Table">

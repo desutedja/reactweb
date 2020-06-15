@@ -4,6 +4,7 @@ import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { payByCash } from './slice';
 
 const exception = [
     'created_on', 'modified_on', 'deleted', 'additional_charges',
@@ -40,7 +41,15 @@ function Component() {
                             url.split('/').slice(0, -1).join('/') + "/edit"
                         )} />
                         <Button label="Add Charge" onClick={() => { }} />
-                        <Button label="Set Paid" onClick={() => { }} />
+                        {unit.selected.payment === "unpaid" && <Button label="Set Paid" onClick={() => {
+                            dispatch(payByCash(headers, {
+                                "id": unit.selected.id,
+                                "total": unit.selected.total,
+                                "penalty_amount": unit.selected.penalty_amount,
+                                "total_payment": unit.selected.total_payment,
+                                "additional_charge_amount": unit.selected.additional_charge_amount,
+                            }));
+                        }} />}
                     </div>
                 </div>
             </div>
