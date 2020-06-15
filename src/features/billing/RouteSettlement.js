@@ -22,7 +22,7 @@ const columns = [
     { Header: 'Resident', accessor: 'resident_name' },
     { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
     { Header: 'Settlement', accessor: row => row.payment_settled_date ? row.payment_settled_date : '-' },
-    { Header: 'Disbursement', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
+    // { Header: 'Disbursement', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
 ]
 
 const formatValue = (value) => toMoney(value.toFixed(0));
@@ -97,13 +97,31 @@ function Component() {
                 <h4>Settlement Selection</h4>
                 <div style={{
                     display: 'flex',
+                    marginBottom: 16,
                 }}>
                     <Input compact label="Search" icon={<FiSearch />} />
                     <Button label="Add" />
                 </div>
-                {selected.map(el => <div key={el.id}>
-                    {el.id}
+                {selected.map(el => <div key={el.id} style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                    padding: 8,
+                    marginBottom: 4,
+                    border: '1px solid silver',
+                    borderRadius: 4,
+                }}>
+                    <div>
+                        <div>Trx Code</div>
+                        {el.trx_code}
+                    </div>
+                    <div>
+                        {toMoney(el.selling_price)}
+                    </div>
                 </div>)}
+                <div>
+                    {el.}
+                </div>
             </Modal>
             <Switch>
                 {/* <Redirect exact from={path} to={`${path}`} /> */}
