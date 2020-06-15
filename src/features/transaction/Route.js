@@ -6,7 +6,7 @@ import Table from '../../components/Table';
 import Add from './Add';
 import Details from './Details';
 import { getTransaction, getTransactionDetails, setSelected } from './slice';
-import { toSentenceCase } from '../../utils';
+import { toMoney, toSentenceCase } from '../../utils';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -22,11 +22,11 @@ const columns = [
     // { Header: 'Sales Fee', accessor: 'profit_from_sales' },
     // { Header: 'PG Fee', accessor: 'profit_from_pg' },
     // { Header: 'Delivery Fee', accessor: 'profit_from_delivery' },
-    { Header: 'Total Price', accessor: 'total_price' },
-    { Header: 'Payment Date', accessor: row => row.payment_date ? row.payment_date : '-' },
-    { Header: 'Settlement Date', accessor: row => row.payment_settled_date ? row.payment_settled_date : '-' },
-    { Header: 'Merchant Disbursement Date', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
-    { Header: 'Courier Disbursement Date', accessor: row => row.courier_disbursement_date ? row.courier_disbursement_date : '-' },
+    { Header: 'Total Price', accessor: row => toMoney(row.total_price) },
+    { Header: 'Payment Date', accessor: row => row.payment_date ? row.payment_date : 'Unpaid' },
+    //{ Header: 'Settlement Date', accessor: row => row.payment_settled_date ? row.payment_settled_date : '-' },
+    //{ Header: 'Merchant Disbursement Date', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
+    //{ Header: 'Courier Disbursement Date', accessor: row => row.courier_disbursement_date ? row.courier_disbursement_date : '-' },
 ]
 
 function Component() {
