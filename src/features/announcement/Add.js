@@ -133,16 +133,6 @@ function Component() {
                                     setModalBuilding(false);
                                 }}
                             />,
-                            <Button key="Select All" label="Select All" icon={<RiCheckDoubleLine />}
-                                onClick={() => {
-                                    let selectedBuildings =
-                                        page.map(el => el.original);
-
-                                    console.log(selectedBuildings);
-                                    setBuildingsSelected(selectedBuildings);
-                                    setModalBuilding(false);
-                                }}
-                            />,
                         ])
                     }}
                 />

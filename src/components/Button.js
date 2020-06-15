@@ -1,16 +1,26 @@
 import React from 'react';
+import { Button } from 'reactstrap';
 
-function Component({ icon, label, onClick, selected, secondary, disabled }) {
+function Component({ icon, label, onClick, selected, color, disabled }) {
     return (
-        <button
-            className={(selected ? "Button selected" : "Button") + (secondary ? " Secondary" : "")
-                + (disabled ? " inactive" : "")
-            }
+        <Button
+            color={disabled ? 'secondary' : color ? color : "primary"}
+            disabled={disabled}
             onClick={onClick}
+            style={{
+                marginRight: 4,
+                marginLeft: 4,
+            }}
+            type="submit"
         >
-            {icon}
-            <p className="Button-label">{label}</p>
-        </button>
+            {icon && <span style={{
+                marginRight: 8,
+                marginBottom: 2,
+            }}>
+                {icon}
+            </span>}
+            {label}
+        </Button>
     )
 }
 
