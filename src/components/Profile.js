@@ -18,7 +18,7 @@ function GroupedItems({tabs, type, data}) {
           <Nav tabs>
          {
              Object.keys(tabs).map((el, i) => 
-             <NavItem key={i}>
+             <NavItem key={i} style={{ cursor: 'default' }}>
                  <NavLink className={classnames({active: activeTab === i})} 
                  onClick={() => toggle(i)} >{toSentenceCase(el)}</NavLink>
              </NavItem>
