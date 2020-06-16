@@ -292,7 +292,7 @@ function Component() {
                     </div>
                 </form>
             </Modal>
-            <Modal isOpen={addSection} onRequestClose={() => setAddSection(false)} title={edit ? "Edit Section" : "Add Section"}
+            <Modal isOpen={addSection} toggle={() => setAddSection(false)} title={edit ? "Edit Section" : "Add Section"}
                 okLabel={edit ? "Save" : "Add"}
                     onClick={() => {
                     edit ?
