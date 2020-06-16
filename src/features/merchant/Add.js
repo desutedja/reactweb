@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Profiler } from "react";
+import React, { useState, useEffect } from "react";
 
 import Input from "../../components/Input";
 import Form from "../../components/Form";
@@ -7,11 +7,12 @@ import Button from "../../components/Button";
 import SectionSeparator from "../../components/SectionSeparator";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { post, get } from "../../utils";
+import { get } from "../../utils";
 import {
   endpointResident,
   endpointAdmin,
   endpointMerchant,
+  banks,
 } from "../../settings";
 import { createMerchant, editMerchant } from "./slice";
 import GoogleMapReact from "google-map-react";
@@ -173,7 +174,7 @@ function Component() {
           name="type"
           type="select"
           options={[
-            { value: "service", label: "Service" },
+            { value: "services", label: "Services" },
             { value: "goods", label: "Goods" },
           ]}
           inputValue={selected.type}
@@ -225,6 +226,7 @@ function Component() {
         <SectionSeparator />
         <Input label="Name" name="pic_name" inputValue={selected.pic_name} />
         <Input label="Phone" name="pic_phone" inputValue={selected.pic_phone} />
+        <Input label="Email" name="pic_mail" inputValue={selected.pic_mail} />
         <Input label="Open Time" name="open_at" type="time"
           inputValue={selected.open_at} />
         <Input label="Close Time" name="closed_at" type="time"
@@ -251,7 +253,7 @@ function Component() {
         <SectionSeparator />
         <Input label="Account No" name="account_no" inputValue={selected.account_no} />
         <Input label="Account Name" name="account_name" inputValue={selected.account_name} />
-        <Input label="Account Bank" name="account_bank" inputValue={selected.account_bank} />
+        <Input label="Account Bank" name="account_bank"  type="select" options={banks} inputValue={selected.account_bank} />
         <SectionSeparator />
       </Form>
     </div>

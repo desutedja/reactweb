@@ -22,7 +22,7 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     useEffect(() => {
         let i = 0;
@@ -82,7 +82,8 @@ function Component() {
 
                 <Input label="Title" name="content_name" type="textarea"
                     inputValue={selected.content_name} />
-                <Editor label="Description" />
+                <Editor label="Content" name="content_description"
+                    inputValue={selected.content_description} />
             </Form>
         </div>
     )

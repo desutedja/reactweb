@@ -8,7 +8,7 @@ import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { editStaff, createStaff } from './slice';
-import { endpointResident, endpointAdmin } from '../../settings';
+import { endpointResident, endpointAdmin, banks } from '../../settings';
 import { get } from '../../utils';
 
 function Component() {
@@ -176,7 +176,7 @@ function Component() {
                 />
                 <SectionSeparator />
 
-                <Input label="Account Bank" inputValue={selected.account_bank} />
+                <Input label="Account Bank" type="select" options={banks} inputValue={selected.account_bank} />
                 <Input label="Account Number" inputValue={selected.account_no} />
                 <Input label="Account Name"
                     inputValue={selected.account_name} />

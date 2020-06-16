@@ -1,7 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiPlus } from 'react-icons/fi';
+import { FiPlus, FiTrash } from 'react-icons/fi';
+import parse from 'html-react-parser';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
@@ -9,7 +10,7 @@ import Table from '../../components/Table';
 import Modal from '../../components/Modal';
 import Form from '../../components/Form';
 import Input from '../../components/Input';
-import { getAdsSchedule, editAdsSchedule, createAdsSchedule } from './slice';
+import { getAdsSchedule, deleteAdsSchedule, createAdsSchedule } from './slice';
 
 const exception = [
     'created_on', 'modified_on', 'deleted',
@@ -47,7 +48,7 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     const fetchData = useCallback((pageIndex, pageSize, search) => {
         tab === 1 && dispatch(getAdsSchedule(headers, pageIndex, pageSize, search, selected));
@@ -88,7 +89,7 @@ function Component() {
                     <div style={{
                         display: 'flex'
                     }}>
-                        <Button label="Create New" onClick={() => {
+                        <Button label="Duplicate" onClick={() => {
                             history.push(
                                 url.split('/').slice(0, -1).join('/') + "/add"
                             );
@@ -98,7 +99,7 @@ function Component() {
                             url.split('/').slice(0, -1).join('/') + "/edit"
                         )} />
                     </div>
-                    <Button disabled={selected.published}
+                    <Button disabled={!!selected.published}
                         label={selected.published ? "Published" : "Publish"} onClick={() => { }} />
                 </div>
             </div>
@@ -117,7 +118,6 @@ function Component() {
                         </div>)}
                 </div>
                 {tab === 0 && <div>
-                    <Button label="Edit" onClick={() => { }} />
                     <div style={{
                         display: 'flex',
                         marginTop: 16,
@@ -138,7 +138,7 @@ function Component() {
                             <p style={{ fontWeight: 'bold', fontSize: '1.2rem', marginBottom: 8 }}>
                                 {selected.content_name ? selected.content_name : "(No Title)"}
                             </p>
-                            <p>{selected.content_description ? selected.content_description : "(No content)"}</p>
+                            {selected.content_description ? parse(selected.content_description) : "(No content)"}
                         </div>
                     </div>
                 </div>}
@@ -154,6 +154,21 @@ function Component() {
                             onClick={() => setAddSchedule(true)}
                         />
                     ]}
+                    renderActions={(selectedRowIds, page) => {
+                        // console.log(selectedRowIds, page);
+                        return ([
+                            <Button color="danger"
+                            disabled={Object.keys(selectedRowIds).length === 0}
+                            onClick={() => {
+                                Object.keys(selectedRowIds).map(el => dispatch(deleteAdsSchedule(
+                                    page[el].original, headers)));
+                            }}
+                            icon={<FiTrash />}
+                            label="Delete"
+                        />,
+                        ])
+                    }}
+                    onClickDelete={row => dispatch(deleteAdsSchedule(row, headers))}
                 />}
             </div>
         </div>

@@ -1,4 +1,5 @@
 import Axios from "axios";
+import history from './history';
 
 export function get(
     link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
@@ -13,6 +14,12 @@ export function get(
         })
         .catch(err => {
             console.log(err);
+
+            if (err.response && err.response.status === 401) {
+                history.push('/login');
+                window.location.reload();
+            }
+
             alert(err.response?.data.error_message);
 
             ifError(err);
@@ -35,6 +42,12 @@ export function post(
         })
         .catch(err => {
             console.log(err);
+            
+            if (err.response && err.response.status === 401) {
+                history.push('/login');
+                window.location.reload();
+            }
+
             alert(err.response?.data.error_message);
 
             ifError(err);
@@ -57,6 +70,12 @@ export function put(
         })
         .catch(err => {
             console.log(err);
+            
+            if (err.response && err.response.status === 401) {
+                history.push('/login');
+                window.location.reload();
+            }
+
             alert(err.response?.data.error_message);
 
             ifError(err);
@@ -79,6 +98,12 @@ export function patch(
         })
         .catch(err => {
             console.log(err);
+            
+            if (err.response && err.response.status === 401) {
+                history.push('/login');
+                window.location.reload();
+            }
+
             alert(err.response?.data.error_message);
 
             ifError(err);
@@ -101,7 +126,13 @@ export function del(
         })
         .catch(err => {
             console.log(err);
-            alert(err.response.data.error_message);
+            
+            if (err.response && err.response.status === 401) {
+                history.push('/login');
+                window.location.reload();
+            }
+
+            alert(err.response?.data.error_message);
 
             ifError(err);
         })
@@ -111,18 +142,18 @@ export function del(
 }
 
 export const months = [
-    {value: 1, label: 'January'},
-    {value: 2, label: 'February'},
-    {value: 3, label: 'March'},
-    {value: 4, label: 'April'},
-    {value: 5, label: 'May'},
-    {value: 6, label: 'June'},
-    {value: 7, label: 'July'},
-    {value: 8, label: 'August'},
-    {value: 9, label: 'September'},
-    {value: 10, label: 'October'},
-    {value: 11, label: 'November'},
-    {value: 12, label: 'December'},
+    { value: 1, label: 'January' },
+    { value: 2, label: 'February' },
+    { value: 3, label: 'March' },
+    { value: 4, label: 'April' },
+    { value: 5, label: 'May' },
+    { value: 6, label: 'June' },
+    { value: 7, label: 'July' },
+    { value: 8, label: 'August' },
+    { value: 9, label: 'September' },
+    { value: 10, label: 'October' },
+    { value: 11, label: 'November' },
+    { value: 12, label: 'December' },
 ];
 
 export function dateTimeFormatter(serverDateTime) {
@@ -133,7 +164,7 @@ export function dateTimeFormatter(serverDateTime) {
     let month = parseInt(date.split('-')[1], 10);
     let day = date.split('-')[2];
 
-    return day + ' ' + months[month].label + ' ' + year + ', ' + time + ' WIB';
+    return day + ' ' + months[month - 1].label + ' ' + year + ', ' + time + ' WIB';
 }
 
 export function dateFormatter(serverDateTime) {
@@ -145,18 +176,22 @@ export function dateFormatter(serverDateTime) {
 
 
 
-    return day + ' ' + months[month].label + ' ' + year;
+    return day + ' ' + months[month - 1].label + ' ' + year;
 }
 
 export function toSentenceCase(sentence) {
-    let words = sentence.toLowerCase().split(' ');
+    if (sentence.length < 4) {
+        return sentence;
+    }
 
-    return words.map(el => {
+    let words = sentence.toLowerCase().replace(/_/g, ' ').split(' ');
+
+    return words.reduce((result, el) => {
         let newEl = el.slice(0, 1).toUpperCase() + el.slice(1) + ' ';
-        return newEl;
-    })
+        return result + newEl;
+    }, '')
 }
 
 export function toMoney(money) {
-    return "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+    return money === null || money === undefined ? "-" : "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
 }

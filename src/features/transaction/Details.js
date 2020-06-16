@@ -5,7 +5,7 @@ import Button from '../../components/Button';
 import Table from '../../components/Table';
 import { useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { toSentenceCase } from '../../utils';
+import { toMoney, toSentenceCase } from '../../utils';
 
 const exception = [
     'created_on', 'modified_on', 'deleted', 'addons', 'items'
@@ -16,18 +16,18 @@ const columnsProduct = [
     { Header: 'Name', accessor: 'item_name' },
     { Header: 'Type', accessor: row => toSentenceCase(row.item_type) },
     { Header: 'Base Price', accessor: 'base_price' },
-    { Header: 'Admin Fee', accessor: row => row.admin_fee + '%' },
+    { Header: 'Admin Fee', accessor: row => toMoney(row.admin_fee) },
     { Header: 'Discount Code', accessor: 'discount_code' },
     { Header: 'Discount Fee', accessor: row => row.discount_price + '%' },
     { Header: 'PG Fee', accessor: row => row.pg_fee + '%' },
-    { Header: 'Selling Price', accessor: 'selling_price' },
+    { Header: 'Selling Price', accessor: row => toMoney(row.selling_price) },
 ]
 
 function Component() {
     const {selected, loading} = useSelector(state => state.transaction);
 
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     const detailsPayment = Object.keys(selected).filter(el => !exception.includes(el))
         .filter(el => el.includes('payment'));

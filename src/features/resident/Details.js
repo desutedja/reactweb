@@ -1,31 +1,22 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { FiPlus, FiSearch } from 'react-icons/fi';
+import React, { useCallback, useState } from 'react';
+import { FiPlus } from 'react-icons/fi';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { dateFormatter, get, toSentenceCase } from '../../utils';
-
-import LabeledText from '../../components/LabeledText';
+import { get } from '../../utils';
 import Profile from '../../components/Profile';
 
 import Button from '../../components/Button';
 import Table from '../../components/Table';
 import Modal from '../../components/Modal';
-import Filter from '../../components/Filter';
 import Input from '../../components/Input';
-import Form from '../../components/Form';
 import Link from '../../components/Link';
 
 import {
     getResidentUnit,
     getSubaccount,
     addResidentUnit,
-    setSelected
 } from './slice';
 import { endpointAdmin } from '../../settings';
-
-const exception = [
-    'modified_on', 'deleted', 'district', 'city', 'province'
-];
 
 const tabs = [
     'Unit', 'Sub Accounts'
@@ -70,14 +61,7 @@ const unitColumns = [
 
 function Component() {
     const [tab, setTab] = useState(0);
-    const [selectedRow, setRow] = useState({});
-
     const [addUnit, setAddUnit] = useState(false);
-    const [addSub, setAddSub] = useState(false);
-
-    const [edit, setEdit] = useState(false);
-    const [search, setSearch] = useState('');
-
     const [addUnitStep, setAddUnitStep] = useState(1);
 
     const [selectedBuilding, setSelectedBuilding] = useState({});
@@ -97,7 +81,7 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     const headers = useSelector(state => state.auth.headers);
     const fetchData = useCallback((pageIndex, pageSize, search) => {

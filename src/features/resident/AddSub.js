@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiSearch } from 'react-icons/fi';
 
 import Input from '../../components/Input';
 import Select from '../../components/Select';
@@ -15,19 +14,14 @@ import countries from '../../countries';
 
 function Component() {
     const [exist, setExist] = useState(true);
-    const [search, setSearch] = useState('');
     const [modal, setModal] = useState(false);
 
     const [data, setData] = useState({});
     const [status, setStatus] = useState('');
 
     const [email, setEmail] = useState('');
-    const [residents, setResidents] = useState([]);
-    const [searchRes, setSearchRes] = useState('');
 
     const [unitID, setUnitID] = useState('');
-    const [unitName, setUnitName] = useState('');
-    const [units, setUnits] = useState([]);
 
     const [district, setDistrict] = useState("");
     const [districts, setDistricts] = useState([]);
@@ -49,15 +43,6 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
-
-    useEffect(() => {
-        get(endpointResident + '/management/resident/read?limit=20&page=1&search=' + searchRes,
-            headers,
-            res => {
-                setResidents(res.data.data);
-            }
-        )
-    }, [headers, searchRes]);
 
     useEffect(() => {
         get(endpointResident + '/geo/province',
@@ -103,7 +88,7 @@ function Component() {
                 setBCLoading(false);
             }
         )
-    }, [headers, search]);
+    }, [headers]);
 
     // useEffect(() => {
     //     get(endpointResident + '/management/resident/unit?id=' + selected.id +
@@ -132,7 +117,7 @@ function Component() {
                     value: el.unit_id
                 }))} inputValue={unitID} setInputValue={setUnitID} />
                 <div style={{ marginTop: 16 }} />
-                {unitID && status && <Input type="button" label="Add as Subaccount" compact
+                {unitID && <Input type="button" label="Add as Subaccount" compact
                     onClick={() => {
                         dispatch(addSubaccount(headers, {
                             unit_id: parseInt(unitID),
@@ -150,7 +135,7 @@ function Component() {
                     dispatch(createSubaccount(headers, {
                         ...data,
                         birthdate: data.birthdate.replace('T', ' ').replace('Z', ''),
-                        status: status,
+                        status: unit.items.find(el => el.unit_id === unitID).status,
                         account_status: data.status,
                         parent_id: selected.id,
                         unit_id: parseInt(unitID),

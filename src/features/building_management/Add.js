@@ -8,9 +8,8 @@ import Filter from '../../components/Filter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { createBuildingManagement, editBuildingManagement } from './slice';
-import { FiSearch } from 'react-icons/fi';
 import { get } from '../../utils';
-import { endpointAdmin } from '../../settings';
+import { endpointAdmin, banks } from '../../settings';
 
 function Component() {
     const [buildingID, setBuildingID] = useState('');
@@ -120,7 +119,7 @@ function Component() {
                         { label: 'Inactive', value: 'inactive' },
                     ]} />
                 <SectionSeparator />
-                <Input label="Settlement Bank" inputValue={selected.settlement_bank} />
+                <Input label="Settlement Bank"  type="select" options={banks} inputValue={selected.settlement_bank} />
                 <Input label="Settlement Account No" inputValue={selected.settlement_account_no} />
                 <Input label="Settlement Account Name"
                     inputValue={selected.settlement_account_name} />

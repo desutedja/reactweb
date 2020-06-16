@@ -52,9 +52,9 @@ a {
 button {
   font-size: 1rem;
   font-family: "Noto Sans", sans-serif;
-  /* cursor: pointer;
+  /* cursor: pointer; */
   background-color: var(--primary-color);
-  border-radius: 4px; */
+  /* border-radius: 4px; */
   color: white;
   border: none;
   padding: 4px;

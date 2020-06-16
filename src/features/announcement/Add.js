@@ -7,10 +7,9 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Link from '../../components/Link';
 import Editor from '../../components/Editor';
-import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { FiChevronRight, FiX } from 'react-icons/fi';
+import { FiChevronRight } from 'react-icons/fi';
 import { RiCheckDoubleLine, RiCheckLine } from 'react-icons/ri';
 import { get, toSentenceCase } from '../../utils';
 import { endpointAdmin } from '../../settings';
@@ -127,16 +126,6 @@ function Component() {
                                     let selectedBuildings =
                                         page.filter(el => Object.keys(selectedRowIds).includes(el.id))
                                             .map(el => el.original);
-
-                                    console.log(selectedBuildings);
-                                    setBuildingsSelected(selectedBuildings);
-                                    setModalBuilding(false);
-                                }}
-                            />,
-                            <Button key="Select All" label="Select All" icon={<RiCheckDoubleLine />}
-                                onClick={() => {
-                                    let selectedBuildings =
-                                        page.map(el => el.original);
 
                                     console.log(selectedBuildings);
                                     setBuildingsSelected(selectedBuildings);

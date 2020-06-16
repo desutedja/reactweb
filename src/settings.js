@@ -10,17 +10,17 @@ export const endpointAds = 'https://centratama.okbabe.technology/clink-advertise
 export const mainColor = '#2f78e9';
 
 export const statusColor = {
-    'created': 'silver',
-    'assigned': 'limegreen',
-    'in_progress': 'dodgerblue',
-    'canceled': 'gold',
-    'reported': 'orange',
-    'rejected': 'crimson',
-    'approved': 'limegreen',
-    'completed': 'silver'
+    'created': 'light',
+    'assigned': 'success',
+    'in_progress': 'primary',
+    'canceled': 'warning',
+    'reported': 'info',
+    'rejected': 'danger',
+    'approved': 'success',
+    'completed': 'secondary'
 }
 
-export const banks = [
+export const payment_banks = [
     {label: 'BRI', value: 'bri',},
     {label: 'BNI', value: 'bni',},
     {label: 'BNI Syariah', value: 'bni_sy',},
@@ -37,4 +37,16 @@ export const banks = [
     {label: 'MasterCard', value: 'mastercard',},
     {label: 'VISA', value: 'visa',},
     {label: 'Other', value: 'other',},
+]
+
+export const banks = [
+    {label: 'BRI', value: 'bri',},
+    {label: 'BNI', value: 'bni',},
+    {label: 'BNI Syariah', value: 'bni_sy',},
+    {label: 'Mandiri', value: 'mandiri',},
+    {label: 'BCA', value: 'bca',},
+    {label: 'BTN', value: 'btn',},
+    {label: 'CIMB Niaga', value: 'cimb',},
+    {label: 'BSM', value: 'bsm',},
+    {label: 'Bank Muamalat', value: 'muamalat',},
 ]

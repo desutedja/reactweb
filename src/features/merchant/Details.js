@@ -13,7 +13,7 @@ function Component() {
     const selected = useSelector(state => state.merchant.selected);
 
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     return (
         <div>

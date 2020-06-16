@@ -152,7 +152,7 @@ function Component() {
                 }}>Room</p>
                 <p style={{
                     marginBottom: 16,
-                }}>{messages[0].room_name + ' (ID: ' + roomID + ')'}</p>
+                }}>{messages[0]?.room_name + ' (ID: ' + roomID + ')'}</p>
                 <p style={{
                     fontWeight: 'bold',
                 }}>Participants</p>

@@ -11,7 +11,7 @@ import Details from './Details';
 import { getAnnoucement, getAnnouncementDetails, setSelected, deleteAnnouncement } from './slice';
 import { FiPlus } from 'react-icons/fi';
 import { toSentenceCase } from '../../utils';
-import { Badge, Alert } from 'reactstrap';
+import { Badge } from 'reactstrap';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },

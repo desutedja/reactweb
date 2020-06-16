@@ -1,19 +1,17 @@
 import React, { useEffect, useState, forwardRef, useRef } from 'react'
-import { useTable, usePagination, useSortBy, useRowSelect, useExpanded } from 'react-table'
+import { useTable, usePagination, useSortBy, useRowSelect } from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
-    FiPenTool, FiEdit, FiCheck, FiUserPlus, FiDelete, FiMessageSquare,
+    FiEdit, FiCheck, FiUserPlus, FiMessageSquare,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
 import ActionButton from './ActionButton';
 import Input from './Input';
 import Modal from './Modal';
 import Dropdown from './DropDown';
-
-import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 function Component({
     columns,
@@ -31,7 +29,8 @@ function Component({
     onClickDetails,
     onClickEdit,
     renderActions,
-    deleteSelection
+    deleteSelection,
+    onSelection,
 }) {
     const {
         getTableProps,
@@ -69,7 +68,7 @@ function Component({
                             </div>
                         ),
                         Cell: ({ row }) => (
-                            <div>
+                            <div >
                                 <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
                             </div>
                         ),
@@ -85,8 +84,6 @@ function Component({
 
     const [activeFilter, setFilter] = useState(0);
     const [modalOpen, toggleModal] = useState(false);
-
-    const [showActions, setShowActions] = useState(false);
 
     useEffect(() => {
         fetchData && fetchData(pageIndex, pageSize, searchToggle);
@@ -105,8 +102,13 @@ function Component({
     }, [search])
 
     useEffect(() => {
-        console.log(selectedRowIds);
-    }, [selectedRowIds]);
+        const selectedRows = selectedRowIds ?
+         Object.keys(selectedRowIds).map(el => page[el].original) : [];
+
+        console.log(selectedRows);
+        onSelection && onSelection(selectedRows);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page, selectedRowIds]);
 
     return (
         <div className="Table">
@@ -121,31 +123,6 @@ function Component({
                 <div style={{
                     display: 'flex',
                 }}>
-                    <div className="SelectActions">
-                        <div className="SelectActions-toggle"
-                            onClick={() => setShowActions(!showActions)}
-                        >
-                            Action
-                            <FiChevronDown style={{
-                                marginLeft: 8,
-                                marginBottom: 2,
-                            }} />
-                        </div>
-                        <div className={showActions ?
-                            "SelectActions-options" : "SelectActions-options-hide"}>
-                            <div className="SelectActions-item"
-                                onClick={() => {
-                                    deleteSelection(selectedRowIds, page);
-                                }}
-                            >
-                                <FiTrash style={{
-                                    marginRight: 8,
-                                    marginBottom: 2,
-                                }} />
-                                Delete
-                            </div>
-                        </div>
-                    </div>
                     {actions}
                     {renderActions != null ? renderActions(selectedRowIds, page) : []}
                 </div>
@@ -244,7 +221,7 @@ function Component({
                             ].filter(x => x !== "")
 
                             return (
-                                <tr {...row.getRowProps()} >
+                                <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
 
                                     {row.cells.map(cell => {
                                         return (

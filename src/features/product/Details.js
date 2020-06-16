@@ -21,11 +21,11 @@ function Component() {
     const [adminFee, setAdminFee] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { selected, loading } = useSelector(state => state.product);
+    const { selected } = useSelector(state => state.product);
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     return (
         <div>
@@ -52,8 +52,18 @@ function Component() {
                         setModalFee(false);
                     }}
                 >
-                    <Input compact label="Admin Fee" type="number" inputValue={adminFee}
-                        setInputValue={setAdminFee} />
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <Input compact label="Admin Fee" type="number" inputValue={adminFee}
+                            setInputValue={setAdminFee} />
+                        <span style={{
+                            margin: 4
+                        }}>
+                            %
+                        </span>
+                    </div>
                     <div style={{
                         display: 'flex',
                         marginTop: 16,

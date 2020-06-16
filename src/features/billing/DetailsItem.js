@@ -1,9 +1,10 @@
-import React, { useCallback, useState } from 'react';
+import React, {  } from 'react';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+import { payByCash } from './slice';
 
 const exception = [
     'created_on', 'modified_on', 'deleted', 'additional_charges',
@@ -13,11 +14,11 @@ const exception = [
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { selected, loading, unit, refreshToggle } = useSelector(state => state.billing);
+    const { unit } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     return (
         <div>
@@ -40,7 +41,15 @@ function Component() {
                             url.split('/').slice(0, -1).join('/') + "/edit"
                         )} />
                         <Button label="Add Charge" onClick={() => { }} />
-                        <Button label="Set Paid" onClick={() => { }} />
+                        {unit.selected.payment === "unpaid" && <Button label="Set Paid" onClick={() => {
+                            dispatch(payByCash(headers, {
+                                "id": unit.selected.id,
+                                "total": unit.selected.total,
+                                "penalty_amount": unit.selected.penalty_amount,
+                                "total_payment": unit.selected.total_payment,
+                                "additional_charge_amount": unit.selected.additional_charge_amount,
+                            }));
+                        }} />}
                     </div>
                 </div>
             </div>

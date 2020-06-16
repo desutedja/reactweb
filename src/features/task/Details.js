@@ -21,7 +21,7 @@ function Component() {
     const selected = useSelector(state => state.task.selected);
 
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     const columns = useMemo(() => ([
         { Header: "Submitted", accessor: row => row.created_on.replace(/T/g, ' ').replace(/Z/g, '') },
@@ -94,7 +94,7 @@ function Component() {
                             <LabeledText
                                 key={el}
                                 label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                                    value={el == "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
+                                    value={el === "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
                             />
                          )
                     }

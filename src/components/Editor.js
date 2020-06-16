@@ -34,7 +34,7 @@ function Component({
                 </div>
             </div>
             <Input hidden label={label} name={name} type="textarea"
-                inputValue={inputValue ? inputValue : draftToHtml(contentState)} />
+                inputValue={contentState ? draftToHtml(contentState) : inputValue} />
         </>
     )
 }

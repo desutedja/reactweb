@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, Fragment } from 'react';
 import Avatar from 'react-avatar';
 import { FiGlobe, FiPhone, FiMail } from 'react-icons/fi';
-import SectionSeparator from './SectionSeparator';
 import { dateFormatter, toSentenceCase } from '../utils';
 import classnames from 'classnames';
 
@@ -18,19 +17,20 @@ function GroupedItems({tabs, type, data}) {
           <Nav tabs>
          {
              Object.keys(tabs).map((el, i) => 
-             <NavItem>
-                 <NavLink className={classnames({active: activeTab === i})} onClick={() => toggle(i)} >{toSentenceCase(el)}</NavLink>
+             <NavItem key={i} style={{ cursor: 'default' }}>
+                 <NavLink className={classnames({active: activeTab === i})} 
+                 onClick={() => toggle(i)} >{toSentenceCase(el)}</NavLink>
              </NavItem>
             )
          }
          </Nav>
          { 
              Object.keys(tabs).map((el, i) => 
-             <>
+             <Fragment key={i}>
                 <TabContent activeTab={activeTab}>
                     <TabPane style={{ paddingTop: '20px' }} tabId={i} >
                     { tabs[el].map( el => 
-                                <Row style={{ padding: '4px' }} >
+                                <Row style={{ padding: '4px' }} key={el} >
                                     <Col style={{ fontWeight: 'normal', fontSize: '0.8em',  }}>
                                         {(
                                             el === 'id' ? (type === '' ? el : type + " " + el) :
@@ -42,7 +42,7 @@ function GroupedItems({tabs, type, data}) {
                                     </Col>
                                     <Col style={{ fontWeight: 'bold', fontSize: '1.1em',  }}>
                                         { 
-                                            (data[el] == null || data[el] == "") ? "-" :
+                                            (data[el] == null || data[el] === "") ? "-" :
                                             el === "birthdate" ? dateFormatter(data[el]) :
                                             el === "birthplace" ? data[el].toUpperCase() : 
                                             el === "address" ? toSentenceCase(data[el]) :
@@ -57,26 +57,14 @@ function GroupedItems({tabs, type, data}) {
                      )}
                         </TabPane>
                     </TabContent>
-            </>
+            </Fragment>
              )
          }
      </>)
 }
 
-
-function GroupedItemsStatus({keys, data}) {
-    return keys.map( el => 
-        <Row>
-            <Col>
-                {data[el]}
-            </Col>
-        </Row>
-    )
- }
-
 function Component({type="", title, email=null, website=null, phone=null, picture=null, filter=[], data}) {
     var grouping = {};
-    var statuses = {};
 
     switch (type) {
         case 'resident':
@@ -93,7 +81,6 @@ function Component({type="", title, email=null, website=null, phone=null, pictur
                 'management': ['building_management_id', 'staff_id', 'staff_role'],
                 'bank account': ['account_name', 'account_no', 'account_bank'],
             };
-            statuses = ["on_shift"];
             break;
         case 'management':
             grouping = {

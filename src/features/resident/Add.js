@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiSearch } from 'react-icons/fi';
 
 import Input from '../../components/Input';
 import Select from '../../components/Select';
@@ -9,12 +8,12 @@ import Form from '../../components/Form';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
-import Pills from '../../components/Pills';
 import SectionSeparator from '../../components/SectionSeparator';
 import { createResident, editResident, addSubaccount } from './slice';
 import { post, get, toSentenceCase } from '../../utils';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';
+import { Badge } from 'reactstrap';
 
 const columns = [
     { Header: "ID", accessor: "id" },
@@ -25,13 +24,13 @@ const columns = [
     { Header: "Nationality", accessor: "nationality" },
     {
         Header: "Status", accessor: row => row.status ?
-            <Pills color="limegreen">{toSentenceCase(row.status)}</Pills>
+            <h5><Badge pill color="success">{toSentenceCase(row.status)}</Badge></h5>
             :
-            <Pills color="crimson">Inactive</Pills>
+            <h5><Badge pill color="danger">Inactive</Badge></h5>
     },
     {
         Header: "KYC Status", accessor: row => row.status_kyc ? row.status_kyc :
-            <Pills color="crimson">None</Pills>
+            <h5><Badge pill color="secondary">None</Badge></h5>
     },
 ]
 
@@ -48,11 +47,9 @@ function Component() {
     const [exist, setExist] = useState(true);
     const [sub, setSub] = useState({});
 
-    const [search, setSearch] = useState('');
     const [modal, setModal] = useState(false);
 
     const [email, setEmail] = useState('');
-    const [searchRes, setSearchRes] = useState('');
 
     const [district, setDistrict] = useState("");
     const [districts, setDistricts] = useState([]);
@@ -119,7 +116,7 @@ function Component() {
                 setBCLoading(false);
             }
         )
-    }, [headers, search]);
+    }, [headers]);
 
     // useEffect(() => {
     //     get(endpointResident + '/management/resident/unit?id=' + selected.id +
@@ -158,13 +155,13 @@ function Component() {
             '?page=' + 1 +
             '&id=' + resident.id +
             '&limit=' + 10 +
-            '&search=' + search,
+            '&search=',
             headers,
             res => {
                 setUnits(res.data.data.items);
             }
         )
-    }, [headers, resident, search])
+    }, [headers, resident])
 
     return (
         <div>
@@ -276,6 +273,13 @@ function Component() {
                         { value: 'divorce', label: 'Divorced' },
                         { value: 'other', label: 'Other' },
                     ]} inputValue={selected.marital_status} />
+                    <Input label="Occupation" type="select" options={[
+                        { value: 'unemployed', label: 'Unemployed' },
+                        { value: 'student', label: 'Student' },
+                        { value: 'university_student', label: 'University Student' },
+                        { value: 'professional', label: 'Professional' },
+                        { value: 'housewife', label: 'Housewife' },
+                    ]} inputValue={selected.occupation} />
                     <SectionSeparator />
 
                     <Input label="Address" type="textarea" inputValue={selected.address} />

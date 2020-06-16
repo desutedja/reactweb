@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
@@ -7,7 +7,7 @@ import Filter from '../../components/Filter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { months, dateFormatter, toSentenceCase } from '../../utils';
-import { getBillingUnitItem, setSelected, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from './slice';
+import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from './slice';
 import { FiPlus } from 'react-icons/fi';
 
 const exception = [
@@ -46,7 +46,7 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     useEffect(() => {
             dispatch(getBillingUnitItem(headers, 0, 100, '',

@@ -6,11 +6,10 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
-import Add from './Add';
 import Details from './Details';
 import { getProduct, getProductDetails } from './slice';
 import { endpointMerchant } from '../../settings';
-import { get, toSentenceCase } from '../../utils';
+import { get, toSentenceCase, toMoney } from '../../utils';
 import { FiSearch } from 'react-icons/fi';
 
 const columns = [
@@ -18,11 +17,11 @@ const columns = [
     { Header: 'Name', accessor: 'name' },
     { Header: 'Merchant Name', accessor: 'merchant_name' },
     { Header: 'Type', accessor: row => toSentenceCase(row.item_type) },
-    { Header: 'Base Price', accessor: 'base_price' },
+    { Header: 'Base Price', accessor: row => toMoney(row.base_price) },
     { Header: 'Admin Fee', accessor: row => row.admin_fee + '%' },
     { Header: 'Discount Fee', accessor: row => row.discount_fee + '%' },
     { Header: 'PG Fee', accessor: row => row.pg_fee + '%' },
-    { Header: 'Selling Price', accessor: 'selling_price' },
+    { Header: 'Selling Price', accessor: row => toMoney(row.selling_price) },
 ]
 
 function Component() {
@@ -37,7 +36,7 @@ function Component() {
     const [cats, setCats] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.product);
+    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.product);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -59,7 +58,7 @@ function Component() {
         get(endpointMerchant + '/admin/categories', headers, res => {
                 let data = res.data.data;
 
-                let formatted = data.map(el => ({ label: el.name, value: el.name }));
+                let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setCats(formatted);
             })
@@ -145,12 +144,6 @@ function Component() {
                         actions={[]}
                         onClickDetails={row => dispatch(getProductDetails(row, headers, history, url))}
                     />
-                </Route>
-                <Route path={`${path}/add`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/edit`}>
-                    <Add />
                 </Route>
                 <Route path={`${path}/details`}>
                     <Details />

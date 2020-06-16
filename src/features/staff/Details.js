@@ -1,21 +1,10 @@
 import React from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { dateFormatter } from '../../utils';
 
 import Profile from '../../components/Profile';
-import LabeledText from '../../components/LabeledText';
-import Button from '../../components/Button';
-
-const exception = [
-    'created_on', 'modified_on', 'deleted', 'photo'
-];
 
 function Component() {
     const selected = useSelector(state => state.staff.selected);
-
-    let history = useHistory();
-    let { path, url } = useRouteMatch();
 
     return (
         <div>
@@ -31,7 +20,8 @@ function Component() {
                                 value={el == "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
                             />
                         ) */}
-                        <Profile type="staff" data={selected} title={selected.firstname + " " + selected.lastname} email={selected.email} 
+                        <Profile type="staff" data={selected} 
+                        title={selected.firstname + " " + selected.lastname} email={selected.email} 
                             phone={selected.phone} />
                 </div>
             </div>

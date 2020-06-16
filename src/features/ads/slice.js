@@ -181,4 +181,21 @@ export const createAdsSchedule = (headers, data) => dispatch => {
     })
 }
 
+export const deleteAdsSchedule = (row, headers) => dispatch => {
+  dispatch(startAsync());
+
+  del(adsEndpoint + '/schedule/' + row.int, headers,
+    res => {
+      dispatch(setAlert({
+        type: 'normal',
+        message: 'Advertisement Schedule has been deleted.'
+      }))
+      setTimeout(() => dispatch(setAlert({
+        message: '',
+      })), 3000);
+      dispatch(refresh());
+      dispatch(stopAsync())
+    })
+}
+
 export default slice.reducer;
