@@ -1,7 +1,6 @@
 import React, { useState, Fragment } from 'react';
 import Avatar from 'react-avatar';
 import { FiGlobe, FiPhone, FiMail } from 'react-icons/fi';
-import SectionSeparator from './SectionSeparator';
 import { dateFormatter, toSentenceCase } from '../utils';
 import classnames from 'classnames';
 
@@ -43,7 +42,7 @@ function GroupedItems({tabs, type, data}) {
                                     </Col>
                                     <Col style={{ fontWeight: 'bold', fontSize: '1.1em',  }}>
                                         { 
-                                            (data[el] == null || data[el] == "") ? "-" :
+                                            (data[el] == null || data[el] === "") ? "-" :
                                             el === "birthdate" ? dateFormatter(data[el]) :
                                             el === "birthplace" ? data[el].toUpperCase() : 
                                             el === "address" ? toSentenceCase(data[el]) :
@@ -64,20 +63,8 @@ function GroupedItems({tabs, type, data}) {
      </>)
 }
 
-
-function GroupedItemsStatus({keys, data}) {
-    return keys.map( el => 
-        <Row key={el} >
-            <Col>
-                {data[el]}
-            </Col>
-        </Row>
-    )
- }
-
 function Component({type="", title, email=null, website=null, phone=null, picture=null, filter=[], data}) {
     var grouping = {};
-    var statuses = {};
 
     switch (type) {
         case 'resident':
@@ -94,7 +81,6 @@ function Component({type="", title, email=null, website=null, phone=null, pictur
                 'management': ['building_management_id', 'staff_id', 'staff_role'],
                 'bank account': ['account_name', 'account_no', 'account_bank'],
             };
-            statuses = ["on_shift"];
             break;
         case 'management':
             grouping = {

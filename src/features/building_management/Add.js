@@ -8,7 +8,6 @@ import Filter from '../../components/Filter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { createBuildingManagement, editBuildingManagement } from './slice';
-import { FiSearch } from 'react-icons/fi';
 import { get } from '../../utils';
 import { endpointAdmin, banks } from '../../settings';
 

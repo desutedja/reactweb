@@ -45,7 +45,7 @@ function Component() {
     const [cats, setCats] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle, alert } =
+    const { loading, items, total_pages, total_items, refreshToggle } =
         useSelector(state => state.merchant);
 
     let dispatch = useDispatch();

@@ -15,7 +15,7 @@ function Component() {
     const selected = useSelector(state => state.building_management.selected);
 
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     return (
         <div>
@@ -27,7 +27,7 @@ function Component() {
                         .map(el =>
                             <LabeledText
                                 label={el.length > 2 ? el.replace(/_/g, ' ') : el.toUpperCase()}
-                                value={el == "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
+                                value={el === "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
                             />
                         )}
                 </div>

@@ -27,7 +27,7 @@ function Component() {
     const {selected, loading} = useSelector(state => state.transaction);
 
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     const detailsPayment = Object.keys(selected).filter(el => !exception.includes(el))
         .filter(el => el.includes('payment'));

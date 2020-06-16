@@ -21,11 +21,11 @@ function Component() {
     const [adminFee, setAdminFee] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { selected, loading } = useSelector(state => state.product);
+    const { selected } = useSelector(state => state.product);
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     return (
         <div>

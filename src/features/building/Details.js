@@ -1,11 +1,9 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { FiPlus } from 'react-icons/fi';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { toMoney, dateFormatter, toSentenceCase } from '../../utils';
+import { toMoney, toSentenceCase } from '../../utils';
 
 import Profile from '../../components/Profile';
-import LabeledText from '../../components/LabeledText';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
@@ -25,12 +23,6 @@ import {
 } from './slice';
 import { endpointAdmin, banks } from '../../settings';
 import { get } from '../../utils';
-
-
-const exception = [
-    'modified_on', 'deleted',
-    'Tasks', 'lat', 'long', 'logo'
-];
 
 const tabs = [
     'Unit', 'Unit Type', 'Section', 'Service', 'Management'
@@ -91,7 +83,8 @@ const columnsService = [
         },
 
     },
-    { Header: "Tax", accessor: row => (row.tax == "percentage" ? row.tax_value + "%" : toMoney(row.tax_amount) + " (Fixed)") },
+    { Header: "Tax", accessor: row => (row.tax === "percentage" ? 
+    row.tax_value + "%" : toMoney(row.tax_amount) + " (Fixed)") },
 ]
 
 const columnsManagement = [
@@ -151,8 +144,6 @@ function Component() {
         loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
-    let history = useHistory();
-    let { path, url } = useRouteMatch();
 
     const fetchData = useCallback((pageIndex, pageSize, search) => {
         tab === 0 && dispatch(getBuildingUnit(headers, pageIndex, pageSize, search, selected));

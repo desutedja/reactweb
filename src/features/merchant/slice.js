@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointMerchant } from '../../settings';
-import { get, post, del, put, patch } from '../../utils';
+import { get, post, del, patch } from '../../utils';
 
 
 const merchantEndpoint = endpointMerchant + '/admin';

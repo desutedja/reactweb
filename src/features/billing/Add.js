@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import Input from '../../components/Input';
 import Form from '../../components/Form';
@@ -33,7 +33,6 @@ function Component() {
     const [services, setServices] = useState([]);
     const [servicesPageCount, setServicesPageCount] = useState(1);
     const [servicesLoading, setServicesLoading] = useState(false);
-    const [servicesGroup, setServicesGroup] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
     const { loading, selected, unit } = useSelector(state => state.billing);
@@ -58,7 +57,7 @@ function Component() {
                         get(endpointAdmin + '/building/service' +
                             '?page=' + (pageIndex + 1) +
                             '&building_id=' + selected.building_id +
-                            '&group=' + servicesGroup +
+                            // '&group=' + servicesGroup +
                             '&search=' + search +
                             '&limit=' + pageSize,
                             headers,
@@ -70,7 +69,7 @@ function Component() {
                                 setServicesLoading(false);
                             });
                         // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [headers, servicesGroup, selected])}
+                    }, [headers, selected])}
                     onClickResolve={row => {
                         setService(row.id);
                         setServiceName(row.name);

@@ -3,7 +3,6 @@ import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../components/Table';
-import Add from './Add';
 import Details from './Details';
 import { getTransaction, getTransactionDetails, setSelected } from './slice';
 import { toMoney, toSentenceCase } from '../../utils';
@@ -31,7 +30,7 @@ const columns = [
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.transaction);
+    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -58,12 +57,6 @@ function Component() {
                             history.push("/chat");
                         }}
                     />
-                </Route>
-                <Route path={`${path}/add`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/edit`}>
-                    <Add />
                 </Route>
                 <Route path={`${path}/details`}>
                     <Details />

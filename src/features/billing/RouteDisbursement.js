@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
+import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
@@ -27,11 +27,10 @@ function Component() {
     const [dataPages, setDataPages] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, disbursement, total_pages, refreshToggle } = useSelector(state => state.billing);
+    const { disbursement, refreshToggle } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
-    let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { path } = useRouteMatch();
 
     useEffect(() => {
         dispatch(getBillingDisbursement(headers, 0, 1000, ''));
@@ -97,6 +96,7 @@ function Component() {
                                 marginBottom: 16,
                             }}>Select Management</h5>
                             {disbursement.items.map((el, index) => <div
+                                key={index}
                                 className={index === active ? "GroupActive" : "Group"}
                                 onClick={() => setActive(index)}
                             >
@@ -115,8 +115,12 @@ function Component() {
                                 fetchData={useCallback((pageIndex, pageSize, search) => {
                                     setDataLoading(true);
                                     get(endpointBilling + '/management/billing/disbursement' +
-                                        '/list/transaction?limit=1000&page=1&search=&management_id=' +
-                                        disbursement.items[active].management_id, headers, res => {
+                                        '/list/transaction?limit=1000&page=1&search='
+                                        + '&building_id=' +
+                                        disbursement.items[active].building_id
+                                        + '&management_id=' +
+                                        disbursement.items[active].management_id,
+                                        headers, res => {
                                             setData(res.data.data.items);
                                             setDataPages(res.data.data.total_pages);
                                             setDataLoading(false);

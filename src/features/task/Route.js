@@ -9,9 +9,8 @@ import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
-import Pills from '../../components/Pills';
 import { get, toSentenceCase, dateTimeFormatter } from '../../utils';
-import { endpointAdmin, endpointManagement, mainColor, statusColor } from '../../settings';
+import { endpointAdmin, endpointManagement, statusColor } from '../../settings';
 import Details from './Details';
 import { Badge } from 'reactstrap';
 

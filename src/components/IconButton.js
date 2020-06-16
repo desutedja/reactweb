@@ -1,5 +1,4 @@
 import React from 'react';
-import { Button } from 'reactstrap';
 
 function Component({className = "", onClick, disabled, color = "", children}) {
     return (

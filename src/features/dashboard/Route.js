@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
+import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
 import { getSOS } from './slice';
 import { AreaChart, XAxis, YAxis, CartesianGrid, Area, Tooltip, PieChart, Pie, BarChart, Legend, Bar } from 'recharts';
 import { dateFormatter, get, toMoney } from '../../utils';
-import { endpointTask, endpointAdmin, endpointAds, endpointBilling, endpointManagement } from '../../settings';
+import { endpointTask, endpointAds, endpointBilling, endpointManagement } from '../../settings';
 
 import './style.css';
 
@@ -27,40 +27,39 @@ function Component() {
     const [staffData, setStaffData] = useState({});
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, sosData } = useSelector(state => state.dashboard);
+    const { sosData } = useSelector(state => state.dashboard);
 
     let dispatch = useDispatch();
-    let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { path } = useRouteMatch();
 
     useEffect(() => {
         dispatch(getSOS(headers, range));
-    }, [range]);
+    }, [dispatch, headers, range]);
 
     useEffect(() => {
         get(endpointTask + '/admin/sa/statistics', headers, res => {
             setPieData(res.data.data.ticket_by_category);
             setTaskData(res.data.data);
         })
-    }, []);
+    }, [headers]);
 
     useEffect(() => {
         get(endpointAds + '/management/ads/report/overview', headers, res => {
             setAdsData(res.data.data);
         })
-    }, []);
+    }, [headers]);
 
     useEffect(() => {
         get(endpointBilling + '/management/billing/statistic', headers, res => {
             setBillingData(res.data.data);
         })
-    }, []);
+    }, [headers]);
 
     useEffect(() => {
         get(endpointManagement + '/admin/staff/statistics', headers, res => {
             setStaffData(res.data.data);
         })
-    }, []);
+    }, [headers]);
 
     return (
         <div>

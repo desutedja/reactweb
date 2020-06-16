@@ -6,7 +6,6 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
-import Add from './Add';
 import Details from './Details';
 import { getProduct, getProductDetails } from './slice';
 import { endpointMerchant } from '../../settings';
@@ -37,7 +36,7 @@ function Component() {
     const [cats, setCats] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.product);
+    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.product);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -145,12 +144,6 @@ function Component() {
                         actions={[]}
                         onClickDetails={row => dispatch(getProductDetails(row, headers, history, url))}
                     />
-                </Route>
-                <Route path={`${path}/add`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/edit`}>
-                    <Add />
                 </Route>
                 <Route path={`${path}/details`}>
                     <Details />

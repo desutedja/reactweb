@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, {  } from 'react';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
@@ -14,11 +14,11 @@ const exception = [
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { selected, loading, unit, refreshToggle } = useSelector(state => state.billing);
+    const { unit } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     return (
         <div>

@@ -1,20 +1,17 @@
 import React, { useEffect, useState, forwardRef, useRef } from 'react'
-import { useTable, usePagination, useSortBy, useRowSelect, useExpanded } from 'react-table'
+import { useTable, usePagination, useSortBy, useRowSelect } from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
-    FiPenTool, FiEdit, FiCheck, FiUserPlus, FiDelete, FiMessageSquare,
+    FiEdit, FiCheck, FiUserPlus, FiMessageSquare,
 } from 'react-icons/fi'
 import IconButton from './IconButton';
 import ActionButton from './ActionButton';
 import Input from './Input';
 import Modal from './Modal';
 import Dropdown from './DropDown';
-import Button from './Button';
-
-import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 function Component({
     columns,
@@ -87,8 +84,6 @@ function Component({
 
     const [activeFilter, setFilter] = useState(0);
     const [modalOpen, toggleModal] = useState(false);
-
-    const [showActions, setShowActions] = useState(false);
 
     useEffect(() => {
         fetchData && fetchData(pageIndex, pageSize, searchToggle);

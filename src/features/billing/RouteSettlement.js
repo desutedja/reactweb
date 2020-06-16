@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
-import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
+import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch, FiCheck, FiFile } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
@@ -9,7 +9,7 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
-import { getBillingUnitDetails, getBillingSettlement } from './slice';
+import { getBillingSettlement } from './slice';
 import { endpointAdmin, endpointBilling } from '../../settings';
 import { get, toMoney, post } from '../../utils';
 
@@ -29,7 +29,7 @@ const formatValue = (value) => toMoney(value.toFixed(0));
 
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, settlement, refreshToggle, alert } = useSelector(state => state.billing);
+    const { loading, settlement, refreshToggle } = useSelector(state => state.billing);
 
     const [search, setSearch] = useState('');
 
@@ -37,24 +37,13 @@ function Component() {
     const [buildingName, setBuildingName] = useState('');
     const [buildings, setBuildings] = useState('');
 
-    const [unit, setUnit] = useState('');
-    const [unitName, setUnitName] = useState('');
-    const [units, setUnits] = useState('');
-
-    const [month, setMonth] = useState('');
-    const [monthName, setMonthName] = useState('');
-
-    const [year, setYear] = useState('');
-    const [yearSet, setYearSet] = useState('');
-
     const [info, setInfo] = useState({});
 
     const [settleModal, setSettleModal] = useState(false);
     const [selected, setSelected] = useState([]);
 
     let dispatch = useDispatch();
-    let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { path } = useRouteMatch();
 
     const getSum = items => {
         return items.reduce((sum, el) => {
@@ -75,27 +64,10 @@ function Component() {
     }, [headers, search]);
 
     useEffect(() => {
-        building && (!search || search.length >= 3) && get(endpointAdmin + '/building/unit' +
-            '?limit=5&page=1' +
-            '&building_id=' + building +
-            '&search=' + search, headers, res => {
-                let data = res.data.data.items;
-
-                let formatted = data.map(el => ({
-                    label: `${el.unit_type_name}-${el.unit_size} 
-                    ${el.section_name} F${el.floor} ${el.number}`,
-                    value: el.id
-                }));
-
-                setUnits(formatted);
-            })
-    }, [headers, search, building]);
-
-    useEffect(() => {
         get(endpointBilling + '/management/billing/settlement/info', headers, res => {
             setInfo(res.data.data);
         })
-    }, []);
+    }, [headers]);
 
     return (
         <div>
@@ -197,9 +169,9 @@ function Component() {
                         pageCount={settlement.total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getBillingSettlement(headers, pageIndex, pageSize, search,
-                                building, unit, month, yearSet));
+                                building));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers, building, unit, month, yearSet])}
+                        }, [dispatch, refreshToggle, headers, building])}
                         filters={[
                             {
                                 button: <Button key="Select Building"

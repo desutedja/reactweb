@@ -3,7 +3,6 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiPlus, FiTrash } from 'react-icons/fi';
 import parse from 'html-react-parser';
-import { Button as RButton } from 'reactstrap';
 
 import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
@@ -49,7 +48,7 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     const fetchData = useCallback((pageIndex, pageSize, search) => {
         tab === 1 && dispatch(getAdsSchedule(headers, pageIndex, pageSize, search, selected));
