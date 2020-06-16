@@ -13,7 +13,9 @@ import { endpointBilling } from '../../settings';
 const formatValue = (value) => toMoney(value.toFixed(0));
 
 const columns = [
-    { Header: 'Name', accessor: 'name' },
+    { Header: 'Billing Refcode', accessor: 'payment_ref_code' },
+    { Header: 'Unit', accessor: 'number' },
+    { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
 ]
 
 function Component() {
@@ -114,7 +116,7 @@ function Component() {
                                     setDataLoading(true);
                                     get(endpointBilling + '/management/billing/disbursement' +
                                         '/list/transaction?limit=1000&page=1&search=&management_id=' +
-                                        disbursement.items[active], headers, res => {
+                                        disbursement.items[active].management_id, headers, res => {
                                             setData(res.data.data.items);
                                             setDataPages(res.data.data.total_pages);
                                             setDataLoading(false);

@@ -104,7 +104,7 @@ function Component() {
                 okLabel="Settle"
                 onClick={() => {
                     post(endpointBilling + '/management/billing/settlement', {
-                        trx_code: selected
+                        trx_code: selected.map(el => el.trx_code)
                     }, headers, res => {
                         setSettleModal(false);
                     })
