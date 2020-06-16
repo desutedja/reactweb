@@ -11,10 +11,12 @@ import { getProduct, getProductDetails } from './slice';
 import { endpointMerchant } from '../../settings';
 import { get, toSentenceCase, toMoney } from '../../utils';
 import { FiSearch } from 'react-icons/fi';
+import UserAvatar from '../../components/UserAvatar';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
-    { Header: 'Name', accessor: 'name' },
+    { Header: 'Product', accessor: row => <UserAvatar fullname={row.name} email={toMoney(row.selling_price)} 
+        picture={row.thumbnails} round={5}/>},
     { Header: 'Merchant Name', accessor: 'merchant_name' },
     { Header: 'Type', accessor: row => toSentenceCase(row.item_type) },
     { Header: 'Base Price', accessor: row => toMoney(row.base_price) },
