@@ -20,6 +20,10 @@ function Component() {
     const [active, setActive] = useState(0);
     const [info, setInfo] = useState({});
 
+    const [data, setData] = useState([]);
+    const [dataLoading, setDataLoading] = useState(false);
+    const [dataPages, setDataPages] = useState('');
+
     const headers = useSelector(state => state.auth.headers);
     const { loading, disbursement, total_pages, refreshToggle } = useSelector(state => state.billing);
 
@@ -87,11 +91,14 @@ function Component() {
                             flexDirection: 'column',
                             marginRight: 16,
                         }}>
+                            <h5 style={{
+                                marginBottom: 16,
+                            }}>Select Management</h5>
                             {disbursement.items.map((el, index) => <div
                                 className={index === active ? "GroupActive" : "Group"}
                                 onClick={() => setActive(index)}
                             >
-                                {el.billing_month}
+                                {el.management_name + ' - ' + el.building_name}
                             </div>)}
                         </div>}
                         <div className="Container" style={{
@@ -100,13 +107,21 @@ function Component() {
                         }}>
                             <Table
                                 columns={columns}
-                                data={disbursement.items}
-                                loading={loading}
-                                pageCount={total_pages}
+                                data={data}
+                                loading={dataLoading}
+                                pageCount={dataPages}
                                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                                    // dispatch(getBillingDisbursement(headers, pageIndex, pageSize, search));
+                                    setDataLoading(true);
+                                    get(endpointBilling + '/management/billing/disbursement' +
+                                        '/list/transaction?limit=1000&page=1&search=&management_id=' +
+                                        disbursement.items[active], headers, res => {
+                                            setData(res.data.data.items);
+                                            setDataPages(res.data.data.total_pages);
+                                            setDataLoading(false);
+                                        })
+
                                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                                }, [dispatch, refreshToggle, headers])}
+                                }, [dispatch, refreshToggle, headers, active])}
                                 filters={[]}
                                 actions={[]}
                             />

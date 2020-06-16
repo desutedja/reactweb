@@ -11,7 +11,7 @@ import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import { getBillingUnitDetails, getBillingSettlement } from './slice';
 import { endpointAdmin, endpointBilling } from '../../settings';
-import { get, toMoney } from '../../utils';
+import { get, toMoney, post } from '../../utils';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -49,7 +49,7 @@ function Component() {
 
     const [info, setInfo] = useState({});
 
-    const [settleModal, setSettleModal] = useState(true);
+    const [settleModal, setSettleModal] = useState(false);
     const [selected, setSelected] = useState([]);
 
     let dispatch = useDispatch();
@@ -100,7 +100,16 @@ function Component() {
     return (
         <div>
             <Modal isOpen={settleModal} toggle={() => setSettleModal(!settleModal)}
-                title="Settlement Selection">
+                title="Settlement Selection"
+                okLabel="Settle"
+                onClick={() => {
+                    post(endpointBilling + '/management/billing/settlement', {
+                        trx_code: selected
+                    }, headers, res => {
+                        setSettleModal(false);
+                    })
+                }}
+                >
                 <div style={{
                     display: 'flex',
                     marginBottom: 16,

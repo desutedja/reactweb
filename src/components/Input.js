@@ -153,8 +153,6 @@ function Component({
                     name={name ? name : label.toLowerCase().replace(/ /g, '_')}
                     required={!optional}
                     placeholder={label}
-                    maxLength="30"
-                    size="30"
                     min={min}
                     max={max}
                     value={value ? value : type === "button" ? label : ""}

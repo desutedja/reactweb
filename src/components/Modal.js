@@ -4,7 +4,7 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 // ReactModal.setAppElement('#root');
 
-function Component({ isOpen, toggle, title, onClick, children }) {
+function Component({ isOpen, toggle, title, onClick, children, okLabel }) {
     return (
         <div>
             <Modal
@@ -16,7 +16,7 @@ function Component({ isOpen, toggle, title, onClick, children }) {
                     {children}
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="primary" onClick={onClick}>Do Something</Button>{' '}
+                    <Button color="primary" onClick={onClick}>{okLabel}</Button>{' '}
                     <Button color="secondary" onClick={toggle}>Cancel</Button>
                 </ModalFooter>
             </Modal>
