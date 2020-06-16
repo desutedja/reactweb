@@ -112,9 +112,11 @@ function Component({
 
     return (
         <div className="Table">
-            <Modal
+            <Modal 
+                disableFooter={true}
+                disableHeader={false}
                 isOpen={modalOpen}
-                onRequestClose={() => toggleModal(false)}
+                toggle={() => { toggleModal(false)} }
             >
                 {(filters.length > 0 && filters[activeFilter].component) ?
                     filters[activeFilter].component(toggleModal) : null}
