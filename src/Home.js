@@ -26,6 +26,7 @@ import ChatRoute from './features/chat/Route';
 import Row from './components/Row';
 import CustomAlert from './components/CustomAlert';
 import IconButton from './components/IconButton';
+import Info from './components/Info';
 import { toSentenceCase } from './utils';
 import { closeAlert } from './features/slice';
 import { setQiscus, updateMessages } from './features/chat/slice';
@@ -276,6 +277,7 @@ function Component() {
                     )}
                 </div>
                 <div className={menuWide ? "Content" : "Content-wide"}>
+                    <Info />
                     <Switch>
                         <Redirect exact from="/" to={"/dashboard/task"} />
                         <Route path="/dashboard">

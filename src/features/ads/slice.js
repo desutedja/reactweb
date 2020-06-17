@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointAds } from '../../settings';
 import { get, post, put, del } from '../../utils';
+import { setInfo } from '../slice';
 
 const adsEndpoint = endpointAds + '/management/ads';
 
@@ -71,10 +72,7 @@ export const {
   setScheduleData,
 } = slice.actions;
 
-export const getAds = (
-  headers, pageIndex, pageSize,
-  search = '', age_from, age_to
-) => dispatch => {
+export const getAds = (headers, pageIndex, pageSize, search = '', age_from, age_to) => dispatch => {
   dispatch(startAsync());
 
   get(adsEndpoint +
@@ -100,6 +98,10 @@ export const createAds = (headers, data, history) => dispatch => {
     res => {
       history.push("/advertisement");
 
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Advertisement has been created.'
+      }));
       dispatch(stopAsync());
     },
     err => {
@@ -115,6 +117,10 @@ export const editAds = (headers, data, history, id) => dispatch => {
       dispatch(setSelected(res.data.data));
       history.push("/advertisement/details");
 
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Advertisement has been updated.'
+      }));
       dispatch(stopAsync());
     },
     err => {
@@ -127,13 +133,11 @@ export const deleteAds = (row, headers) => dispatch => {
 
   del(adsEndpoint + '/' + row.id, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Advertisement ' + row.name + ' has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Advertisement has been deleted.'
+      }));
+      
       dispatch(refresh());
       dispatch(stopAsync())
     })
@@ -151,9 +155,7 @@ export const getAdsDetails = (row, headers, history, url) => dispatch => {
     })
 }
 
-export const getAdsSchedule = (
-  headers, pageIndex, pageSize, search, row
-) => dispatch => {
+export const getAdsSchedule = (headers, pageIndex, pageSize, search, row) => dispatch => {
   dispatch(startAsync());
 
   get(adsEndpoint + '/schedule/' + row.id +
@@ -173,6 +175,11 @@ export const createAdsSchedule = (headers, data) => dispatch => {
 
   post(adsEndpoint + '/schedule', data, headers,
     res => {
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Advertisement schedule has been added.'
+      }));
+
       dispatch(refresh());
       dispatch(stopAsync());
     },
@@ -186,13 +193,11 @@ export const deleteAdsSchedule = (row, headers) => dispatch => {
 
   del(adsEndpoint + '/schedule/' + row.int, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Advertisement Schedule has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Advertisement schedule has been deleted.'
+      }));
+
       dispatch(refresh());
       dispatch(stopAsync())
     })

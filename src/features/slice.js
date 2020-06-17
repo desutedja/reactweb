@@ -8,6 +8,10 @@ export const slice = createSlice({
     alert: false,
     title: '',
     content: '',
+    info: {
+      color: 'primary',
+      message: '',
+    },
   },
   reducers: {
     openAlert: (state, action) => {
@@ -18,17 +22,30 @@ export const slice = createSlice({
     closeAlert: (state) => {
       state.alert = false;
     },
+    setInfoData: (state, action) => {
+      state.info.type = action.payload.type;
+      state.info.message = action.payload.message;
+    },
   },
 });
 
 export const {
   openAlert,
-  closeAlert
+  closeAlert,
+  setInfoData,
 } = slice.actions;
 
-export function get(
+export const setInfo = data => dispatch => {
+  dispatch(setInfoData(data));
+
+  setTimeout(() => dispatch(setInfoData({
+    message: '',
+  })), 3000);
+}
+
+export const get = (
   link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) {
+) => dispatch => {
   Axios.get(link, {
     headers: headers
   })
@@ -45,7 +62,10 @@ export function get(
         window.location.reload();
       }
 
-      alert(err.response?.data.error_message);
+      dispatch(openAlert({
+        title: 'An error has occured.',
+        content: err.response?.data.error_message,
+      }));
 
       ifError(err);
     })
@@ -69,8 +89,8 @@ export const post = (
       console.log(err);
 
       if (err.response && err.response.status === 401) {
-          history.push('/login');
-          window.location.reload();
+        history.push('/login');
+        window.location.reload();
       }
 
       dispatch(openAlert({
@@ -85,9 +105,9 @@ export const post = (
     })
 }
 
-export function put(
+export const put = (
   link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) {
+) => dispatch => {
   Axios.put(link, data, {
     headers: headers
   })
@@ -104,7 +124,10 @@ export function put(
         window.location.reload();
       }
 
-      alert(err.response?.data.error_message);
+      dispatch(openAlert({
+        title: 'An error has occured.',
+        content: err.response?.data.error_message,
+      }));
 
       ifError(err);
     })
@@ -113,9 +136,9 @@ export function put(
     })
 }
 
-export function patch(
+export const patch = (
   link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) {
+) => dispatch => {
   Axios.patch(link, data, {
     headers: headers
   })
@@ -132,7 +155,10 @@ export function patch(
         window.location.reload();
       }
 
-      alert(err.response?.data.error_message);
+      dispatch(openAlert({
+        title: 'An error has occured.',
+        content: err.response?.data.error_message,
+      }));
 
       ifError(err);
     })
@@ -141,9 +167,9 @@ export function patch(
     })
 }
 
-export function del(
+export const del = (
   link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) {
+) => dispatch => {
   Axios.delete(link, {
     headers: headers
   })
@@ -160,7 +186,10 @@ export function del(
         window.location.reload();
       }
 
-      alert(err.response?.data.error_message);
+      dispatch(openAlert({
+        title: 'An error has occured.',
+        content: err.response?.data.error_message,
+      }));
 
       ifError(err);
     })
