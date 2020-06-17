@@ -13,6 +13,7 @@ import Add from './Add';
 import AddSub from './AddSub';
 import Details from './Details';
 import { toSentenceCase } from '../../utils';
+import { getCountryFromCode } from '../../utils';
 
 const columns = [
     { Header: "ID", accessor: "id" },
@@ -25,7 +26,9 @@ const columns = [
     },
     { Header: "Phone", accessor: "phone" },
     { Header: "Gender", accessor: "gender" },
-    { Header: "Nationality", accessor: "nationality" },
+    { Header: "Nationality", accessor: row => 
+        getCountryFromCode(row.nationality)
+    },
     {
         Header: "Status", accessor: row => row.status ?
             <h5><Badge pill color="success">{toSentenceCase(row.status)}</Badge></h5>

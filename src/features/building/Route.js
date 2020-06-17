@@ -166,7 +166,7 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+            <Modal disableFooter={true} disableHeader={true} isOpen={confirm} onRequestClose={() => setConfirm(false)}>
                 Are you sure you want to delete?
                 <div style={{
                     display: 'flex',
@@ -202,7 +202,7 @@ function Component() {
                         }, [dispatch, refreshToggle, headers, province, city, district])}
                         filters={[
                             {
-                                button: city && <Button key="Select District" label={district ? districtName : "Select District"}
+                                button: city && <Button key="Select District" label={district ? "District: " + districtName : "Select District"}
                                     selected={district}
                                     onClick={() => {
                                         setType("district");
@@ -211,7 +211,7 @@ function Component() {
                                 component: ModalComponent,
                             },
                             {
-                                button: province && <Button key="Select City" label={city ? cityName : "Select City"}
+                                button: province && <Button key="Select City" label={city ? "City: " + cityName : "Select City"}
                                     selected={city}
                                     onClick={() => {
                                         setType("city");
@@ -220,7 +220,7 @@ function Component() {
                                 component: ModalComponent,
                             },
                             {
-                                button: <Button key="Select Province" label={province ? provinceName : "Select Province"}
+                                button: <Button key="Select Province" label={province ? "Province: " + provinceName : "Select Province"}
                                     selected={province}
                                     onClick={() => {
                                         setType("province");
