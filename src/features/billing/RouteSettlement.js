@@ -81,7 +81,7 @@ function Component() {
                         setSettleModal(false);
                     })
                 }}
-                >
+            >
                 <div style={{
                     display: 'flex',
                     marginBottom: 16,
@@ -127,15 +127,27 @@ function Component() {
                             flexDirection: 'column',
                             flex: 1,
                         }}>
-                            <div>
-                                Settled Amount
-                            <AnimatedNumber className="BigNumber" value={info.settled_amount}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}>
+                                <div style={{
+                                    marginRight: 16,
+                                }}>
+                                    Settled Amount</div>
+                                <AnimatedNumber className="BigNumber" value={info.settled_amount}
                                     formatValue={formatValue}
                                 />
                             </div>
-                            <div>
-                                Unsettled Amount
-                            <AnimatedNumber className="BigNumber" value={info.unsettled_amount}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}>
+                                <div style={{
+                                    marginRight: 16,
+                                }}>
+                                    Unsettled Amount</div>
+                                <AnimatedNumber className="BigNumber" value={info.unsettled_amount}
                                     formatValue={formatValue}
                                 />
                             </div>
@@ -145,15 +157,27 @@ function Component() {
                             flexDirection: 'column',
                             flex: 1,
                         }}>
-                            <div>
-                                Disbursed Amount
-                            <AnimatedNumber className="BigNumber" value={info.disbursed_amount}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}>
+                                <div style={{
+                                    marginRight: 16,
+                                }}>
+                                    Disbursed Amount</div>
+                                <AnimatedNumber className="BigNumber" value={info.disbursed_amount}
                                     formatValue={formatValue}
                                 />
                             </div>
-                            <div>
-                                Undisbursed Amount
-                            <AnimatedNumber className="BigNumber" value={info.undisbursed_amount}
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}>
+                                <div style={{
+                                    marginRight: 16,
+                                }}>
+                                    Undisbursed Amount</div>
+                                <AnimatedNumber className="BigNumber" value={info.undisbursed_amount}
                                     formatValue={formatValue}
                                 />
                             </div>

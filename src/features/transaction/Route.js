@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../components/Table';
 import Details from './Details';
+import Settlement from './Settlement';
+import Disbursement from './Disbursement';
 import { getTransaction, getTransactionDetails, setSelected } from './slice';
 import { toMoney, toSentenceCase } from '../../utils';
 
@@ -39,7 +41,7 @@ function Component() {
     return (
         <div>
             <Switch>
-                <Route exact path={path}>
+                <Route exact path={`${path}/list`}>
                     <Table totalItems={total_items}
                         columns={columns}
                         data={items}
@@ -60,6 +62,12 @@ function Component() {
                 </Route>
                 <Route path={`${path}/details`}>
                     <Details />
+                </Route>
+                <Route path={`${path}/settlement`}>
+                    <Settlement />
+                </Route>
+                <Route path={`${path}/disbursement`}>
+                    <Disbursement />
                 </Route>
             </Switch>
         </div>
