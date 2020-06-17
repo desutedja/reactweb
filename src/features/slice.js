@@ -43,6 +43,20 @@ export const setInfo = data => dispatch => {
   })), 3000);
 }
 
+const responseAlert = response => async dispatch => {
+  if (response && response.status === 401) {
+    dispatch(openAlert({
+      title: 'Token Expired',
+      content: "Your authentication token has expired. For your safety, please relogin.",
+    }));
+  } else {
+    dispatch(openAlert({
+      title: 'An error has occured.',
+      content: response?.data.error_message,
+    }));
+  }
+}
+
 export const get = (
   link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
 ) => dispatch => {
@@ -57,15 +71,7 @@ export const get = (
     .catch(err => {
       console.log(err);
 
-      if (err.response && err.response.status === 401) {
-        history.push('/login');
-        window.location.reload();
-      }
-
-      dispatch(openAlert({
-        title: 'An error has occured.',
-        content: err.response?.data.error_message,
-      }));
+      dispatch(responseAlert(err.response));
 
       ifError(err);
     })
@@ -88,15 +94,7 @@ export const post = (
     .catch(err => {
       console.log(err);
 
-      if (err.response && err.response.status === 401) {
-        history.push('/login');
-        window.location.reload();
-      }
-
-      dispatch(openAlert({
-        title: 'An error has occured.',
-        content: err.response?.data.error_message,
-      }));
+      dispatch(responseAlert(err.response));
 
       ifError(err);
     })
@@ -119,15 +117,8 @@ export const put = (
     .catch(err => {
       console.log(err);
 
-      if (err.response && err.response.status === 401) {
-        history.push('/login');
-        window.location.reload();
-      }
+      dispatch(responseAlert(err.response));
 
-      dispatch(openAlert({
-        title: 'An error has occured.',
-        content: err.response?.data.error_message,
-      }));
 
       ifError(err);
     })
@@ -150,15 +141,8 @@ export const patch = (
     .catch(err => {
       console.log(err);
 
-      if (err.response && err.response.status === 401) {
-        history.push('/login');
-        window.location.reload();
-      }
+      dispatch(responseAlert(err.response));
 
-      dispatch(openAlert({
-        title: 'An error has occured.',
-        content: err.response?.data.error_message,
-      }));
 
       ifError(err);
     })
@@ -181,15 +165,8 @@ export const del = (
     .catch(err => {
       console.log(err);
 
-      if (err.response && err.response.status === 401) {
-        history.push('/login');
-        window.location.reload();
-      }
+      dispatch(responseAlert(err.response));
 
-      dispatch(openAlert({
-        title: 'An error has occured.',
-        content: err.response?.data.error_message,
-      }));
 
       ifError(err);
     })
