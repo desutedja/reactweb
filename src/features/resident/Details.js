@@ -1,15 +1,19 @@
-import React, { useCallback, useState } from 'react';
-import { FiPlus } from 'react-icons/fi';
+import React, { useEffect, useCallback, useState } from 'react';
+import { FiSearch, FiPlus } from 'react-icons/fi';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { get } from '../../utils';
 import Profile from '../../components/Profile';
 
+import UserAvatar from '../../components/UserAvatar';
 import Button from '../../components/Button';
 import Table from '../../components/Table';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 import Link from '../../components/Link';
+import Filter from '../../components/Filter';
+import { toSentenceCase } from '../../utils';
+import SectionSeparator from '../../components/SectionSeparator';
 
 import {
     getResidentUnit,
@@ -19,11 +23,11 @@ import {
 import { endpointAdmin } from '../../settings';
 
 const tabs = [
-    'Unit', 'Sub Accounts'
+    'Unit', 'Sub Account'
 ]
 
 const columnsUnit = [
-    { Header: "ID", accessor: "unit_id" },
+    //{ Header: "ID", accessor: "unit_id" },
     { Header: "Building", accessor: "building_name" },
     { Header: "Unit Number", accessor: "number" },
     { Header: "Level", accessor: "level" },
@@ -32,12 +36,11 @@ const columnsUnit = [
 ]
 
 const columnsSubaccount = [
-    { Header: "ID", accessor: "id" },
-    { Header: "Name", accessor: row => row.firstname + " " + row.lastname },
-    { Header: "Building", accessor: "building_name" },
+    //{ Header: "ID", accessor: "id" },
     { Header: "Unit Number", accessor: "unit_number" },
-    { Header: "Email", accessor: "email" },
-    { Header: "Phone", accessor: "phone" },
+    { Header: "Building", accessor: "building_name" },
+    { Header: "Resident", accessor: row => 
+    <UserAvatar fullname={row.firstname + " " + row.lastname} email={row.email} />},
 ]
 
 const buildingColumns = [
@@ -63,6 +66,8 @@ function Component() {
     const [tab, setTab] = useState(0);
     const [addUnit, setAddUnit] = useState(false);
     const [addUnitStep, setAddUnitStep] = useState(1);
+
+    const [search, setSearch] = useState('');
 
     const [selectedBuilding, setSelectedBuilding] = useState({});
     const [buildings, setBuildings] = useState([]);
@@ -90,11 +95,11 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, refreshToggle, headers, tab])
 
-    const getBuilding = useCallback((pageIndex, pageSize, search) => {
+    useEffect(() => {
         setBuildingLoading(true);
-        get(endpointAdmin + '/building' +
-            '?page=' + (pageIndex + 1) +
-            '&limit=' + pageSize +
+        addUnit && addUnitStep === 1 && (!search || search.length >= 3) && get(endpointAdmin + '/building' +
+            '?page=1'+
+            '&limit=10' +
             '&search=' + search,
             headers,
             res => {
@@ -104,15 +109,15 @@ function Component() {
                 setBuildingLoading(false);
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [headers]);
+    }, [addUnit, addUnitStep, search, headers]);
 
-    const getUnit = useCallback((pageIndex, pageSize, search) => {
+    useEffect(() => {
         setUnitLoading(true);
-        get(endpointAdmin + '/building/unit' +
-            '?page=' + (pageIndex + 1) +
-            '&building_id=' + selectedBuilding.id +
+        addUnit && addUnitStep === 2 && (!search || search.length >= 3) && get(endpointAdmin + '/building/unit' +
+            '?page=1' + 
+            '&building_id=' + selectedBuilding.value.id +
             '&search=' + search +
-            '&limit=' + pageSize,
+            '&limit=10',
             headers,
             res => {
                 setUnits(res.data.data.items);
@@ -121,76 +126,81 @@ function Component() {
                 setUnitLoading(false);
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [headers, selectedBuilding]);
+    }, [headers, addUnit, search, addUnitStep, selectedBuilding]);
 
-    return (
-        <div>
-            <Modal isOpen={addUnit} onRequestClose={() => setAddUnit(false)}>
-                {addUnitStep === 1 && <>
-                    <p className="Title" style={{
-                        marginBottom: 16
-                    }}>Select Building</p>
-                    <Table
-                        columns={buildingColumns}
-                        data={buildings}
-                        loading={buildingLoading}
-                        pageCount={buildingPageCount}
-                        fetchData={getBuilding}
-                        onClickResolve={row => {
-                            setSelectedBuilding(row);
-                            setAddUnitStep(2);
-                        }}
-                    />
-                    <Button label="Cancel" secondary
-                        onClick={() => setAddUnit(false)}
-                    />
-                </>}
-                {addUnitStep === 2 && <>
-                    <p className="Title" style={{
-                        marginBottom: 16
-                    }}>Select Unit</p>
-                    <Table
-                        columns={unitColumns}
-                        data={units}
-                        loading={unitLoading}
-                        pageCount={unitPageCount}
-                        fetchData={getUnit}
-                        onClickResolve={row => {
-                            setSelectedUnit(row);
-                            setAddUnitStep(3);
-                        }}
-                    />
-                    <Button label="Back" secondary
-                        onClick={() => setAddUnitStep(1)}
-                    />
-                </>}
-                {addUnitStep === 3 && <>
-                    <p className="Title" style={{
-                        marginBottom: 16
-                    }}>Add Unit</p>
-                    <form
-                        onSubmit={e => {
+    const backFunction = useCallback(() => setAddUnitStep(addUnitStep - 1), [addUnitStep]);
+
+    const submitFunction = (e) => {
                             dispatch(addResidentUnit(headers, {
-                                unit_id: selectedUnit.id,
+                                unit_id: selectedUnit.value.id,
                                 owner_id: selected.id,
                                 level: level,
                                 status: status
                             }))
                             setAddUnit(false);
-                            setAddUnitStep(1);
+                            setAddUnitStep(1);}
+
+    return (
+        <div>
+            <Modal isOpen={addUnit} title={ "Add Unit" }
+            disableFooter={addUnitStep === 1} 
+            okLabel = {addUnitStep !== 3 ? "Back" : "Add Unit"}
+            cancelLabel = {"Back"}
+            onClick={addUnitStep === 3 ? submitFunction : backFunction}
+            onClickSecondary={backFunction}
+            disablePrimary={addUnitStep !== 3}
+            toggle={() => setAddUnit(false)}>
+                {addUnitStep === 1 && <>
+                    <Input label="Search Building"
+                        compact
+                        icon={<FiSearch />} 
+                        inputValue={search} setInputValue={setSearch}
+                    />
+                    <Filter
+                        data={buildings.map((el) => {
+                            return { label: el.name, value: el };
+                        })}
+                        onClick={(el) => {
+                            setSelectedBuilding(el);
+                            setAddUnitStep(2);
+                            setSearch('');
                         }}
-                    >
-                        <Input type="button" inputValue={selectedBuilding.name} onClick={() => {
+                    />
+                </>}
+                {addUnitStep === 2 && <>
+                    <Input type="button" inputValue={selectedBuilding.label} onClick={() => {}} />
+                    <SectionSeparator />
+                    <Input label="Search Unit Number"
+                        compact
+                        icon={<FiSearch />} 
+                        inputValue={search} setInputValue={setSearch}
+                    />
+                    <Filter
+                        data={units.map((el) => {
+                            return { label: "Room " + el.number + " - " + toSentenceCase(el.section_type) + " " + el.section_name,
+                               value: el };
+                        })}
+                        onClick={(el) => {
+                            setSelectedUnit(el);
+                            setAddUnitStep(3);
+                            setSearch('');
+                        }}
+                    />
+                </>}
+                {addUnitStep === 3 && <>
+                <form>
+                        <Input type="button" inputValue={selectedBuilding.label} onClick={() => {
 
                         }} />
                         <Input type="button" inputValue={
-                            selectedUnit.number + " F" +
-                            selectedUnit.floor + " " +
-                            selectedUnit.section_name + " " +
-                            selectedUnit.unit_type_name + " - " + selectedUnit.unit_size
+                            "Room " +
+                            selectedUnit.value.number + " - " +
+                            toSentenceCase(selectedUnit.value.section_type) + " " +
+                            selectedUnit.value.section_name + " "
                         } onClick={() => {
 
                         }} />
+                        <SectionSeparator/>
                         <Input label="Level" type="select"
                             inputValue={level}
                             setInputValue={setLevel}
@@ -207,15 +217,6 @@ function Component() {
                                 { value: 'rent', label: 'Rent' },
                             ]}
                         />
-                        <div style={{
-                            display: 'flex',
-                            marginTop: 16,
-                        }}>
-                            <Button label="Back" secondary
-                                onClick={() => setAddUnitStep(2)}
-                            />
-                            <Button label="Add" />
-                        </div>
                     </form>
                 </>}
             </Modal>

@@ -77,6 +77,9 @@
   margin-top: 4px;
   margin-bottom: 4px;
   width: 100%;
+  color: var(--primary-color);
+  background-color: white;
+  border: 1px solid var(--primary-color);
 }
 
 .ReactModalPortal .Input {

@@ -1,5 +1,7 @@
 import Axios from "axios";
 import history from './history';
+import countries from './countries';
+import { banks } from './settings';
 
 export function get(
     link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
@@ -194,4 +196,14 @@ export function toSentenceCase(sentence) {
 
 export function toMoney(money) {
     return money === null || money === undefined ? "-" : "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+}
+
+export function getCountryFromCode(value) {
+    const c = countries.find((el) => el.value == value)
+    return c === undefined ? "Undefined Country" : c.label
+}
+
+export function getBank(value) {
+    const c = banks.find((el) => el.value == value)
+    return c === undefined ? "Undefined Bank" : c.label
 }

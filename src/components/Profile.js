@@ -1,7 +1,7 @@
 import React, { useState, Fragment } from 'react';
 import Avatar from 'react-avatar';
 import { FiGlobe, FiPhone, FiMail } from 'react-icons/fi';
-import { dateFormatter, toSentenceCase } from '../utils';
+import { getBank, getCountryFromCode, dateFormatter, toSentenceCase } from '../utils';
 import classnames from 'classnames';
 
 import { TabContent, TabPane, Nav, NavItem, NavLink, Container, Row, Col } from 'reactstrap';
@@ -47,6 +47,8 @@ function GroupedItems({tabs, type, data}) {
                                             el === "birthplace" ? data[el].toUpperCase() : 
                                             el === "address" ? toSentenceCase(data[el]) :
                                             el === "created_on" ? dateFormatter(data[el]) :
+                                            el === "nationality" ? getCountryFromCode(data[el]) :
+                                            el === "account_bank" ? getBank(data[el]) :
                                             el === "gender" ? 
                                                 (data[el] === "L" ? "Male" :
                                                  data[el] === "P" ? "Female" : "Undefined") :

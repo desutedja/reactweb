@@ -11,7 +11,7 @@ import Add from './Add';
 import Details from './Details';
 import { getMerchant, setSelected, deleteMerchant, getMerchantDetails } from './slice';
 import { get } from '../../utils';
-import { endpointMerchant } from '../../settings';
+import { merchant_types, endpointMerchant } from '../../settings';
 import { FiSearch } from 'react-icons/fi';
 import { FiPlus } from 'react-icons/fi';
 
@@ -25,11 +25,6 @@ const columns = [
     { Header: 'Closed', accessor: 'closed_at' },
     { Header: 'Status', accessor: 'status' },
 ]
-
-const types = [
-    { label: 'Goods', value: 'goods' },
-    { label: 'Services', value: 'services' },
-];
 
 function Component() {
     const [confirm, setConfirm] = useState(false);
@@ -100,7 +95,7 @@ function Component() {
                                 />,
                                 component: toggleModal =>
                                     <Filter
-                                        data={types}
+                                        data={merchant_types}
                                         onClickAll={() => {
                                             setType("");
                                             setTypeLabel("");
