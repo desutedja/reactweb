@@ -8,18 +8,21 @@ import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Details from './Details';
 import { getProduct, getProductDetails } from './slice';
-import { endpointMerchant } from '../../settings';
+import { merchant_types, endpointMerchant } from '../../settings';
 import { get, toSentenceCase, toMoney } from '../../utils';
 import { FiSearch } from 'react-icons/fi';
+import UserAvatar from '../../components/UserAvatar';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
-    { Header: 'Name', accessor: 'name' },
+    { Header: 'Product', accessor: row => <UserAvatar fullname={row.name} email={toMoney(row.selling_price)} 
+        picture={row.thumbnails} round={5}/>},
     { Header: 'Merchant Name', accessor: 'merchant_name' },
+    { Header: 'Category', accessor: 'category_name' },
     { Header: 'Type', accessor: row => toSentenceCase(row.item_type) },
     { Header: 'Base Price', accessor: row => toMoney(row.base_price) },
     { Header: 'Admin Fee', accessor: row => row.admin_fee + '%' },
-    { Header: 'Discount Fee', accessor: row => row.discount_fee + '%' },
+    { Header: 'Discount Fee', accessor: row => <span className={row.discount_fee > 0 ? "HighlightValue-Red" : ""} >{row.discount_fee + '%'}</span> },
     { Header: 'PG Fee', accessor: row => row.pg_fee + '%' },
     { Header: 'Selling Price', accessor: row => toMoney(row.selling_price) },
 ]
@@ -34,6 +37,8 @@ function Component() {
     const [cat, setCat] = useState('');
     const [catName, setCatName] = useState('');
     const [cats, setCats] = useState('');
+
+    const [type, setType] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
     const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.product);
@@ -74,13 +79,35 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getProduct(headers, pageIndex, pageSize, search, merchant, cat));
+                            dispatch(getProduct(headers, pageIndex, pageSize, search, merchant, cat, type));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers, merchant, cat])}
+                        }, [dispatch, refreshToggle, headers, merchant, cat, type])}
                         filters={[
                             {
+                                button: <Button key="Select Type"
+                                    label={type ? "Type: " + type : "Select Type"}
+                                    selected={type}
+                                />,
+                                component: (toggleModal) =>
+                                    <>
+                                        <Filter
+                                            data={merchant_types}
+                                            onClick={(el) => {
+                                                setType(el.value);
+                                                toggleModal(false);
+                                                setSearch("");
+                                            }}
+                                            onClickAll={() => {
+                                                setType("");
+                                                toggleModal(false);
+                                                setSearch("");
+                                            }}
+                                        />
+                                    </>
+                            },
+                            {
                                 button: <Button key="Select Merchant"
-                                    label={merchant ? merchantName : "Select Merchant"}
+                                    label={merchant ? "Merchant: " + merchantName : "Select Merchant"}
                                     selected={merchant}
                                 />,
                                 component: (toggleModal) =>
@@ -110,8 +137,8 @@ function Component() {
                                     </>
                             },
                             {
-                                button: <Button key="Select Catgeory"
-                                    label={cat ? catName : "Select Category"}
+                                button: <Button key="Select Category"
+                                    label={cat ? "Category: " + catName : "Select Category"}
                                     selected={cat}
                                 />,
                                 component: (toggleModal) =>

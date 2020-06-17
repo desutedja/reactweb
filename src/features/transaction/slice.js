@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { endpointTransaction } from '../../settings';
 import { get } from '../../utils';
 
@@ -12,13 +12,17 @@ export const slice = createSlice({
     selected: {},
     total_items: 0,
     total_pages: 1,
-    page: 1,
-    range: 10,
     refreshToggle: true,
     alert: {
       type: 'normal',
       message: '',
     },
+    settlement: {
+      items: [],
+      selected: {},
+      total_items: 0,
+      total_pages: 1,
+    }
   },
   reducers: {
     startAsync: (state) => {
@@ -33,6 +37,13 @@ export const slice = createSlice({
       state.items = data.items;
       state.total_items = data.total_items;
       state.total_pages = data.filtered_page;
+    },
+    setSettlement: (state, action) => {
+      const data = action.payload;
+
+      state.settlement.items = data.items;
+      state.settlement.total_items = data.total_items;
+      state.settlement.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {
       state.selected = action.payload;
@@ -51,6 +62,7 @@ export const {
   startAsync,
   stopAsync,
   setData,
+  setSettlement,
   setSelected,
   refresh
 } = slice.actions;
@@ -84,5 +96,24 @@ export const getTransactionDetails = (row, headers, history, url) => dispatch =>
       history.push(url + '/details');
 
       dispatch(stopAsync())
+    })
+}
+
+export const getTransactionSettlement = (
+  headers, pageIndex, pageSize,
+  search = '',
+) => dispatch => {
+  dispatch(startAsync());
+
+  get(transactionEndpoint + '/list' +
+    '?page=' + (pageIndex + 1) +
+    '&limit=' + pageSize +
+    '&status=completed' +
+    '&search=' + search,
+    headers,
+    res => {
+      dispatch(setSettlement(res.data.data));
+
+      dispatch(stopAsync());
     })
 }

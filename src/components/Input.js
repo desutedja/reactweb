@@ -60,6 +60,7 @@ function Component({
 
             case 'select': return <div className="Input-container">
                 <select
+                    disabled={disabled}
                     style={{
                         color: !value && 'grey'
                     }}

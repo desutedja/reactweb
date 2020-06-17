@@ -2,6 +2,7 @@ import React, { useCallback, useState, useEffect } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 import { toMoney, toSentenceCase } from '../../utils';
+import { CustomInput } from 'reactstrap';
 
 import Profile from '../../components/Profile';
 import Table from '../../components/Table';
@@ -99,7 +100,10 @@ const columnsManagement = [
     { Header: "Settlement Account Name", accessor: "settlement_account_name" },
     { Header: "Settlement Account No", accessor: "settlement_account_no" },
     { Header: "Settlement Bank", accessor: "settlement_bank" },
-    { Header: "Status", accessor: "status" },
+    { Header: "Status", 
+        accessor: row => <CustomInput type="switch" label={row.status} id={"managementStatus-" + row.id} 
+        checked={ row.status === "active" } /> 
+    },
 ]
 
 function Component() {
@@ -173,7 +177,7 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+            <Modal disableFooter={false} isOpen={confirm} onRequestClose={() => setConfirm(false)}>
                 Are you sure you want to delete?
                 <div style={{
                     display: 'flex',
@@ -190,10 +194,9 @@ function Component() {
                     />
                 </div>
             </Modal>
-            <Modal isOpen={addUnit} onRequestClose={() => setAddUnit(false)}>
-                {edit ? "Edit Unit" : "Add Unit"}
-                <form
-                    onSubmit={() => {
+            <Modal disableFooter={false} okLabel={edit ? "Save" : "Add"} title={edit ? "Edit Unit" : "Add Unit"} 
+                isOpen={addUnit} toggle={() => setAddUnit(false)}
+                onClick={() => {
                         edit ?
                             dispatch(editBuildingUnit(headers, {
                                 "building_id": selected.id,
@@ -218,9 +221,11 @@ function Component() {
                         setFloor('');
                         setNumber('');
                     }}
+ 
                 >
+                <form>
                     <Input label="Number" inputValue={selectedRow.number ? selectedRow.number : number}
-                        setInputValue={setNumber} />
+                        setInputValue={setNumber} disabled={edit}/>
                     <Input label="Floor" inputValue={selectedRow.floor ? selectedRow.floor : floor}
                         setInputValue={setFloor} />
                     <Input label="Section" type="select"
@@ -244,16 +249,12 @@ function Component() {
                         marginTop: 16,
                         justifyContent: 'center',
                     }}>
-                        <Button label="Cancel" secondary
-                            onClick={() => setAddUnit(false)}
-                        />
-                        <Button label={edit ? "Save" : "Add"} />
                     </div>
                 </form>
             </Modal>
-            <Modal isOpen={addUnitType} onRequestClose={() => setAddUnitType(false)}>
-                {edit ? "Edit" : "Add"} Unit Type
-                <form onSubmit={() => {
+            <Modal isOpen={addUnitType} toggle={() => setAddUnitType(false)} title={edit ? "Edit Unit Type" : "Add Unit Type"}
+            okLabel={edit ? "Save" : "Add"}
+            onClick={() => {
                     edit ?
                         dispatch(editBuildingUnitType(headers, {
                             "building_id": selected.id,
@@ -271,11 +272,14 @@ function Component() {
                     setRow({});
                     setTypeName('');
                     setTypeSize('');
-                }}>
+                }}
+                 >
+                <form >
                     <Input label="Type Name"
                         inputValue={selectedRow.unit_type ? selectedRow.unit_type : typeName}
                         setInputValue={setTypeName}
                         type="select" options={unitTypes}
+                        disabled={edit}
                     />
                     <Input label="Type Size"
                         inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeSize}
@@ -285,16 +289,12 @@ function Component() {
                         marginTop: 16,
                         justifyContent: 'center',
                     }}>
-                        <Button label="Cancel" secondary
-                            onClick={() => setAddUnitType(false)}
-                        />
-                        <Button label={edit ? "Save" : "Add"} />
                     </div>
                 </form>
             </Modal>
-            <Modal isOpen={addSection} onRequestClose={() => setAddSection(false)}>
-                {edit ? "Edit" : "Add"} Section
-                <form onSubmit={() => {
+            <Modal isOpen={addSection} toggle={() => setAddSection(false)} title={edit ? "Edit Section" : "Add Section"}
+                okLabel={edit ? "Save" : "Add"}
+                    onClick={() => {
                     edit ?
                         dispatch(editBuildingSection(headers, {
                             "building_id": selected.id,
@@ -312,10 +312,12 @@ function Component() {
                     setRow({});
                     setSectionName('');
                     setSectionType('');
-                }}>
+                }}
+                >
+                <form >
                     <Input label="Section Name"
                         inputValue={selectedRow.section_name ? selectedRow.section_name : sectionName}
-                        setInputValue={setSectionName} />
+                        setInputValue={setSectionName} disabled={edit}/>
                     <Input label="Section Type"
                         inputValue={selectedRow.section_type ? selectedRow.section_type : sectionType}
                         setInputValue={setSectionType}
@@ -326,17 +328,12 @@ function Component() {
                         marginTop: 16,
                         justifyContent: 'center',
                     }}>
-                        <Button label="Cancel" secondary
-                            onClick={() => setAddSection(false)}
-                        />
-                        <Button label={edit ? "Save" : "Add"} />
                     </div>
                 </form>
             </Modal>
-            <Modal isOpen={addManagement} onRequestClose={() => setAddManagement(false)}>
-                {edit ? "Edit" : "Add"} Management
-                <Form
-                    onSubmit={data => {
+            <Modal isOpen={addManagement} toggle={() => setAddManagement(false)} title={edit ? "Edit Management" : "Add Management"}
+                okLabel={edit ? "Save" : "Add" } >
+                    <Form onSubmit={data => {
                         edit ?
                             dispatch(editBuildingManagement(headers, {
                                 "building_id": selected.id, building_name: selected.name, ...data,
@@ -348,10 +345,8 @@ function Component() {
                         setAddManagement(false);
                         setEdit(false);
                         setRow({});
-                    }}
-                    loading={loading}
-                >
-                    <Modal isOpen={modalManagement} onRequestClose={() => setModalManagement(false)}>
+                    }}>
+                    <Modal disableFooter={true} isOpen={modalManagement} onRequestClose={() => setModalManagement(false)}>
                         <Input label="Search"
                             inputValue={search} setInputValue={setSearch}
                         />
@@ -375,18 +370,17 @@ function Component() {
                     <Input label="Select Management" type="button"
                         inputValue={managementName ? managementName : selectedRow.management_name}
                         onClick={() => setModalManagement(true)}
+                        disabled={edit}
                     />
                     <Input label="Status" type="select" inputValue={selectedRow.status}
                         options={[
                             { label: 'Active', value: 'active' },
                             { label: 'Inactive', value: 'inactive' },
                         ]} />
-                    <SectionSeparator />
                     <Input label="Settlement Bank" type="select" options={banks} inputValue={selectedRow.settlement_bank} />
                     <Input label="Settlement Account No" inputValue={selectedRow.settlement_account_no} />
                     <Input label="Settlement Account Name"
                         inputValue={selectedRow.settlement_account_name} />
-                    <SectionSeparator />
                     <Input label="Billing Published (Date)" name="billing_published" type="number"
                         inputValue={selectedRow.billing_published}
                     />
@@ -394,7 +388,6 @@ function Component() {
                         inputValue={selectedRow.billing_duedate} />
                     <Input label="Penalty Fee" type="number"
                         inputValue={selectedRow.penalty_fee} />
-                    <SectionSeparator />
                     <Input label="Courier Fee" type="number"
                         inputValue={selectedRow.courier_fee}
                     />
@@ -406,9 +399,9 @@ function Component() {
                     />
                 </Form>
             </Modal>
-            <Modal isOpen={addService} onRequestClose={() => setAddService(false)}>
-                <h4>{edit ? "Edit" : "Add"} Service</h4>
-                <Form onSubmit={data => {
+            <Modal isOpen={addService} toggle={() => setAddService(false)} title={edit ? "Edit Service" : "Add Service"}
+                okLabel={edit ? "Save" : "Add" }
+                onClick={data => {
                     edit ?
                         dispatch(editBuildingService(headers, {
                             "building_id": selected.id, building_name: selected.name, ...data,
@@ -418,7 +411,9 @@ function Component() {
                     setAddService(false);
                     setEdit(false);
                     setRow({});
-                }}>
+                }}
+                >
+                <form >
                     <Input label="Name" inputValue={selectedRow.name} />
                     <Input label="Group" type="select" inputValue={selectedRow.group} options={[
                         { value: 'ipl', label: 'IPL' },
@@ -444,7 +439,7 @@ function Component() {
                         setInputValue={setTaxType} inputValue={taxType ? taxType : selectedRow.tax} />
                     <Input label="Tax Value" hidden={taxType === 'value'} inputValue={selectedRow.tax_value} />
                     <Input label="Tax Amount" hidden={taxType === 'percentage'} inputValue={selectedRow.tax_amount} />
-                </Form>
+                </form>
             </Modal>
             <div style={{
                 display: 'flex'

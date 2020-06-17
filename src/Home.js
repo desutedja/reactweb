@@ -302,7 +302,7 @@ function Component() {
                         <Route path="/product">
                             <ProductRoute />
                         </Route>
-                        <Route path="/transaction/list">
+                        <Route path="/transaction">
                             <TransactionRoute />
                         </Route>
                         <Route path="/advertisement">

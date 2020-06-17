@@ -96,9 +96,8 @@ input[type="file"] {
   margin-left: 12px;
 }
 
-svg {
-  /* width: 1.2rem; */
-  /* height: 1.2rem; */
+h5 {
+  margin: 0;
 }
 
 table {

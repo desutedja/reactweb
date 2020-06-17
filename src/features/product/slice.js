@@ -64,7 +64,7 @@ export default slice.reducer;
 
 export const getProduct = (
   headers, pageIndex, pageSize,
-  search = '', merchant, category
+  search = '', merchant, category, type
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -73,6 +73,7 @@ export const getProduct = (
     '&limit=' + pageSize +
     '&merchant_id=' + merchant +
     '&category_id=' + category +
+    '&merchant_type=' + type +
     '&search=' + search,
     headers,
     res => {
