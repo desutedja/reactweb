@@ -198,6 +198,11 @@ export function toMoney(money) {
     return money === null || money === undefined ? "-" : "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
 }
 
+export function getCountryCode(country) {
+    const c = countries.find((el) => el.label == country)
+    return c === undefined ? "Undefined Country Code" : c.value
+}
+
 export function getCountryFromCode(value) {
     const c = countries.find((el) => el.value == value)
     return c === undefined ? "Undefined Country" : c.label

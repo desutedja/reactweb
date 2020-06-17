@@ -1,4 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { FiPlus } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 import { toMoney, toSentenceCase } from '../../utils';
@@ -148,6 +149,8 @@ function Component() {
         loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
+    let history = useHistory();
+    let { url } = useRouteMatch();
 
     const fetchData = useCallback((pageIndex, pageSize, search) => {
         tab === 0 && dispatch(getBuildingUnit(headers, pageIndex, pageSize, search, selected));
@@ -453,6 +456,11 @@ function Component() {
                         <Profile type="building" title={selected["name"]} website={selected["website"]} picture={selected["logo"]}
                             data={selected} />
                     </div>
+                    <div className="Photos">
+                        <Button label="Edit" onClick={() => history.push(
+                            url.split('/').slice(0, -1).join('/') + "/edit"
+                        )} />
+                    </div>
                 </div>
             </div>
             <div className="Container" style={{
@@ -666,7 +674,6 @@ function Component() {
                             onClick={() => {
                                 setEdit(false);
                                 setRow({});
-
                                 setAddManagement(true);
                             }}
                         />
