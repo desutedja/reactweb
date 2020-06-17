@@ -22,7 +22,24 @@ export const slice = createSlice({
       state.loading = false;
       state.email = action.payload;
     },
+    loginBMSuccess: (state, action) => {
+      state.loading = false;
+      state.email = action.payload;
+    },
     otpSuccess: (state, action) => {
+      state.loading = false;
+      state.isAuthenticated = true;
+
+      state.user = action.payload;
+      state.headers = {
+        'Authorization': 'Bearer ' + action.payload.token,
+        'X-User-Id': action.payload.id,
+        'X-Session': action.payload.session,
+        'X-User-Type': 'sa',
+        'Content-Type': 'application/json',
+      }
+    },    
+    otpBMSuccess: (state, action) => {
       state.loading = false;
       state.isAuthenticated = true;
 
@@ -45,7 +62,9 @@ export const {
   startAsync,
   stopAsync,
   loginSuccess,
+  loginBMSuccess,
   otpSuccess,
+  otpBMSuccess,
   logout
 } = slice.actions;
 
@@ -62,6 +81,21 @@ export const login = (email, history) => dispatch => {
     dispatch(stopAsync());
   }))
 }
+export const loginBM = (email, history) => dispatch => {
+  dispatch(startAsync());
+
+  post(endpointAdmin + '/auth/management/login', {
+    email: email,
+  }, {}, res => {
+    dispatch(loginBMSuccess(email));
+
+    history && history.push("/otpbm");
+  }, () => {
+    dispatch(stopAsync());
+  })
+}
+
+
 
 export const otpCheck = (email, otp, history) => dispatch => {
   console.log(email);
@@ -81,5 +115,26 @@ export const otpCheck = (email, otp, history) => dispatch => {
 
   }))
 }
+
+
+export const otpCheckBM = (email, otp, history) => dispatch => {
+  console.log(email);
+
+  post(endpointAdmin + '/auth/management/otp', {
+    "email": email,
+    "otp": otp,
+    "device": "web",
+    "fcm_id": "1:10663666241:web:f3a844afac4e2025a6dcc0"
+  }, {}, res => {
+    dispatch(otpBMSuccess(res.data.data));
+
+    history.push("/");
+  }, () => {
+    dispatch(stopAsync());
+  }, () => {
+
+  })
+}
+
 
 export default slice.reducer;
