@@ -158,6 +158,7 @@ function Component() {
         </h2>
         <SectionSeparator />
         <Input label="Name" inputValue={selected.name} />
+        <Input label="Email" inputValue={selected.email} />
         <Input label="Phone" type="phone" inputValue={selected.phone} />
         <Input
           label="Legal"
