@@ -74,7 +74,7 @@ function Component() {
                         }, [dispatch, refreshToggle, headers])}
                         filters={[]}
                         actions={[
-                            <Button key="Add" label="Add" icon={<FiPlus />}
+                            <Button key="Add Announcement" label="Add Announcement" icon={<FiPlus />}
                                 onClick={() => {
                                     dispatch(setSelected({}));
                                     history.push(url + "/add");

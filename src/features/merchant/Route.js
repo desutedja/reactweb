@@ -141,7 +141,7 @@ function Component() {
                             },
                         ]}
                         actions={[
-                            <Button key="Add" label="Add" icon={<FiPlus />}
+                            <Button key="Add Merchant" label="Add Merchant" icon={<FiPlus />}
                                 onClick={() => {
                                     dispatch(setSelected({}));
                                     history.push(url + "/add");
