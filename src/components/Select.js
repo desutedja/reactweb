@@ -42,7 +42,7 @@ function Component({
                 </div>}
                 <Filter data={searched}
                     onClick={el => {
-                        setInputValue && setInputValue(el.value);
+                        setInputValue && setInputValue(el);
                         setModal(false);
                     }}
                 />

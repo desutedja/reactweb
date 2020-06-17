@@ -253,7 +253,7 @@ function Component() {
                     fetchData={fetchData}
                     filters={[]}
                     actions={[
-                        <Button key="Add" label="Add" icon={<FiPlus />}
+                        <Button key="Add Unit" label="Add Unit" icon={<FiPlus />}
                             onClick={() => setAddUnit(true)}
                         />
                     ]}
@@ -266,7 +266,7 @@ function Component() {
                     fetchData={fetchData}
                     filters={[]}
                     actions={[
-                        <Button key="Add" label="Add" icon={<FiPlus />}
+                        <Button key="Add Sub Account" label="Add Sub Account" icon={<FiPlus />}
                             onClick={() => {
                                 history.push(url + "/add-subaccount");
                             }}

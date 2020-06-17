@@ -10,6 +10,7 @@ import Modal from '../../components/Modal';
 import { Badge } from 'reactstrap';
 import { getResident, getResidentDetails, deleteResident, setSelected } from './slice';
 import Add from './Add';
+import Edit from './Edit';
 import AddSub from './AddSub';
 import Details from './Details';
 import { toSentenceCase } from '../../utils';
@@ -102,7 +103,7 @@ function Component() {
                     <Add />
                 </Route>
                 <Route path={`${path}/edit`}>
-                    <Add />
+                    <Edit />
                 </Route>
                 <Route exact path={`${path}/details`}>
                     <Details />
