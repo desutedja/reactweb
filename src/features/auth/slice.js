@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { post } from '../../utils';
+import { post } from '../slice';
 import { endpointAdmin } from '../../settings';
 
 export const slice = createSlice({
@@ -52,7 +52,7 @@ export const {
 export const login = (email, history) => dispatch => {
   dispatch(startAsync());
 
-  post(endpointAdmin + '/auth/centratama/login', {
+  dispatch(post(endpointAdmin + '/auth/centratama/login', {
     email: email,
   }, {}, res => {
     dispatch(loginSuccess(email));
@@ -60,13 +60,13 @@ export const login = (email, history) => dispatch => {
     history && history.push("/otp");
   }, () => {
     dispatch(stopAsync());
-  })
+  }))
 }
 
 export const otpCheck = (email, otp, history) => dispatch => {
   console.log(email);
 
-  post(endpointAdmin + '/auth/centratama/otp', {
+  dispatch(post(endpointAdmin + '/auth/centratama/otp', {
     "email": email,
     "otp": otp,
     "device": "web",
@@ -79,7 +79,7 @@ export const otpCheck = (email, otp, history) => dispatch => {
     dispatch(stopAsync());
   }, () => {
 
-  })
+  }))
 }
 
 export default slice.reducer;

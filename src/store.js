@@ -5,6 +5,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage'
 import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 
+import main from './features/slice';
 import auth, { startAsync, stopAsync }  from './features/auth/slice';
 import dashboard from './features/dashboard/slice';
 import management from './features/management/slice';
@@ -28,6 +29,7 @@ const logger = createLogger({
 })
 
 const reducers = combineReducers({
+  main,
   auth,
   dashboard,
   management,

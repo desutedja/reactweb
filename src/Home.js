@@ -24,8 +24,10 @@ import AnnouncementRoute from './features/announcement/Route';
 import ChatRoute from './features/chat/Route';
 
 import Row from './components/Row';
+import CustomAlert from './components/CustomAlert';
 import IconButton from './components/IconButton';
 import { toSentenceCase } from './utils';
+import { closeAlert } from './features/slice';
 import { setQiscus, updateMessages } from './features/chat/slice';
 
 const qiscus = new QiscusSDKCore();
@@ -114,6 +116,7 @@ function Component() {
     const [expanded, setExpanded] = useState("");
     const [profile, setProfile] = useState(false);
 
+    const { alert, title, content } = useSelector(state => state.main);
     const { user } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
@@ -147,7 +150,7 @@ function Component() {
         }).catch(error => {
             alert('init: ' + error);
         });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     function isSelected(menu) {
@@ -156,6 +159,9 @@ function Component() {
 
     return (
         <div>
+            <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
+                content={content}
+            />
             <div className={menuWide ? "TopBar" : "TopBar-wide"}>
                 <div className="TopBar-left">
                     <IconButton
