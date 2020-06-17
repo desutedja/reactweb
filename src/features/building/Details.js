@@ -333,7 +333,7 @@ function Component() {
             </Modal>
             <Modal isOpen={addManagement} toggle={() => setAddManagement(false)} title={edit ? "Edit Management" : "Add Management"}
                 okLabel={edit ? "Save" : "Add" } >
-                    <Form onSubmit={data => {
+                    <Form isModal={true} onSubmit={data => {
                         edit ?
                             dispatch(editBuildingManagement(headers, {
                                 "building_id": selected.id, building_name: selected.name, ...data,
@@ -346,7 +346,7 @@ function Component() {
                         setEdit(false);
                         setRow({});
                     }}>
-                    <Modal disableFooter={true} isOpen={modalManagement} onRequestClose={() => setModalManagement(false)}>
+                    <Modal disableFooter={true} isOpen={modalManagement} toggle={() => setModalManagement(false)}>
                         <Input label="Search"
                             inputValue={search} setInputValue={setSearch}
                         />

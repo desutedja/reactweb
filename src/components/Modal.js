@@ -4,7 +4,9 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 // ReactModal.setAppElement('#root');
 
-function Component({ isOpen, toggle, title, onClick, children, okLabel, disableHeader=false, disableFooter=false}) {
+function Component({ isOpen, toggle, title, onClick, children, okLabel, cancelLabel='',
+    disableHeader=false, disableFooter=false, onClickSecondary=null, 
+    disablePrimary=false, disableSecondary=false}) {
     const closeBtn = <button className="close" onClick={toggle}>&times;</button>;
 
     return (
@@ -20,8 +22,12 @@ function Component({ isOpen, toggle, title, onClick, children, okLabel, disableH
                     {children}
                 </ModalBody>
                 { !disableFooter && (<ModalFooter>
-                    <Button color="primary" onClick={onClick}>{okLabel}</Button>{' '}
-                    <Button color="secondary" onClick={toggle}>Cancel</Button>
+                        { !disablePrimary && <Button color="primary" onClick={onClick}>{okLabel}</Button> }
+                        {' '}
+                        { !disableSecondary && 
+                        <Button color="secondary" onClick={onClickSecondary !== null ? onClickSecondary : toggle}>
+                            {cancelLabel === '' ? "Cancel" : cancelLabel}
+                        </Button> }
                 </ModalFooter>) }
             </Modal>
         </div>
