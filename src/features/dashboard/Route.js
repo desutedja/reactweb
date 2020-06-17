@@ -2,6 +2,7 @@ import React, {  } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
 import Task from './Task';
+import Transaction from './Transaction';
 import Billing from './Billing';
 import Advertisement from './Advertisement';
 
@@ -22,6 +23,9 @@ function Component() {
                 </Route>
                 <Route path={`${path}/billing`}>
                     <Billing />
+                </Route>
+                <Route path={`${path}/transaction`}>
+                    <Transaction />
                 </Route>
             </Switch>
         </div>
