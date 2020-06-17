@@ -50,3 +50,8 @@ export const banks = [
     {label: 'BSM', value: 'bsm',},
     {label: 'Bank Muamalat', value: 'muamalat',},
 ]
+
+export const merchant_types = [
+    {label: 'Services', value: 'Services'},
+    {label: 'Goods', value: 'Goods'},
+]

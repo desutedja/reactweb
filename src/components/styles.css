@@ -175,3 +175,7 @@ input[type="button"]:disabled {
   cursor: default;
 }
 
+.HighlightValue-Red {
+  font-weight: bold;    
+  color: var(--red);
+}
