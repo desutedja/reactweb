@@ -12,6 +12,7 @@ import ActionButton from './ActionButton';
 import Input from './Input';
 import Modal from './Modal';
 import Dropdown from './DropDown';
+import FilterButton from './FilterButton';
 
 function Component({
     columns,
@@ -129,12 +130,18 @@ function Component({
                     {renderActions != null ? renderActions(selectedRowIds, page) : []}
                 </div>
                 <div className="TableAction-right">
-                    {filters.map((el, index) => <div key={index} onClick={() => {
-                        el.component && toggleModal(true);
-                        setFilter(index);
-                    }}>
-                        {el.button}
-                    </div>)}
+                    {
+                        filters.map((el, index) => !el.hidden && 
+                                <FilterButton label={el.label} 
+                                hideX={el.hidex}
+                                onClick={() => {
+                                    el.onClick && el.onClick();
+                                    el.component && toggleModal(true);
+                                    setFilter(index);
+                                }}
+                                onClickDelete={el.delete} />
+                        )
+                    }
                     <div className="TableSearch">
                         <Input
                             label="Search"

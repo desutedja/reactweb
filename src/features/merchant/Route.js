@@ -89,10 +89,9 @@ function Component() {
                         }, [dispatch, refreshToggle, headers, type, cat])}
                         filters={[
                             {
-                                button: <Button key="Select Type"
-                                    label={type ? typeLabel : "Select Type"}
-                                    selected={type}
-                                />,
+                                hidex: type === "",
+                                label: <p>{type ? "Type: " + typeLabel : "Select Type"}</p>,
+                                delete: () => { setType(""); },
                                 component: toggleModal =>
                                     <Filter
                                         data={merchant_types}
@@ -113,6 +112,9 @@ function Component() {
                                     label={cat ? catName : "Select Category"}
                                     selected={cat}
                                 />,
+                                hidex: cat === "",
+                                label: <p>{cat ? "Category: " + catName : "Select Category"}</p>,
+                                delete: () => { setCat(""); },
                                 component: (toggleModal) =>
                                     <>
                                         <Input

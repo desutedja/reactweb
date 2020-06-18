@@ -186,10 +186,9 @@ function Component() {
                         }, [dispatch, headers, refreshToggle, type, prio, status, building])}
                         filters={[
                             {
-                                button: <Button key="Select Building"
-                                    label={building ? buildingName : "Select Building"}
-                                    selected={building}
-                                />,
+                                hidex: building === "",
+                                label: <p>{building ? "Building: " + buildingName : "Select Building"}</p>,
+                                delete: () => { setBuilding(""); },
                                 component: (toggleModal) =>
                                     <>
                                         <Input
@@ -215,10 +214,9 @@ function Component() {
                                     </>
                             },
                             {
-                                button: <Button key="Select Type"
-                                    label={type ? typeLabel : "Select Type"}
-                                    selected={type}
-                                />,
+                                hidex: type === "",
+                                label: <p>{type ? "Type: " + typeLabel : "Select Type"}</p>,
+                                delete: () => { setType(""); },
                                 component: (toggleModal) =>
                                     <Filter
                                         data={types}
@@ -235,10 +233,9 @@ function Component() {
                                     />
                             },
                             {
-                                button: <Button key="Select Priority"
-                                    label={prio ? prioLabel : "Select Priority"}
-                                    selected={prio}
-                                />,
+                                hidex: prio === "",
+                                label: <p>{prio ? "Priority: " + prioLabel : "Select Priority"}</p>,
+                                delete: () => { setPrio(""); },
                                 component: (toggleModal) =>
                                     <Filter
                                         data={prios}
@@ -255,10 +252,9 @@ function Component() {
                                     />
                             },
                             {
-                                button: <Button key="Select Status"
-                                    label={status ? statusLabel : "Select Status"}
-                                    selected={status}
-                                />,
+                                hidex: status === "",
+                                label: <p>{status ? "Status: " + statusLabel : "Select Status"}</p>,
+                                delete: () => { setStatus(""); },
                                 component: (toggleModal) =>
                                     <Filter
                                         data={statuses}

@@ -486,7 +486,7 @@ function Component() {
                     fetchData={fetchData}
                     filters={[]}
                     actions={[
-                        <Button key="Add" label="Add" icon={<FiPlus />}
+                        <Button key="Add Unit" label="Add Unit" icon={<FiPlus />}
                             onClick={() => {
                                 setEdit(false);
                                 setRow({});
@@ -519,10 +519,9 @@ function Component() {
                     fetchData={fetchData}
                     filters={[
                         {
-                            button: <Button key="Select Name"
-                                label={utNameFilter.label ? utNameFilter.label : "Select Name"}
-                                selected={utNameFilter.label}
-                            />,
+                            hidex: !utNameFilter.label,
+                            label: <p>{utNameFilter.label ? "Name: " + utNameFilter.label : "Select Name"}</p>,
+                            delete: () => { setUtNameFilter({}); },
                             component: (toggleModal) =>
                                 <Filter
                                     data={unitTypes}
@@ -531,14 +530,14 @@ function Component() {
                                         toggleModal(false);
                                     }}
                                     onClickAll={() => {
-                                        setUtNameFilter("");
+                                        setUtNameFilter({});
                                         toggleModal(false);
                                     }}
                                 />
                         },
                     ]}
                     actions={[
-                        <Button key="Add" label="Add" icon={<FiPlus />}
+                        <Button key="Add Unit Type" label="Add Unit Type" icon={<FiPlus />}
                             onClick={() => {
                                 setEdit(false);
                                 setRow({});
@@ -569,10 +568,9 @@ function Component() {
                     fetchData={fetchData}
                     filters={[
                         {
-                            button: <Button key="Select Type"
-                                label={sTypeFilter.label ? sTypeFilter.label : "Select Type"}
-                                selected={sTypeFilter.label}
-                            />,
+                            hidex: !sTypeFilter.label,
+                            label: <p>{sTypeFilter.label ? "Type: " + sTypeFilter.label : "Select Type"}</p>,
+                            delete: () => { setSTypeFilter({}); },
                             component: (toggleModal) =>
                                 <Filter
                                     data={sectionTypes}
@@ -581,14 +579,14 @@ function Component() {
                                         toggleModal(false);
                                     }}
                                     onClickAll={() => {
-                                        setSTypeFilter("");
+                                        setSTypeFilter({});
                                         toggleModal(false);
                                     }}
                                 />
                         },
                     ]}
                     actions={[
-                        <Button key="Add" label="Add" icon={<FiPlus />}
+                        <Button key="Add Section" label="Add Section" icon={<FiPlus />}
                             onClick={() => {
                                 setEdit(false);
                                 setRow({});
@@ -623,6 +621,9 @@ function Component() {
                                 label={sGroupFilter.label ? sGroupFilter.label : "Select Group"}
                                 selected={sGroupFilter.label}
                             />,
+                            hidex: !sGroupFilter.label,
+                            label: <p>{sGroupFilter.label ? "Group: " + sGroupFilter.label : "Select Group"}</p>,
+                            delete: () => { setSGroupFilter({}); },
                             component: (toggleModal) =>
                                 <Filter
                                     data={serviceGroup}
@@ -638,7 +639,7 @@ function Component() {
                         },
                     ]}
                     actions={[
-                        <Button key="Add" label="Add" icon={<FiPlus />}
+                        <Button key="Add Billing Service" label="Add Billing Service" icon={<FiPlus />}
                             onClick={() => {
                                 setEdit(false);
                                 setRow({});
@@ -670,7 +671,7 @@ function Component() {
                     fetchData={fetchData}
                     filters={[]}
                     actions={[
-                        <Button key="Add" label="Add" icon={<FiPlus />}
+                        <Button key="Add Building Management" label="Add Building Management" icon={<FiPlus />}
                             onClick={() => {
                                 setEdit(false);
                                 setRow({});

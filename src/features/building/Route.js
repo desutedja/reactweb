@@ -3,6 +3,7 @@ import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiPlus, FiSearch } from 'react-icons/fi';
 
+import FilterButton from '../../components/FilterButton';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -195,30 +196,26 @@ function Component() {
                         }, [dispatch, refreshToggle, headers, province, city, district])}
                         filters={[
                             {
-                                button: city && <Button key="Select District" label={district ? "District: " + districtName : "Select District"}
-                                    selected={district}
-                                    onClick={() => {
-                                        setType("district");
-                                    }}
-                                />,
+                                label: <p>{district ? "District: " + districtName : "Select District"}</p>,
+                                delete: () => { setDistrict(""); },
+                                onClick: () => { setType("district"); },
+                                hidden: city === "",
+                                hidex: district === "",
                                 component: ModalComponent,
                             },
                             {
-                                button: province && <Button key="Select City" label={city ? "City: " + cityName : "Select City"}
-                                    selected={city}
-                                    onClick={() => {
-                                        setType("city");
-                                    }}
-                                />,
+                                label: <p>{city ? "City: " + cityName : "Select City"}</p>,
+                                onClick: () => { setType("city"); },
+                                delete: () => { setCity("") },
+                                hidden: province === "",
+                                hidex: city === "" ,
                                 component: ModalComponent,
                             },
                             {
-                                button: <Button key="Select Province" label={province ? "Province: " + provinceName : "Select Province"}
-                                    selected={province}
-                                    onClick={() => {
-                                        setType("province");
-                                    }}
-                                />,
+                                label:  <p>{province ? "Province: " + provinceName : "Select Province"}</p>,
+                                onClick: () => { setType("province"); },
+                                delete: () => { setProvince(""); },
+                                hidex: province === "",
                                 component: ModalComponent,
                             },
                         ]}

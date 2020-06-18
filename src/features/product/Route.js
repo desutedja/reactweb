@@ -84,10 +84,9 @@ function Component() {
                         }, [dispatch, refreshToggle, headers, merchant, cat, type])}
                         filters={[
                             {
-                                button: <Button key="Select Type"
-                                    label={type ? "Type: " + type : "Select Type"}
-                                    selected={type}
-                                />,
+                                hidex: type === "",
+                                label: <p>{type ? "Type: " + type : "Select Type"}</p>,
+                                delete: () => { setType(""); },
                                 component: (toggleModal) =>
                                     <>
                                         <Filter
@@ -106,10 +105,9 @@ function Component() {
                                     </>
                             },
                             {
-                                button: <Button key="Select Merchant"
-                                    label={merchant ? "Merchant: " + merchantName : "Select Merchant"}
-                                    selected={merchant}
-                                />,
+                                hidex: merchant === "",
+                                label: <p>{merchant ? "Merchant: " + merchantName : "Select Merchant"}</p>,
+                                delete: () => { setMerchant(""); },
                                 component: (toggleModal) =>
                                     <>
                                         <Input
@@ -137,10 +135,9 @@ function Component() {
                                     </>
                             },
                             {
-                                button: <Button key="Select Category"
-                                    label={cat ? "Category: " + catName : "Select Category"}
-                                    selected={cat}
-                                />,
+                                hidex: cat === "",
+                                label: <p>{cat ? "Category: " + catName : "Select Category"}</p>,
+                                delete: () => { setCat(""); },
                                 component: (toggleModal) =>
                                     <>
                                         <Input
