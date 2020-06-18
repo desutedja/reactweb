@@ -20,6 +20,39 @@ export const statusColor = {
     'completed': 'secondary'
 }
 
+export const trx_statusColor = {
+    'requested': 'light',
+    'ask_resident': 'primary',
+    'ask_merchant': 'info',
+    'paid': 'warning',
+    'in_progress': 'primary',
+    'canceled': 'secondary',
+    'expired': 'secondary',
+    'delivered': 'primary',
+    'completed': 'success',
+    'rejected': 'danger',
+    'ready_for_pickup': 'primary',
+    'accepted': 'primary',
+}
+
+export const trx_status = [
+    { label: 'requested', value: 'requested' },
+    { label: 'ask_resident', value: 'ask_resident' },
+    { label: 'ask_merchant', value: 'ask_merchant' },
+    { label: 'paid', value: 'paid' },
+    { label: 'in_progress', value: 'in_progress' },
+    { label: 'accepted', value: 'accepted' },
+    { label: 'canceled', value: 'canceled' },
+    { label: 'expired', value: 'expired' },
+    { label: 'paid', value: 'paid' },
+    { label: 'on_delivery', value: 'on_delivery' },
+    { label: 'delivered', value: 'delivered' },
+    { label: 'completed', value: 'completed' },
+    { label: 'rejected', value: 'rejected' },
+    { label: 'ready_for_pickup', value: 'ready_for_pickup' },
+    { label: 'requested', value: 'requested' },
+]
+
 export const payment_banks = [
     {label: 'BRI', value: 'bri',},
     {label: 'BNI', value: 'bni',},
