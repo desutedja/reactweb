@@ -59,7 +59,7 @@ export const getProduct = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(merchantEndpoint + '/items/list' +
+  dispatch(get(merchantEndpoint + '/items/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&merchant_id=' + merchant +
@@ -71,19 +71,19 @@ export const getProduct = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const getProductDetails = (row, headers, history, url) => dispatch => {
   dispatch(startAsync());
 
-  get(merchantEndpoint + '/items?id=' + row.id, headers,
+  dispatch(get(merchantEndpoint + '/items?id=' + row.id, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
 
       dispatch(stopAsync())
-    })
+    }))
 }
 
 export const patchAdminFee = (headers, data, item) => dispatch => {
