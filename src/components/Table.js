@@ -104,20 +104,20 @@ function Component({
 
     useEffect(() => {
         const selectedRows = selectedRowIds ?
-         Object.keys(selectedRowIds).map(el => page[el].original) : [];
+            Object.keys(selectedRowIds).map(el => page[el].original) : [];
 
         console.log(selectedRows);
         onSelection && onSelection(selectedRows);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, selectedRowIds]);
 
     return (
         <div className="Table">
-            <Modal 
+            <Modal
                 disableFooter={true}
-                disableHeader={false}
+                disableHeader={true}
                 isOpen={modalOpen}
-                toggle={() => { toggleModal(false)} }
+                toggle={() => { toggleModal(false) }}
             >
                 {(filters.length > 0 && filters[activeFilter].component) ?
                     filters[activeFilter].component(toggleModal) : null}
@@ -131,8 +131,10 @@ function Component({
                 </div>
                 <div className="TableAction-right">
                     {
-                        filters.map((el, index) => !el.hidden && 
-                                <FilterButton label={el.label} 
+                        filters.map((el, index) => !el.hidden &&
+                            <FilterButton
+                                key={index}
+                                label={el.label}
                                 hideX={el.hidex}
                                 onClick={() => {
                                     el.onClick && el.onClick();
@@ -154,110 +156,116 @@ function Component({
                 </div>
             </div>
             <div className="Table-content">
-                <table {...getTableProps()}>
-                    {loading &&
-                        <tbody className="TableLoading">
-                            <tr className="Spinner">
-                                <td><MoonLoader
-                                    size={24}
-                                    color={"grey"}
-                                    loading={loading}
-                                />
-                                </td>
-                            </tr>
-                        </tbody>
-                    }
-                    <thead>
-                        {headerGroups.map((headerGroup, i) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    <th {...column.getHeaderProps(
-                                        column.getSortByToggleProps()
-                                    )}><div className="TableHeader">
-                                            {column.render('Header')}
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <FiChevronDown className="SortIcon" />
-                                                    : <FiChevronUp className="SortIcon" />
-                                                : ''}
-                                        </div>
-                                    </th>
-                                ))}
-                                {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) && <th key={i}>
-                                    Actions
-                            </th>}
-                            </tr>
-                        ))}
-                    </thead>
-                    <tbody {...getTableBodyProps()}>
-                        {page.map((row, i) => {
-                            prepareRow(row);
-
-                            const MenuActions = [
-                                (onClickChat ? {
-                                    onClick: () => onClickChat(row.original),
-                                    name: "Chat",
-                                    icon: <FiMessageSquare />,
-                                } : ""),
-                                (onClickResolve ? {
-                                    name: "Set As Resolved",
-                                    onClick: () => onClickResolve(row.original),
-                                    disabled: row.original.status === 'completed',
-                                    icon: <FiCheck />,
-                                } : ""),
-                                (onClickReassign ? {
-                                    name: "Assign Staff",
-                                    onClick: () => onClickReassign(row.original),
-                                    disabled: !(row.original.status === 'created' || row.original.status === 'rejected'),
-                                    icon: <FiUserPlus />
-                                } : ""),
-                                (onClickDetails ? {
-                                    onClick: () => onClickDetails(row.original),
-                                    name: "Details",
-                                    icon: <FiMoreHorizontal />,
-                                } : ""),
-                                (onClickEdit ? {
-                                    onClick: () => onClickEdit(row.original),
-                                    name: "Edit",
-                                    icon: <FiEdit />,
-                                } : ""),
-                                (onClickDelete ? {
-                                    name: "Delete",
-                                    onClick: () => onClickDelete(row.original),
-                                    color: "danger",
-                                    icon: <FiTrash />,
-                                } : ""),
-                            ].filter(x => x !== "")
-
-                            return (
-                                <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
-
-                                    {row.cells.map(cell => {
-                                        return (
-                                            <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                        );
-                                    })}
-
-                                    {(MenuActions.length > 0) &&
-                                        <td key={i}>
-                                            <div style={{
-                                                display: 'flex',
-                                            }}>
-                                                {(MenuActions.length > 2) ? (<Dropdown label="Actions" items={MenuActions} />) : (
-                                                    MenuActions.map((item, key) =>
-                                                        <ActionButton key={key} icon={item.icon} color={item.color}
-                                                            onClick={item.onClick}>{item.name}
-                                                        </ActionButton>
-                                                    )
-                                                )}
-                                            </div>
-                                        </td>
-                                    }
+                {page.length === 0 ?
+                    <div className="TableEmpty">
+                        No items.
+                    </div>
+                    :
+                    <table {...getTableProps()}>
+                        {loading &&
+                            <tbody className="TableLoading">
+                                <tr className="Spinner">
+                                    <td><MoonLoader
+                                        size={34}
+                                        color={"grey"}
+                                        loading={loading}
+                                    />
+                                    </td>
                                 </tr>
-                            );
-                        })}
-                    </tbody>
-                </table>
+                            </tbody>
+                        }
+                        <thead>
+                            {headerGroups.map((headerGroup, i) => (
+                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup.headers.map(column => (
+                                        <th {...column.getHeaderProps(
+                                            column.getSortByToggleProps()
+                                        )}><div className="TableHeader">
+                                                {column.render('Header')}
+                                                {column.isSorted
+                                                    ? column.isSortedDesc
+                                                        ? <FiChevronDown className="SortIcon" />
+                                                        : <FiChevronUp className="SortIcon" />
+                                                    : ''}
+                                            </div>
+                                        </th>
+                                    ))}
+                                    {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) && <th key={i}>
+                                        Actions
+                            </th>}
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyProps()}>
+                            {page.map((row, i) => {
+                                prepareRow(row);
+
+                                const MenuActions = [
+                                    (onClickChat ? {
+                                        onClick: () => onClickChat(row.original),
+                                        name: "Chat",
+                                        icon: <FiMessageSquare />,
+                                    } : ""),
+                                    (onClickResolve ? {
+                                        name: "Set As Resolved",
+                                        onClick: () => onClickResolve(row.original),
+                                        disabled: row.original.status === 'completed',
+                                        icon: <FiCheck />,
+                                    } : ""),
+                                    (onClickReassign ? {
+                                        name: "Assign Staff",
+                                        onClick: () => onClickReassign(row.original),
+                                        disabled: !(row.original.status === 'created' || row.original.status === 'rejected'),
+                                        icon: <FiUserPlus />
+                                    } : ""),
+                                    (onClickDetails ? {
+                                        onClick: () => onClickDetails(row.original),
+                                        name: "Details",
+                                        icon: <FiMoreHorizontal />,
+                                    } : ""),
+                                    (onClickEdit ? {
+                                        onClick: () => onClickEdit(row.original),
+                                        name: "Edit",
+                                        icon: <FiEdit />,
+                                    } : ""),
+                                    (onClickDelete ? {
+                                        name: "Delete",
+                                        onClick: () => onClickDelete(row.original),
+                                        color: "danger",
+                                        icon: <FiTrash />,
+                                    } : ""),
+                                ].filter(x => x !== "")
+
+                                return (
+                                    <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
+
+                                        {row.cells.map(cell => {
+                                            return (
+                                                <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                            );
+                                        })}
+
+                                        {(MenuActions.length > 0) &&
+                                            <td key={i}>
+                                                <div style={{
+                                                    display: 'flex',
+                                                }}>
+                                                    {(MenuActions.length > 2) ? (<Dropdown label="Actions" items={MenuActions} />) : (
+                                                        MenuActions.map((item, key) =>
+                                                            <ActionButton key={key} icon={item.icon} color={item.color}
+                                                                onClick={item.onClick}>{item.name}
+                                                            </ActionButton>
+                                                        )
+                                                    )}
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                }
             </div>
             <div className="Pagination">
                 <div className="Pagination-range">

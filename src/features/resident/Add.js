@@ -205,7 +205,7 @@ function Component() {
                 <div style={{
                     width: '100%'
                 }}>
-                    <Input label="Email" placeholder={"Input Resident Email"} type="email" inputValue={email}
+                    <Input label="Email" placeholder={"Input Resident Email"} type="email" compact inputValue={email}
                         setInputValue={setEmail} />
                     {exist && <Input label="Check" type="button" compact
                         onClick={() => {

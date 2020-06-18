@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointTransaction } from '../../settings';
-import { get } from '../../utils';
+import { get } from '../slice';
 
 const transactionEndpoint = endpointTransaction + '/admin/transaction';
 
@@ -13,11 +13,13 @@ export const slice = createSlice({
     total_items: 0,
     total_pages: 1,
     refreshToggle: true,
-    alert: {
-      type: 'normal',
-      message: '',
-    },
     settlement: {
+      items: [],
+      selected: {},
+      total_items: 0,
+      total_pages: 1,
+    },
+    disbursement: {
       items: [],
       selected: {},
       total_items: 0,
@@ -35,25 +37,28 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.total_items;
+      state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
     },
     setSettlement: (state, action) => {
       const data = action.payload;
 
       state.settlement.items = data.items;
-      state.settlement.total_items = data.total_items;
+      state.settlement.total_items = data.filtered_item;
       state.settlement.total_pages = data.filtered_page;
+    },
+    setDisbursement: (state, action) => {
+      const data = action.payload;
+
+      state.disbursement.items = data.items;
+      state.disbursement.total_items = data.filtered_item;
+      state.disbursement.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {
       state.selected = action.payload;
     },
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
-    },
-    setAlert: (state, action) => {
-      state.alert.type = action.payload.type;
-      state.alert.message = action.payload.message;
     },
   },
 });
@@ -64,6 +69,7 @@ export const {
   setData,
   setSettlement,
   setSelected,
+  setDisbursement,
   refresh
 } = slice.actions;
 
@@ -75,7 +81,7 @@ export const getTransaction = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(transactionEndpoint + '/list' +
+  dispatch(get(transactionEndpoint + '/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&status=' + status +
@@ -87,19 +93,19 @@ export const getTransaction = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const getTransactionDetails = (row, headers, history, url) => dispatch => {
   dispatch(startAsync());
 
-  get(transactionEndpoint + '/' + row.trx_code, headers,
+  dispatch(get(transactionEndpoint + '/' + row.trx_code, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
 
       dispatch(stopAsync())
-    })
+    }))
 }
 
 export const getTransactionSettlement = (
@@ -108,7 +114,7 @@ export const getTransactionSettlement = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(transactionEndpoint + '/list' +
+  dispatch(get(transactionEndpoint + '/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&status=completed' +
@@ -118,5 +124,26 @@ export const getTransactionSettlement = (
       dispatch(setSettlement(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
+}
+
+export const getTransactionDisbursement = (
+  headers, pageIndex, pageSize,
+  search = '', type, merchant = '', courier = ''
+) => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(get(endpointTransaction + '/admin/disbursement/' + type +
+    '?page=' + (pageIndex + 1) +
+    '&limit=' + pageSize +
+    '&merchant_id=' + merchant +
+    '&courier_id=' + courier +
+    '&limit=' + pageSize +
+    '&search=' + search,
+    headers,
+    res => {
+      dispatch(setDisbursement(res.data.data));
+
+      dispatch(stopAsync());
+    }))
 }

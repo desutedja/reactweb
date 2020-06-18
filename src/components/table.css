@@ -81,7 +81,7 @@
 
 .TableAction-right {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .TableAction-right button {
@@ -91,6 +91,16 @@
 .TableHeader {
   display: flex;
   align-items: center;
+}
+
+.TableEmpty {
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  padding: 16px;
+  width: 100%;
+  border-bottom: 1px solid #f3f3fa;
+  color: grey;
 }
 
 .SortIcon {

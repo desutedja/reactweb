@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointResident } from '../../settings';
-import { get, post, del, put } from '../../utils';
+import { get, post, del, put } from '../slice';
 
 const residentEndpoint = endpointResident + '/management/resident';
 
@@ -15,10 +15,6 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
-    alert: {
-      type: 'normal',
-      message: '',
-    },
     unit: {
       items: [],
       total_items: 0,
@@ -45,21 +41,21 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.total_items;
+      state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
     },
     setUnitData: (state, action) => {
       const data = action.payload;
 
       state.unit.items = data.items;
-      state.unit.total_items = data.total_items;
+      state.unit.total_items = data.filtered_item;
       state.unit.total_pages = data.filtered_page;
     },
     setSubaccountData: (state, action) => {
       const data = action.payload;
 
       state.subaccount.items = data.items;
-      state.subaccount.total_items = data.total_items;
+      state.subaccount.total_items = data.filtered_item;
       state.subaccount.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {
@@ -67,10 +63,6 @@ export const slice = createSlice({
     },
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
-    },
-    setAlert: (state, action) => {
-      state.alert.type = action.payload.type;
-      state.alert.message = action.payload.message;
     },
   },
 });
@@ -83,7 +75,6 @@ export const {
   setSubaccountData,
   setSelected,
   refresh,
-  setAlert
 } = slice.actions;
 
 export const getResident = (
@@ -92,7 +83,7 @@ export const getResident = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(residentEndpoint + '/read' +
+  dispatch(get(residentEndpoint + '/read' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search +
@@ -103,13 +94,13 @@ export const getResident = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const createResident = (headers, data, history) => dispatch => {
   dispatch(startAsync());
 
-  post(residentEndpoint + '/register/parent', data, headers,
+  dispatch(post(residentEndpoint + '/register/parent', data, headers,
     res => {
       history.push("/resident");
 
@@ -117,13 +108,13 @@ export const createResident = (headers, data, history) => dispatch => {
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const editResident = (headers, data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  put(residentEndpoint + '/edit', { ...data, id: id }, headers,
+  dispatch(put(residentEndpoint + '/edit', { ...data, id: id }, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/resident/details");
@@ -132,42 +123,35 @@ export const editResident = (headers, data, history, id) => dispatch => {
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const deleteResident = (row, headers) => dispatch => {
   dispatch(startAsync());
 
-  del(residentEndpoint + '/delete/' + row.id, headers,
+  dispatch(del(residentEndpoint + '/delete/' + row.id, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Resident ' + row.name + ' has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
       dispatch(refresh());
       dispatch(stopAsync())
-    })
+    }))
 }
 
 export const getResidentDetails = (row, headers, history, url) => dispatch => {
   dispatch(startAsync());
 
-  get(residentEndpoint + '/detail/' + row.id, headers,
+  dispatch(get(residentEndpoint + '/detail/' + row.id, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
 
       dispatch(stopAsync())
-    })
+    }))
 }
 
 export const getSubaccount = (headers, pageIndex, pageSize, search, row) => dispatch => {
     dispatch(startAsync());
 
-    get(residentEndpoint + '/subaccount' +
+    dispatch(get(residentEndpoint + '/subaccount' +
         '?page=' + (pageIndex + 1) +
         '&id=' + row.id + 
         '&limit=' + pageSize +
@@ -179,13 +163,13 @@ export const getSubaccount = (headers, pageIndex, pageSize, search, row) => disp
 
             dispatch(stopAsync())
         }
-    )
+    ))
 }
 
 export const getResidentUnit = (headers, pageIndex, pageSize, search, row) => dispatch => {
     dispatch(startAsync());
     
-    get(residentEndpoint + '/unit' + 
+    dispatch(get(residentEndpoint + '/unit' + 
         '?page=' + (pageIndex + 1) +
         '&id=' + row.id + 
         '&limit=' + pageSize +
@@ -197,39 +181,39 @@ export const getResidentUnit = (headers, pageIndex, pageSize, search, row) => di
 
             dispatch(stopAsync())
         }
-    )
+    ))
 }
 
 export const addResidentUnit = (headers, data) => dispatch => {
   dispatch(startAsync());
 
-  post(residentEndpoint + '/add_unit', data, headers,
+  dispatch(post(residentEndpoint + '/add_unit', data, headers,
     res => {
       dispatch(refresh());
       dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const addSubaccount = (headers, data) => dispatch => {
   dispatch(startAsync());
 
-  post(residentEndpoint + '/add_unit', data, headers,
+  dispatch(post(residentEndpoint + '/add_unit', data, headers,
     res => {
       dispatch(refresh());
       dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const createSubaccount = (headers, data, history) => dispatch => {
   dispatch(startAsync());
 
-  post(residentEndpoint + '/register/subaccount', data, headers,
+  dispatch(post(residentEndpoint + '/register/subaccount', data, headers,
     res => {
       history.push("/resident");
 
@@ -237,7 +221,7 @@ export const createSubaccount = (headers, data, history) => dispatch => {
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export default slice.reducer;

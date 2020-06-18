@@ -10,7 +10,6 @@ import auth, { startAsync, stopAsync }  from './features/auth/slice';
 import dashboard from './features/dashboard/slice';
 import management from './features/management/slice';
 import building from './features/building/slice';
-import building_management from './features/building_management/slice';
 import resident from './features/resident/slice';
 import billing from './features/billing/slice';
 import staff from './features/staff/slice';
@@ -34,7 +33,6 @@ const reducers = combineReducers({
   dashboard,
   management,
   building,
-  building_management,
   resident,
   billing,
   staff,

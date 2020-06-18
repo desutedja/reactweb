@@ -9,7 +9,7 @@ export const endpointAds = 'https://centratama.okbabe.technology/clink-advertise
 
 export const mainColor = '#2f78e9';
 
-export const statusColor = {
+export const taskStatusColor = {
     'created': 'light',
     'assigned': 'success',
     'in_progress': 'primary',
@@ -18,21 +18,6 @@ export const statusColor = {
     'rejected': 'danger',
     'approved': 'success',
     'completed': 'secondary'
-}
-
-export const trx_statusColor = {
-    'requested': 'light',
-    'ask_resident': 'primary',
-    'ask_merchant': 'info',
-    'paid': 'warning',
-    'in_progress': 'primary',
-    'canceled': 'secondary',
-    'expired': 'secondary',
-    'delivered': 'primary',
-    'completed': 'success',
-    'rejected': 'danger',
-    'ready_for_pickup': 'primary',
-    'accepted': 'primary',
 }
 
 export const trx_status = [
@@ -52,6 +37,22 @@ export const trx_status = [
     { label: 'ready_for_pickup', value: 'ready_for_pickup' },
     { label: 'requested', value: 'requested' },
 ]
+
+export const trxStatusColor = {
+    'requested': 'light',
+    'ask_merchant': 'warning',
+    'accepted': 'info',
+    'rejected': 'warning',
+    'canceled': 'secondary',
+    'expired': 'light',
+    'in_progress': 'primary',
+    'ask_resident': 'warning',
+    'paid': 'success',
+    'ready_for_pickup': 'info',
+    'on_delivery': 'success',
+    'delivered': 'info',
+    'completed': 'secondary',
+}
 
 export const payment_banks = [
     {label: 'BRI', value: 'bri',},

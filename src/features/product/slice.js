@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointMerchant } from '../../settings';
-import { get, patch } from '../../utils';
+import { get, patch, setInfo } from '../slice';
 
 const merchantEndpoint = endpointMerchant + '/admin';
 
@@ -15,10 +15,6 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
-    alert: {
-      type: 'normal',
-      message: '',
-    },
   },
   reducers: {
     startAsync: (state) => {
@@ -31,7 +27,7 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.total_items;
+      state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {
@@ -39,10 +35,6 @@ export const slice = createSlice({
     },
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
-    },
-    setAlert: (state, action) => {
-      state.alert.type = action.payload.type;
-      state.alert.message = action.payload.message;
     },
     setAdminFee: (state, action) => {
       state.selected.admin_fee = action.payload;
@@ -56,7 +48,6 @@ export const {
   setData,
   setSelected,
   refresh,
-  setAlert,
   setAdminFee,
 } = slice.actions;
 
@@ -98,12 +89,17 @@ export const getProductDetails = (row, headers, history, url) => dispatch => {
 export const patchAdminFee = (headers, data, item) => dispatch => {
   dispatch(startAsync());
 
-  patch(merchantEndpoint + '/items/adjust_fee', data, headers,
+  dispatch(patch(merchantEndpoint + '/items/adjust_fee', data, headers,
     res => {
       dispatch(setAdminFee(res.data.data.admin_fee));
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Admin fee has been updated.'
+      }));
     },
     err => {
 
     }
-  )
+  ))
 }

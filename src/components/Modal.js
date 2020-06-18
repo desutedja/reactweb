@@ -16,6 +16,7 @@ function Component({ isOpen, toggle, title, onClick, children, okLabel, cancelLa
                 scrollable={false}
                 modalTransition={{ timeout: 1 }}
                 backdropTransition= {{ timeout: 1 }}
+                toggle={toggle}
             >
                 { !disableHeader && <ModalHeader toggle={toggle} close={closeBtn}><h3>{title}</h3></ModalHeader> }
                 <ModalBody>

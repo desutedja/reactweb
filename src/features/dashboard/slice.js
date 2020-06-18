@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointTask } from '../../settings';
-import { get } from '../../utils';
+import { get } from '../slice';
 
 const chartEndpoint = endpointTask + '/admin/chart';
 
@@ -48,7 +48,7 @@ export const getSOS = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(chartEndpoint + '/sos/statistics' + 
+  dispatch(get(chartEndpoint + '/sos/statistics' + 
     '?timegroup=' + range +
     '&limit=',
     headers,
@@ -58,7 +58,7 @@ export const getSOS = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export default slice.reducer;

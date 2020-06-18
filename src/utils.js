@@ -182,7 +182,7 @@ export function dateFormatter(serverDateTime) {
 }
 
 export function toSentenceCase(sentence) {
-    if (sentence.length < 4) {
+    if (sentence.length < 3) {
         return sentence;
     }
 
@@ -199,16 +199,16 @@ export function toMoney(money) {
 }
 
 export function getCountryCode(country) {
-    const c = countries.find((el) => el.label == country)
+    const c = countries.find((el) => el.label === country)
     return c === undefined ? "Undefined Country Code" : c.value
 }
 
 export function getCountryFromCode(value) {
-    const c = countries.find((el) => el.value == value)
+    const c = countries.find((el) => el.value === value)
     return c === undefined ? "Undefined Country" : c.label
 }
 
 export function getBank(value) {
-    const c = banks.find((el) => el.value == value)
+    const c = banks.find((el) => el.value === value)
     return c === undefined ? "Undefined Bank" : c.label
 }

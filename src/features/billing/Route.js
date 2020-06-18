@@ -14,7 +14,7 @@ import Settlement from './Settlement';
 import Disbursement from './Disbursement';
 import { getBillingUnit, getBillingUnitDetails } from './slice';
 import { endpointAdmin } from '../../settings';
-import { get, toSentenceCase } from '../../utils';
+import { get, toSentenceCase, toMoney } from '../../utils';
 
 const columns = [
     // { Header: 'ID', accessor: 'code' },
@@ -25,7 +25,7 @@ const columns = [
     },
     { Header: 'Building', accessor: 'building_name' },
     { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
-    { Header: 'Unpaid Amount', accessor: 'unpaid_amount' },
+    { Header: 'Unpaid Amount', accessor: row => toMoney(row.unpaid_amount) },
 ]
 
 function Component() {
@@ -71,10 +71,9 @@ function Component() {
                         }, [dispatch, refreshToggle, headers, building])}
                         filters={[
                             {
-                                button: <Button key="Select Building"
-                                    label={building ? buildingName : "Select Building"}
-                                    selected={building}
-                                />,
+                                label: <p>{building ? "Building: " + buildingName : "Select Building"}</p>,
+                                hidex: building === "",
+                                delete: () => { setBuilding(""); },
                                 component: (toggleModal) =>
                                     <>
                                         <Input

@@ -11,7 +11,7 @@ function Component() {
 
     return (
         <div>
-            <Alert color={info.color} isOpen={info.message} toggle={() => dispatch(setInfo({}))}>
+            <Alert color={info.color} isOpen={!!info.message} toggle={() => dispatch(setInfo({}))}>
                 {info.message}
             </Alert>
         </div>

@@ -1,53 +1,56 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
-import { getTransactionDetails, setSelected, getTransactionSettlement } from './slice';
+import { getTransactionDetails, setSelected, getTransactionSettlement, getTransactionDisbursement } from './slice';
 import { toMoney, toSentenceCase, get, dateTimeFormatter } from '../../utils';
-import { endpointTransaction } from '../../settings';
-
-const columns = [
-    { Header: 'ID', accessor: 'id' },
-    { Header: 'Trx Code', accessor: 'trx_code' },
-    { Header: 'Type', accessor: row => toSentenceCase(row.type) },
-    // { Header: 'Selling Price', accessor: 'total_selling_price' },
-    // { Header: 'Internal Courier Fee', accessor: 'courier_internal_charges' },
-    // { Header: 'External Courier Fee', accessor: 'courier_external_charges' },
-    // { Header: 'Tax', accessor: 'tax_price' },
-    // { Header: 'Discount', accessor: 'discount_price' },
-    // { Header: 'Sales Fee', accessor: 'profit_from_sales' },
-    // { Header: 'PG Fee', accessor: 'profit_from_pg' },
-    // { Header: 'Delivery Fee', accessor: 'profit_from_delivery' },
-    { Header: 'Total Price', accessor: row => toMoney(row.total_price) },
-    {
-        Header: 'Payment Date', accessor: row => row.payment_date ?
-            dateTimeFormatter(row.payment_date) : 'Unpaid'
-    },
-    {
-        Header: 'Settlement Date', accessor: row => row.payment_settled_date ?
-            dateTimeFormatter(row.payment_settled_date) : '-'
-    },
-    //{ Header: 'Merchant Disbursement Date', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
-    //{ Header: 'Courier Disbursement Date', accessor: row => row.courier_disbursement_date ? row.courier_disbursement_date : '-' },
-];
+import { endpointTransaction, endpointMerchant } from '../../settings';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
 function Component() {
     const [info, setInfo] = useState({});
+    const [active, setActive] = useState(0);
+    const [type, setType] = useState('merchant');
+
+    const [merchant, setMerchant] = useState('');
+    const [merchants, setMerchants] = useState([]);
+    const [courier, setCourier] = useState('');
+    const [couriers, setCouriers] = useState([]);
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.transaction);
+    const { loading, refreshToggle, disbursement } = useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
 
+    const columns = useMemo(() => [
+        { Header: 'ID', accessor: 'id' },
+        { Header: 'Trx Code', accessor: 'trx_code' },
+        {
+            Header: 'Amount', accessor: row => type === 'merchant' ?
+                toMoney(row.total_selling_price) : toMoney(row.assignee_fee)
+        },
+        {
+            Header: 'Disbursement Date', accessor: row => type === 'merchant' ?
+                row.disbursement_date ? row.disbursement_date : '-'
+                :
+                row.courier_disbursement_date ? row.courier_disbursement_date : '-'
+        },
+    ], [type]);
+
     useEffect(() => {
         get(endpointTransaction + '/admin/transaction/summary', headers, res => {
             setInfo(res.data.data);
+        });
+    }, [headers]);
+
+    useEffect(() => {
+        get(endpointMerchant + '/admin/list?filter=disbursed', headers, res => {
+            setMerchants(res.data.data.items);
         });
     }, [headers]);
 
@@ -111,23 +114,44 @@ function Component() {
                     </div>
                 </div>
             </div>
-            <Table totalItems={total_items}
-                columns={columns}
-                data={items}
-                loading={loading}
-                pageCount={total_pages}
-                fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getTransactionSettlement(headers, pageIndex, pageSize, search));
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle, headers])}
-                filters={[]}
-                actions={[]}
-                onClickDetails={row => dispatch(getTransactionDetails(row, headers, history, url))}
-                onClickChat={row => {
-                    dispatch(setSelected(row));
-                    history.push("/chat");
-                }}
-            />
+            <div style={{
+                display: 'flex',
+                marginTop: 16,
+            }}>
+                {merchants.length > 0 && <div className="Container" style={{
+                    flexDirection: 'column',
+                    marginRight: 16,
+                }}>
+                    <h5 style={{
+                        marginBottom: 16,
+                    }}>Select Merchant</h5>
+                    {merchants.map((el, index) => <div
+                        key={index}
+                        className={index === active ? "GroupActive" : "Group"}
+                        onClick={() => setActive(index)}
+                    >
+                        {el.management_name + ' - ' + el.building_name}
+                    </div>)}
+                </div>}
+                <div className="Container" style={{
+                    flex: 3,
+                    flexDirection: 'column',
+                }}>
+                    <Table totalItems={disbursement.total_items}
+                        columns={columns}
+                        data={disbursement.items}
+                        loading={loading}
+                        pageCount={disbursement.total_pages}
+                        fetchData={useCallback((pageIndex, pageSize, search) => {
+                            dispatch(getTransactionDisbursement(headers, pageIndex, pageSize, search,
+                                type, merchant, courier));
+                            // eslint-disable-next-line react-hooks/exhaustive-deps
+                        }, [dispatch, refreshToggle, headers])}
+                        filters={[]}
+                        actions={[]}
+                    />
+                </div>
+            </div>
         </>
     )
 }
