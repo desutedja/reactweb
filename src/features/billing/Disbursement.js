@@ -141,9 +141,9 @@ function Component() {
                                     get(endpointBilling + '/management/billing/disbursement' +
                                         '/list/transaction?limit=1000&page=1&search='
                                         + '&building_id=' +
-                                        disbursement.items[active].building_id
+                                        disbursement.items[active]?.building_id
                                         + '&management_id=' +
-                                        disbursement.items[active].id,
+                                        disbursement.items[active]?.id,
                                         headers, res => {
                                             setData(res.data.data.items);
                                             setDataPages(res.data.data.total_pages);

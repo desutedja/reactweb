@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointBilling } from '../../settings';
-import { get, post, put, del } from '../../utils';
+import { get, post, put, del } from '../slice';
+import { setInfo } from '../slice';
 
 const billingEndpoint = endpointBilling + '/management/billing';
 
@@ -15,10 +16,6 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
-    alert: {
-      type: 'normal',
-      message: '',
-    },
     unit: {
       items: [],
       selected: {},
@@ -58,10 +55,6 @@ export const slice = createSlice({
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     },
-    setAlert: (state, action) => {
-      state.alert.type = action.payload.type;
-      state.alert.message = action.payload.message;
-    },
     setUnit: (state, action) => {
       const data = action.payload;
 
@@ -98,7 +91,6 @@ export const {
   setData,
   setSelected,
   refresh,
-  setAlert,
   setUnit,
   setSettlement,
   setDisbursement,
@@ -108,12 +100,10 @@ export const {
 
 export default slice.reducer;
 
-export const getBillingUnit = (
-  headers, pageIndex, pageSize, search = '', building, unit,
-) => dispatch => {
+export const getBillingUnit = (headers, pageIndex, pageSize, search = '', building, unit) => dispatch => {
   dispatch(startAsync());
 
-  get(billingEndpoint + '/unit' +
+  dispatch(get(billingEndpoint + '/unit' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&resident_building=' + building +
@@ -123,15 +113,13 @@ export const getBillingUnit = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
-export const getBillingSettlement = (
-  headers, pageIndex, pageSize, search = '', building, unit,
-) => dispatch => {
+export const getBillingSettlement = (headers, pageIndex, pageSize, search = '', building, unit) => dispatch => {
   dispatch(startAsync());
 
-  get(billingEndpoint + '/settlement' +
+  dispatch(get(billingEndpoint + '/settlement' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&building_id=' + building +
@@ -141,15 +129,13 @@ export const getBillingSettlement = (
       dispatch(setSettlement(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
-export const getBillingDisbursement = (
-  headers, pageIndex, pageSize, search = '', building, unit,
-) => dispatch => {
+export const getBillingDisbursement = (headers, pageIndex, pageSize, search = '', building, unit,) => dispatch => {
   dispatch(startAsync());
 
-  get(billingEndpoint + '/disbursement/list/management' +
+  dispatch(get(billingEndpoint + '/disbursement/list/management' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search,
@@ -158,7 +144,7 @@ export const getBillingDisbursement = (
       dispatch(setDisbursement(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const getBillingUnitDetails = (row, headers, history, url) => dispatch => {
@@ -166,12 +152,10 @@ export const getBillingUnitDetails = (row, headers, history, url) => dispatch =>
   history.push(url + '/item');
 }
 
-export const getBillingUnitItem = (
-  headers, pageIndex, pageSize, search = '', selected, status
-) => dispatch => {
+export const getBillingUnitItem = (headers, pageIndex, pageSize, search = '', selected, status) => dispatch => {
   dispatch(startAsync());
 
-  get(billingEndpoint + '/unit/group' +
+  dispatch(get(billingEndpoint + '/unit/group' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&unit_id=' + selected.id +
@@ -182,7 +166,7 @@ export const getBillingUnitItem = (
       dispatch(setUnit(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const getBillingUnitItemDetails = (row, headers, history, url) => dispatch => {
@@ -193,7 +177,7 @@ export const getBillingUnitItemDetails = (row, headers, history, url) => dispatc
 export const createBillingUnitItem = (headers, data, selected, history) => dispatch => {
   dispatch(startAsync());
 
-  post(billingEndpoint, {
+  dispatch(post(billingEndpoint, {
     ...data,
     "resident_building": selected.building_id,
     "resident_unit": selected.id,
@@ -204,49 +188,62 @@ export const createBillingUnitItem = (headers, data, selected, history) => dispa
     res => {
       history.goBack();
 
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Billing has been created.'
+      }));
+
       dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const editBillingUnitItem = (headers, data, selected, history, id) => dispatch => {
   dispatch(startAsync());
 
-  put(billingEndpoint, { 'billing': { id: id, ...data } }, headers,
+  dispatch(put(billingEndpoint, { 'billing': { id: id, ...data } }, headers,
     res => {
       history.goBack();
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Billing has been updated.'
+      }));
 
       dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const deleteBillingUnitItem = (id, headers) => dispatch => {
   dispatch(startAsync());
 
-  del(billingEndpoint + '/' + id, headers,
+  dispatch(del(billingEndpoint + '/' + id, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Billing Item with id: ' + id + ' has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Billing has been deleted.'
+      }));
+
       dispatch(refresh());
       dispatch(stopAsync())
-    })
+    }))
 }
 
 export const payByCash = (headers, data) => dispatch => {
   dispatch(startAsync());
 
-  post(billingEndpoint + '/cash', data, headers, res => {
+  dispatch(post(billingEndpoint + '/cash', data, headers, res => {
+    dispatch(setInfo({
+      color: 'success',
+      message: 'Billing has been set as paid by cash.'
+    }));
+
     dispatch(setUnitPaid());
     dispatch(stopAsync());
-  })
+  }))
 }

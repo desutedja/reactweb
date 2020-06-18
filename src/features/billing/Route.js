@@ -10,8 +10,8 @@ import Filter from '../../components/Filter';
 import Add from './Add';
 import Details from './Details';
 import DetailsItem from './DetailsItem';
-import RouteSettlement from './RouteSettlement';
-import RouteDisbursement from './RouteDisbursement';
+import Settlement from './Settlement';
+import Disbursement from './Disbursement';
 import { getBillingUnit, getBillingUnitDetails } from './slice';
 import { endpointAdmin } from '../../settings';
 import { get, toSentenceCase } from '../../utils';
@@ -124,10 +124,10 @@ function Component() {
                     <Details />
                 </Route>
                 <Route path={`${path}/settlement`}>
-                    <RouteSettlement />
+                    <Settlement />
                 </Route>
                 <Route path={`${path}/disbursement`}>
-                    <RouteDisbursement />
+                    <Disbursement />
                 </Route>
             </Switch>
         </div>

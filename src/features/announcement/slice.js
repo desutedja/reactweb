@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
-import { get, post, put, del } from '../../utils';
+import { get, post, put, del, setInfo } from '../slice';
 
 const announcementEndpoint = endpointAdmin + '/announcement';
 
@@ -15,10 +15,6 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
-    alert: {
-      type: 'normal',
-      message: '',
-    },
   },
   reducers: {
     startAsync: (state) => {
@@ -40,10 +36,6 @@ export const slice = createSlice({
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     },
-    setAlert: (state, action) => {
-      state.alert.type = action.payload.type;
-      state.alert.message = action.payload.message;
-    },
     publish: (state) => {
       state.selected.publish = 1;
     }
@@ -56,7 +48,6 @@ export const {
   setData,
   setSelected,
   refresh,
-  setAlert,
   publish
 } = slice.actions;
 
@@ -68,7 +59,7 @@ export const getAnnoucement = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(announcementEndpoint +
+  dispatch(get(announcementEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search,
@@ -77,77 +68,91 @@ export const getAnnoucement = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const getAnnouncementDetails = (row, headers, history, url) => dispatch => {
   dispatch(startAsync());
 
-  get(announcementEndpoint + '/preview/' + row.id, headers,
+  dispatch(get(announcementEndpoint + '/preview/' + row.id, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
 
       dispatch(stopAsync())
-    })
+    }))
 }
 
 export const createAnnouncement = (headers, data, history) => dispatch => {
   dispatch(startAsync());
 
-  post(announcementEndpoint, {...data, topic: "announcement"}, headers,
+  dispatch(post(announcementEndpoint, {...data, topic: "announcement"}, headers,
     res => {
       history.push("/announcement");
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Announcement has been created.'
+      }));
 
       dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const editAnnouncement = (headers, data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  put(announcementEndpoint, { ...data, topic: "announcement", id: id }, headers,
+  dispatch(put(announcementEndpoint, { ...data, topic: "announcement", id: id }, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/announcement/details");
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Announcement has been updated.'
+      }));
 
       dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const deleteAnnouncement = (row, headers) => dispatch => {
   dispatch(startAsync());
 
-  del(announcementEndpoint + '/' + row.id, headers,
+  dispatch(del(announcementEndpoint + '/' + row.id, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Announcement ' + row.name + ' has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
       dispatch(refresh());
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Announcement has been deleted.'
+      }));
+
       dispatch(stopAsync())
-    })
+    }))
 }
 
 export const publishAnnouncement = (headers, data) => dispatch => {
   dispatch(startAsync());
 
-  post(announcementEndpoint + '/publish', { id: data.id }, headers,
+  dispatch(post(announcementEndpoint + '/publish', { id: data.id }, headers,
     res => {
       dispatch(publish());
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Announcement published.'
+      }));
 
       dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }

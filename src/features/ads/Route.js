@@ -1,14 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiPlus, FiX } from 'react-icons/fi';
+import { FiPlus } from 'react-icons/fi';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
-import IconButton from '../../components/IconButton';
 import Input from '../../components/Input';
-import { getAds, getAdsDetails, setSelected, deleteAds, setAlert } from './slice';
+import { getAds, getAdsDetails, setSelected, deleteAds } from './slice';
 import Details from './Details';
 import Add from './Add';
 
@@ -66,12 +65,6 @@ function Component() {
             </Modal>
             <Switch>
                 <Route exact path={path}>
-                    {alert.message && <div className={"Alert " + alert.type}>
-                        <p>{alert.message}</p>
-                        <IconButton onClick={() => dispatch(setAlert({}))}>
-                            <FiX />
-                        </IconButton>
-                    </div>}
                     <Table totalItems={total_items}
                         columns={columns}
                         data={items}

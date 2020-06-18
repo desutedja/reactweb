@@ -36,7 +36,7 @@ function Component() {
     const [selectedRow, setRow] = useState({});
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.announcement);
+    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.announcement);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -83,8 +83,7 @@ function Component() {
                         ]}
                         onClickDelete={row => {
                             setRow(row);
-                            row.publish ? alert('You cannot delete a published announcement.')
-                                : setConfirm(true);
+                            setConfirm(true);
                         }}
                         onClickDetails={row =>
                             dispatch(getAnnouncementDetails(row, headers, history, url))}

@@ -15,10 +15,6 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
-    alert: {
-      type: 'normal',
-      message: '',
-    },
     unit: {
       items: [],
       total_items: 0,
@@ -75,10 +71,6 @@ export const slice = createSlice({
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     },
-    setAlert: (state, action) => {
-      state.alert.type = action.payload.type;
-      state.alert.message = action.payload.message;
-    },
     setUnitData: (state, action) => {
       const data = action.payload;
 
@@ -123,7 +115,6 @@ export const {
   setData,
   setSelected,
   refresh,
-  setAlert,
   setUnitData,
   setUnitTypeData,
   setSectionData,
@@ -188,13 +179,7 @@ export const deleteBuilding = (row, headers) => dispatch => {
 
   del(buildingEndpoint + '/' + row.id, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Building ' + row.name + ' has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
+
       dispatch(refresh());
       dispatch(stopAsync())
     })
@@ -442,13 +427,6 @@ export const deleteBuildingUnit = (row, headers) => dispatch => {
 
   del(buildingEndpoint + '/unit/' + row.id, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Unit has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
       dispatch(refresh());
       dispatch(stopAsync());
     },
@@ -462,13 +440,6 @@ export const deleteBuildingUnitType = (row, headers) => dispatch => {
 
   del(buildingEndpoint + '/unit/type/' + row.id, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Unit Type has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
       dispatch(refresh());
       dispatch(stopAsync());
     },
@@ -482,13 +453,6 @@ export const deleteBuildingSection = (row, headers) => dispatch => {
 
   del(buildingEndpoint + '/section/' + row.id, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Section has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
       dispatch(refresh());
       dispatch(stopAsync());
     },
@@ -502,13 +466,6 @@ export const deleteBuildingManagement = (row, headers) => dispatch => {
 
   del(buildingEndpoint + '/management/' + row.id, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Building Management has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
       dispatch(refresh());
       dispatch(stopAsync());
     },
@@ -522,13 +479,6 @@ export const deleteBuildingService = (row, headers) => dispatch => {
 
   del(buildingEndpoint + '/service/' + row.id, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Building billing service has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
       dispatch(refresh());
       dispatch(stopAsync());
     },

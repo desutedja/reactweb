@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiPlus, FiSearch, FiX } from 'react-icons/fi';
+import { FiPlus, FiSearch } from 'react-icons/fi';
 
 import FilterButton from '../../components/FilterButton';
 import Table from '../../components/Table';
@@ -9,10 +9,9 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Link from '../../components/Link';
-import IconButton from '../../components/IconButton';
 import Add from './Add';
 import Details from './Details';
-import { getBuilding, deleteBuilding, getBuildingDetails, setAlert, setSelected } from './slice';
+import { getBuilding, deleteBuilding, getBuildingDetails, setSelected } from './slice';
 import { get } from '../../utils';
 import { endpointResident } from '../../settings';
 
@@ -49,7 +48,7 @@ function Component() {
     const [filteredProvinces, setFilteredProvinces] = useState([]);
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.building);
+    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -186,12 +185,6 @@ function Component() {
             </Modal>
             <Switch>
                 <Route exact path={path}>
-                    {alert.message && <div className={"Alert " + alert.type}>
-                        <p>{alert.message}</p>
-                        <IconButton onClick={() => dispatch(setAlert({}))}>
-                            <FiX />
-                        </IconButton>
-                    </div>}
                     <Table totalItems={total_items}
                         columns={columns}
                         data={items}
