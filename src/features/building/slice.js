@@ -63,7 +63,7 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.total_items;
+      state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {
@@ -76,35 +76,35 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.unit.items = data.items;
-      state.unit.total_items = data.total_items;
+      state.unit.total_items = data.filtered_item;
       state.unit.total_pages = data.filtered_page;
     },
     setUnitTypeData: (state, action) => {
       const data = action.payload;
 
       state.unit_type.items = data.items;
-      state.unit_type.total_items = data.total_items;
+      state.unit_type.total_items = data.filtered_item;
       state.unit_type.total_pages = data.filtered_page;
     },
     setSectionData: (state, action) => {
       const data = action.payload;
 
       state.section.items = data.items;
-      state.section.total_items = data.total_items;
+      state.section.total_items = data.filtered_item;
       state.section.total_pages = data.filtered_page;
     },
     setServiceData: (state, action) => {
       const data = action.payload;
 
       state.service.items = data.items;
-      state.service.total_items = data.total_items;
+      state.service.total_items = data.filtered_item;
       state.service.total_pages = data.filtered_page;
     },
     setManagementData: (state, action) => {
       const data = action.payload;
 
       state.management.items = data.items;
-      state.management.total_items = data.total_items;
+      state.management.total_items = data.filtered_item;
       state.management.total_pages = data.filtered_page;
     },
   },

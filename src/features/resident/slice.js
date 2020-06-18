@@ -41,21 +41,21 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.total_items;
+      state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
     },
     setUnitData: (state, action) => {
       const data = action.payload;
 
       state.unit.items = data.items;
-      state.unit.total_items = data.total_items;
+      state.unit.total_items = data.filtered_item;
       state.unit.total_pages = data.filtered_page;
     },
     setSubaccountData: (state, action) => {
       const data = action.payload;
 
       state.subaccount.items = data.items;
-      state.subaccount.total_items = data.total_items;
+      state.subaccount.total_items = data.filtered_item;
       state.subaccount.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {

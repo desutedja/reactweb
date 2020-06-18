@@ -46,7 +46,7 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.total_items;
+      state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {
@@ -59,21 +59,21 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.unit.items = data.items;
-      state.unit.total_items = data.total_items;
+      state.unit.total_items = data.filtered_item;
       state.unit.total_pages = data.filtered_page;
     },
     setSettlement: (state, action) => {
       const data = action.payload;
 
       state.settlement.items = data.items;
-      state.settlement.total_items = data.total_items;
+      state.settlement.total_items = data.filtered_item;
       state.settlement.total_pages = data.filtered_page;
     },
     setDisbursement: (state, action) => {
       const data = action.payload;
 
       state.disbursement.items = data.items;
-      state.disbursement.total_items = data.total_items;
+      state.disbursement.total_items = data.filtered_item;
       state.disbursement.total_pages = data.filtered_page;
     },
     setSelectedUnit: (state, action) => {

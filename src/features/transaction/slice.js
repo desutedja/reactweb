@@ -31,14 +31,14 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.total_items;
+      state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
     },
     setSettlement: (state, action) => {
       const data = action.payload;
 
       state.settlement.items = data.items;
-      state.settlement.total_items = data.total_items;
+      state.settlement.total_items = data.filtered_item;
       state.settlement.total_pages = data.filtered_page;
     },
     setSelected: (state, action) => {
