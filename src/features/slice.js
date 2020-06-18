@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import Axios from 'axios';
-import history from '../history';
 
 export const slice = createSlice({
   name: 'main',
@@ -40,7 +39,7 @@ export const setInfo = data => dispatch => {
 
   setTimeout(() => dispatch(setInfoData({
     message: '',
-  })), 3000);
+  })), 10000);
 }
 
 const responseAlert = response => async dispatch => {
@@ -51,7 +50,7 @@ const responseAlert = response => async dispatch => {
     }));
   } else {
     dispatch(openAlert({
-      title: 'An error has occured.',
+      title: 'API Error',
       content: response?.data.error_message,
     }));
   }

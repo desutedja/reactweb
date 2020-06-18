@@ -83,8 +83,7 @@ function Component() {
                         ]}
                         onClickDelete={row => {
                             setRow(row);
-                            row.publish ? alert('You cannot delete a published announcement.')
-                                : setConfirm(true);
+                            setConfirm(true);
                         }}
                         onClickDetails={row =>
                             dispatch(getAnnouncementDetails(row, headers, history, url))}
