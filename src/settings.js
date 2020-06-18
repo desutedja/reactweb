@@ -9,7 +9,7 @@ export const endpointAds = 'https://centratama.okbabe.technology/clink-advertise
 
 export const mainColor = '#2f78e9';
 
-export const statusColor = {
+export const taskStatusColor = {
     'created': 'light',
     'assigned': 'success',
     'in_progress': 'primary',
@@ -18,6 +18,22 @@ export const statusColor = {
     'rejected': 'danger',
     'approved': 'success',
     'completed': 'secondary'
+}
+
+export const trxStatusColor = {
+    'requested': 'light',
+    'ask_merchant': 'warning',
+    'accepted': 'info',
+    'rejected': 'warning',
+    'canceled': 'secondary',
+    'expired': 'danger',
+    'in_progress': 'primary',
+    'ask_resident': 'warning',
+    'paid': 'success',
+    'ready_for_pickup': 'info',
+    'on_delivery': 'success',
+    'delivered': 'info',
+    'completed': 'secondary',
 }
 
 export const payment_banks = [

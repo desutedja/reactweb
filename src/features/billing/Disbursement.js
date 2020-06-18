@@ -4,8 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
-import Add from './Add';
-import Details from './Details';
 import { getBillingDisbursement } from './slice';
 import { get, toMoney } from '../../utils';
 import { endpointBilling } from '../../settings';
@@ -157,15 +155,6 @@ function Component() {
                             />
                         </div>
                     </div>
-                </Route>
-                <Route path={`${path}/add`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/edit`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/details`}>
-                    <Details />
                 </Route>
             </Switch>
         </div>

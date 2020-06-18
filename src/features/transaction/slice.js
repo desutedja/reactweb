@@ -18,6 +18,12 @@ export const slice = createSlice({
       selected: {},
       total_items: 0,
       total_pages: 1,
+    },
+    disbursement: {
+      items: [],
+      selected: {},
+      total_items: 0,
+      total_pages: 1,
     }
   },
   reducers: {
@@ -41,6 +47,13 @@ export const slice = createSlice({
       state.settlement.total_items = data.filtered_item;
       state.settlement.total_pages = data.filtered_page;
     },
+    setDisbursement: (state, action) => {
+      const data = action.payload;
+
+      state.disbursement.items = data.items;
+      state.disbursement.total_items = data.filtered_item;
+      state.disbursement.total_pages = data.filtered_page;
+    },
     setSelected: (state, action) => {
       state.selected = action.payload;
     },
@@ -56,6 +69,7 @@ export const {
   setData,
   setSettlement,
   setSelected,
+  setDisbursement,
   refresh
 } = slice.actions;
 
@@ -105,6 +119,27 @@ export const getTransactionSettlement = (
     headers,
     res => {
       dispatch(setSettlement(res.data.data));
+
+      dispatch(stopAsync());
+    }))
+}
+
+export const getTransactionDisbursement = (
+  headers, pageIndex, pageSize,
+  search = '', type, merchant = '', courier = ''
+) => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(get(endpointTransaction + '/admin/disbursement/' + type +
+    '?page=' + (pageIndex + 1) +
+    '&limit=' + pageSize +
+    '&merchant_id=' + merchant +
+    '&courier_id=' + courier +
+    '&limit=' + pageSize +
+    '&search=' + search,
+    headers,
+    res => {
+      dispatch(setDisbursement(res.data.data));
 
       dispatch(stopAsync());
     }))

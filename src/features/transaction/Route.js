@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
+import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../components/Table';
@@ -8,6 +8,8 @@ import Settlement from './Settlement';
 import Disbursement from './Disbursement';
 import { getTransaction, getTransactionDetails, setSelected } from './slice';
 import { toMoney, toSentenceCase } from '../../utils';
+import { Badge } from 'reactstrap';
+import { trxStatusColor } from '../../settings';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -15,19 +17,13 @@ const columns = [
     { Header: 'Type', accessor: row => toSentenceCase(row.type) },
     { Header: 'Merchant', accessor: 'merchant_name' },
     { Header: 'Resident', accessor: 'resident_name' },
-    // { Header: 'Selling Price', accessor: 'total_selling_price' },
-    // { Header: 'Internal Courier Fee', accessor: 'courier_internal_charges' },
-    // { Header: 'External Courier Fee', accessor: 'courier_external_charges' },
-    // { Header: 'Tax', accessor: 'tax_price' },
-    // { Header: 'Discount', accessor: 'discount_price' },
-    // { Header: 'Sales Fee', accessor: 'profit_from_sales' },
-    // { Header: 'PG Fee', accessor: 'profit_from_pg' },
-    // { Header: 'Delivery Fee', accessor: 'profit_from_delivery' },
     { Header: 'Total Price', accessor: row => toMoney(row.total_price) },
-    { Header: 'Payment Date', accessor: row => row.payment_date ? row.payment_date : 'Unpaid' },
-    //{ Header: 'Settlement Date', accessor: row => row.payment_settled_date ? row.payment_settled_date : '-' },
-    //{ Header: 'Merchant Disbursement Date', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
-    //{ Header: 'Courier Disbursement Date', accessor: row => row.courier_disbursement_date ? row.courier_disbursement_date : '-' },
+    {
+        Header: 'Status', accessor: row => row.status ?
+            <h5><Badge pill color={trxStatusColor[row.status]}>
+                {toSentenceCase(row.status)}
+            </Badge></h5> : "-"
+    },
 ]
 
 function Component() {
@@ -41,7 +37,8 @@ function Component() {
     return (
         <div>
             <Switch>
-                <Route exact path={`${path}/list`}>
+            <   Redirect exact from={path} to={`${path}/list`} />
+                <Route path={`${path}/list`}>
                     <Table totalItems={total_items}
                         columns={columns}
                         data={items}

@@ -10,7 +10,7 @@ import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import { get, toSentenceCase, dateTimeFormatter } from '../../utils';
-import { endpointAdmin, endpointManagement, statusColor } from '../../settings';
+import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import Details from './Details';
 import { Badge } from 'reactstrap';
 
@@ -34,7 +34,7 @@ const columns = [
     { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
     {
         Header: "Status", accessor: row => row.status ?
-            <h5><Badge pill color={statusColor[row.status]}>
+            <h5><Badge pill color={taskStatusColor[row.status]}>
                 {toSentenceCase(row.status) + (row.status === 'rejected' ? 
                 ' by ' + row.rejected_by : '')}
             </Badge></h5> : "-"
