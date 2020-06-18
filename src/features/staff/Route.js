@@ -126,34 +126,13 @@ function Component() {
                         }, [dispatch, refreshToggle, headers, role, building, shift])}
                         filters={[
                             {
-                                button: <Button key="Select Shift"
-                                    label={shiftLabel ? shiftLabel : "Select Shift"}
-                                    selected={shift}
-                                />,
-                                component: (toggleModal) =>
-                                    <Filter
-                                        data={shifts}
-                                        onClick={(el) => {
-                                            setShift(el.value);
-                                            setShiftLabel(el.label);
-                                            toggleModal(false);
-                                        }}
-                                        onClickAll={() => {
-                                            setShift("");
-                                            setShiftLabel("");
-                                            toggleModal(false);
-                                        }}
-                                    />
-                            },
-                            {
-                                button: <Button key="Select Building"
-                                    label={building ? buildingName : "Select Building"}
-                                    selected={building}
-                                />,
+                                hidex: building === "",
+                                label: <p>{building ? "Building: " + buildingName : "Select Building"}</p>,
+                                delete: () => { setBuilding(""); setBuildingName(""); },
                                 component: (toggleModal) =>
                                     <>
                                         <Input
-                                            label="Search"
+                                            placeholder="Search Building Name"
                                             compact
                                             icon={<FiSearch />}
                                             inputValue={search}
@@ -175,10 +154,28 @@ function Component() {
                                     </>
                             },
                             {
-                                button: <Button key="Select Role"
-                                    label={role ? roleLabel : "Select Role"}
-                                    selected={role}
-                                />,
+                                hidex: shift === "",
+                                label: <p>{shiftLabel ? "Available: " + shiftLabel : "Select Availability"}</p>,
+                                delete: () => { setShift(""); setShiftLabel(""); },
+                                component: (toggleModal) =>
+                                    <Filter
+                                        data={shifts}
+                                        onClick={(el) => {
+                                            setShift(el.value);
+                                            setShiftLabel(el.label);
+                                            toggleModal(false);
+                                        }}
+                                        onClickAll={() => {
+                                            setShift("");
+                                            setShiftLabel("");
+                                            toggleModal(false);
+                                        }}
+                                    />
+                            },
+                            {
+                                hidex: role === "",
+                                label: <p>{role ? "Role: " + roleLabel : "Select Role"}</p>,
+                                delete: () => { setRole(""); setRoleLabel(""); },
                                 component: toggleModal =>
                                     <Filter
                                         data={roles}
