@@ -81,7 +81,7 @@
 
 .TableAction-right {
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .TableAction-right button {

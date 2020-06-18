@@ -44,7 +44,6 @@ function Component({
                 </div>;
 
             case 'textarea': return <textarea
-                className="Input-input"
                 type={type}
                 id={label}
                 name={name ? name : label.toLowerCase().replace(/ /g, '_')}
@@ -64,7 +63,6 @@ function Component({
                     style={{
                         color: !value && 'grey'
                     }}
-                    className="Input-input"
                     type={type}
                     id={label}
                     name={name ? name : label.toLowerCase().replace(/ /g, '_')}
@@ -97,7 +95,6 @@ function Component({
                     />
                 </div>}
                 <input
-                    className="Input-input"
                     type="url"
                     id={label}
                     name={name ? name : label.toLowerCase().replace(/ /g, '_')}
@@ -113,7 +110,6 @@ function Component({
                 />
                 <input
                     ref={uploader}
-                    className="Input-input"
                     accept="image/*"
                     type="file"
                     id={label}
@@ -148,7 +144,6 @@ function Component({
                 </div>}
                 <input
                     disabled={disabled}
-                    className="Input-input"
                     type={type}
                     id={label}
                     name={name ? name : label.toLowerCase().replace(/ /g, '_')}

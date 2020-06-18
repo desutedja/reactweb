@@ -77,13 +77,14 @@ export default slice.reducer;
 
 export const getTransaction = (
   headers, pageIndex, pageSize,
-  search = '',
+  search = '', status
 ) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(transactionEndpoint + '/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
+    '&status=' + status +
     '&search=' + search,
     headers,
     res => {

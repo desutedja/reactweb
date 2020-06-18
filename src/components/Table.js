@@ -115,7 +115,7 @@ function Component({
         <div className="Table">
             <Modal
                 disableFooter={true}
-                disableHeader={false}
+                disableHeader={true}
                 isOpen={modalOpen}
                 toggle={() => { toggleModal(false) }}
             >
@@ -197,74 +197,72 @@ function Component({
                             ))}
                         </thead>
                         <tbody {...getTableBodyProps()}>
-                            {
+                            {page.map((row, i) => {
+                                prepareRow(row);
 
-                                page.map((row, i) => {
-                                    prepareRow(row);
+                                const MenuActions = [
+                                    (onClickChat ? {
+                                        onClick: () => onClickChat(row.original),
+                                        name: "Chat",
+                                        icon: <FiMessageSquare />,
+                                    } : ""),
+                                    (onClickResolve ? {
+                                        name: "Set As Resolved",
+                                        onClick: () => onClickResolve(row.original),
+                                        disabled: row.original.status === 'completed',
+                                        icon: <FiCheck />,
+                                    } : ""),
+                                    (onClickReassign ? {
+                                        name: "Assign Staff",
+                                        onClick: () => onClickReassign(row.original),
+                                        disabled: !(row.original.status === 'created' || row.original.status === 'rejected'),
+                                        icon: <FiUserPlus />
+                                    } : ""),
+                                    (onClickDetails ? {
+                                        onClick: () => onClickDetails(row.original),
+                                        name: "Details",
+                                        icon: <FiMoreHorizontal />,
+                                    } : ""),
+                                    (onClickEdit ? {
+                                        onClick: () => onClickEdit(row.original),
+                                        name: "Edit",
+                                        icon: <FiEdit />,
+                                    } : ""),
+                                    (onClickDelete ? {
+                                        name: "Delete",
+                                        onClick: () => onClickDelete(row.original),
+                                        color: "danger",
+                                        icon: <FiTrash />,
+                                    } : ""),
+                                ].filter(x => x !== "")
 
-                                    const MenuActions = [
-                                        (onClickChat ? {
-                                            onClick: () => onClickChat(row.original),
-                                            name: "Chat",
-                                            icon: <FiMessageSquare />,
-                                        } : ""),
-                                        (onClickResolve ? {
-                                            name: "Set As Resolved",
-                                            onClick: () => onClickResolve(row.original),
-                                            disabled: row.original.status === 'completed',
-                                            icon: <FiCheck />,
-                                        } : ""),
-                                        (onClickReassign ? {
-                                            name: "Assign Staff",
-                                            onClick: () => onClickReassign(row.original),
-                                            disabled: !(row.original.status === 'created' || row.original.status === 'rejected'),
-                                            icon: <FiUserPlus />
-                                        } : ""),
-                                        (onClickDetails ? {
-                                            onClick: () => onClickDetails(row.original),
-                                            name: "Details",
-                                            icon: <FiMoreHorizontal />,
-                                        } : ""),
-                                        (onClickEdit ? {
-                                            onClick: () => onClickEdit(row.original),
-                                            name: "Edit",
-                                            icon: <FiEdit />,
-                                        } : ""),
-                                        (onClickDelete ? {
-                                            name: "Delete",
-                                            onClick: () => onClickDelete(row.original),
-                                            color: "danger",
-                                            icon: <FiTrash />,
-                                        } : ""),
-                                    ].filter(x => x !== "")
+                                return (
+                                    <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
 
-                                    return (
-                                        <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
+                                        {row.cells.map(cell => {
+                                            return (
+                                                <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                            );
+                                        })}
 
-                                            {row.cells.map(cell => {
-                                                return (
-                                                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                                );
-                                            })}
-
-                                            {(MenuActions.length > 0) &&
-                                                <td key={i}>
-                                                    <div style={{
-                                                        display: 'flex',
-                                                    }}>
-                                                        {(MenuActions.length > 2) ? (<Dropdown label="Actions" items={MenuActions} />) : (
-                                                            MenuActions.map((item, key) =>
-                                                                <ActionButton key={key} icon={item.icon} color={item.color}
-                                                                    onClick={item.onClick}>{item.name}
-                                                                </ActionButton>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                </td>
-                                            }
-                                        </tr>
-                                    );
-                                })}
+                                        {(MenuActions.length > 0) &&
+                                            <td key={i}>
+                                                <div style={{
+                                                    display: 'flex',
+                                                }}>
+                                                    {(MenuActions.length > 2) ? (<Dropdown label="Actions" items={MenuActions} />) : (
+                                                        MenuActions.map((item, key) =>
+                                                            <ActionButton key={key} icon={item.icon} color={item.color}
+                                                                onClick={item.onClick}>{item.name}
+                                                            </ActionButton>
+                                                        )
+                                                    )}
+                                                </div>
+                                            </td>
+                                        }
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 }

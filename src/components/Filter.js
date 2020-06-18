@@ -1,4 +1,5 @@
 import React from 'react';
+import { toSentenceCase } from '../utils';
 
 function Component({ data, onClick, onClickAll }) {
     return (
@@ -13,11 +14,11 @@ function Component({ data, onClick, onClickAll }) {
                 </button>}
                 {data && data.map(el =>
                     <button
-                        key={el.value}
+                        key={el.value ? el.value : el}
                         className="ListItem"
                         onClick={() => onClick(el)}
                     >
-                        {el.label}
+                        {el.label ? el.label : toSentenceCase(el)}
                     </button>
                 )}
             </div>

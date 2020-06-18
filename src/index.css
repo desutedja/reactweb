@@ -71,8 +71,8 @@ button:hover {
 
 input,
 textarea {
-  padding: 8px;
-  padding-left: 16px;
+  padding: 4px;
+  padding-left: 8px;
   border-radius: 4px;
   border-style: solid;
   border-width: 0.5px;

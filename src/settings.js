@@ -26,7 +26,7 @@ export const trxStatusColor = {
     'accepted': 'info',
     'rejected': 'warning',
     'canceled': 'secondary',
-    'expired': 'danger',
+    'expired': 'light',
     'in_progress': 'primary',
     'ask_resident': 'warning',
     'paid': 'success',
