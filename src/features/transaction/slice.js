@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointTransaction } from '../../settings';
-import { get } from '../../utils';
+import { get } from '../slice';
 
 const transactionEndpoint = endpointTransaction + '/admin/transaction';
 
@@ -13,10 +13,6 @@ export const slice = createSlice({
     total_items: 0,
     total_pages: 1,
     refreshToggle: true,
-    alert: {
-      type: 'normal',
-      message: '',
-    },
     settlement: {
       items: [],
       selected: {},
@@ -51,10 +47,6 @@ export const slice = createSlice({
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     },
-    setAlert: (state, action) => {
-      state.alert.type = action.payload.type;
-      state.alert.message = action.payload.message;
-    },
   },
 });
 
@@ -75,7 +67,7 @@ export const getTransaction = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(transactionEndpoint + '/list' +
+  dispatch(get(transactionEndpoint + '/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search,
@@ -84,19 +76,19 @@ export const getTransaction = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const getTransactionDetails = (row, headers, history, url) => dispatch => {
   dispatch(startAsync());
 
-  get(transactionEndpoint + '/' + row.trx_code, headers,
+  dispatch(get(transactionEndpoint + '/' + row.trx_code, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
 
       dispatch(stopAsync())
-    })
+    }))
 }
 
 export const getTransactionSettlement = (
@@ -105,7 +97,7 @@ export const getTransactionSettlement = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(transactionEndpoint + '/list' +
+  dispatch(get(transactionEndpoint + '/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&status=completed' +
@@ -115,5 +107,5 @@ export const getTransactionSettlement = (
       dispatch(setSettlement(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }

@@ -1,14 +1,13 @@
 import React, { useCallback, useState } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getManagement, deleteManagement, getManagementDetails, setAlert, setSelected } from './slice';
-import { FiPlus, FiX } from 'react-icons/fi';
+import { getManagement, deleteManagement, getManagementDetails, setSelected } from './slice';
+import { FiPlus } from 'react-icons/fi';
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Link from '../../components/Link';
-import IconButton from '../../components/IconButton';
 import Add from './Add';
 import Details from './Details';
 
@@ -29,7 +28,7 @@ function Component() {
     const [selectedRow, setRow] = useState({});
 
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle, alert } = useSelector(state => state.management);
+    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.management);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -56,12 +55,6 @@ function Component() {
             </Modal>
             <Switch>
                 <Route exact path={path}>
-                    {alert.message && <div className={"Alert " + alert.type}>
-                        <p>{alert.message}</p>
-                        <IconButton onClick={() => dispatch(setAlert({}))}>
-                            <FiX />
-                        </IconButton>
-                    </div>}
                     <Table totalItems={total_items}
                         columns={columns}
                         data={items}

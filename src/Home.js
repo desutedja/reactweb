@@ -11,7 +11,6 @@ import QiscusSDKCore from 'qiscus-sdk-core';
 import DashboardRoute from './features/dashboard/Route';
 import ManagementRoute from './features/management/Route';
 import BuildingRoute from './features/building/Route';
-import BuildingManagementRoute from './features/building_management/Route';
 import ResidentRoute from './features/resident/Route';
 import BillingRoute from './features/billing/Route';
 import StaffRoute from './features/staff/Route';
@@ -285,9 +284,6 @@ function Component() {
                         </Route>
                         <Route path="/building">
                             <BuildingRoute />
-                        </Route>
-                        <Route path="/building_management">
-                            <BuildingManagementRoute />
                         </Route>
                         <Route path="/management">
                             <ManagementRoute />

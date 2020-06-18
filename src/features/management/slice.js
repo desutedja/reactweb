@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
-import { get, post, del, put } from '../../utils';
+import { get, post, del, put, setInfo } from '../slice';
 
 const managementEndpoint = endpointAdmin + '/management';
 
@@ -15,7 +15,6 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
-    alert: {},
   },
   reducers: {
     startAsync: (state) => {
@@ -37,10 +36,6 @@ export const slice = createSlice({
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     },
-    setAlert: (state, action) => {
-      state.alert.type = action.payload.type;
-      state.alert.message = action.payload.message;
-    },
   },
 });
 
@@ -50,7 +45,6 @@ export const {
   setData,
   setSelected,
   refresh,
-  setAlert,
 } = slice.actions;
 
 export const getManagement = (
@@ -59,7 +53,7 @@ export const getManagement = (
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(managementEndpoint +
+  dispatch(get(managementEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search,
@@ -68,65 +62,74 @@ export const getManagement = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const createManagement = (headers, data, history) => dispatch => {
   dispatch(startAsync());
 
-  post(managementEndpoint, data, headers,
+  dispatch(post(managementEndpoint, data, headers,
     res => {
       history.push("/management");
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Management has been created.'
+      }));
 
       dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const editManagement = (headers, data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  put(managementEndpoint, {...data, id: id}, headers,
+  dispatch(put(managementEndpoint, {...data, id: id}, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/management/details");
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Management has been updated.'
+      }));
 
       dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
 export const deleteManagement = (row, headers) => dispatch => {
   dispatch(startAsync());
 
-  del(managementEndpoint + '/' + row.id, headers,
+  dispatch(del(managementEndpoint + '/' + row.id, headers,
     res => {
-      dispatch(setAlert({
-        type: 'normal',
-        message: 'Management ' + row.name + ' has been deleted.'
-      }))
-      setTimeout(() => dispatch(setAlert({
-        message: '',
-      })), 3000);
       dispatch(refresh());
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Management has been deleted.'
+      }));
+
       dispatch(stopAsync())
-    })
+    }))
 }
 
 export const getManagementDetails = (row, headers, history, url) => dispatch => {
   dispatch(startAsync());
 
-  get(managementEndpoint + '/details/' + row.id, headers,
+  dispatch(get(managementEndpoint + '/details/' + row.id, headers,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
 
       dispatch(stopAsync())
-    })
+    }))
 }
 
 export default slice.reducer;
