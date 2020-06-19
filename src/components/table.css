@@ -156,5 +156,9 @@
 }
 
 .SelectedRow {
-  background-color: var(--accent-color);
+  background-color: var(--primary-yellow-color);
+}
+
+.AlignRight {
+  text-align: right;
 }

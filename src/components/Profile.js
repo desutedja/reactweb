@@ -18,7 +18,7 @@ function GroupedItems({ tabs, type, data }) {
             {
                 Object.keys(tabs).map((el, i) =>
                     <NavItem key={i} style={{ cursor: 'default' }}>
-                        <NavLink className={classnames({ active: activeTab === i })}
+                        <NavLink className={classnames({ active: activeTab === i })} style={{ marginLeft: '0px' }} 
                             onClick={() => toggle(i)} >{toSentenceCase(el)}</NavLink>
                     </NavItem>
                 )
@@ -28,19 +28,19 @@ function GroupedItems({ tabs, type, data }) {
             Object.keys(tabs).map((el, i) =>
                 <Fragment key={i}>
                     <TabContent activeTab={activeTab}>
-                        <TabPane style={{ paddingTop: '20px' }} tabId={i} >
+                        <TabPane className="ProfileTab" tabId={i} >
                             {tabs[el].map(el =>
                                 <Row style={{ padding: '4px' }} key={el} >
-                                    <Col style={{ fontWeight: 'normal', fontSize: '0.8em', }}>
-                                        {(
+                                    <Col sm="4" style={{ fontWeight: 'bold', fontSize: '1em', textAlign: 'left'}}>
+                                        {toSentenceCase((
                                             el === 'id' ? (type === '' ? el : type + " " + el) :
                                                 el === 'address' ? "Street Address" :
                                                     el === 'created_on' ? "Registered Since" :
                                                         el === 'name_legal' ? "Legal Name" :
                                                             el
-                                        ).replace(/_/g, ' ').toUpperCase()}
+                                        ).replace(/_/g, ' '))}
                                     </Col>
-                                    <Col style={{ fontWeight: 'bold', fontSize: '1.1em', }}>
+                                    <Col style={{ fontWeight: 'normal', fontSize: '1em', }}>
                                         {
                                             (data[el] == null || data[el] === "") ? "-" :
                                                 el === "birthdate" ? dateFormatter(data[el]) :

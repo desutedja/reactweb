@@ -26,10 +26,10 @@ const columns = [
     { Header: 'Type', accessor: row => toSentenceCase(row.type) },
     { Header: 'Merchant', accessor: 'merchant_name' },
     { Header: 'Resident', accessor: 'resident_name' },
-    { Header: 'Payment Amount', accessor: row => toMoney(row.payment_amount) },
     {
         Header: 'Transaction Date', accessor: row => dateTimeFormatter(row.created_on)
     },
+    { Header: 'Payment Amount', accessor: row => toMoney(row.payment_amount) },
     {
         Header: 'Payment Date', accessor: row => row.payment_date ?
             dateTimeFormatter(row.payment_date) : 'Unpaid'
@@ -130,10 +130,6 @@ function Component() {
                         ]}
                         actions={[]}
                         onClickDetails={row => dispatch(getTransactionDetails(row, headers, history, url))}
-                        onClickChat={row => {
-                            dispatch(setSelected(row));
-                            history.push("/chat");
-                        }}
                     />
                 </Route>
                 <Route path={`${path}/details`}>

@@ -5,6 +5,7 @@
   --primary-color: #2f78e9;
   /* --primary-color: rgba(5, 83, 149, 1); */
   --secondary-color: rgba(0, 116, 255, 1);
+  --primary-yellow-color: rgba(250, 219, 8, 1);
   --accent-color: rgba(0, 197, 255, 1);
   font-size: 14px;
   font-family: "Noto Sans", sans-serif;

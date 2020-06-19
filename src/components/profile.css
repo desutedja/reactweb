@@ -1,0 +1,8 @@
+.ProfileTab {
+    padding-top: 20px;
+    padding-left: 15px;
+    padding-bottom: 20px;
+    border-right: 1px solid lightgray;
+    border-left: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+}

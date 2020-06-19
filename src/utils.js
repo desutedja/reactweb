@@ -6,6 +6,7 @@ import { banks } from './settings';
 export function get(
     link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
 ) {
+    console.log("getting from: ", link);
     Axios.get(link, {
         headers: headers
     })
@@ -161,6 +162,7 @@ export const months = [
 export function dateTimeFormatter(serverDateTime) {
     let date = serverDateTime.split('T')[0];
     let time = serverDateTime.split('T')[1].split('Z')[0];
+    time = time.split(':').slice(0,2).join(':');
 
     let year = date.split('-')[0];
     let month = parseInt(date.split('-')[1], 10);

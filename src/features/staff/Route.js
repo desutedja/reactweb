@@ -24,13 +24,13 @@ const columns = [
         Header: "Staff",
         accessor: row => <UserAvatar fullname={row.firstname + ' ' + row.lastname} email={toSentenceCase(row.staff_role)} picture={row.photo}/>,
     },
-    { Header: "Task", accessor: row => row.ongoing_task ? row.ongoing_task : "-"},
+    //{ Header: "Ongoing Task", accessor: row => row.ongoing_task ? row.ongoing_task : "-"},
     { Header: "Email", accessor: "email" },
-    { Header: "Phone", accessor: "phone" },
+    //{ Header: "Phone", accessor: "phone" },
     //{ Header: "Gender", accessor: "gender" },
-    { Header: "Building Management", accessor: row => <Tile items={[row.building_name, 
-        row.staff_role === "courier" ? 
-            (row.on_centratama ? "Centratama Courier" : row.management_name) : row.management_name ]} /> },
+    { Header: "Building Management", accessor: "building_name"}, 
+    { Header: "Management", accessor: row => row.staff_role === "courier" ? 
+            (row.on_centratama ? "Centratama Courier" : row.management_name) : row.management_name },
     {
         Header: "Available", accessor: row => 
         row.staff_role === "courier" ? (row.is_available ? <Pill color="success">Accepting Order</Pill> : <Pill color="secondary">No</Pill>) : 

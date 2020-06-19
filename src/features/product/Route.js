@@ -15,7 +15,7 @@ import UserAvatar from '../../components/UserAvatar';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
-    { Header: 'Product', accessor: row => <UserAvatar fullname={row.name} email={toMoney(row.selling_price)} 
+    { Header: 'Product', accessor: row => <UserAvatar fullname={row.name} email={toMoney(row.total_selling_price)} 
         picture={row.thumbnails} round={5}/>},
     { Header: 'Merchant Name', accessor: 'merchant_name' },
     { Header: 'Category', accessor: 'category_name' },
@@ -23,7 +23,7 @@ const columns = [
     //{ Header: 'Base Price', accessor: row => toMoney(row.base_price) },
     { Header: 'Admin Fee', accessor: row => row.admin_fee + '%' },
     { Header: 'Discount', accessor: row => <span className={row.discount_fee > 0 ? "HighlightValue-Red" : ""} >{row.discount_fee + '%'}</span> },
-    { Header: 'PG Fee', accessor: row => row.pg_fee + '%' },
+    { Header: 'PG Markup', accessor: row => row.pg_fee + '%' },
     { Header: 'Selling Price', accessor: row => toMoney(row.selling_price) },
     { Header: 'Final Price', accessor: row => toMoney(row.total_selling_price) }
 ]
