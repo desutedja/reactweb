@@ -87,6 +87,8 @@ export const getTransaction = (
     '&status=' + status +
     '&payment_status=' + statusPayment +
     '&trx_type=' + type +
+    '&sort_field=created_on' +
+    '&sort_type=DESC' +
     '&search=' + search,
     headers,
     res => {

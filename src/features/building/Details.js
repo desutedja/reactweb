@@ -12,7 +12,6 @@ import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Form from '../../components/Form';
-import SectionSeparator from '../../components/SectionSeparator';
 
 import {
     getBuildingUnit, getBuildingUnitType, getBuildingSection,
@@ -54,13 +53,21 @@ const columnsUnit = [
     { Header: "Number", accessor: "number" },
     { Header: "Floor", accessor: "floor" },
     { Header: "Section", accessor: row => toSentenceCase(row.section_type) + " " + row.section_name },
-    { Header: "Type", accessor: row => toSentenceCase(row.unit_type_name) + " - " + row.unit_size },
+    {
+        Header: "Type", accessor: row => <div>
+            {(row.unit_type_name.length > 3 ? toSentenceCase(row.unit_type_name)
+            : row.unit_type_name.toUpperCase()) + " - "}
+            {row.unit_size + ' m'}<sup>2</sup>
+            </div>
+    },
 ]
 
 const columnsUnitType = [
     { Header: "ID", accessor: "id" },
-    { Header: "Name", accessor: row => toSentenceCase(row.unit_type) + " - " + row.unit_size },
-    { Header: "Type Name", accessor: row => toSentenceCase(row.unit_type) },
+    {
+        Header: "Type Name", accessor: row => row.unit_type.length > 3 ? toSentenceCase(row.unit_type)
+            : row.unit_type.toUpperCase()
+    },
     {
         Header: "Size", accessor: row => <div>
             {row.unit_size + ' m'}<sup>2</sup>
@@ -85,8 +92,10 @@ const columnsService = [
         },
 
     },
-    { Header: "Tax", accessor: row => (row.tax === "percentage" ? 
-    row.tax_value + "%" : toMoney(row.tax_amount) + " (Fixed)") },
+    {
+        Header: "Tax", accessor: row => (row.tax === "percentage" ?
+            row.tax_value + "%" : toMoney(row.tax_amount) + " (Fixed)")
+    },
 ]
 
 const columnsManagement = [
@@ -94,16 +103,17 @@ const columnsManagement = [
     { Header: "Management_name", accessor: "management_name" },
     { Header: "Billing Duedate", accessor: "billing_duedate" },
     { Header: "Billing Published", accessor: "billing_published" },
-    { Header: "Courier Fee", accessor: "courier_fee" },
-    { Header: "Courier Internal Markup", accessor: "courier_internal_markup" },
-    { Header: "Courier External Markup", accessor: "courier_external_markup" },
-    { Header: "Penalty Fee", accessor: "penalty_fee" },
+    { Header: "Courier Fee", accessor: row => toMoney(row.courier_fee)},
+    { Header: "Internal Courier Markup", accessor: row => toMoney(row.courier_internal_markup)},
+    { Header: "External Courier Markup", accessor: row => toMoney(row.courier_external_markup)},
+    { Header: "Penalty Fee", accessor: row => toMoney(row.penalty_fee)},
     { Header: "Settlement Account Name", accessor: "settlement_account_name" },
     { Header: "Settlement Account No", accessor: "settlement_account_no" },
-    { Header: "Settlement Bank", accessor: "settlement_bank" },
-    { Header: "Status", 
-        accessor: row => <CustomInput type="switch" label={row.status} id={"managementStatus-" + row.id} 
-        checked={ row.status === "active" } /> 
+    { Header: "Settlement Bank", accessor: row => row.settlement_bank.toUpperCase() },
+    {
+        Header: "Status",
+        accessor: row => <CustomInput type="switch" label={row.status} id={"managementStatus-" + row.id}
+            checked={row.status === "active"} />
     },
 ]
 
@@ -197,38 +207,38 @@ function Component() {
                     />
                 </div>
             </Modal>
-            <Modal disableFooter={false} okLabel={edit ? "Save" : "Add"} title={edit ? "Edit Unit" : "Add Unit"} 
+            <Modal disableFooter={false} okLabel={edit ? "Save" : "Add"} title={edit ? "Edit Unit" : "Add Unit"}
                 isOpen={addUnit} toggle={() => setAddUnit(false)}
                 onClick={() => {
-                        edit ?
-                            dispatch(editBuildingUnit(headers, {
-                                "building_id": selected.id,
-                                "building_section": parseFloat(sectionID ? sectionID : selectedRow.building_section),
-                                "unit_type": parseFloat(unitTypeID ? unitTypeID : selectedRow.unit_type),
-                                "floor": parseFloat(floor ? floor : selectedRow.floor),
-                                "number": number ? number : selectedRow.number,
-                            }, selectedRow.id))
-                            :
-                            dispatch(createBuildingUnit(headers, {
-                                "building_id": selected.id,
-                                "building_section": parseFloat(sectionID),
-                                "unit_type": parseFloat(unitTypeID),
-                                "floor": parseFloat(floor),
-                                "number": number,
-                            }))
-                        setAddUnit(false);
-                        setEdit(false);
-                        setRow({});
-                        setSectionID('');
-                        setUnitTypeID('');
-                        setFloor('');
-                        setNumber('');
-                    }}
- 
-                >
+                    edit ?
+                        dispatch(editBuildingUnit(headers, {
+                            "building_id": selected.id,
+                            "building_section": parseFloat(sectionID ? sectionID : selectedRow.building_section),
+                            "unit_type": parseFloat(unitTypeID ? unitTypeID : selectedRow.unit_type),
+                            "floor": parseFloat(floor ? floor : selectedRow.floor),
+                            "number": number ? number : selectedRow.number,
+                        }, selectedRow.id))
+                        :
+                        dispatch(createBuildingUnit(headers, {
+                            "building_id": selected.id,
+                            "building_section": parseFloat(sectionID),
+                            "unit_type": parseFloat(unitTypeID),
+                            "floor": parseFloat(floor),
+                            "number": number,
+                        }))
+                    setAddUnit(false);
+                    setEdit(false);
+                    setRow({});
+                    setSectionID('');
+                    setUnitTypeID('');
+                    setFloor('');
+                    setNumber('');
+                }}
+
+            >
                 <form>
                     <Input label="Number" inputValue={selectedRow.number ? selectedRow.number : number}
-                        setInputValue={setNumber} disabled={edit}/>
+                        setInputValue={setNumber} disabled={edit} />
                     <Input label="Floor" inputValue={selectedRow.floor ? selectedRow.floor : floor}
                         setInputValue={setFloor} />
                     <Input label="Section" type="select"
@@ -256,8 +266,8 @@ function Component() {
                 </form>
             </Modal>
             <Modal isOpen={addUnitType} toggle={() => setAddUnitType(false)} title={edit ? "Edit Unit Type" : "Add Unit Type"}
-            okLabel={edit ? "Save" : "Add"}
-            onClick={() => {
+                okLabel={edit ? "Save" : "Add"}
+                onClick={() => {
                     edit ?
                         dispatch(editBuildingUnitType(headers, {
                             "building_id": selected.id,
@@ -276,7 +286,7 @@ function Component() {
                     setTypeName('');
                     setTypeSize('');
                 }}
-                 >
+            >
                 <form >
                     <Input label="Type Name"
                         inputValue={selectedRow.unit_type ? selectedRow.unit_type : typeName}
@@ -297,7 +307,7 @@ function Component() {
             </Modal>
             <Modal isOpen={addSection} toggle={() => setAddSection(false)} title={edit ? "Edit Section" : "Add Section"}
                 okLabel={edit ? "Save" : "Add"}
-                    onClick={() => {
+                onClick={() => {
                     edit ?
                         dispatch(editBuildingSection(headers, {
                             "building_id": selected.id,
@@ -316,11 +326,11 @@ function Component() {
                     setSectionName('');
                     setSectionType('');
                 }}
-                >
+            >
                 <form >
                     <Input label="Section Name"
                         inputValue={selectedRow.section_name ? selectedRow.section_name : sectionName}
-                        setInputValue={setSectionName} disabled={edit}/>
+                        setInputValue={setSectionName} disabled={edit} />
                     <Input label="Section Type"
                         inputValue={selectedRow.section_type ? selectedRow.section_type : sectionType}
                         setInputValue={setSectionType}
@@ -335,20 +345,20 @@ function Component() {
                 </form>
             </Modal>
             <Modal isOpen={addManagement} toggle={() => setAddManagement(false)} title={edit ? "Edit Management" : "Add Management"}
-                okLabel={edit ? "Save" : "Add" } >
-                    <Form isModal={true} onSubmit={data => {
-                        edit ?
-                            dispatch(editBuildingManagement(headers, {
-                                "building_id": selected.id, building_name: selected.name, ...data,
-                            }, selectedRow.id))
-                            :
-                            dispatch(createBuildingManagement(headers, {
-                                "building_id": selected.id, building_name: selected.name, ...data,
-                            }))
-                        setAddManagement(false);
-                        setEdit(false);
-                        setRow({});
-                    }}>
+                okLabel={edit ? "Save" : "Add"} >
+                <Form isModal={true} onSubmit={data => {
+                    edit ?
+                        dispatch(editBuildingManagement(headers, {
+                            "building_id": selected.id, building_name: selected.name, ...data,
+                        }, selectedRow.id))
+                        :
+                        dispatch(createBuildingManagement(headers, {
+                            "building_id": selected.id, building_name: selected.name, ...data,
+                        }))
+                    setAddManagement(false);
+                    setEdit(false);
+                    setRow({});
+                }}>
                     <Modal disableFooter={true} isOpen={modalManagement} toggle={() => setModalManagement(false)}>
                         <Input label="Search"
                             inputValue={search} setInputValue={setSearch}
@@ -403,7 +413,7 @@ function Component() {
                 </Form>
             </Modal>
             <Modal isOpen={addService} toggle={() => setAddService(false)} title={edit ? "Edit Service" : "Add Service"}
-                okLabel={edit ? "Save" : "Add" }
+                okLabel={edit ? "Save" : "Add"}
                 onClick={data => {
                     edit ?
                         dispatch(editBuildingService(headers, {
@@ -415,7 +425,7 @@ function Component() {
                     setEdit(false);
                     setRow({});
                 }}
-                >
+            >
                 <form >
                     <Input label="Name" inputValue={selectedRow.name} />
                     <Input label="Group" type="select" inputValue={selectedRow.group} options={[
@@ -444,23 +454,19 @@ function Component() {
                     <Input label="Tax Amount" hidden={taxType === 'percentage'} inputValue={selectedRow.tax_amount} />
                 </form>
             </Modal>
-            <div style={{
-                display: 'flex'
+            <div className="Container" style={{
+                flex: 3,
+                marginRight: 16,
             }}>
-                <div className="Container" style={{
-                    flex: 3,
-                    marginRight: 16,
-                }}>
 
-                    <div className="Details">
-                        <Profile type="building" title={selected["name"]} website={selected["website"]} picture={selected["logo"]}
-                            data={selected} />
-                    </div>
-                    <div className="Photos">
-                        <Button label="Edit" onClick={() => history.push(
-                            url.split('/').slice(0, -1).join('/') + "/edit"
-                        )} />
-                    </div>
+                <div className="Details">
+                    <Profile type="building" title={selected["name"]} website={selected["website"]} picture={selected["logo"]}
+                        data={selected} />
+                </div>
+                <div className="Photos">
+                    <Button label="Edit" onClick={() => history.push(
+                        url.split('/').slice(0, -1).join('/') + "/edit"
+                    )} />
                 </div>
             </div>
             <div className="Container" style={{

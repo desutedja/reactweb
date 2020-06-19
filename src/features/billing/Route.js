@@ -58,7 +58,7 @@ function Component() {
         <div>
             <Switch>
                 <Redirect exact from={path} to={`${path}/unit`} />
-                <Route path={`${path}/unit`}>
+                <Route exact path={`${path}/unit`}>
                     <Table totalItems={total_items}
                         columns={columns}
                         data={items}
@@ -110,16 +110,16 @@ function Component() {
                 <Route path={`${path}/edit`}>
                     <Add />
                 </Route>
-                <Route path={`${path}/item/add`}>
+                <Route path={`${path}/unit/item/add`}>
                     <Add />
                 </Route>
-                <Route path={`${path}/item/edit`}>
+                <Route path={`${path}/unit/item/edit`}>
                     <Add />
                 </Route>
-                <Route path={`${path}/item/details`}>
+                <Route path={`${path}/unit/item/details`}>
                     <DetailsItem />
                 </Route>
-                <Route path={`${path}/item`}>
+                <Route path={`${path}/unit/item`}>
                     <Details />
                 </Route>
                 <Route path={`${path}/settlement`}>

@@ -20,12 +20,15 @@ function Component() {
     const [lng, setLng] = useState('');
 
     const [district, setDistrict] = useState("");
+    const [districtName, setDistrictName] = useState("");
     const [districts, setDistricts] = useState([]);
 
     const [city, setCity] = useState("");
+    const [cityName, setCityName] = useState("");
     const [cities, setCities] = useState([]);
 
     const [province, setProvince] = useState("");
+    const [provinceName, setProvinceName] = useState("");
     const [provinces, setProvinces] = useState([]);
 
     const headers = useSelector(state => state.auth.headers);
@@ -45,6 +48,8 @@ function Component() {
     }, [headers]);
 
     useEffect(() => {
+        province && setProvinceName(provinces.find(el => el.value + '' === province).label);
+
         setCity("");
         (province || selected.province) && get(endpointResident + '/geo/province/' + (province ? province : selected.province),
             headers,
@@ -53,9 +58,12 @@ function Component() {
                 setCities(formatted);
             }
         )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [headers, province, selected.province]);
 
     useEffect(() => {
+        city && setCityName(cities.find(el => el.value + '' === city).label);
+
         setDistrict("");
         (city || selected.city) && get(endpointResident + '/geo/city/' + (city ? city : selected.city),
             headers,
@@ -64,7 +72,13 @@ function Component() {
                 setDistricts(formatted);
             }
         )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [headers, city, selected.city]);
+
+    useEffect(() => {
+        district && setDistrictName(districts.find(el => el.value + '' === district).label);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [district, headers]);
 
     return (
         <div>
@@ -136,6 +150,18 @@ function Component() {
                 />
                 <Input label="District" type="select" options={districts}
                     inputValue={district ? district : selected.district} setInputValue={setDistrict}
+                />
+                <Input label="Province Name" hidden
+                    inputValue={provinceName ? provinceName :
+                        selected.province_name}
+                />
+                <Input label="City Name" hidden
+                    inputValue={cityName ? cityName :
+                        selected.city_name}
+                />
+                <Input label="District Name" hidden
+                    inputValue={districtName ? districtName :
+                        selected.district_name}
                 />
                 <Input label="ZIP Code" type="number" name="zipcode" inputValue={selected.zipcode} />
             </Form>
