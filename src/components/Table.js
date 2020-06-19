@@ -156,11 +156,6 @@ function Component({
                 </div>
             </div>
             <div className="Table-content">
-                {page.length === 0 ?
-                    <div className="TableEmpty">
-                        No items.
-                    </div>
-                    :
                     <table {...getTableProps()}>
                         {loading &&
                             <tbody className="TableLoading">
@@ -196,6 +191,14 @@ function Component({
                                 </tr>
                             ))}
                         </thead>
+                        {page.length === 0 ?
+                        <tbody>
+                            <tr>
+                                <td colspan={ columns.length + 1 } style={{ textAlign: "center" }} >
+                                    No items.
+                                </td>
+                            </tr>
+                        </tbody> :
                         <tbody {...getTableBodyProps()}>
                             {page.map((row, i) => {
                                 prepareRow(row);
@@ -264,8 +267,8 @@ function Component({
                                 );
                             })}
                         </tbody>
+                        }
                     </table>
-                }
             </div>
             <div className="Pagination">
                 <div className="Pagination-range">
