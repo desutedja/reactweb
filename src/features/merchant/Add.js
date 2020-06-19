@@ -232,7 +232,7 @@ function Component() {
         <Input label="Close Time" name="closed_at" type="time"
           inputValue={selected.closed_at} />
         <Input label="Description" type="textarea" inputValue={selected.description} />
-        <Input label="Select Location" type="button"
+        <Input label="Location: All" type="button"
                     onClick={() => {
                         setLat(-6.2107863);
                         setLng(106.8137977);

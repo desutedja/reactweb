@@ -96,7 +96,7 @@ function Component() {
                         filters={[
                             {
                                 hidex: type === "",
-                                label: <p>{type ? "Type: " + typeLabel : "Select Type"}</p>,
+                                label: <p>{type ? "Type: " + typeLabel : "Type: All"}</p>,
                                 delete: () => { setType(""); },
                                 component: toggleModal =>
                                     <Filter
@@ -114,12 +114,12 @@ function Component() {
                                     />
                             },
                             {
-                                button: <Button key="Select Catgeory"
-                                    label={cat ? catName : "Select Category"}
+                                button: <Button key="Catgeory: All"
+                                    label={cat ? catName : "Category: All"}
                                     selected={cat}
                                 />,
                                 hidex: cat === "",
-                                label: <p>{cat ? "Category: " + catName : "Select Category"}</p>,
+                                label: <p>{cat ? "Category: " + catName : "Category: All"}</p>,
                                 delete: () => { setCat(""); },
                                 component: (toggleModal) =>
                                     <>

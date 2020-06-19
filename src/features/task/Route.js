@@ -187,7 +187,7 @@ function Component() {
                         filters={[
                             {
                                 hidex: building === "",
-                                label: <p>{building ? "Building: " + buildingName : "Select Building"}</p>,
+                                label: <p>{building ? "Building: " + buildingName : "Building: All"}</p>,
                                 delete: () => { setBuilding(""); },
                                 component: (toggleModal) =>
                                     <>
@@ -215,7 +215,7 @@ function Component() {
                             },
                             {
                                 hidex: type === "",
-                                label: <p>{type ? "Type: " + typeLabel : "Select Type"}</p>,
+                                label: <p>{type ? "Type: " + typeLabel : "Type: All"}</p>,
                                 delete: () => { setType(""); },
                                 component: (toggleModal) =>
                                     <Filter
@@ -234,7 +234,7 @@ function Component() {
                             },
                             {
                                 hidex: prio === "",
-                                label: <p>{prio ? "Priority: " + prioLabel : "Select Priority"}</p>,
+                                label: <p>{prio ? "Priority: " + prioLabel : "Priority: All"}</p>,
                                 delete: () => { setPrio(""); },
                                 component: (toggleModal) =>
                                     <Filter
@@ -253,7 +253,7 @@ function Component() {
                             },
                             {
                                 hidex: status === "",
-                                label: <p>{status ? "Status: " + statusLabel : "Select Status"}</p>,
+                                label: <p>{status ? "Status: " + statusLabel : "Status: All"}</p>,
                                 delete: () => { setStatus(""); },
                                 component: (toggleModal) =>
                                     <Filter

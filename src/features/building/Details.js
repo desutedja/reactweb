@@ -380,7 +380,7 @@ function Component() {
                         inputValue={managementName ? managementName : selectedRow.management_name}
                         setInputValue={setManagementName}
                     />
-                    <Input label="Select Management" type="button"
+                    <Input label="Management: All" type="button"
                         inputValue={managementName ? managementName : selectedRow.management_name}
                         onClick={() => setModalManagement(true)}
                         disabled={edit}
@@ -526,7 +526,7 @@ function Component() {
                     filters={[
                         {
                             hidex: !utNameFilter.label,
-                            label: <p>{utNameFilter.label ? "Name: " + utNameFilter.label : "Select Name"}</p>,
+                            label: <p>{utNameFilter.label ? "Name: " + utNameFilter.label : "Name: All"}</p>,
                             delete: () => { setUtNameFilter({}); },
                             component: (toggleModal) =>
                                 <Filter
@@ -575,7 +575,7 @@ function Component() {
                     filters={[
                         {
                             hidex: !sTypeFilter.label,
-                            label: <p>{sTypeFilter.label ? "Type: " + sTypeFilter.label : "Select Type"}</p>,
+                            label: <p>{sTypeFilter.label ? "Type: " + sTypeFilter.label : "Type: All"}</p>,
                             delete: () => { setSTypeFilter({}); },
                             component: (toggleModal) =>
                                 <Filter
@@ -623,12 +623,12 @@ function Component() {
                     totalItems={service.total_items}
                     filters={[
                         {
-                            button: <Button key="Select Group"
-                                label={sGroupFilter.label ? sGroupFilter.label : "Select Group"}
+                            button: <Button key="Group: All"
+                                label={sGroupFilter.label ? sGroupFilter.label : "Group: All"}
                                 selected={sGroupFilter.label}
                             />,
                             hidex: !sGroupFilter.label,
-                            label: <p>{sGroupFilter.label ? "Group: " + sGroupFilter.label : "Select Group"}</p>,
+                            label: <p>{sGroupFilter.label ? "Group: " + sGroupFilter.label : "Group: All"}</p>,
                             delete: () => { setSGroupFilter({}); },
                             component: (toggleModal) =>
                                 <Filter

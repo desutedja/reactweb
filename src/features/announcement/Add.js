@@ -179,7 +179,7 @@ function Component() {
                                     setModalUnit(false);
                                 }}
                             />,
-                            <Button key="Select All" label="Select All" icon={<RiCheckDoubleLine />}
+                            <Button key="All: All" label="All: All" icon={<RiCheckDoubleLine />}
                                 onClick={() => {
                                     let selectedUnits =
                                         page.map(el => el.original);
@@ -206,7 +206,7 @@ function Component() {
                 <Input label="Building" hidden inputValue={JSON.stringify(buildingsSelected.map(el =>
                     el.id
                 ))} />
-                <Input label="Select Building"
+                <Input label="Building: All"
                     actionlabels={
                         buildingsSelected.length > 0 ? { "Deselect All": () => setBuildingsSelected([]) } : {}
                     }
@@ -226,7 +226,7 @@ function Component() {
                         "building_unit_id": el.id
                     })
                 ))} />
-                {buildingsSelected.length === 1 && <Input label="Select Unit"
+                {buildingsSelected.length === 1 && <Input label="Unit: All"
                     actionlabels={
                         unitsSelected.length > 0 ? { "Deselect All": () => setUnitsSelected([]) } : {}
                     }

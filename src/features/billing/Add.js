@@ -86,14 +86,14 @@ function Component() {
                 }}
                 loading={loading}
             >
-                <Input label="Name" inputValue={selectedUnit?.name} />
-                <Input label="Service" hidden inputValue={selectedUnit.service ? selectedUnit.service
-                    : service} />
-                <Input label="Select Service" icon={<FiChevronRight />} inputValue={
+                <Input label="Service: All" icon={<FiChevronRight />} inputValue={
                     selectedUnit.service_name ? selectedUnit.service_name :
                     serviceName}
                     onClick={() => setModal(true)}
                 />
+                <Input label="Service" hidden inputValue={selectedUnit.service ? selectedUnit.service
+                    : service} />
+                <Input label="Name" inputValue={selectedUnit?.name} />
                 <Input label="Previous Usage" type="number" inputValue={selectedUnit?.previous_usage + ''} />
                 <Input label="Recent Usage" type="number" inputValue={selectedUnit?.recent_usage + ''} />
                 <Input label="Remarks" type="textarea" inputValue={selectedUnit?.remarks} />

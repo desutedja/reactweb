@@ -132,7 +132,7 @@ function Component() {
                 <Input label="Phone" type="tel" inputValue={selected.phone} />
                 <Input label="Email" type="email" inputValue={selected.email} />
                 <SectionSeparator />
-                <Input label="Select Location" type="button"
+                <Input label="Location: All" type="button"
                     onClick={() => {
                         setLat(-6.2107863);
                         setLng(106.8137977);

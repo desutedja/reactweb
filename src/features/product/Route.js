@@ -86,7 +86,7 @@ function Component() {
                         filters={[
                             {
                                 hidex: type === "",
-                                label: <p>{type ? "Type: " + type : "Select Type"}</p>,
+                                label: <p>{type ? "Type: " + type : "Type: All"}</p>,
                                 delete: () => { setType(""); },
                                 component: (toggleModal) =>
                                     <>
@@ -107,7 +107,7 @@ function Component() {
                             },
                             {
                                 hidex: merchant === "",
-                                label: <p>{merchant ? "Merchant: " + merchantName : "Select Merchant"}</p>,
+                                label: <p>{merchant ? "Merchant: " + merchantName : "Merchant: All"}</p>,
                                 delete: () => { setMerchant(""); },
                                 component: (toggleModal) =>
                                     <>
@@ -137,7 +137,7 @@ function Component() {
                             },
                             {
                                 hidex: cat === "",
-                                label: <p>{cat ? "Category: " + catName : "Select Category"}</p>,
+                                label: <p>{cat ? "Category: " + catName : "Category: All"}</p>,
                                 delete: () => { setCat(""); },
                                 component: (toggleModal) =>
                                     <>

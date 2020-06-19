@@ -72,7 +72,7 @@ function Component() {
                         filters={[
                             {
                                 hidex: statusPayment === "",
-                                label: <p>{statusPayment ? "Payment: " + statusPayment.label : "Select Payment"}</p>,
+                                label: <p>{statusPayment ? "Payment: " + statusPayment.label : "Payment: All"}</p>,
                                 delete: () => { setStatusPayment(""); },
                                 component: (toggleModal) =>
                                     <>
@@ -91,7 +91,7 @@ function Component() {
                             },
                             {
                                 hidex: status === "",
-                                label: <p>{status ? "Status: " + status.label : "Select Status"}</p>,
+                                label: <p>{status ? "Status: " + status.label : "Status: All"}</p>,
                                 delete: () => { setStatus(""); },
                                 component: (toggleModal) =>
                                     <>
@@ -110,7 +110,7 @@ function Component() {
                             },
                             {
                                 hidex: type === "",
-                                label: <p>{type ? "Type: " + type.label : "Select Type"}</p>,
+                                label: <p>{type ? "Type: " + type.label : "Type: All"}</p>,
                                 delete: () => { setType(""); },
                                 component: (toggleModal) =>
                                     <>

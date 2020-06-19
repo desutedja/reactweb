@@ -196,7 +196,7 @@ function Component() {
                         }, [dispatch, refreshToggle, headers, province, city, district])}
                         filters={[
                             {
-                                label: <p>{district ? "District: " + districtName : "Select District"}</p>,
+                                label: <p>{district ? "District: " + districtName : "District: All"}</p>,
                                 delete: () => { setDistrict(""); },
                                 onClick: () => { setType("district"); },
                                 hidden: city === "",
@@ -204,7 +204,7 @@ function Component() {
                                 component: ModalComponent,
                             },
                             {
-                                label: <p>{city ? "City: " + cityName : "Select City"}</p>,
+                                label: <p>{city ? "City: " + cityName : "City: All"}</p>,
                                 onClick: () => { setType("city"); },
                                 delete: () => { setCity("") },
                                 hidden: province === "",
@@ -212,7 +212,7 @@ function Component() {
                                 component: ModalComponent,
                             },
                             {
-                                label:  <p>{province ? "Province: " + provinceName : "Select Province"}</p>,
+                                label:  <p>{province ? "Province: " + provinceName : "Province: All"}</p>,
                                 onClick: () => { setType("province"); },
                                 delete: () => { setProvince(""); },
                                 hidex: province === "",

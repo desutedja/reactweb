@@ -125,7 +125,7 @@ function Component() {
                         filters={[
                             {
                                 hidex: building === "",
-                                label: <p>{building ? "Building: " + buildingName : "Select Building"}</p>,
+                                label: <p>{building ? "Building: " + buildingName : "Building: All"}</p>,
                                 delete: () => { setBuilding(""); setBuildingName(""); },
                                 component: (toggleModal) =>
                                     <>
@@ -153,7 +153,7 @@ function Component() {
                             },
                             {
                                 hidex: shift === "",
-                                label: <p>{shiftLabel ? "Availability: " + shiftLabel : "Select Availability"}</p>,
+                                label: <p>{shiftLabel ? "Availability: " + shiftLabel : "Availability: All"}</p>,
                                 delete: () => { setShift(""); setShiftLabel(""); },
                                 component: (toggleModal) =>
                                     <Filter
@@ -172,7 +172,7 @@ function Component() {
                             },
                             {
                                 hidex: role === "",
-                                label: <p>{role ? "Role: " + roleLabel : "Select Role"}</p>,
+                                label: <p>{role ? "Role: " + roleLabel : "Role: All"}</p>,
                                 delete: () => { setRole(""); setRoleLabel(""); },
                                 component: toggleModal =>
                                     <Filter

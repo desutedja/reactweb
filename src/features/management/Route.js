@@ -13,7 +13,7 @@ import Details from './Details';
 
 const columns = [
     { Header: "ID", accessor: "id" },
-    { Header: "Name", accessor: "name" },
+    { Header: "Name", accessor: row => <b>{row.name}</b> },
     { Header: "Legal Name", accessor: "name_legal" },
     { Header: "Phone", accessor: "phone" },
     { Header: "Email", accessor: "email" },
