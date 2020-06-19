@@ -99,11 +99,6 @@ function Component() {
                          )
                     }
                 </div>
-                <div className="Photos">
-                    <Button label="Edit" onClick={() => history.push(
-                        url.split('/').slice(0, -1).join('/') + "/edit"
-                    )} />
-                </div>
             </div>
             <div className="Container" style={{
                 marginTop: 16,
