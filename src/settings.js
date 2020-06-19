@@ -20,6 +20,24 @@ export const taskStatusColor = {
     'completed': 'secondary'
 }
 
+export const trx_status = [
+    { label: 'requested', value: 'requested' },
+    { label: 'ask_resident', value: 'ask_resident' },
+    { label: 'ask_merchant', value: 'ask_merchant' },
+    { label: 'paid', value: 'paid' },
+    { label: 'in_progress', value: 'in_progress' },
+    { label: 'accepted', value: 'accepted' },
+    { label: 'canceled', value: 'canceled' },
+    { label: 'expired', value: 'expired' },
+    { label: 'paid', value: 'paid' },
+    { label: 'on_delivery', value: 'on_delivery' },
+    { label: 'delivered', value: 'delivered' },
+    { label: 'completed', value: 'completed' },
+    { label: 'rejected', value: 'rejected' },
+    { label: 'ready_for_pickup', value: 'ready_for_pickup' },
+    { label: 'requested', value: 'requested' },
+]
+
 export const trxStatusColor = {
     'requested': 'light',
     'ask_merchant': 'warning',

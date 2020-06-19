@@ -20,11 +20,12 @@ const columns = [
     { Header: 'Merchant Name', accessor: 'merchant_name' },
     { Header: 'Category', accessor: 'category_name' },
     { Header: 'Type', accessor: row => toSentenceCase(row.item_type) },
-    { Header: 'Base Price', accessor: row => toMoney(row.base_price) },
+    //{ Header: 'Base Price', accessor: row => toMoney(row.base_price) },
     { Header: 'Admin Fee', accessor: row => row.admin_fee + '%' },
-    { Header: 'Discount Fee', accessor: row => <span className={row.discount_fee > 0 ? "HighlightValue-Red" : ""} >{row.discount_fee + '%'}</span> },
+    { Header: 'Discount', accessor: row => <span className={row.discount_fee > 0 ? "HighlightValue-Red" : ""} >{row.discount_fee + '%'}</span> },
     { Header: 'PG Fee', accessor: row => row.pg_fee + '%' },
     { Header: 'Selling Price', accessor: row => toMoney(row.selling_price) },
+    { Header: 'Final Price', accessor: row => toMoney(row.total_selling_price) }
 ]
 
 function Component() {

@@ -166,7 +166,7 @@ function Component({
                             <tbody className="TableLoading">
                                 <tr className="Spinner">
                                     <td><MoonLoader
-                                        size={24}
+                                        size={34}
                                         color={"grey"}
                                         loading={loading}
                                     />

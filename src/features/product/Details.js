@@ -10,7 +10,6 @@ import { patchAdminFee } from './slice';
 
 const exception = [
     'created_on', 'modified_on', 'deleted', 'images', 'thumbnails',
-
 ];
 
 function Component() {
@@ -19,6 +18,7 @@ function Component() {
 
     const [image, setImage] = useState('');
     const [adminFee, setAdminFee] = useState('');
+    const [discFee, setDiscFee] = useState('');
 
     const headers = useSelector(state => state.auth.headers);
     const { selected } = useSelector(state => state.product);
@@ -34,44 +34,38 @@ function Component() {
                     maxHeight: 600,
                 }} />
             </Modal>
-            <Modal isOpen={modalFee} toggle={() => setModalFee(false)}>
-                <p className="Title">Set Admin Fee</p>
-                <form
-                    style={{
-                        marginTop: 16,
-                    }}
-                    onSubmit={e => {
+            <Modal title="Adjust Fees" okLabel={"Set Fees"} isOpen={modalFee} disableHeader={true} toggle={() => { setModalFee(false); setAdminFee(""); setDiscFee("");}}
+                    onClick={() => {
                         dispatch(patchAdminFee(headers, {
                             item_id: selected.id,
                             merchant_id: selected.merchant_id,
                             admin_fee: parseInt(adminFee),
                             pg_fee: selected.pg_fee,
+                            discount_fee: parseInt(discFee),
                             delivery_fee: selected.delivery_fee,
                         }, selected));
-
                         setModalFee(false);
+                    }}
+                >
+                <form
+                    style={{
+                        marginTop: 16,
                     }}
                 >
                     <div style={{
                         display: 'flex',
+                        flexDirection: 'column',
                         alignItems: 'center',
                     }}>
-                        <Input compact label="Admin Fee" type="number" inputValue={adminFee}
+                        <Input label="Admin Fee" type="number" inputValue={adminFee !== "" ? adminFee : selected.admin_fee}
                             setInputValue={setAdminFee} />
-                        <span style={{
-                            margin: 4
-                        }}>
-                            %
-                        </span>
+                        <Input  label="Discount" type="number" inputValue={discFee !== "" ? discFee : selected.discount_fee}
+                            setInputValue={setDiscFee} />
                     </div>
                     <div style={{
                         display: 'flex',
                         marginTop: 16,
                     }}>
-                        <Button label="Cancel" secondary
-                            onClick={() => setModalFee(false)}
-                        />
-                        <Button label="Set" />
                     </div>
                 </form>
             </Modal>
@@ -93,10 +87,8 @@ function Component() {
                     <div style={{
                         display: 'flex'
                     }}>
-                        <Button label="Set Admin Fee" onClick={() => setModalFee(true)} />
-                        <Button label="Edit" onClick={() => history.push(
-                            url.split('/').slice(0, -1).join('/') + "/edit"
-                        )} />
+                        <Button label="Adjust Fees & Discount" onClick={() => setModalFee(true)} />
+                        <Button label="Take Down Product" onClick={() => {}} />
                     </div>
                     {selected.thumbnails ?
                         <img className="Logo" src={selected.thumbnails} alt="thumbnails" />

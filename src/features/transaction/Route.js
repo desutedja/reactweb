@@ -1,16 +1,24 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState, useCallback } from 'react';
+
+import Table from '../../components/Table';
 import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Table from '../../components/Table';
-import Filter from '../../components/Filter';
 import Details from './Details';
+import Filter from '../../components/Filter';
 import Settlement from './Settlement';
 import Disbursement from './Disbursement';
 import { getTransaction, getTransactionDetails, setSelected } from './slice';
+import { trx_status, trxStatusColor, merchant_types } from '../../settings';
 import { toMoney, toSentenceCase, dateTimeFormatter } from '../../utils';
 import { Badge } from 'reactstrap';
-import { trxStatusColor } from '../../settings';
+
+const payment_status = [
+    { label: "Paid", value: "paid" },
+    { label: "Unpaid", value: "unpaid" }
+]
+
+const trx_type = merchant_types;
 
 const columns = [
     // { Header: 'ID', accessor: 'id' },
@@ -34,17 +42,18 @@ const columns = [
     },
 ]
 
-const statuses = Object.keys(trxStatusColor);
-
 function Component() {
-    const [status, setStatus] = useState('');
-
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.transaction);
+    const { loading, items, total_pages, total_items, refreshToggle } =
+        useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
     let history = useHistory();
     let { path, url } = useRouteMatch();
+
+    const [statusPayment, setStatusPayment] = useState('');
+    const [status, setStatus] = useState('');
+    const [type, setType] = useState('');
 
     return (
         <div>
@@ -57,26 +66,66 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getTransaction(headers, pageIndex, pageSize, search, status));
+                            dispatch(getTransaction(headers, pageIndex, pageSize, search, status.value, statusPayment.value, type.value));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers, status])}
+                        }, [dispatch, refreshToggle, headers, status, statusPayment, type])}
                         filters={[
                             {
+                                hidex: statusPayment === "",
+                                label: <p>{statusPayment ? "Payment: " + statusPayment.label : "Select Payment"}</p>,
+                                delete: () => { setStatusPayment(""); },
+                                component: (toggleModal) =>
+                                    <>
+                                        <Filter
+                                            data={payment_status}
+                                            onClick={(el) => {
+                                                setStatusPayment(el);
+                                                toggleModal(false);
+                                            }}
+                                            onClickAll={() => {
+                                                setStatusPayment("");
+                                                toggleModal(false);
+                                            }}
+                                        />
+                                    </>
+                            },
+                            {
                                 hidex: status === "",
-                                label: <p>{"Status: " + toSentenceCase(status ? status : 'all')}</p>,
+                                label: <p>{status ? "Status: " + status.label : "Select Status"}</p>,
                                 delete: () => { setStatus(""); },
                                 component: (toggleModal) =>
-                                    <Filter
-                                        data={statuses}
-                                        onClick={(el) => {
-                                            setStatus(el);
-                                            toggleModal(false);
-                                        }}
-                                        onClickAll={() => {
-                                            setStatus("");
-                                            toggleModal(false);
-                                        }}
-                                    />
+                                    <>
+                                        <Filter
+                                            data={trx_status}
+                                            onClick={(el) => {
+                                                setStatus(el);
+                                                toggleModal(false);
+                                            }}
+                                            onClickAll={() => {
+                                                setStatus("");
+                                                toggleModal(false);
+                                            }}
+                                        />
+                                    </>
+                            },
+                            {
+                                hidex: type === "",
+                                label: <p>{type ? "Type: " + type.label : "Select Type"}</p>,
+                                delete: () => { setType(""); },
+                                component: (toggleModal) =>
+                                    <>
+                                        <Filter
+                                            data={trx_type}
+                                            onClick={(el) => {
+                                                setType(el);
+                                                toggleModal(false);
+                                            }}
+                                            onClickAll={() => {
+                                                setType("");
+                                                toggleModal(false);
+                                            }}
+                                        />
+                                    </>
                             },
                         ]}
                         actions={[]}
