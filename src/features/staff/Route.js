@@ -13,36 +13,34 @@ import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
-import { Badge } from 'reactstrap';
 import Add from './Add';
 import Details from './Details';
+import Pill from '../../components/Pill';
+import Tile from '../../components/Tile';
 
 const columns = [
     { Header: "ID", accessor: "id" },
     {
         Header: "Staff",
-        accessor: row => [row.firstname + ' ' + row.lastname, row.email],
-        Cell: acc => {
-            return <UserAvatar fullname={acc.value[0]} email={acc.value[1]} />;
-        }
+        accessor: row => <UserAvatar fullname={row.firstname + ' ' + row.lastname} email={toSentenceCase(row.staff_role)} picture={row.photo}/>,
     },
-    { Header: "Role", accessor: row => toSentenceCase(row.staff_role) },
+    { Header: "Task", accessor: row => row.ongoing_task ? row.ongoing_task : "-"},
+    { Header: "Email", accessor: "email" },
     { Header: "Phone", accessor: "phone" },
-    { Header: "Gender", accessor: "gender" },
-    { Header: "Building", accessor: "building_name" },
-    { Header: "Management", accessor: "management_name" },
+    //{ Header: "Gender", accessor: "gender" },
+    { Header: "Building Management", accessor: row => <Tile items={[row.building_name, 
+        row.staff_role === "courier" ? 
+            (row.on_centratama ? "Centratama Courier" : row.management_name) : row.management_name ]} /> },
     {
-        Header: "Shift", accessor: row => row.current_shift_status ?
-            <h5><Badge pill color="success">
-                Yes
-            </Badge></h5> : <h5><Badge pill color="secondary">
-                No
-            </Badge></h5>
+        Header: "Available", accessor: row => 
+        row.staff_role === "courier" ? (row.is_available ? <Pill color="success">Accepting Order</Pill> : <Pill color="secondary">No</Pill>) : 
+        row.staff_role === "gm_bm" || row.staff_role === "pic_bm" ? "-" : 
+        (row.current_shift_status ? <Pill color="success">On Shift</Pill>:<Pill color="secondary">No</Pill>)
     },
     {
-        Header: "Status", accessor: row => <h5><Badge pill color={
+        Header: "Status", accessor: row => <Pill color={
             row.status === 'active' ? "success" : 'secondary'
-        }>{toSentenceCase(row.status)}</Badge></h5>
+        }>{toSentenceCase(row.status)}</Pill>
     },
 ]
 
@@ -56,8 +54,8 @@ const roles = [
 
 
 const shifts = [
-    { label: 'Yes', value: 'yes', },
-    { label: 'No', value: 'no', },
+    { label: 'Available', value: 'yes', },
+    { label: 'Not Available', value: 'no', },
 ]
 
 function Component() {
@@ -155,7 +153,7 @@ function Component() {
                             },
                             {
                                 hidex: shift === "",
-                                label: <p>{shiftLabel ? "Available: " + shiftLabel : "Select Availability"}</p>,
+                                label: <p>{shiftLabel ? "Availability: " + shiftLabel : "Select Availability"}</p>,
                                 delete: () => { setShift(""); setShiftLabel(""); },
                                 component: (toggleModal) =>
                                     <Filter
