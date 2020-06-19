@@ -49,8 +49,8 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-            dispatch(getBillingUnitItem(headers, 0, 100, '',
-                selected, status));
+        dispatch(getBillingUnitItem(headers, 0, 100, '',
+            selected, status));
     }, [dispatch, refreshToggle, headers, selected, status])
 
     useEffect(() => {
@@ -105,10 +105,9 @@ function Component() {
                         // fetchData={}
                         filters={[
                             {
-                                button: <Button key="Payment Status"
-                                    label={status ? toSentenceCase(status) : "Payment Status"}
-                                    selected={status}
-                                />,
+                                label: <p>{"Status: " + (status ? toSentenceCase(status) : "All")}</p>,
+                                hidex: status === '',
+                                delete: () => setStatus(''),
                                 component: (toggleModal) =>
                                     <>
                                         <Filter

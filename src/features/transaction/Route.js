@@ -9,10 +9,9 @@ import Filter from '../../components/Filter';
 import Settlement from './Settlement';
 import Disbursement from './Disbursement';
 import { getTransaction, getTransactionDetails, setSelected } from './slice';
-import { trx_status, trx_statusColor, merchant_types } from '../../settings';
+import { trx_status, trxStatusColor, merchant_types } from '../../settings';
 import { toMoney, toSentenceCase, dateTimeFormatter } from '../../utils';
 import { Badge } from 'reactstrap';
-import { trxStatusColor } from '../../settings';
 
 const payment_status = [
     { label: "Paid", value: "paid" },
@@ -22,25 +21,15 @@ const payment_status = [
 const trx_type = merchant_types;
 
 const columns = [
-    { Header: 'ID', accessor: 'id' },
+    // { Header: 'ID', accessor: 'id' },
     { Header: 'Trx Code', accessor: 'trx_code' },
     { Header: 'Type', accessor: row => toSentenceCase(row.type) },
     { Header: 'Merchant', accessor: 'merchant_name' },
     { Header: 'Resident', accessor: 'resident_name' },
-    // { Header: 'Selling Price', accessor: 'total_selling_price' },
-    // { Header: 'Internal Courier Fee', accessor: 'courier_internal_charges' },
-    // { Header: 'External Courier Fee', accessor: 'courier_external_charges' },
-    // { Header: 'Tax', accessor: 'tax_price' },
-    // { Header: 'Discount', accessor: 'discount_price' },
-    // { Header: 'Sales Fee', accessor: 'profit_from_sales' },
-    // { Header: 'PG Fee', accessor: 'profit_from_pg' },
-    // { Header: 'Delivery Fee', accessor: 'profit_from_delivery' },
-    //{ Header: 'Total Price', accessor: row => toMoney(row.total_price) },
     { Header: 'Payment Amount', accessor: row => toMoney(row.payment_amount) },
-    //{ Header: 'Settlement Date', accessor: row => row.payment_settled_date ? row.payment_settled_date : '-' },
-    //{ Header: 'Merchant Disbursement Date', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
-    //{ Header: 'Courier Disbursement Date', accessor: row => row.courier_disbursement_date ? row.courier_disbursement_date : '-' },
-    { Header: 'Total Price', accessor: row => toMoney(row.total_price) },
+    {
+        Header: 'Transaction Date', accessor: row => dateTimeFormatter(row.created_on)
+    },
     {
         Header: 'Payment Date', accessor: row => row.payment_date ?
             dateTimeFormatter(row.payment_date) : 'Unpaid'
@@ -53,11 +42,10 @@ const columns = [
     },
 ]
 
-const statuses = Object.keys(trxStatusColor);
-
 function Component() {
     const headers = useSelector(state => state.auth.headers);
-    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.transaction);
+    const { loading, items, total_pages, total_items, refreshToggle } =
+        useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
     let history = useHistory();

@@ -85,7 +85,7 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={modal} onRequestClose={() => setModal(false)}>
+            <Modal isOpen={modal} toggle={() => setModal(false)}>
                 <Input label="Search"
                     inputValue={search} setInputValue={setSearch}
                 />

@@ -43,7 +43,7 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={modal} onRequestClose={() => setModal(false)}>
+            <Modal isOpen={modal} toggle={() => setModal(false)}>
                 <p className="Title" style={{
                     marginBottom: 16
                 }}>Select Service</p>

@@ -57,20 +57,8 @@ function Component() {
                                 <div style={{
                                     marginRight: 16,
                                 }}>
-                                    Settled Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.settled_amount}
-                                    formatValue={formatValue}
-                                />
-                            </div>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <div style={{
-                                    marginRight: 16,
-                                }}>
-                                    Unsettled Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.unsettled_amount}
+                                    Undisbursed Amount</div>
+                                <AnimatedNumber className="BigNumber" value={info.undisbursed_amount}
                                     formatValue={formatValue}
                                 />
                             </div>
@@ -89,18 +77,6 @@ function Component() {
                                 }}>
                                     Disbursed Amount</div>
                                 <AnimatedNumber className="BigNumber" value={info.disbursed_amount}
-                                    formatValue={formatValue}
-                                />
-                            </div>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <div style={{
-                                    marginRight: 16,
-                                }}>
-                                    Undisbursed Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.undisbursed_amount}
                                     formatValue={formatValue}
                                 />
                             </div>

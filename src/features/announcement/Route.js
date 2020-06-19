@@ -44,22 +44,26 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
-                Are you sure you want to delete?
+            <Modal isOpen={confirm} toggle={() => setConfirm(false)} disableHeader disableFooter >
+                {selectedRow.publish ? <>
+                    You cannot delete published announcement.
+                </> : <>
+                        Are you sure you want to delete?
                 <div style={{
-                    display: 'flex',
-                    marginTop: 16,
-                }}>
-                    <Button label="No" secondary
-                        onClick={() => setConfirm(false)}
-                    />
-                    <Button label="Yes"
-                        onClick={() => {
-                            setConfirm(false);
-                            dispatch(deleteAnnouncement(selectedRow, headers));
-                        }}
-                    />
-                </div>
+                            display: 'flex',
+                            marginTop: 16,
+                        }}>
+                            <Button label="No" secondary
+                                onClick={() => setConfirm(false)}
+                            />
+                            <Button label="Yes"
+                                onClick={() => {
+                                    setConfirm(false);
+                                    dispatch(deleteAnnouncement(selectedRow, headers));
+                                }}
+                            />
+                        </div>
+                    </>}
             </Modal>
             <Switch>
                 <Route exact path={path}>

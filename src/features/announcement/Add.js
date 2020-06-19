@@ -89,7 +89,7 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={modalBuilding} onRequestClose={() => setModalBuilding(false)}>
+            <Modal isOpen={modalBuilding} toggle={() => setModalBuilding(false)}>
                 <p className="Title" style={{
                     marginBottom: 16
                 }}>Select Building</p>
@@ -136,7 +136,7 @@ function Component() {
                     }}
                 />
             </Modal>
-            <Modal isOpen={modalUnit} onRequestClose={() => setModalUnit(false)}>
+            <Modal isOpen={modalUnit} toggle={() => setModalUnit(false)}>
                 <p className="Title" style={{
                     marginBottom: 16
                 }}>Select Unit</p>

@@ -10,10 +10,11 @@ import Modal from '../../components/Modal';
 import Add from './Add';
 import Details from './Details';
 import { getMerchant, setSelected, deleteMerchant, getMerchantDetails } from './slice';
-import { get } from '../../utils';
+import { get, toSentenceCase } from '../../utils';
 import { merchant_types, endpointMerchant } from '../../settings';
 import { FiSearch } from 'react-icons/fi';
 import { FiPlus } from 'react-icons/fi';
+import { Badge } from 'reactstrap';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -23,7 +24,12 @@ const columns = [
     { Header: 'description', accessor: 'description' },
     { Header: 'Open', accessor: 'open_at' },
     { Header: 'Closed', accessor: 'closed_at' },
-    { Header: 'Status', accessor: 'status' },
+    {
+        Header: 'Status', accessor: row =>
+            <h5><Badge pill color={
+                row.status ? 'success' : 'secondary'
+            }>{toSentenceCase(row.status ? row.status : 'inactive')}</Badge></h5>
+    },
 ]
 
 function Component() {
@@ -59,7 +65,7 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+            <Modal isOpen={confirm} toggle={() => setConfirm(false)}>
                 Are you sure you want to delete?
                 <div style={{
                     display: 'flex',

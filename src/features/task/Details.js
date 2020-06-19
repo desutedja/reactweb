@@ -81,7 +81,7 @@ function Component() {
     console.log(selected);
     return (
         <div>
-            <Modal isOpen={modal} onRequestClose={() => setModal(false)}>
+            <Modal isOpen={modal} toggle={() => setModal(false)}>
                 <img src={image} alt='attachment' style={{
                     maxHeight: 600,
                 }} />
@@ -98,11 +98,6 @@ function Component() {
                             />
                          )
                     }
-                </div>
-                <div className="Photos">
-                    <Button label="Edit" onClick={() => history.push(
-                        url.split('/').slice(0, -1).join('/') + "/edit"
-                    )} />
                 </div>
             </div>
             <div className="Container" style={{
