@@ -166,7 +166,7 @@ function Component() {
 
     return (
         <div>
-            <Modal disableFooter={true} disableHeader={true} isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+            <Modal disableFooter={true} disableHeader={true} isOpen={confirm} toggle={() => setConfirm(false)}>
                 Are you sure you want to delete?
                 <div style={{
                     display: 'flex',

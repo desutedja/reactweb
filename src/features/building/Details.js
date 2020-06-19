@@ -180,7 +180,7 @@ function Component() {
 
     return (
         <div>
-            <Modal disableFooter={false} isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+            <Modal disableFooter={false} isOpen={confirm} toggle={() => setConfirm(false)}>
                 Are you sure you want to delete?
                 <div style={{
                     display: 'flex',

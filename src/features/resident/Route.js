@@ -55,7 +55,7 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={confirm} onRequestClose={() => setConfirm(false)}>
+            <Modal isOpen={confirm} toggle={() => setConfirm(false)}>
                 Are you sure you want to delete this resident?
                 <div style={{
                     display: 'flex',

@@ -13,12 +13,15 @@ import { Badge } from 'reactstrap';
 import { trxStatusColor } from '../../settings';
 
 const columns = [
-    { Header: 'ID', accessor: 'id' },
+    // { Header: 'ID', accessor: 'id' },
     { Header: 'Trx Code', accessor: 'trx_code' },
     { Header: 'Type', accessor: row => toSentenceCase(row.type) },
     { Header: 'Merchant', accessor: 'merchant_name' },
     { Header: 'Resident', accessor: 'resident_name' },
-    { Header: 'Total Price', accessor: row => toMoney(row.total_price) },
+    { Header: 'Payment Amount', accessor: row => toMoney(row.payment_amount) },
+    {
+        Header: 'Transaction Date', accessor: row => dateTimeFormatter(row.created_on)
+    },
     {
         Header: 'Payment Date', accessor: row => row.payment_date ?
             dateTimeFormatter(row.payment_date) : 'Unpaid'

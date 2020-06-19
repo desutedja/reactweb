@@ -29,12 +29,12 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={modal} onRequestClose={() => setModal(false)}>
+            <Modal isOpen={modal} toggle={() => setModal(false)}>
                 <img src={image} alt='attachment' style={{
                     maxHeight: 600,
                 }} />
             </Modal>
-            <Modal isOpen={modalFee} onRequestClose={() => setModalFee(false)}>
+            <Modal isOpen={modalFee} toggle={() => setModalFee(false)}>
                 <p className="Title">Set Admin Fee</p>
                 <form
                     style={{

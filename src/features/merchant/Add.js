@@ -112,7 +112,7 @@ function Component() {
 
   return (
     <div>
-      <Modal isOpen={modal} onRequestClose={() => {
+      <Modal isOpen={modal} toggle={() => {
                 setLat('');
                 setLng('');
                 setModal(false);

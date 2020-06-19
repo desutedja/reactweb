@@ -130,7 +130,7 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={resolve} onRequestClose={() => setResolve(false)}>
+            <Modal isOpen={resolve} toggle={() => setResolve(false)} disableFooter disableHeader >
                 Are you sure you want to resolve this task?
                 <div style={{
                     display: 'flex',
@@ -147,7 +147,7 @@ function Component() {
                     />
                 </div>
             </Modal>
-            <Modal isOpen={assign} onRequestClose={() => setAssign(false)}>
+            <Modal isOpen={assign} toggle={() => setAssign(false)}>
                 Choose assignee:
                 {staffs.length !== 0 && !staff.value && <Input label="Search" icon={<FiSearch />}
                     compact inputValue={search} setInputValue={setSearch} />}

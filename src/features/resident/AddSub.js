@@ -107,7 +107,7 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={modal} onRequestClose={() => setModal(false)}>
+            <Modal isOpen={modal} toggle={() => setModal(false)}>
                 <p>Resident with the provided email already exist.</p>
                 <p style={{ marginBottom: 16 }}>Add as sub account to
                 {' ' + selected.firstname + ' ' + selected.lastname}

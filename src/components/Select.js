@@ -25,7 +25,7 @@ function Component({
 
     return (
         <>
-            <Modal isOpen={modal} onRequestClose={() => setModal(false)}>
+            <Modal isOpen={modal} toggle={() => setModal(false)}>
                 <Input
                     label="Search"
                     compact

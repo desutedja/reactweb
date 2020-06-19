@@ -75,7 +75,7 @@ export const getTask = (
 export const resolveTask = (headers, row) => dispatch => {
   dispatch(startAsync());
 
-  post(taskEndpoint + '/resolve/' + row.id, {}, headers,
+  post(taskEndpoint + '/resolve?id=' + row.id, {}, headers,
     res => {
       dispatch(stopAsync());
       dispatch(refresh());

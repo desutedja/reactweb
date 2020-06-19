@@ -57,7 +57,7 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={addSchedule} onRequestClose={() => setAddSchedule(false)}>
+            <Modal isOpen={addSchedule} toggle={() => setAddSchedule(false)}>
                 Add Schedule
                 <Form
                     onSubmit={data => {

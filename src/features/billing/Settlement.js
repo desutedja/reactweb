@@ -11,7 +11,7 @@ import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import { getBillingSettlement } from './slice';
 import { endpointAdmin, endpointBilling } from '../../settings';
-import { get, toMoney, post } from '../../utils';
+import { get, toMoney, post, dateTimeFormatter } from '../../utils';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -21,7 +21,10 @@ const columns = [
     { Header: 'Management', accessor: 'management_name' },
     { Header: 'Resident', accessor: 'resident_name' },
     { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
-    { Header: 'Settlement', accessor: row => row.payment_settled_date ? row.payment_settled_date : '-' },
+    {
+        Header: 'Settlement', accessor: row => row.payment_settled_date ?
+            dateTimeFormatter(row.payment_settled_date) : '-'
+    },
     // { Header: 'Disbursement', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
 ]
 
@@ -134,23 +137,12 @@ function Component() {
                                 <div style={{
                                     marginRight: 16,
                                 }}>
-                                    Settled Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.settled_amount}
-                                    formatValue={formatValue}
-                                />
-                            </div>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <div style={{
-                                    marginRight: 16,
-                                }}>
                                     Unsettled Amount</div>
                                 <AnimatedNumber className="BigNumber" value={info.unsettled_amount}
                                     formatValue={formatValue}
                                 />
                             </div>
+
                         </div>
                         <div style={{
                             display: 'flex',
@@ -164,20 +156,8 @@ function Component() {
                                 <div style={{
                                     marginRight: 16,
                                 }}>
-                                    Disbursed Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.disbursed_amount}
-                                    formatValue={formatValue}
-                                />
-                            </div>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <div style={{
-                                    marginRight: 16,
-                                }}>
-                                    Undisbursed Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.undisbursed_amount}
+                                    Settled Amount</div>
+                                <AnimatedNumber className="BigNumber" value={info.settled_amount}
                                     formatValue={formatValue}
                                 />
                             </div>
@@ -198,10 +178,9 @@ function Component() {
                         }, [dispatch, refreshToggle, headers, building])}
                         filters={[
                             {
-                                button: <Button key="Select Building"
-                                    label={building ? buildingName : "Select Building"}
-                                    selected={building}
-                                />,
+                                hidex: building === "",
+                                label: <p>Building: {building ? buildingName : "All"}</p>,
+                                delete: () => setBuilding(''),
                                 component: (toggleModal) =>
                                     <>
                                         <Input
@@ -244,7 +223,7 @@ function Component() {
                                 <Button
                                     onClick={() => { }}
                                     icon={<FiFile />}
-                                    label="Settle From File"
+                                    label="Upload Settlement"
                                 />,
                             ])
                         }}

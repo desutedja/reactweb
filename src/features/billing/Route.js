@@ -71,10 +71,9 @@ function Component() {
                         }, [dispatch, refreshToggle, headers, building])}
                         filters={[
                             {
-                                button: <Button key="Select Building"
-                                    label={building ? buildingName : "Select Building"}
-                                    selected={building}
-                                />,
+                                hidex: building === "",
+                                label: <p>Building: {building ? buildingName : "All"}</p>,
+                                delete: () => setBuilding(''),
                                 component: (toggleModal) =>
                                     <>
                                         <Input
