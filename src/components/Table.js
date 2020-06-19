@@ -132,7 +132,7 @@ function Component({
                 <div className="TableAction-right">
                     {
                         filters.map((el, index) => !el.hidden &&
-                            <FilterButton
+                            <FilterButton 
                                 key={index}
                                 label={el.label}
                                 hideX={el.hidex}
