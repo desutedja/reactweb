@@ -116,8 +116,8 @@ function Component() {
                 setLat('');
                 setLng('');
                 setModal(false);
-            }}>
-                <div style={{ height: '20rem', width: '60rem' }}>
+      }} onClick={() => setModal(false)} okLabel={"select"}>
+                <div style={{ height: '40rem', width: '100%' }}>
                     <GoogleMapReact
                         bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
                         center={{
@@ -126,6 +126,7 @@ function Component() {
                         }}
                         zoom={12}
                         onClick={({ x, y, lat, lng, event }) => {
+                            /* AVID_TODO: handle when not click, but drag (onMouseUp) */
                             setLat(lat);
                             setLng(lng);
                             console.log(lat, lng);
@@ -138,7 +139,6 @@ function Component() {
                     <Input label='Latitude' compact inputValue={lat} setInputValue={setLat} />
                     <Input label='Longitude' compact inputValue={lng} setInputValue={setLng} />
                 </div>
-                <Button label='Select' onClick={() => setModal(false)} />
             </Modal>
       <Form
         onSubmit={(data) => {
