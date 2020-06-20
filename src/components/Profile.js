@@ -103,7 +103,7 @@ function Component({ type = "", title, email = null, website = null, phone = nul
     }
 
     return (
-        <Container style={{ paddingTop: '20px', paddingBottom: '30px' }} >
+        <Container style={{ paddingTop: '20px', paddingBottom: '30px', marginLeft: '100px' }} >
             <Row>
                 <Col style={{ paddingLeft: '0px' }} xs="3">
                     <Row>
