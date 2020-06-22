@@ -1,6 +1,5 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
-import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../components/Table';
