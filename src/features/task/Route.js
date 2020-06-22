@@ -9,14 +9,15 @@ import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
-import { get, toSentenceCase, dateTimeFormatter } from '../../utils';
+import { get, toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import Details from './Details';
 import { Badge } from 'reactstrap';
+import Tile from '../../components/Tile';
 
 const columns = [
     { Header: "ID", accessor: "id" },
-    { Header: "Title", accessor: "title" },
+    { Header: "Title", accessor: row => <Tile items={[row.title, toEllipsis(row.ref_code, 15)]}/> },
     { Header: "Type", accessor: row => toSentenceCase(row.task_type) },
     { Header: "Requester", accessor: "requester_name" },
     { Header: "Building", accessor: "building_name" },
