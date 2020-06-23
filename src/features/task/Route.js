@@ -12,7 +12,7 @@ import Modal from '../../components/Modal';
 import { get, toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import Details from './Details';
-import { Badge } from 'reactstrap';
+import { Badge, Row } from 'reactstrap';
 import Tile from '../../components/Tile';
 
 const columns = [
@@ -36,8 +36,11 @@ const columns = [
     {
         Header: "Status", accessor: row => row.status ?
             <h5><Badge pill color={taskStatusColor[row.status]}>
-                {toSentenceCase(row.status) + (row.status === 'rejected' ? 
-                ' by ' + row.rejected_by : '')}
+                {
+                toSentenceCase(row.status)+(row.status === 'created' && row.priority === 'emergency'  ? ':Searching for Security' : '')
+                + (row.status === 'rejected' ? ' by ' + row.rejected_by : '')
+                }
+                
             </Badge></h5> : "-"
     },
 ]
