@@ -1,12 +1,13 @@
 import React, { } from 'react';
-import { FiGlobe, FiPhone } from 'react-icons/fi';
+import { FiGlobe, FiPhone, FiHome } from 'react-icons/fi';
 
 import Container from '../../../components/Container';
 import Row from '../../../components/Row';
 import Column from '../../../components/Column';
 import Tab from '../../../components/Tab';
 
-function Component({ image, title, website, phone, labels, contents }) {
+function Component({ image, title, website, phone, merchant,
+    labels, contents }) {
     return (
         <Row>
             {(image || title) && <Container flex={3}>
@@ -28,14 +29,23 @@ function Component({ image, title, website, phone, labels, contents }) {
                     {website && <Row center>
                         <FiGlobe style={{
                             marginRight: 8,
+                            fontSize: '1.2rem',
                         }} />
                         <h5><a href={website}>{website}</a></h5>
                     </Row>}
                     {phone && <Row center>
                         <FiPhone style={{
                             marginRight: 8,
+                            fontSize: '1.2rem',
                         }} />
                         <h5>{phone}</h5>
+                    </Row>}
+                    {merchant && <Row center>
+                        <FiHome style={{
+                            marginRight: 8,
+                            fontSize: '1.2rem',
+                        }} />
+                        <h5>{merchant}</h5>
                     </Row>}
                 </Column>
             </Container>}
