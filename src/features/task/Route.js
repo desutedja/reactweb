@@ -12,12 +12,12 @@ import Modal from '../../components/Modal';
 import { get, toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import Details from './Details';
-import { Badge } from 'reactstrap';
+import { Badge, Row } from 'reactstrap';
 import Tile from '../../components/Tile';
 
 const columns = [
     { Header: "ID", accessor: "id" },
-    { Header: "Title", accessor: row => <Tile items={[row.title, toEllipsis(row.ref_code, 15)]}/> },
+    { Header: "Title", accessor: row => <Tile items={[row.title,<small>{toEllipsis(row.ref_code, 17)}</small>  ]}/> },
     { Header: "Type", accessor: row => toSentenceCase(row.task_type) },
     { Header: "Requester", accessor: "requester_name" },
     { Header: "Building", accessor: "building_name" },
@@ -36,8 +36,11 @@ const columns = [
     {
         Header: "Status", accessor: row => row.status ?
             <h5><Badge pill color={taskStatusColor[row.status]}>
-                {toSentenceCase(row.status) + (row.status === 'rejected' ? 
-                ' by ' + row.rejected_by : '')}
+                {
+                toSentenceCase(row.status)+(row.status === 'created' && row.priority === 'emergency'  ? ':Searching for Security' : '')
+                + (row.status === 'rejected' ? ' by ' + row.rejected_by : '')
+                }
+                
             </Badge></h5> : "-"
     },
 ]
@@ -57,6 +60,8 @@ const statuses = [
     { label: 'Rejected', value: 'rejected', },
     { label: 'Approved', value: 'approved', },
     { label: 'Completed', value: 'completed', },
+    { label: 'Timeout', value: 'timeout', },
+    
 ]
 
 const prios = [
@@ -115,7 +120,7 @@ function Component() {
         assign && (!search || search.length >= 3) && get(endpointManagement + '/admin/staff/list' +
             '?limit=5&page=1&max_ongoing_task=1' +
             '&staff_role=' + role + "&status=active" +
-            '&task_priority=' + selectedRow.priority +
+            (selectedRow.priority==="emergency" ? '&is_ongoing_emergency=true':'')+
             '&search=' + search, headers, res => {
                 let data = res.data.data.items;
 
