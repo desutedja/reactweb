@@ -57,6 +57,8 @@ const statuses = [
     { label: 'Rejected', value: 'rejected', },
     { label: 'Approved', value: 'approved', },
     { label: 'Completed', value: 'completed', },
+    { label: 'Timeout', value: 'timeout', },
+    
 ]
 
 const prios = [
