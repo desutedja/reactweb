@@ -120,7 +120,7 @@ function Component() {
         assign && (!search || search.length >= 3) && get(endpointManagement + '/admin/staff/list' +
             '?limit=5&page=1&max_ongoing_task=1' +
             '&staff_role=' + role + "&status=active" +
-            '&task_priority=' + selectedRow.priority +
+            (selectedRow.priority==="emergency" ? '&is_ongoing_emergency=true':'')+
             '&search=' + search, headers, res => {
                 let data = res.data.data.items;
 
