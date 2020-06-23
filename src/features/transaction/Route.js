@@ -4,7 +4,8 @@ import Table from '../../components/Table';
 import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Details from './Details';
+import Details from '../details/transaction';
+// import Details from './Details';
 import Filter from '../../components/Filter';
 import Settlement from './Settlement';
 import Disbursement from './Disbursement';

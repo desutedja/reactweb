@@ -112,7 +112,7 @@ const menu = [
 ]
 
 function Component() {
-    const [menuWide, setMenuWide] = useState(true);
+    const [menuWide, setMenuWide] = useState(false);
     const [expanded, setExpanded] = useState("");
     const [profile, setProfile] = useState(false);
 
@@ -162,7 +162,7 @@ function Component() {
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
                 content={content}
             />
-            <div className={menuWide ? "TopBar" : "TopBar-wide"}>
+            <div className={menuWide ? "TopBar shadow" : "TopBar-wide shadow"}>
                 <div className="TopBar-left">
                     <IconButton
                         className="MenuToggle"
@@ -224,7 +224,7 @@ function Component() {
                 </div>
             </div>
             <Row>
-                <div className="Menu">
+                <div className="Menu shadow">
                     <div className={menuWide ? "Logo-container" : "Logo-container-small"}
                         onClick={() => history.push('/')}
                     >

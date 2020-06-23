@@ -1,10 +1,10 @@
 import React from 'react';
 
-function Component({ children, flex = 1, style = {} }) {
+function Component({children, flex = 1, style = {}}) {
     return (
-        <div className="Column" style={{
+        <div className="Container" style={{
             flex: flex,
-            ...style,
+            ...style
         }}>
             {children}
         </div>
