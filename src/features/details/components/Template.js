@@ -29,6 +29,7 @@ function Component({ image, title, website, phone, merchant,
                             require('../../../assets/fallback.jpg')}
                         style={{
                             height: imgLoading ? 0 : 400,
+                            minWidth: 300,
                             maxHeight: 400,
                             objectFit: 'cover',
                             width: '100%',

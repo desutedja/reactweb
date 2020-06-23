@@ -15,16 +15,13 @@ import { get, toMoney } from '../../../../utils';
 
 const columnsManagement = [
     { Header: "ID", accessor: "id" },
-    { Header: "Management_name", accessor: "management_name" },
-    { Header: "Billing Duedate", accessor: "billing_duedate" },
-    { Header: "Billing Published", accessor: "billing_published" },
+    { Header: "Management Name", accessor: "management_name" },
+    { Header: "Billing Duedate", accessor: row => "Day " + row.billing_duedate },
+    { Header: "Billing Published", accessor: row => "Day " + row.billing_published },
     { Header: "Courier Fee", accessor: row => toMoney(row.courier_fee) },
     { Header: "Internal Courier Markup", accessor: row => toMoney(row.courier_internal_markup) },
     { Header: "External Courier Markup", accessor: row => toMoney(row.courier_external_markup) },
     { Header: "Penalty Fee", accessor: row => toMoney(row.penalty_fee) },
-    { Header: "Settlement Account Name", accessor: "settlement_account_name" },
-    { Header: "Settlement Account No", accessor: "settlement_account_no" },
-    { Header: "Settlement Bank", accessor: row => row.settlement_bank.toUpperCase() },
     {
         Header: "Status",
         accessor: row => <CustomInput type="switch" label={row.status} id={"managementStatus-" + row.id}
@@ -161,7 +158,7 @@ function Component() {
                     setEdit(true);
                     setAddManagement(true);
                 }}
-            />}
+            />
         </>
     )
 }
