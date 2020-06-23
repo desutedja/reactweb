@@ -11,7 +11,8 @@ import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import { get, toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
-import Details from './Details';
+import Details from '../details/task';
+// import Details from './Details';
 import { Badge, Row } from 'reactstrap';
 import Tile from '../../components/Tile';
 

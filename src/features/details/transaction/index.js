@@ -1,11 +1,5 @@
 import React, { } from 'react';
 import { useSelector } from 'react-redux';
-import { FiGlobe } from 'react-icons/fi';
-
-import Container from '../../../components/Container';
-import Row from '../../../components/Row';
-import Column from '../../../components/Column';
-import Tab from '../../../components/Tab';
 
 import InfoField from '../components/InfoField';
 import Template from '../components/Template';
