@@ -3,7 +3,6 @@ import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiPlus, FiSearch } from 'react-icons/fi';
 
-import FilterButton from '../../components/FilterButton';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -11,7 +10,6 @@ import Modal from '../../components/Modal';
 import Link from '../../components/Link';
 import Add from './Add';
 import Details from '../details/building';
-// import Details from './Details';
 import { getBuilding, deleteBuilding, getBuildingDetails, setSelected } from './slice';
 import { get } from '../../utils';
 import { endpointResident } from '../../settings';

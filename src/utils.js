@@ -185,10 +185,10 @@ export function dateFormatter(serverDateTime) {
 
 export function toSentenceCase(sentence) {
     if (sentence.length < 3) {
-        return sentence;
+        return sentence.toUpperCase();
     }
 
-    let words = sentence.toLowerCase().replace(/_/g, ' ').split(' ');
+    let words = sentence.replace(/_/g, ' ').split(' ');
 
     return words.reduce((result, el) => {
         let newEl = el.slice(0, 1).toUpperCase() + el.slice(1) + ' ';

@@ -9,7 +9,7 @@ import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Link from '../../components/Link';
 import Add from './Add';
-import Details from './Details';
+import Details from '../details/management';
 
 const columns = [
     { Header: "ID", accessor: "id" },
@@ -18,9 +18,6 @@ const columns = [
     { Header: "Phone", accessor: "phone" },
     { Header: "Email", accessor: "email" },
     { Header: "Website", accessor: row => <Link>{row.website}</Link> },
-    // { Header: "PIC Name", accessor: "pic_name" },
-    // { Header: "PIC Phone", accessor: "pic_phone" },
-    // { Header: "PIC Email", accessor: "pic_email" },
 ]
 
 function Component() {
