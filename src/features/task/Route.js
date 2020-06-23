@@ -17,7 +17,7 @@ import Tile from '../../components/Tile';
 
 const columns = [
     { Header: "ID", accessor: "id" },
-    { Header: "Title", accessor: row => <Tile items={[row.title, toEllipsis(row.ref_code, 15)]}/> },
+    { Header: "Title", accessor: row => <Tile items={[row.title,<small>{toEllipsis(row.ref_code, 17)}</small>  ]}/> },
     { Header: "Type", accessor: row => toSentenceCase(row.task_type) },
     { Header: "Requester", accessor: "requester_name" },
     { Header: "Building", accessor: "building_name" },
