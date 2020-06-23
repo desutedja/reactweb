@@ -4,26 +4,28 @@ import { useSelector } from 'react-redux';
 import InfoField from '../components/Detail';
 import Template from '../components/Template';
 
-const info = [
-    "id",
-    "name",
-    "item_type",
-    "description",
-    "length",
-    "width",
-    "height",
-    "weight",
-    "measurement_standard",
-    "measurement_unit",
-    "stock",
-    "promoted",
-    "promoted_until",
-    "base_price",
-    "selling_price",
-    "admin_fee",
-    "pg_fee",
-    "delivery_fee",
-];
+const labels = {
+    'Information': [
+        "id",
+        "name",
+        "item_type",
+        "description",
+        "length",
+        "width",
+        "height",
+        "weight",
+        "measurement_standard",
+        "measurement_unit",
+        "stock",
+        "promoted",
+        "promoted_until",
+        "base_price",
+        "selling_price",
+        "admin_fee",
+        "pg_fee",
+        "delivery_fee",
+    ]
+};
 
 function Component() {
     const { selected } = useSelector(state => state.product);
@@ -35,7 +37,7 @@ function Component() {
             merchant={"Merchant Name"}
             labels={["Details", "Images"]}
             contents={[
-                <InfoField data={selected} labels={info} />,
+                <InfoField data={selected} labels={labels} editable={false} />,
             ]}
         />
     )

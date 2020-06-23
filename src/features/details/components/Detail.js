@@ -70,11 +70,11 @@ function Component({ data, labels, type = "", editable = true }) {
                     </div>
                 )}
             </div>
-            <div>
+            {editable && <div>
                 <Button label="Edit" onClick={() => history.push(
                     url.split('/').slice(0, -1).join('/') + "/edit"
                 )} />
-            </div>
+            </div>}
         </div>
     )
 }

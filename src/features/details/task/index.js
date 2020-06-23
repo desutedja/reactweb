@@ -1,41 +1,49 @@
 import React, { } from 'react';
 import { useSelector } from 'react-redux';
 
-import InfoField from '../components/Detail';
+import Details from '../components/Detail';
 import Template from '../components/Template';
 
-const info = [
-    "ref_code",
-    "title",
-    "description",
-    "task_type",
-    "priority",
-    "r_lat",
-    "r_long",
-    "service",
-    "service_schedule",
-    "status",
-    "completed_on",
-    "attachment_1",
-    "attachment_2",
-    "attachment_3",
-    "attachment_4",
-    "attachment_5",
-];
+const detail = {
+    "Information": [
+        "ref_code",
+        "title",
+        "description",
+        "task_type",
+        "priority",
+        "r_lat",
+        "r_long",
+        "service",
+        "service_schedule",
+        "status",
+        "completed_on",
+    ],
+    "Attachments": [
+        "attachment_1",
+        "attachment_2",
+        "attachment_3",
+        "attachment_4",
+        "attachment_5",
+    ]
+};
 
-const assignee = [
-    "assignee_name",
-    "assignee_photo",
-    "assigned_by",
-    "assigned_on",
-    "assignee",
-    "assignee_fee",
-];
+const assignee = {
+    "Profile": [
+        "assignee_name",
+        "assignee_photo",
+        "assigned_by",
+        "assigned_on",
+        "assignee",
+        "assignee_fee",
+    ]
+};
 
-const requester = [
-    "requester",
-    "requester_name",
-];
+const requester = {
+    "Profile": [
+        "requester",
+        "requester_name",
+    ]
+};
 
 function Component() {
     const { selected } = useSelector(state => state.task);
@@ -44,9 +52,9 @@ function Component() {
         <Template
             labels={["Details", "Assignee", "Requester", "Reports"]}
             contents={[
-                <InfoField data={selected} labels={info} />,
-                <InfoField data={selected} labels={assignee} />,
-                <InfoField data={selected} labels={requester} />,
+                <Details data={selected} labels={detail} editable={false} />,
+                <Details data={selected} labels={assignee} editable={false} />,
+                <Details data={selected} labels={requester} editable={false} />,
             ]}
         />
     )
