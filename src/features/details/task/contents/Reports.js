@@ -1,27 +1,14 @@
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { dateFormatter } from '../../utils';
 
-import LabeledText from '../../components/LabeledText';
-import Button from '../../components/Button';
-import Table from '../../components/Table';
-import Modal from '../../components/Modal';
-
-const exception = [
-    'modified_on', 'deleted', 'pic_profile',
-    'task_reports', 'attachments',
-    'attachment_1', 'attachment_2', 'attachment_3', 'attachment_4', 'attachment_5',
-];
+import Table from '../../../../components/Table';
+import Modal from '../../../../components/Modal';
 
 function Component() {
     const [modal, setModal] = useState(false);
     const [image, setImage] = useState('');
 
-    const selected = useSelector(state => state.task.selected);
-
-    let history = useHistory();
-    let { url } = useRouteMatch();
+    const { selected } = useSelector(state => state.task);
 
     const columns = useMemo(() => ([
         { Header: "Submitted", accessor: row => row.created_on.replace(/T/g, ' ').replace(/Z/g, '') },
@@ -78,48 +65,24 @@ function Component() {
         },
     ]), [])
 
-    console.log(selected);
     return (
-        <div>
-            <Modal isOpen={modal} toggle={() => setModal(false)}>
+        <>
+            <Modal disableFooter disableHeader isOpen={modal} toggle={() => setModal(false)}>
                 <img src={image} alt='attachment' style={{
                     maxHeight: 600,
+                    maxWidth: '100%',
                 }} />
             </Modal>
-            <div className="Container">
-                <div className="Details" style={{
-                }}>
-                    {Object.keys(selected).filter(el => !exception.includes(el))
-                        .map(el =>
-                            <LabeledText
-                                key={el}
-                                label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                                    value={el === "created_on" ? dateFormatter(selected["created_on"]) : selected[el]}
-                            />
-                         )
-                    }
-                </div>
-            </div>
-            <div className="Container" style={{
-                marginTop: 16,
-                flex: 1,
-                flexDirection: 'column',
-            }}>
-                <p style={{
-                    fontWeight: 'bold',
-                    marginBottom: 12,
-                }}>Task Reports</p>
-                <Table
-                    columns={columns}
-                    data={selected.task_reports}
-                    loading={false}
-                    pageCount={1}
-                    fetchData={() => { }}
-                    filters={[]}
-                    actions={[]}
-                />
-            </div>
-        </div>
+            <Table
+                columns={columns}
+                data={selected.task_reports}
+                loading={false}
+                pageCount={1}
+                fetchData={() => { }}
+                filters={[]}
+                actions={[]}
+            />
+        </>
     )
 }
 

@@ -10,6 +10,7 @@ function Component({ icon, label, onClick, selected, color, disabled }) {
             style={{
                 marginRight: 4,
                 marginLeft: 4,
+                marginBottom: 8,
             }}
             type="submit"
         >

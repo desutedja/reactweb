@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import Detail from '../components/Detail';
 import Template from '../components/Template';
 
+import Orders from './contents/Orders';
+
 const details = {
     'Information': [
         'trx_code',
@@ -22,14 +24,14 @@ const details = {
 };
 
 const resident = {
-    'Information': [
+    'profile': [
         'building_id', 'building_unit_id', 'resident_id', 'resident_name', 'resident_phone',
         'resident_email', 'resident_address',
     ]
 };
 
 const merchant = {
-    'Information': [
+    'profile': [
         'merchant_id',
         "type",
     ]
@@ -80,13 +82,14 @@ function Component() {
 
     return (
         <Template
-            labels={["Details", "Resident", "Merchant", "Courier", "Payment", "Products"]}
+            labels={["Details", "Resident", "Merchant", "Courier", "Payment", "Orders"]}
             contents={[
                 <Detail data={selected} labels={details} editable={false} />,
                 <Detail data={selected} labels={resident} editable={false} />,
                 <Detail data={selected} labels={merchant} editable={false} />,
                 <Detail data={selected} labels={courier} editable={false} />,
                 <Detail data={selected} labels={payment} editable={false} />,
+                <Orders />,
             ]}
         />
     )

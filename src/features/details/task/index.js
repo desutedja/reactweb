@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import Details from '../components/Detail';
 import Template from '../components/Template';
 
+import Reports from './contents/Reports';
+
 const detail = {
     "Information": [
         "ref_code",
@@ -18,14 +20,16 @@ const detail = {
         "status",
         "completed_on",
     ],
-    "Attachments": [
-        "attachment_1",
-        "attachment_2",
-        "attachment_3",
-        "attachment_4",
-        "attachment_5",
-    ]
+    "Attachments": []
 };
+
+const attachments = [
+    "attachment_1",
+    "attachment_2",
+    "attachment_3",
+    "attachment_4",
+    "attachment_5",
+]
 
 const assignee = {
     "Profile": [
@@ -52,9 +56,20 @@ function Component() {
         <Template
             labels={["Details", "Assignee", "Requester", "Reports"]}
             contents={[
-                <Details data={selected} labels={detail} editable={false} />,
+                <>
+                    <Details data={selected} labels={detail} editable={false} />
+                    {selected.attachment_1 ?
+                        attachments.map(el => selected[el] && <img src={selected[el]} alt="Attachment" />)
+                    :
+                        <div style={{
+                            color: 'silver',
+                            marginLeft: 8,
+                        }}>None</div>
+                    }
+                </>,
                 <Details data={selected} labels={assignee} editable={false} />,
                 <Details data={selected} labels={requester} editable={false} />,
+                <Reports />,
             ]}
         />
     )

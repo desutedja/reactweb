@@ -6,8 +6,9 @@ import Column from '../../../components/Column';
 import Button from '../../../components/Button';
 
 import { toSentenceCase, dateFormatter, getCountryFromCode, getBank } from '../../../utils';
+import { render } from '@testing-library/react';
 
-function Component({ data, labels, type = "", editable = true }) {
+function Component({ data, labels, type = "", editable = true, renderButtons }) {
 
     let history = useHistory();
     let { url } = useRouteMatch();
@@ -70,11 +71,15 @@ function Component({ data, labels, type = "", editable = true }) {
                     </div>
                 )}
             </div>
-            {editable && <div>
-                <Button label="Edit" onClick={() => history.push(
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+            }}>
+                {editable && <Button label="Edit" onClick={() => history.push(
                     url.split('/').slice(0, -1).join('/') + "/edit"
-                )} />
-            </div>}
+                )} />}
+                {renderButtons()}
+            </div>
         </div>
     )
 }

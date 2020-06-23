@@ -11,7 +11,7 @@ import Service from './contents/Service';
 import Management from './contents/Management';
 
 const labels = {
-    'Information': ['id', 'created_on', 'legal_name', 'owner_name', 'code_name', 'phone', 'email'],
+    'Information': ['id', 'created_on', 'legal_name', 'owner_name', 'code_name', 'email'],
     'Address': ['address', 'district_name', 'city_name', 'province_name', 'zipcode'],
     'Others': ['max_units', 'max_floors', 'max_sections'],
 }
@@ -24,6 +24,7 @@ function Component() {
             image={selected.logo}
             title={selected.name}
             website={selected.website}
+            phone={selected.phone}
             labels={["Details", "Unit", "Unit Type", "Section", "Service", "Management"]}
             contents={[
                 <Detail data={selected} labels={labels} />,
