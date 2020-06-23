@@ -1,7 +1,7 @@
 import React, { } from 'react';
 import { useSelector } from 'react-redux';
 
-import InfoField from '../components/InfoField';
+import InfoField from '../components/Detail';
 import Template from '../components/Template';
 
 const info = [
@@ -46,7 +46,7 @@ function Component() {
             image={selected.logo}
             title={selected.name}
             phone={selected.phone}
-            labels={["Info", "PIC", "Bank Account"]}
+            labels={["Details", "PIC", "Bank Account"]}
             contents={[
                 <InfoField data={selected} labels={info} />,
                 <InfoField data={selected} labels={pic} />,
