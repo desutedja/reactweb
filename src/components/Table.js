@@ -273,7 +273,9 @@ function Component({
             <div className="Pagination">
                 <div className="Pagination-range">
                     <p><b>{totalItems} Results</b></p>
-                    <p>Show: </p>
+                    <p style={{
+                        marginLeft: 8,
+                    }}>Show: </p>
                     <select
                         value={pageSize}
                         className="SelectRange"
@@ -302,7 +304,10 @@ function Component({
                     </IconButton>
                     <div className="PageInfo">
                         <p>{pageIndex + 1}</p>
-                        <p>of</p>
+                        <p style={{
+                            marginRight: 8,
+                            marginLeft: 8,
+                        }}>of</p>
                         <p>{pageCount}</p>
                     </div>
                     <IconButton

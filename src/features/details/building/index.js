@@ -6,6 +6,9 @@ import Template from '../components/Template';
 
 import Unit from './contents/Unit';
 import UnitType from './contents/UnitType';
+import Section from './contents/Section';
+import Service from './contents/Service';
+import Management from './contents/Management';
 
 const info = [
     'id', 'created_on', 'legal_name', 'owner_name', 'code_name', 'phone',
@@ -25,7 +28,10 @@ function Component() {
             contents={[
                 <InfoField data={selected} labels={info} />,
                 <Unit />,
-                <UnitType />
+                <UnitType />,
+                <Section />,
+                <Service />,
+                <Management />,
             ]}
         />
     )

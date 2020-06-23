@@ -1,18 +1,18 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
-import { toSentenceCase } from '../../utils';
+import { toSentenceCase } from '../../../../utils';
 
-import Table from '../../components/Table';
-import Button from '../../components/Button';
-import Modal from '../../components/Modal';
-import Input from '../../components/Input';
-import Filter from '../../components/Filter';
+import Table from '../../../../components/Table';
+import Button from '../../../../components/Button';
+import Modal from '../../../../components/Modal';
+import Input from '../../../../components/Input';
+import Filter from '../../../../components/Filter';
 
 import {
     getBuildingSection,createBuildingSection, 
     deleteBuildingSection, editBuildingSection,
-} from './slice';
+} from '../../../building/slice';
 
 const sectionTypes = [
     { label: 'Tower', value: 'tower' },
@@ -39,10 +39,6 @@ function Component() {
     const { selected, section, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
-
-    useEffect(() => {
-        dispatch(getBuildingSection(headers, 0, 10, '', selected));
-    }, [dispatch, headers, selected]);
 
     return (
         <>
