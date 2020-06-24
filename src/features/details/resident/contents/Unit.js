@@ -18,7 +18,6 @@ import { endpointAdmin } from '../../../../settings';
 import { get } from '../../../slice';
 
 const columnsUnit = [
-    //{ Header: "ID", accessor: "unit_id" },
     { Header: "Building", accessor: "building_name" },
     { Header: "Unit Number", accessor: "number" },
     { Header: "Level", accessor: "level" },
@@ -27,7 +26,7 @@ const columnsUnit = [
 ]
 
 
-function Component() {
+function Component({ id }) {
     const [addUnit, setAddUnit] = useState(false);
     const [addUnitStep, setAddUnitStep] = useState(1);
 
@@ -42,27 +41,25 @@ function Component() {
     const [level, setLevel] = useState('main');
     const [status, setStatus] = useState('own');
 
-    const { selected, unit, loading, refreshToggle } = useSelector(state => state.resident);
+    const { unit, loading, refreshToggle } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
-    
 
     const fetchData = useCallback((pageIndex, pageSize, search) => {
-        dispatch(getResidentUnit( pageIndex, pageSize, search, selected));
+        dispatch(getResidentUnit(pageIndex, pageSize, search, id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, refreshToggle, ])
+    }, [dispatch, refreshToggle])
 
     useEffect(() => {
         addUnit && addUnitStep === 1 && (!search || search.length >= 3) && get(endpointAdmin + '/building' +
             '?page=1' +
             '&limit=10' +
             '&search=' + search,
-            
+
             res => {
                 setBuildings(res.data.data.items);
             })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [addUnit, addUnitStep, search, ]);
+    }, [addUnit, addUnitStep, search,]);
 
     useEffect(() => {
         addUnit && addUnitStep === 2 && (!search || search.length >= 3) && get(endpointAdmin + '/building/unit' +
@@ -70,19 +67,18 @@ function Component() {
             '&building_id=' + selectedBuilding.value.id +
             '&search=' + search +
             '&limit=10',
-            
+
             res => {
                 setUnits(res.data.data.items);
             })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ addUnit, search, addUnitStep, selectedBuilding]);
+    }, [addUnit, search, addUnitStep, selectedBuilding]);
 
     const backFunction = useCallback(() => setAddUnitStep(addUnitStep - 1), [addUnitStep]);
 
     const submitFunction = (e) => {
-        dispatch(addResidentUnit( {
+        dispatch(addResidentUnit({
             unit_id: selectedUnit.value.id,
-            owner_id: selected.id,
+            owner_id: id,
             level: level,
             status: status
         }))

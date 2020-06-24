@@ -3,7 +3,7 @@ import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiPlus } from 'react-icons/fi';
 
-import UserAvatar from '../../components/UserAvatar';
+import Resident from '../../components/Resident';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
@@ -13,24 +13,16 @@ import Add from './Add';
 import Edit from './Edit';
 import AddSub from './AddSub';
 import Details from '../details/resident';
-import DetailsOld from './Details';
 import { toSentenceCase } from '../../utils';
-import { getCountryFromCode } from '../../utils';
 
 const columns = [
-    { Header: "ID", accessor: "id" },
-    { 
-        Header: "Resident", 
-        accessor: row => [row.firstname + ' ' + row.lastname, row.email],
-        Cell: props => {
-            return <UserAvatar fullname={props.value[0]} email={props.value[1]} />
-        }
+    // { Header: "ID", accessor: "id" },
+    {
+        Header: "Resident",
+        accessor: row => <Resident id={row.id} />,
     },
+    { Header: "Email", accessor: "email" },
     { Header: "Phone", accessor: "phone" },
-    { Header: "Gender", accessor: "gender" },
-    { Header: "Nationality", accessor: row => 
-        getCountryFromCode(row.nationality)
-    },
     {
         Header: "Status", accessor: row => row.status ?
             <h5><Badge pill color="success">{toSentenceCase(row.status)}</Badge></h5>
@@ -38,8 +30,10 @@ const columns = [
             <h5><Badge pill color="secondary">Inactive</Badge></h5>
     },
     {
-        Header: "KYC Status", accessor: row => row.status_kyc ? row.status_kyc :
-        <h5><Badge pill color="secondary">None</Badge></h5>
+        Header: "KYC Status", accessor: row => row.status_kyc ?
+            <h5><Badge pill color="primary">{toSentenceCase(row.status_kyc)}</Badge></h5>
+            :
+            <h5><Badge pill color="secondary">None</Badge></h5>
     },
 ]
 
@@ -47,7 +41,7 @@ function Component() {
     const [confirm, setConfirm] = useState(false);
     const [selectedRow, setRow] = useState({});
 
-    
+
     const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
@@ -68,7 +62,7 @@ function Component() {
                     <Button label="Yes"
                         onClick={() => {
                             setConfirm(false);
-                            dispatch(deleteResident(selectedRow, ));
+                            dispatch(deleteResident(selectedRow,));
                         }}
                     />
                 </div>
@@ -81,9 +75,9 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getResident( pageIndex, pageSize, search));
+                            dispatch(getResident(pageIndex, pageSize, search));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch,  refreshToggle])}
+                        }, [dispatch, refreshToggle])}
                         filters={[]}
                         actions={[
                             <Button key="Add Resident" label="Add Resident" icon={<FiPlus />}
@@ -97,7 +91,6 @@ function Component() {
                             setRow(row);
                             setConfirm(true);
                         }}
-                        onClickDetails={row => dispatch(getResidentDetails(row,  history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>
@@ -108,9 +101,6 @@ function Component() {
                 </Route>
                 <Route path={`${path}/add-subaccount`}>
                     <AddSub />
-                </Route>
-                <Route path={`${path}/details`}>
-                    <DetailsOld />
                 </Route>
                 <Route path={`${path}/:id`}>
                     <Details />

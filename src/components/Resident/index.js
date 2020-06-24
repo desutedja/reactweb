@@ -9,7 +9,12 @@ import './style.css';
 
 
 function Component({ id }) {
-    const [data, setData] = useState({});
+    const [data, setData] = useState({
+        email: '',
+        firstname: '',
+        lastname: '',
+        photo: '',
+    });
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -21,9 +26,13 @@ function Component({ id }) {
     }, [dispatch, id])
 
     return (
-        <div className="Resident" onClick={() => history.push('/resident/' + id)}>
+        <div className="Resident" onClick={() => history.push({
+            pathname: '/resident/' + id,
+            state: data
+        })}>
             <Avatar style={{ marginRight: '10px' }} size="40" src={data.photo}
-                name={data.firstname + ' ' + data.lastname} round email={data.email} />
+                name={data.firstname + ' ' + data.lastname} round
+                email={data.photo ? null : data.email} />
             <span> </span>
             <div style={{ display: 'block' }}>
                 <div>{data.firstname + ' ' + data.lastname}</div>

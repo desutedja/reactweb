@@ -18,18 +18,17 @@ const columnsSubaccount = [
     },
 ]
 
-function Component() {
-    const { selected, subaccount, loading, refreshToggle } = useSelector(state => state.resident);
+function Component({ id }) {
+    const { subaccount, loading, refreshToggle } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { url } = useRouteMatch();
 
     
     const fetchData = useCallback((pageIndex, pageSize, search) => {
-        dispatch(getSubaccount( pageIndex, pageSize, search, selected));
+        dispatch(getSubaccount( pageIndex, pageSize, search, id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, refreshToggle, ])
+    }, [dispatch, refreshToggle, id])
 
     return (
         <Table

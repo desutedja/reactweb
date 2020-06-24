@@ -173,7 +173,7 @@ function Component() {
                     >
                         <FiMenu />
                     </IconButton>
-                    {/* <div className="PageTitle Title">
+                    <div className="PageTitle Title">
                         {location.pathname.split('/').map((el, index) =>
                             <Fragment key={el + index}>
                                 {index > 1 && <FiChevronRight style={{
@@ -201,7 +201,7 @@ function Component() {
                                 </div>
                             </Fragment>
                         )}
-                    </div> */}
+                    </div>
                 </div>
                 <div className="ProfileButton" onClick={() => {
                     setProfile(!profile)

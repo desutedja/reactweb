@@ -148,12 +148,12 @@ export const getResidentDetails = (row,  history, url) => dispatch => {
     }))
 }
 
-export const getSubaccount = ( pageIndex, pageSize, search, row) => dispatch => {
+export const getSubaccount = ( pageIndex, pageSize, search, id) => dispatch => {
     dispatch(startAsync());
 
     dispatch(get(residentEndpoint + '/subaccount' +
         '?page=' + (pageIndex + 1) +
-        '&id=' + row.id + 
+        '&id=' + id + 
         '&limit=' + pageSize +
         '&search=' + search,
         
@@ -166,12 +166,12 @@ export const getSubaccount = ( pageIndex, pageSize, search, row) => dispatch => 
     ))
 }
 
-export const getResidentUnit = ( pageIndex, pageSize, search, row) => dispatch => {
+export const getResidentUnit = ( pageIndex, pageSize, search, id) => dispatch => {
     dispatch(startAsync());
     
     dispatch(get(residentEndpoint + '/unit' + 
         '?page=' + (pageIndex + 1) +
-        '&id=' + row.id + 
+        '&id=' + id + 
         '&limit=' + pageSize +
         '&search=' + search,
         
