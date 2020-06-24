@@ -26,8 +26,11 @@ import Row from './components/Row';
 import CustomAlert from './components/CustomAlert';
 import IconButton from './components/IconButton';
 import Info from './components/Info';
+import Modal from './components/Modal';
+import Button from './components/Button';
+
 import { toSentenceCase } from './utils';
-import { closeAlert } from './features/slice';
+import { closeAlert, setConfirmDelete } from './features/slice';
 import { setQiscus, updateMessages } from './features/chat/slice';
 
 const qiscus = new QiscusSDKCore();
@@ -116,7 +119,7 @@ function Component() {
     const [expanded, setExpanded] = useState("");
     const [profile, setProfile] = useState(false);
 
-    const { alert, title, content } = useSelector(state => state.main);
+    const { alert, title, content, confirmDelete } = useSelector(state => state.main);
     const { user } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
@@ -159,6 +162,19 @@ function Component() {
 
     return (
         <div>
+            <Modal
+                isOpen={confirmDelete.modal}
+                toggle={() => dispatch(setConfirmDelete())}
+                disableHeader
+                okLabel="Confirm"
+                onClick={() => {
+                    dispatch(setConfirmDelete());
+                    confirmDelete.confirmed();
+                }}
+                onClickSecondary={() => dispatch(setConfirmDelete())}
+            >
+                {confirmDelete.content}
+            </Modal>
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
                 content={content}
             />

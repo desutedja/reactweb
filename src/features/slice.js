@@ -11,6 +11,11 @@ export const slice = createSlice({
       color: 'primary',
       message: '',
     },
+    confirmDelete: {
+      modal: false,
+      content: '',
+      confirmed: () => {},
+    },
   },
   reducers: {
     openAlert: (state, action) => {
@@ -25,6 +30,11 @@ export const slice = createSlice({
       state.info.type = action.payload.type;
       state.info.message = action.payload.message;
     },
+    toggleDelete: (state, action) => {
+      state.confirmDelete.modal = !state.confirmDelete.modal;
+      state.confirmDelete.content = action.payload.content;
+      state.confirmDelete.confirmed = action.payload.confirmed;
+    },
   },
 });
 
@@ -32,7 +42,15 @@ export const {
   openAlert,
   closeAlert,
   setInfoData,
+  toggleDelete,
 } = slice.actions;
+
+export const setConfirmDelete = (content, confirmed = () => {}) => dispatch => {
+  dispatch(toggleDelete({
+    content: content,
+    confirmed: confirmed,
+  }))
+}
 
 export const setInfo = data => dispatch => {
   dispatch(setInfoData(data));
