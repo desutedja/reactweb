@@ -11,7 +11,8 @@ import Filter from '../../../../components/Filter';
 import Form from '../../../../components/Form';
 import { editBuildingManagement, createBuildingManagement, getBuildingManagement, deleteBuildingManagement } from '../../../building/slice';
 import { banks, endpointAdmin } from '../../../../settings';
-import { get, toMoney } from '../../../../utils';
+import { toMoney } from '../../../../utils';
+import { get } from '../../../slice';
 
 const columnsManagement = [
     { Header: "ID", accessor: "id" },
@@ -41,7 +42,7 @@ function Component() {
     const [modalManagement, setModalManagement] = useState(false);
     const [managements, setManagements] = useState([]);
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { selected, management, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
@@ -49,14 +50,14 @@ function Component() {
     useEffect(() => {
         (!search || search >= 3) && get(endpointAdmin + '/management' +
             '?limit=5&page=1' +
-            '&search=' + search, headers, res => {
+            '&search=' + search,  res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setManagements(formatted);
             })
-    }, [headers, search]);
+    }, [ search]);
 
     return (
         <>
@@ -64,11 +65,11 @@ function Component() {
                 okLabel={edit ? "Save" : "Add"} >
                 <Form isModal={true} onSubmit={data => {
                     edit ?
-                        dispatch(editBuildingManagement(headers, {
+                        dispatch(editBuildingManagement( {
                             "building_id": selected.id, building_name: selected.name, ...data,
                         }, selectedRow.id))
                         :
-                        dispatch(createBuildingManagement(headers, {
+                        dispatch(createBuildingManagement( {
                             "building_id": selected.id, building_name: selected.name, ...data,
                         }))
                     setAddManagement(false);
@@ -135,9 +136,9 @@ function Component() {
                 pageCount={management.total_pages}
                 totalItems={management.total_items}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getBuildingManagement(headers, pageIndex, pageSize, search, selected));
+                    dispatch(getBuildingManagement( pageIndex, pageSize, search, selected));
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle, headers])}
+                }, [dispatch, refreshToggle, ])}
                 filters={[]}
                 actions={[
                     <Button key="Add Building Management" label="Add Building Management" icon={<FiPlus />}
@@ -150,7 +151,7 @@ function Component() {
                 ]}
                 onClickDelete={row => {
                     setRow(row);
-                    dispatch(deleteBuildingManagement(row, headers))
+                    dispatch(deleteBuildingManagement(row, ))
                     // setConfirm(true);
                 }}
                 onClickEdit={row => {

@@ -9,10 +9,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { editStaff, createStaff } from './slice';
 import { endpointResident, endpointAdmin, banks } from '../../settings';
-import { get } from '../../utils';
+import { get } from '../slice';
 
 function Component() {
-    const headers = useSelector(state => state.auth.headers);
     const { loading, selected } = useSelector(state => state.staff);
 
     const [bManagementID, setBManagementID] = useState('');
@@ -37,9 +36,9 @@ function Component() {
     let history = useHistory();
 
     useEffect(() => {
-        (!search || search >= 3) && get(endpointAdmin + '/management/building' +
+        (!search || search >= 3) && dispatch(get(endpointAdmin + '/management/building' +
             '?limit=10&page=1' +
-            '&search=' + search, headers, res => {
+            '&search=' + search,  res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({
@@ -48,40 +47,40 @@ function Component() {
                 }));
 
                 setBManagements(formatted);
-            })
-    }, [headers, search]);
+            }))
+    }, [ search]);
 
     useEffect(() => {
-        get(endpointResident + '/geo/province',
-            headers,
+        dispatch(get(endpointResident + '/geo/province',
+            
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setProvinces(formatted);
             }
-        )
-    }, [headers]);
+        ))
+    }, []);
 
     useEffect(() => {
         setCity("");
-        (province || selected.province) && get(endpointResident + '/geo/province/' + (province ? province : selected.province),
-            headers,
+        (province || selected.province) && dispatch(get(endpointResident + '/geo/province/' + (province ? province : selected.province),
+            
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setCities(formatted);
             }
-        )
-    }, [headers, province, selected.province]);
+        ))
+    }, [ province, selected.province]);
 
     useEffect(() => {
         setDistrict("");
-        (city || selected.city) && get(endpointResident + '/geo/city/' + (city ? city : selected.city),
-            headers,
+        (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city ? city : selected.city),
+            
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setDistricts(formatted);
             }
-        )
-    }, [headers, city, selected.city]);
+        ))
+    }, [city, dispatch, selected.city]);
 
     return (
         <div>
@@ -100,9 +99,9 @@ function Component() {
             </Modal>
             <Form
                 onSubmit={data => selected.id ?
-                    dispatch(editStaff(headers, data, history, selected.id))
+                    dispatch(editStaff( data, history, selected.id))
                     :
-                    dispatch(createStaff(headers, data, history))}
+                    dispatch(createStaff( data, history))}
                 loading={loading}
             >
                 <Input label="Staff Role" type="select"

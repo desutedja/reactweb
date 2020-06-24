@@ -54,7 +54,7 @@ export const {
 export default slice.reducer;
 
 export const getAnnoucement = (
-  headers, pageIndex, pageSize,
+   pageIndex, pageSize,
   search = '',
 ) => dispatch => {
   dispatch(startAsync());
@@ -63,7 +63,7 @@ export const getAnnoucement = (
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search,
-    headers,
+    
     res => {
       dispatch(setData(res.data.data));
 
@@ -71,10 +71,10 @@ export const getAnnoucement = (
     }))
 }
 
-export const getAnnouncementDetails = (row, headers, history, url) => dispatch => {
+export const getAnnouncementDetails = (row,  history, url) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(announcementEndpoint + '/preview/' + row.id, headers,
+  dispatch(get(announcementEndpoint + '/preview/' + row.id, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
@@ -83,10 +83,10 @@ export const getAnnouncementDetails = (row, headers, history, url) => dispatch =
     }))
 }
 
-export const createAnnouncement = (headers, data, history) => dispatch => {
+export const createAnnouncement = ( data, history) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(announcementEndpoint, {...data, topic: "announcement"}, headers,
+  dispatch(post(announcementEndpoint, {...data, topic: "announcement"}, 
     res => {
       history.push("/announcement");
 
@@ -102,10 +102,10 @@ export const createAnnouncement = (headers, data, history) => dispatch => {
     }))
 }
 
-export const editAnnouncement = (headers, data, history, id) => dispatch => {
+export const editAnnouncement = ( data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(announcementEndpoint, { ...data, topic: "announcement", id: id }, headers,
+  dispatch(put(announcementEndpoint, { ...data, topic: "announcement", id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/announcement/details");
@@ -122,10 +122,10 @@ export const editAnnouncement = (headers, data, history, id) => dispatch => {
     }))
 }
 
-export const deleteAnnouncement = (row, headers) => dispatch => {
+export const deleteAnnouncement = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(announcementEndpoint + '/' + row.id, headers,
+  dispatch(del(announcementEndpoint + '/' + row.id, 
     res => {
       dispatch(refresh());
 
@@ -138,10 +138,10 @@ export const deleteAnnouncement = (row, headers) => dispatch => {
     }))
 }
 
-export const publishAnnouncement = (headers, data) => dispatch => {
+export const publishAnnouncement = ( data) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(announcementEndpoint + '/publish', { id: data.id }, headers,
+  dispatch(post(announcementEndpoint + '/publish', { id: data.id }, 
     res => {
       dispatch(publish());
 

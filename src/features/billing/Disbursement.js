@@ -5,8 +5,9 @@ import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
 import { getBillingDisbursement } from './slice';
-import { get, toMoney } from '../../utils';
+import { toMoney } from '../../utils';
 import { endpointBilling } from '../../settings';
+import { get } from '../slice';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
@@ -24,21 +25,21 @@ function Component() {
     const [dataLoading, setDataLoading] = useState(false);
     const [dataPages, setDataPages] = useState('');
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { disbursement, refreshToggle } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
     let { path } = useRouteMatch();
 
     useEffect(() => {
-        dispatch(getBillingDisbursement(headers, 0, 1000, ''));
-    }, [dispatch, headers]);
+        dispatch(getBillingDisbursement( 0, 1000, ''));
+    }, [dispatch, ]);
 
     useEffect(() => {
-        get(endpointBilling + '/management/billing/settlement/info', headers, res => {
+        dispatch(get(endpointBilling + '/management/billing/settlement/info',  res => {
             setInfo(res.data.data);
-        })
-    }, [headers]);
+        }))
+    }, []);
 
     return (
         <div>
@@ -118,14 +119,14 @@ function Component() {
                                         disbursement.items[active]?.building_id
                                         + '&management_id=' +
                                         disbursement.items[active]?.id,
-                                        headers, res => {
+                                         res => {
                                             setData(res.data.data.items);
                                             setDataPages(res.data.data.total_pages);
                                             setDataLoading(false);
                                         })
 
                                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                                }, [dispatch, refreshToggle, headers, active])}
+                                }, [dispatch, refreshToggle,  active])}
                                 filters={[]}
                                 actions={[]}
                             />

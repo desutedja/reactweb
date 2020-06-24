@@ -4,9 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
-import { getTransactionDetails, setSelected, getTransactionSettlement } from './slice';
-import { toMoney, get, dateTimeFormatter } from '../../utils';
+import { getTransactionDetails, getTransactionSettlement } from './slice';
+import { toMoney, dateTimeFormatter } from '../../utils';
 import { endpointTransaction } from '../../settings';
+import { get } from '../slice';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -23,7 +24,7 @@ const formatValue = (value) => toMoney(value.toFixed(0));
 function Component() {
     const [info, setInfo] = useState({});
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
@@ -31,10 +32,10 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        get(endpointTransaction + '/admin/transaction/summary', headers, res => {
+        dispatch(get(endpointTransaction + '/admin/transaction/summary',  res => {
             setInfo(res.data.data);
-        });
-    }, [headers]);
+        }));
+    }, [dispatch]);
 
     return (
         <>
@@ -102,12 +103,12 @@ function Component() {
                 loading={loading}
                 pageCount={total_pages}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getTransactionSettlement(headers, pageIndex, pageSize, search));
+                    dispatch(getTransactionSettlement( pageIndex, pageSize, search));
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle, headers])}
+                }, [dispatch, refreshToggle, ])}
                 filters={[]}
                 actions={[]}
-                onClickDetails={row => dispatch(getTransactionDetails(row, headers, history, url))}
+                onClickDetails={row => dispatch(getTransactionDetails(row,  history, url))}
             />
         </>
     )

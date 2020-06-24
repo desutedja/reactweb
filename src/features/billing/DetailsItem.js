@@ -13,7 +13,7 @@ const exception = [
 ];
 
 function Component() {
-    const headers = useSelector(state => state.auth.headers);
+    
     const { unit } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
@@ -42,7 +42,7 @@ function Component() {
                         )} />
                         <Button label="Add Charge" onClick={() => { }} />
                         {unit.selected.payment === "unpaid" && <Button label="Set Paid" onClick={() => {
-                            dispatch(payByCash(headers, {
+                            dispatch(payByCash( {
                                 "id": unit.selected.id,
                                 "total": unit.selected.total,
                                 "penalty_amount": unit.selected.penalty_amount,

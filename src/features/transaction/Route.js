@@ -44,7 +44,7 @@ const columns = [
 ]
 
 function Component() {
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, items, total_pages, total_items, refreshToggle } =
         useSelector(state => state.transaction);
 
@@ -67,9 +67,9 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getTransaction(headers, pageIndex, pageSize, search, status.value, statusPayment.value, type.value));
+                            dispatch(getTransaction( pageIndex, pageSize, search, status.value, statusPayment.value, type.value));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers, status, statusPayment, type])}
+                        }, [dispatch, refreshToggle,  status, statusPayment, type])}
                         filters={[
                             {
                                 hidex: statusPayment === "",
@@ -130,7 +130,7 @@ function Component() {
                             },
                         ]}
                         actions={[]}
-                        onClickDetails={row => dispatch(getTransactionDetails(row, headers, history, url))}
+                        onClickDetails={row => dispatch(getTransactionDetails(row,  history, url))}
                     />
                 </Route>
                 <Route path={`${path}/details`}>

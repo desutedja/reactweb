@@ -9,18 +9,19 @@ import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
-import { get, toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
+import Resident from '../../components/Resident';
+import { toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import Details from '../details/task';
-// import Details from './Details';
-import { Badge, Row } from 'reactstrap';
+import { Badge } from 'reactstrap';
 import Tile from '../../components/Tile';
+import { get } from '../slice';
 
 const columns = [
     { Header: "ID", accessor: "id" },
     { Header: "Title", accessor: row => <Tile items={[row.title,<small>{toEllipsis(row.ref_code, 17)}</small>  ]}/> },
     { Header: "Type", accessor: row => toSentenceCase(row.task_type) },
-    { Header: "Requester", accessor: "requester_name" },
+    { Header: "Requester", accessor: row => <Resident id={row.requester_id} /> },
     { Header: "Building", accessor: "building_name" },
     {
         Header: "Priority", accessor: row =>
@@ -31,7 +32,6 @@ const columns = [
                 {toSentenceCase(row.priority)}
             </Badge></h5>
     },
-    { Header: "Assigned by", accessor: row => row.assigner_firstname == null ? "Auto" : row.assigner_firstname + ' ' + row.assigner_lastname },
     { Header: "Assignee", accessor: row => row.assignee_firstname + ' ' + row.assignee_lastname },
     { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
     {
@@ -93,7 +93,7 @@ function Component() {
     const [prio, setPrio] = useState('');
     const [prioLabel, setPrioLabel] = useState('');
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.task);
 
     let dispatch = useDispatch();
@@ -101,16 +101,16 @@ function Component() {
     let { path, url } = useRouteMatch();
 
     useEffect(() => {
-        (!search || search.length >= 3) && get(endpointAdmin + '/building' +
+        (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
-            '&search=' + search, headers, res => {
+            '&search=' + search,  res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setBuildings(formatted);
-            })
-    }, [headers, search]);
+            }))
+    }, [dispatch, search]);
 
     useEffect(() => {
         console.log(selectedRow);
@@ -118,11 +118,11 @@ function Component() {
         let role = selectedRow.task_type === 'security' ? 'security' :
             selectedRow.task_type === 'service' ? 'technician' : 'courier';
 
-        assign && (!search || search.length >= 3) && get(endpointManagement + '/admin/staff/list' +
+        assign && (!search || search.length >= 3) && dispatch(get(endpointManagement + '/admin/staff/list' +
             '?limit=5&page=1&max_ongoing_task=1' +
             '&staff_role=' + role + "&status=active" +
             (selectedRow.priority==="emergency" ? '&is_ongoing_emergency=true':'')+
-            '&search=' + search, headers, res => {
+            '&search=' + search,  res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({
@@ -131,9 +131,9 @@ function Component() {
                 }));
 
                 setStaffs(formatted);
-            })
+            }))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [headers, search, selectedRow]);
+    }, [dispatch, search, selectedRow]);
 
     return (
         <div>
@@ -149,7 +149,7 @@ function Component() {
                     <Button label="Yes"
                         onClick={() => {
                             setResolve(false);
-                            dispatch(resolveTask(headers, selectedRow));
+                            dispatch(resolveTask( selectedRow));
                         }}
                     />
                 </div>
@@ -172,7 +172,7 @@ function Component() {
                             onClick={() => {
                                 setStaff({});
                                 setAssign(false);
-                                dispatch(reassignTask(headers, {
+                                dispatch(reassignTask( {
                                     "task_id": selectedRow.id,
                                     "assignee_id": staff.value,
                                 }));
@@ -188,9 +188,9 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getTask(headers, pageIndex, pageSize, search, type, prio, status, building));
+                            dispatch(getTask( pageIndex, pageSize, search, type, prio, status, building));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, headers, refreshToggle, type, prio, status, building])}
+                        }, [dispatch,  refreshToggle, type, prio, status, building])}
                         filters={[
                             {
                                 hidex: building === "",
@@ -279,7 +279,7 @@ function Component() {
                             },
                         ]}
                         actions={[]}
-                        onClickDetails={row => dispatch(getTaskDetails(row, headers, history, url))}
+                        onClickDetails={row => dispatch(getTaskDetails(row,  history, url))}
                         onClickResolve={row => {
                             setRow(row);
                             setResolve(true);

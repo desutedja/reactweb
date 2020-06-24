@@ -48,7 +48,7 @@ export const {
 } = slice.actions;
 
 export const getManagement = (
-  headers, pageIndex, pageSize,
+   pageIndex, pageSize,
   search = '',
 ) => dispatch => {
   dispatch(startAsync());
@@ -57,7 +57,7 @@ export const getManagement = (
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search,
-    headers,
+    
     res => {
       dispatch(setData(res.data.data));
 
@@ -65,10 +65,10 @@ export const getManagement = (
     }))
 }
 
-export const createManagement = (headers, data, history) => dispatch => {
+export const createManagement = ( data, history) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(managementEndpoint, data, headers,
+  dispatch(post(managementEndpoint, data, 
     res => {
       history.push("/management");
 
@@ -84,10 +84,10 @@ export const createManagement = (headers, data, history) => dispatch => {
     }))
 }
 
-export const editManagement = (headers, data, history, id) => dispatch => {
+export const editManagement = ( data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(managementEndpoint, {...data, id: id}, headers,
+  dispatch(put(managementEndpoint, {...data, id: id}, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/management/details");
@@ -104,10 +104,10 @@ export const editManagement = (headers, data, history, id) => dispatch => {
     }))
 }
 
-export const deleteManagement = (row, headers) => dispatch => {
+export const deleteManagement = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(managementEndpoint + '/' + row.id, headers,
+  dispatch(del(managementEndpoint + '/' + row.id, 
     res => {
       dispatch(refresh());
 
@@ -120,10 +120,10 @@ export const deleteManagement = (row, headers) => dispatch => {
     }))
 }
 
-export const getManagementDetails = (row, headers, history, url) => dispatch => {
+export const getManagementDetails = (row,  history, url) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(managementEndpoint + '/details/' + row.id, headers,
+  dispatch(get(managementEndpoint + '/details/' + row.id, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');

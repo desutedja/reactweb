@@ -44,7 +44,7 @@ function Component() {
 
     const [sGroupFilter, setSGroupFilter] = useState({});
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { selected, service, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
@@ -55,10 +55,10 @@ function Component() {
                 okLabel={edit ? "Save" : "Add"}
                 onClick={data => {
                     edit ?
-                        dispatch(editBuildingService(headers, {
+                        dispatch(editBuildingService( {
                             "building_id": selected.id, building_name: selected.name, ...data,
                         }, selectedRow.id))
-                        : dispatch(createBuildingService(headers, { ...data, building_id: selected.id }));
+                        : dispatch(createBuildingService( { ...data, building_id: selected.id }));
 
                     setAddService(false);
                     setEdit(false);
@@ -99,9 +99,9 @@ function Component() {
                     loading={loading}
                     pageCount={service.total_pages}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
-                        dispatch(getBuildingService(headers, pageIndex, pageSize, search, selected, sGroupFilter.value));
+                        dispatch(getBuildingService( pageIndex, pageSize, search, selected, sGroupFilter.value));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [dispatch, refreshToggle, headers, sGroupFilter])}
+                    }, [dispatch, refreshToggle,  sGroupFilter])}
                     totalItems={service.total_items}
                     filters={[
                         {
@@ -146,7 +146,7 @@ function Component() {
                     }}
                     onClickDelete={row => {
                         // setRow(row);
-                        dispatch(deleteBuildingService(row, headers))
+                        dispatch(deleteBuildingService(row, ))
                         // setConfirm(true);
                     }}
                 />

@@ -11,7 +11,8 @@ import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import { getBillingSettlement } from './slice';
 import { endpointAdmin, endpointBilling } from '../../settings';
-import { get, toMoney, post, dateTimeFormatter } from '../../utils';
+import { toMoney, dateTimeFormatter } from '../../utils';
+import { get, post } from '../slice';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -31,7 +32,7 @@ const columns = [
 const formatValue = (value) => toMoney(value.toFixed(0));
 
 function Component() {
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, settlement, refreshToggle } = useSelector(state => state.billing);
 
     const [search, setSearch] = useState('');
@@ -55,22 +56,22 @@ function Component() {
     }
 
     useEffect(() => {
-        (!search || search.length >= 3) && get(endpointAdmin + '/building' +
+        (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
-            '&search=' + search, headers, res => {
+            '&search=' + search,  res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setBuildings(formatted);
-            })
-    }, [headers, search]);
+            }))
+    }, [dispatch, search]);
 
     useEffect(() => {
-        get(endpointBilling + '/management/billing/settlement/info', headers, res => {
+        dispatch(get(endpointBilling + '/management/billing/settlement/info',  res => {
             setInfo(res.data.data);
-        })
-    }, [headers]);
+        }))
+    }, [dispatch]);
 
     return (
         <div>
@@ -78,11 +79,11 @@ function Component() {
                 title="Settlement Selection"
                 okLabel="Settle"
                 onClick={() => {
-                    post(endpointBilling + '/management/billing/settlement', {
+                    dispatch(post(endpointBilling + '/management/billing/settlement', {
                         trx_code: selected.map(el => el.trx_code)
-                    }, headers, res => {
+                    },  res => {
                         setSettleModal(false);
-                    })
+                    }))
                 }}
             >
                 <div style={{
@@ -172,10 +173,10 @@ function Component() {
                         loading={loading}
                         pageCount={settlement.total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getBillingSettlement(headers, pageIndex, pageSize, search,
+                            dispatch(getBillingSettlement( pageIndex, pageSize, search,
                                 building));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers, building])}
+                        }, [dispatch, refreshToggle,  building])}
                         filters={[
                             {
                                 hidex: building === "",

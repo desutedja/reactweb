@@ -16,7 +16,7 @@ const exception = [
 function Component() {
     const [confirm, setConfirm] = useState(false);
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const selected = useSelector(state => state.announcement.selected);
 
     let dispatch = useDispatch();
@@ -37,7 +37,7 @@ function Component() {
                     <Button label="Yes"
                         onClick={() => {
                             setConfirm(false);
-                            dispatch(publishAnnouncement(headers, selected));
+                            dispatch(publishAnnouncement( selected));
                         }}
                     />
                 </div>

@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 import { XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Legend, Bar } from 'recharts';
-import { get } from '../../utils';
 import { endpointAds } from '../../settings';
 
 import './style.css';
+import { get } from '../slice';
+import { useDispatch } from 'react-redux';
 
 function Component() {
     const [adsData, setAdsData] = useState([]);
 
-    const headers = useSelector(state => state.auth.headers);
+    let dispatch = useDispatch();
 
     useEffect(() => {
-        get(endpointAds + '/management/ads/report/overview', headers, res => {
+        dispatch(get(endpointAds + '/management/ads/report/overview',  res => {
             setAdsData(res.data.data);
-        })
-    }, [headers]);
+        }))
+    }, [dispatch]);
 
     return (
         <>

@@ -1,6 +1,6 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { endpointTask } from '../../settings';
-import { get, post } from '../../utils';
+import { get, post } from '../slice';
 
 const taskEndpoint = endpointTask + '/admin';
 
@@ -48,66 +48,66 @@ export const {
 } = slice.actions;
 
 export const getTask = (
-  headers, pageIndex, pageSize,
+  pageIndex, pageSize,
   search = '', type, prio, status,
   building
 ) => dispatch => {
   dispatch(startAsync());
 
-  get(taskEndpoint + '/list' +
+  dispatch(get(taskEndpoint + '/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
-    '&search=' + search + 
-      //'&sort_field=created_on' + 
-    '&sort_type=DESC' + 
+    '&search=' + search +
+    //'&sort_field=created_on' + 
+    '&sort_type=DESC' +
     '&type=' + type +
     '&priority=' + prio +
     '&requester_building_id=' + building +
     '&status=' + status,
-    headers,
+
     res => {
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    })
+    }))
 }
 
-export const resolveTask = (headers, row) => dispatch => {
+export const resolveTask = (row) => dispatch => {
   dispatch(startAsync());
 
-  post(taskEndpoint + '/resolve?id=' + row.id, {}, headers,
+  dispatch(post(taskEndpoint + '/resolve?id=' + row.id, {},
     res => {
       dispatch(stopAsync());
       dispatch(refresh());
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
-export const reassignTask = (headers, data) => dispatch => {
+export const reassignTask = (data) => dispatch => {
   dispatch(startAsync());
 
-  post(taskEndpoint + '/assign', data, headers,
+  dispatch(post(taskEndpoint + '/assign', data,
     res => {
       dispatch(stopAsync());
       dispatch(refresh());
     },
     err => {
       dispatch(stopAsync());
-    })
+    }))
 }
 
-export const getTaskDetails = (row, headers, history, url) => dispatch => {
+export const getTaskDetails = (row, history, url) => dispatch => {
   dispatch(startAsync());
 
-  get(taskEndpoint + '/' + row.id, headers,
+  dispatch(get(taskEndpoint + '/' + row.id,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
 
       dispatch(stopAsync())
-    })
+    }))
 }
 
 export default slice.reducer;

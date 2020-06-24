@@ -44,15 +44,15 @@ function Component() {
 
     const [utNameFilter, setUtNameFilter] = useState({});
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { selected, unit_type, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getBuildingUnitType(headers, 0, 10, '', selected));
-        dispatch(getBuildingSection(headers, 0, 10, '', selected));
-    }, [dispatch, headers, selected]);
+        dispatch(getBuildingUnitType( 0, 10, '', selected));
+        dispatch(getBuildingSection( 0, 10, '', selected));
+    }, [dispatch,  selected]);
 
     return (
         <>
@@ -60,13 +60,13 @@ function Component() {
                 okLabel={edit ? "Save" : "Add"}
                 onClick={() => {
                     edit ?
-                        dispatch(editBuildingUnitType(headers, {
+                        dispatch(editBuildingUnitType( {
                             "building_id": selected.id,
                             "unit_type": typeName ? typeName : selectedRow.unit_type,
                             "unit_size": parseFloat(typeSize ? typeSize : selectedRow.unit_size),
                         }, selectedRow.id))
                         :
-                        dispatch(createBuildingUnitType(headers, {
+                        dispatch(createBuildingUnitType( {
                             "building_id": selected.id,
                             "unit_type": typeName ? typeName : selectedRow.unit_type,
                             "unit_size": parseFloat(typeSize ? typeSize : selectedRow.unit_size),
@@ -103,9 +103,9 @@ function Component() {
                 pageCount={unit_type.total_pages}
                 totalItems={unit_type.total_items}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getBuildingUnitType(headers, pageIndex, pageSize, search, selected, utNameFilter.value));
+                    dispatch(getBuildingUnitType( pageIndex, pageSize, search, selected, utNameFilter.value));
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, headers, selected, utNameFilter.value, refreshToggle])}
+                }, [dispatch,  selected, utNameFilter.value, refreshToggle])}
                 filters={[
                     {
                         hidex: !utNameFilter.label,
@@ -139,7 +139,7 @@ function Component() {
                 ]}
                 onClickDelete={row => {
                     // setRow(row);
-                    dispatch(deleteBuildingUnitType(row, headers))
+                    dispatch(deleteBuildingUnitType(row, ))
                     // setConfirm(true);
                 }}
                 onClickEdit={row => {

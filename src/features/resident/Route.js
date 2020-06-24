@@ -12,7 +12,8 @@ import { getResident, getResidentDetails, deleteResident, setSelected } from './
 import Add from './Add';
 import Edit from './Edit';
 import AddSub from './AddSub';
-import Details from './Details';
+import Details from '../details/resident';
+import DetailsOld from './Details';
 import { toSentenceCase } from '../../utils';
 import { getCountryFromCode } from '../../utils';
 
@@ -46,7 +47,7 @@ function Component() {
     const [confirm, setConfirm] = useState(false);
     const [selectedRow, setRow] = useState({});
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
@@ -67,7 +68,7 @@ function Component() {
                     <Button label="Yes"
                         onClick={() => {
                             setConfirm(false);
-                            dispatch(deleteResident(selectedRow, headers));
+                            dispatch(deleteResident(selectedRow, ));
                         }}
                     />
                 </div>
@@ -80,9 +81,9 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getResident(headers, pageIndex, pageSize, search));
+                            dispatch(getResident( pageIndex, pageSize, search));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, headers, refreshToggle])}
+                        }, [dispatch,  refreshToggle])}
                         filters={[]}
                         actions={[
                             <Button key="Add Resident" label="Add Resident" icon={<FiPlus />}
@@ -96,7 +97,7 @@ function Component() {
                             setRow(row);
                             setConfirm(true);
                         }}
-                        onClickDetails={row => dispatch(getResidentDetails(row, headers, history, url))}
+                        onClickDetails={row => dispatch(getResidentDetails(row,  history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>
@@ -105,11 +106,14 @@ function Component() {
                 <Route path={`${path}/edit`}>
                     <Edit />
                 </Route>
-                <Route exact path={`${path}/details`}>
-                    <Details />
-                </Route>
-                <Route path={`${path}/details/add-subaccount`}>
+                <Route path={`${path}/add-subaccount`}>
                     <AddSub />
+                </Route>
+                <Route path={`${path}/details`}>
+                    <DetailsOld />
+                </Route>
+                <Route path={`${path}/:id`}>
+                    <Details />
                 </Route>
             </Switch>
         </div>

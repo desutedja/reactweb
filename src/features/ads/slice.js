@@ -64,7 +64,7 @@ export const {
   setScheduleData,
 } = slice.actions;
 
-export const getAds = (headers, pageIndex, pageSize, search = '', age_from, age_to) => dispatch => {
+export const getAds = ( pageIndex, pageSize, search = '', age_from, age_to) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(adsEndpoint +
@@ -73,7 +73,7 @@ export const getAds = (headers, pageIndex, pageSize, search = '', age_from, age_
     '&age_from=' + age_from +
     '&age_to=' + age_to +
     '&search=' + search,
-    headers,
+    
     res => {
       dispatch(setData(res.data.data));
 
@@ -81,12 +81,12 @@ export const getAds = (headers, pageIndex, pageSize, search = '', age_from, age_
     }))
 }
 
-export const createAds = (headers, data, history) => dispatch => {
+export const createAds = ( data, history) => dispatch => {
   dispatch(startAsync());
 
   dispatch(post(adsEndpoint, {
     ads: data
-  }, headers,
+  }, 
     res => {
       history.push("/advertisement");
 
@@ -101,10 +101,10 @@ export const createAds = (headers, data, history) => dispatch => {
     }))
 }
 
-export const editAds = (headers, data, history, id) => dispatch => {
+export const editAds = ( data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(adsEndpoint, { ...data, id: id }, headers,
+  dispatch(put(adsEndpoint, { ...data, id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/advertisement/details");
@@ -120,10 +120,10 @@ export const editAds = (headers, data, history, id) => dispatch => {
     }))
 }
 
-export const deleteAds = (row, headers) => dispatch => {
+export const deleteAds = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(adsEndpoint + '/' + row.id, headers,
+  dispatch(del(adsEndpoint + '/' + row.id, 
     res => {
       dispatch(setInfo({
         color: 'success',
@@ -135,10 +135,10 @@ export const deleteAds = (row, headers) => dispatch => {
     }))
 }
 
-export const getAdsDetails = (row, headers, history, url) => dispatch => {
+export const getAdsDetails = (row,  history, url) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(adsEndpoint + '/' + row.id, headers,
+  dispatch(get(adsEndpoint + '/' + row.id, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
@@ -147,14 +147,14 @@ export const getAdsDetails = (row, headers, history, url) => dispatch => {
     }))
 }
 
-export const getAdsSchedule = (headers, pageIndex, pageSize, search, row) => dispatch => {
+export const getAdsSchedule = ( pageIndex, pageSize, search, row) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(adsEndpoint + '/schedule/' + row.id +
     '?page=' + (pageIndex + 1) +
     '&search=' + search +
     '&limit=' + pageSize,
-    headers,
+    
     res => {
       dispatch(setScheduleData(res.data.data));
 
@@ -162,10 +162,10 @@ export const getAdsSchedule = (headers, pageIndex, pageSize, search, row) => dis
     }))
 }
 
-export const createAdsSchedule = (headers, data) => dispatch => {
+export const createAdsSchedule = ( data) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(adsEndpoint + '/schedule', data, headers,
+  dispatch(post(adsEndpoint + '/schedule', data, 
     res => {
       dispatch(setInfo({
         color: 'success',
@@ -180,10 +180,10 @@ export const createAdsSchedule = (headers, data) => dispatch => {
     }))
 }
 
-export const deleteAdsSchedule = (row, headers) => dispatch => {
+export const deleteAdsSchedule = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(adsEndpoint + '/schedule/' + row.int, headers,
+  dispatch(del(adsEndpoint + '/schedule/' + row.int, 
     res => {
       dispatch(setInfo({
         color: 'success',

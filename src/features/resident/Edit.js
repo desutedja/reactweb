@@ -1,54 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Form from '../../components/Form';
-import Modal from '../../components/Modal';
-import Table from '../../components/Table';
-import Button from '../../components/Button';
 import SectionSeparator from '../../components/SectionSeparator';
-import { createResident, editResident, addSubaccount } from './slice';
-import { post, get, toSentenceCase, getCountryFromCode } from '../../utils';
+import { editResident } from './slice';
+import { getCountryFromCode } from '../../utils';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';
-import { Badge } from 'reactstrap';
-
-const columns = [
-    { Header: "ID", accessor: "id" },
-    { Header: "Name", accessor: row => row.firstname + ' ' + row.lastname },
-    { Header: "Phone", accessor: "phone" },
-    { Header: "Email", accessor: "email" },
-    { Header: "Gender", accessor: "gender" },
-    { Header: "Nationality", accessor: "nationality" },
-    {
-        Header: "Status", accessor: row => row.status ?
-            <h5><Badge pill color="success">{toSentenceCase(row.status)}</Badge></h5>
-            :
-            <h5><Badge pill color="danger">Inactive</Badge></h5>
-    },
-    {
-        Header: "KYC Status", accessor: row => row.status_kyc ? row.status_kyc :
-            <h5><Badge pill color="secondary">None</Badge></h5>
-    },
-]
+import { get } from '../slice';
 
 function Component() {
-    const [step, setStep] = useState(2);
-    const [resident, setResident] = useState({});
-    const [residents, setResidents] = useState([]);
-    const [residentsPage, setResidentsPage] = useState('');
-    const [loadingResident, setLoadingResident] = useState(false);
-
-    const [unitID, setUnitID] = useState('');
-    const [units, setUnits] = useState([]);
-
-    const [exist, setExist] = useState(true);
-    const [sub, setSub] = useState({});
-
-    const [modal, setModal] = useState(false);
-
     const [email, setEmail] = useState('');
 
     const [district, setDistrict] = useState("");
@@ -66,48 +30,48 @@ function Component() {
 
     const [nat, setNat] = useState("");
 
-    const headers = useSelector(state => state.auth.headers);
+
     const { loading, selected } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
     let history = useHistory();
 
     useEffect(() => {
-        get(endpointResident + '/geo/province',
-            headers,
+        dispatch(get(endpointResident + '/geo/province',
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setProvinces(formatted);
             }
-        )
-    }, [headers]);
+        ))
+    }, [dispatch]);
 
     useEffect(() => {
         setCity("");
-        (province || selected.province) && get(endpointResident + '/geo/province/' + (province ? province : selected.province),
-            headers,
+        (province || selected.province) && dispatch(get(endpointResident + '/geo/province/' + (province ? province : selected.province),
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setCities(formatted);
             }
-        )
-    }, [headers, province, selected.province]);
+        ))
+    }, [dispatch, province, selected.province]);
 
     useEffect(() => {
         setDistrict("");
-        (city || selected.city) && get(endpointResident + '/geo/city/' + (city ? city : selected.city),
-            headers,
+        (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city ? city : selected.city),
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setDistricts(formatted);
             }
-        )
-    }, [headers, city, selected.city]);
+        ))
+    }, [city, dispatch, selected.city]);
 
     useEffect(() => {
         setBCLoading(true);
-        get(endpointResident + '/geo/province',
-            headers,
+        dispatch(get(endpointResident + '/geo/province',
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.name }));
                 console.log(formatted)
@@ -115,44 +79,14 @@ function Component() {
                 setBCities(formatted);
                 setBCLoading(false);
             }
-        )
-    }, [headers]);
-
-    const getResident = useCallback((pageIndex, pageSize, search) => {
-        setLoadingResident(true);
-        get(endpointResident + '/management/resident/read' +
-            '?page=' + (pageIndex + 1) +
-            '&limit=' + pageSize +
-            '&search=' + search +
-            '&status=',
-            headers,
-            res => {
-                setResidents(res.data.data.items);
-                setResidentsPage(res.data.data.total_pages);
-
-                setLoadingResident(false)
-            })
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [headers]);
-
-    useEffect(() => {
-        get(endpointResident + '/management/resident/unit' +
-            '?page=' + 1 +
-            '&id=' + resident.id +
-            '&limit=' + 10 +
-            '&search=',
-            headers,
-            res => {
-                setUnits(res.data.data.items);
-            }
-        )
-    }, [headers, resident])
+        ))
+    }, [dispatch]);
 
     return (
         <div>
             <Form
                 showSubmit={!!selected.id}
-                onSubmit={data => dispatch(editResident(headers, data, history, selected.id))}
+                onSubmit={data => dispatch(editResident(data, history, selected.id))}
                 loading={loading}
             >
                 <div style={{
@@ -160,22 +94,6 @@ function Component() {
                 }}>
                     <Input label="Email" placeholder={"Input Resident Email"} type="email" inputValue={email ? email : selected.email}
                         setInputValue={setEmail} disabled={selected.id} />
-                    {!selected.id && <Input label="Check" type="button" compact
-                        onClick={() => {
-                            post(endpointResident + '/management/resident/check', {
-                                email: email
-                            }, headers,
-                                res => {
-                                    setSub(res.data.data);
-                                    res.data.data.id
-                                        ?
-                                        setModal(true)
-                                        :
-                                        setExist(false);
-                                },
-                            )
-                        }}
-                    />}
                     <SectionSeparator />
                 </div>
                 {(selected.email) && <>

@@ -4,10 +4,11 @@ import AnimatedNumber from "animated-number-react";
 
 import { getSOS } from './slice';
 import { AreaChart, XAxis, YAxis, CartesianGrid, Area, Tooltip, PieChart, Pie } from 'recharts';
-import { dateFormatter, get } from '../../utils';
+import { dateFormatter } from '../../utils';
 import { endpointTask } from '../../settings';
 
 import './style.css';
+import { get } from '../slice';
 
 const formatValue = (value) => value.toFixed(0);
 
@@ -17,21 +18,21 @@ function Component() {
     const [pieData, setPieData] = useState([]);
     const [taskData, setTaskData] = useState({});
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { sosData } = useSelector(state => state.dashboard);
 
     let dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getSOS(headers, range));
-    }, [dispatch, headers, range]);
+        dispatch(getSOS( range));
+    }, [dispatch,  range]);
 
     useEffect(() => {
-        get(endpointTask + '/admin/sa/statistics', headers, res => {
+        dispatch(get(endpointTask + '/admin/sa/statistics',  res => {
             setPieData(res.data.data.ticket_by_category);
             setTaskData(res.data.data);
-        })
-    }, [headers]);
+        }));
+    }, [dispatch]);
 
     return (
         <>

@@ -7,10 +7,11 @@ import Table from '../../components/Table';
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { get, months } from '../../utils';
+import { months } from '../../utils';
 import { endpointAdmin } from '../../settings';
 import { FiChevronRight } from 'react-icons/fi';
 import { createBillingUnitItem, editBillingUnitItem } from './slice';
+import { get } from '../slice';
 
 const columnsService = [
     { Header: "ID", accessor: "id" },
@@ -34,7 +35,7 @@ function Component() {
     const [servicesPageCount, setServicesPageCount] = useState(1);
     const [servicesLoading, setServicesLoading] = useState(false);
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, selected, unit } = useSelector(state => state.billing);
     const selectedUnit = unit.selected;
 
@@ -54,22 +55,22 @@ function Component() {
                     pageCount={servicesPageCount}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
                         setServicesLoading(true);
-                        get(endpointAdmin + '/building/service' +
+                        dispatch(get(endpointAdmin + '/building/service' +
                             '?page=' + (pageIndex + 1) +
                             '&building_id=' + selected.building_id +
                             // '&group=' + servicesGroup +
                             '&search=' + search +
                             '&limit=' + pageSize,
-                            headers,
+                            
                             res => {
                                 const { items, total_pages } = res.data.data;
                                 setServices(items);
                                 setServicesPageCount(total_pages);
 
                                 setServicesLoading(false);
-                            });
+                            }));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [headers, selected])}
+                    }, [ selected])}
                     onClickResolve={row => {
                         setService(row.id);
                         setServiceName(row.name);
@@ -80,9 +81,9 @@ function Component() {
             <Form
                 onSubmit={data => {
                     selectedUnit.id ?
-                        dispatch(editBillingUnitItem(headers, data, selected, history, selectedUnit.id))
+                        dispatch(editBillingUnitItem( data, selected, history, selectedUnit.id))
                         :
-                        dispatch(createBillingUnitItem(headers, data, selected, history))
+                        dispatch(createBillingUnitItem( data, selected, history))
                 }}
                 loading={loading}
             >

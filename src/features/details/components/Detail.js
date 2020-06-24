@@ -8,7 +8,7 @@ import Button from '../../../components/Button';
 import { toSentenceCase, dateFormatter, getCountryFromCode, getBank } from '../../../utils';
 import { render } from '@testing-library/react';
 
-function Component({ data, labels, type = "", editable = true, renderButtons }) {
+function Component({ data, labels, type = "", editable = true, renderButtons = () => {} }) {
 
     let history = useHistory();
     let { url } = useRouteMatch();

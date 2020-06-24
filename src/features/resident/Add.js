@@ -9,11 +9,12 @@ import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import SectionSeparator from '../../components/SectionSeparator';
-import { createResident, editResident, addSubaccount } from './slice';
-import { post, get, toSentenceCase } from '../../utils';
+import { createResident, addSubaccount } from './slice';
+import { toSentenceCase } from '../../utils';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';
 import { Badge } from 'reactstrap';
+import { get, post } from '../slice';
 
 const columns = [
     { Header: "ID", accessor: "id" },
@@ -66,48 +67,48 @@ function Component() {
 
     const [nat, setNat] = useState("");
 
-    const headers = useSelector(state => state.auth.headers);
+
     const { loading } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
     let history = useHistory();
 
     useEffect(() => {
-        get(endpointResident + '/geo/province',
-            headers,
+        dispatch(get(endpointResident + '/geo/province',
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setProvinces(formatted);
             }
-        )
-    }, [headers]);
+        ))
+    }, [dispatch]);
 
     useEffect(() => {
         setCity("");
-        (province) && get(endpointResident + '/geo/province/' + (province),
-            headers,
+        (province) && dispatch(get(endpointResident + '/geo/province/' + (province),
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setCities(formatted);
             }
-        )
-    }, [headers, province]);
+        ))
+    }, [dispatch, province]);
 
     useEffect(() => {
         setDistrict("");
-        (city) && get(endpointResident + '/geo/city/' + (city),
-            headers,
+        (city) && dispatch(get(endpointResident + '/geo/city/' + (city),
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setDistricts(formatted);
             }
-        )
-    }, [headers, city]);
+        ))
+    }, [city, dispatch]);
 
     useEffect(() => {
         setBCLoading(true);
-        get(endpointResident + '/geo/province',
-            headers,
+        dispatch(get(endpointResident + '/geo/province',
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.name }));
                 console.log(formatted)
@@ -115,38 +116,38 @@ function Component() {
                 setBCities(formatted);
                 setBCLoading(false);
             }
-        )
-    }, [headers]);
+        ))
+    }, [dispatch]);
 
     const getResident = useCallback((pageIndex, pageSize, search) => {
         setLoadingResident(true);
-        get(endpointResident + '/management/resident/read' +
+        dispatch(get(endpointResident + '/management/resident/read' +
             '?page=' + (pageIndex + 1) +
             '&limit=' + pageSize +
             '&search=' + search +
             '&status=',
-            headers,
+
             res => {
                 setResidents(res.data.data.items);
                 setResidentsPage(res.data.data.total_pages);
 
                 setLoadingResident(false)
-            })
+            }))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [headers]);
+    }, []);
 
     useEffect(() => {
-        get(endpointResident + '/management/resident/unit' +
+        dispatch(get(endpointResident + '/management/resident/unit' +
             '?page=' + 1 +
             '&id=' + resident.id +
             '&limit=' + 10 +
             '&search=',
-            headers,
+
             res => {
                 setUnits(res.data.data.items);
             }
-        )
-    }, [headers, resident])
+        ))
+    }, [dispatch, resident])
 
     return (
         <div>
@@ -186,7 +187,7 @@ function Component() {
                     <div style={{ marginTop: 16 }} />
                     {unitID && <Input type="button" label="Add as Subaccount" compact
                         onClick={() => {
-                            dispatch(addSubaccount(headers, {
+                            dispatch(addSubaccount({
                                 unit_id: parseInt(unitID),
                                 parent_id: resident.id,
                                 owner_id: sub.id,
@@ -199,7 +200,7 @@ function Component() {
             </Modal>
             <Form
                 showSubmit={!exist}
-                onSubmit={data => dispatch(createResident(headers, data, history))}
+                onSubmit={data => dispatch(createResident(data, history))}
                 loading={loading}
             >
                 <div style={{
@@ -209,9 +210,9 @@ function Component() {
                         setInputValue={setEmail} />
                     {exist && <Input label="Check" type="button" compact
                         onClick={() => {
-                            post(endpointResident + '/management/resident/check', {
+                            dispatch(post(endpointResident + '/management/resident/check', {
                                 email: email
-                            }, headers,
+                            },
                                 res => {
                                     setSub(res.data.data);
                                     res.data.data.id
@@ -220,15 +221,15 @@ function Component() {
                                         :
                                         setExist(false);
                                 },
-                            )
+                            ))
                         }}
                     />}
                     <SectionSeparator />
                 </div>
                 {(!exist) && <>
                     <Input label="First Name" name="firstname" />
-                    <Input label="Last Name" name="lastname"  />
-                    <Input label="Phone" type="tel"  />
+                    <Input label="Last Name" name="lastname" />
+                    <Input label="Phone" type="tel" />
                     <Select label="Birth Place" name="birthplace" options={bcities}
                         inputValue={bcity.value} setInputValue={setBCity}
                         loading={bcloading}
@@ -242,23 +243,23 @@ function Component() {
                     <Input label="Gender" type="select" options={[
                         { value: 'P', label: 'Perempuan' },
                         { value: 'L', label: 'Laki-Laki' },
-                    ]}  />
+                    ]} />
                     <Input label="Marital Status" type="select" options={[
                         { value: 'single', label: 'Single' },
                         { value: 'married', label: 'Married' },
                         { value: 'divorce', label: 'Divorced' },
                         { value: 'other', label: 'Other' },
-                    ]}  />
+                    ]} />
                     <Input label="Occupation" type="select" options={[
                         { value: 'unemployed', label: 'Unemployed' },
                         { value: 'student', label: 'Student' },
                         { value: 'university_student', label: 'University Student' },
                         { value: 'professional', label: 'Professional' },
                         { value: 'housewife', label: 'Housewife' },
-                    ]}  />
+                    ]} />
                     <SectionSeparator />
 
-                    <Input label="Address" type="textarea"  />
+                    <Input label="Address" type="textarea" />
                     <Input label="Province" type="select" options={provinces}
                         inputValue={province} setInputValue={setProvince}
                     />
@@ -270,10 +271,10 @@ function Component() {
                     />
                     <SectionSeparator />
 
-                    <Input label="Account Bank" type="select" options={banks}  />
-                    <Input label="Account Number"  />
+                    <Input label="Account Bank" type="select" options={banks} />
+                    <Input label="Account Number" />
                     <Input label="Account Name"
-                         />
+                    />
                 </>}
             </Form>
         </div>

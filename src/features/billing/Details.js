@@ -41,7 +41,7 @@ function Component() {
     const [items, setItems] = useState([]);
     const [active, setActive] = useState(0);
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { selected, loading, unit, refreshToggle } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
@@ -49,9 +49,9 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        dispatch(getBillingUnitItem(headers, 0, 100, '',
+        dispatch(getBillingUnitItem( 0, 100, '',
             selected, status));
-    }, [dispatch, refreshToggle, headers, selected, status])
+    }, [dispatch, refreshToggle,  selected, status])
 
     useEffect(() => {
         unit.items[active] && setItems(unit.items[active].billing_item);
@@ -136,11 +136,11 @@ function Component() {
                             />
                         ]}
                         onClickDetails={row => {
-                            dispatch(getBillingUnitItemDetails(row, headers, history, url))
+                            dispatch(getBillingUnitItemDetails(row,  history, url))
                         }}
                         deleteSelection={(selectedRows, rows) => {
                             Object.keys(selectedRows).map(el => dispatch(deleteBillingUnitItem(
-                                rows[el].original.id, headers)));
+                                rows[el].original.id, )));
                         }}
                     />
                 </div>

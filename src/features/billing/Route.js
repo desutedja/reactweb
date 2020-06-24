@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch } from 'react-icons/fi';
 
 import Table from '../../components/Table';
-import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Add from './Add';
@@ -14,7 +13,8 @@ import Settlement from './Settlement';
 import Disbursement from './Disbursement';
 import { getBillingUnit, getBillingUnitDetails } from './slice';
 import { endpointAdmin } from '../../settings';
-import { get, toSentenceCase, toMoney } from '../../utils';
+import { toSentenceCase, toMoney } from '../../utils';
+import { get } from '../slice';
 
 const columns = [
     // { Header: 'ID', accessor: 'code' },
@@ -29,7 +29,6 @@ const columns = [
 ]
 
 function Component() {
-    const headers = useSelector(state => state.auth.headers);
     const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.billing);
 
     const [search, setSearch] = useState('');
@@ -45,14 +44,14 @@ function Component() {
     useEffect(() => {
         (!search || search.length >= 3) && get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
-            '&search=' + search, headers, res => {
+            '&search=' + search,  res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setBuildings(formatted);
             })
-    }, [headers, search]);
+    }, [ search]);
 
     return (
         <div>
@@ -65,10 +64,10 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getBillingUnit(headers, pageIndex, pageSize, search,
+                            dispatch(getBillingUnit( pageIndex, pageSize, search,
                                 building));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers, building])}
+                        }, [dispatch, refreshToggle,  building])}
                         filters={[
                             {
                                 hidex: building === "",
@@ -103,7 +102,7 @@ function Component() {
                         ]}
                         actions={[]}
                         onClickDetails={row => {
-                            dispatch(getBillingUnitDetails(row, headers, history, url))
+                            dispatch(getBillingUnitDetails(row,  history, url))
                         }}
                     />
                 </Route>

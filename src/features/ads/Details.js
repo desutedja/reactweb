@@ -43,7 +43,7 @@ function Component() {
     const [tab, setTab] = useState(0);
     const [addSchedule, setAddSchedule] = useState(false);
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { selected, loading, schedule, refreshToggle } = useSelector(state => state.ads);
 
     let dispatch = useDispatch();
@@ -51,9 +51,9 @@ function Component() {
     let { url } = useRouteMatch();
 
     const fetchData = useCallback((pageIndex, pageSize, search) => {
-        tab === 1 && dispatch(getAdsSchedule(headers, pageIndex, pageSize, search, selected));
+        tab === 1 && dispatch(getAdsSchedule( pageIndex, pageSize, search, selected));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, refreshToggle, headers, tab]);
+    }, [dispatch, refreshToggle,  tab]);
 
     return (
         <div>
@@ -61,7 +61,7 @@ function Component() {
                 Add Schedule
                 <Form
                     onSubmit={data => {
-                        dispatch(createAdsSchedule(headers, { ...data, adv_id: selected.id }))
+                        dispatch(createAdsSchedule( { ...data, adv_id: selected.id }))
                         setAddSchedule(false);
                     }}
                 >
@@ -161,14 +161,14 @@ function Component() {
                             disabled={Object.keys(selectedRowIds).length === 0}
                             onClick={() => {
                                 Object.keys(selectedRowIds).map(el => dispatch(deleteAdsSchedule(
-                                    page[el].original, headers)));
+                                    page[el].original, )));
                             }}
                             icon={<FiTrash />}
                             label="Delete"
                         />,
                         ])
                     }}
-                    onClickDelete={row => dispatch(deleteAdsSchedule(row, headers))}
+                    onClickDelete={row => dispatch(deleteAdsSchedule(row, ))}
                 />}
             </div>
         </div>

@@ -17,7 +17,7 @@ function Component() {
     const [aget, setAget] = useState('');
     const [os, setOS] = useState('');
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, selected } = useSelector(state => state.ads);
 
     let dispatch = useDispatch();
@@ -39,9 +39,9 @@ function Component() {
         <div>
             <Form
                 onSubmit={data => !selected.id || url.split('/').reverse()[0] === 'add' ?
-                    dispatch(createAds(headers, data, history))
+                    dispatch(createAds( data, history))
                     :
-                    dispatch(editAds(headers, data, history, selected.id))
+                    dispatch(editAds( data, history, selected.id))
                 }
                 loading={loading}
             >

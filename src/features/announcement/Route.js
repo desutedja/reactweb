@@ -35,7 +35,7 @@ function Component() {
     const [confirm, setConfirm] = useState(false);
     const [selectedRow, setRow] = useState({});
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.announcement);
 
     let dispatch = useDispatch();
@@ -59,7 +59,7 @@ function Component() {
                             <Button label="Yes"
                                 onClick={() => {
                                     setConfirm(false);
-                                    dispatch(deleteAnnouncement(selectedRow, headers));
+                                    dispatch(deleteAnnouncement(selectedRow, ));
                                 }}
                             />
                         </div>
@@ -73,9 +73,9 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getAnnoucement(headers, pageIndex, pageSize, search));
+                            dispatch(getAnnoucement( pageIndex, pageSize, search));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers])}
+                        }, [dispatch, refreshToggle, ])}
                         filters={[]}
                         actions={[
                             <Button key="Add Announcement" label="Add Announcement" icon={<FiPlus />}
@@ -90,7 +90,7 @@ function Component() {
                             setConfirm(true);
                         }}
                         onClickDetails={row =>
-                            dispatch(getAnnouncementDetails(row, headers, history, url))}
+                            dispatch(getAnnouncementDetails(row,  history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

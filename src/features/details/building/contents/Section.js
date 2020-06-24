@@ -35,7 +35,7 @@ function Component() {
     const [sectionType, setSectionType] = useState('');
     const [sectionName, setSectionName] = useState('');
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { selected, section, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
@@ -46,13 +46,13 @@ function Component() {
                 okLabel={edit ? "Save" : "Add"}
                 onClick={() => {
                     edit ?
-                        dispatch(editBuildingSection(headers, {
+                        dispatch(editBuildingSection( {
                             "building_id": selected.id,
                             "section_type": sectionType ? sectionType : selectedRow.section_type,
                             "section_name": sectionName ? sectionName : selectedRow.section_name,
                         }, selectedRow.id))
                         :
-                        dispatch(createBuildingSection(headers, {
+                        dispatch(createBuildingSection( {
                             "building_id": selected.id,
                             "section_type": sectionType ? sectionType : selectedRow.section_type,
                             "section_name": sectionName ? sectionName : selectedRow.section_name,
@@ -88,9 +88,9 @@ function Component() {
                 pageCount={section.total_pages}
                 totalItems={section.total_items}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getBuildingSection(headers, pageIndex, pageSize, search, selected, sTypeFilter.value));
+                    dispatch(getBuildingSection( pageIndex, pageSize, search, selected, sTypeFilter.value));
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle, headers, sTypeFilter])}
+                }, [dispatch, refreshToggle,  sTypeFilter])}
                 filters={[
                     {
                         hidex: !sTypeFilter.label,
@@ -124,7 +124,7 @@ function Component() {
                 ]}
                 onClickDelete={row => {
                     // setRow(row);
-                    dispatch(deleteBuildingSection(row, headers))
+                    dispatch(deleteBuildingSection(row, ))
                     // setConfirm(true);
                 }}
                 onClickEdit={row => {

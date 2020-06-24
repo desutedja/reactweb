@@ -37,7 +37,7 @@ function Component() {
     const [agefSet, setAgefSet] = useState("");
     const [agetSet, setAgetSet] = useState("");
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.ads);
 
     let dispatch = useDispatch();
@@ -58,7 +58,7 @@ function Component() {
                     <Button label="Yes"
                         onClick={() => {
                             setConfirm(false);
-                            dispatch(deleteAds(selectedRow, headers));
+                            dispatch(deleteAds(selectedRow, ));
                         }}
                     />
                 </div>
@@ -71,9 +71,9 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getAds(headers, pageIndex, pageSize, search, agefSet, agetSet));
+                            dispatch(getAds( pageIndex, pageSize, search, agefSet, agetSet));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, headers, refreshToggle, agefSet, agetSet])}
+                        }, [dispatch,  refreshToggle, agefSet, agetSet])}
                         filters={[
                             {
                                 button: <Button key="Set Age Range"
@@ -114,7 +114,7 @@ function Component() {
                             setRow(row);
                             setConfirm(true);
                         }}
-                        onClickDetails={row => dispatch(getAdsDetails(row, headers, history, url))}
+                        onClickDetails={row => dispatch(getAdsDetails(row,  history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

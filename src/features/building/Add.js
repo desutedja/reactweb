@@ -8,11 +8,9 @@ import Input from '../../components/Input';
 import Form from '../../components/Form';
 import SectionSeparator from '../../components/SectionSeparator';
 import Modal from '../../components/Modal';
-import Button from '../../components/Button';
 import { createBuilding, editBuilding } from './slice';
 import { endpointResident } from '../../settings';
-import { get } from '../../utils';
-
+import { get } from '../slice';
 
 function Component() {
     const [modal, setModal] = useState(false);
@@ -31,54 +29,54 @@ function Component() {
     const [provinceName, setProvinceName] = useState("");
     const [provinces, setProvinces] = useState([]);
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, selected } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
     let history = useHistory();
 
     useEffect(() => {
-        get(endpointResident + '/geo/province',
-            headers,
+        dispatch(get(endpointResident + '/geo/province',
+            
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setProvinces(formatted);
             }
-        )
-    }, [headers]);
+        ))
+    }, []);
 
     useEffect(() => {
         province && setProvinceName(provinces.find(el => el.value + '' === province).label);
 
         setCity("");
-        (province || selected.province) && get(endpointResident + '/geo/province/' + (province ? province : selected.province),
-            headers,
+        (province || selected.province) && dispatch(get(endpointResident + '/geo/province/' + (province ? province : selected.province),
+            
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setCities(formatted);
             }
-        )
+        ))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [headers, province, selected.province]);
+    }, [ province, selected.province]);
 
     useEffect(() => {
         city && setCityName(cities.find(el => el.value + '' === city).label);
 
         setDistrict("");
-        (city || selected.city) && get(endpointResident + '/geo/city/' + (city ? city : selected.city),
-            headers,
+        (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city ? city : selected.city),
+            
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setDistricts(formatted);
             }
-        )
+        ))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [headers, city, selected.city]);
+    }, [ city, selected.city]);
 
     useEffect(() => {
         district && setDistrictName(districts.find(el => el.value + '' === district).label);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [district, headers]);
+    }, [district, ]);
 
     return (
         <div>
@@ -113,9 +111,9 @@ function Component() {
             <Form
                 onSubmit={data =>
                     selected.id ?
-                        dispatch(editBuilding(headers, data, history, selected.id))
+                        dispatch(editBuilding( data, history, selected.id))
                         :
-                        dispatch(createBuilding(headers, data, history))
+                        dispatch(createBuilding( data, history))
                 }
                 loading={loading}
             >

@@ -47,7 +47,7 @@ export const {
   refresh
 } = slice.actions;
 
-export const getStaff = (headers, pageIndex, pageSize,search = '', role, building, shift) => dispatch => {
+export const getStaff = ( pageIndex, pageSize,search = '', role, building, shift) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(staffEndpoint + '/list' +
@@ -57,7 +57,7 @@ export const getStaff = (headers, pageIndex, pageSize,search = '', role, buildin
     '&building_id=' + building +
     '&is_shift=' + (shift === 'yes' ? 1 : shift === 'no' ? 0 : '') +
     '&staff_role=' + role,
-    headers,
+    
     res => {
       dispatch(setData(res.data.data));
 
@@ -65,10 +65,10 @@ export const getStaff = (headers, pageIndex, pageSize,search = '', role, buildin
     }))
 }
 
-export const createStaff = (headers, data, history) => dispatch => {
+export const createStaff = ( data, history) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(staffEndpoint + '/create', data, headers,
+  dispatch(post(staffEndpoint + '/create', data, 
     res => {
       history.push("/staff");
 
@@ -84,10 +84,10 @@ export const createStaff = (headers, data, history) => dispatch => {
     }))
 }
 
-export const editStaff = (headers, data, history, id) => dispatch => {
+export const editStaff = ( data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(staffEndpoint + '/update', { ...data, id: id }, headers,
+  dispatch(put(staffEndpoint + '/update', { ...data, id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/staff/details");
@@ -104,10 +104,10 @@ export const editStaff = (headers, data, history, id) => dispatch => {
     }))
 }
 
-export const deleteStaff = (row, headers) => dispatch => {
+export const deleteStaff = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(staffEndpoint + '/delete/' + row.id, headers,
+  dispatch(del(staffEndpoint + '/delete/' + row.id, 
     res => {
       dispatch(refresh());
       
@@ -120,10 +120,10 @@ export const deleteStaff = (row, headers) => dispatch => {
     }))
 }
 
-export const getStaffDetails = (row, headers, history, url) => dispatch => {
+export const getStaffDetails = (row,  history, url) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(staffEndpoint + '/' + row.id, headers,
+  dispatch(get(staffEndpoint + '/' + row.id, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');

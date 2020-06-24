@@ -11,9 +11,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
 import { RiCheckDoubleLine, RiCheckLine } from 'react-icons/ri';
-import { get, toSentenceCase } from '../../utils';
+import { toSentenceCase } from '../../utils';
 import { endpointAdmin } from '../../settings';
 import { createAnnouncement, editAnnouncement } from './slice';
+import { get } from '../slice';
 
 const columnsBuilding = [
     { Header: 'ID', accessor: 'id' },
@@ -57,7 +58,7 @@ function Component() {
     const [unitsPageCount, setUnitsPageCount] = useState(1);
     const [unitsLoading, setUnitsLoading] = useState(false);
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, selected } = useSelector(state => state.announcement);
 
     let dispatch = useDispatch();
@@ -68,24 +69,12 @@ function Component() {
     }, [buildingsSelected]);
 
     useEffect(() => {
-        // get(endpointAdmin + '/building' +
-        //     '?page=' + 1 +
-        //     '&search=' +
-        //     '&limit=' + 100,
-        //     headers,
-        //     res => {
-        //         const { items } = res.data.data;
-
-        //         let selectedBuildings = items.filter(el => selected.building.includes(el.id));
-        //         setBuildingsSelected(selectedBuildings);
-        //     });
-
         let selectedBuildings = selected.building?.map(el => ({
             id: el.building_id,
             name: el.building_name
         }));
         selected.building && setBuildingsSelected(selectedBuildings);
-    }, [headers, selected.building]);
+    }, [ selected.building]);
 
     return (
         <div>
@@ -100,20 +89,20 @@ function Component() {
                     pageCount={buildingsPageCount}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
                         setBuildingsLoading(true);
-                        get(endpointAdmin + '/building' +
+                        dispatch(get(endpointAdmin + '/building' +
                             '?page=' + (pageIndex + 1) +
                             '&search=' + search +
                             '&limit=' + pageSize,
-                            headers,
+                            
                             res => {
                                 const { items, total_pages } = res.data.data;
                                 setBuildings(items);
                                 setBuildingsPageCount(total_pages);
 
                                 setBuildingsLoading(false);
-                            });
+                            }));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [headers])}
+                    }, [])}
                     renderActions={(selectedRowIds, page) => {
                         // console.log(selectedRowIds, page);
                         return ([
@@ -147,21 +136,21 @@ function Component() {
                     pageCount={unitsPageCount}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
                         setUnitsLoading(true);
-                        get(endpointAdmin + '/building/unit' +
+                        dispatch(get(endpointAdmin + '/building/unit' +
                             '?page=' + (pageIndex + 1) +
                             '&building_id=' + buildingsSelected[0]?.id +
                             '&search=' + search +
                             '&limit=' + pageSize,
-                            headers,
+                            
                             res => {
                                 const { items, total_pages } = res.data.data;
                                 setUnits(items);
                                 setUnitsPageCount(total_pages);
 
                                 setUnitsLoading(false);
-                            });
+                            }));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [headers, buildingsSelected])}
+                    }, [ buildingsSelected])}
                     renderActions={(selectedRowIds, page) => {
                         return ([
                             <Button
@@ -196,9 +185,9 @@ function Component() {
             <Form
                 onSubmit={data => {
                     selected.id ?
-                        dispatch(editAnnouncement(headers, data, history, selected.id))
+                        dispatch(editAnnouncement( data, history, selected.id))
                         :
-                        dispatch(createAnnouncement(headers, data, history));
+                        dispatch(createAnnouncement( data, history));
                 }}
                 loading={loading}
             >

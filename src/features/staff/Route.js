@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch, FiPlus } from 'react-icons/fi';
 
 import { getStaff, setSelected, getStaffDetails, deleteStaff } from './slice';
-import { get, toSentenceCase } from '../../utils';
+import { toSentenceCase } from '../../utils';
 import { endpointAdmin } from '../../settings';
 
 import UserAvatar from '../../components/UserAvatar';
@@ -16,7 +16,7 @@ import Modal from '../../components/Modal';
 import Add from './Add';
 import Details from './Details';
 import Pill from '../../components/Pill';
-import Tile from '../../components/Tile';
+import { get } from '../slice';
 
 const columns = [
     { Header: "ID", accessor: "id" },
@@ -73,7 +73,7 @@ function Component() {
     const [role, setRole] = useState('');
     const [roleLabel, setRoleLabel] = useState('');
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, items, total_pages, total_items, refreshToggle, } = useSelector(state => state.staff);
 
     let dispatch = useDispatch();
@@ -83,14 +83,14 @@ function Component() {
     useEffect(() => {
         search.length >= 3 && get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
-            '&search=' + search, headers, res => {
+            '&search=' + search,  res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setBuildings(formatted);
             })
-    }, [headers, search]);
+    }, [ search]);
 
     return (
         <div>
@@ -106,7 +106,7 @@ function Component() {
                     <Button label="Yes"
                         onClick={() => {
                             setConfirm(false);
-                            dispatch(deleteStaff(selectedRow, headers));
+                            dispatch(deleteStaff(selectedRow, ));
                         }}
                     />
                 </div>
@@ -119,9 +119,9 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getStaff(headers, pageIndex, pageSize, search, role, building, shift));
+                            dispatch(getStaff( pageIndex, pageSize, search, role, building, shift));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers, role, building, shift])}
+                        }, [dispatch, refreshToggle,  role, building, shift])}
                         filters={[
                             {
                                 hidex: building === "",
@@ -202,7 +202,7 @@ function Component() {
                             setRow(row);
                             setConfirm(true);
                         }}
-                        onClickDetails={row => dispatch(getStaffDetails(row, headers, history, url))}
+                        onClickDetails={row => dispatch(getStaffDetails(row,  history, url))}
                     />
                 </Route>
                 <Route path={`${path}/add`}>

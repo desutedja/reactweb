@@ -123,7 +123,7 @@ export const {
   setManagementData
 } = slice.actions;
 
-export const getBuilding = (headers, pageIndex, pageSize, search = '', province, city, district) => dispatch => {
+export const getBuilding = ( pageIndex, pageSize, search = '', province, city, district) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(buildingEndpoint +
@@ -133,7 +133,7 @@ export const getBuilding = (headers, pageIndex, pageSize, search = '', province,
     '&province=' + province +
     '&city=' + city +
     '&district=' + district,
-    headers,
+    
     res => {
       console.log(res);
 
@@ -143,10 +143,10 @@ export const getBuilding = (headers, pageIndex, pageSize, search = '', province,
     }))
 }
 
-export const createBuilding = (headers, data, history) => dispatch => {
+export const createBuilding = ( data, history) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(buildingEndpoint, data, headers,
+  dispatch(post(buildingEndpoint, data, 
     res => {
       history.push("/building");
 
@@ -162,10 +162,10 @@ export const createBuilding = (headers, data, history) => dispatch => {
     }))
 }
 
-export const editBuilding = (headers, data, history, id) => dispatch => {
+export const editBuilding = ( data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint, { ...data, id: id }, headers,
+  dispatch(put(buildingEndpoint, { ...data, id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/building/details");
@@ -182,10 +182,10 @@ export const editBuilding = (headers, data, history, id) => dispatch => {
     }))
 }
 
-export const deleteBuilding = (row, headers) => dispatch => {
+export const deleteBuilding = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(buildingEndpoint + '/' + row.id, headers,
+  dispatch(del(buildingEndpoint + '/' + row.id, 
     res => {
       dispatch(setInfo({
         color: 'success',
@@ -197,10 +197,10 @@ export const deleteBuilding = (row, headers) => dispatch => {
     }))
 }
 
-export const getBuildingDetails = (row, headers, history, url) => dispatch => {
+export const getBuildingDetails = (row,  history, url) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(buildingEndpoint + '/details/' + row.id, headers,
+  dispatch(get(buildingEndpoint + '/details/' + row.id, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
@@ -209,7 +209,7 @@ export const getBuildingDetails = (row, headers, history, url) => dispatch => {
     }))
 }
 
-export const getBuildingUnit = (headers, pageIndex, pageSize, search, row) => dispatch => {
+export const getBuildingUnit = ( pageIndex, pageSize, search, row) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(buildingEndpoint + '/unit' +
@@ -217,7 +217,7 @@ export const getBuildingUnit = (headers, pageIndex, pageSize, search, row) => di
     '&building_id=' + row.id +
     '&search=' + search +
     '&limit=' + pageSize,
-    headers,
+    
     res => {
       dispatch(setUnitData(res.data.data));
 
@@ -225,7 +225,7 @@ export const getBuildingUnit = (headers, pageIndex, pageSize, search, row) => di
     }))
 }
 
-export const getBuildingUnitType = (headers, pageIndex, pageSize, search, row, unit_type = "") => dispatch => {
+export const getBuildingUnitType = ( pageIndex, pageSize, search, row, unit_type = "") => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(buildingEndpoint + '/unit/type' +
@@ -234,7 +234,7 @@ export const getBuildingUnitType = (headers, pageIndex, pageSize, search, row, u
     '&search=' + search +
     '&unit_type=' + unit_type +
     '&limit=' + pageSize,
-    headers,
+    
     res => {
       dispatch(setUnitTypeData(res.data.data));
 
@@ -242,7 +242,7 @@ export const getBuildingUnitType = (headers, pageIndex, pageSize, search, row, u
     }))
 }
 
-export const getBuildingSection = (headers, pageIndex, pageSize, search, row, section_type = "") => dispatch => {
+export const getBuildingSection = ( pageIndex, pageSize, search, row, section_type = "") => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(buildingEndpoint + '/section' +
@@ -251,7 +251,7 @@ export const getBuildingSection = (headers, pageIndex, pageSize, search, row, se
     '&section_type=' + section_type +
     '&search=' + search +
     '&limit=' + pageSize,
-    headers,
+    
     res => {
       dispatch(setSectionData(res.data.data));
 
@@ -259,7 +259,7 @@ export const getBuildingSection = (headers, pageIndex, pageSize, search, row, se
     }))
 }
 
-export const getBuildingService = (headers, pageIndex, pageSize, search, row, group = "") => dispatch => {
+export const getBuildingService = ( pageIndex, pageSize, search, row, group = "") => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(buildingEndpoint + '/service' +
@@ -268,7 +268,7 @@ export const getBuildingService = (headers, pageIndex, pageSize, search, row, gr
     '&group=' + group +
     '&search=' + search +
     '&limit=' + pageSize,
-    headers,
+    
     res => {
       dispatch(setServiceData(res.data.data));
 
@@ -276,7 +276,7 @@ export const getBuildingService = (headers, pageIndex, pageSize, search, row, gr
     }))
 }
 
-export const getBuildingManagement = (headers, pageIndex, pageSize, search, row) => dispatch => {
+export const getBuildingManagement = ( pageIndex, pageSize, search, row) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(buildingEndpoint + '/management' +
@@ -286,7 +286,7 @@ export const getBuildingManagement = (headers, pageIndex, pageSize, search, row)
     '&sort_type=desc' +
     '&sort_field=created_on' +
     '&limit=' + pageSize,
-    headers,
+    
     res => {
       dispatch(setManagementData(res.data.data));
 
@@ -294,10 +294,10 @@ export const getBuildingManagement = (headers, pageIndex, pageSize, search, row)
     }))
 }
 
-export const createBuildingUnit = (headers, data) => dispatch => {
+export const createBuildingUnit = ( data) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(buildingEndpoint + '/unit', data, headers,
+  dispatch(post(buildingEndpoint + '/unit', data, 
     res => {
       dispatch(refresh());
 
@@ -313,10 +313,10 @@ export const createBuildingUnit = (headers, data) => dispatch => {
     }))
 }
 
-export const createBuildingUnitType = (headers, data) => dispatch => {
+export const createBuildingUnitType = ( data) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(buildingEndpoint + '/unit/type', data, headers,
+  dispatch(post(buildingEndpoint + '/unit/type', data, 
     res => {
       dispatch(refresh());
       
@@ -332,10 +332,10 @@ export const createBuildingUnitType = (headers, data) => dispatch => {
     }))
 }
 
-export const createBuildingSection = (headers, data) => dispatch => {
+export const createBuildingSection = ( data) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(buildingEndpoint + '/section', data, headers,
+  dispatch(post(buildingEndpoint + '/section', data, 
     res => {
       dispatch(refresh());
 
@@ -351,10 +351,10 @@ export const createBuildingSection = (headers, data) => dispatch => {
     }))
 }
 
-export const createBuildingManagement = (headers, data) => dispatch => {
+export const createBuildingManagement = ( data) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(buildingEndpoint + '/management', data, headers,
+  dispatch(post(buildingEndpoint + '/management', data, 
     res => {
       dispatch(refresh());
 
@@ -370,10 +370,10 @@ export const createBuildingManagement = (headers, data) => dispatch => {
     }))
 }
 
-export const createBuildingService = (headers, data) => dispatch => {
+export const createBuildingService = ( data) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(buildingEndpoint + '/service', data, headers,
+  dispatch(post(buildingEndpoint + '/service', data, 
     res => {
       dispatch(refresh());
 
@@ -389,10 +389,10 @@ export const createBuildingService = (headers, data) => dispatch => {
     }))
 }
 
-export const editBuildingUnit = (headers, data, id) => dispatch => {
+export const editBuildingUnit = ( data, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint + '/unit', {...data, id: id}, headers,
+  dispatch(put(buildingEndpoint + '/unit', {...data, id: id}, 
     res => {
       dispatch(refresh());
 
@@ -408,10 +408,10 @@ export const editBuildingUnit = (headers, data, id) => dispatch => {
     }))
 }
 
-export const editBuildingUnitType = (headers, data, id) => dispatch => {
+export const editBuildingUnitType = ( data, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint + '/unit/type', {...data, id: id}, headers,
+  dispatch(put(buildingEndpoint + '/unit/type', {...data, id: id}, 
     res => {
       dispatch(refresh());
 
@@ -427,10 +427,10 @@ export const editBuildingUnitType = (headers, data, id) => dispatch => {
     }))
 }
 
-export const editBuildingSection = (headers, data, id) => dispatch => {
+export const editBuildingSection = ( data, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint + '/section', {...data, id: id}, headers,
+  dispatch(put(buildingEndpoint + '/section', {...data, id: id}, 
     res => {
       dispatch(refresh());
 
@@ -446,10 +446,10 @@ export const editBuildingSection = (headers, data, id) => dispatch => {
     }))
 }
 
-export const editBuildingManagement = (headers, data, id) => dispatch => {
+export const editBuildingManagement = ( data, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint + '/management', {...data, id: id}, headers,
+  dispatch(put(buildingEndpoint + '/management', {...data, id: id}, 
     res => {
       dispatch(refresh());
 
@@ -465,10 +465,10 @@ export const editBuildingManagement = (headers, data, id) => dispatch => {
     }))
 }
 
-export const editBuildingService = (headers, data, id) => dispatch => {
+export const editBuildingService = ( data, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint + '/service', {...data, id: id}, headers,
+  dispatch(put(buildingEndpoint + '/service', {...data, id: id}, 
     res => {
       dispatch(refresh());
 
@@ -484,10 +484,10 @@ export const editBuildingService = (headers, data, id) => dispatch => {
     }))
 }
 
-export const deleteBuildingUnit = (row, headers) => dispatch => {
+export const deleteBuildingUnit = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(buildingEndpoint + '/unit/' + row.id, headers,
+  dispatch(del(buildingEndpoint + '/unit/' + row.id, 
     res => {
       dispatch(refresh());
 
@@ -503,10 +503,10 @@ export const deleteBuildingUnit = (row, headers) => dispatch => {
     }))
 }
 
-export const deleteBuildingUnitType = (row, headers) => dispatch => {
+export const deleteBuildingUnitType = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(buildingEndpoint + '/unit/type/' + row.id, headers,
+  dispatch(del(buildingEndpoint + '/unit/type/' + row.id, 
     res => {
       dispatch(refresh());
 
@@ -522,10 +522,10 @@ export const deleteBuildingUnitType = (row, headers) => dispatch => {
     }))
 }
 
-export const deleteBuildingSection = (row, headers) => dispatch => {
+export const deleteBuildingSection = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(buildingEndpoint + '/section/' + row.id, headers,
+  dispatch(del(buildingEndpoint + '/section/' + row.id, 
     res => {
       dispatch(refresh());
 
@@ -541,10 +541,10 @@ export const deleteBuildingSection = (row, headers) => dispatch => {
     }))
 }
 
-export const deleteBuildingManagement = (row, headers) => dispatch => {
+export const deleteBuildingManagement = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(buildingEndpoint + '/management/' + row.id, headers,
+  dispatch(del(buildingEndpoint + '/management/' + row.id, 
     res => {
       dispatch(refresh());
 
@@ -560,10 +560,10 @@ export const deleteBuildingManagement = (row, headers) => dispatch => {
     }))
 }
 
-export const deleteBuildingService = (row, headers) => dispatch => {
+export const deleteBuildingService = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(buildingEndpoint + '/service/' + row.id, headers,
+  dispatch(del(buildingEndpoint + '/service/' + row.id, 
     res => {
       dispatch(refresh());
 

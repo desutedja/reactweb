@@ -5,8 +5,9 @@ import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
 import { getTransactionDetails, setSelected, getTransactionSettlement, getTransactionDisbursement } from './slice';
-import { toMoney, toSentenceCase, get, dateTimeFormatter } from '../../utils';
+import { toMoney, toSentenceCase, dateTimeFormatter } from '../../utils';
 import { endpointTransaction, endpointMerchant } from '../../settings';
+import { get } from '../slice';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
@@ -20,7 +21,7 @@ function Component() {
     const [courier, setCourier] = useState('');
     const [couriers, setCouriers] = useState([]);
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, refreshToggle, disbursement } = useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
@@ -43,16 +44,16 @@ function Component() {
     ], [type]);
 
     useEffect(() => {
-        get(endpointTransaction + '/admin/transaction/summary', headers, res => {
+        dispatch(get(endpointTransaction + '/admin/transaction/summary',  res => {
             setInfo(res.data.data);
-        });
-    }, [headers]);
+        }));
+    }, [dispatch]);
 
     useEffect(() => {
-        get(endpointMerchant + '/admin/list?filter=disbursed', headers, res => {
+        dispatch(get(endpointMerchant + '/admin/list?filter=disbursed',  res => {
             setMerchants(res.data.data.items);
-        });
-    }, [headers]);
+        }));
+    }, [dispatch]);
 
     return (
         <>
@@ -143,10 +144,10 @@ function Component() {
                         loading={loading}
                         pageCount={disbursement.total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getTransactionDisbursement(headers, pageIndex, pageSize, search,
+                            dispatch(getTransactionDisbursement( pageIndex, pageSize, search,
                                 type, merchant, courier));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers])}
+                        }, [dispatch, refreshToggle, ])}
                         filters={[]}
                         actions={[]}
                     />

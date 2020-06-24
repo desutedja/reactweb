@@ -76,7 +76,7 @@ export const {
 export default slice.reducer;
 
 export const getTransaction = (
-  headers, pageIndex, pageSize,
+   pageIndex, pageSize,
   search = '', status = '', statusPayment = '', type = ''
 ) => dispatch => {
   dispatch(startAsync());
@@ -90,7 +90,7 @@ export const getTransaction = (
     '&sort_field=created_on' +
     '&sort_type=DESC' +
     '&search=' + search,
-    headers,
+    
     res => {
       dispatch(setData(res.data.data));
 
@@ -98,10 +98,10 @@ export const getTransaction = (
     }))
 }
 
-export const getTransactionDetails = (row, headers, history, url) => dispatch => {
+export const getTransactionDetails = (row,  history, url) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(transactionEndpoint + '/' + row.trx_code, headers,
+  dispatch(get(transactionEndpoint + '/' + row.trx_code, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
@@ -111,7 +111,7 @@ export const getTransactionDetails = (row, headers, history, url) => dispatch =>
 }
 
 export const getTransactionSettlement = (
-  headers, pageIndex, pageSize,
+   pageIndex, pageSize,
   search = '',
 ) => dispatch => {
   dispatch(startAsync());
@@ -121,7 +121,7 @@ export const getTransactionSettlement = (
     '&limit=' + pageSize +
     '&status=completed' +
     '&search=' + search,
-    headers,
+    
     res => {
       dispatch(setSettlement(res.data.data));
 
@@ -130,7 +130,7 @@ export const getTransactionSettlement = (
 }
 
 export const getTransactionDisbursement = (
-  headers, pageIndex, pageSize,
+   pageIndex, pageSize,
   search = '', type, merchant = '', courier = ''
 ) => dispatch => {
   dispatch(startAsync());
@@ -142,7 +142,7 @@ export const getTransactionDisbursement = (
     '&courier_id=' + courier +
     '&limit=' + pageSize +
     '&search=' + search,
-    headers,
+    
     res => {
       dispatch(setDisbursement(res.data.data));
 

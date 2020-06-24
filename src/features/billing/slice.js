@@ -100,7 +100,7 @@ export const {
 
 export default slice.reducer;
 
-export const getBillingUnit = (headers, pageIndex, pageSize, search = '', building, unit) => dispatch => {
+export const getBillingUnit = ( pageIndex, pageSize, search = '', building, unit) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(billingEndpoint + '/unit' +
@@ -108,7 +108,7 @@ export const getBillingUnit = (headers, pageIndex, pageSize, search = '', buildi
     '&limit=' + pageSize +
     '&resident_building=' + building +
     '&search=' + search,
-    headers,
+    
     res => {
       dispatch(setData(res.data.data));
 
@@ -116,7 +116,7 @@ export const getBillingUnit = (headers, pageIndex, pageSize, search = '', buildi
     }))
 }
 
-export const getBillingSettlement = (headers, pageIndex, pageSize, search = '', building, unit) => dispatch => {
+export const getBillingSettlement = ( pageIndex, pageSize, search = '', building, unit) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(billingEndpoint + '/settlement' +
@@ -124,7 +124,7 @@ export const getBillingSettlement = (headers, pageIndex, pageSize, search = '', 
     '&limit=' + pageSize +
     '&building_id=' + building +
     '&search=' + search,
-    headers,
+    
     res => {
       dispatch(setSettlement(res.data.data));
 
@@ -132,14 +132,14 @@ export const getBillingSettlement = (headers, pageIndex, pageSize, search = '', 
     }))
 }
 
-export const getBillingDisbursement = (headers, pageIndex, pageSize, search = '', building, unit,) => dispatch => {
+export const getBillingDisbursement = ( pageIndex, pageSize, search = '', building, unit,) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(billingEndpoint + '/disbursement/list/management' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search,
-    headers,
+    
     res => {
       dispatch(setDisbursement(res.data.data));
 
@@ -147,12 +147,12 @@ export const getBillingDisbursement = (headers, pageIndex, pageSize, search = ''
     }))
 }
 
-export const getBillingUnitDetails = (row, headers, history, url) => dispatch => {
+export const getBillingUnitDetails = (row,  history, url) => dispatch => {
   dispatch(setSelected(row));
   history.push(url + '/unit/item');
 }
 
-export const getBillingUnitItem = (headers, pageIndex, pageSize, search = '', selected, status) => dispatch => {
+export const getBillingUnitItem = ( pageIndex, pageSize, search = '', selected, status) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(billingEndpoint + '/unit/group' +
@@ -161,7 +161,7 @@ export const getBillingUnitItem = (headers, pageIndex, pageSize, search = '', se
     '&unit_id=' + selected.id +
     '&building_id=' + selected.building_id +
     '&search=' + search,
-    headers,
+    
     res => {
       dispatch(setUnit(res.data.data));
 
@@ -169,12 +169,12 @@ export const getBillingUnitItem = (headers, pageIndex, pageSize, search = '', se
     }))
 }
 
-export const getBillingUnitItemDetails = (row, headers, history, url) => dispatch => {
+export const getBillingUnitItemDetails = (row,  history, url) => dispatch => {
   dispatch(setSelectedUnit(row));
   history.push(url + '/details');
 }
 
-export const createBillingUnitItem = (headers, data, selected, history) => dispatch => {
+export const createBillingUnitItem = ( data, selected, history) => dispatch => {
   dispatch(startAsync());
 
   dispatch(post(billingEndpoint, {
@@ -184,7 +184,7 @@ export const createBillingUnitItem = (headers, data, selected, history) => dispa
     "resident_id": selected.resident_id,
     "resident_name": selected.resident_name,
     'additional_charge': []
-  }, headers,
+  }, 
     res => {
       history.goBack();
 
@@ -200,10 +200,10 @@ export const createBillingUnitItem = (headers, data, selected, history) => dispa
     }))
 }
 
-export const editBillingUnitItem = (headers, data, selected, history, id) => dispatch => {
+export const editBillingUnitItem = ( data, selected, history, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(billingEndpoint, { 'billing': { id: id, ...data } }, headers,
+  dispatch(put(billingEndpoint, { 'billing': { id: id, ...data } }, 
     res => {
       history.goBack();
 
@@ -219,10 +219,10 @@ export const editBillingUnitItem = (headers, data, selected, history, id) => dis
     }))
 }
 
-export const deleteBillingUnitItem = (id, headers) => dispatch => {
+export const deleteBillingUnitItem = (id, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(billingEndpoint + '/' + id, headers,
+  dispatch(del(billingEndpoint + '/' + id, 
     res => {
       dispatch(setInfo({
         color: 'success',
@@ -234,10 +234,10 @@ export const deleteBillingUnitItem = (id, headers) => dispatch => {
     }))
 }
 
-export const payByCash = (headers, data) => dispatch => {
+export const payByCash = ( data) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(billingEndpoint + '/cash', data, headers, res => {
+  dispatch(post(billingEndpoint + '/cash', data,  res => {
     dispatch(setInfo({
       color: 'success',
       message: 'Billing has been set as paid by cash.'

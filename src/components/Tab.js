@@ -7,7 +7,7 @@ function Component({ labels = [], contents = [] }) {
         <div style={{
             width: '100%',
         }}>
-            <div className="Tab">
+            {labels.length > 1 && <div className="Tab">
                 {labels.map((el, index) =>
                     <div key={el} className="TabItem" onClick={() => setActive(index)}>
                         <div className={active === index ? "TabItem-Text" : "TabItem-Text-inactive"}>
@@ -16,7 +16,7 @@ function Component({ labels = [], contents = [] }) {
                         {active === index && <div className="TabIndicator"></div>}
                     </div>
                 )}
-            </div>
+            </div>}
             {contents[active]}
         </div>
     )

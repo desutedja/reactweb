@@ -8,7 +8,7 @@ import { createManagement, editManagement } from './slice';
 import { useHistory } from 'react-router-dom';
 
 function Component() {
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, selected } = useSelector(state => state.management);
 
     let dispatch = useDispatch();
@@ -18,9 +18,9 @@ function Component() {
         <div>
             <Form
                 onSubmit={data => selected.id ?
-                    dispatch(editManagement(headers, data, history, selected.id))
+                    dispatch(editManagement( data, history, selected.id))
                     :
-                    dispatch(createManagement(headers, data, history))}
+                    dispatch(createManagement( data, history))}
                 loading={loading}
             >
                 <Input label="Name" inputValue={selected.name} />

@@ -11,8 +11,8 @@ import Link from '../../components/Link';
 import Add from './Add';
 import Details from '../details/building';
 import { getBuilding, deleteBuilding, getBuildingDetails, setSelected } from './slice';
-import { get } from '../../utils';
 import { endpointResident } from '../../settings';
+import { get } from '../slice';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -46,7 +46,7 @@ function Component() {
     const [provinces, setProvinces] = useState([]);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
@@ -54,38 +54,35 @@ function Component() {
     let { path, url } = useRouteMatch();
 
     useEffect(() => {
-        get(endpointResident + '/geo/province',
-            headers,
+        dispatch(get(endpointResident + '/geo/province',
             res => {
                 setProvinces(res.data.data);
                 setFilteredProvinces(res.data.data);
             }
-        )
-    }, [headers]);
+        ))
+    }, [dispatch]);
 
     useEffect(() => {
         setCity("");
         setCityName("")
-        province && get(endpointResident + '/geo/province/' + province,
-            headers,
+        province && dispatch(get(endpointResident + '/geo/province/' + province,
             res => {
                 setCities(res.data.data);
                 setFilteredCities(res.data.data);
             }
-        )
-    }, [headers, province]);
+        ))
+    }, [dispatch, province]);
 
     useEffect(() => {
         setDistrict("");
         setDistrictName("")
-        city && get(endpointResident + '/geo/city/' + city,
-            headers,
+        city && dispatch(get(endpointResident + '/geo/city/' + city,
             res => {
                 setDistricts(res.data.data);
                 setFilteredDistricts(res.data.data);
             }
-        )
-    }, [city, headers]);
+        ))
+    }, [city, dispatch]);
 
     useEffect(() => {
         let filtered = (modalType === "province" ? provinces :
@@ -177,7 +174,7 @@ function Component() {
                     <Button label="Yes"
                         onClick={() => {
                             setConfirm(false);
-                            dispatch(deleteBuilding(selectedRow, headers));
+                            dispatch(deleteBuilding(selectedRow, ));
                         }}
                     />
                 </div>
@@ -190,9 +187,9 @@ function Component() {
                         loading={loading}
                         pageCount={total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getBuilding(headers, pageIndex, pageSize, search, province, city, district));
+                            dispatch(getBuilding(pageIndex, pageSize, search, province, city, district));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers, province, city, district])}
+                        }, [dispatch, refreshToggle, province, city, district])}
                         filters={[
                             {
                                 label: <p>{district ? "District: " + districtName : "District: All"}</p>,
@@ -207,11 +204,11 @@ function Component() {
                                 onClick: () => { setType("city"); },
                                 delete: () => { setCity("") },
                                 hidden: province === "",
-                                hidex: city === "" ,
+                                hidex: city === "",
                                 component: ModalComponent,
                             },
                             {
-                                label:  <p>{province ? "Province: " + provinceName : "Province: All"}</p>,
+                                label: <p>{province ? "Province: " + provinceName : "Province: All"}</p>,
                                 onClick: () => { setType("province"); },
                                 delete: () => { setProvince(""); },
                                 hidex: province === "",
@@ -230,7 +227,7 @@ function Component() {
                             setRow(row);
                             setConfirm(true);
                         }}
-                        onClickDetails={row => dispatch(getBuildingDetails(row, headers, history, url))}
+                        onClickDetails={row => dispatch(getBuildingDetails(row, history, url))}
 
                     />
                 </Route>

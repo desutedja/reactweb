@@ -51,7 +51,7 @@ export const {
 export default slice.reducer;
 
 export const getMerchant = (
-  headers, pageIndex, pageSize,
+   pageIndex, pageSize,
   search = '', type, category
 ) => dispatch => {
   dispatch(startAsync());
@@ -62,7 +62,7 @@ export const getMerchant = (
     '&type=' + type +
     '&category=' + category +
     '&search=' + search,
-    headers,
+    
     res => {
       dispatch(setData(res.data.data));
 
@@ -70,10 +70,10 @@ export const getMerchant = (
     }))
 }
 
-export const getMerchantDetails = (row, headers, history, url) => dispatch => {
+export const getMerchantDetails = (row,  history, url) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(merchantEndpoint + '?id=' + row.id, headers,
+  dispatch(get(merchantEndpoint + '?id=' + row.id, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
@@ -82,10 +82,10 @@ export const getMerchantDetails = (row, headers, history, url) => dispatch => {
     }))
 }
 
-export const createMerchant = (headers, data, history) => dispatch => {
+export const createMerchant = ( data, history) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(merchantEndpoint , data, headers,
+  dispatch(post(merchantEndpoint , data, 
     res => {
       history.push("/merchant");
 
@@ -101,10 +101,10 @@ export const createMerchant = (headers, data, history) => dispatch => {
     }))
 }
 
-export const editMerchant = (headers, data, history, id) => dispatch => {
+export const editMerchant = ( data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(patch(merchantEndpoint, { ...data, id: id }, headers,
+  dispatch(patch(merchantEndpoint, { ...data, id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
       history.push("/merchant/details");
@@ -121,10 +121,10 @@ export const editMerchant = (headers, data, history, id) => dispatch => {
     }))
 }
 
-export const deleteMerchant = (row, headers) => dispatch => {
+export const deleteMerchant = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(merchantEndpoint + '?id=' + row.id, headers,
+  dispatch(del(merchantEndpoint + '?id=' + row.id, 
     res => {
       dispatch(refresh());
 

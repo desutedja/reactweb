@@ -15,21 +15,25 @@ const labels = {
         "name",
         "item_type",
         "description",
+        "stock",
+        "promoted",
+        "promoted_until",
+    ],
+    "Specification": [
         "length",
         "width",
         "height",
         "weight",
         "measurement_standard",
         "measurement_unit",
-        "stock",
-        "promoted",
-        "promoted_until",
+    ],
+    "Pricing": [
         "base_price",
         "selling_price",
         "admin_fee",
         "pg_fee",
         "delivery_fee",
-    ]
+    ],
 };
 
 function Component() {
@@ -40,7 +44,7 @@ function Component() {
     const [adminFee, setAdminFee] = useState('');
     const [discFee, setDiscFee] = useState('');
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { selected } = useSelector(state => state.product);
 
     let dispatch = useDispatch();
@@ -56,7 +60,7 @@ function Component() {
             </Modal>
             <Modal title="Adjust Fees" okLabel={"Set Fees"} isOpen={modalFee} disableHeader={true} toggle={() => { setModalFee(false); setAdminFee(""); setDiscFee(""); }}
                 onClick={() => {
-                    dispatch(patchAdminFee(headers, {
+                    dispatch(patchAdminFee( {
                         item_id: selected.id,
                         merchant_id: selected.merchant_id,
                         admin_fee: parseInt(adminFee),

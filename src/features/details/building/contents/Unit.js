@@ -33,7 +33,7 @@ function Component() {
     const [floor, setFloor] = useState('');
     const [number, setNumber] = useState('');
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { selected, loading, unit, section, unit_type, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
@@ -44,7 +44,7 @@ function Component() {
                 isOpen={addUnit} toggle={() => setAddUnit(false)}
                 onClick={() => {
                     edit ?
-                        dispatch(editBuildingUnit(headers, {
+                        dispatch(editBuildingUnit( {
                             "building_id": selected.id,
                             "building_section": parseFloat(sectionID ? sectionID : selectedRow.building_section),
                             "unit_type": parseFloat(unitTypeID ? unitTypeID : selectedRow.unit_type),
@@ -52,7 +52,7 @@ function Component() {
                             "number": number ? number : selectedRow.number,
                         }, selectedRow.id))
                         :
-                        dispatch(createBuildingUnit(headers, {
+                        dispatch(createBuildingUnit( {
                             "building_id": selected.id,
                             "building_section": parseFloat(sectionID),
                             "unit_type": parseFloat(unitTypeID),
@@ -105,9 +105,9 @@ function Component() {
                 pageCount={unit.total_pages}
                 totalItems={unit.total_items}
                 fetchData={useCallback((pageIndex, pageSize, search) =>
-                    dispatch(getBuildingUnit(headers, pageIndex, pageSize, search, selected)),
+                    dispatch(getBuildingUnit( pageIndex, pageSize, search, selected)),
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                    [dispatch, headers, selected, refreshToggle])}
+                    [dispatch,  selected, refreshToggle])}
                 filters={[]}
                 actions={[
                     <Button key="Add Unit" label="Add Unit" icon={<FiPlus />}
@@ -125,7 +125,7 @@ function Component() {
                 ]}
                 onClickDelete={row => {
                     // setRow(row);
-                    dispatch(deleteBuildingUnit(row, headers))
+                    dispatch(deleteBuildingUnit(row, ))
                     // setConfirm(true);
                 }}
                 onClickEdit={row => {

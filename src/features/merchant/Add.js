@@ -3,11 +3,9 @@ import React, { useState, useEffect } from "react";
 import Input from "../../components/Input";
 import Form from "../../components/Form";
 import Modal from "../../components/Modal";
-import Button from "../../components/Button";
 import SectionSeparator from "../../components/SectionSeparator";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
-import { get } from "../../utils";
 import {
   endpointResident,
   endpointAdmin,
@@ -17,6 +15,7 @@ import {
 import { createMerchant, editMerchant } from "./slice";
 import GoogleMapReact from "google-map-react";
 import { FiMapPin } from "react-icons/fi";
+import { get } from "../slice";
 function Component() {
   const [modal, setModal] = useState(false);
   const [lat, setLat] = useState('');
@@ -38,7 +37,7 @@ function Component() {
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState([]);
 
-  const headers = useSelector((state) => state.auth.headers);
+  
   const { loading, selected } = useSelector((state) => state.merchant);
 
   let dispatch = useDispatch();
@@ -46,44 +45,44 @@ function Component() {
 
   useEffect(() => {
     setBuilding("");
-    get(endpointAdmin + "/building?page=1&limit=9999", headers, (res) => {
+    dispatch(get(endpointAdmin + "/building?page=1&limit=9999",  (res) => {
       let formatted = res.data.data.items.map((el) => ({
         label: el.name,
         value: el.id,
       }));
       setBuildings(formatted);
-    });
-  }, [headers]);
+    }));
+  }, [dispatch]);
 
   useEffect(() => {
     setCategory("");
-    get(endpointMerchant + "/admin/categories", headers, (res) => {
+    dispatch(get(endpointMerchant + "/admin/categories",  (res) => {
       let formatted = res.data.data.map((el) => ({
         label: el.name,
         value: el.name,
       }));
       setCategories(formatted);
-    });
-  }, [headers]);
+    }));
+  }, [dispatch]);
 
   useEffect(() => {
-    get(endpointResident + "/geo/province", headers, (res) => {
+    dispatch(get(endpointResident + "/geo/province",  (res) => {
       let formatted = res.data.data.map((el) => ({
         label: el.name,
         value: el.id,
       }));
       setProvinces(formatted);
-    });
-  }, [headers]);
+    }));
+  }, [dispatch]);
 
   useEffect(() => {
     setCity("");
     (province || selected.province) &&
-      get(
+    dispatch(get(
         endpointResident +
         "/geo/province/" +
         (province ? province : selected.province),
-        headers,
+        
         (res) => {
           let formatted = res.data.data.map((el) => ({
             label: el.name,
@@ -91,15 +90,15 @@ function Component() {
           }));
           setCities(formatted);
         }
-      );
-  }, [headers, province, selected.province]);
+      ));
+  }, [dispatch, province, selected.province]);
 
   useEffect(() => {
     setDistrict("");
     (city || selected.city) &&
-      get(
+    dispatch(get(
         endpointResident + "/geo/city/" + (city ? city : selected.city),
-        headers,
+        
         (res) => {
           let formatted = res.data.data.map((el) => ({
             label: el.name,
@@ -107,8 +106,8 @@ function Component() {
           }));
           setDistricts(formatted);
         }
-      );
-  }, [headers, city, selected.city]);
+      ));
+  }, [city, dispatch, selected.city]);
 
   return (
     <div>
@@ -143,9 +142,9 @@ function Component() {
       <Form
         onSubmit={(data) => {
           selected.id ?
-            dispatch(editMerchant(headers, data, history, selected.id))
+            dispatch(editMerchant( data, history, selected.id))
             :
-            dispatch(createMerchant(headers, data, history));
+            dispatch(createMerchant( data, history));
         }}
         loading={loading}
       >

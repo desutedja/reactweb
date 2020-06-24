@@ -8,9 +8,9 @@ import Form from '../../components/Form';
 import Modal from '../../components/Modal';
 import SectionSeparator from '../../components/SectionSeparator';
 import { addSubaccount, createSubaccount } from './slice';
-import { post, get } from '../../utils';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';
+import { get, post } from '../slice';
 
 function Component() {
     const [exist, setExist] = useState(true);
@@ -38,48 +38,48 @@ function Component() {
 
     const [nat, setNat] = useState("");
 
-    const headers = useSelector(state => state.auth.headers);
+    
     const { loading, selected, unit } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
     let history = useHistory();
 
     useEffect(() => {
-        get(endpointResident + '/geo/province',
-            headers,
+        dispatch(get(endpointResident + '/geo/province',
+            
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setProvinces(formatted);
             }
-        )
-    }, [headers]);
+        ))
+    }, []);
 
     useEffect(() => {
         setCity("");
-        province && get(endpointResident + '/geo/province/' + province,
-            headers,
+        province && dispatch(get(endpointResident + '/geo/province/' + province,
+            
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setCities(formatted);
             }
-        )
-    }, [headers, province]);
+        ))
+    }, [ province]);
 
     useEffect(() => {
         setDistrict("");
-        city && get(endpointResident + '/geo/city/' + city,
-            headers,
+        city && dispatch(get(endpointResident + '/geo/city/' + city,
+            
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setDistricts(formatted);
             }
-        )
-    }, [headers, city]);
+        ))
+    }, [ city]);
 
     useEffect(() => {
         setBCLoading(true);
-        get(endpointResident + '/geo/province',
-            headers,
+        dispatch(get(endpointResident + '/geo/province',
+            
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.name }));
                 console.log(formatted)
@@ -87,23 +87,8 @@ function Component() {
                 setBCities(formatted);
                 setBCLoading(false);
             }
-        )
-    }, [headers]);
-
-    // useEffect(() => {
-    //     get(endpointResident + '/management/resident/unit?id=' + selected.id +
-    //         '&limit=10&page=1' +
-    //         '&search=' + search, headers, res => {
-    //             let data = res.data.data.items;
-
-    //             let formatted = data.map(el => ({
-    //                 label: el.building_name + ' by ' + el.management_name,
-    //                 value: el.id
-    //             }));
-
-    //             setUnits(formatted);
-    //         })
-    // }, [headers, search, selected.id]);
+        ))
+    }, []);
 
     return (
         <div>
@@ -119,7 +104,7 @@ function Component() {
                 <div style={{ marginTop: 16 }} />
                 {unitID && <Input type="button" label="Add as Subaccount" compact
                     onClick={() => {
-                        dispatch(addSubaccount(headers, {
+                        dispatch(addSubaccount( {
                             unit_id: parseInt(unitID),
                             parent_id: selected.id,
                             owner_id: data.id,
@@ -132,7 +117,7 @@ function Component() {
             <Form
                 showSubmit={!exist || !!selected.id}
                 onSubmit={data => {
-                    dispatch(createSubaccount(headers, {
+                    dispatch(createSubaccount( {
                         ...data,
                         birthdate: data.birthdate.replace('T', ' ').replace('Z', ''),
                         status: unit.items.find(el => el.unit_id === unitID).status,
@@ -150,9 +135,9 @@ function Component() {
                         setInputValue={setEmail} />
                     {exist && <Input label="Check" type="button" compact
                         onClick={() => {
-                            post(endpointResident + '/management/resident/check', {
+                            dispatch(post(endpointResident + '/management/resident/check', {
                                 email: email
-                            }, headers,
+                            }, 
                                 res => {
                                     setData(res.data.data);
                                     res.data.data.id
@@ -161,7 +146,7 @@ function Component() {
                                         :
                                         setExist(false);
                                 },
-                            )
+                            ))
                         }}
                     />}
                     <SectionSeparator />
