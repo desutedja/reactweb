@@ -30,7 +30,6 @@ function Component() {
 
     const [nat, setNat] = useState("");
 
-
     const { loading, selected } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();

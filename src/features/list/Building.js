@@ -1,18 +1,16 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { FiPlus, FiSearch } from 'react-icons/fi';
 
-import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
-import Modal from '../../components/Modal';
 import Link from '../../components/Link';
-import Add from './Add';
-import Details from '../details/building';
 import { getBuilding, deleteBuilding, getBuildingDetails, setSelected } from '../slices/building';
 import { endpointResident } from '../../settings';
 import { get } from '../slice';
+
+import Template from './components/Template';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -24,9 +22,6 @@ const columns = [
 ]
 
 function Component() {
-    const [confirm, setConfirm] = useState(false);
-    const [selectedRow, setRow] = useState({});
-
     const [modalType, setType] = useState("province");
 
     const [search, setSearch] = useState("");
@@ -46,12 +41,9 @@ function Component() {
     const [provinces, setProvinces] = useState([]);
     const [filteredProvinces, setFilteredProvinces] = useState([]);
 
-    
-    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.building);
-
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     useEffect(() => {
         dispatch(get(endpointResident + '/geo/province',
@@ -161,87 +153,47 @@ function Component() {
     }
 
     return (
-        <div>
-            <Modal disableFooter={true} disableHeader={true} isOpen={confirm} toggle={() => setConfirm(false)}>
-                Are you sure you want to delete?
-                <div style={{
-                    display: 'flex',
-                    marginTop: 16,
-                }}>
-                    <Button label="No" secondary
-                        onClick={() => setConfirm(false)}
-                    />
-                    <Button label="Yes"
-                        onClick={() => {
-                            setConfirm(false);
-                            dispatch(deleteBuilding(selectedRow, ));
-                        }}
-                    />
-                </div>
-            </Modal>
-            <Switch>
-                <Route exact path={path}>
-                    <Table totalItems={total_items}
-                        columns={columns}
-                        data={items}
-                        loading={loading}
-                        pageCount={total_pages}
-                        fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getBuilding(pageIndex, pageSize, search, province, city, district));
-                            // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, province, city, district])}
-                        filters={[
-                            {
-                                label: <p>{district ? "District: " + districtName : "District: All"}</p>,
-                                delete: () => { setDistrict(""); },
-                                onClick: () => { setType("district"); },
-                                hidden: city === "",
-                                hidex: district === "",
-                                component: ModalComponent,
-                            },
-                            {
-                                label: <p>{city ? "City: " + cityName : "City: All"}</p>,
-                                onClick: () => { setType("city"); },
-                                delete: () => { setCity("") },
-                                hidden: province === "",
-                                hidex: city === "",
-                                component: ModalComponent,
-                            },
-                            {
-                                label: <p>{province ? "Province: " + provinceName : "Province: All"}</p>,
-                                onClick: () => { setType("province"); },
-                                delete: () => { setProvince(""); },
-                                hidex: province === "",
-                                component: ModalComponent,
-                            },
-                        ]}
-                        actions={[
-                            <Button key="Add Building" label="Add Building" icon={<FiPlus />}
-                                onClick={() => {
-                                    dispatch(setSelected({}));
-                                    history.push(url + "/add");
-                                }}
-                            />
-                        ]}
-                        onClickDelete={row => {
-                            setRow(row);
-                            setConfirm(true);
-                        }}
-                        onClickDetails={row => dispatch(getBuildingDetails(row, history, url))}
-
-                    />
-                </Route>
-                <Route path={`${path}/add`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/edit`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/details`}>
-                    <Details />
-                </Route>
-            </Switch>
-        </div>
+        <Template 
+            columns={columns}
+            slice='building'
+            getAction={getBuilding}
+            deleteAction={deleteBuilding}
+            filterVars={[province, city, district]}
+            filters={[
+                {
+                    label: <p>{district ? "District: " + districtName : "District: All"}</p>,
+                    delete: () => { setDistrict(""); },
+                    onClick: () => { setType("district"); },
+                    hidden: city === "",
+                    hidex: district === "",
+                    component: ModalComponent,
+                },
+                {
+                    label: <p>{city ? "City: " + cityName : "City: All"}</p>,
+                    onClick: () => { setType("city"); },
+                    delete: () => { setCity("") },
+                    hidden: province === "",
+                    hidex: city === "",
+                    component: ModalComponent,
+                },
+                {
+                    label: <p>{province ? "Province: " + provinceName : "Province: All"}</p>,
+                    onClick: () => { setType("province"); },
+                    delete: () => { setProvince(""); },
+                    hidex: province === "",
+                    component: ModalComponent,
+                },
+            ]}
+            actions={[
+                <Button key="Add Building" label="Add Building" icon={<FiPlus />}
+                    onClick={() => {
+                        dispatch(setSelected({}));
+                        history.push(url + "/add");
+                    }}
+                />
+            ]}
+            onClickDetails={row => dispatch(getBuildingDetails(row, history, url))}
+        />
     )
 }
 

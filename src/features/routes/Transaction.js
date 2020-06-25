@@ -4,11 +4,11 @@ import Table from '../../components/Table';
 import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Details from '../details/transaction';
+import Details from '../details/Transaction';
 // import Details from './Details';
 import Filter from '../../components/Filter';
-import Settlement from './Settlement';
-import Disbursement from './Disbursement';
+import Settlement from '../settlement/Transaction';
+import Disbursement from '../disbursement/Transaction';
 import { getTransaction, getTransactionDetails, setSelected } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
 import { toMoney, toSentenceCase, dateTimeFormatter } from '../../utils';

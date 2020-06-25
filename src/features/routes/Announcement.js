@@ -2,7 +2,7 @@ import React, {  } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
 import Add from '../add/Announcement';
-import Details from '../details/announcement';
+import Details from '../details/Announcement';
 
 import List from '../list/Announcement';
 

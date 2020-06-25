@@ -1,11 +1,9 @@
 import React, { } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
-import List from '../list/Resident';
-import Add from './Add';
-import Edit from './Edit';
-import AddSub from './AddSub';
-import Details from '../details/resident';
+import Add from '../add/Staff';
+import List from '../list/Staff';
+import Details from '../details/Staff';
 
 function Component() {
     let { path } = useRouteMatch();
@@ -20,10 +18,7 @@ function Component() {
                     <Add />
                 </Route>
                 <Route path={`${path}/edit`}>
-                    <Edit />
-                </Route>
-                <Route path={`${path}/add-subaccount`}>
-                    <AddSub />
+                    <Add />
                 </Route>
                 <Route path={`${path}/:id`}>
                     <Details />

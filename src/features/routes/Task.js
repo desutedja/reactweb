@@ -2,7 +2,7 @@ import React, { } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
 import List from '../list/Task';
-import Details from '../details/task';
+import Details from '../details/Task';
 
 function Component() {
     let { path } = useRouteMatch();

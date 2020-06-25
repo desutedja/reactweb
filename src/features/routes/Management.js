@@ -8,8 +8,8 @@ import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Link from '../../components/Link';
-import Add from './Add';
-import Details from '../details/management';
+import Add from '../add/Management';
+import Details from '../details/Management';
 
 const columns = [
     { Header: "ID", accessor: "id" },
