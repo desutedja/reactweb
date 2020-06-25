@@ -51,18 +51,18 @@ function Component({ id }) {
     }, [dispatch, refreshToggle])
 
     useEffect(() => {
-        addUnit && addUnitStep === 1 && (!search || search.length >= 3) && get(endpointAdmin + '/building' +
+        addUnit && addUnitStep === 1 && (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +
             '?page=1' +
             '&limit=10' +
             '&search=' + search,
 
             res => {
                 setBuildings(res.data.data.items);
-            })
-    }, [addUnit, addUnitStep, search,]);
+            }))
+    }, [addUnit, addUnitStep, dispatch, search]);
 
     useEffect(() => {
-        addUnit && addUnitStep === 2 && (!search || search.length >= 3) && get(endpointAdmin + '/building/unit' +
+        addUnit && addUnitStep === 2 && (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building/unit' +
             '?page=1' +
             '&building_id=' + selectedBuilding.value.id +
             '&search=' + search +
@@ -70,8 +70,8 @@ function Component({ id }) {
 
             res => {
                 setUnits(res.data.data.items);
-            })
-    }, [addUnit, search, addUnitStep, selectedBuilding]);
+            }))
+    }, [addUnit, search, addUnitStep, selectedBuilding, dispatch]);
 
     const backFunction = useCallback(() => setAddUnitStep(addUnitStep - 1), [addUnitStep]);
 

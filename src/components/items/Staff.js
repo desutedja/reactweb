@@ -7,6 +7,7 @@ import { get } from '../../features/slice';
 import { endpointManagement } from '../../settings';
 import './style.css';
 import { toSentenceCase } from '../../utils';
+import { setSelected } from '../../features/staff/slice';
 
 
 function Component({ id }) {
@@ -28,10 +29,13 @@ function Component({ id }) {
     }, [dispatch, id])
 
     return (
-        <div className="Item" onClick={() => history.push({
-            pathname: '/staff/' + id,
-            state: data
-        })}>
+        <div className="Item" onClick={() => {
+            history.push({
+                pathname: '/staff/' + id,
+                state: data
+            });
+            dispatch(setSelected(data));
+        }}>
             <Avatar className="Item-avatar" size="40" src={data.photo}
                 name={data.firstname + ' ' + data.lastname} round
                 email={data.photo ? null : data.email} />

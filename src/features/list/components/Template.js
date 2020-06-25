@@ -7,7 +7,7 @@ import Container from '../../../components/Container';
 import { setConfirmDelete } from '../../slice';
 
 function Component({ columns, slice, getAction, filterVars = [], filters = [],
-    actions = [], deleteAction }) {
+    actions = [], deleteAction, ...props }) {
 
     const { loading, items, total_pages, total_items, refreshToggle } =
         useSelector(state => state[slice]);
@@ -22,16 +22,17 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [],
                 loading={loading}
                 pageCount={total_pages}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getAction(pageIndex, pageSize, search, ...filters));
+                    dispatch(getAction(pageIndex, pageSize, search, ...filterVars));
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle, ...filters])}
+                }, [dispatch, refreshToggle, ...filterVars])}
                 filters={filters}
                 actions={actions}
                 onClickDelete={row => {
-                    dispatch(setConfirmDelete("Are you sure to delete this resident?",
+                    dispatch(setConfirmDelete("Are you sure to delete this item?",
                         () => dispatch(deleteAction(row))
                     ));
                 }}
+                {...props}
             />
         </Container>
     )

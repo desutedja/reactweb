@@ -17,7 +17,7 @@ import task from './features/task/slice';
 import merchant from './features/merchant/slice';
 import product from './features/product/slice';
 import transaction from './features/transaction/slice';
-import ads from './features/ads/slice';
+import ads from './features/slices/Ads';
 import announcement from './features/announcement/slice';
 import chat from './features/chat/slice';
 

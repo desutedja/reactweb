@@ -1,10 +1,10 @@
 import React, { } from 'react';
 import { useSelector } from 'react-redux';
 
-import InfoField from '../components/Detail';
+import Detail from '../components/Detail';
 import Template from '../components/Template';
 
-const labels =
+const details =
 {
     'Information': ['id', 'created_on', 'name_legal', 'email'],
     'Contact Person': ['pic_name', 'pic_phone', 'pic_email']
@@ -21,7 +21,7 @@ function Component() {
             phone={selected.phone}
             labels={["Details"]}
             contents={[
-                <InfoField type="Management" data={selected} labels={labels} />,
+                <Detail type="Management" data={selected} labels={details} />,
             ]}
         />
     )

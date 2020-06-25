@@ -107,7 +107,7 @@ export const editStaff = ( data, history, id) => dispatch => {
 export const deleteStaff = (row, ) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(staffEndpoint + '/delete/' + row.id, 
+  dispatch(del(staffEndpoint + '/delete?id=' + row.id, 
     res => {
       dispatch(refresh());
       

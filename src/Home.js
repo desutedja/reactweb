@@ -18,7 +18,7 @@ import TaskRoute from './features/task/Route';
 import MerchantRoute from './features/merchant/Route';
 import ProductRoute from './features/product/Route';
 import TransactionRoute from './features/transaction/Route';
-import AdsRoute from './features/ads/Route';
+import Ads from './features/routes/Ads';
 import AnnouncementRoute from './features/announcement/Route';
 import ChatRoute from './features/chat/Route';
 
@@ -27,7 +27,6 @@ import CustomAlert from './components/CustomAlert';
 import IconButton from './components/IconButton';
 import Info from './components/Info';
 import Modal from './components/Modal';
-import Button from './components/Button';
 
 import { toSentenceCase } from './utils';
 import { closeAlert, setConfirmDelete } from './features/slice';
@@ -326,7 +325,7 @@ function Component() {
                             <TransactionRoute />
                         </Route>
                         <Route path="/advertisement">
-                            <AdsRoute />
+                            <Ads />
                         </Route>
                         <Route path="/announcement">
                             <AnnouncementRoute />

@@ -1,16 +1,14 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { FiSearch } from 'react-icons/fi';
 import { Badge } from 'reactstrap';
 
-import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Tile from '../../components/Tile';
-import Container from '../../components/Container';
 
 import Resident from '../../components/items/Resident';
 import Staff from '../../components/items/Staff';
@@ -20,6 +18,8 @@ import { toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import { getTask, getTaskDetails, resolveTask, reassignTask, setSelected } from '../task/slice';
 import { get } from '../slice';
+
+import Template from './components/Template';
 
 const columns = [
     // { Header: "ID", accessor: "id" },
@@ -97,12 +97,9 @@ function Component() {
     const [prio, setPrio] = useState('');
     const [prioLabel, setPrioLabel] = useState('');
 
-
-    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.task);
-
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     useEffect(() => {
         (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +
@@ -184,119 +181,112 @@ function Component() {
                         />
                     </div>}
             </Modal>
-            <Container>
-                <Table totalItems={total_items}
-                    columns={columns}
-                    data={items}
-                    loading={loading}
-                    pageCount={total_pages}
-                    fetchData={useCallback((pageIndex, pageSize, search) => {
-                        dispatch(getTask(pageIndex, pageSize, search, type, prio, status, building));
-                        // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [dispatch, refreshToggle, type, prio, status, building])}
-                    filters={[
-                        {
-                            hidex: building === "",
-                            label: <p>{building ? "Building: " + buildingName : "Building: All"}</p>,
-                            delete: () => { setBuilding(""); },
-                            component: (toggleModal) =>
-                                <>
-                                    <Input
-                                        label="Search Building"
-                                        compact
-                                        icon={<FiSearch />}
-                                        inputValue={search}
-                                        setInputValue={setSearch}
-                                    />
-                                    <Filter
-                                        data={buildings}
-                                        onClick={(el) => {
-                                            setBuilding(el.value);
-                                            setBuildingName(el.label);
-                                            toggleModal(false);
-                                        }}
-                                        onClickAll={() => {
-                                            setBuilding("");
-                                            setBuildingName("");
-                                            toggleModal(false);
-                                        }}
-                                    />
-                                </>
-                        },
-                        {
-                            hidex: type === "",
-                            label: <p>{type ? "Type: " + typeLabel : "Type: All"}</p>,
-                            delete: () => { setType(""); },
-                            component: (toggleModal) =>
+            <Template
+                columns={columns}
+                slice='task'
+                getAction={getTask}
+                filterVars={[type, prio, status, building]}
+                filters={[
+                    {
+                        hidex: building === "",
+                        label: <p>{building ? "Building: " + buildingName : "Building: All"}</p>,
+                        delete: () => { setBuilding(""); },
+                        component: (toggleModal) =>
+                            <>
+                                <Input
+                                    label="Search Building"
+                                    compact
+                                    icon={<FiSearch />}
+                                    inputValue={search}
+                                    setInputValue={setSearch}
+                                />
                                 <Filter
-                                    data={types}
+                                    data={buildings}
                                     onClick={(el) => {
-                                        setType(el.value);
-                                        setTypeLabel(el.label);
+                                        setBuilding(el.value);
+                                        setBuildingName(el.label);
                                         toggleModal(false);
                                     }}
                                     onClickAll={() => {
-                                        setType("");
-                                        setTypeLabel("");
+                                        setBuilding("");
+                                        setBuildingName("");
                                         toggleModal(false);
                                     }}
                                 />
-                        },
-                        {
-                            hidex: prio === "",
-                            label: <p>{prio ? "Priority: " + prioLabel : "Priority: All"}</p>,
-                            delete: () => { setPrio(""); },
-                            component: (toggleModal) =>
-                                <Filter
-                                    data={prios}
-                                    onClick={(el) => {
-                                        setPrio(el.value);
-                                        setPrioLabel(el.label);
-                                        toggleModal(false);
-                                    }}
-                                    onClickAll={() => {
-                                        setPrio("");
-                                        setPrioLabel("");
-                                        toggleModal(false);
-                                    }}
-                                />
-                        },
-                        {
-                            hidex: status === "",
-                            label: <p>{status ? "Status: " + statusLabel : "Status: All"}</p>,
-                            delete: () => { setStatus(""); },
-                            component: (toggleModal) =>
-                                <Filter
-                                    data={statuses}
-                                    onClick={(el) => {
-                                        setStatus(el.value);
-                                        setStatusLabel(el.label);
-                                        toggleModal(false);
-                                    }}
-                                    onClickAll={() => {
-                                        setStatus("");
-                                        setStatusLabel("");
-                                        toggleModal(false);
-                                    }}
-                                />
-                        },
-                    ]}
-                    actions={[]}
-                    onClickDetails={row => dispatch(getTaskDetails(row, history, url))}
-                    onClickResolve={row => {
-                        setRow(row);
-                        setResolve(true);
-                    }}
-                    onClickReassign={row => {
-                        setRow(row);
-                        setAssign(true);
-                    }}
-                    onClickChat={row => {
-                        dispatch(setSelected(row));
-                        history.push("/chat");
-                    }}
-                />
-            </Container>
+                            </>
+                    },
+                    {
+                        hidex: type === "",
+                        label: <p>{type ? "Type: " + typeLabel : "Type: All"}</p>,
+                        delete: () => { setType(""); },
+                        component: (toggleModal) =>
+                            <Filter
+                                data={types}
+                                onClick={(el) => {
+                                    setType(el.value);
+                                    setTypeLabel(el.label);
+                                    toggleModal(false);
+                                }}
+                                onClickAll={() => {
+                                    setType("");
+                                    setTypeLabel("");
+                                    toggleModal(false);
+                                }}
+                            />
+                    },
+                    {
+                        hidex: prio === "",
+                        label: <p>{prio ? "Priority: " + prioLabel : "Priority: All"}</p>,
+                        delete: () => { setPrio(""); },
+                        component: (toggleModal) =>
+                            <Filter
+                                data={prios}
+                                onClick={(el) => {
+                                    setPrio(el.value);
+                                    setPrioLabel(el.label);
+                                    toggleModal(false);
+                                }}
+                                onClickAll={() => {
+                                    setPrio("");
+                                    setPrioLabel("");
+                                    toggleModal(false);
+                                }}
+                            />
+                    },
+                    {
+                        hidex: status === "",
+                        label: <p>{status ? "Status: " + statusLabel : "Status: All"}</p>,
+                        delete: () => { setStatus(""); },
+                        component: (toggleModal) =>
+                            <Filter
+                                data={statuses}
+                                onClick={(el) => {
+                                    setStatus(el.value);
+                                    setStatusLabel(el.label);
+                                    toggleModal(false);
+                                }}
+                                onClickAll={() => {
+                                    setStatus("");
+                                    setStatusLabel("");
+                                    toggleModal(false);
+                                }}
+                            />
+                    },
+                ]}
+                onClickDetails={row => dispatch(getTaskDetails(row, history, url))}
+                onClickResolve={row => {
+                    setRow(row);
+                    setResolve(true);
+                }}
+                onClickReassign={row => {
+                    setRow(row);
+                    setAssign(true);
+                }}
+                onClickChat={row => {
+                    dispatch(setSelected(row));
+                    history.push("/chat");
+                }}
+            />
         </>
     )
 }

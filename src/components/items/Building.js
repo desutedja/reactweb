@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { get } from '../../features/slice';
 import { endpointAdmin } from '../../settings';
 import './style.css';
+import { setSelected } from '../../features/building/slice';
 
 
 function Component({ id }) {
@@ -25,10 +26,13 @@ function Component({ id }) {
     }, [dispatch, id])
 
     return (
-        <div className="Item" onClick={() => history.push({
-            pathname: '/building/' + id,
-            state: data
-        })}>
+        <div className="Item" onClick={() => {
+            history.push({
+                pathname: '/building/' + id,
+                state: data
+            });
+            dispatch(setSelected(data));
+        }}>
             <Avatar className="Item-avatar" size="40" round={8} src={data.logo}
                 name={data.name}
                 email={data.logo ? null : data.email} />

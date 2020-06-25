@@ -1,21 +1,20 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { FiSearch, FiPlus } from 'react-icons/fi';
 
 import { toSentenceCase } from '../../utils';
 import { endpointAdmin } from '../../settings';
 
-import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Pill from '../../components/Pill';
-import Modal from '../../components/Modal';
-import Container from '../../components/Container';
 import Staff from '../../components/items/Staff';
 import { get } from '../slice';
 import { getStaff, setSelected, deleteStaff } from '../staff/slice';
+
+import Template from './components/Template';
 
 const columns = [
     // { Header: "ID", accessor: "id" },
@@ -60,9 +59,6 @@ const shifts = [
 ]
 
 function Component() {
-    const [confirm, setConfirm] = useState(false);
-    const [selectedRow, setRow] = useState({});
-
     const [shift, setShift] = useState('');
     const [shiftLabel, setShiftLabel] = useState('');
 
@@ -73,9 +69,6 @@ function Component() {
 
     const [role, setRole] = useState('');
     const [roleLabel, setRoleLabel] = useState('');
-
-
-    const { loading, items, total_pages, total_items, refreshToggle, } = useSelector(state => state.staff);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -94,117 +87,89 @@ function Component() {
     }, [search]);
 
     return (
-        <>
-            <Modal isOpen={confirm} toggle={() => setConfirm(false)}>
-                Are you sure you want to delete?
-                <div style={{
-                    display: 'flex',
-                    marginTop: 16,
-                }}>
-                    <Button label="No" secondary
-                        onClick={() => setConfirm(false)}
-                    />
-                    <Button label="Yes"
-                        onClick={() => {
-                            setConfirm(false);
-                            dispatch(deleteStaff(selectedRow,));
-                        }}
-                    />
-                </div>
-            </Modal>
-            <Container>
-                <Table totalItems={total_items}
-                    columns={columns}
-                    data={items}
-                    loading={loading}
-                    pageCount={total_pages}
-                    fetchData={useCallback((pageIndex, pageSize, search) => {
-                        dispatch(getStaff(pageIndex, pageSize, search, role, building, shift));
-                        // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [dispatch, refreshToggle, role, building, shift])}
-                    filters={[
-                        {
-                            hidex: building === "",
-                            label: <p>{building ? "Building: " + buildingName : "Building: All"}</p>,
-                            delete: () => { setBuilding(""); setBuildingName(""); },
-                            component: (toggleModal) =>
-                                <>
-                                    <Input
-                                        placeholder="Search Building Name"
-                                        compact
-                                        icon={<FiSearch />}
-                                        inputValue={search}
-                                        setInputValue={setSearch}
-                                    />
-                                    <Filter
-                                        data={buildings}
-                                        onClick={(el) => {
-                                            setBuilding(el.value);
-                                            setBuildingName(el.label);
-                                            toggleModal(false);
-                                        }}
-                                        onClickAll={() => {
-                                            setBuilding("");
-                                            setBuildingName("");
-                                            toggleModal(false);
-                                        }}
-                                    />
-                                </>
-                        },
-                        {
-                            hidex: shift === "",
-                            label: <p>{shiftLabel ? "Availability: " + shiftLabel : "Availability: All"}</p>,
-                            delete: () => { setShift(""); setShiftLabel(""); },
-                            component: (toggleModal) =>
-                                <Filter
-                                    data={shifts}
-                                    onClick={(el) => {
-                                        setShift(el.value);
-                                        setShiftLabel(el.label);
-                                        toggleModal(false);
-                                    }}
-                                    onClickAll={() => {
-                                        setShift("");
-                                        setShiftLabel("");
-                                        toggleModal(false);
-                                    }}
-                                />
-                        },
-                        {
-                            hidex: role === "",
-                            label: <p>{role ? "Role: " + roleLabel : "Role: All"}</p>,
-                            delete: () => { setRole(""); setRoleLabel(""); },
-                            component: toggleModal =>
-                                <Filter
-                                    data={roles}
-                                    onClickAll={() => {
-                                        setRole("");
-                                        setRoleLabel("");
-                                        toggleModal(false);
-                                    }}
-                                    onClick={el => {
-                                        setRole(el.value);
-                                        setRoleLabel(el.label);
-                                        toggleModal(false);
-                                    }}
-                                />
-                        },
-                    ]}
-                    actions={[
-                        <Button key="Add Staff" label="Add Staff" icon={<FiPlus />}
-                            onClick={() => {
-                                dispatch(setSelected({}));
-                                history.push(url + "/add")
+        <Template
+            columns={columns}
+            slice='staff'
+            getAction={getStaff}
+            filterVars={[role, building, shift]}
+            filters={[
+                {
+                    hidex: building === "",
+                    label: <p>{building ? "Building: " + buildingName : "Building: All"}</p>,
+                    delete: () => { setBuilding(""); setBuildingName(""); },
+                    component: (toggleModal) =>
+                        <>
+                            <Input
+                                placeholder="Search Building Name"
+                                compact
+                                icon={<FiSearch />}
+                                inputValue={search}
+                                setInputValue={setSearch}
+                            />
+                            <Filter
+                                data={buildings}
+                                onClick={(el) => {
+                                    setBuilding(el.value);
+                                    setBuildingName(el.label);
+                                    toggleModal(false);
+                                }}
+                                onClickAll={() => {
+                                    setBuilding("");
+                                    setBuildingName("");
+                                    toggleModal(false);
+                                }}
+                            />
+                        </>
+                },
+                {
+                    hidex: shift === "",
+                    label: <p>{shiftLabel ? "Availability: " + shiftLabel : "Availability: All"}</p>,
+                    delete: () => { setShift(""); setShiftLabel(""); },
+                    component: (toggleModal) =>
+                        <Filter
+                            data={shifts}
+                            onClick={(el) => {
+                                setShift(el.value);
+                                setShiftLabel(el.label);
+                                toggleModal(false);
+                            }}
+                            onClickAll={() => {
+                                setShift("");
+                                setShiftLabel("");
+                                toggleModal(false);
                             }}
                         />
-                    ]}
-                    onClickDelete={row => {
-                        setRow(row);
-                        setConfirm(true);
+                },
+                {
+                    hidex: role === "",
+                    label: <p>{role ? "Role: " + roleLabel : "Role: All"}</p>,
+                    delete: () => { setRole(""); setRoleLabel(""); },
+                    component: toggleModal =>
+                        <Filter
+                            data={roles}
+                            onClickAll={() => {
+                                setRole("");
+                                setRoleLabel("");
+                                toggleModal(false);
+                            }}
+                            onClick={el => {
+                                setRole(el.value);
+                                setRoleLabel(el.label);
+                                toggleModal(false);
+                            }}
+                        />
+                },
+            ]}
+            actions={[
+                <Button key="Add Staff" label="Add Staff" icon={<FiPlus />}
+                    onClick={() => {
+                        dispatch(setSelected({}));
+                        history.push(url + "/add")
                     }}
                 />
-            </Container>
-        </>
+            ]}
+            deleteAction={deleteStaff}
+        />
     )
 }
 
