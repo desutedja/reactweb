@@ -19,7 +19,7 @@ export const months = [
 export function dateTimeFormatter(serverDateTime) {
     let date = serverDateTime.split('T')[0];
     let time = serverDateTime.split('T')[1].split('Z')[0];
-    time = time.split(':').slice(0,2).join(':');
+    time = time.split(':').slice(0, 2).join(':');
 
     let year = date.split('-')[0];
     let month = parseInt(date.split('-')[1], 10);
@@ -48,7 +48,8 @@ export function toSentenceCase(sentence) {
     let words = sentence.replace(/_/g, ' ').split(' ');
 
     return words.reduce((result, el) => {
-        let newEl = el.slice(0, 1).toUpperCase() + el.slice(1) + ' ';
+        let newEl = el.length < 4 ? el.toUpperCase() + ' ' :
+            el.slice(0, 1).toUpperCase() + el.slice(1) + ' ';
         return result + newEl;
     }, '')
 }

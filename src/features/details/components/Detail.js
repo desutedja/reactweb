@@ -44,8 +44,8 @@ function Component({ data, labels, type = "", editable = true, renderButtons = (
             <div style={{
                 flex: 1,
             }}>
-                {Object.keys(labels).map(group =>
-                    <div style={{
+                {Object.keys(labels).map((group, i) =>
+                    <div key={i} style={{
                         marginBottom: 16,
                     }}>
                         <div style={{

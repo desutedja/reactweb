@@ -26,16 +26,17 @@ function Component({ id }) {
     }, [dispatch, id])
 
     return (
-        <div className="Resident" onClick={() => history.push({
+        <div className="Item" onClick={() => history.push({
             pathname: '/resident/' + id,
             state: data
         })}>
-            <Avatar style={{ marginRight: '10px' }} size="40" src={data.photo}
+            <Avatar className="Item-avatar" size="40" src={data.photo}
                 name={data.firstname + ' ' + data.lastname} round
                 email={data.photo ? null : data.email} />
             <span> </span>
-            <div style={{ display: 'block' }}>
-                <div>{data.firstname + ' ' + data.lastname}</div>
+            <div >
+                <b>{data.firstname + ' ' + data.lastname}</b>
+                <p className="Item-subtext">{data.email}</p>
             </div>
         </div>
     );

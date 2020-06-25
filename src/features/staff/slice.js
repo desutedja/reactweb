@@ -126,7 +126,7 @@ export const getStaffDetails = (row,  history, url) => dispatch => {
   dispatch(get(staffEndpoint + '/' + row.id, 
     res => {
       dispatch(setSelected(res.data.data));
-      history.push(url + '/details');
+      history.push(url + '/' + row.id);
 
       dispatch(stopAsync())
     }))
