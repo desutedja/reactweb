@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
-import { getTransactionDetails, getTransactionSettlement } from './slice';
+import { getTransactionDetails, getTransactionSettlement } from '../slices/transaction';
 import { toMoney, dateTimeFormatter } from '../../utils';
 import { endpointTransaction } from '../../settings';
 import { get } from '../slice';

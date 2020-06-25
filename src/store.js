@@ -8,18 +8,19 @@ import autoMergeLevel2 from 'redux-persist/es/stateReconciler/autoMergeLevel2';
 import main from './features/slice';
 import auth, { startAsync, stopAsync }  from './features/auth/slice';
 import dashboard from './features/dashboard/slice';
-import management from './features/management/slice';
-import building from './features/building/slice';
-import resident from './features/resident/slice';
-import billing from './features/billing/slice';
-import staff from './features/staff/slice';
-import task from './features/task/slice';
-import merchant from './features/merchant/slice';
-import product from './features/product/slice';
-import transaction from './features/transaction/slice';
-import ads from './features/slices/Ads';
-import announcement from './features/announcement/slice';
 import chat from './features/chat/slice';
+
+import management from './features/slices/management';
+import building from './features/slices/building';
+import resident from './features/slices/resident';
+import billing from './features/slices/billing';
+import staff from './features/slices/staff';
+import task from './features/slices/task';
+import merchant from './features/slices/merchant';
+import product from './features/slices/product';
+import transaction from './features/slices/transaction';
+import ads from './features/slices/ads';
+import announcement from './features/slices/announcement';
 
 const logger = createLogger({
   predicate: (getState, action) => 

@@ -7,7 +7,7 @@ import Button from '../../../components/Button';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
-import { patchAdminFee } from '../../product/slice';
+import { patchAdminFee } from '../../slices/product';
 
 const labels = {
     'Information': [

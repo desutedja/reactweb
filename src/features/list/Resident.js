@@ -8,7 +8,7 @@ import Button from '../../components/Button';
 
 import Resident from '../../components/items/Resident';
 
-import { getResident, setSelected, deleteResident } from '../resident/slice';
+import { getResident, setSelected, deleteResident } from '../slices/resident';
 import { toSentenceCase } from '../../utils';
 import Template from './components/Template';
 

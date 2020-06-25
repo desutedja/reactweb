@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { get } from '../../features/slice';
 import { endpointResident } from '../../settings';
 import './style.css';
-import { setSelected } from '../../features/resident/slice';
+import { setSelected } from '../../features/slices/resident';
 
 
 function Component({ id }) {

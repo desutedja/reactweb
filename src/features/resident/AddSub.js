@@ -7,7 +7,7 @@ import Select from '../../components/Select';
 import Form from '../../components/Form';
 import Modal from '../../components/Modal';
 import SectionSeparator from '../../components/SectionSeparator';
-import { addSubaccount, createSubaccount } from './slice';
+import { addSubaccount, createSubaccount } from '../slices/resident';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';
 import { get, post } from '../slice';

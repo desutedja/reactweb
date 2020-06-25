@@ -7,7 +7,7 @@ import Table from '../../../../components/Table';
 import Modal from '../../../../components/Modal';
 import Form from '../../../../components/Form';
 import Input from '../../../../components/Input';
-import { getAdsSchedule, deleteAdsSchedule, createAdsSchedule } from '../../../slices/Ads';
+import { getAdsSchedule, deleteAdsSchedule, createAdsSchedule } from '../../../slices/ads';
 
 const days = [
     { value: 1, label: "Senin" },

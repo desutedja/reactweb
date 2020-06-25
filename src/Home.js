@@ -18,9 +18,10 @@ import TaskRoute from './features/task/Route';
 import MerchantRoute from './features/merchant/Route';
 import ProductRoute from './features/product/Route';
 import TransactionRoute from './features/transaction/Route';
-import Ads from './features/routes/Ads';
-import AnnouncementRoute from './features/announcement/Route';
 import ChatRoute from './features/chat/Route';
+
+import Ads from './features/routes/Ads';
+import Announcement from './features/routes/Announcement';
 
 import Row from './components/Row';
 import CustomAlert from './components/CustomAlert';
@@ -328,7 +329,7 @@ function Component() {
                             <Ads />
                         </Route>
                         <Route path="/announcement">
-                            <AnnouncementRoute />
+                            <Announcement />
                         </Route>
                         <Route path="/chat">
                             <ChatRoute />

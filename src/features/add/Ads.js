@@ -6,7 +6,7 @@ import Input from '../../components/Input';
 import Form from '../../components/Form';
 import Editor from '../../components/Editor';
 import SectionSeparator from '../../components/SectionSeparator';
-import { editAds, createAds } from '../slices/Ads';
+import { editAds, createAds } from '../slices/ads';
 
 function Component() {
     const [score, setScore] = useState(0);

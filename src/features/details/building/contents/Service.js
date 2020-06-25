@@ -9,7 +9,7 @@ import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import Filter from '../../../../components/Filter';
 import { editBuildingService, createBuildingService, getBuildingService, 
-    deleteBuildingService } from '../../../building/slice';
+    deleteBuildingService } from '../../../slices/building';
 
 const serviceGroup = [
     { label: 'IPL', value: 'ipl' },

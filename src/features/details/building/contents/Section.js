@@ -12,7 +12,7 @@ import Filter from '../../../../components/Filter';
 import {
     getBuildingSection,createBuildingSection, 
     deleteBuildingSection, editBuildingSection,
-} from '../../../building/slice';
+} from '../../../slices/building';
 
 const sectionTypes = [
     { label: 'Tower', value: 'tower' },

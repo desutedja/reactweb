@@ -10,7 +10,7 @@ import { useHistory } from 'react-router-dom';
 import { months } from '../../utils';
 import { endpointAdmin } from '../../settings';
 import { FiChevronRight } from 'react-icons/fi';
-import { createBillingUnitItem, editBillingUnitItem } from './slice';
+import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
 import { get } from '../slice';
 
 const columnsService = [

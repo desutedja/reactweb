@@ -12,7 +12,7 @@ import Input from '../../components/Input';
 import Pill from '../../components/Pill';
 import Staff from '../../components/items/Staff';
 import { get } from '../slice';
-import { getStaff, setSelected, deleteStaff } from '../staff/slice';
+import { getStaff, setSelected, deleteStaff } from '../slices/staff';
 
 import Template from './components/Template';
 

@@ -14,7 +14,7 @@ function Component({ data, labels, type = "", editable = true, renderButtons = (
 
     function formatLabel(label) {
         if (label === 'id') label = type + " ID";
-        if (label.includes('pic')) label = label.split('_')[1];
+        if (label.includes('pic_')) label = label.split('_')[1];
         if (label === 'created_on') label = "Registered Since";
         if (label === 'name_legal') label = "Legal Name";
         if (label === 'address') label = "Streed Address";

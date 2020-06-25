@@ -9,7 +9,7 @@ import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import SectionSeparator from '../../components/SectionSeparator';
-import { createResident, addSubaccount } from './slice';
+import { createResident, addSubaccount } from '../slices/resident';
 import { toSentenceCase } from '../../utils';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';

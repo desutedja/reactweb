@@ -7,7 +7,7 @@ import Filter from '../../components/Filter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { months, dateFormatter, toSentenceCase } from '../../utils';
-import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from './slice';
+import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
 import { FiPlus } from 'react-icons/fi';
 
 const exception = [

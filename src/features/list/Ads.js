@@ -7,7 +7,7 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 
 import Template from './components/Template';
-import { getAds, deleteAds, setSelected, getAdsDetails } from '../slices/Ads';
+import { getAds, deleteAds, setSelected, getAdsDetails } from '../slices/ads';
 
 const columns = [
     { Header: "ID", accessor: "id" },

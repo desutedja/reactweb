@@ -7,7 +7,7 @@ import Filter from '../../components/Filter';
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { editStaff, createStaff } from './slice';
+import { editStaff, createStaff } from '../slices/staff';
 import { endpointResident, endpointAdmin, banks } from '../../settings';
 import { get } from '../slice';
 

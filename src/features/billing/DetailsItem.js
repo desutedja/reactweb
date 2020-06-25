@@ -4,7 +4,7 @@ import LabeledText from '../../components/LabeledText';
 import Button from '../../components/Button';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { payByCash } from './slice';
+import { payByCash } from '../slices/billing';
 
 const exception = [
     'created_on', 'modified_on', 'deleted', 'additional_charges',

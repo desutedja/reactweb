@@ -1,12 +1,12 @@
 import React, { useCallback } from 'react';
 import { FiPlus } from 'react-icons/fi';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import UserAvatar from '../../../../components/UserAvatar';
 import Button from '../../../../components/Button';
 import Table from '../../../../components/Table';
-import { getSubaccount } from '../../../resident/slice';
+import { getSubaccount } from '../../../slices/resident';
 
 const columnsSubaccount = [
     //{ Header: "ID", accessor: "id" },

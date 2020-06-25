@@ -7,7 +7,7 @@ import { get } from '../../features/slice';
 import { endpointManagement } from '../../settings';
 import './style.css';
 import { toSentenceCase } from '../../utils';
-import { setSelected } from '../../features/staff/slice';
+import { setSelected } from '../../features/slices/staff';
 
 
 function Component({ id }) {

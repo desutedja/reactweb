@@ -6,7 +6,7 @@ import Table from '../../components/Table';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Details from '../details/product';
-import { getProduct, getProductDetails } from './slice';
+import { getProduct, getProductDetails } from '../slices/product';
 import { merchant_types, endpointMerchant } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
 import { FiSearch } from 'react-icons/fi';

@@ -9,7 +9,7 @@ import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import Filter from '../../../../components/Filter';
 import Form from '../../../../components/Form';
-import { editBuildingManagement, createBuildingManagement, getBuildingManagement, deleteBuildingManagement } from '../../../building/slice';
+import { editBuildingManagement, createBuildingManagement, getBuildingManagement, deleteBuildingManagement } from '../../../slices/building';
 import { banks, endpointAdmin } from '../../../../settings';
 import { toMoney } from '../../../../utils';
 import { get } from '../../../slice';

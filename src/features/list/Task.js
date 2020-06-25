@@ -16,7 +16,7 @@ import Staff from '../../components/items/Staff';
 
 import { toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
-import { getTask, getTaskDetails, resolveTask, reassignTask, setSelected } from '../task/slice';
+import { getTask, getTaskDetails, resolveTask, reassignTask, setSelected } from '../slices/task';
 import { get } from '../slice';
 
 import Template from './components/Template';

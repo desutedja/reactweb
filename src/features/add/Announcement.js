@@ -13,7 +13,7 @@ import { FiChevronRight } from 'react-icons/fi';
 import { RiCheckDoubleLine, RiCheckLine } from 'react-icons/ri';
 import { toSentenceCase } from '../../utils';
 import { endpointAdmin } from '../../settings';
-import { createAnnouncement, editAnnouncement } from './slice';
+import { createAnnouncement, editAnnouncement } from '../slices/announcement';
 import { get } from '../slice';
 
 const columnsBuilding = [

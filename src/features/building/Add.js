@@ -8,7 +8,7 @@ import Input from '../../components/Input';
 import Form from '../../components/Form';
 import SectionSeparator from '../../components/SectionSeparator';
 import Modal from '../../components/Modal';
-import { createBuilding, editBuilding } from './slice';
+import { createBuilding, editBuilding } from '../slices/building';
 import { endpointResident } from '../../settings';
 import { get } from '../slice';
 

@@ -7,7 +7,7 @@ import Button from '../../../../components/Button';
 import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import { toSentenceCase } from '../../../../utils';
-import { deleteBuildingUnit, getBuildingUnit, editBuildingUnit, createBuildingUnit } from '../../../building/slice';
+import { deleteBuildingUnit, getBuildingUnit, editBuildingUnit, createBuildingUnit } from '../../../slices/building';
 
 const columnsUnit = [
     { Header: "ID", accessor: "id" },

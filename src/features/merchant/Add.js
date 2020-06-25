@@ -12,7 +12,7 @@ import {
   endpointMerchant,
   banks,
 } from "../../settings";
-import { createMerchant, editMerchant } from "./slice";
+import { createMerchant, editMerchant } from "../slices/merchant";
 import GoogleMapReact from "google-map-react";
 import { FiMapPin } from "react-icons/fi";
 import { get } from "../slice";

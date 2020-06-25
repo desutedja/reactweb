@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useRouteMatch, Switch, Route, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { getManagement, deleteManagement, getManagementDetails, setSelected } from './slice';
+import { getManagement, deleteManagement, getManagementDetails, setSelected } from '../slices/management';
 import { FiPlus } from 'react-icons/fi';
 
 import Table from '../../components/Table';

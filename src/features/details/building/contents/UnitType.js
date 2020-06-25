@@ -9,7 +9,7 @@ import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import Filter from '../../../../components/Filter';
 import { getBuildingUnitType, getBuildingSection, editBuildingUnitType, 
-    createBuildingUnitType, deleteBuildingUnitType } from '../../../building/slice';
+    createBuildingUnitType, deleteBuildingUnitType } from '../../../slices/building';
 
 const unitTypes = [
     { label: 'Studio', value: 'studio' },

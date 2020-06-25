@@ -9,7 +9,7 @@ import Details from '../details/transaction';
 import Filter from '../../components/Filter';
 import Settlement from './Settlement';
 import Disbursement from './Disbursement';
-import { getTransaction, getTransactionDetails, setSelected } from './slice';
+import { getTransaction, getTransactionDetails, setSelected } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
 import { toMoney, toSentenceCase, dateTimeFormatter } from '../../utils';
 import { Badge } from 'reactstrap';

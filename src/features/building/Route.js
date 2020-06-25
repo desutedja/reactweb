@@ -10,7 +10,7 @@ import Modal from '../../components/Modal';
 import Link from '../../components/Link';
 import Add from './Add';
 import Details from '../details/building';
-import { getBuilding, deleteBuilding, getBuildingDetails, setSelected } from './slice';
+import { getBuilding, deleteBuilding, getBuildingDetails, setSelected } from '../slices/building';
 import { endpointResident } from '../../settings';
 import { get } from '../slice';
 

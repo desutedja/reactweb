@@ -4,7 +4,7 @@ import Input from '../../components/Input';
 import Form from '../../components/Form';
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
-import { createManagement, editManagement } from './slice';
+import { createManagement, editManagement } from '../slices/management';
 import { useHistory } from 'react-router-dom';
 
 function Component() {

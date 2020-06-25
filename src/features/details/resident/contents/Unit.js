@@ -13,7 +13,7 @@ import SectionSeparator from '../../../../components/SectionSeparator';
 import {
     getResidentUnit,
     addResidentUnit,
-} from '../../../resident/slice';
+} from '../../../slices/resident';
 import { endpointAdmin } from '../../../../settings';
 import { get } from '../../../slice';
 

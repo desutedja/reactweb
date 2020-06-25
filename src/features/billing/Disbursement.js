@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
-import { getBillingDisbursement } from './slice';
+import { getBillingDisbursement } from '../slices/billing';
 import { toMoney } from '../../utils';
 import { endpointBilling } from '../../settings';
 import { get } from '../slice';

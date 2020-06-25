@@ -9,7 +9,7 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
-import { getBillingSettlement } from './slice';
+import { getBillingSettlement } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
 import { toMoney, dateTimeFormatter } from '../../utils';
 import { get, post } from '../slice';

@@ -9,7 +9,7 @@ import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Add from './Add';
 import Details from '../details/merchant';
-import { getMerchant, setSelected, deleteMerchant, getMerchantDetails } from './slice';
+import { getMerchant, setSelected, deleteMerchant, getMerchantDetails } from '../slices/merchant';
 import { toSentenceCase, dateTimeFormatter } from '../../utils';
 import { merchant_types, endpointMerchant } from '../../settings';
 import { FiSearch } from 'react-icons/fi';

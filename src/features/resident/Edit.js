@@ -6,7 +6,7 @@ import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Form from '../../components/Form';
 import SectionSeparator from '../../components/SectionSeparator';
-import { editResident } from './slice';
+import { editResident } from '../slices/resident';
 import { getCountryFromCode } from '../../utils';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';

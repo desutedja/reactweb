@@ -11,7 +11,7 @@ import Details from './Details';
 import DetailsItem from './DetailsItem';
 import Settlement from './Settlement';
 import Disbursement from './Disbursement';
-import { getBillingUnit, getBillingUnitDetails } from './slice';
+import { getBillingUnit, getBillingUnitDetails } from '../slices/billing';
 import { endpointAdmin } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
 import { get } from '../slice';
