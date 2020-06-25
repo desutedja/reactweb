@@ -1,18 +1,16 @@
-import React, { useCallback } from 'react';
+import React, { } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { FiPlus } from 'react-icons/fi';
+import { Badge } from 'reactstrap';
 
-import Table from '../../components/Table';
 import Button from '../../components/Button';
-import Container from '../../components/Container';
 
 import Resident from '../../components/items/Resident';
 
-import { Badge } from 'reactstrap';
 import { getResident, setSelected, deleteResident } from '../resident/slice';
 import { toSentenceCase } from '../../utils';
-import { setConfirmDelete } from '../slice';
+import Template from './components/Template';
 
 const columns = [
     {
@@ -39,39 +37,26 @@ const columns = [
 ]
 
 function Component() {
-    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
 
     return (
-        <Container>
-            <Table totalItems={total_items}
-                columns={columns}
-                data={items}
-                loading={loading}
-                pageCount={total_pages}
-                fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getResident(pageIndex, pageSize, search));
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle])}
-                filters={[]}
-                actions={[
-                    <Button key="Add Resident" label="Add Resident" icon={<FiPlus />}
-                        onClick={() => {
-                            dispatch(setSelected({}));
-                            history.push(url + "/add");
-                        }}
-                    />
-                ]}
-                onClickDelete={row => {
-                    dispatch(setConfirmDelete("Are you sure to delete this resident?",
-                        () => dispatch(deleteResident(row))
-                    ));
-                }}
-            />
-        </Container>
+        <Template
+            columns={columns}
+            slice={'resident'}
+            getAction={getResident}
+            actions={[
+                <Button key="Add Resident" label="Add Resident" icon={<FiPlus />}
+                    onClick={() => {
+                        dispatch(setSelected({}));
+                        history.push(url + "/add");
+                    }}
+                />
+            ]}
+            deleteAction={deleteResident}
+        />
     )
 }
 

@@ -12,6 +12,12 @@
   --background-color: #f3f3fa;
   background-color: #f3f3fa;
   /* background-color: rgba(245, 245, 245, 1); */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
 }
 
 body {
@@ -110,7 +116,7 @@ table {
 
 thead {
   /* background-color: #f3f3fa; */
-  background-color: #f0f0f3;
+  /* background-color: #f0f0f3; */
 }
 
 th {
