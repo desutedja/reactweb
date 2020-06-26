@@ -27,11 +27,11 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [],
                 }, [dispatch, refreshToggle, ...filterVars])}
                 filters={filters}
                 actions={actions}
-                onClickDelete={row => {
+                onClickDelete={deleteAction ? row => {
                     dispatch(setConfirmDelete("Are you sure to delete this item?",
                         () => dispatch(deleteAction(row))
                     ));
-                }}
+                }: null}
                 {...props}
             />
         </Container>

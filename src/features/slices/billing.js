@@ -149,7 +149,7 @@ export const getBillingDisbursement = ( pageIndex, pageSize, search = '', buildi
 
 export const getBillingUnitDetails = (row,  history, url) => dispatch => {
   dispatch(setSelected(row));
-  history.push(url + '/unit/item');
+  history.push(url + '/item');
 }
 
 export const getBillingUnitItem = ( pageIndex, pageSize, search = '', selected, status) => dispatch => {
