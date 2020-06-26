@@ -10,9 +10,9 @@ import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Tile from '../../components/Tile';
 
-import Resident from '../../components/items/Resident';
-import Staff from '../../components/items/Staff';
-// import Building from '../../components/items/Building';
+import Resident from '../../components/cells/Resident';
+import Staff from '../../components/cells/Staff';
+// import Building from '../../components/cells/Building';
 
 import { toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
@@ -36,7 +36,7 @@ const columns = [
     },
     { Header: "Requester", accessor: row => <Resident id={row.requester_id} /> },
     // { Header: "Building", accessor: row => <Building id={row.requester_building_id} /> },
-    { Header: "Assignee", accessor: row => <Staff id={row.assignee_id} /> },
+    { Header: "Assignee", accessor: row => row.assignee_id ? <Staff id={row.assignee_id} /> : "-" },
     { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
     {
         Header: "Status", accessor: row => row.status ?

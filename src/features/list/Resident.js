@@ -6,7 +6,7 @@ import { Badge } from 'reactstrap';
 
 import Button from '../../components/Button';
 
-import Resident from '../../components/items/Resident';
+import Resident from '../../components/cells/Resident';
 
 import { getResident, setSelected, deleteResident } from '../slices/resident';
 import { toSentenceCase } from '../../utils';

@@ -10,7 +10,7 @@ import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Pill from '../../components/Pill';
-import Staff from '../../components/items/Staff';
+import Staff from '../../components/cells/Staff';
 import { get } from '../slice';
 import { getStaff, setSelected, deleteStaff } from '../slices/staff';
 
