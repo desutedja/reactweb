@@ -13,6 +13,7 @@ import Input from './Input';
 import Modal from './Modal';
 import Dropdown from './DropDown';
 import FilterButton from './FilterButton';
+import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 function Component({
     columns,
@@ -132,7 +133,7 @@ function Component({
                 <div className="TableAction-right">
                     {
                         filters.map((el, index) => !el.hidden &&
-                            <FilterButton 
+                            <FilterButton
                                 key={index}
                                 label={el.label}
                                 hideX={el.hidex}
@@ -156,45 +157,44 @@ function Component({
                 </div>
             </div>
             <div className="Table-content">
-                    <table {...getTableProps()}>
-                        {loading &&
-                            <tbody className="TableLoading">
-                                <tr className="Spinner">
-                                    <td><MoonLoader
-                                        size={34}
-                                        color={"grey"}
-                                        loading={loading}
-                                    />
-                                    </td>
-                                </tr>
-                            </tbody>
-                        }
-                        <thead>
-                            {headerGroups.map((headerGroup, i) => (
-                                <tr {...headerGroup.getHeaderGroupProps()}>
-                                    {headerGroup.headers.map(column => (
-                                        <th {...column.getHeaderProps(
-                                            column.getSortByToggleProps()
-                                        )}><div className="TableHeader">
-                                                {column.render('Header')}
-                                                {column.isSorted
-                                                    ? column.isSortedDesc
-                                                        ? <FiChevronDown className="SortIcon" />
-                                                        : <FiChevronUp className="SortIcon" />
-                                                    : ''}
-                                            </div>
-                                        </th>
-                                    ))}
-                                    {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) && <th key={i}>
-                                        Actions
-                            </th>}
-                                </tr>
-                            ))}
-                        </thead>
-                        {page.length === 0 ?
+                <table {...getTableProps()}>
+                    {loading &&
+                        <tbody className="TableLoading">
+                            <tr className="Spinner">
+                                <td><MoonLoader
+                                    size={34}
+                                    color={"grey"}
+                                    loading={loading}
+                                />
+                                </td>
+                            </tr>
+                        </tbody>
+                    }
+                    <thead>
+                        {headerGroups.map((headerGroup, i) => (
+                            <tr {...headerGroup.getHeaderGroupProps()}>
+                                {headerGroup.headers.map(column => (
+                                    <th {...column.getHeaderProps(
+                                        column.getSortByToggleProps()
+                                    )}><div className="TableHeader">
+                                            {column.render('Header')}
+                                            {column.isSorted
+                                                ? column.isSortedDesc
+                                                    ? <FiChevronDown className="SortIcon" />
+                                                    : <FiChevronUp className="SortIcon" />
+                                                : ''}
+                                        </div>
+                                    </th>
+                                ))}
+                                {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) &&
+                                    <th key={i} />}
+                            </tr>
+                        ))}
+                    </thead>
+                    {page.length === 0 ?
                         <tbody>
                             <tr>
-                                <td colspan={ columns.length + 2 } style={{ textAlign: "center" }} >
+                                <td colspan={columns.length + 2} style={{ textAlign: "center" }} >
                                     No items.
                                 </td>
                             </tr>
@@ -253,13 +253,24 @@ function Component({
                                                 <div style={{
                                                     display: 'flex',
                                                 }}>
-                                                    {(MenuActions.length > 2) ? (<Dropdown label="Actions" items={MenuActions} />) : (
-                                                        MenuActions.map((item, key) =>
-                                                            <ActionButton key={key} icon={item.icon} color={item.color}
-                                                                onClick={item.onClick}>{item.name}
-                                                            </ActionButton>
-                                                        )
-                                                    )}
+                                                    {/* <Dropdown label="Actions" items={MenuActions} /> */}
+                                                    <UncontrolledDropdown>
+                                                        <DropdownToggle tag="span" className="More">
+                                                            <FiMoreHorizontal style={{
+                                                                color: 'grey',
+                                                                fontSize: '1.2rem',
+                                                            }} />
+                                                        </DropdownToggle>
+                                                        <DropdownMenu>
+                                                            {MenuActions.map((item, key) =>
+                                                                item.disabled ?
+                                                                    null :
+                                                                    <DropdownItem key={key} onClick={item.onClick}>
+                                                                        {item.icon} {item.name}
+                                                                    </DropdownItem>
+                                                            )}
+                                                        </DropdownMenu>
+                                                    </UncontrolledDropdown>
                                                 </div>
                                             </td>
                                         }
@@ -267,8 +278,8 @@ function Component({
                                 );
                             })}
                         </tbody>
-                        }
-                    </table>
+                    }
+                </table>
             </div>
             <div className="Pagination">
                 <div className="Pagination-range">

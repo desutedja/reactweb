@@ -33,7 +33,6 @@ const columnsManagement = [
 function Component() {
     const [selectedRow, setRow] = useState({});
     const [edit, setEdit] = useState(false);
-    
     const [addManagement, setAddManagement] = useState(false);
 
     const [search, setSearch] = useState('');
@@ -42,13 +41,12 @@ function Component() {
     const [modalManagement, setModalManagement] = useState(false);
     const [managements, setManagements] = useState([]);
 
-    
     const { selected, management, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
 
     useEffect(() => {
-        (!search || search >= 3) && get(endpointAdmin + '/management' +
+        (!search || search >= 3) && dispatch(get(endpointAdmin + '/management' +
             '?limit=5&page=1' +
             '&search=' + search,  res => {
                 let data = res.data.data.items;
@@ -56,8 +54,8 @@ function Component() {
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setManagements(formatted);
-            })
-    }, [ search]);
+            }))
+    }, [dispatch, search]);
 
     return (
         <>
