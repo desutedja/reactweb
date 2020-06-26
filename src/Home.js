@@ -3,10 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from './features/auth/slice';
 import {
     FiMenu, FiUsers, FiHome, FiBarChart2, FiShoppingCart, FiZap, FiVolume2,
-    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign, FiLogOut, 
-    FiChevronRight, FiChevronDown, FiChevronUp
+    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign, FiLogOut, FiChevronDown, FiChevronUp
 } from "react-icons/fi";
-import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom';
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import QiscusSDKCore from 'qiscus-sdk-core';
 
 import DashboardRoute from './features/dashboard/Route';
@@ -125,7 +124,6 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let location = useLocation();
 
     useEffect(() => {
         const userID = "superadmin" + user.id + user.email;
@@ -190,35 +188,6 @@ function Component() {
                     >
                         <FiMenu />
                     </IconButton>
-                    <div className="PageTitle Title">
-                        {location.pathname.split('/').map((el, index) =>
-                            <Fragment key={el + index}>
-                                {index > 1 && <FiChevronRight style={{
-                                    marginLeft: 8,
-                                    marginRight: 8,
-                                    marginTop: 8,
-                                }} />}
-                                <div
-                                    key={el + index}
-                                    className="Crumbs"
-                                    onClick={() => {
-                                        let array = location.pathname.split('/');
-
-                                        if (array[1] === el && array.length > 1) {
-                                            history.push('/' + el);
-                                        } else if (array[2] === el && array.length > 2) {
-                                            history.push('/' + array[1] + '/' + el);
-                                        } else if (array[3] === el && array.length > 3) {
-                                            history.push('/' + array[1] + '/' + array[2] + '/' + el);
-                                        } else {
-                                            history.push(el);
-                                        }
-                                    }}>
-                                    {toSentenceCase(el.replace(/-/g, ' '))}
-                                </div>
-                            </Fragment>
-                        )}
-                    </div>
                 </div>
                 <div className="ProfileButton" onClick={() => {
                     setProfile(!profile)

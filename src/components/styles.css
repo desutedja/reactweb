@@ -193,4 +193,11 @@ input[type="button"]:disabled {
   color: var(--red);
 }
 
-
+.Breadcrumb {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  font-size: 1.6rem;
+  color: grey;
+}
