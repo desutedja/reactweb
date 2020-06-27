@@ -11,6 +11,11 @@ export const slice = createSlice({
       color: 'primary',
       message: '',
     },
+    confirmDelete: {
+      modal: false,
+      content: '',
+      confirmed: () => {},
+    },
   },
   reducers: {
     openAlert: (state, action) => {
@@ -25,6 +30,11 @@ export const slice = createSlice({
       state.info.type = action.payload.type;
       state.info.message = action.payload.message;
     },
+    toggleDelete: (state, action) => {
+      state.confirmDelete.modal = !state.confirmDelete.modal;
+      state.confirmDelete.content = action.payload.content;
+      state.confirmDelete.confirmed = action.payload.confirmed;
+    },
   },
 });
 
@@ -32,7 +42,15 @@ export const {
   openAlert,
   closeAlert,
   setInfoData,
+  toggleDelete,
 } = slice.actions;
+
+export const setConfirmDelete = (content, confirmed = () => {}) => dispatch => {
+  dispatch(toggleDelete({
+    content: content,
+    confirmed: confirmed,
+  }))
+}
 
 export const setInfo = data => dispatch => {
   dispatch(setInfoData(data));
@@ -57,10 +75,12 @@ const responseAlert = response => async dispatch => {
 }
 
 export const get = (
-  link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) => dispatch => {
+  link, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) => (dispatch, getState) => {
+  const { auth } = getState();
+
   Axios.get(link, {
-    headers: headers
+    headers: auth.headers
   })
     .then(res => {
       console.log(res);
@@ -80,10 +100,12 @@ export const get = (
 }
 
 export const post = (
-  link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) => dispatch => {
+  link, data, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) => (dispatch, getState) => {
+  const { auth } = getState();
+
   Axios.post(link, data, {
-    headers: headers
+    headers: auth.headers
   })
     .then(res => {
       console.log(res);
@@ -103,10 +125,12 @@ export const post = (
 }
 
 export const put = (
-  link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) => dispatch => {
+  link, data, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) => (dispatch, getState) => {
+  const { auth } = getState();
+
   Axios.put(link, data, {
-    headers: headers
+    headers: auth.headers
   })
     .then(res => {
       console.log(res);
@@ -127,10 +151,12 @@ export const put = (
 }
 
 export const patch = (
-  link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) => dispatch => {
+  link, data, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) => (dispatch, getState) => {
+  const { auth } = getState();
+
   Axios.patch(link, data, {
-    headers: headers
+    headers: auth.headers
   })
     .then(res => {
       console.log(res);
@@ -151,10 +177,12 @@ export const patch = (
 }
 
 export const del = (
-  link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) => dispatch => {
+  link, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) => (dispatch, getState) => {
+  const { auth } = getState();
+
   Axios.delete(link, {
-    headers: headers
+    headers: auth.headers
   })
     .then(res => {
       console.log(res);

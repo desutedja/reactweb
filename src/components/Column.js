@@ -1,8 +1,11 @@
 import React from 'react';
 
-function Component({children}) {
+function Component({ children, flex = 1, style = {} }) {
     return (
-        <div className="Column">
+        <div className="Column" style={{
+            flex: flex,
+            ...style,
+        }}>
             {children}
         </div>
     )

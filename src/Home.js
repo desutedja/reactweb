@@ -3,31 +3,35 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from './features/auth/slice';
 import {
     FiMenu, FiUsers, FiHome, FiBarChart2, FiShoppingCart, FiZap, FiVolume2,
-    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign, FiLogOut, FiChevronRight, FiChevronDown, FiChevronUp
+    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign, FiLogOut, 
+    FiChevronRight, FiChevronDown, FiChevronUp
 } from "react-icons/fi";
 import { Switch, Route, useHistory, Redirect, useLocation } from 'react-router-dom';
 import QiscusSDKCore from 'qiscus-sdk-core';
 
 import DashboardRoute from './features/dashboard/Route';
-import ManagementRoute from './features/management/Route';
-import BuildingRoute from './features/building/Route';
-import ResidentRoute from './features/resident/Route';
-import BillingRoute from './features/billing/Route';
-import StaffRoute from './features/staff/Route';
-import TaskRoute from './features/task/Route';
-import MerchantRoute from './features/merchant/Route';
-import ProductRoute from './features/product/Route';
-import TransactionRoute from './features/transaction/Route';
-import AdsRoute from './features/ads/Route';
-import AnnouncementRoute from './features/announcement/Route';
 import ChatRoute from './features/chat/Route';
+
+import Ads from './features/routes/Ads';
+import Announcement from './features/routes/Announcement';
+import Billing from './features/routes/Billing';
+import Building from './features/routes/Building';
+import Management from './features/routes/Management';
+import Merchant from './features/routes/Merchant';
+import Product from './features/routes/Product';
+import Resident from './features/routes/Resident';
+import Staff from './features/routes/Staff';
+import Task from './features/routes/Task';
+import Transaction from './features/routes/Transaction';
 
 import Row from './components/Row';
 import CustomAlert from './components/CustomAlert';
 import IconButton from './components/IconButton';
 import Info from './components/Info';
+import Modal from './components/Modal';
+
 import { toSentenceCase } from './utils';
-import { closeAlert } from './features/slice';
+import { closeAlert, setConfirmDelete } from './features/slice';
 import { setQiscus, updateMessages } from './features/chat/slice';
 
 const qiscus = new QiscusSDKCore();
@@ -112,11 +116,11 @@ const menu = [
 ]
 
 function Component() {
-    const [menuWide, setMenuWide] = useState(true);
+    const [menuWide, setMenuWide] = useState(false);
     const [expanded, setExpanded] = useState("");
     const [profile, setProfile] = useState(false);
 
-    const { alert, title, content } = useSelector(state => state.main);
+    const { alert, title, content, confirmDelete } = useSelector(state => state.main);
     const { user } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
@@ -159,10 +163,23 @@ function Component() {
 
     return (
         <div>
+            <Modal
+                isOpen={confirmDelete.modal}
+                toggle={() => dispatch(setConfirmDelete())}
+                disableHeader
+                okLabel="Confirm"
+                onClick={() => {
+                    dispatch(setConfirmDelete());
+                    confirmDelete.confirmed();
+                }}
+                onClickSecondary={() => dispatch(setConfirmDelete())}
+            >
+                {confirmDelete.content}
+            </Modal>
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
                 content={content}
             />
-            <div className={menuWide ? "TopBar" : "TopBar-wide"}>
+            <div className={menuWide ? "TopBar shadow" : "TopBar-wide shadow"}>
                 <div className="TopBar-left">
                     <IconButton
                         className="MenuToggle"
@@ -224,7 +241,7 @@ function Component() {
                 </div>
             </div>
             <Row>
-                <div className="Menu">
+                <div className="Menu shadow">
                     <div className={menuWide ? "Logo-container" : "Logo-container-small"}
                         onClick={() => history.push('/')}
                     >
@@ -283,37 +300,37 @@ function Component() {
                             <DashboardRoute />
                         </Route>
                         <Route path="/building">
-                            <BuildingRoute />
+                            <Building />
                         </Route>
                         <Route path="/management">
-                            <ManagementRoute />
+                            <Management />
                         </Route>
                         <Route path="/resident">
-                            <ResidentRoute />
+                            <Resident />
                         </Route>
                         <Route path="/billing">
-                            <BillingRoute />
+                            <Billing />
                         </Route>
                         <Route path="/staff">
-                            <StaffRoute />
+                            <Staff />
                         </Route>
                         <Route path="/task">
-                            <TaskRoute />
+                            <Task />
                         </Route>
                         <Route path="/merchant">
-                            <MerchantRoute />
+                            <Merchant />
                         </Route>
                         <Route path="/product">
-                            <ProductRoute />
+                            <Product />
                         </Route>
                         <Route path="/transaction">
-                            <TransactionRoute />
+                            <Transaction />
                         </Route>
                         <Route path="/advertisement">
-                            <AdsRoute />
+                            <Ads />
                         </Route>
                         <Route path="/announcement">
-                            <AnnouncementRoute />
+                            <Announcement />
                         </Route>
                         <Route path="/chat">
                             <ChatRoute />

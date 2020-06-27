@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
-import { get, toMoney } from '../../utils';
+import { toMoney } from '../../utils';
 import { endpointBilling, endpointManagement } from '../../settings';
 
 import './style.css';
+import { useDispatch } from 'react-redux';
+import { get } from '../slice';
 
 const formatValue = (value) => value.toFixed(0);
 const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
@@ -14,19 +15,19 @@ function Component() {
     const [billingData, setBillingData] = useState({});
     const [staffData, setStaffData] = useState({});
 
-    const headers = useSelector(state => state.auth.headers);
+    let dispatch = useDispatch();
 
     useEffect(() => {
-        get(endpointBilling + '/management/billing/statistic', headers, res => {
+        dispatch(get(endpointBilling + '/management/billing/statistic',  res => {
             setBillingData(res.data.data);
-        })
-    }, [headers]);
+        }))
+    }, [dispatch]);
 
     useEffect(() => {
-        get(endpointManagement + '/admin/staff/statistics', headers, res => {
+        dispatch(get(endpointManagement + '/admin/staff/statistics',  res => {
             setStaffData(res.data.data);
-        })
-    }, [headers]);
+        }))
+    }, [dispatch]);
 
     return (
         <>

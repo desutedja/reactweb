@@ -1,0 +1,26 @@
+.Item {
+  display: flex;
+  align-items: center;
+  border: 1px solid #f0f0f3;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 200px;
+  max-width: 240px;
+  overflow: hidden;
+}
+
+.Item:hover {
+    background-color: #f3f3fa;
+}
+
+.Item-avatar {
+  margin-right: 8px;
+  min-width: 40px;
+}
+
+.Item-subtext {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

@@ -12,6 +12,12 @@
   --background-color: #f3f3fa;
   background-color: #f3f3fa;
   /* background-color: rgba(245, 245, 245, 1); */
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+}
+
+::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
 }
 
 body {
@@ -40,8 +46,8 @@ label {
 
 p, a {
   margin: 0;
-  margin-left: 4px;
-  margin-right: 4px;
+  /* margin-left: 4px; */
+  /* margin-right: 4px; */
   text-align: justify;
 }
 
@@ -110,7 +116,7 @@ table {
 
 thead {
   /* background-color: #f3f3fa; */
-  background-color: #f0f0f3;
+  /* background-color: #f0f0f3; */
 }
 
 th {
@@ -141,4 +147,54 @@ table tr:last-child td:first-child {
 
 table tr:last-child td:last-child {
   border-bottom-right-radius: 4px;
+}
+
+.shadow {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+.shadow:hover {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.shine {
+  background: #f6f7f8;
+  background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+  background-repeat: no-repeat;
+  background-size: 800px 400px; 
+  display: inline-block;
+  position: relative; 
+  
+  animation-duration: 1s;
+  animation-fill-mode: forwards; 
+  animation-iteration-count: infinite;
+  animation-name: placeholderShimmer;
+  animation-timing-function: linear;
+
+  -webkit-animation-duration: 1s;
+  -webkit-animation-fill-mode: forwards; 
+  -webkit-animation-iteration-count: infinite;
+  -webkit-animation-name: placeholderShimmer;
+  -webkit-animation-timing-function: linear;
+}
+
+@keyframes placeholderShimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  
+  100% {
+    background-position: 468px 0; 
+  }
+}
+
+@-webkit-keyframes placeholderShimmer {
+  0% {
+    background-position: -468px 0;
+  }
+  
+  100% {
+    background-position: 468px 0; 
+  }
 }

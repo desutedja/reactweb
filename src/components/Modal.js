@@ -1,10 +1,7 @@
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
-// import ReactModal from 'react-modal';
 
-// ReactModal.setAppElement('#root');
-
-function Component({ isOpen, toggle, title, onClick, children, okLabel, cancelLabel = '',
+function Component({ isOpen, toggle, title, onClick, children, okLabel = "Yes", cancelLabel = '',
     disableHeader = false, disableFooter = false, onClickSecondary = null,
     disablePrimary = false, disableSecondary = false }) {
     const closeBtn = <button className="close" onClick={toggle}>&times;</button>;

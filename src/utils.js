@@ -1,148 +1,5 @@
-import Axios from "axios";
-import history from './history';
 import countries from './countries';
 import { banks } from './settings';
-
-export function get(
-    link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) {
-    console.log("getting from: ", link);
-    Axios.get(link, {
-        headers: headers
-    })
-        .then(res => {
-            console.log(res);
-
-            ifSuccess(res);
-        })
-        .catch(err => {
-            console.log(err);
-
-            if (err.response && err.response.status === 401) {
-                history.push('/login');
-                window.location.reload();
-            }
-
-            alert(err.response?.data.error_message);
-
-            ifError(err);
-        })
-        .finally(() => {
-            finallyDo();
-        })
-}
-
-export function post(
-    link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) {
-    Axios.post(link, data, {
-        headers: headers
-    })
-        .then(res => {
-            console.log(res);
-
-            ifSuccess(res);
-        })
-        .catch(err => {
-            console.log(err);
-            
-            if (err.response && err.response.status === 401) {
-                history.push('/login');
-                window.location.reload();
-            }
-
-            alert(err.response?.data.error_message);
-
-            ifError(err);
-        })
-        .finally(() => {
-            finallyDo();
-        })
-}
-
-export function put(
-    link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) {
-    Axios.put(link, data, {
-        headers: headers
-    })
-        .then(res => {
-            console.log(res);
-
-            ifSuccess(res);
-        })
-        .catch(err => {
-            console.log(err);
-            
-            if (err.response && err.response.status === 401) {
-                history.push('/login');
-                window.location.reload();
-            }
-
-            alert(err.response?.data.error_message);
-
-            ifError(err);
-        })
-        .finally(() => {
-            finallyDo();
-        })
-}
-
-export function patch(
-    link, data, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) {
-    Axios.patch(link, data, {
-        headers: headers
-    })
-        .then(res => {
-            console.log(res);
-
-            ifSuccess(res);
-        })
-        .catch(err => {
-            console.log(err);
-            
-            if (err.response && err.response.status === 401) {
-                history.push('/login');
-                window.location.reload();
-            }
-
-            alert(err.response?.data.error_message);
-
-            ifError(err);
-        })
-        .finally(() => {
-            finallyDo();
-        })
-}
-
-export function del(
-    link, headers, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
-) {
-    Axios.delete(link, {
-        headers: headers
-    })
-        .then(res => {
-            console.log(res);
-
-            ifSuccess(res);
-        })
-        .catch(err => {
-            console.log(err);
-            
-            if (err.response && err.response.status === 401) {
-                history.push('/login');
-                window.location.reload();
-            }
-
-            alert(err.response?.data.error_message);
-
-            ifError(err);
-        })
-        .finally(() => {
-            finallyDo();
-        })
-}
 
 export const months = [
     { value: 1, label: 'January' },
@@ -162,7 +19,7 @@ export const months = [
 export function dateTimeFormatter(serverDateTime) {
     let date = serverDateTime.split('T')[0];
     let time = serverDateTime.split('T')[1].split('Z')[0];
-    time = time.split(':').slice(0,2).join(':');
+    time = time.split(':').slice(0, 2).join(':');
 
     let year = date.split('-')[0];
     let month = parseInt(date.split('-')[1], 10);
@@ -185,10 +42,10 @@ export function dateFormatter(serverDateTime) {
 
 export function toSentenceCase(sentence) {
     if (sentence.length < 3) {
-        return sentence;
+        return sentence.toUpperCase();
     }
 
-    let words = sentence.toLowerCase().replace(/_/g, ' ').split(' ');
+    let words = sentence.replace(/_/g, ' ').split(' ');
 
     return words.reduce((result, el) => {
         let newEl = el.slice(0, 1).toUpperCase() + el.slice(1) + ' ';

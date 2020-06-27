@@ -44,14 +44,14 @@ export const {
 } = slice.actions;
 
 export const getSOS = (
-  headers, range
+   range
 ) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(chartEndpoint + '/sos/statistics' + 
     '?timegroup=' + range +
     '&limit=',
-    headers,
+    
     res => {
       console.log(res);
 

@@ -20,4 +20,4 @@ function Component({fullname, email, picture=null, round=true}) {
 
 const avatar = React.memo(Component, (oldprops, newprops) => { return oldprops === newprops; })
 
-export default Component;
+export default avatar;

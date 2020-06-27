@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
-import { get, toMoney } from '../../utils';
+import { toMoney } from '../../utils';
 import { endpointBilling, endpointManagement, endpointMerchant, endpointTransaction } from '../../settings';
 
 import './style.css';
 import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, PieChart, Pie, ComposedChart } from 'recharts';
+import { get } from '../slice';
 
 const formatValue = (value) => value.toFixed(0);
 const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
@@ -29,51 +30,51 @@ function Component() {
     const [orderData, setOrderData] = useState([]);
     const [orderType, setOrderType] = useState('year');
 
-    const headers = useSelector(state => state.auth.headers);
+    let dispatch = useDispatch();
 
     useEffect(() => {
-        get(endpointMerchant + '/admin/statistic/transactiongraph?type=' + range + '&scale='
+        dispatch(get(endpointMerchant + '/admin/statistic/transactiongraph?type=' + range + '&scale='
             + scale,
-            headers, res => {
+             res => {
                 setTrxData(res.data.data.graph);
-            })
-    }, [headers, range, scale]);
+            }))
+    }, [dispatch, range, scale]);
 
     useEffect(() => {
-        get(endpointTransaction + '/admin/transaction/summary',
-            headers, res => {
+        dispatch(get(endpointTransaction + '/admin/transaction/summary',
+             res => {
                 setTrxSumm(res.data.data);
-            })
-    }, [headers]);
+            }))
+    }, [dispatch]);
 
     useEffect(() => {
-        get(endpointMerchant + '/admin/statistic/successcategory?order_type=' + successType,
-            headers, res => {
+        dispatch(get(endpointMerchant + '/admin/statistic/successcategory?order_type=' + successType,
+             res => {
                 setSuccessData(res.data.data);
-            })
-    }, [headers, successType]);
+            }))
+    }, [dispatch, successType]);
 
     useEffect(() => {
-        get(endpointMerchant + '/admin/statistic/failedcategory?order_type=' + failedType,
-            headers, res => {
+        dispatch(get(endpointMerchant + '/admin/statistic/failedcategory?order_type=' + failedType,
+             res => {
                 setFailedData(res.data.data);
-            })
-    }, [headers, failedType]);
+            }))
+    }, [dispatch, failedType]);
 
     useEffect(() => {
-        get(endpointMerchant + '/admin/statistics',
-            headers, res => {
+        dispatch(get(endpointMerchant + '/admin/statistics',
+             res => {
                 setMerchantInfo(res.data.data);
-            })
-    }, [headers]);
+            }))
+    }, [dispatch]);
 
     useEffect(() => {
-        get(endpointMerchant + '/admin/statistic/mostordered?order_type=' + orderType +
+        dispatch(get(endpointMerchant + '/admin/statistic/mostordered?order_type=' + orderType +
             '&limit=5&page=1',
-            headers, res => {
+             res => {
                 setOrderData(res.data.data.items);
-            })
-    }, [headers, orderType]);
+            }))
+    }, [dispatch, orderType]);
 
     return (
         <>
