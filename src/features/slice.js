@@ -40,8 +40,8 @@ export const slice = createSlice({
       state.confirmDelete.confirmed = action.payload.confirmed;
     },
     setNotifData: (state, action) => {
-      state.title = action.payload.title;
-      state.message = action.payload.message;
+      state.notif.title = action.payload.title;
+      state.notif.message = action.payload.message;
     },
   },
 });
@@ -62,9 +62,9 @@ export const setConfirmDelete = (content, confirmed = () => {}) => dispatch => {
 }
 
 export const setNotif = data => dispatch => {
-  dispatch(setInfoData(data));
+  dispatch(setNotifData(data));
 
-  setTimeout(() => dispatch(setInfoData({
+  setTimeout(() => dispatch(setNotifData({
     title: '',
   })), 10000);
 }

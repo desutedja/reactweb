@@ -137,10 +137,11 @@ function Component() {
             AppId: 'fastelsar-tvx6nj235zm',
             options: {
                 newMessagesCallback: message => {
+                    console.log('received', message);
                     dispatch(updateMessages(message));
                     dispatch(setNotif({
                         title: "New Message",
-                        message: message.message,
+                        message: message[0].username + ': ' + message[0].message,
                     }))
                 },
                 commentReadCallback: function (data) {
