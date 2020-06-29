@@ -214,6 +214,15 @@ function Component() {
           inputValue={inBuilding ? inBuilding : selected.in_building}
           setInputValue={setBuilding}
         />
+        <Input
+          label="Status"
+          type="select"
+          options={[
+            { value: "active", label: "Active" },
+            { value: "inactive", label: "Inactive" },
+          ]}
+          inputValue={selected.status}
+        />
         <SectionSeparator />
         <h2
           style={{

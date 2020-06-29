@@ -66,7 +66,7 @@ export const setNotif = data => dispatch => {
 
   setTimeout(() => dispatch(setNotifData({
     title: '',
-  })), 10000);
+  })), 20000);
 }
 
 export const setInfo = data => dispatch => {
