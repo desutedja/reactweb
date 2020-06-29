@@ -1,12 +1,12 @@
 .Item {
   display: flex;
   align-items: center;
-  border: 1px solid #f0f0f3;
+  /* border: 1px solid #f0f0f3; */
   padding: 8px;
   border-radius: 8px;
   cursor: pointer;
   min-width: 200px;
-  max-width: 240px;
+  max-width: 280px;
   overflow: hidden;
 }
 
@@ -15,12 +15,13 @@
 }
 
 .Item-avatar {
-  margin-right: 8px;
+  margin-right: 12px;
   min-width: 40px;
+  object-fit: cover;
 }
 
 .Item-subtext {
-  max-width: 140px;
+  max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;

@@ -78,7 +78,7 @@ function Component({ id }) {
     const submitFunction = (e) => {
         dispatch(addResidentUnit({
             unit_id: selectedUnit.value.id,
-            owner_id: id,
+            owner_id: parseInt(id),
             level: level,
             status: status
         }))
@@ -88,14 +88,17 @@ function Component({ id }) {
 
     return (
         <>
-            <Modal isOpen={addUnit} title={"Add Unit"}
+            <Modal
+                isOpen={addUnit}
+                title={"Add Unit"}
                 disableFooter={addUnitStep === 1}
                 okLabel={addUnitStep !== 3 ? "Back" : "Add Unit"}
                 cancelLabel={"Back"}
                 onClick={addUnitStep === 3 ? submitFunction : backFunction}
                 onClickSecondary={backFunction}
                 disablePrimary={addUnitStep !== 3}
-                toggle={() => setAddUnit(false)}>
+                toggle={() => setAddUnit(false)}
+            >
                 {addUnitStep === 1 && <>
                     <Input label="Search Building"
                         compact

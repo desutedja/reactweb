@@ -39,7 +39,7 @@ function Component({ id }) {
             <span> </span>
             <div>
                 <b>{data.name}</b>
-                <p className="Item-subtext">{data.name_legal}</p>
+                <p className="Item-subtext">{data.email}</p>
             </div>
         </div>
     );

@@ -13,9 +13,9 @@ import Template from './components/Template';
 const columns = [
     // { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: row => <Management id={row.id} /> },
-    // { Header: "Legal Name", accessor: "name_legal" },
+    { Header: "Legal Name", accessor: "name_legal" },
     { Header: "Phone", accessor: "phone" },
-    { Header: "Email", accessor: "email" },
+    // { Header: "Email", accessor: "email" },
     { Header: "Website", accessor: row => <Link>{row.website}</Link> },
 ]
 

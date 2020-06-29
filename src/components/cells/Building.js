@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { get } from '../../features/slice';
 import { endpointAdmin } from '../../settings';
 import './style.css';
-import { setSelected } from '../../features/building/slice';
+import { setSelected } from '../../features/slices/building';
 
 
 function Component({ id }) {
@@ -39,7 +39,9 @@ function Component({ id }) {
             <span> </span>
             <div>
                 <b>{data.name}</b>
-                {/* <p className="Item-subtext">{data.management_name}</p> */}
+                <p className="Item-subtext">{data.management_name ? data.management_name
+                    : <i>No Management</i>
+                }</p>
             </div>
         </div>
     );

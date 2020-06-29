@@ -72,8 +72,6 @@ function Component() {
             // limit: 20
         }
 
-        qiscus.readComment && qiscus.readComment(roomID, room.last_comment_id);
-
         setLoadingMessages(true);
         roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
             .then(function (comments) {
@@ -81,6 +79,7 @@ function Component() {
                 dispatch(setMessages(comments));
                 setLoadingMessages(false);
 
+                qiscus.readComment(roomID, room.last_comment_id);
             })
             .catch(function (error) {
                 // On error
