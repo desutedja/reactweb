@@ -16,6 +16,10 @@ export const slice = createSlice({
       content: '',
       confirmed: () => {},
     },
+    notif: {
+      title: '',
+      message: '',
+    }
   },
   reducers: {
     openAlert: (state, action) => {
@@ -35,6 +39,10 @@ export const slice = createSlice({
       state.confirmDelete.content = action.payload.content;
       state.confirmDelete.confirmed = action.payload.confirmed;
     },
+    setNotifData: (state, action) => {
+      state.title = action.payload.title;
+      state.message = action.payload.message;
+    },
   },
 });
 
@@ -43,6 +51,7 @@ export const {
   closeAlert,
   setInfoData,
   toggleDelete,
+  setNotifData,
 } = slice.actions;
 
 export const setConfirmDelete = (content, confirmed = () => {}) => dispatch => {
@@ -50,6 +59,14 @@ export const setConfirmDelete = (content, confirmed = () => {}) => dispatch => {
     content: content,
     confirmed: confirmed,
   }))
+}
+
+export const setNotif = data => dispatch => {
+  dispatch(setInfoData(data));
+
+  setTimeout(() => dispatch(setInfoData({
+    title: '',
+  })), 10000);
 }
 
 export const setInfo = data => dispatch => {
@@ -66,7 +83,7 @@ const responseAlert = response => async dispatch => {
       title: 'Token Expired',
       content: "Your authentication token has expired. For your safety, please relogin.",
     }));
-  } else if (response.data.error_message) {
+  } else if (response && response.data.error_message) {
     dispatch(openAlert({
       title: 'API Error',
       content: response?.data.error_message,

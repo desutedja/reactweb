@@ -8,6 +8,7 @@ export const slice = createSlice({
     source: 'Task',
     roomID: '',
     roomUniqueID: '',
+    unread: '',
     participants: [],
     messages: [],
   },
@@ -33,6 +34,9 @@ export const slice = createSlice({
     updateMessages: (state, action) => {
       state.messages = [...action.payload, ...state.messages];
     },
+    setUnread: (state, action) => {
+      state.unread = action.payload;
+    },
   },
 });
 
@@ -44,6 +48,7 @@ export const {
   setQiscus,
   setMessages,
   updateMessages,
+  setUnread
 } = slice.actions;
 
 export default slice.reducer;

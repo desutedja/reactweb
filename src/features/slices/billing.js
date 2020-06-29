@@ -203,7 +203,7 @@ export const createBillingUnitItem = ( data, selected, history) => dispatch => {
 export const editBillingUnitItem = ( data, selected, history, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(billingEndpoint, { 'billing': { id: id, ...data } }, 
+  dispatch(put(billingEndpoint, { id: id, ...data }, 
     res => {
       history.goBack();
 

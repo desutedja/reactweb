@@ -1,8 +1,8 @@
 import React from 'react';
 
-function Component({children, center, style = {}}) {
+function Component({children, center, style = {}, className}) {
     return (
-        <div className="Row" style={{
+        <div className={"Row " + className} style={{
             alignItems: center && 'center',
             ...style,
         }}>

@@ -69,7 +69,7 @@
   color: white;
   font-size: 1.3rem;
   margin-bottom: 4px;
-  margin-right: 8px;
+  /* margin-right: 8px; */
 }
 
 .MenuToggle {
@@ -220,8 +220,8 @@
   flex: 1;
   margin-bottom: 32px;
   margin-right: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   height: fit-content;
 }
 
@@ -255,7 +255,8 @@
   background-color: var(--accent-color);
 }
 
-.ProfileButton-menu, .ProfileButton-menu-hide {
+.ProfileButton-menu,
+.ProfileButton-menu-hide {
   position: fixed;
   right: 16px;
 
@@ -284,4 +285,21 @@
 
 .ProfileButton-menuItem:hover {
   background-color: silver;
+}
+
+.Badge {
+  position: relative;
+  left: -12px;
+  top: -8px;
+  background-color: crimson;
+  color: white;
+  padding: 0 6px;
+  border-radius: 50%;
+}
+
+.Toast {
+  position: fixed;
+  z-index: 100;
+  right: 32px;
+  bottom: 16px;
 }

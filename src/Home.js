@@ -7,7 +7,7 @@ import {
     FiChevronDown, FiChevronUp,
 } from "react-icons/fi";
 import { MdChatBubble, MdNotifications } from "react-icons/md";
-import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
+import { Switch, Route, useHistory, Redirect, useRouteMatch } from 'react-router-dom';
 import QiscusSDKCore from 'qiscus-sdk-core';
 
 import DashboardRoute from './features/dashboard/Route';
@@ -32,10 +32,11 @@ import Info from './components/Info';
 import Modal from './components/Modal';
 
 import { toSentenceCase } from './utils';
-import { closeAlert, setConfirmDelete } from './features/slice';
-import { setQiscus, updateMessages } from './features/chat/slice';
+import { closeAlert, setConfirmDelete, setNotif } from './features/slice';
+import { setQiscus, updateMessages, setUnread } from './features/chat/slice';
+import { Toast, ToastHeader, ToastBody } from 'reactstrap';
 
-const qiscus = new QiscusSDKCore();
+const Qiscus = new QiscusSDKCore();
 
 const menu = [
     {
@@ -121,31 +122,43 @@ function Component() {
     const [expanded, setExpanded] = useState("");
     const [profile, setProfile] = useState(false);
 
-    const { alert, title, content, confirmDelete } = useSelector(state => state.main);
+    const { alert, title, content, confirmDelete, notif } = useSelector(state => state.main);
     const { user } = useSelector(state => state.auth);
+    const { qiscus, unread, messages } = useSelector(state => state.chat);
 
     let dispatch = useDispatch();
     let history = useHistory();
+    let { url } = useRouteMatch();
 
     useEffect(() => {
         const userID = "superadmin" + user.id + user.email;
 
-        qiscus.init({
+        Qiscus.init({
             AppId: 'fastelsar-tvx6nj235zm',
             options: {
-                newMessagesCallback: message => dispatch(updateMessages(message)),
+                newMessagesCallback: message => {
+                    dispatch(updateMessages(message));
+                    dispatch(setNotif({
+                        title: "New Message",
+                        message: message.message,
+                    }))
+                },
+                commentReadCallback: function (data) {
+                    // On comment has been read by user
+                    console.log('read', data)
+                },
             },
         }).then(() => {
             console.log('init success');
 
-            !qiscus.isLogin && qiscus.setUser(userID, 'kucing', user.firstname + ' ' + user.lastname,
+            !Qiscus.isLogin && Qiscus.setUser(userID, 'kucing', user.firstname + ' ' + user.lastname,
                 'https://avatars.dicebear.com/api/male/' + user.email + '.svg', user)
                 .then(function (authData) {
                     // On success
                     console.log(authData);
-                    console.log(qiscus.isLogin);
+                    console.log(Qiscus.isLogin);
 
-                    dispatch(setQiscus(qiscus));
+                    dispatch(setQiscus(Qiscus));
                 })
                 .catch(function (error) {
                     // On error
@@ -157,12 +170,31 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
+    useEffect(() => {
+        qiscus && qiscus.getTotalUnreadCount && qiscus.getTotalUnreadCount()
+            .then(function (unreadCount) {
+                // On success
+                dispatch(setUnread(unreadCount));
+            })
+            .catch(function (error) {
+                // On error
+            })
+    }, [dispatch, qiscus, url, messages])
+
     function isSelected(menu) {
         return ('/' + history.location.pathname.split('/')[1]) === menu.route;
     }
 
     return (
         <div>
+            {notif.title && <Toast className="Toast">
+                <ToastHeader>
+                    {notif.title}
+                </ToastHeader>
+                <ToastBody>
+                    {notif.message}
+                </ToastBody>
+            </Toast>}
             <Modal
                 isOpen={confirmDelete.modal}
                 toggle={() => dispatch(setConfirmDelete())}
@@ -195,11 +227,19 @@ function Component() {
                     display: 'flex',
                     alignItems: 'center',
                 }}>
-                    <IconButton
-                        onClick={() => history.push('chat')}
-                    >
-                        <MdChatBubble />
-                    </IconButton>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}>
+                        <IconButton
+                            onClick={() => history.push('/chat')}
+                        >
+                            <MdChatBubble />
+                        </IconButton>
+                        {!!unread && <div className="Badge">
+                            {unread}
+                        </div>}
+                    </div>
                     <IconButton>
                         <MdNotifications />
                     </IconButton>

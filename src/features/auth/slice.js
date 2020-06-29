@@ -73,7 +73,7 @@ export const login = (email, history) => dispatch => {
 
   dispatch(post(endpointAdmin + '/auth/centratama/login', {
     email: email,
-  }, {}, res => {
+  }, res => {
     dispatch(loginSuccess(email));
 
     history && history.push("/otp");
@@ -86,7 +86,7 @@ export const loginBM = (email, history) => dispatch => {
 
   post(endpointAdmin + '/auth/management/login', {
     email: email,
-  }, {}, res => {
+  }, res => {
     dispatch(loginBMSuccess(email));
 
     history && history.push("/otpbm");
@@ -105,7 +105,7 @@ export const otpCheck = (email, otp, history) => dispatch => {
     "otp": otp,
     "device": "web",
     "fcm_id": "1:10663666241:web:f3a844afac4e2025a6dcc0"
-  }, {}, res => {
+  }, res => {
     dispatch(otpSuccess(res.data.data));
 
     history.push("/");
@@ -125,7 +125,7 @@ export const otpCheckBM = (email, otp, history) => dispatch => {
     "otp": otp,
     "device": "web",
     "fcm_id": "1:10663666241:web:f3a844afac4e2025a6dcc0"
-  }, {}, res => {
+  }, res => {
     dispatch(otpBMSuccess(res.data.data));
 
     history.push("/");

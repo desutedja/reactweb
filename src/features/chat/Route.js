@@ -44,6 +44,7 @@ function Component() {
 
     const [participants, setParticipants] = useState([]);
     const [rooms, setRooms] = useState([]);
+    const [room, setRoom] = useState({});
 
     const { user } = useSelector(state => state.auth);
     const { qiscus, roomID, roomUniqueID, messages } = useSelector(state => state.chat);
@@ -71,18 +72,21 @@ function Component() {
             // limit: 20
         }
 
+        qiscus.readComment && qiscus.readComment(roomID, room.last_comment_id);
+
         setLoadingMessages(true);
         roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
             .then(function (comments) {
                 // On success
                 dispatch(setMessages(comments));
                 setLoadingMessages(false);
+
             })
             .catch(function (error) {
                 // On error
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [qiscus, roomID]);
+    }, [qiscus, room, roomID]);
 
     useEffect(() => {
         var params = {
@@ -106,7 +110,8 @@ function Component() {
             .catch(function (error) {
                 // On error
             })
-    }, [dispatch, qiscus, roomID, roomUniqueID]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, qiscus]);
 
     return (
         <div style={{
@@ -226,11 +231,29 @@ function Component() {
                         </>,
                         <Loading loading={loadingRooms}>
                             {rooms.map((el, index) =>
-                                <div key={index} className="Room">
-                                    {el.id}
-                                    {el.name}
-                                    {el.last_comment.username + ': ' + el.last_comment_message}
-                                    {el.count_notif}
+                                <div
+                                    className={"Room" + (el.id === roomID ? " selected" : "")}
+                                    onClick={el.id === roomID ? null : () => {
+                                        setRoom(el);
+                                        dispatch(setRoomID(el.id));
+                                        dispatch(setRoomUniqueID(el.unique_id));
+                                    }}
+                                >
+                                    <div className="Room-left">
+                                        <div className="Room-title">
+                                            <p className="Room-name">{el.name}</p>
+                                            <p className="Room-subtitle">{"ID: " + el.id}</p>
+                                        </div>
+                                        <p className="Room-message">{el.last_comment.username
+                                            + ': ' +
+                                            (el.last_comment_message.length > 20 ?
+                                                el.last_comment_message.slice(0, 20) + '...'
+                                                : el.last_comment_message)}</p>
+                                    </div>
+                                    <div className="Room-right">
+                                        {!!el.count_notif &&
+                                            <p className="Room-unread">{el.count_notif}</p>}
+                                    </div>
                                 </div>
                             )}
                         </Loading>
