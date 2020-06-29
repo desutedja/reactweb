@@ -66,12 +66,12 @@ const responseAlert = response => async dispatch => {
       title: 'Token Expired',
       content: "Your authentication token has expired. For your safety, please relogin.",
     }));
-  } else {
+  } else if (response.data.error_message) {
     dispatch(openAlert({
       title: 'API Error',
       content: response?.data.error_message,
     }));
-  }
+  } else return null
 }
 
 export const get = (

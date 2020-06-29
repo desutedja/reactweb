@@ -67,6 +67,9 @@
 .TopBar .IconButton,
 .TopBar-wide .IconButton {
   color: white;
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+  margin-right: 8px;
 }
 
 .MenuToggle {

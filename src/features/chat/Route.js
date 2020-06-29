@@ -4,30 +4,55 @@ import { useSelector, useDispatch } from 'react-redux';
 import Input from '../../components/Input';
 import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
+import Tab from '../../components/Tab';
 import { dateTimeFormatter } from '../../utils';
-import { setMessages } from './slice';
+import { setMessages, setRoomID, setRoomUniqueID } from './slice';
 import { FiSend } from 'react-icons/fi';
 
 import './style.css';
+
+// avatar: ""
+// comments: []
+// count_notif: 2
+// custom_subtitle: null
+// custom_title: null
+// id: 17159434
+// isChannel: false
+// isLoaded: false
+// last_comment: {comment_before_id: 294549503, comment_before_id_str: "294549503", disable_link_preview: false, email: "superadmin4meriororen@gmail.com", extras: {…}, …}
+// last_comment_id: 294549551
+// last_comment_message: "test"
+// last_comment_message_created_at: "2020-06-24T14:50:22Z"
+// last_comment_topic_title: undefined
+// name: "taskchat admin sama resident"
+// options: "{}"
+// participantNumber: undefined
+// participants: (5) [{…}, {…}, {…}, {…}, {…}]
+// room_type: "group"
+// secret_code: undefined
+// topics: []
+// unique_id: "1641e1a7-6ec4-487b-be44-3e5ad5
 
 function Component() {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
     const [loadingParticipants, setLoadingParticipants] = useState(false);
+    const [loadingRooms, setLoadingRooms] = useState(false);
 
     const [refresh, setRefresh] = useState(false);
     const [message, setMessage] = useState('');
 
     const [participants, setParticipants] = useState([]);
+    const [rooms, setRooms] = useState([]);
 
     const { user } = useSelector(state => state.auth);
-    const { qiscus, roomID, messages } = useSelector(state => state.chat);
+    const { qiscus, roomID, roomUniqueID, messages } = useSelector(state => state.chat);
 
     let dispatch = useDispatch();
 
     useEffect(() => {
         setLoadingParticipants(true);
-        qiscus.getParticipants && qiscus.getParticipants("1641e1a7-6ec4-487b-be44-3e5ad584b54c")
+        roomUniqueID && qiscus.getParticipants && qiscus.getParticipants(roomUniqueID)
             .then(function (participants) {
                 // Do something with participants
                 console.log("participants", participants);
@@ -37,7 +62,7 @@ function Component() {
             .catch(function (error) {
                 // Do something if error occured
             })
-    }, [qiscus, roomID]);
+    }, [qiscus, roomUniqueID]);
 
     useEffect(() => {
         var options = {
@@ -47,7 +72,7 @@ function Component() {
         }
 
         setLoadingMessages(true);
-        qiscus.loadComments && qiscus.loadComments(roomID, options)
+        roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
             .then(function (comments) {
                 // On success
                 dispatch(setMessages(comments));
@@ -58,6 +83,30 @@ function Component() {
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [qiscus, roomID]);
+
+    useEffect(() => {
+        var params = {
+            page: 1,
+            limit: 100,
+            show_participants: false,
+            show_empty: false
+        }
+
+        setLoadingRooms(true);
+        qiscus.loadRoomList && qiscus.loadRoomList(params)
+            .then(function (rooms) {
+                // On success
+                console.log("rooms", rooms);
+
+                setRooms(rooms);
+                !roomID && dispatch(setRoomID(rooms[0].id));
+                !roomUniqueID && dispatch(setRoomUniqueID(rooms[0].unique_id));
+                setLoadingRooms(false);
+            })
+            .catch(function (error) {
+                // On error
+            })
+    }, [dispatch, qiscus, roomID, roomUniqueID]);
 
     return (
         <div style={{
@@ -106,7 +155,7 @@ function Component() {
                                                 dateTimeFormatter(el.timestamp).split(',')[1].split(':')[1]}
                                         </div>
                                     </div>
-                                    {messages[index + 1]?.username !== el.username && 
+                                    {messages[index + 1]?.username !== el.username &&
                                         <div style={{
                                             height: 12
                                         }} />}
@@ -147,25 +196,46 @@ function Component() {
                 marginLeft: 16,
                 flexDirection: 'column',
             }}>
-                <p style={{
-                    fontWeight: 'bold',
-                }}>Room</p>
-                <p style={{
-                    marginBottom: 16,
-                }}>{messages[0]?.room_name + ' (ID: ' + roomID + ')'}</p>
-                <p style={{
-                    fontWeight: 'bold',
-                }}>Participants</p>
-                <Loading loading={loadingParticipants}>
-                    {participants.map((el, index) =>
-                        <div key={index} className="Participant">
-                            <img alt="avatar" className="MessageAvatar" src={el.avatar_url} style={{
-                                marginRight: 8,
-                            }} />
-                            {el.username}
-                        </div>
-                    )}
-                </Loading>
+                <Tab
+                    labels={['Room Info', 'Room List']}
+                    contents={[
+                        <>
+                            <p style={{
+                                fontWeight: 'bold',
+                                marginBottom: 8,
+                            }}>Room Name</p>
+                            <p style={{
+                                marginBottom: 24,
+                            }}>{messages[0]?.room_name + ' (ID: ' + roomID + ')'}</p>
+                            <p style={{
+                                fontWeight: 'bold',
+                                marginBottom: 8,
+                            }}>Participants</p>
+                            <Loading loading={loadingParticipants}>
+                                {participants.map((el, index) =>
+                                    <div key={index} className="Participant">
+                                        <img alt="avatar" className="MessageAvatar" src={el.avatar_url} style={{
+                                            marginRight: 8,
+                                            marginBottom: 4,
+                                            borderRadius: 4,
+                                        }} />
+                                        {el.username}
+                                    </div>
+                                )}
+                            </Loading>
+                        </>,
+                        <Loading loading={loadingRooms}>
+                            {rooms.map((el, index) =>
+                                <div key={index} className="Room">
+                                    {el.id}
+                                    {el.name}
+                                    {el.last_comment.username + ': ' + el.last_comment_message}
+                                    {el.count_notif}
+                                </div>
+                            )}
+                        </Loading>
+                    ]}
+                />
             </div>
         </div>
     )

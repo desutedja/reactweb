@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from './features/auth/slice';
 import {
     FiMenu, FiUsers, FiHome, FiBarChart2, FiShoppingCart, FiZap, FiVolume2,
-    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign, FiLogOut, FiChevronDown, FiChevronUp
+    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign, FiLogOut,
+    FiChevronDown, FiChevronUp,
 } from "react-icons/fi";
+import { MdChatBubble, MdNotifications } from "react-icons/md";
 import { Switch, Route, useHistory, Redirect } from 'react-router-dom';
 import QiscusSDKCore from 'qiscus-sdk-core';
 
@@ -189,23 +191,36 @@ function Component() {
                         <FiMenu />
                     </IconButton>
                 </div>
-                <div className="ProfileButton" onClick={() => {
-                    setProfile(!profile)
+                <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
                 }}>
-                    {user.firstname + ' ' + user.lastname}
-                    <FiChevronDown style={{
-                        marginLeft: 8,
-                    }} />
-                </div>
-                <div className={profile ? "ProfileButton-menu" : "ProfileButton-menu-hide"}>
-                    <div className="ProfileButton-menuItem" onClick={() => {
-                        qiscus.isLogin && qiscus.disconnect();
-                        dispatch(logout());
+                    <IconButton
+                        onClick={() => history.push('chat')}
+                    >
+                        <MdChatBubble />
+                    </IconButton>
+                    <IconButton>
+                        <MdNotifications />
+                    </IconButton>
+                    <div className="ProfileButton" onClick={() => {
+                        setProfile(!profile)
                     }}>
-                        <FiLogOut style={{
-                            marginRight: 8
+                        {user.firstname + ' ' + user.lastname}
+                        <FiChevronDown style={{
+                            marginLeft: 8,
                         }} />
+                    </div>
+                    <div className={profile ? "ProfileButton-menu" : "ProfileButton-menu-hide"}>
+                        <div className="ProfileButton-menuItem" onClick={() => {
+                            qiscus.isLogin && qiscus.disconnect();
+                            dispatch(logout());
+                        }}>
+                            <FiLogOut style={{
+                                marginRight: 8
+                            }} />
                         Logout
+                    </div>
                     </div>
                 </div>
             </div>

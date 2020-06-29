@@ -6,7 +6,8 @@ export const slice = createSlice({
     qiscus: null,
     loading: false,
     source: 'Task',
-    roomID: '17159434',
+    roomID: '',
+    roomUniqueID: '',
     participants: [],
     messages: [],
   },
@@ -19,6 +20,9 @@ export const slice = createSlice({
     },
     setRoomID: (state, action) => {
       state.roomID = action.payload;
+    },
+    setRoomUniqueID: (state, action) => {
+      state.roomUniqueID = action.payload;
     },
     setQiscus: (state, action) => {
       state.qiscus = action.payload;
@@ -36,6 +40,7 @@ export const {
   startAsync,
   stopAsync,
   setRoomID,
+  setRoomUniqueID,
   setQiscus,
   setMessages,
   updateMessages,
