@@ -55,7 +55,7 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        console.log(file);
+        // console.log(file);
 
         let form = new FormData();
         form.append('resident', file);
@@ -65,7 +65,7 @@ function Component() {
     }, [file]);
 
     useEffect(() => {
-        console.log(data);
+        // console.log(data);
     }, [data])
 
     return (
@@ -91,7 +91,6 @@ function Component() {
                         dispatch(post(endpointResident + '/management/resident/register/bulk',
                             data,
                             res => {
-                                console.log(res);
                                 setLoading(false);
 
                                 setRes(res.data.data);

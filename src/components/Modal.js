@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 function Component({
+    width = '1400px',
     isOpen, toggle, title, onClick, children, okLabel = "Yes", cancelLabel = '',
     disableHeader = false, disableFooter = false, onClickSecondary = null,
     disablePrimary = false, disableSecondary = false
@@ -17,7 +18,7 @@ function Component({
                 backdropTransition={{ timeout: 1 }}
                 toggle={toggle}
                 style={{
-                    maxWidth: '1400px'
+                    maxWidth: width
                 }}
             >
                 {!disableHeader && <ModalHeader toggle={toggle} close={closeBtn}><h3>{title}</h3></ModalHeader>}

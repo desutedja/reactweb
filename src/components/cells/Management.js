@@ -22,7 +22,6 @@ function Component({ id }) {
     useEffect(() => {
         dispatch(get(endpointAdmin + '/management/details/' + id, res => {
             setData(res.data.data);
-            console.log('halo', res.data.data)
         }))
     }, [dispatch, id])
 

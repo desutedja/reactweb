@@ -48,7 +48,7 @@ export const {
 } = slice.actions;
 
 export const getManagement = (
-   pageIndex, pageSize,
+  pageIndex, pageSize,
   search = '',
 ) => dispatch => {
   dispatch(startAsync());
@@ -60,6 +60,7 @@ export const getManagement = (
     
     res => {
       dispatch(setData(res.data.data));
+      console.log(res.data.data)
 
       dispatch(stopAsync());
     }))

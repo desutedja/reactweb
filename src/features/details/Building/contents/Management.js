@@ -30,10 +30,12 @@ const columnsManagement = [
     },
 ]
 
+
 function Component() {
     const [selectedRow, setRow] = useState({});
     const [edit, setEdit] = useState(false);
     const [addManagement, setAddManagement] = useState(false);
+    const [loadDefault, setLoadDefault] = useState(5);
 
     const [search, setSearch] = useState('');
     const [managementID, setManagementID] = useState('');
@@ -47,19 +49,30 @@ function Component() {
 
     useEffect(() => {
         (!search || search >= 3) && dispatch(get(endpointAdmin + '/management' +
-            '?limit=5&page=1' +
-            '&search=' + search,  res => {
-                let data = res.data.data.items;
-
-                let formatted = data.map(el => ({ label: el.name, value: el.id }));
-
+        '?limit=' + loadDefault + '&page=1' +
+        '&search=' + search,  res => {
+            let data = res.data.data.items;
+            const totalItems = res.data.data.total_items;
+            const sisaItems = totalItems - data.length;
+            
+            let formatted = data.map(el => ({ label: el.name, value: el.id, clickable: true }));
+            console.log(sisaItems)
+            if (sisaItems > 0) {
+                formatted.push({
+                    label: `Load more (${sisaItems})`,
+                    className: 'load-more',
+                    clickable: false
+                })
                 setManagements(formatted);
-            }))
-    }, [dispatch, search]);
+            } else setManagements(formatted);
+        }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, search, loadDefault]);
+
 
     return (
         <>
-            <Modal isOpen={addManagement} toggle={() => setAddManagement(false)} title={edit ? "Edit Management" : "Add Management"}
+            <Modal width="460px" isOpen={addManagement} toggle={() => setAddManagement(false)} title={edit ? "Edit Management" : "Add Management"}
                 okLabel={edit ? "Save" : "Add"} >
                 <Form isModal={true} onSubmit={data => {
                     edit ?
@@ -74,16 +87,21 @@ function Component() {
                     setEdit(false);
                     setRow({});
                 }}>
-                    <Modal disableFooter={true} isOpen={modalManagement} toggle={() => setModalManagement(false)}>
+                    <Modal width="400px" disableFooter={true} isOpen={modalManagement} toggle={() => setModalManagement(false)}>
                         <Input label="Search"
                             inputValue={search} setInputValue={setSearch}
+                            placeholder="Type managements..."
                         />
                         <Filter
                             data={managements}
                             onClick={(el) => {
-                                setManagementID(el.value);
-                                setManagementName(el.label);
-                                setModalManagement(false);
+                                if (el.clickable) {
+                                    setManagementID(el.value);
+                                    setManagementName(el.label);
+                                    setModalManagement(false);
+                                    return;
+                                }
+                                setLoadDefault(loadDefault + 5);
                             }}
                         />
                     </Modal>
