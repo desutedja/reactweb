@@ -16,7 +16,7 @@ const MultiSelectItem = ({ value, onClickDelete }) => {
 function Component({
     label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
     type = "text", rows = 2, options = [],
-    inputValue, setInputValue, icon, onClick,
+    inputValue, setInputValue, icon, onClick, onFocus,
     hidden, max, min, disabled
 }) {
     const [value, setValue] = useState(inputValue ? inputValue : "");
@@ -138,40 +138,44 @@ function Component({
                 />
             </div>;
 
-            default: return <div className="Input-container">
-                {icon && <div className="InputIcon">
-                    {icon}
-                </div>}
-                <input
-                    disabled={disabled}
-                    type={type}
-                    id={label}
-                    name={name ? name : label.toLowerCase().replace(/ /g, '_')}
-                    required={!optional}
-                    placeholder={placeholder === null ? label : placeholder}
-                    min={min}
-                    max={max}
-                    value={value ? value : type === "button" ? label : ""}
-                    onChange={(e) => {
-                        // console.log(e.target.value);
-                        if (type === 'url') {
-                            setValue('http://' + e.target.value.replace('http://', ''));
-                            setInputValue && setInputValue('http://' + e.target.value.replace('http://', ''));
-                        } else {
-                            !onClick && setValue(e.target.value);
-                            setInputValue && setInputValue(e.target.value);
-                        }
-                    }}
-                    onClick={onClick}
-                    list={type === 'searchable' ? ('options-' + label) : null}
-                />
-                {type === 'searchable' &&
-                    <datalist id={"options-" + label}>
-                        {options.map(el =>
-                            <option key={el.value} value={el.label} />
-                        )}
-                    </datalist>}
-            </div>
+            default:
+                return (
+                    <div className="Input-container">
+                        {icon && <div className="InputIcon">
+                            {icon}
+                        </div>}
+                        <input
+                            disabled={disabled}
+                            type={type}
+                            id={label}
+                            name={name ? name : label.toLowerCase().replace(/ /g, '_')}
+                            required={!optional}
+                            placeholder={placeholder === null ? label : placeholder}
+                            min={min}
+                            max={max}
+                            value={value ? value : type === "button" ? label : ""}
+                            onChange={(e) => {
+                                // console.log(e.target.value);
+                                if (type === 'url') {
+                                    setValue('http://' + e.target.value.replace('http://', ''));
+                                    setInputValue && setInputValue('http://' + e.target.value.replace('http://', ''));
+                                } else {
+                                    !onClick && setValue(e.target.value);
+                                    setInputValue && setInputValue(e.target.value);
+                                }
+                            }}
+                            onClick={onClick}
+                            onFocus={onFocus}
+                            list={type === 'searchable' ? ('options-' + label) : null}
+                        />
+                        {type === 'searchable' &&
+                            <datalist id={"options-" + label}>
+                                {options.map(el =>
+                                    <option key={el.value} value={el.label} />
+                                )}
+                            </datalist>}
+                    </div>
+                )
         }
     }
 

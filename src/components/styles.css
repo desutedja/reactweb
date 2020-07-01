@@ -83,6 +83,11 @@
   border: 1px solid var(--primary-color);
 }
 
+.ListItem.load-more {
+  border: none;
+  outline: none;
+}
+
 .ReactModalPortal .Input {
   width: 100%;
 }

@@ -15,7 +15,7 @@ function Component({ data, onClick, onClickAll }) {
                 {data && data.map(el =>
                     <button
                         key={el.value ? el.value : el}
-                        className="ListItem"
+                        className={el.className === 'load-more' ? "ListItem load-more" : "ListItem"}
                         onClick={() => onClick(el)}
                     >
                         {el.label ? el.label : toSentenceCase(el)}
