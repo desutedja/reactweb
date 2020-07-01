@@ -48,18 +48,17 @@ function Component() {
     let dispatch = useDispatch();
 
     useEffect(() => {
-        (!search || search >= 3) && dispatch(get(endpointAdmin + '/management' +
+        (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/management' +
         '?limit=' + loadDefault + '&page=1' +
         '&search=' + search,  res => {
             let data = res.data.data.items;
             const totalItems = res.data.data.total_items;
-            const sisaItems = totalItems - data.length;
+            const currentItems = totalItems - data.length;
             
             let formatted = data.map(el => ({ label: el.name, value: el.id, clickable: true }));
-            console.log(sisaItems)
-            if (sisaItems > 0) {
+            if (currentItems > 0 && !search) {
                 formatted.push({
-                    label: `Load more (${sisaItems})`,
+                    label: `Load more (${currentItems})`,
                     className: 'load-more',
                     clickable: false
                 })
