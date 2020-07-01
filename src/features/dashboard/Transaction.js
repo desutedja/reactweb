@@ -110,7 +110,7 @@ function Component() {
                     </ComposedChart>
                 </div>
                 <div className="Container" style={{
-                    marginLeft: 16,
+                    marginRight: 0,
                     flexDirection: 'column',
                 }}>
                     <h5>Transaction Summary</h5>
@@ -134,7 +134,7 @@ function Component() {
                     </PieChart>
                 </div>
                 <div className="Container" style={{
-                    marginLeft: 16,
+                    marginRight: 0,
                     flexDirection: 'column',
                 }}>
                     <h5>Most Failed Order Category</h5>
@@ -147,10 +147,7 @@ function Component() {
                 </div>
             </div>
             <div className="Row">
-                <div style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                }}>
+                <div className="d-flex flex-column">
                     <div className="Row">
                         <div className="Container" style={{
                             flexDirection: 'column',
@@ -180,7 +177,7 @@ function Component() {
                     </div>
                 </div>
                 <div className="Container" style={{
-                    marginLeft: 16,
+                    marginRight: 0,
                     flexDirection: 'column',
                 }}>
                     <h5>Most Ordered Items</h5>

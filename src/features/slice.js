@@ -100,12 +100,12 @@ export const get = (
     headers: auth.headers
   })
     .then(res => {
-      console.log(res);
+      // console.log(res);
 
       ifSuccess(res);
     })
     .catch(err => {
-      console.log(err);
+      // console.log(err);
 
       dispatch(responseAlert(err.response));
 
@@ -125,12 +125,12 @@ export const post = (
     headers: auth.headers
   })
     .then(res => {
-      console.log(res);
+      // console.log(res);
 
       ifSuccess(res);
     })
     .catch(err => {
-      console.log(err);
+      // console.log(err);
 
       dispatch(responseAlert(err.response));
 
@@ -150,12 +150,12 @@ export const put = (
     headers: auth.headers
   })
     .then(res => {
-      console.log(res);
+      // console.log(res);
 
       ifSuccess(res);
     })
     .catch(err => {
-      console.log(err);
+      // console.log(err);
 
       dispatch(responseAlert(err.response));
 
@@ -176,12 +176,12 @@ export const patch = (
     headers: auth.headers
   })
     .then(res => {
-      console.log(res);
+      // console.log(res);
 
       ifSuccess(res);
     })
     .catch(err => {
-      console.log(err);
+      // console.log(err);
 
       dispatch(responseAlert(err.response));
 
@@ -202,12 +202,12 @@ export const del = (
     headers: auth.headers
   })
     .then(res => {
-      console.log(res);
+      // console.log(res);
 
       ifSuccess(res);
     })
     .catch(err => {
-      console.log(err);
+      // console.log(err);
 
       dispatch(responseAlert(err.response));
 

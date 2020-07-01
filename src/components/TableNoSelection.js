@@ -56,29 +56,10 @@ function Component({
         autoResetSelectedRows: true,
     },
         useSortBy,
-        usePagination,
-        useRowSelect,
-        hooks => {
-            hooks.visibleColumns.push(columns => {
-                return [
-                    {
-                        id: 'selection',
-                        Header: ({ getToggleAllRowsSelectedProps }) => (
-                            <div>
-                                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-                            </div>
-                        ),
-                        Cell: ({ row }) => (
-                            <div >
-                                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-                            </div>
-                        ),
-                    },
-                    ...columns,
-                ]
-            })
-        }
+        usePagination
     );
+    
+    console.log(selectedRowIds)
 
     const [search, setSearch] = useState("");
     const [searchToggle, toggleSearch] = useState("");
@@ -106,7 +87,7 @@ function Component({
         const selectedRows = selectedRowIds ?
             Object.keys(selectedRowIds).map(el => page[el].original) : [];
 
-        // console.log(selectedRows);
+        console.log(selectedRows);
         onSelection && onSelection(selectedRows);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, selectedRowIds]);

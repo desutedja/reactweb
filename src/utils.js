@@ -1,6 +1,18 @@
 import countries from './countries';
 import { banks } from './settings';
 
+export const yearsRentangDepanBelakang = (rentang) => {
+    const currentYear = Number(new Date().getFullYear());
+    const arrYears = [];
+    for (let i = 0; i <= rentang * 2; i++) {
+        arrYears.push({
+            value: i + 1,
+            label: (currentYear - rentang) + i
+        })
+    }
+    return arrYears;
+}
+
 export const months = [
     { value: 1, label: 'January' },
     { value: 2, label: 'February' },

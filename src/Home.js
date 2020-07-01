@@ -150,7 +150,7 @@ function Component() {
                 },
             },
         }).then(() => {
-            console.log('init success');
+            // console.log('init success');
 
             !Qiscus.isLogin && Qiscus.setUser(userID, 'kucing', user.firstname + ' ' + user.lastname,
                 'https://avatars.dicebear.com/api/male/' + user.email + '.svg', user)
@@ -163,10 +163,10 @@ function Component() {
                 })
                 .catch(function (error) {
                     // On error
-                    alert('setUser: ' + error);
+                    // alert('setUser: ' + error);
                 })
         }).catch(error => {
-            alert('init: ' + error);
+            // alert('init: ' + error);
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);

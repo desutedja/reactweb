@@ -22,6 +22,7 @@ function Component({ id }) {
     useEffect(() => {
         dispatch(get(endpointAdmin + '/management/details/' + id, res => {
             setData(res.data.data);
+            console.log('halo', res.data.data)
         }))
     }, [dispatch, id])
 
@@ -36,7 +37,7 @@ function Component({ id }) {
             <Avatar className="Item-avatar" size="40" round={8} src={data.logo}
                 name={data.name}
                 email={data.logo ? null : data.email} />
-            <span> </span>
+            <span></span>
             <div>
                 <b>{data.name}</b>
                 <p className="Item-subtext">{data.email}</p>

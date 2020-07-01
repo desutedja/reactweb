@@ -32,6 +32,7 @@ function Component() {
     return (
         <>
             <div className="Container" style={{
+                marginRight: 0,
                 flexDirection: 'column',
                 padding: 0,
             }}>
@@ -170,7 +171,8 @@ function Component() {
                     </div>
                 </div>
                 <div className="Container" style={{
-                    marginLeft: 16,
+                    // marginLeft: 16,
+                    marginRight: 0,
                 }}>
                     <div style={{
                         flex: 1,

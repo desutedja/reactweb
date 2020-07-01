@@ -164,6 +164,7 @@
   width: 200px;
   display: flex;
   align-items: center;
+  font-weight: 500;
 }
 
 .MenuItem-label-hidden {
@@ -197,9 +198,9 @@
 .Content,
 .Content-wide {
   flex: 1;
-  padding: 16px;
-  padding-right: 8px;
-  padding-top: 72px;
+  padding: 85px 22px 16px 96px;
+  /* padding-right: 8px;
+  padding-top: 72px; */
   min-height: 100vh;
   box-sizing: border-box;
   transition: all 0.3s ease;
@@ -212,15 +213,24 @@
   padding-left: 96px;
 }
 
+.box-self {
+  background-color: white;
+  padding: 16px;
+  border-radius: 4px;
+  box-shadow: 0px 0px 42px 0px rgba(32, 91, 146, 0.12);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
 .Container {
   background-color: white;
   padding: 16px;
   border-radius: 4px;
   display: flex;
   flex: 1;
-  margin-bottom: 32px;
-  margin-right: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  /* margin-bottom: 32px;
+  margin-right: 16px; */
+  margin: 0 1.4rem 1.3rem 0;
+  box-shadow: 0px 0px 42px 0px rgba(32, 91, 146, 0.12);
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   height: fit-content;
 }

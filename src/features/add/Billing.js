@@ -4,10 +4,11 @@ import Input from '../../components/Input';
 import Form from '../../components/Form';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
+import TableNoSelection from '../../components/TableNoSelection';
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { months } from '../../utils';
+import { months, yearsRentangDepanBelakang } from '../../utils';
 import { endpointAdmin } from '../../settings';
 import { FiChevronRight } from 'react-icons/fi';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
@@ -44,11 +45,17 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={modal} toggle={() => setModal(false)}>
+            <Modal isOpen={modal} toggle={() => setModal(false)}
+                style={{
+                    display: 'flex',
+                    justifyContent: 'center'
+                }}
+            >
                 <p className="Title" style={{
                     marginBottom: 16
                 }}>Select Service</p>
-                <Table
+                <TableNoSelection
+                    noSelector
                     columns={columnsService}
                     data={services}
                     loading={servicesLoading}
@@ -99,7 +106,7 @@ function Component() {
                 <Input label="Recent Usage" type="number" inputValue={selectedUnit?.recent_usage + ''} />
                 <Input label="Remarks" type="textarea" inputValue={selectedUnit?.remarks} />
                 <Input label="Month" type="select" options={months} inputValue={selectedUnit?.month} />
-                <Input label="Year" type="number" inputValue={selectedUnit?.year} />
+                <Input label="Year" type="select"  options={yearsRentangDepanBelakang(10)} inputValue={selectedUnit?.year} />
                 {/* <Input label="Due Date" type="date" inputValue={selectedUnit.due_date?.split('T')[0]} /> */}
                 <SectionSeparator />
             </Form>
