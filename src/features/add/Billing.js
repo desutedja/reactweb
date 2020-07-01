@@ -46,6 +46,7 @@ function Component() {
     return (
         <div>
             <Modal isOpen={modal} toggle={() => setModal(false)}
+                width="1400px"
                 style={{
                     display: 'flex',
                     justifyContent: 'center'

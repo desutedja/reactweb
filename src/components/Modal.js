@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 function Component({
-    width = '1400px',
+    width = '450px',
     isOpen, toggle, title, onClick, children, okLabel = "Yes", cancelLabel = '',
     disableHeader = false, disableFooter = false, onClickSecondary = null,
     disablePrimary = false, disableSecondary = false,

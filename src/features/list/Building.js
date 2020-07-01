@@ -154,7 +154,7 @@ function Component() {
     }
 
     return (
-        <Template 
+        <Template
             columns={columns}
             slice='building'
             getAction={getBuilding}
