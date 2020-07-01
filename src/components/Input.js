@@ -16,8 +16,8 @@ const MultiSelectItem = ({ value, onClickDelete }) => {
 function Component({
     label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
     type = "text", rows = 2, options = [],
-    inputValue, setInputValue, icon, onClick, onFocus,
-    hidden, max, min, disabled
+    inputValue, setInputValue, icon, onClick, onFocus, onBlur,
+    hidden, max, min, disabled, isValidate = false, validationMsg
 }) {
     const [value, setValue] = useState(inputValue ? inputValue : "");
     const [uploading, setUploading] = useState(false);
@@ -154,6 +154,7 @@ function Component({
                             min={min}
                             max={max}
                             value={value ? value : type === "button" ? label : ""}
+                            onBlur={onBlur}
                             onChange={(e) => {
                                 // console.log(e.target.value);
                                 if (type === 'url') {
@@ -199,6 +200,7 @@ function Component({
             </>}
 
             {renderInput(type)}
+            {isValidate && <span className="validation-error">{ validationMsg }</span>}
         </div>
     )
 }

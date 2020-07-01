@@ -42,6 +42,12 @@ function Component() {
     const [residentsPage, setResidentsPage] = useState('');
     const [loadingResident, setLoadingResident] = useState(false);
     const [emailRegistered, setEmailRegistered] = useState(false);
+    const [validation, setValidation] = useState({
+        tel: {
+            value: '',
+            isErr: false
+        }
+    })
 
     const [unitID, setUnitID] = useState('');
     const [units, setUnits] = useState([]);
@@ -68,12 +74,11 @@ function Component() {
 
     const [nat, setNat] = useState("");
 
-
     const { loading } = useSelector(state => state.resident);
-
+    
     let dispatch = useDispatch();
     let history = useHistory();
-
+    
     useEffect(() => {
         dispatch(get(endpointResident + '/geo/province',
 
@@ -232,7 +237,37 @@ function Component() {
                 {(!exist) && <>
                     <Input label="First Name" name="firstname" />
                     <Input label="Last Name" name="lastname" />
-                    <Input label="Phone" type="tel" />
+                    <Input label="Phone" type="tel" placeholder="e.g 62xxxxxxxxx"
+                        inputValue={validation.tel.value}
+                        isValidate={validation.tel.isErr}
+                        validationMsg="The phone number must contain 62" onFocus={(e) => {
+                            setValidation({
+                                ...validation,
+                                tel: {
+                                    ...validation.tel,
+                                    value: '62'
+                                }
+                            })
+                            console.log(validation.tel)
+                        }}
+                        onBlur={(e) => {
+                            if (e.target.value.includes(e.target.value.match(/^62/))) {
+                                setValidation({
+                                    ...validation,
+                                    tel: {
+                                        ...validation.tel,
+                                        isErr: false
+                                    }
+                                })
+                            } else setValidation({
+                                ...validation,
+                                tel: {
+                                    ...validation.tel,
+                                    isErr: true
+                                }
+                            })
+                        }}
+                        />
                     <Select label="Birth Place" name="birthplace" options={bcities}
                         inputValue={bcity.value} setInputValue={setBCity}
                         loading={bcloading}
