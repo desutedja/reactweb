@@ -1,2 +1,3 @@
 deploy:
-  - yarn deploy
+  script:
+    - yarn deploy
