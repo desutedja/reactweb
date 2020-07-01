@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Avatar from 'react-avatar';
 import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { get } from '../../features/slice';
 import { endpointResident } from '../../settings';
@@ -19,6 +19,7 @@ function Component({ id }) {
 
     let dispatch = useDispatch();
     let history = useHistory();
+    let { path } = useRouteMatch();
 
     useEffect(() => {
         dispatch(get(endpointResident + '/management/resident/detail/' + id, res => {
@@ -29,7 +30,7 @@ function Component({ id }) {
     return (
         <div className="Item" onClick={() => {
             history.push({
-                pathname: '/resident/' + id,
+                pathname: path + '/' + id,
                 state: data
             });
             dispatch(setSelected(data));
