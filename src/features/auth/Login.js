@@ -21,7 +21,9 @@ function Page() {
                 content={content}
             />
             <Template>
-                <form className="Column" onSubmit={(e) => {
+                <form className="Column" style={{
+                    alignItems: 'center',
+                }} onSubmit={(e) => {
                     e.preventDefault();
                     dispatch(login(email, history));
                 }}>

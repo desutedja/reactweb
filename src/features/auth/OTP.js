@@ -39,7 +39,9 @@ function Page() {
                     e.preventDefault();
                     dispatch(otpCheck(email, otp, history));
                 }}>
-                    <Column>
+                    <Column style={{
+                    alignItems: 'center',
+                }}>
                         <label className="Auth-label" htmlFor="otp">Kode OTP telah dikirim</label>
                         <p style={{
                             marginBottom: 20

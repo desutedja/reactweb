@@ -4,6 +4,7 @@ import { Button } from 'reactstrap';
 function Component({ icon, label, onClick, selected, color, disabled }) {
     return (
         <Button
+            className="Button"
             color={disabled ? 'secondary' : color ? color : "primary"}
             disabled={disabled}
             onClick={onClick}
