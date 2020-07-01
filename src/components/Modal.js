@@ -4,13 +4,15 @@ import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 function Component({
     isOpen, toggle, title, onClick, children, okLabel = "Yes", cancelLabel = '',
     disableHeader = false, disableFooter = false, onClickSecondary = null,
-    disablePrimary = false, disableSecondary = false
+    disablePrimary = false, disableSecondary = false,
+    className
 }) {
     const closeBtn = <button className="close" onClick={toggle}>&times;</button>;
 
     return (
         <div>
             <Modal
+                className={className}
                 isOpen={isOpen}
                 scrollable={false}
                 modalTransition={{ timeout: 1 }}
