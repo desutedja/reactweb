@@ -20,7 +20,7 @@ function Page({ role }) {
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
                 content={content}
             />
-            <Template>
+            <Template role={role}>
                 <form className="Column" style={{
                     alignItems: 'center',
                 }} onSubmit={(e) => {
