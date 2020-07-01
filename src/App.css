@@ -325,3 +325,14 @@
 .modal-content {
   height: 100%;
 }
+
+.NotificationModal-title {
+  font-size: large;
+}
+
+.NotificationModal-empty {
+  margin-top: 32px;
+  text-align: center;
+  color: grey;
+  /* background-color: red; */
+}

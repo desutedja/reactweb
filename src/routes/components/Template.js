@@ -126,7 +126,7 @@ function Component({ role, menu }) {
                 disableFooter
             >
                 <p className="NotificationModal-title">Notifications</p>
-                <p className="NotificationModal-empty">No notifications.</p>
+                <div className="NotificationModal-empty">No notifications.</div>
             </Modal>
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
                 content={content}
