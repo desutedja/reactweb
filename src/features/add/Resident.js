@@ -41,6 +41,7 @@ function Component() {
     const [residents, setResidents] = useState([]);
     const [residentsPage, setResidentsPage] = useState('');
     const [loadingResident, setLoadingResident] = useState(false);
+    const [emailRegistered, setEmailRegistered] = useState(false);
 
     const [unitID, setUnitID] = useState('');
     const [units, setUnits] = useState([]);
@@ -206,8 +207,9 @@ function Component() {
                 <div style={{
                     width: '100%'
                 }}>
-                    <Input label="Email" placeholder={"Input Resident Email"} type="email" compact inputValue={email}
+                    <Input onFocus={() => setEmailRegistered(false)} label="Email" placeholder={"Input Resident Email"} type="email" compact inputValue={email}
                         setInputValue={setEmail} />
+                    {emailRegistered && <span className="validation-error">Email is already registered</span>}
                     {exist && <Input label="Check" type="button" compact
                         onClick={() => {
                             dispatch(post(endpointResident + '/management/resident/check', {
@@ -217,9 +219,10 @@ function Component() {
                                     setSub(res.data.data);
                                     res.data.data.id
                                         ?
-                                        setModal(true)
+                                        setEmailRegistered(true)
+                                        // setModal(true)
                                         :
-                                        setExist(false);
+                                        setExist(false)
                                 },
                             ))
                         }}
