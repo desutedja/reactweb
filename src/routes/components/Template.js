@@ -169,9 +169,6 @@ function Component({ role, menu }) {
                         >
                             <MdNotifications />
                         </IconButton>
-                        {!!unread && <div className="Badge">
-                            {unread}
-                        </div>}
                     </div>
                     <div className="ProfileButton" onClick={() => {
                         setProfile(!profile)

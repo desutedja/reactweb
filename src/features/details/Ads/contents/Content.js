@@ -15,10 +15,10 @@ function Component() {
                 <div style={{
                     flex: 1
                 }}>
-                    {selected.content_image ?
-                        <img className="Logo" src={selected.content_image} alt="content_image" />
+                    {selected.media_url ?
+                        <img className="Logo" src={selected.media_url} alt="media_url" />
                         :
-                        <img src={'https://via.placeholder.com/200'} alt="content_image" />
+                        <img src={'https://via.placeholder.com/200'} alt="media_url" />
                     }
                 </div>
                 <div style={{

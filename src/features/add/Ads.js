@@ -82,6 +82,8 @@ function Component() {
 
                 <Input label="Title" name="content_name" type="textarea"
                     inputValue={selected.content_name} />
+                <Input label="Image/Video" name="media_url" type="file" accept="image/*, video/*"
+                    inputValue={selected.media_url} />
                 <Editor label="Content" name="content_description"
                     inputValue={selected.content_description} />
             </Form>

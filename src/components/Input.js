@@ -17,7 +17,7 @@ function Component({
     label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
     type = "text", rows = 2, options = [],
     inputValue, setInputValue, icon, onClick, onFocus, onBlur,
-    hidden, max, min, disabled, isValidate = false, validationMsg
+    hidden, max, min, disabled, isValidate = false, validationMsg, accept = "image/*"
 }) {
     const [value, setValue] = useState(inputValue ? inputValue : "");
     const [uploading, setUploading] = useState(false);
