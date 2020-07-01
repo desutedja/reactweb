@@ -6,6 +6,7 @@ import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { createManagement, editManagement } from '../slices/management';
 import { useHistory } from 'react-router-dom';
+import Template from './components/Template';
 
 function Component() {
     
@@ -15,7 +16,7 @@ function Component() {
     let history = useHistory();
 
     return (
-        <div>
+        <Template>
             <Form
                 onSubmit={data => selected.id ?
                     dispatch(editManagement( data, history, selected.id))
@@ -35,7 +36,7 @@ function Component() {
                 <Input label="PIC Phone" type="tel" inputValue={selected.pic_phone} />
                 <Input label="PIC Email" type="email" inputValue={selected.pic_email} />
             </Form>
-        </div>
+        </Template>
     )
 }
 

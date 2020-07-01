@@ -11,6 +11,7 @@ import Modal from '../../components/Modal';
 import { createBuilding, editBuilding } from '../slices/building';
 import { endpointResident } from '../../settings';
 import { get } from '../slice';
+import Template from './components/Template';
 
 function Component() {
     const [modal, setModal] = useState(false);
@@ -79,7 +80,7 @@ function Component() {
     }, [district, ]);
 
     return (
-        <div>
+        <Template>
             <Modal isOpen={modal} toggle={() => {
                 setLat('');
                 setLng('');
@@ -163,7 +164,7 @@ function Component() {
                 />
                 <Input label="ZIP Code" type="number" name="zipcode" inputValue={selected.zipcode} />
             </Form>
-        </div>
+        </Template>
     )
 }
 

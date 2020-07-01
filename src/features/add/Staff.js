@@ -10,6 +10,7 @@ import { useHistory } from 'react-router-dom';
 import { editStaff, createStaff } from '../slices/staff';
 import { endpointResident, endpointAdmin, banks } from '../../settings';
 import { get } from '../slice';
+import Template from './components/Template';
 
 function Component() {
     const { loading, selected } = useSelector(state => state.staff);
@@ -83,7 +84,7 @@ function Component() {
     }, [city, dispatch, selected.city]);
 
     return (
-        <div>
+        <Template>
             <Modal isOpen={modal} toggle={() => setModal(false)}>
                 <Input label="Search"
                     inputValue={search} setInputValue={setSearch}
@@ -180,7 +181,7 @@ function Component() {
                 <Input label="Account Name"
                     inputValue={selected.account_name} />
             </Form>
-        </div>
+        </Template>
     )
 }
 

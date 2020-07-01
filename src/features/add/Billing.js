@@ -13,6 +13,7 @@ import { endpointAdmin } from '../../settings';
 import { FiChevronRight } from 'react-icons/fi';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
 import { get } from '../slice';
+import Template from './components/Template';
 
 const columnsService = [
     { Header: "ID", accessor: "id" },
@@ -44,7 +45,7 @@ function Component() {
     let history = useHistory();
 
     return (
-        <div>
+        <Template>
             <Modal isOpen={modal} toggle={() => setModal(false)}
                 width="1400px"
                 style={{
@@ -111,7 +112,7 @@ function Component() {
                 {/* <Input label="Due Date" type="date" inputValue={selectedUnit.due_date?.split('T')[0]} /> */}
                 <SectionSeparator />
             </Form>
-        </div>
+        </Template>
     )
 }
 

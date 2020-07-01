@@ -15,6 +15,7 @@ import { toSentenceCase } from '../../utils';
 import { endpointAdmin } from '../../settings';
 import { createAnnouncement, editAnnouncement } from '../slices/announcement';
 import { get } from '../slice';
+import Template from './components/Template';
 
 const columnsBuilding = [
     { Header: 'ID', accessor: 'id' },
@@ -77,7 +78,7 @@ function Component() {
     }, [ selected.building]);
 
     return (
-        <div>
+        <Template>
             <Modal isOpen={modalBuilding} toggle={() => setModalBuilding(false)}>
                 <p className="Title" style={{
                     marginBottom: 16
@@ -234,7 +235,7 @@ function Component() {
                 <Input label="Image" type="file" inputValue={selected.image} />
                 <Editor label="Description" inputValue={selected.description} />
             </Form>
-        </div>
+        </Template>
     )
 }
 

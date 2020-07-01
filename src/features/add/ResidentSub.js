@@ -11,6 +11,7 @@ import { addSubaccount, createSubaccount } from '../slices/resident';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';
 import { get, post } from '../slice';
+import Template from './components/Template';
 
 function Component() {
     const [exist, setExist] = useState(true);
@@ -91,7 +92,7 @@ function Component() {
     }, []);
 
     return (
-        <div>
+        <Template>
             <Modal isOpen={modal} toggle={() => setModal(false)}>
                 <p>Resident with the provided email already exist.</p>
                 <p style={{ marginBottom: 16 }}>Add as sub account to
@@ -205,7 +206,7 @@ function Component() {
                     />
                 </>}
             </Form>
-        </div>
+        </Template>
     )
 }
 

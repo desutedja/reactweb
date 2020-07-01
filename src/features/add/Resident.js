@@ -15,6 +15,7 @@ import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';
 import { Badge } from 'reactstrap';
 import { get, post } from '../slice';
+import Template from './components/Template';
 
 const columns = [
     { Header: "ID", accessor: "id" },
@@ -156,7 +157,7 @@ function Component() {
     }, [dispatch, resident])
 
     return (
-        <div>
+        <Template>
             <Modal title={"Add Resident"} okLabel={"Yes"}
                 isOpen={modal} toggle={() => setModal(false)} onClick={() => setStep(2)}>
                 {step === 1 && <p>
@@ -315,7 +316,7 @@ function Component() {
                     />
                 </>}
             </Form>
-        </div>
+        </Template>
     )
 }
 

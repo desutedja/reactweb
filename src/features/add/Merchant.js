@@ -16,6 +16,7 @@ import { createMerchant, editMerchant } from "../slices/merchant";
 import GoogleMapReact from "google-map-react";
 import { FiMapPin } from "react-icons/fi";
 import { get } from "../slice";
+import Template from "./components/Template";
 function Component() {
   const [modal, setModal] = useState(false);
   const [lat, setLat] = useState('');
@@ -110,7 +111,7 @@ function Component() {
   }, [city, dispatch, selected.city]);
 
   return (
-    <div>
+    <Template>
       <Modal isOpen={modal} toggle={() => {
                 setLat('');
                 setLng('');
@@ -264,7 +265,7 @@ function Component() {
         <Input label="Account Bank" name="account_bank"  type="select" options={banks} inputValue={selected.account_bank} />
         <SectionSeparator />
       </Form>
-    </div>
+    </Template>
   );
 }
 

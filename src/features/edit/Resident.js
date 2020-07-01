@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import Input from '../../components/Input';
 import Select from '../../components/Select';
 import Form from '../../components/Form';
+import Breadcrumb from '../../components/Breadcrumb';
 import SectionSeparator from '../../components/SectionSeparator';
 import { editResident } from '../slices/resident';
 import { getCountryFromCode } from '../../utils';
@@ -83,6 +84,7 @@ function Component() {
 
     return (
         <div>
+            <Breadcrumb title="Edit" />
             <Form
                 showSubmit={!!selected.id}
                 onSubmit={data => dispatch(editResident(data, history, selected.id))}

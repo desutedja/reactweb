@@ -7,6 +7,7 @@ import Form from '../../components/Form';
 import Editor from '../../components/Editor';
 import SectionSeparator from '../../components/SectionSeparator';
 import { editAds, createAds } from '../slices/ads';
+import Template from './components/Template';
 
 function Component() {
     const [score, setScore] = useState(0);
@@ -36,7 +37,7 @@ function Component() {
     }, [agef, aget, gender, media, os])
 
     return (
-        <div>
+        <Template>
             <Form
                 onSubmit={data => !selected.id || url.split('/').reverse()[0] === 'add' ?
                     dispatch(createAds( data, history))
@@ -87,7 +88,7 @@ function Component() {
                 <Editor label="Content" name="content_description"
                     inputValue={selected.content_description} />
             </Form>
-        </div>
+        </Template>
     )
 }
 

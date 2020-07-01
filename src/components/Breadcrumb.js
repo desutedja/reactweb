@@ -16,8 +16,9 @@ function Component({ title }) {
             {location.pathname.split('/').length === 3 ?
                 toSentenceCase(location.pathname.split('/')[2]) :
                 location.pathname.split('/').map((el, index) =>
-                    index !== location.pathname.split('/').length - 1 && <Fragment key={el + index}>
-                        {index > 1 &&
+                    index !== 1 && index !== location.pathname.split('/').length - 1 &&
+                    <Fragment key={el + index}>
+                        {index > 2 &&
                             <FiChevronRight style={{
                                 marginLeft: 8,
                                 marginRight: 8,
