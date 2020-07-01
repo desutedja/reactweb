@@ -148,7 +148,7 @@ export const createBuilding = ( data, history) => dispatch => {
 
   dispatch(post(buildingEndpoint, data, 
     res => {
-      history.push("/building");
+      history.push("/sa/building");
 
       dispatch(setInfo({
         color: 'success',

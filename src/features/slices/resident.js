@@ -102,7 +102,7 @@ export const createResident = ( data, history) => dispatch => {
 
   dispatch(post(residentEndpoint + '/register/parent', data, 
     res => {
-      history.push("/resident");
+      history.push("/sa/resident");
 
       dispatch(stopAsync());
     },

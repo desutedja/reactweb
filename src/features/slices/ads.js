@@ -88,7 +88,7 @@ export const createAds = ( data, history) => dispatch => {
     ads: data
   }, 
     res => {
-      history.push("/advertisement");
+      history.push("/sa/advertisement");
 
       dispatch(setInfo({
         color: 'success',
@@ -107,7 +107,7 @@ export const editAds = ( data, history, id) => dispatch => {
   dispatch(put(adsEndpoint, { ...data, id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
-      history.push("/advertisement/details");
+      history.push("/sa/advertisement/details");
 
       dispatch(setInfo({
         color: 'success',

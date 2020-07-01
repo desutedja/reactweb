@@ -161,7 +161,7 @@ function Component() {
         <Input label="Phone" type="phone" inputValue={selected.phone} />
         <Input
           label="Legal"
-          type="select"
+          type="radio"
           options={[
             { value: "individual", label: "Individu" },
             { value: "company", label: "Perusahaan" },
@@ -171,7 +171,7 @@ function Component() {
         <Input
           label="Type"
           name="type"
-          type="select"
+          type="radio"
           options={[
             { value: "services", label: "Services" },
             { value: "goods", label: "Goods" },
@@ -216,7 +216,7 @@ function Component() {
         />
         <Input
           label="Status"
-          type="select"
+          type="radio"
           options={[
             { value: "active", label: "Active" },
             { value: "inactive", label: "Inactive" },

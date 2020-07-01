@@ -21,7 +21,6 @@ function Component({
 }) {
     const [value, setValue] = useState(inputValue ? inputValue : "");
     const [uploading, setUploading] = useState(false);
-
     let uploader = useRef();
 
     useEffect(() => {
@@ -85,6 +84,24 @@ function Component({
                     <FiChevronDown />
                 </div>
             </div>;
+
+            case 'radio': return (
+                <div className="row">
+                    {options.map(el => (
+                        <div className="col-6">
+                            <div className="form-check">
+                                {inputValue === el.value ? <input className="form-check-input" type="radio" name={label} id={el.label} value={el.value} checked /> :
+                                    <input className="form-check-input" type="radio" name={label} id={el.label} value={el.value} />
+                                }
+                               
+                                <label className="form-check-label m-0 ml-2" for={el.label}>
+                                    {el.label}
+                                </label>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )
 
             case 'file': return <div className="Input-container">
                 {uploading && <div className="InputIcon">

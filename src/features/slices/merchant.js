@@ -87,7 +87,7 @@ export const createMerchant = ( data, history) => dispatch => {
 
   dispatch(post(merchantEndpoint , data, 
     res => {
-      history.push("/merchant");
+      history.push("/sa/merchant");
 
       dispatch(setInfo({
         color: 'success',
@@ -107,7 +107,7 @@ export const editMerchant = ( data, history, id) => dispatch => {
   dispatch(patch(merchantEndpoint, { ...data, id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
-      history.push("/merchant/details");
+      history.push("/sa/merchant/details");
 
       dispatch(setInfo({
         color: 'success',

@@ -25,7 +25,7 @@ function Component() {
             >
                 <Input label="Name" inputValue={selected.name} />
                 <Input label="Legal Name" name="name_legal" inputValue={selected.name_legal} />
-                <Input label="Phone" type="tel" inputValue={selected.phone} />
+                <Input label="Phone" type="tel" placeholder="e.g 6281xxxxxxx" inputValue={selected.phone} />
                 <Input label="Email" type="email" inputValue={selected.email} />
                 <Input label="Website" type="url" inputValue={selected.website} />
                 <SectionSeparator />

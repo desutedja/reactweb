@@ -45,17 +45,17 @@ function Component() {
                 }
                 loading={loading}
             >
-                <Input label="Appear as" type="select" options={[
+                <Input label="Appear as" type="radio" options={[
                     { value: "popup", label: "Popup" },
                     { value: "banner", label: "Banner" },
                 ]} inputValue={selected.appear_as} />
                 <SectionSeparator />
 
-                <Input optional label="Gender" type="select" options={[
+                <Input optional label="Gender" type="radio" options={[
                     { value: "M", label: "Male" },
                     { value: "F", label: "Female" },
                 ]} inputValue={gender ? gender : selected.gender} setInputValue={setGender} />
-                <Input optional label="Media" type="select" options={[
+                <Input optional label="Media" type="radio" options={[
                     { value: "apps", label: "Apps" },
                     { value: "url", label: "URL" },
                 ]} inputValue={media ? media : selected.media} setInputValue={setMedia} />
@@ -67,7 +67,7 @@ function Component() {
                     inputValue={aget ? aget : selected.age_to} setInputValue={setAget}
                     max={85}
                 />
-                <Input optional label="OS" type="select" options={[
+                <Input optional label="OS" type="radio" options={[
                     { value: "android", label: "Android" },
                     { value: "ios", label: "iOS" },
                 ]} inputValue={os ? os : selected.os} setInputValue={setOS} />

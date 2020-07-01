@@ -11,7 +11,6 @@ function Component({ data, labels, type = "", editable = true, renderButtons = (
 
     let history = useHistory();
     let { url } = useRouteMatch();
-
     function formatLabel(label) {
         if (label === 'id') label = type + " ID";
         if (label.includes('pic_')) label = label.split('_')[1];

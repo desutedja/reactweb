@@ -237,7 +237,7 @@ function Component() {
                 {(!exist) && <>
                     <Input label="First Name" name="firstname" />
                     <Input label="Last Name" name="lastname" />
-                    <Input label="Phone" type="tel" placeholder="e.g 62xxxxxxxxx"
+                    <Input label="Phone" type="tel" placeholder="e.g 6281xxxxxxx"
                         inputValue={validation.tel.value}
                         isValidate={validation.tel.isErr}
                         validationMsg="The phone number must contain 62" onFocus={(e) => {
@@ -278,7 +278,7 @@ function Component() {
                         setInputValue={setNat} inputValue={nat.label}
                     />
                     <Input hidden name="nationality" inputValue={nat.value} />
-                    <Input label="Gender" type="select" options={[
+                    <Input label="Gender" type="radio" options={[
                         { value: 'P', label: 'Perempuan' },
                         { value: 'L', label: 'Laki-Laki' },
                     ]} />

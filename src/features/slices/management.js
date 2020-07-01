@@ -71,7 +71,7 @@ export const createManagement = ( data, history) => dispatch => {
 
   dispatch(post(managementEndpoint, data, 
     res => {
-      history.push("sa/management");
+      history.push("/sa/management");
 
       dispatch(setInfo({
         color: 'success',

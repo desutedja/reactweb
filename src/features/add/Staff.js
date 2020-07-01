@@ -151,7 +151,7 @@ function Component() {
                 <SectionSeparator />
 
                 <Input label="Nationality" inputValue={selected.nationality} />
-                <Input label="Gender" type="select" options={[
+                <Input label="Gender" type="radio" options={[
                     { value: 'P', label: 'Perempuan' },
                     { value: 'L', label: 'Laki-Laki' },
                 ]} inputValue={selected.gender} />

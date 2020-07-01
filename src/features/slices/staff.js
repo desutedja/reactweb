@@ -70,7 +70,7 @@ export const createStaff = ( data, history) => dispatch => {
 
   dispatch(post(staffEndpoint + '/create', data, 
     res => {
-      history.push("/staff");
+      history.push("/sa/staff");
 
       dispatch(setInfo({
         color: 'success',
