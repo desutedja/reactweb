@@ -1,4 +1,12 @@
 .BigNumber {
     /* margin: 16px; */
     font-size: 2rem;
+    font-weight: 600;
+    color: #007bff;
+}
+.BigNumber.in-dashboard {
+    color: #007bff;
+    font-size: 3.5rem;
+    font-weight: 600;
+    line-height: 1.3;
 }

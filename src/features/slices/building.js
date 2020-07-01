@@ -135,7 +135,7 @@ export const getBuilding = ( pageIndex, pageSize, search = '', province, city, d
     '&district=' + district,
     
     res => {
-      console.log(res);
+      // console.log(res);
 
       dispatch(setData(res.data.data));
 
@@ -203,7 +203,7 @@ export const getBuildingDetails = (row,  history, url) => dispatch => {
   dispatch(get(buildingEndpoint + '/details/' + row.id, 
     res => {
       dispatch(setSelected(res.data.data));
-      history.push(url + '/details');
+      history.push(url + '/' + res.data.data.id);
 
       dispatch(stopAsync())
     }))
