@@ -71,7 +71,7 @@ export const createManagement = ( data, history) => dispatch => {
 
   dispatch(post(managementEndpoint, data, 
     res => {
-      history.push("/management");
+      history.push("sa/management");
 
       dispatch(setInfo({
         color: 'success',
@@ -91,7 +91,7 @@ export const editManagement = ( data, history, id) => dispatch => {
   dispatch(put(managementEndpoint, {...data, id: id}, 
     res => {
       dispatch(setSelected(res.data.data));
-      history.push("/management/details");
+      history.push(`${id}`);
 
       dispatch(setInfo({
         color: 'success',

@@ -117,7 +117,7 @@ export const editResident = ( data, history, id) => dispatch => {
   dispatch(put(residentEndpoint + '/edit', { ...data, id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
-      history.push("/resident/details");
+      history.push(`${id}`);
 
       dispatch(stopAsync());
     },

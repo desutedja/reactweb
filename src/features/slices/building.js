@@ -168,7 +168,7 @@ export const editBuilding = ( data, history, id) => dispatch => {
   dispatch(put(buildingEndpoint, { ...data, id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
-      history.push("/building/details");
+      history.push(`${id}`);
 
       dispatch(setInfo({
         color: 'success',
