@@ -313,3 +313,15 @@
   right: 32px;
   bottom: 16px;
 }
+
+.NotificationModal {
+  position: fixed !important;
+  right: 0;
+  height: 100vh;
+  margin: 0 !important;
+  width: 280px !important;
+}
+
+.modal-content {
+  height: 100%;
+}

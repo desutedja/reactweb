@@ -32,9 +32,10 @@ import Info from './components/Info';
 import Modal from './components/Modal';
 
 import { toSentenceCase } from './utils';
-import { closeAlert, setConfirmDelete, setNotif } from './features/slice';
+import { closeAlert, setConfirmDelete, setNotif, get } from './features/slice';
 import { setQiscus, updateMessages, setUnread } from './features/chat/slice';
 import { Toast, ToastHeader, ToastBody } from 'reactstrap';
+import { endpointManagement } from './settings';
 
 const Qiscus = new QiscusSDKCore();
 
@@ -121,6 +122,9 @@ function Component() {
     const [menuWide, setMenuWide] = useState(false);
     const [expanded, setExpanded] = useState("");
     const [profile, setProfile] = useState(false);
+    
+    const [notifModal, setNotifModal] = useState(false);
+    const [notifData, setNotifData] = useState([]);
 
     const { alert, title, content, confirmDelete, notif } = useSelector(state => state.main);
     const { user } = useSelector(state => state.auth);
@@ -180,7 +184,7 @@ function Component() {
             .catch(function (error) {
                 // On error
             })
-    }, [dispatch, qiscus, url, messages])
+    }, [dispatch, qiscus, url, messages]);
 
     function isSelected(menu) {
         return ('/' + history.location.pathname.split('/')[1]) === menu.route;
@@ -208,6 +212,15 @@ function Component() {
                 onClickSecondary={() => dispatch(setConfirmDelete())}
             >
                 {confirmDelete.content}
+            </Modal>
+            <Modal
+                className="NotificationModal"
+                isOpen={notifModal}
+                toggle={() => setNotifModal(false)}
+                disableHeader
+                disableFooter
+            >
+                Notifications
             </Modal>
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
                 content={content}
@@ -241,9 +254,19 @@ function Component() {
                             {unread}
                         </div>}
                     </div>
-                    <IconButton>
-                        <MdNotifications />
-                    </IconButton>
+                    {/* <div style={{
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}>
+                        <IconButton
+                            onClick={() => setNotifModal(true)}
+                        >
+                            <MdNotifications />
+                        </IconButton>
+                        {!!unread && <div className="Badge">
+                            {unread}
+                        </div>}
+                    </div> */}
                     <div className="ProfileButton" onClick={() => {
                         setProfile(!profile)
                     }}>
