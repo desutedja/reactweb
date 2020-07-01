@@ -7,7 +7,7 @@ import CustomAlert from '../../components/CustomAlert';
 import Template from './template';
 import { closeAlert } from '../slice';
 
-function Page() {
+function Page({ role }) {
     const [email, setEmail] = useState("")
 
     const { alert, title, content } = useSelector(state => state.main);
@@ -25,7 +25,7 @@ function Page() {
                     alignItems: 'center',
                 }} onSubmit={(e) => {
                     e.preventDefault();
-                    dispatch(login(email, history));
+                    dispatch(login(role, email, history));
                 }}>
                     <label className="Auth-label" htmlFor="email">Email</label>
                     <input

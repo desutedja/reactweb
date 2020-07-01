@@ -10,7 +10,7 @@ import { closeAlert } from '../slice';
 
 const time = 5;
 
-function Page() {
+function Page({ role }) {
     const [otp, setOtp] = useState("");
     const [tick, setTick] = useState(time);
 
@@ -37,11 +37,11 @@ function Page() {
             <Template>
                 <form onSubmit={(e) => {
                     e.preventDefault();
-                    dispatch(otpCheck(email, otp, history));
+                    dispatch(otpCheck(role, email, otp, history));
                 }}>
                     <Column style={{
-                    alignItems: 'center',
-                }}>
+                        alignItems: 'center',
+                    }}>
                         <label className="Auth-label" htmlFor="otp">Kode OTP telah dikirim</label>
                         <p style={{
                             marginBottom: 20

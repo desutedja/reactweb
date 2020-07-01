@@ -1,130 +1,35 @@
 import React, { useState, Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from './features/auth/slice';
+import { logout } from '../../features/auth/slice';
 import {
-    FiMenu, FiUsers, FiHome, FiBarChart2, FiShoppingCart, FiZap, FiVolume2,
-    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign, FiLogOut,
-    FiChevronDown, FiChevronUp,
+    FiMenu, FiLogOut, FiChevronDown, FiChevronUp,
 } from "react-icons/fi";
 import { MdChatBubble, MdNotifications } from "react-icons/md";
 import { Switch, Route, useHistory, Redirect, useRouteMatch } from 'react-router-dom';
 import QiscusSDKCore from 'qiscus-sdk-core';
 
-import DashboardRoute from './features/dashboard/Route';
-import ChatRoute from './features/chat/Route';
+import Row from '../../components/Row';
+import CustomAlert from '../../components/CustomAlert';
+import IconButton from '../../components/IconButton';
+import Info from '../../components/Info';
+import Modal from '../../components/Modal';
+import Chat from '../../features/chat/Route';
 
-import Ads from './features/routes/Ads';
-import Announcement from './features/routes/Announcement';
-import Billing from './features/routes/Billing';
-import Building from './features/routes/Building';
-import Management from './features/routes/Management';
-import Merchant from './features/routes/Merchant';
-import Product from './features/routes/Product';
-import Resident from './features/routes/Resident';
-import Staff from './features/routes/Staff';
-import Task from './features/routes/Task';
-import Transaction from './features/routes/Transaction';
-
-import Row from './components/Row';
-import CustomAlert from './components/CustomAlert';
-import IconButton from './components/IconButton';
-import Info from './components/Info';
-import Modal from './components/Modal';
-
-import { toSentenceCase } from './utils';
-import { closeAlert, setConfirmDelete, setNotif, get } from './features/slice';
-import { setQiscus, updateMessages, setUnread } from './features/chat/slice';
+import { toSentenceCase } from '../../utils';
+import { closeAlert, setConfirmDelete, setNotif } from '../../features/slice';
+import { setQiscus, updateMessages, setUnread } from '../../features/chat/slice';
 import { Toast, ToastHeader, ToastBody } from 'reactstrap';
-import { endpointManagement } from './settings';
 
 const Qiscus = new QiscusSDKCore();
 
-const menu = [
-    {
-        icon: <FiBarChart2 className="MenuItem-icon" />,
-        label: "Dashboard",
-        route: "/dashboard",
-        subroutes: [
-            '/billing',
-            '/transaction',
-            '/task',
-            '/advertisement',
-        ]
-    },
-    {
-        icon: <FiBriefcase className="MenuItem-icon" />,
-        label: "Management",
-        route: "/management"
-    },
-    {
-        icon: <FiHome className="MenuItem-icon" />,
-        label: "Building",
-        route: "/building"
-    },
-    {
-        icon: <FiUsers className="MenuItem-icon" />,
-        label: "Resident",
-        route: "/resident"
-    },
-    {
-        icon: <FiZap className="MenuItem-icon" />,
-        label: "Billing",
-        route: "/billing",
-        subroutes: [
-            '/unit',
-            '/settlement',
-            '/disbursement',
-        ]
-    },
-    {
-        icon: <FiAward className="MenuItem-icon" />,
-        label: "Staff",
-        route: "/staff"
-    },
-    {
-        icon: <FiTarget className="MenuItem-icon" />,
-        label: "Task",
-        route: "/task"
-    },
-    {
-        icon: <FiShoppingCart className="MenuItem-icon" />,
-        label: "Merchant",
-        route: "/merchant"
-    },
-    {
-        icon: <FiShoppingBag className="MenuItem-icon" />,
-        label: "Product",
-        route: "/product"
-    },
-    {
-        icon: <FiDollarSign className="MenuItem-icon" />,
-        label: "Transaction",
-        route: "/transaction",
-        subroutes: [
-            '/list',
-            '/settlement',
-            '/disbursement',
-        ]
-    },
-    {
-        icon: <FiRss className="MenuItem-icon" />,
-        label: "Advertisement",
-        route: "/advertisement"
-    },
-    {
-        icon: <FiVolume2 className="MenuItem-icon" />,
-        label: "Announcement",
-        route: "/announcement"
-    },
-]
+const clinkLogo = require("../../assets/clink_logo.png");
+const clinkLogoSmall = require("../../assets/clink_logo_small.png");
 
-function Component() {
+function Component({ role, menu }) {
     const [menuWide, setMenuWide] = useState(false);
     const [expanded, setExpanded] = useState("");
     const [profile, setProfile] = useState(false);
-    
     const [notifModal, setNotifModal] = useState(false);
-    const [notifData, setNotifData] = useState([]);
 
     const { alert, title, content, confirmDelete, notif } = useSelector(state => state.main);
     const { user } = useSelector(state => state.auth);
@@ -132,7 +37,7 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { url } = useRouteMatch();
+    let { path, url } = useRouteMatch();
 
     useEffect(() => {
         const userID = "superadmin" + user.id + user.email;
@@ -187,7 +92,7 @@ function Component() {
     }, [dispatch, qiscus, url, messages]);
 
     function isSelected(menu) {
-        return ('/' + history.location.pathname.split('/')[1]) === menu.route;
+        return ('/' + history.location.pathname.split('/')[2]) === menu.route;
     }
 
     return (
@@ -220,7 +125,8 @@ function Component() {
                 disableHeader
                 disableFooter
             >
-                Notifications
+                <p className="NotificationModal-title">Notifications</p>
+                <p className="NotificationModal-empty">No notifications.</p>
             </Modal>
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
                 content={content}
@@ -246,7 +152,7 @@ function Component() {
                         alignItems: 'center'
                     }}>
                         <IconButton
-                            onClick={() => history.push('/chat')}
+                            onClick={() => history.push('/' + role + '/chat')}
                         >
                             <MdChatBubble />
                         </IconButton>
@@ -254,7 +160,7 @@ function Component() {
                             {unread}
                         </div>}
                     </div>
-                    {/* <div style={{
+                    <div style={{
                         display: 'flex',
                         alignItems: 'center'
                     }}>
@@ -266,7 +172,7 @@ function Component() {
                         {!!unread && <div className="Badge">
                             {unread}
                         </div>}
-                    </div> */}
+                    </div>
                     <div className="ProfileButton" onClick={() => {
                         setProfile(!profile)
                     }}>
@@ -294,11 +200,11 @@ function Component() {
                         onClick={() => history.push('/')}
                     >
                         {menuWide ? <img className="Logo-main"
-                            src={require("./assets/clink_logo.png")} alt="logo" />
+                            src={clinkLogo} alt="logo" />
                             : <img className="Logo-main-small"
-                                src={require("./assets/clink_logo_small.png")} alt="logo" />}
+                                src={clinkLogoSmall} alt="logo" />}
                     </div>
-                    {menu.map((el, index) =>
+                    {menu.map(el =>
                         <Fragment
                             key={el.label}
                         >
@@ -309,7 +215,7 @@ function Component() {
                                         setMenuWide(true);
                                     } :
                                         () => {
-                                            history.push(el.route);
+                                            history.push(path + el.route);
                                             setExpanded("");
                                         }}
                                 className={(isSelected(el) ? "MenuItem-active" : "MenuItem") +
@@ -330,8 +236,8 @@ function Component() {
                             {menuWide && expanded === el.label && <div className="Submenu">
                                 {el.subroutes.map(sub => <div
                                     key={sub}
-                                    onClick={() => history.push(el.route + sub)}
-                                    className={('/' + history.location.pathname.split('/')[2]) === sub
+                                    onClick={() => history.push(path + el.route + sub)}
+                                    className={('/' + history.location.pathname.split('/')[3]) === sub
                                         ? "SubmenuItem-active" : "SubmenuItem"}
                                 >
                                     {toSentenceCase(sub.slice(1))}
@@ -343,45 +249,12 @@ function Component() {
                 <div className={menuWide ? "Content" : "Content-wide"}>
                     <Info />
                     <Switch>
-                        <Redirect exact from="/" to={"/dashboard/task"} />
-                        <Route path="/dashboard">
-                            <DashboardRoute />
-                        </Route>
-                        <Route path="/building">
-                            <Building />
-                        </Route>
-                        <Route path="/management">
-                            <Management />
-                        </Route>
-                        <Route path="/resident">
-                            <Resident />
-                        </Route>
-                        <Route path="/billing">
-                            <Billing />
-                        </Route>
-                        <Route path="/staff">
-                            <Staff />
-                        </Route>
-                        <Route path="/task">
-                            <Task />
-                        </Route>
-                        <Route path="/merchant">
-                            <Merchant />
-                        </Route>
-                        <Route path="/product">
-                            <Product />
-                        </Route>
-                        <Route path="/transaction">
-                            <Transaction />
-                        </Route>
-                        <Route path="/advertisement">
-                            <Ads />
-                        </Route>
-                        <Route path="/announcement">
-                            <Announcement />
-                        </Route>
-                        <Route path="/chat">
-                            <ChatRoute />
+                        <Redirect exact from={"/" + role} to={"/" + role + menu[0].route} />
+                        {menu.map(el => <Route key={el.label} path={"/" + role + el.route}>
+                            {el.component}
+                        </Route>)}
+                        <Route path={"/" + role + "/chat"}>
+                            <Chat />
                         </Route>
                     </Switch>
                 </div>

@@ -15,15 +15,12 @@ import "./components/input.css";
 import "./components/table.css";
 
 import Login from "./features/auth/Login";
-import LoginBM from "./features/auth/LoginBM";
-
 import OTP from "./features/auth/OTP";
-import OTPBM from "./features/auth/OTPBM";
-
-
-import Home from "./Home";
+import SARoutes from "./routes/SA";
+import BMRoutes from "./routes/BM";
 import { store, persistor } from "./store";
-function MainRoute({ children, ...other }) {
+
+function SAMain({ children, ...other }) {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   return (
@@ -33,13 +30,35 @@ function MainRoute({ children, ...other }) {
         isAuthenticated ? (
           children
         ) : (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: { from: location },
-            }}
-          />
-        )
+            <Redirect
+              to={{
+                pathname: "/sa/login",
+                state: { from: location },
+              }}
+            />
+          )
+      }
+    />
+  );
+}
+
+function BMMain({ children, ...other }) {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  return (
+    <Route
+      {...other}
+      render={({ location }) =>
+        isAuthenticated ? (
+          children
+        ) : (
+            <Redirect
+              to={{
+                pathname: "/bm/login",
+                state: { from: location },
+              }}
+            />
+          )
       }
     />
   );
@@ -52,21 +71,27 @@ function App() {
         <Router>
           <div className="App" id="App">
             <Switch>
-              <Route path="/login">
-                <Login />
+              <Redirect exact from="/" to={"/sa"} />
+              {/* superadmin routes */}
+              <Route path="/sa/login">
+                <Login role="sa" />
               </Route>
-              <Route path="/loginbm">
-                <LoginBM />
+              <Route path="/sa/otp">
+                <OTP role="sa" />
               </Route>
-              <Route path="/otp">
-                <OTP />
+              <SAMain path="/sa">
+                <SARoutes />
+              </SAMain>
+              {/* bm routes */}
+              <Route path="/bm/login">
+                <Login role="bm" />
               </Route>
-              <Route path="/otpbm">
-                <OTPBM />
+              <Route path="/bm/otp">
+                <OTP role="bm" />
               </Route>
-              <MainRoute path="/">
-                <Home />
-              </MainRoute>
+              <BMMain path="/bm">
+                <BMRoutes />
+              </BMMain>
             </Switch>
           </div>
         </Router>

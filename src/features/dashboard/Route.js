@@ -1,5 +1,5 @@
 import React, {  } from 'react';
-import { useRouteMatch, Switch, Route } from 'react-router-dom';
+import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 
 import Task from './Task';
 import Transaction from './Transaction';
@@ -14,8 +14,8 @@ function Component() {
     return (
         <div>
             <Switch>
-                {/* <Redirect from={path} to={`${path}/task`} /> */}
-                <Route exact path={`${path}/task`}>
+                <Redirect exact from={path} to={`${path}/task`} />
+                <Route path={`${path}/task`}>
                     <Task />
                 </Route>
                 <Route path={`${path}/advertisement`}>

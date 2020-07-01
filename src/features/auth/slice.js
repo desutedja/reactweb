@@ -38,7 +38,7 @@ export const slice = createSlice({
         'X-User-Type': 'sa',
         'Content-Type': 'application/json',
       }
-    },    
+    },
     otpBMSuccess: (state, action) => {
       state.loading = false;
       state.isAuthenticated = true;
@@ -68,39 +68,26 @@ export const {
   logout
 } = slice.actions;
 
-export const login = (email, history) => dispatch => {
+export const login = (role, email, history) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(endpointAdmin + '/auth/centratama/login', {
+  dispatch(post(endpointAdmin + '/auth/' + (role === 'sa' ? 'centratama' : 'management')
+    + '/login', {
     email: email,
   }, res => {
     dispatch(loginSuccess(email));
 
-    history && history.push("/otp");
+    history && history.push("/" + role + "/otp");
   }, () => {
     dispatch(stopAsync());
   }))
 }
-export const loginBM = (email, history) => dispatch => {
-  dispatch(startAsync());
 
-  post(endpointAdmin + '/auth/management/login', {
-    email: email,
-  }, res => {
-    dispatch(loginBMSuccess(email));
-
-    history && history.push("/otpbm");
-  }, () => {
-    dispatch(stopAsync());
-  })
-}
-
-
-
-export const otpCheck = (email, otp, history) => dispatch => {
+export const otpCheck = (role, email, otp, history) => dispatch => {
   console.log(email);
 
-  dispatch(post(endpointAdmin + '/auth/centratama/otp', {
+  dispatch(post(endpointAdmin + '/auth/' + (role === 'sa' ? 'centratama' : 'management')
+    + '/otp', {
     "email": email,
     "otp": otp,
     "device": "web",
@@ -108,33 +95,12 @@ export const otpCheck = (email, otp, history) => dispatch => {
   }, res => {
     dispatch(otpSuccess(res.data.data));
 
-    history.push("/");
+    history.push("/" + role);
   }, () => {
     dispatch(stopAsync());
   }, () => {
 
   }))
 }
-
-
-export const otpCheckBM = (email, otp, history) => dispatch => {
-  console.log(email);
-
-  post(endpointAdmin + '/auth/management/otp', {
-    "email": email,
-    "otp": otp,
-    "device": "web",
-    "fcm_id": "1:10663666241:web:f3a844afac4e2025a6dcc0"
-  }, res => {
-    dispatch(otpBMSuccess(res.data.data));
-
-    history.push("/");
-  }, () => {
-    dispatch(stopAsync());
-  }, () => {
-
-  })
-}
-
 
 export default slice.reducer;
