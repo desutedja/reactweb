@@ -1,4 +1,11 @@
+image: node:14.4.0
+
+cache:
+  paths:
+  - node_modules/
+  - .yarn
+
 deploy:
   script:
-    - npm install
-    - npm run deploy
+    - yarn install
+    - yarn deploy
