@@ -197,7 +197,7 @@ function Component({
         }
     }
 
-    return (
+    return (options.length !== 0 || type !== 'select') && (
         <div className={"Input"
             + (type === "textarea" ? " textarea" : "")
             + (type === "select" ? " select" : "")
@@ -206,7 +206,8 @@ function Component({
         }>
             {!compact && <>
                 <div style={{ display: 'flex' }} >
-                    <label className="Input-label" htmlFor={label}>{label}
+                    <label className="Input-label" htmlFor={label}>
+                        {label}
                     </label>
                     {Object.keys(actionlabels).map(action =>
                         // eslint-disable-next-line jsx-a11y/anchor-is-valid

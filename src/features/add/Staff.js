@@ -11,6 +11,7 @@ import { editStaff, createStaff } from '../slices/staff';
 import { endpointResident, endpointAdmin, banks } from '../../settings';
 import { get } from '../slice';
 import Template from './components/Template';
+import countries from '../../countries';
 
 function Component() {
     const { loading, selected } = useSelector(state => state.staff);
@@ -151,7 +152,9 @@ function Component() {
                 <Input label="Phone" type="tel" inputValue={selected.phone} />
                 <SectionSeparator />
 
-                <Input label="Nationality" inputValue={selected.nationality} />
+                <Input label="Nationality" inputValue={selected.nationality} type="select"
+                    options={countries}
+                />
                 <Input label="Gender" type="radio" options={[
                     { value: 'P', label: 'Perempuan' },
                     { value: 'L', label: 'Laki-Laki' },

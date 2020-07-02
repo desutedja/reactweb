@@ -6,6 +6,7 @@ export const slice = createSlice({
   name: 'auth',
   initialState: {
     isAuthenticated: false,
+    role: '',
     loading: false,
     email: '',
     user: {},
@@ -22,10 +23,6 @@ export const slice = createSlice({
       state.loading = false;
       state.email = action.payload;
     },
-    loginBMSuccess: (state, action) => {
-      state.loading = false;
-      state.email = action.payload;
-    },
     otpSuccess: (state, action) => {
       state.loading = false;
       state.isAuthenticated = true;
@@ -39,18 +36,8 @@ export const slice = createSlice({
         'Content-Type': 'application/json',
       }
     },
-    otpBMSuccess: (state, action) => {
-      state.loading = false;
-      state.isAuthenticated = true;
-
-      state.user = action.payload;
-      state.headers = {
-        'Authorization': 'Bearer ' + action.payload.token,
-        'X-User-Id': action.payload.id,
-        'X-Session': action.payload.session,
-        'X-User-Type': 'sa',
-        'Content-Type': 'application/json',
-      }
+    setRole: (state, action) => {
+      state.role = action.payload;
     },
     logout: (state) => {
       state.isAuthenticated = false;
@@ -62,9 +49,8 @@ export const {
   startAsync,
   stopAsync,
   loginSuccess,
-  loginBMSuccess,
   otpSuccess,
-  otpBMSuccess,
+  setRole,
   logout
 } = slice.actions;
 
@@ -93,6 +79,7 @@ export const otpCheck = (role, email, otp, history) => dispatch => {
     "device": "web",
     "fcm_id": "1:10663666241:web:f3a844afac4e2025a6dcc0"
   }, res => {
+    dispatch(setRole(role));
     dispatch(otpSuccess(res.data.data));
 
     history.push("/" + role);

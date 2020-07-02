@@ -79,8 +79,7 @@ button:hover {
 
 input,
 textarea {
-  padding: 4px;
-  padding-left: 8px;
+  padding: 8px;
   border-radius: 4px;
   border-style: solid;
   border-width: 0.5px;

@@ -32,7 +32,7 @@ function Component({ id }) {
     return (
         <div className="Item" onClick={() => {
             history.push({
-                pathname: path + '/' + id,
+                pathname: 'staff/' + id,
                 state: data
             });
             dispatch(setSelected(data));
