@@ -12,7 +12,7 @@ import Disbursement from '../disbursement/Transaction';
 import { getTransaction, getTransactionDetails, setSelected } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
 import { toMoney, toSentenceCase, dateTimeFormatter } from '../../utils';
-import { Badge } from 'reactstrap';
+import Pill from '../../components/Pill';
 
 const payment_status = [
     { label: "Paid", value: "paid" },
@@ -37,9 +37,9 @@ const columns = [
     },
     {
         Header: 'Status', accessor: row => row.status ?
-            <h5><Badge pill color={trxStatusColor[row.status]}>
+            <Pill color={trxStatusColor[row.status]}>
                 {toSentenceCase(row.status)}
-            </Badge></h5> : "-"
+            </Pill> : "-"
     },
 ]
 

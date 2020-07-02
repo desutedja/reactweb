@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { FiSearch } from 'react-icons/fi';
-import { Badge } from 'reactstrap';
 
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Tile from '../../components/Tile';
+import Pill from '../../components/Pill';
 
 import Resident from '../../components/cells/Resident';
 import Staff from '../../components/cells/Staff';
@@ -27,12 +27,12 @@ const columns = [
     { Header: "Type", accessor: row => toSentenceCase(row.task_type) },
     {
         Header: "Priority", accessor: row =>
-            <h5><Badge pill color={
+            <Pill color={
                 row.priority === "emergency" ? "danger" :
                     row.priority === "high" ? "warning" : "success"
             }>
                 {toSentenceCase(row.priority)}
-            </Badge></h5>
+            </Pill>
     },
     { Header: "Requester", accessor: row => <Resident compact={true} id={row.requester_id} /> },
     // { Header: "Building", accessor: row => <Building id={row.requester_building_id} /> },
@@ -40,13 +40,13 @@ const columns = [
     { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
     {
         Header: "Status", accessor: row => row.status ?
-            <h5><Badge pill color={taskStatusColor[row.status]}>
+            <Pill color={taskStatusColor[row.status]}>
                 {
                     toSentenceCase(row.status) + (row.status === 'created' && row.priority === 'emergency' ? ':Searching for Security' : '')
                     + (row.status === 'rejected' ? ' by ' + row.rejected_by : '')
                 }
 
-            </Badge></h5> : "-"
+            </Pill> : "-"
     },
 ]
 
