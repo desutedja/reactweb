@@ -148,6 +148,7 @@ function Component({
                         <Input
                             label="Search"
                             compact
+                            fullwidth={true}
                             icon={<FiSearch />}
                             inputValue={search}
                             setInputValue={setSearch}

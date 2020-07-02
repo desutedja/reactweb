@@ -88,7 +88,7 @@
   outline: none;
 }
 
-.ReactModalPortal .Input {
+.FullInput, .ReactModalPortal .Input {
   width: 100%;
 }
 

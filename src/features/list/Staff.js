@@ -75,7 +75,7 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        search.length >= 3 && get(endpointAdmin + '/building' +
+        search.length >= 3 && dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
@@ -83,8 +83,8 @@ function Component() {
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setBuildings(formatted);
-            })
-    }, [search]);
+            }))
+    }, [dispatch, search]);
 
     return (
         <Template
@@ -102,6 +102,7 @@ function Component() {
                             <Input
                                 placeholder="Search Building Name"
                                 compact
+                                fullwidth={true}
                                 icon={<FiSearch />}
                                 inputValue={search}
                                 setInputValue={setSearch}
