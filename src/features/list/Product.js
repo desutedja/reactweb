@@ -10,23 +10,26 @@ import { toSentenceCase, toMoney } from '../../utils';
 import { FiSearch } from 'react-icons/fi';
 import UserAvatar from '../../components/UserAvatar';
 import { get } from '../slice';
+import Product from '../../components/cells/Product'; 
 
 import Template from './components/Template';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
     {
-        Header: 'Product', accessor: row => <UserAvatar fullname={row.name} email={toMoney(row.total_selling_price)}
-            picture={row.thumbnails} round={5} />
+        Header: 'Product', accessor: row => <Product id={row.id} merchantName={row.merchant_name}/>
     },
-    { Header: 'Merchant Name', accessor: 'merchant_name' },
+    { Header: 'Selling Price', accessor: row => {
+        return row.discount_fee > 0 ? <div style={{ display: 'block' }} ><div style={{ textDecoration: 'line-through' }} >{toMoney(row.total_selling_price)}</div><div>{toMoney(row.total_selling_price - row.discount_price)}</div></div> : 
+                        <span>{toMoney(row.selling_price)}</span>
+        }
+    },
+    //    { Header: 'Merchant Name', accessor: 'merchant_name' },
     { Header: 'Category', accessor: 'category_name' },
     { Header: 'Type', accessor: row => toSentenceCase(row.item_type) },
     { Header: 'Admin Fee', accessor: row => row.admin_fee + '%' },
     { Header: 'Discount', accessor: row => <span className={row.discount_fee > 0 ? "HighlightValue-Red" : ""} >{row.discount_fee + '%'}</span> },
-    { Header: 'PG Markup', accessor: row => row.pg_fee + '%' },
-    { Header: 'Selling Price', accessor: row => toMoney(row.selling_price) },
-    { Header: 'Final Price', accessor: row => toMoney(row.total_selling_price) }
+    //{ Header: 'PG Markup', accessor: row => row.pg_fee + '%' },
 ]
 
 function Component() {
@@ -47,7 +50,7 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        (!search || search.length >= 3) && get(endpointMerchant + '/admin/list' +
+        (!search || search.length >= 3) && dispatch(get(endpointMerchant + '/admin/list' +
             '?limit=5&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
@@ -55,18 +58,18 @@ function Component() {
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setMerchants(formatted);
-            })
-    }, [search]);
+            }))
+    }, [search, dispatch]);
 
     useEffect(() => {
-        get(endpointMerchant + '/admin/categories', res => {
+        (!search || search.length >= 3) && dispatch(get(endpointMerchant + '/admin/categories' + '?name=' + search, res => {
             let data = res.data.data;
 
             let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
             setCats(formatted);
-        })
-    }, []);
+        }))
+    }, [search, dispatch]);
 
     return (
         <Template
@@ -157,7 +160,6 @@ function Component() {
                         </>
                 },
             ]}
-            onClickDetails={row => dispatch(getProductDetails(row, history, url))}
         />
     )
 }

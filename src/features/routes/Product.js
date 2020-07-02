@@ -12,7 +12,7 @@ function Component() {
             <Route exact path={path}>
                 <List />
             </Route>
-            <Route path={`${path}/details`}>
+            <Route path={`${path}/:id`}>
                 <Details />
             </Route>
         </Switch>
