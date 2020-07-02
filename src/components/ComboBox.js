@@ -14,15 +14,16 @@ const useStyles = makeStyles((theme) => ({
   },
   listbox: {
     width: '100%',
-    margin: 0,
+    margin: '0 0 5rem 0',
     padding: 0,
     zIndex: 1,
     position: 'absolute',
     listStyle: 'none',
     backgroundColor: theme.palette.background.paper,
     overflow: 'auto',
-    maxHeight: 400,
+    maxHeight: 600,
     border: '1px solid rgba(0,0,0,.25)',
+    borderRadius: '5px',
     '& li': {
       padding: '8px 12px',
     },
