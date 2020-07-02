@@ -9,7 +9,6 @@ function Component({
     className
 }) {
     const closeBtn = <button className="close" onClick={toggle}>&times;</button>;
-
     return (
         <div>
             <Modal

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FiChevronDown, FiX } from 'react-icons/fi';
 import MoonLoader from "react-spinners/MoonLoader";
+import ComboBox from './ComboBox';
 
 import { storageRef } from '../firebase';
 
@@ -13,6 +14,7 @@ const MultiSelectItem = ({ value, onClickDelete }) => {
     )
 }
 
+
 function Component({
     label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
     type = "text", rows = 2, options = [],
@@ -21,11 +23,13 @@ function Component({
 }) {
     const [value, setValue] = useState(inputValue ? inputValue : "");
     const [uploading, setUploading] = useState(false);
+    const [dropShow, setDropShow] = useState(false);
     let uploader = useRef();
 
     useEffect(() => {
         inputValue && setValue(inputValue);
     }, [inputValue])
+
 
     const renderInput = type => {
         switch (type) {
@@ -56,42 +60,66 @@ function Component({
                 }}
             />;
 
-            case 'select': return <div className="Input-container">
-                <select
-                    disabled={disabled}
-                    style={{
-                        color: !value && 'grey'
-                    }}
-                    type={type}
-                    id={label}
-                    name={name ? name : label.toLowerCase().replace(/ /g, '_')}
-                    required={!optional}
-                    placeholder={placeholder == null ? label : placeholder}
-                    rows={rows}
-                    value={value}
-                    onChange={(e) => {
-                        setValue(e.target.value);
-                        setInputValue && setInputValue(e.target.value);
-                    }}
-                    onClick={onClick}
-                >
-                    {!inputValue && <option value="">{label}</option>}
-                    {options.map(el =>
-                        <option key={el.value} value={el.value}>{el.label}</option>
-                    )}
-                </select>
-                <div className="InputIcon">
-                    <FiChevronDown />
-                </div>
-            </div>;
+            case 'select':
+                if (options > 10) {
+                    return (
+                        <ComboBox
+                            options={options}
+                            label={label}
+                            comboValue={value}
+                            setComboValue={e => {
+                                setInputValue && setInputValue(e.target.value.toString());
+                            }}
+                        />
+                    )
+                }
+                return (
+                    <div className="Input-container">
+                        <select
+                            disabled={disabled}
+                            style={{
+                                color: !value && 'grey'
+                            }}
+                            type={type}
+                            id={label}
+                            name={name ? name : label.toLowerCase().replace(/ /g, '_')}
+                            required={!optional}
+                            placeholder={placeholder == null ? label : placeholder}
+                            rows={rows}
+                            value={value}
+                            onChange={(e) => {
+                                // console.log(e.target.value)
+                                setValue(e.target.value);
+                                setInputValue && setInputValue(e.target.value);
+                            }}
+                            onClick={onClick}
+                        >
+                            {!inputValue && <option value="">{label}</option>}
+                            {options.map(el =>
+                                <option key={el.value} value={el.value}>{el.label}</option>
+                            )}
+                        </select>
+                        <div className="InputIcon">
+                            <FiChevronDown />
+                        </div>
+                    </div>
+                );
 
             case 'radio': return (
                 <div className="row">
                     {options.map(el => (
                         <div className="col-6">
                             <div className="form-check">
-                                {inputValue === el.value ? <input className="form-check-input" type="radio" name={label} id={el.label} value={el.value} checked /> :
-                                    <input className="form-check-input" type="radio" name={label} id={el.label} value={el.value} />
+                                {inputValue === el.value ?
+                                    <input className="form-check-input" type="radio"
+                                        name={label}
+                                        id={el.label}
+                                        value={el.value}
+                                        checked /> :
+                                    <input className="form-check-input" type="radio"
+                                        name={label}
+                                        id={el.label}
+                                        value={el.value} />
                                 }
                                
                                 <label className="form-check-label m-0 ml-2" for={el.label}>

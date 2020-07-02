@@ -67,7 +67,7 @@ function Component() {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col" style={{
+                    <div className="col pr-5" style={{
                         height: '400px'
                     }}>
                         <ResponsiveContainer width='100%'>

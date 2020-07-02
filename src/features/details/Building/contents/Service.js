@@ -2,11 +2,13 @@ import React, { useCallback, useState } from 'react';
 import { FiPlus } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 import { toMoney } from '../../../../utils';
+// import { useParams } from 'react-router-dom';
 
 import Table from '../../../../components/Table';
 import Button from '../../../../components/Button';
 import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
+import Form from '../../../../components/Form';
 import Filter from '../../../../components/Filter';
 import { editBuildingService, createBuildingService, getBuildingService, 
     deleteBuildingService } from '../../../slices/building';
@@ -43,7 +45,6 @@ function Component() {
     const [taxType, setTaxType] = useState('percentage');
 
     const [sGroupFilter, setSGroupFilter] = useState({});
-
     
     const { selected, service, loading, refreshToggle } = useSelector(state => state.building);
 
@@ -51,21 +52,43 @@ function Component() {
 
     return (
         <>
-            <Modal isOpen={addService} toggle={() => setAddService(false)} title={edit ? "Edit Service" : "Add Service"}
+            <Modal isOpen={addService} toggle={() => setAddService(false)} title={edit ? "Edit Service" : "Add Service"} disableFooter={true}
                 okLabel={edit ? "Save" : "Add"}
                 onClick={data => {
-                    edit ?
-                        dispatch(editBuildingService( {
-                            "building_id": selected.id, building_name: selected.name, ...data,
-                        }, selectedRow.id))
-                        : dispatch(createBuildingService( { ...data, building_id: selected.id }));
+                    // console.log(selected)
+                    // edit ?
+                    //     dispatch(editBuildingService( {
+                    //         "building_id": selected.id, building_name: selected.name, ...data,
+                    //     }, selectedRow.id))
+                    //     : dispatch(createBuildingService( { ...data, building_id: selected.id }));
 
-                    setAddService(false);
-                    setEdit(false);
-                    setRow({});
+                    // setAddService(false);
+                    // setEdit(false);
+                    // setRow({});
                 }}
             >
-                <form >
+                <Form
+                    showCancel={true}
+                    onCancel={() => {
+                        setAddService(false);
+                        setEdit(false);
+                    }}
+                    onSubmit={(data) => {
+                        // console.log({
+                        //         "building_id": selected.id, building_name: selected.name, ...data,
+                        // })
+                        edit ?
+                        dispatch(editBuildingService({
+                            "building_id": selected.id, building_name: selected.name, ...data,
+                        }, selectedRow.id)) :
+                            dispatch(createBuildingService( { ...data, building_id: selected.id }));
+
+
+                        setAddService(false);
+                        setEdit(false);
+                        setRow({});      
+                    }}
+                >
                     <Input label="Name" inputValue={selectedRow.name} />
                     <Input label="Group" type="select" inputValue={selectedRow.group} options={[
                         { value: 'ipl', label: 'IPL' },
@@ -91,7 +114,7 @@ function Component() {
                         setInputValue={setTaxType} inputValue={taxType ? taxType : selectedRow.tax} />
                     <Input label="Tax Value" hidden={taxType === 'value'} inputValue={selectedRow.tax_value} />
                     <Input label="Tax Amount" hidden={taxType === 'percentage'} inputValue={selectedRow.tax_amount} />
-                </form>
+                </Form>
             </Modal>
             <Table
                     columns={columnsService}

@@ -44,6 +44,7 @@ function Component() {
                 setProvinces(formatted);
             }
         ))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -73,7 +74,7 @@ function Component() {
         ))
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ city, selected.city]);
-
+    
     useEffect(() => {
         district && setDistrictName(districts.find(el => el.value + '' === district).label);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,11 +111,13 @@ function Component() {
                 </div>
             </Modal>
             <Form
-                onSubmit={data =>
-                    selected.id ?
-                        dispatch(editBuilding( data, history, selected.id))
-                        :
-                        dispatch(createBuilding( data, history))
+                onSubmit={data => {
+                    // console.log(data)
+                        selected.id ?
+                            dispatch(editBuilding( data, history, selected.id))
+                            :
+                            dispatch(createBuilding( data, history))
+                    }
                 }
                 loading={loading}
             >
