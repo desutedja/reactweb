@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { FiSearch } from 'react-icons/fi';
+import { FiClock, FiSearch } from 'react-icons/fi';
 
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
@@ -24,7 +24,9 @@ import Template from './components/Template';
 const columns = [
     // { Header: "ID", accessor: "id" },
     { Header: "Title", accessor: row => <Tile items={[row.title, <small>{toEllipsis(row.ref_code, 17)}</small>]} /> },
-    { Header: "Type", accessor: row => toSentenceCase(row.task_type) },
+    { Header: "Type", accessor: row =>  row.task_type === "service" ? <>{ toSentenceCase(row.task_type) + 
+            (row.task_specialization ? ("- " + row.task_specialization) : "") }</> : 
+        toSentenceCase(row.task_type) },
     {
         Header: "Priority", accessor: row =>
             <Pill color={
@@ -37,7 +39,7 @@ const columns = [
     { Header: "Requester", accessor: row => <Resident compact={true} id={row.requester_id} /> },
     // { Header: "Building", accessor: row => <Building id={row.requester_building_id} /> },
     { Header: "Assignee", accessor: row => row.assignee_id ? <Staff compact={true} id={row.assignee_id} /> : "-" },
-    { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
+    { Header: "Assigned on", accessor: row => row.assigned_on ? <><FiClock /> {dateTimeFormatter(row.assigned_on)}</> : "-" },
     {
         Header: "Status", accessor: row => row.status ?
             <Pill color={taskStatusColor[row.status]}>
