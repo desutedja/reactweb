@@ -67,6 +67,10 @@ function Component() {
     const [buildingName, setBuildingName] = useState('');
     const [buildings, setBuildings] = useState('');
 
+    const [management, setManagement] = useState('');
+    const [managementName, setManagementName] = useState('');
+    const [managements, setManagements] = useState('');
+
     const [role, setRole] = useState('');
     const [roleLabel, setRoleLabel] = useState('');
 
@@ -86,12 +90,24 @@ function Component() {
             }))
     }, [dispatch, search]);
 
+    useEffect(() => {
+        search.length >= 3 && dispatch(get(endpointAdmin + '/management' +
+            '?limit=5&page=1' +
+            '&search=' + search, res => {
+                let data = res.data.data.items;
+
+                let formatted = data.map(el => ({ label: el.name, value: el.id }));
+
+                setManagements(formatted);
+            }))
+    }, [dispatch, search]);
+
     return (
         <Template
             columns={columns}
             slice='staff'
             getAction={getStaff}
-            filterVars={[role, building, shift]}
+            filterVars={[role, building, shift, management]}
             filters={[
                 {
                     hidex: building === "",
@@ -140,6 +156,35 @@ function Component() {
                                 toggleModal(false);
                             }}
                         />
+                },
+                {
+                    hidex: management === "",
+                    label: <p>{management ? "Management: " + managementName : "Management: All"}</p>,
+                    delete: () => { setManagement(""); setManagementName(""); },
+                    component: (toggleModal) =>
+                    <>
+                        <Input
+                            placeholder="Search Management Name"
+                            compact
+                            fullwidth={true}
+                            icon={<FiSearch />}
+                            inputValue={search}
+                            setInputValue={setSearch}
+                        />
+                        <Filter
+                            data={managements}
+                            onClick={(el) => {
+                                setManagement(el.value);
+                                setManagementName(el.label);
+                                toggleModal(false);
+                            }}
+                            onClickAll={() => {
+                                setManagement("");
+                                setManagementName("");
+                                toggleModal(false);
+                            }}
+                        />
+                    </>
                 },
                 {
                     hidex: role === "",
