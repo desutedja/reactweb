@@ -90,7 +90,8 @@ function Component({
                     {options.map(el => (
                         <div className="col-6">
                             <div className="form-check">
-                                {inputValue === el.value ? <input className="form-check-input" type="radio" name={label} id={el.label} value={el.value} checked /> :
+                                {inputValue === el.value ?
+                                    <input className="form-check-input" type="radio" name={label} id={el.label} value={el.value} checked /> :
                                     <input className="form-check-input" type="radio" name={label} id={el.label} value={el.value} />
                                 }
                                
