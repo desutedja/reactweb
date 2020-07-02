@@ -23,10 +23,10 @@ const columns = [
         accessor: row => <Staff id={row.id} />,
     },
     //{ Header: "Ongoing Task", accessor: row => row.ongoing_task ? row.ongoing_task : "-"},
-    { Header: "Email", accessor: "email" },
+    { Header: "Email", accessor: row => <a href={"mailto:" + row.email}>{row.email}</a> },
     //{ Header: "Phone", accessor: "phone" },
     //{ Header: "Gender", accessor: "gender" },
-    { Header: "Building Management", accessor: "building_name" },
+    { Header: "Building", accessor: "building_name" },
     {
         Header: "Management", accessor: row => row.staff_role === "courier" ?
             (row.on_centratama ? "Centratama Courier" : row.management_name) : row.management_name
