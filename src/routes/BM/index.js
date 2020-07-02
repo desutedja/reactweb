@@ -1,6 +1,6 @@
 import React, {  } from 'react';
 import {
-    FiBriefcase, FiBarChart2, FiHome
+    FiBriefcase, FiBarChart2, FiHome, FiUsers, FiZap, FiAward, FiTarget, FiRss, FiVolume2
 } from "react-icons/fi";
 
 import Template from '../components/Template';
@@ -20,16 +20,51 @@ import Transaction from '../../features/routes/Transaction';
 
 const menu = [
     {
-        icon: <FiBriefcase className="MenuItem-icon" />,
-        label: "Management",
-        route: "/management",
-        component: <Management />,
-    },
-    {
         icon: <FiHome className="MenuItem-icon" />,
         label: "Building",
         route: "/building",
         component: <Building />,
+    },
+    {
+        icon: <FiUsers className="MenuItem-icon" />,
+        label: "Resident",
+        route: "/resident",
+        component: <Resident />,
+    },
+    {
+        icon: <FiZap className="MenuItem-icon" />,
+        label: "Billing",
+        route: "/billing",
+        subroutes: [
+            '/unit',
+            '/settlement',
+            '/disbursement',
+        ],
+        component: <Billing />,
+    },
+    {
+        icon: <FiAward className="MenuItem-icon" />,
+        label: "Staff",
+        route: "/staff",
+        component: <Staff />,
+    },
+    {
+        icon: <FiTarget className="MenuItem-icon" />,
+        label: "Task",
+        route: "/task",
+        component: <Task />,
+    },
+    {
+        icon: <FiRss className="MenuItem-icon" />,
+        label: "Advertisement",
+        route: "/advertisement",
+        component: <Ads />,
+    },
+    {
+        icon: <FiVolume2 className="MenuItem-icon" />,
+        label: "Announcement",
+        route: "/announcement",
+        component: <Announcement />,
     },
 ]
 

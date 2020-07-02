@@ -32,7 +32,7 @@ export const slice = createSlice({
         'Authorization': 'Bearer ' + action.payload.token,
         'X-User-Id': action.payload.id,
         'X-Session': action.payload.session,
-        'X-User-Type': 'sa',
+        'X-User-Type': action.payload.role,
         'Content-Type': 'application/json',
       }
     },
@@ -80,7 +80,7 @@ export const otpCheck = (role, email, otp, history) => dispatch => {
     "fcm_id": "1:10663666241:web:f3a844afac4e2025a6dcc0"
   }, res => {
     dispatch(setRole(role));
-    dispatch(otpSuccess(res.data.data));
+    dispatch(otpSuccess({...res.data.data, role: role}));
 
     history.push("/" + role);
   }, () => {

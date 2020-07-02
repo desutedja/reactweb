@@ -140,7 +140,10 @@ function Component({ role, menu }) {
                             setExpanded("");
                         }}
                     >
-                        <FiMenu />
+                        <FiMenu style={{
+                            marginRight: 16,
+                        }} />
+                        {role === 'sa' ? 'Superadmin' : 'Building Manager'}
                     </IconButton>
                 </div>
                 <div style={{
@@ -194,7 +197,7 @@ function Component({ role, menu }) {
             <Row>
                 <div className="Menu shadow">
                     <div className={menuWide ? "Logo-container" : "Logo-container-small"}
-                        onClick={() => history.push('/')}
+                        onClick={() => history.push('/' + role)}
                     >
                         {menuWide ? <img className="Logo-main"
                             src={clinkLogo} alt="logo" />
