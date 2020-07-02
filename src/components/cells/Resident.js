@@ -9,7 +9,7 @@ import './style.css';
 import { setSelected } from '../../features/slices/resident';
 
 
-function Component({ id }) {
+function Component({ id, compact=false }) {
     const [data, setData] = useState({
         email: '',
         firstname: '',
@@ -28,7 +28,7 @@ function Component({ id }) {
     }, [dispatch, id])
 
     return (
-        <div className="Item" onClick={() => {
+        <div className={ !compact ? "Item" : "Item-compact" } onClick={() => {
             history.push({
                 pathname: path + '/' + id,
                 state: data
@@ -38,11 +38,15 @@ function Component({ id }) {
             <Avatar className="Item-avatar" size="40" src={data.photo}
                 name={data.firstname + ' ' + data.lastname} round
                 email={data.photo ? null : data.email} />
+            { !compact &&
+            <>
             <span> </span>
             <div >
                 <b>{data.firstname + ' ' + data.lastname}</b>
                 <p className="Item-subtext">{data.email}</p>
-            </div>
+            </div> 
+            </>
+            }
         </div>
     );
 }

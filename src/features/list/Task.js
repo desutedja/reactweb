@@ -34,9 +34,9 @@ const columns = [
                 {toSentenceCase(row.priority)}
             </Badge></h5>
     },
-    { Header: "Requester", accessor: row => <Resident id={row.requester_id} /> },
+    { Header: "Requester", accessor: row => <Resident compact={true} id={row.requester_id} /> },
     // { Header: "Building", accessor: row => <Building id={row.requester_building_id} /> },
-    { Header: "Assignee", accessor: row => row.assignee_id ? <Staff id={row.assignee_id} /> : "-" },
+    { Header: "Assignee", accessor: row => row.assignee_id ? <Staff compact={true} id={row.assignee_id} /> : "-" },
     { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
     {
         Header: "Status", accessor: row => row.status ?

@@ -10,7 +10,7 @@ import { toSentenceCase } from '../../utils';
 import { setSelected } from '../../features/slices/staff';
 
 
-function Component({ id }) {
+function Component({ id, compact=false }) {
     const [data, setData] = useState({
         email: '',
         staff_role: '',
@@ -30,7 +30,7 @@ function Component({ id }) {
     }, [dispatch, id])
 
     return (
-        <div className="Item" onClick={() => {
+        <div className={ !compact ? "Item" : "Item-compact" } onClick={() => {
             history.push({
                 pathname: 'staff/' + id,
                 state: data
@@ -40,11 +40,14 @@ function Component({ id }) {
             <Avatar className="Item-avatar" size="40" src={data.photo}
                 name={data.firstname + ' ' + data.lastname} round
                 email={data.photo ? null : data.email} />
+            { !compact &&
+            <>
             <span> </span>
             <div >
                 <b>{data.firstname + ' ' + data.lastname}</b>
                 <p className="Item-subtext">{toSentenceCase(data.staff_role)}</p>
             </div>
+            </> }
         </div>
     );
 }

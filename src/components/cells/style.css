@@ -10,6 +10,11 @@
   overflow: hidden;
 }
 
+.Item-compact {
+  cursor: pointer;
+  align-items: center;
+}
+
 .Item:hover {
     background-color: #f3f3fa;
 }
