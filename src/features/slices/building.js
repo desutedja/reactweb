@@ -370,8 +370,10 @@ export const createBuildingManagement = ( data) => dispatch => {
     }))
 }
 
-export const createBuildingService = ( data) => dispatch => {
+export const createBuildingService = ( data ) => dispatch => {
   dispatch(startAsync());
+
+  // console.log(data)
 
   dispatch(post(buildingEndpoint + '/service', data, 
     res => {

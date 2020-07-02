@@ -61,47 +61,49 @@ function Component({
             />;
 
             case 'select':
+                if (options > 10) {
+                    return (
+                        <ComboBox
+                            options={options}
+                            label={label}
+                            comboValue={value}
+                            setComboValue={e => {
+                                setInputValue && setInputValue(e.target.value.toString());
+                            }}
+                        />
+                    )
+                }
                 return (
-                    <ComboBox
-                        options={options}
-                        label={label}
-                        comboValue={value}
-                        setComboValue={e => {
-                            setInputValue && setInputValue(e.target.value.toString());
-                        }}
-                    />
-                )
-                // return (
-                //     <div className="Input-container">
-                //         <select
-                //             disabled={disabled}
-                //             style={{
-                //                 color: !value && 'grey'
-                //             }}
-                //             type={type}
-                //             id={label}
-                //             name={name ? name : label.toLowerCase().replace(/ /g, '_')}
-                //             required={!optional}
-                //             placeholder={placeholder == null ? label : placeholder}
-                //             rows={rows}
-                //             value={value}
-                //             onChange={(e) => {
-                //                 // console.log(e.target.value)
-                //                 setValue(e.target.value);
-                //                 setInputValue && setInputValue(e.target.value);
-                //             }}
-                //             onClick={onClick}
-                //         >
-                //             {!inputValue && <option value="">{label}</option>}
-                //             {options.map(el =>
-                //                 <option key={el.value} value={el.value}>{el.label}</option>
-                //             )}
-                //         </select>
-                //         <div className="InputIcon">
-                //             <FiChevronDown />
-                //         </div>
-                //     </div>
-                // );
+                    <div className="Input-container">
+                        <select
+                            disabled={disabled}
+                            style={{
+                                color: !value && 'grey'
+                            }}
+                            type={type}
+                            id={label}
+                            name={name ? name : label.toLowerCase().replace(/ /g, '_')}
+                            required={!optional}
+                            placeholder={placeholder == null ? label : placeholder}
+                            rows={rows}
+                            value={value}
+                            onChange={(e) => {
+                                // console.log(e.target.value)
+                                setValue(e.target.value);
+                                setInputValue && setInputValue(e.target.value);
+                            }}
+                            onClick={onClick}
+                        >
+                            {!inputValue && <option value="">{label}</option>}
+                            {options.map(el =>
+                                <option key={el.value} value={el.value}>{el.label}</option>
+                            )}
+                        </select>
+                        <div className="InputIcon">
+                            <FiChevronDown />
+                        </div>
+                    </div>
+                );
 
             case 'radio': return (
                 <div className="row">
