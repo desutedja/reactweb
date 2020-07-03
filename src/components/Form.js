@@ -4,15 +4,15 @@ import SectionSeparator from './SectionSeparator';
 import Loading from './Loading';
 import { Form } from 'reactstrap';
 
-function Component({ children, onSubmit, loading, isModal=false, showSubmit = true, showCancel = false, onCancel }) {
+function Component({ children, onSubmit, loading, isModal=false, showSubmit = true, showCancel = false, onCancel, noContainer = false }) {
 
     let formRef = useRef();
 
     return (
         <>
-        { !isModal && <SectionSeparator /> }
-        <div className={isModal ? "" : "Container"}>
-            <Form innerRef={formRef} className={isModal ? "" : "Form"} onSubmit={async e => {
+        { isModal || noContainer ? null : <SectionSeparator /> }
+        <div className={isModal || noContainer ? "" : "Container"}>
+            <Form innerRef={formRef} className={isModal || noContainer ? "" : "Form"} onSubmit={async e => {
                 e.preventDefault();
 
                 const formData = new FormData(formRef.current);
@@ -38,7 +38,7 @@ function Component({ children, onSubmit, loading, isModal=false, showSubmit = tr
                 onSubmit(dataObject);
             }}>
                 {children}
-                {!isModal && <SectionSeparator />}
+                {!isModal && <SectionSeparator className="mt-4" />}
                 {!isModal && showSubmit && <div className="Form-control">
                     <Loading loading={loading}>
                         <Button label="Submit" className="m-0" onClick={() => {

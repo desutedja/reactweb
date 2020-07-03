@@ -53,8 +53,8 @@ function Component() {
     return (
         <>
             <Modal isOpen={addService} toggle={() => setAddService(false)} title={edit ? "Edit Service" : "Add Service"} disableFooter={true}
-                okLabel={edit ? "Save" : "Add"}
-                onClick={data => {
+                // okLabel={edit ? "Save" : "Add"}
+                // onClick={data => {
                     // console.log(selected)
                     // edit ?
                     //     dispatch(editBuildingService( {
@@ -65,9 +65,10 @@ function Component() {
                     // setAddService(false);
                     // setEdit(false);
                     // setRow({});
-                }}
+                // }}
             >
                 <Form
+                    noContainer={true}
                     showCancel={true}
                     onCancel={() => {
                         setAddService(false);

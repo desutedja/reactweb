@@ -71,14 +71,23 @@ function Component() {
 
     return (
         <>
-            <Modal width="460px" isOpen={addManagement} toggle={() => setAddManagement(false)} title={edit ? "Edit Management" : "Add Management"}
+            <Modal isOpen={addManagement} toggle={() => setAddManagement(false)} title={edit ? "Edit Management" : "Add Management"} disableFooter={true}
                 okLabel={edit ? "Save" : "Add"} >
-                <Form isModal={true} onSubmit={data => {
+                <Form
+                    noContainer={true}
+                    showCancel={true}
+                    onCancel={() => {
+                        setAddManagement(false);
+                        setEdit(false);
+                    }}
+                    onSubmit={data => {
                     edit ?
                         dispatch(editBuildingManagement( {
                             "building_id": selected.id, building_name: selected.name, ...data,
                         }, selectedRow.id))
                         :
+                        // console.log({
+                        //     "building_id": selected.id, building_name: selected.name, ...data})
                         dispatch(createBuildingManagement( {
                             "building_id": selected.id, building_name: selected.name, ...data,
                         }))

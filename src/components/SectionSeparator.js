@@ -1,11 +1,8 @@
 import React from 'react';
 
-function Component() {
+function Component({className = ''}) {
     return (
-        <>
-        <div className="SectionSeparator">
-        </div>
-        </>
+        <div className={'SectionSeparator ' + className}></div>
     )
 }
 
