@@ -14,7 +14,6 @@ import FilterButton from './FilterButton';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 function Component({
-    noSelector = false,
     columns,
     data,
     totalItems,
@@ -29,6 +28,7 @@ function Component({
     onClickDelete,
     onClickDetails,
     onClickEdit,
+    onClickRow,
     renderActions,
     deleteSelection,
     onSelection,
@@ -220,7 +220,9 @@ function Component({
                                 ].filter(x => x !== "")
 
                                 return (
-                                    <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
+                                    <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : onClickRow && 'selectable'}
+                                        onClick={() => onClickRow(row.original)}
+                                    >
 
                                         {row.cells.map(cell => {
                                             return (

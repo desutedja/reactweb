@@ -3,7 +3,6 @@ import React, { useState, useCallback } from 'react';
 import Input from '../../components/Input';
 import Form from '../../components/Form';
 import Modal from '../../components/Modal';
-import Table from '../../components/Table';
 import TableNoSelection from '../../components/TableNoSelection';
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
@@ -46,7 +45,9 @@ function Component() {
 
     return (
         <Template>
-            <Modal isOpen={modal} toggle={() => setModal(false)}
+            <Modal
+                isOpen={modal} toggle={() => setModal(false)}
+                disableFooter={true}
                 width="1400px"
                 style={{
                     display: 'flex',
@@ -57,7 +58,6 @@ function Component() {
                     marginBottom: 16
                 }}>Select Service</p>
                 <TableNoSelection
-                    noSelector
                     columns={columnsService}
                     data={services}
                     loading={servicesLoading}
@@ -80,7 +80,14 @@ function Component() {
                             }));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [ selected])}
-                    onClickResolve={row => {
+                    // onClickResolve={row => {
+                    //     console.log(row)
+                    //     setService(row.id);
+                    //     setServiceName(row.name);
+                    //     setModal(false);
+                    // }}
+                    onClickRow={row => {
+                        // console.log(row)
                         setService(row.id);
                         setServiceName(row.name);
                         setModal(false);

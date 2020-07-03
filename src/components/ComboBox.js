@@ -40,15 +40,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function UseAutocomplete({
-  options = [], label = '', comboValue = '', setComboValue
+  options = [], label = '', comboValue = '', setComboValue, comboName
 }) {
   const [indexValue, setIndexValue] = useState(options.findIndex(option => option.value === comboValue));
   const [defaultValue, setDefaultValue] = useState(options[indexValue])
   // const indexValue = options.findIndex(option => option.value === inputValue);
 
-  useEffect(() => {
-    setIndexValue(0)
-  }, [options])
   const classes = useStyles();
   const {
     getRootProps,
@@ -59,12 +56,17 @@ export default function UseAutocomplete({
     groupedOptions
   } = useAutocomplete({
     id: label,
+    name: comboName,
     onChange: setComboValue,
     defaultValue: defaultValue,
     options: options,
     getOptionLabel: (option) => option.label,
   });
-   
+
+  useEffect(() => {
+    setIndexValue(0)
+  }, [options])
+  
   return (
     <div className={classes.wrapper}>
       <div {...getRootProps()}>

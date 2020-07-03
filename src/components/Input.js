@@ -66,6 +66,7 @@ function Component({
                         <ComboBox
                             options={options}
                             label={label}
+                            comboName={name ? name : label.toLowerCase().replace(/ /g, '_')}
                             comboValue={value}
                             setComboValue={e => {
                                 setInputValue && setInputValue(e.target.value.toString());

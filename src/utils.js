@@ -7,7 +7,7 @@ export const yearsRentangDepanBelakang = (rentang) => {
     for (let i = 0; i <= rentang * 2; i++) {
         arrYears.push({
             value: i + 1,
-            label: (currentYear - rentang) + i
+            label: ((currentYear - rentang) + i).toString()
         })
     }
     return arrYears;
