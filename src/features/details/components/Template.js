@@ -16,7 +16,7 @@ function Component({ image, title, website, phone, merchant,
         <>
             <Breadcrumb title="Details" />
             <div className="d-flex flex-wrap">
-                {(image || title) && <div className="col-12 col-md-5 col-lg-4 col-xl-3 box-self">
+                {(image || title) && <div className="col-12 col-md-5 col-lg-4 col-xl-3 box-self mr-md-4">
                         <div className="row">
                             <div className="col">
                                 {imgLoading &&
@@ -97,7 +97,7 @@ function Component({ image, title, website, phone, merchant,
                             </div>
                         </div>
                 </div>}
-                <div className="col-12 col-md box-self ml-0 mt-4 ml-md-4 mt-md-0">
+                <div className="col-12 col-md box-self ml-0 mt-4 mt-md-0">
                     <Tab
                         labels={labels}
                         contents={contents}

@@ -1,6 +1,6 @@
-import React, {  } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useHistory, useRouteMatch, useLocation, useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Button from '../../../components/Button';
 
@@ -9,6 +9,8 @@ import Template from '../components/Template';
 
 import Content from './contents/Content';
 import Schedule from './contents/Schedule';
+import { get } from '../../slice';
+import { endpointAds } from '../../../settings';
 
 const details = {
     "Information": [
@@ -41,16 +43,25 @@ const details = {
 }
 
 function Component() {
-    const { selected } = useSelector(state => state.ads);
+    const [data, setData] = useState({});
 
+    let dispatch = useDispatch();
     let history = useHistory();
+    let { state } = useLocation();
     let { url } = useRouteMatch();
+    let { id } = useParams();
+
+    useEffect(() => {
+        !state && dispatch(get(endpointAds + '/management/ads/' + id, res => {
+            setData(res.data.data);
+        }))
+    }, [dispatch, id, state])
 
     return (
         <Template
             labels={["Details", "Content", "Schedules"]}
             contents={[
-                <Detail type="Advertisement" data={selected} labels={details}
+                <Detail type="Advertisement" data={state ? state : data} labels={details}
                     renderButtons={() => [
                         <Button
                             label="Duplicate"
@@ -60,8 +71,10 @@ function Component() {
                         />,
                         <Button label="Preview" onClick={() => { }} />,
                         <Button
-                            disabled={!!selected.published}
-                            label={selected.published ? "Published" : "Publish"}
+                            disabled={state ? !!state.published : !!data.published}
+                            label={state ? 
+                                state.published ? "Published" : 
+                                data.published ? "Published" : "Publish" : "Publish"}
                             onClick={() => { }}
                         />
                     ]}
