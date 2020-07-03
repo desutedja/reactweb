@@ -61,7 +61,7 @@ function Component({
             />;
 
             case 'select':
-                if (options > 10) {
+                if (options.length > 10) {
                     return (
                         <ComboBox
                             options={options}
