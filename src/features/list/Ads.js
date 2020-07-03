@@ -1,37 +1,39 @@
-import React, { useState } from 'react';
+import React, {  } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { FiPlus } from 'react-icons/fi';
 
+import Pill from '../../components/Pill';
 import Button from '../../components/Button';
-import Input from '../../components/Input';
 
 import Template from './components/Template';
 import { getAds, deleteAds, setSelected, getAdsDetails } from '../slices/ads';
+import { dateFormatter } from '../../utils';
+import AdsCell from '../../components/cells/Ads';
 
 const columns = [
-    { Header: "ID", accessor: "id" },
-    { Header: "Title", accessor: "content_name" },
-    {
-        Header: "Target", accessor: row =>
-            row.gender + ", " + row.age_from + "-" + row.age_to + ", " + row.os
-    },
+    // { Header: "ID", accessor: "id" },
+    { Header: "Title", accessor: row => <AdsCell id={row.id} /> },
+    // {
+    //     Header: "Target", accessor: row =>
+    //         row.gender + ", " + row.age_from + "-" + row.age_to + ", " + row.os
+    // },
+    { Header: "Gender", accessor: "gender" },
+    { Header: "Age", accessor: row => row.age_from + " - " + row.age_to },
+    { Header: "Platform", accessor: "os" },
     { Header: "Priority", accessor: "total_priority_score" },
-    { Header: "Appear As", accessor: "appear_as" },
-    { Header: "Image", accessor: "" },
-    { Header: "Media Type", accessor: "media" },
-    { Header: "Media URL", accessor: "media_url" },
-    { Header: "Start Date", accessor: row => row.start_date?.split("T")[0] },
-    { Header: "End Date", accessor: row => row.end_date?.split("T")[0] },
-    { Header: "Status", accessor: "published" },
+    // { Header: "Appear As", accessor: "appear_as" },
+    // { Header: "Image", accessor: "" },
+    // { Header: "Media Type", accessor: "media" },
+    // { Header: "Media URL", accessor: "media_url" },
+    { Header: "Date", accessor: row => dateFormatter(row.start_date) + ' - ' 
+        + dateFormatter(row.end_date)},
+    { Header: "Status", accessor: row => <Pill
+        color={row.published && 'success'}
+    >{row.published ? 'Published' : 'Draft' }</Pill>},
 ]
 
 function Component() {
-    const [agef, setAgef] = useState("");
-    const [aget, setAget] = useState("");
-    const [agefSet, setAgefSet] = useState("");
-    const [agetSet, setAgetSet] = useState("");
-
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
@@ -42,34 +44,6 @@ function Component() {
             slice={'ads'}
             getAction={getAds}
             deleteAction={deleteAds}
-            filters={[
-                {
-                    button: <Button key="Set Age Range"
-                        label={(agefSet || agetSet) ?
-                            ("Age: " + (agefSet ? agefSet : 10) + " - " +
-                                (agetSet ? agetSet : 85)) : "Set Age Range"}
-                        selected={agefSet || agetSet}
-                    />,
-                    component: toggleModal =>
-                        <form style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                        }} onSubmit={() => {
-                            setAgefSet(agef);
-                            setAgetSet(aget);
-                            toggleModal();
-                        }} >
-                            <Input type="number" min={10}
-                                label="Age From" inputValue={agef}
-                                setInputValue={setAgef} />
-                            <Input type="number" max={85}
-                                label="Age To" inputValue={aget}
-                                setInputValue={setAget} />
-                            <Button label="Set" />
-                        </form>
-                },
-            ]}
             actions={[
                 <Button key="Add Advertisement" label="Add Advertisement" icon={<FiPlus />}
                     onClick={() => {
@@ -78,7 +52,7 @@ function Component() {
                     }}
                 />
             ]}
-            onClickDetails={row => dispatch(getAdsDetails(row,  history, url))}
+            // onClickDetails={row => dispatch(getAdsDetails(row,  history, url))}
         />
     )
 }
