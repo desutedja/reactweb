@@ -160,6 +160,11 @@
   /* background-color: var(--primary-yellow-color); */
 }
 
+.SubRowComponent {
+  background-color: #f0f0f3;
+  padding: 20px;
+}
+
 .selectable:hover {
   cursor: pointer;
   background-color: rgba(0, 0, 0, 0.048);

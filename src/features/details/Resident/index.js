@@ -5,7 +5,6 @@ import Detail from '../components/Detail';
 import Template from '../components/Template';
 
 import Unit from './contents/Unit';
-import Subaccount from './contents/Subaccount';
 import { useLocation, useParams } from 'react-router-dom';
 import { get } from '../../slice';
 import { endpointResident } from '../../../settings';
@@ -39,7 +38,6 @@ function Component() {
             contents={[
                 <Detail data={state ? state : data} labels={details} />,
                 <Unit id={id} />,
-                <Subaccount id={id} />,
             ]}
         />
     )

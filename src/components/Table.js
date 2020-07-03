@@ -1,5 +1,5 @@
 import React, { useEffect, useState, forwardRef, useRef } from 'react'
-import { useTable, usePagination, useSortBy, useRowSelect, } from 'react-table'
+import { useTable, useExpanded, usePagination, useSortBy, useRowSelect, } from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
@@ -7,6 +7,9 @@ import {
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
     FiEdit, FiCheck, FiUserPlus, FiMessageSquare,
 } from 'react-icons/fi'
+import {
+    FaCaretRight, FaCaretDown,
+} from 'react-icons/fa'
 import IconButton from './IconButton';
 import Input from './Input';
 import Modal from './Modal';
@@ -38,6 +41,7 @@ function Component({
         getTableBodyProps,
         headerGroups,
         prepareRow,
+        visibleColumns,
         page,
         canPreviousPage,
         canNextPage,
@@ -56,6 +60,7 @@ function Component({
         autoResetSelectedRows: true,
     },
         useSortBy,
+        useExpanded,
         usePagination,
         useRowSelect,
         hooks => {
@@ -72,6 +77,17 @@ function Component({
                             <div >
                                 <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
                             </div>
+                        ),
+                    },
+                    {
+                        id: 'expander',
+                        Header: () => null,
+                        Cell: ({ row }) => 
+                            row.original.expandable === true &&
+                        (
+                            <span {...row.getToggleRowExpandedProps()}>
+                                {row.isExpanded ? <FaCaretDown /> : <FaCaretRight />}
+                            </span> 
                         ),
                     },
                     ...columns,
@@ -240,6 +256,7 @@ function Component({
                                 ].filter(x => x !== "")
 
                                 return (
+                                    <>
                                     <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
 
                                         {row.cells.map(cell => {
@@ -275,6 +292,14 @@ function Component({
                                             </td>
                                         }
                                     </tr>
+                                    {
+                                        row.isExpanded ? <tr>
+                                            <td className="SubRowComponent" colSpan={visibleColumns.length}> 
+                                                {row.original.subComponent && row.original.subComponent(row.original)}
+                                            </td>
+                                        </tr> : null
+                                    }
+                                    </>
                                 );
                             })}
                         </tbody>

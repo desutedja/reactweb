@@ -1,7 +1,7 @@
 import React from 'react';
 import Avatar from 'react-avatar';
 
-function Component({fullname, email, picture=null, round=true}) {
+function Component({fullname, email=null, picture=null, round=true}) {
     return (
         <>
             <div style={{ display: 'flex' }}>
@@ -10,7 +10,7 @@ function Component({fullname, email, picture=null, round=true}) {
                 <span> </span>
                 <div style={{ display: 'block' }}>
                     <div><b>{fullname}</b></div>
-                    <div>{email}</div>
+                    {email && <div>{email}</div>}
                 </div>
             </div>
         </> 

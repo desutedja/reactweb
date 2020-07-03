@@ -1,7 +1,9 @@
 import React, { useEffect, useCallback, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { FiSearch, FiPlus } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 
+import UserAvatar from '../../../../components/UserAvatar'; 
 import Button from '../../../../components/Button';
 import Table from '../../../../components/Table';
 import Modal from '../../../../components/Modal';
@@ -9,6 +11,7 @@ import Input from '../../../../components/Input';
 import Filter from '../../../../components/Filter';
 import { toSentenceCase } from '../../../../utils';
 import SectionSeparator from '../../../../components/SectionSeparator';
+import Resident from '../../../../components/cells/Resident';
 
 import {
     getResidentUnit,
@@ -44,6 +47,7 @@ function Component({ id }) {
     const { unit, loading, refreshToggle } = useSelector(state => state.resident);
 
     let dispatch = useDispatch();
+    let history = useHistory();
 
     const fetchData = useCallback((pageIndex, pageSize, search) => {
         dispatch(getResidentUnit(pageIndex, pageSize, search, id));
@@ -84,6 +88,27 @@ function Component({ id }) {
         }))
         setAddUnit(false);
         setAddUnitStep(1);
+    }
+
+    function SubAccountList(item) {
+        let subs = item.unit_sub_account
+        return (
+                    <>
+            <div >
+                        <div style={{ marginBottom: '1vw'  }} ><b>Subaccounts in this unit: </b></div>
+                        <div style={{ display: 'flex', marginLeft: '50px' }} >
+                        { subs.map(el => 
+                            <Resident id={el.id}/> 
+                          )}
+                          { subs.length < 5 && 
+                            <div style={{ padding: '10px', marginLeft: '20px' }} >
+                                <a href="" onClick={() => history.push("/resident/add-subaccount") }> 
+                                    <FiPlus/> Add Subaccount </a>
+                            </div> }
+                        </div>
+            </div>
+                </>
+        )
     }
 
     return (
@@ -173,7 +198,9 @@ function Component({ id }) {
             </Modal>
             <Table
                 columns={columnsUnit}
-                data={unit.items}
+                data={unit.items.map( el =>
+                    el.level === 'main' ? ({ expandable: true, subComponent: SubAccountList, ...el}) : el
+                )}
                 loading={loading}
                 pageCount={unit.total_pages}
                 fetchData={fetchData}

@@ -16,6 +16,7 @@
   border: 1px solid var(--primary-color);
 }
 
+
 .Button.selected {
   background-color: var(--secondary-color);
 }
