@@ -15,79 +15,95 @@ function Component({ image, title, website, phone, merchant,
     return (
         <>
             <Breadcrumb title="Details" />
-            <Row>
-                {(image || title) && <Container flex={3}>
-                    <Column>
-                        {imgLoading &&
-                            <div style={{
-                                height: 400,
-                                objectFit: 'cover',
-                                width: '100%',
-                                marginBottom: 16,
-                            }} className="shine" />
-                        }
-                        <img
-                            alt="Avatar"
-                            src={image ? image :
-                                require('../../../assets/fallback.jpg')}
-                            style={{
-                                height: imgLoading ? 0 : 400,
-                                minWidth: 300,
-                                maxHeight: 400,
-                                objectFit: 'cover',
-                                width: '100%',
-                                marginBottom: 16,
-                            }}
-                            onLoad={() => setImgLoading(false)}
-                        />
-                        {title && <h3 style={{
-                            marginBottom: 16,
-                        }}>{title}</h3>}
-                        {website && <Row center style={{
-                            marginBottom: 8,
-                        }}>
-                            <FiGlobe style={{
-                                marginRight: 8,
-                                fontSize: '1.2rem',
-                            }} />
-                            <h5><a href={website}>{website}</a></h5>
-                        </Row>}
-                        {email && <Row center style={{
-                            marginBottom: 8,
-                        }}>
-                            <FiMail style={{
-                                marginRight: 8,
-                                fontSize: '1.2rem',
-                            }} />
-                            <h5><a href={"mailto:" + email}>{email}</a></h5>
-                        </Row>}
-                        {phone && <Row center style={{
-                            marginBottom: 8,
-                        }}>
-                            <FiPhone style={{
-                                marginRight: 8,
-                                fontSize: '1.2rem',
-                            }} />
-                            <h5>{phone}</h5>
-                        </Row>}
-                        {merchant && <Row center style={{
-                            marginBottom: 8,
-                        }}>
-                            <FiHome style={{
-                                marginRight: 8,
-                                fontSize: '1.2rem',
-                            }} />
-                            <h5>{merchant}</h5>
-                        </Row>}
-                    </Column>
-                </Container>}
-                <Container flex={9}>
+            <div className="d-flex flex-wrap">
+                {(image || title) && <div className="col-12 col-md-5 col-lg-4 col-xl-3 box-self">
+                        <div className="row">
+                            <div className="col">
+                                {imgLoading &&
+                                    <div style={{
+                                        height: 400,
+                                        objectFit: 'cover',
+                                        width: '100%',
+                                        marginBottom: 16,
+                                    }} className="shine" />
+                                }
+                                <img
+                                    alt="Avatar"
+                                    src={image ? image :
+                                        require('../../../assets/fallback.jpg')}
+                                    style={{
+                                        height: imgLoading ? 0 : 400,
+                                        objectFit: 'cover',
+                                        width: '100%',
+                                        marginBottom: 16,
+                                    }}
+                                    onLoad={() => setImgLoading(false)}
+                                />
+                                {title && <h3 style={{
+                                    marginBottom: 16,
+                                }}>{title}</h3>}
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                {website && <div className="row">
+                                    <div className="col d-flex">
+                                        <FiGlobe
+                                        className="mr-3 h4"
+                                        // style={{
+                                            // marginRight: 8,
+                                            // fontSize: '1.2rem',
+                                        // }}
+                                        />
+                                        <h5><a href={website}>{website}</a></h5>
+                                    </div>
+                                </div>}
+                                {email && <div className="row">
+                                    <div className="col d-flex">
+                                        <FiMail
+                                        className="mr-3 h4"
+                                        // style={{
+                                            // marginRight: 8,
+                                            // fontSize: '1.2rem',
+                                        // }}
+                                        />
+                                        <h5><a href={"mailto:" + email}>{email}</a></h5>
+                                    </div>
+                                </div>}
+                                {phone && <div className="row">
+                                    <div className="col d-flex">
+                                        <FiPhone
+                                        className="mr-3 h4"
+                                        // style={{
+                                            // marginRight: 8,
+                                            // fontSize: '1.2rem',
+                                        // }}
+                                        />
+                                        <h5>{phone}</h5>
+                                    </div>
+                                </div>}
+                                {merchant && <div className="row">
+                                    <div className="col d-flex">
+                                        <FiHome
+                                        className="mr-3 h4"
+                                        // style={{
+                                            // marginRight: 8,
+                                            // fontSize: '1.2rem',
+                                        // }}
+                                        />
+                                        <h5>{merchant}</h5>
+                                    </div>
+                                </div>}
+                            </div>
+                        </div>
+                </div>}
+                <div className="col-12 col-md box-self ml-0 mt-4 ml-md-4 mt-md-0">
                     <Tab
                         labels={labels}
                         contents={contents}
                     />
-                </Container>
-            </Row>
+                </div>
+            </div>
         </>
     )
 }
