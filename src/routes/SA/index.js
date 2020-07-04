@@ -3,6 +3,10 @@ import {
     FiUsers, FiHome, FiBarChart2, FiShoppingCart, FiZap, FiVolume2,
     FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign
 } from "react-icons/fi";
+import {
+    RiStore2Line, RiTaskLine, RiAdvertisementLine,
+    RiBuilding2Line, RiCustomerService2Line,
+} from "react-icons/ri";
 
 import Dashboard from '../../features/dashboard/Route';
 import Ads from '../../features/routes/Ads';
@@ -39,7 +43,7 @@ const menu = [
         component: <Management />,
     },
     {
-        icon: <FiHome className="MenuItem-icon" />,
+        icon: <RiBuilding2Line className="MenuItem-icon" />,
         label: "Building",
         route: "/building",
         component: <Building />,
@@ -62,19 +66,19 @@ const menu = [
         component: <Billing />,
     },
     {
-        icon: <FiAward className="MenuItem-icon" />,
+        icon: <RiCustomerService2Line className="MenuItem-icon" />,
         label: "Staff",
         route: "/staff",
         component: <Staff />,
     },
     {
-        icon: <FiTarget className="MenuItem-icon" />,
+        icon: <RiTaskLine className="MenuItem-icon" />,
         label: "Task",
         route: "/task",
         component: <Task />,
     },
     {
-        icon: <FiShoppingCart className="MenuItem-icon" />,
+        icon: <RiStore2Line className="MenuItem-icon" />,
         label: "Merchant",
         route: "/merchant",
         component: <Merchant />,
@@ -86,7 +90,7 @@ const menu = [
         component: <Product />,
     },
     {
-        icon: <FiDollarSign className="MenuItem-icon" />,
+        icon: <FiShoppingCart className="MenuItem-icon" />,
         label: "Transaction",
         route: "/transaction",
         subroutes: [
