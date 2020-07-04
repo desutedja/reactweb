@@ -59,7 +59,7 @@ function Component({ id }) {
     const fetchData = useCallback((pageIndex, pageSize, search) => {
         dispatch(getResidentUnit(pageIndex, pageSize, search, id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, refreshToggle])
+    }, [dispatch, refreshToggle, id])
 
     useEffect(() => { }, [ ])
 
