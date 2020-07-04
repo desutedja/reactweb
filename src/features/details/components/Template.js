@@ -14,7 +14,7 @@ function Component({ image, title, website, phone, merchant,
 
     return (
         <>
-            <Breadcrumb title="Details" />
+            <Breadcrumb title={title} />
             <div className="d-flex flex-wrap">
                 {(image || title) && <div className="col-12 col-md-5 col-lg-4 col-xl-3 box-self mr-md-4">
                         <div className="row">
