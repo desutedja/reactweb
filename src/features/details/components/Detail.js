@@ -23,10 +23,10 @@ function Component({ data, labels, type = "", editable = true, renderButtons = (
 
     function formatValue(label, value) {
         return (value == null || value === "") ? "-" :
-            label === "birthdate" ? dateFormatter(value) :
+            label === "birthdate" ? dateFormatter(value, '-') :
                 label === "birthplace" ? value.toUpperCase() :
                     label === "address" ? toSentenceCase(value) :
-                        label === "created_on" ? dateFormatter(value) :
+                        label === "created_on" ? dateFormatter(value, '-') :
                             label === "nationality" ? getCountryFromCode(value) :
                                 label === "account_bank" ? getBank(value) :
                                     label === "gender" ?

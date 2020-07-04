@@ -1,0 +1,12 @@
+.NoDecorationLink div {
+    text-decoration: 'none';
+}
+
+.Link {
+    color: 'blue';
+    cursor: 'pointer';
+}
+
+.Link:hover {
+    text-decoration: 'underline';
+}

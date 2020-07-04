@@ -9,7 +9,7 @@ import './style.css';
 import { setSelected } from '../../features/slices/resident';
 
 
-function Component({ id, compact=false }) {
+function Component({ id, compact=false, onClickPath='' }) {
     const [data, setData] = useState({
         email: '',
         firstname: '',
@@ -20,6 +20,8 @@ function Component({ id, compact=false }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { path } = useRouteMatch();
+
+    path = onClickPath !== '' ? onClickPath : path;
 
     useEffect(() => {
         dispatch(get(endpointResident + '/management/resident/detail/' + id, res => {

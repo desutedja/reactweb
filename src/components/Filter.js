@@ -2,6 +2,8 @@ import React from 'react';
 import { toSentenceCase } from '../utils';
 
 function Component({ data, onClick, onClickAll }) {
+    console.log("Filter -->");
+    console.log(data);
     return (
         <div className="Filter">
             <div className="List">

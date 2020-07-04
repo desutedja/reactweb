@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
@@ -34,7 +34,8 @@ function Component() {
             title={state ? state.firstname + ' ' + state.lastname : data.firstname + ' ' + data.lastname}
             email={state ? state.email : data.email}
             phone={state ? state.phone : data.phone}
-            labels={["Details", "Unit", "Sub Account"]}
+            labels={["Details", "Unit"]}
+            activeTab={0}
             contents={[
                 <Detail data={state ? state : data} labels={details} />,
                 <Unit id={id} />,

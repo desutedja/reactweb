@@ -24,11 +24,10 @@ const columns = [
         Header: 'Open', accessor: row => {
             return <Tile items={[
                 row.is_open === 1 ? <Pill color="primary">Open</Pill> : <Pill color="secondary">Closed</Pill>,
-                row.is_open === 1 ? <div style={{ paddingTop: '5px', fontSize: ".9em" }}>Until {dateTimeFormatter(row.is_open_until)}
-                </div> : <span></span>,
             ]} />
         }
     },
+    { Header: 'Open Until', accessor: row => row.is_open === 1 ? dateTimeFormatter(row.is_open_until) : "-" }
 ]
 
 function Component() {

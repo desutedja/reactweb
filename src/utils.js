@@ -1,5 +1,7 @@
+import React from 'react';
 import countries from './countries';
 import { banks } from './settings';
+import { FiCalendar, FiClock } from 'react-icons/fi'
 
 export const yearsRentangDepanBelakang = (rentang) => {
     const currentYear = Number(new Date().getFullYear());
@@ -28,7 +30,10 @@ export const months = [
     { value: 12, label: 'December' },
 ];
 
-export function dateTimeFormatter(serverDateTime) {
+export function dateTimeFormatter(serverDateTime, whenzero='-') {
+    if (serverDateTime == "0001-01-01T00:00:00Z") 
+        return whenzero;
+
     let date = serverDateTime.split('T')[0];
     let time = serverDateTime.split('T')[1].split('Z')[0];
     time = time.split(':').slice(0, 2).join(':');
@@ -37,16 +42,22 @@ export function dateTimeFormatter(serverDateTime) {
     let month = parseInt(date.split('-')[1], 10);
     let day = date.split('-')[2];
 
-    return day + ' ' + months[month - 1].label + ' ' + year + ', ' + time + ' WIB';
+    return <><div style={{ display: 'block' }}>
+        <div><FiCalendar/> {day + ' ' + months[month - 1].label + ' ' + year}</div>
+        <div><FiClock /> {time + ' WIB'}</div>
+        </div>
+    </>;
 }
 
-export function dateFormatter(serverDateTime) {
+export function dateFormatter(serverDateTime, whenzero='-') {
+    if (serverDateTime == "0001-01-01T00:00:00Z") 
+        return whenzero;
+
     let date = serverDateTime.split('T')[0];
 
     let year = date.split('-')[0];
     let month = parseInt(date.split('-')[1], 10);
     let day = date.split('-')[2];
-
 
 
     return day + ' ' + months[month - 1].label + ' ' + year;
@@ -67,6 +78,12 @@ export function toSentenceCase(sentence) {
 
 export function toMoney(money) {
     return money === null || money === undefined ? "-" : "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+}
+
+export function removeLastFromPath(path) {
+    var newpath = path.split("/")
+    newpath.pop()
+    return newpath.join("/")
 }
 
 export function getCountryCode(country) {

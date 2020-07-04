@@ -1,3 +1,16 @@
+
+
+
+/*
+export const endpointAdmin = 'https://clink.okbabe.technology/clink-admins';
+export const endpointBilling = 'https://clink.okbabe.technology/clink-billings';
+export const endpointResident = 'https://clink.okbabe.technology/clink-residents';
+export const endpointManagement = 'https://clink.okbabe.technology/clink-managements';
+export const endpointTask = 'https://clink.okbabe.technology/clink-tasks';
+export const endpointMerchant = 'https://clink.okbabe.technology/clink-merchants';
+export const endpointTransaction = 'https://clink.okbabe.technology/clink-transactions';
+export const endpointAds = 'https://clink.okbabe.technology/clink-advertisements';
+*/
 export const endpointAdmin = 'https://centratama.okbabe.technology/clink-admin';
 export const endpointBilling = 'https://centratama.okbabe.technology/clink-billing';
 export const endpointResident = 'https://centratama.okbabe.technology/clink-resident';
@@ -6,6 +19,7 @@ export const endpointTask = 'https://centratama.okbabe.technology/clink-task';
 export const endpointMerchant = 'https://centratama.okbabe.technology/clink-merchant';
 export const endpointTransaction = 'https://centratama.okbabe.technology/clink-transaction';
 export const endpointAds = 'https://centratama.okbabe.technology/clink-advertisement';
+
 
 export const mainColor = '#2f78e9';
 

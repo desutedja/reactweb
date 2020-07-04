@@ -1,5 +1,5 @@
 import React, { useEffect, useCallback, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { FiSearch, FiPlus } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -9,13 +9,15 @@ import Table from '../../../../components/Table';
 import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import Filter from '../../../../components/Filter';
-import { toSentenceCase } from '../../../../utils';
+import { toSentenceCase, removeLastFromPath } from '../../../../utils';
 import SectionSeparator from '../../../../components/SectionSeparator';
 import Resident from '../../../../components/cells/Resident';
+import './style.css';
 
 import {
     getResidentUnit,
     addResidentUnit,
+    refresh
 } from '../../../slices/resident';
 import { endpointAdmin } from '../../../../settings';
 import { get } from '../../../slice';
@@ -33,6 +35,10 @@ function Component({ id }) {
     const [addUnit, setAddUnit] = useState(false);
     const [addUnitStep, setAddUnitStep] = useState(1);
 
+    const [addSubAccount, setAddSubAccount] = useState(false);
+    const [addSubAccountStep, setAddSubAccountStep] = useState(false);
+    const [existing, setExisting] = useState("");
+
     const [search, setSearch] = useState('');
 
     const [selectedBuilding, setSelectedBuilding] = useState({});
@@ -48,11 +54,14 @@ function Component({ id }) {
 
     let dispatch = useDispatch();
     let history = useHistory();
+    let { path } = useRouteMatch();
 
     const fetchData = useCallback((pageIndex, pageSize, search) => {
         dispatch(getResidentUnit(pageIndex, pageSize, search, id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, refreshToggle])
+
+    useEffect(() => { }, [ ])
 
     useEffect(() => {
         addUnit && addUnitStep === 1 && (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +
@@ -90,29 +99,68 @@ function Component({ id }) {
         setAddUnitStep(1);
     }
 
+    const submitSubAccount = (e) => {
+        
+    }
+
     function SubAccountList(item) {
         let subs = item.unit_sub_account
         return (
                     <>
-            <div >
-                        <div style={{ marginBottom: '1vw'  }} ><b>Subaccounts in this unit: </b></div>
-                        <div style={{ display: 'flex', marginLeft: '50px' }} >
-                        { subs.map(el => 
-                            <Resident id={el.id}/> 
-                          )}
-                          { subs.length < 5 && 
-                            <div style={{ padding: '10px', marginLeft: '20px' }} >
-                                <a href="" onClick={() => history.push("/resident/add-subaccount") }> 
-                                    <FiPlus/> Add Subaccount </a>
-                            </div> }
-                        </div>
-            </div>
+                    <div >
+                            <div style={{ marginBottom: '1vw'  }} ><b>Subaccounts in this unit: </b></div>
+                            <div style={{ display: 'flex', marginLeft: '50px' }} >
+                            { subs.map(el => 
+                                <span onClick={ () => dispatch(refresh()) } >
+                                    <Resident id={el.id} onClickPath={ removeLastFromPath(path) }/>
+                                </span>
+                              )}
+                              { subs.length < 5 && 
+                                <div style={{ padding: '10px', marginLeft: '20px' }} >
+                                    <span style={{ color: 'dodgerblue', cursor: 'pointer' }} 
+                                        onClick={() => setAddSubAccount(true) }> 
+                                        <FiPlus/> Add Subaccount </span>
+                                </div> }
+                            </div>
+                    </div>
                 </>
         )
     }
 
     return (
         <>
+            <Modal
+                isOpen={addSubAccount}
+                title={"Add Sub Account"}
+                disableFooter={addSubAccountStep === 1}
+                okLabel={addSubAccountStep !== 2 ? "Back" : "Add Sub Account"}
+                cancelLabel={"Back"}
+                onClick={addSubAccountStep === 3 ? submitSubAccount : backFunction}
+                onClickSecondary={backFunction}
+                disablePrimary={addSubAccountStep !== 3}
+                toggle={() => setAddSubAccount(false)}
+                >
+                {addSubAccountStep === 1 && <>
+                    <Filter
+                        data={[
+                                { label: "Existing Resident", value: "existing"}, 
+                                { label: "New Resident", value: "new"}
+                        ]}
+                        onClick={(el) => {
+                            setExisting(el.value);
+                            setAddSubAccountStep(2);
+                        }}
+                    />
+                </>}
+                {addSubAccountStep === 2 && <>
+                    <Filter
+                        data={[]}
+                        onClick={(el) => {
+                        }}
+                    />
+                </>}
+            </Modal>
+
             <Modal
                 isOpen={addUnit}
                 title={"Add Unit"}
@@ -152,7 +200,8 @@ function Component({ id }) {
                     <Filter
                         data={units.map((el) => {
                             return {
-                                label: "Room " + el.number + " - " + toSentenceCase(el.section_type) + " " + el.section_name,
+                                label: "Room " + el.number + " - " + 
+                                        toSentenceCase(el.section_type) + " " + el.section_name,
                                 value: el
                             };
                         })}

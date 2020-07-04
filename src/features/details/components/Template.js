@@ -8,7 +8,7 @@ import Tab from '../../../components/Tab';
 import Breadcrumb from '../../../components/Breadcrumb';
 
 function Component({ image, title, website, phone, merchant,
-    email, labels, contents }) {
+    email, labels, contents, activeTab }) {
 
     const [imgLoading, setImgLoading] = useState(true);
 
@@ -101,6 +101,7 @@ function Component({ image, title, website, phone, merchant,
                     <Tab
                         labels={labels}
                         contents={contents}
+                        activeTab={activeTab}
                     />
                 </div>
             </div>

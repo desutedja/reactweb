@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-function Component({ labels = [], contents = [] }) {
-    const [active, setActive] = useState(0);
+function Component({ labels = [], contents = [], activeTab=0}) {
+    const [active, setActive] = useState(activeTab);
 
     return (
         <div style={{
