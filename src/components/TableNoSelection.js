@@ -59,7 +59,7 @@ function Component({
         usePagination
     );
     
-    console.log(selectedRowIds)
+    // console.log(selectedRowIds)
 
     const [search, setSearch] = useState("");
     const [searchToggle, toggleSearch] = useState("");

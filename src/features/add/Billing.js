@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import Input from '../../components/Input';
 import Form from '../../components/Form';
@@ -35,11 +35,21 @@ function Component() {
     const [services, setServices] = useState([]);
     const [servicesPageCount, setServicesPageCount] = useState(1);
     const [servicesLoading, setServicesLoading] = useState(false);
-
     
     const { loading, selected, unit } = useSelector(state => state.billing);
     const selectedUnit = unit.selected;
 
+    
+    // const [selectedUnit, setSelectedUnit] = useState({})
+    // useEffect(() => {
+    //     setSelectedUnit(unit.selected)
+    //     console.log('selectedUnit', selectedUnit)
+    // }, [selectedUnit, unit])
+
+    useEffect(() => {
+        console.log('services', serviceName)
+    })
+    
     let dispatch = useDispatch();
     let history = useHistory();
 
@@ -106,6 +116,7 @@ function Component() {
                 <Input label="Service: All" icon={<FiChevronRight />} inputValue={
                     selectedUnit.service_name ? selectedUnit.service_name :
                     serviceName}
+                    cancelValue={true}
                     onClick={() => setModal(true)}
                 />
                 <Input label="Service" hidden inputValue={selectedUnit.service ? selectedUnit.service
