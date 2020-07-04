@@ -119,7 +119,7 @@ export const getTransactionSettlement = (
   dispatch(get(transactionEndpoint + '/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
-    '&settlement_status=undisbursed'+
+    '&settlement_status=unsettled'+
     '&status=completed' +
     '&search=' + search,
     
