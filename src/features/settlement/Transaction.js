@@ -79,8 +79,8 @@ function Component() {
                     }}>
                         <div style={{
                             marginRight: 16,
-                        }}>Disbursed Amount</div>
-                        <AnimatedNumber className="BigNumber" value={info.total_disbursed_transaction_amount}
+                        }}>Merchant Disbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_merchant_disbursed_transaction_amount}
                             formatValue={formatValue}
                         />
                     </div>
@@ -90,8 +90,36 @@ function Component() {
                     }}>
                         <div style={{
                             marginRight: 16,
-                        }}>Undisbursed Amount</div>
-                        <AnimatedNumber className="BigNumber" value={info.total_undisbursed_transaction_amount}
+                        }}>Merchant Undisbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_merchant_undisbursed_transaction_amount}
+                            formatValue={formatValue}
+                        />
+                    </div>
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <div style={{
+                            marginRight: 16,
+                        }}>Courier Disbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_courier_disbursed_transaction_amount}
+                            formatValue={formatValue}
+                        />
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <div style={{
+                            marginRight: 16,
+                        }}>Courier Undisbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_courier_undisbursed_transaction_amount}
                             formatValue={formatValue}
                         />
                     </div>
