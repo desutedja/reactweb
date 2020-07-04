@@ -18,7 +18,7 @@ const MultiSelectItem = ({ value, onClickDelete }) => {
 function Component({
     label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
     type = "text", rows = 2, options = [], fullwidth = false,
-    inputValue, setInputValue, icon, onClick, onFocus, onBlur,
+    inputValue, setInputValue, icon, onClick, onFocus, onBlur, cancelValue,
     hidden, max, min, disabled, isValidate = false, validationMsg, accept = "image/*"
 }) {
     const [value, setValue] = useState(inputValue ? inputValue : "");
@@ -215,6 +215,20 @@ function Component({
                             onFocus={onFocus}
                             list={type === 'searchable' ? ('options-' + label) : null}
                         />
+                        {cancelValue && value && <div
+                        onClick={() => {
+                            setValue('')
+                        }}
+                        style={{
+                            position: 'absolute',
+                            right: '40px',
+                            height: '24px',
+                            width: '24px',
+                            textAlign: 'center',
+                            borderRadius: '50px',
+                            cursor: 'pointer',
+                            backgroundColor: 'rgba(0, 0, 0, .05)'
+                        }}><FiX /></div> }
                         {type === 'searchable' &&
                             <datalist id={"options-" + label}>
                                 {options.map(el =>
