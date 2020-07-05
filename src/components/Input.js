@@ -19,7 +19,8 @@ function Component({
     label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
     type = "text", rows = 2, options = [], fullwidth = false,
     inputValue, setInputValue, icon, onClick, onFocus, onBlur, cancelValue,
-    hidden, max, min, disabled, isValidate = false, validationMsg, accept = "image/*"
+    hidden, max, min, disabled, isValidate = false, validationMsg, accept = "image/*",
+    addons,
 }) {
     const [value, setValue] = useState(inputValue ? inputValue : "");
     const [uploading, setUploading] = useState(false);
@@ -195,6 +196,7 @@ function Component({
                             type={type}
                             id={label}
                             name={name ? name : label.toLowerCase().replace(/ /g, '_')}
+                            className={addons ? "withaddons" : ""}
                             required={!optional}
                             placeholder={placeholder === null ? label : placeholder}
                             min={min}
@@ -260,7 +262,10 @@ function Component({
                 </div>
             </>}
 
-            {renderInput(type)}
+            <div style={{ display: 'flex' }} >
+                {renderInput(type)}
+                { addons && <div className="addons">{addons}</div>}
+            </div>
             {isValidate && <span className="validation-error">{ validationMsg }</span>}
         </div>
     )

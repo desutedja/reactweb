@@ -90,6 +90,22 @@ textarea {
   font-family: "Noto Sans", sans-serif;
 }
 
+.withaddons {
+    border-radius: 4px 0px 0px 4px;
+}
+
+.addons {
+    border-radius: 0px 4px 4px 0px;
+    border-top: 0.5px;
+    border-bottom: 0.5px;
+    border-right: 0.5px;
+    border-left: 0px;
+    border-color: silver;
+    border-style: solid;
+    padding: 8px;
+    background-color: #f3f3fa;
+}
+
 input[type="button"] {
   background-color: var(--primary-color);
   color: white;

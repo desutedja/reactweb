@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { FiGlobe, FiPhone, FiHome, FiMail } from 'react-icons/fi';
+import {
+    RiStore2Line, 
+} from "react-icons/ri";
 
 import Container from '../../../components/Container';
 import Row from '../../../components/Row';
@@ -84,7 +87,7 @@ function Component({ image, title, website, phone, merchant,
                                 </div>}
                                 {merchant && <div className="row">
                                     <div className="col d-flex">
-                                        <FiHome
+                                        <RiStore2Line
                                         className="mr-3 h4"
                                         // style={{
                                             // marginRight: 8,

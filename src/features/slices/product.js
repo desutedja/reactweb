@@ -97,6 +97,8 @@ export const patchAdminFee = ( data, item) => dispatch => {
         color: 'success',
         message: 'Admin fee has been updated.'
       }));
+
+      dispatch(refresh());
     },
     err => {
 
