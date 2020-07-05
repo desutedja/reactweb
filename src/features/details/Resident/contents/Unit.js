@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { FiSearch, FiPlus } from 'react-icons/fi';
+import { FiX, FiSearch, FiPlus } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 
 import UserAvatar from '../../../../components/UserAvatar'; 
@@ -16,7 +16,7 @@ import Resident from '../../../../components/cells/Resident';
 import {
     getResidentUnit,
     addResidentUnit,
-    createSubaccount,
+    deleteSubaccount,
     refresh
 } from '../../../slices/resident';
 import { endpointAdmin, endpointResident } from '../../../../settings';
@@ -32,6 +32,7 @@ const columnsUnit = [
 
 function Component({ id }) {
     const [addUnit, setAddUnit] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
     const [addUnitStep, setAddUnitStep] = useState(1);
 
     const [expanded, setExpanded] = useState(0);
@@ -114,8 +115,6 @@ function Component({ id }) {
     }
 
     const submitSubAccount = (e) => {
-        console.log("selected unit");
-        console.log(selectedUnit);
         dispatch(addResidentUnit({
             unit_id: selectedUnit.unit_id,
             owner_id: subAccount.id,
@@ -127,17 +126,28 @@ function Component({ id }) {
         setAddSubAccountStep(1);
     }
 
+    const deleteSub = (e) => {
+        console.log("selectedunit");
+        console.log(subAccount);
+        dispatch(deleteSubaccount(
+            selectedUnit.unit_id, parseInt(id), subAccount.id,
+        ))
+        setConfirmDelete(false);
+    }
+
     function SubAccountList(item) {
         let subs = item.unit_sub_account
         return (
             <>
                 <div >
                         <div style={{ marginBottom: '1vw'  }} ><b>{subs.length} sub accounts in this unit: </b></div>
-                        <div style={{ display: 'flex', marginLeft: '50px' }} >
+                        <div style={{ display: 'flex', flexWrap: 'wrap' }} >
                         { subs.map(el => 
-                            <span onClick={ () => dispatch(refresh()) } >
+                            <div style={{ display: 'flex', marginLeft: '50px' }} onClick={ () => dispatch(refresh()) } >
                                 <Resident id={el.id} onClickPath={ removeLastFromPath(path) }/>
-                            </span>
+                                <FiX size={15} style={{ marginTop: '10px', cursor: 'pointer'}} 
+                                    onClick={ () => {setConfirmDelete(true); setSelectedUnit(item); setSubAccount(el)} } />
+                            </div>
                           )}
                           { subs.length < 5 && 
                             <div style={{ padding: '10px', marginLeft: '20px' }} >
@@ -168,6 +178,16 @@ function Component({ id }) {
 
     return (
         <>
+            <Modal 
+                isOpen={confirmDelete}
+                disableHeader={true}
+                onClick={deleteSub}
+                toggle={() => setConfirmDelete(false)}
+                okLabel={"Delete"}
+                cancelLabel={"Cancel"}
+            >
+                Are you sure you want to remove <b>{subAccount.firstname + ' ' + subAccount.lastname}</b> from this unit?
+            </Modal>
             <Modal
                 isOpen={addSubAccount}
                 title={"Add Sub Account"}
@@ -218,6 +238,7 @@ function Component({ id }) {
             <Modal
                 isOpen={addUnit}
                 title={"Add Unit"}
+                subtitle={"Register unit as a main resident"}
                 disableFooter={addUnitStep === 1}
                 okLabel={addUnitStep !== 3 ? "Back" : "Add Unit"}
                 cancelLabel={"Back"}
@@ -229,6 +250,7 @@ function Component({ id }) {
                 {addUnitStep === 1 && <>
                     <Input label="Search Building"
                         compact
+                        fullwidth
                         icon={<FiSearch />}
                         inputValue={search} setInputValue={setSearch}
                     />
@@ -244,10 +266,11 @@ function Component({ id }) {
                     />
                 </>}
                 {addUnitStep === 2 && <>
-                    <Input type="button" inputValue={selectedBuilding.label} onClick={() => { }} />
+                    <Input label="Building:" fullwidth type="button" inputValue={selectedBuilding.label} onClick={() => { }} />
                     <SectionSeparator />
                     <Input label="Search Unit Number"
                         compact
+                        fullwidth
                         icon={<FiSearch />}
                         inputValue={search} setInputValue={setSearch}
                     />
@@ -268,10 +291,10 @@ function Component({ id }) {
                 </>}
                 {addUnitStep === 3 && <>
                     <form>
-                        <Input type="button" inputValue={selectedBuilding.label} onClick={() => {
+                        <Input fullwidth label="Building:" type="button" inputValue={selectedBuilding.label} onClick={() => {
 
                         }} />
-                        <Input type="button" inputValue={
+                        <Input fullwidth label="Unit Number: "type="button" inputValue={
                             "Room " +
                             selectedUnit.value.number + " - " +
                             toSentenceCase(selectedUnit.value.section_type) + " " +
@@ -280,15 +303,7 @@ function Component({ id }) {
 
                         }} />
                         <SectionSeparator />
-                        <Input label="Level" type="select"
-                            inputValue={level}
-                            setInputValue={setLevel}
-                            options={[
-                                { value: 'main', label: 'Main' },
-                                { value: 'sub', label: 'Sub' },
-                            ]}
-                        />
-                        <Input label="Status" type="select"
+                        <Input fullwidth label="Status" type="select"
                             inputValue={status}
                             setInputValue={setStatus}
                             options={[

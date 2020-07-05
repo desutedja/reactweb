@@ -5,7 +5,7 @@ function Component({
     width = '450px',
     isOpen, toggle, title, onClick, children, okLabel = "Yes", cancelLabel = '',
     disableHeader = false, disableFooter = false, onClickSecondary = null,
-    disablePrimary = false, disableSecondary = false,
+    disablePrimary = false, disableSecondary = false, subtitle="",
     className
 }) {
     const closeBtn = <button className="close" onClick={toggle}>&times;</button>;
@@ -22,7 +22,10 @@ function Component({
                     maxWidth: width
                 }}
             >
-                {!disableHeader && <ModalHeader toggle={toggle} close={closeBtn}><h3>{title}</h3></ModalHeader>}
+                {!disableHeader && <ModalHeader toggle={toggle} close={closeBtn}>
+                        <h3>{title}</h3>
+                        <h6>{subtitle}</h6> 
+                    </ModalHeader>}
                 <ModalBody>
                     {children}
                 </ModalBody>
