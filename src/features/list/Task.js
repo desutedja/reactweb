@@ -14,7 +14,7 @@ import Resident from '../../components/cells/Resident';
 import Staff from '../../components/cells/Staff';
 // import Building from '../../components/cells/Building';
 
-import { toSentenceCase, dateTimeFormatterCell, toEllipsis } from '../../utils';
+import { toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import { getTask, getTaskDetails, resolveTask, reassignTask, setSelected } from '../slices/task';
 import { get } from '../slice';
@@ -39,7 +39,7 @@ const columns = [
     { Header: "Requester", accessor: row => <Resident compact={true} id={row.requester_id} onClickPath={"resident"} /> },
     // { Header: "Building", accessor: row => <Building id={row.requester_building_id} /> },
     { Header: "Assignee", accessor: row => row.assignee_id ? <Staff compact={true} id={row.assignee_id} /> : "-" },
-    { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatterCell(row.assigned_on) : "-" },
+    { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
     {
         Header: "Status", accessor: row => row.status ?
             <Pill color={taskStatusColor[row.status]}>

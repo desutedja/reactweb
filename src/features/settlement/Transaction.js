@@ -23,9 +23,9 @@ const formatValue = (value) => toMoney(value.toFixed(0));
 
 function Component() {
     const [info, setInfo] = useState({});
-
     
-    const { loading, items, total_pages, total_items, refreshToggle } = useSelector(state => state.transaction);
+    
+    const { loading, settlement, refreshToggle } = useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -125,15 +125,15 @@ function Component() {
                     </div>
                 </div>
             </div>
-            <Table totalItems={total_items}
+            <Table totalItems={settlement.total_items}
                 columns={columns}
-                data={items}
+                data={settlement.items}
                 loading={loading}
-                pageCount={total_pages}
+                pageCount={settlement.total_pages}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
                     dispatch(getTransactionSettlement( pageIndex, pageSize, search));
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle, ])}
+                }, [dispatch, refreshToggle ])}
                 filters={[]}
                 actions={[]}
                 onClickDetails={row => dispatch(getTransactionDetails(row,  history, url))}

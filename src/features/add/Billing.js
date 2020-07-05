@@ -7,7 +7,7 @@ import TableNoSelection from '../../components/TableNoSelection';
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { months, yearsRentangDepanBelakang } from '../../utils';
+import { months, yearsOnRange } from '../../utils';
 import { endpointAdmin } from '../../settings';
 import { FiChevronRight } from 'react-icons/fi';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
@@ -126,7 +126,7 @@ function Component() {
                 <Input label="Recent Usage" type="number" inputValue={selectedUnit?.recent_usage + ''} />
                 <Input label="Remarks" type="textarea" inputValue={selectedUnit?.remarks} />
                 <Input label="Month" type="select" options={months} inputValue={selectedUnit?.month} />
-                <Input label="Year" type="select"  options={yearsRentangDepanBelakang(10)} inputValue={selectedUnit?.year} />
+                <Input label="Year" type="select"  options={yearsOnRange(10)} inputValue={selectedUnit?.year} />
                 {/* <Input label="Due Date" type="date" inputValue={selectedUnit.due_date?.split('T')[0]} /> */}
                 <SectionSeparator />
             </Form>

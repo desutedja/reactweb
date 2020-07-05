@@ -3,13 +3,13 @@ import countries from './countries';
 import { banks } from './settings';
 import { FiCalendar, FiClock } from 'react-icons/fi'
 
-export const yearsRentangDepanBelakang = (rentang) => {
+export const yearsOnRange = (range) => {
     const currentYear = Number(new Date().getFullYear());
     const arrYears = [];
-    for (let i = 0; i <= rentang * 2; i++) {
+    for (let i = 0; i <= range * 2; i++) {
         arrYears.push({
             value: i + 1,
-            label: ((currentYear - rentang) + i).toString()
+            label: ((currentYear - range) + i).toString()
         })
     }
     return arrYears;
