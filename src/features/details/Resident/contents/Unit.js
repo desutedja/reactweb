@@ -16,6 +16,7 @@ import Resident from '../../../../components/cells/Resident';
 import {
     getResidentUnit,
     addResidentUnit,
+    createSubaccount,
     refresh
 } from '../../../slices/resident';
 import { endpointAdmin, endpointResident } from '../../../../settings';
@@ -33,10 +34,13 @@ function Component({ id }) {
     const [addUnit, setAddUnit] = useState(false);
     const [addUnitStep, setAddUnitStep] = useState(1);
 
+    const [expanded, setExpanded] = useState(0);
+
     const [addSubAccount, setAddSubAccount] = useState(false);
     const [addSubAccountStep, setAddSubAccountStep] = useState(false);
     const [residents, setResidents] = useState([]);
     const [subAccount, setSubAccount] = useState('');
+    const [ownershipStatus, setOwnershipStatus] = useState('');
 
     const [search, setSearch] = useState('');
 
@@ -61,10 +65,10 @@ function Component({ id }) {
     }, [dispatch, refreshToggle, id])
 
     useEffect(() => {
-        addSubAccount  && addSubAccountStep === 1 && (!search || search.length >= 3) && 
+        addSubAccount  && addSubAccountStep === 1 && (search.length >= 3) && 
             dispatch(get(endpointResident + '/management/resident/read' +
             '?page=1' +
-            '&limit=10' +
+            '&limit=5' +
             '&search=' + search,
 
             res => {
@@ -95,7 +99,8 @@ function Component({ id }) {
             }))
     }, [addUnit, search, addUnitStep, selectedBuilding, dispatch]);
 
-    const backFunction = useCallback(() => setAddUnitStep(addUnitStep - 1), [addUnitStep]);
+    const addUnitBackFunction = useCallback(() => setAddUnitStep(addUnitStep - 1), [addUnitStep]);
+    const addSubBackFunction = useCallback(() => setAddSubAccountStep(addSubAccountStep - 1), [addSubAccountStep]);
 
     const submitFunction = (e) => {
         dispatch(addResidentUnit({
@@ -109,7 +114,17 @@ function Component({ id }) {
     }
 
     const submitSubAccount = (e) => {
-        
+        console.log("selected unit");
+        console.log(selectedUnit);
+        dispatch(addResidentUnit({
+            unit_id: selectedUnit.unit_id,
+            owner_id: subAccount.id,
+            level: 'sub',
+            parent_id: parseInt(id),
+            status: ownershipStatus.value,
+        }))
+        setAddSubAccount(false);
+        setAddSubAccountStep(1);
     }
 
     function SubAccountList(item) {
@@ -117,7 +132,7 @@ function Component({ id }) {
         return (
             <>
                 <div >
-                        <div style={{ marginBottom: '1vw'  }} ><b>Subaccounts in this unit: </b></div>
+                        <div style={{ marginBottom: '1vw'  }} ><b>{subs.length} sub accounts in this unit: </b></div>
                         <div style={{ display: 'flex', marginLeft: '50px' }} >
                         { subs.map(el => 
                             <span onClick={ () => dispatch(refresh()) } >
@@ -127,7 +142,12 @@ function Component({ id }) {
                           { subs.length < 5 && 
                             <div style={{ padding: '10px', marginLeft: '20px' }} >
                                 <span style={{ color: 'dodgerblue', cursor: 'pointer' }}
-                                    onClick={() => {setAddSubAccount(true); setAddSubAccountStep(1);} }> 
+                                    onClick={() => {
+                                        setAddSubAccount(true); 
+                                        setAddSubAccountStep(1); 
+                                        setSelectedUnit(item);
+                                        setExpanded(item.unit_id);
+                                    } }> 
                                     <FiPlus/> Add Subaccount </span>
                             </div> }
                         </div>
@@ -136,8 +156,8 @@ function Component({ id }) {
         )
     }
 
-    function SubAccountItemList(resident, onClick) { 
-        return <Resident id={resident.value.id} onClick={onClick}/>
+    function SubAccountItemList(resident, itemOnClick) { 
+        return <Resident id={resident.value.id} onClick={itemOnClick}/>
     }
 
     function AddSubAccountNotFound() {
@@ -152,16 +172,17 @@ function Component({ id }) {
                 isOpen={addSubAccount}
                 title={"Add Sub Account"}
                 disableFooter={addSubAccountStep === 1}
-                okLabel={addSubAccountStep !== 2 ? "Back" : "Add Sub Account"}
-                cancelLabel={"Cancel"}
-                onClick={addSubAccountStep === 3 ? submitSubAccount : backFunction}
-                onClickSecondary={backFunction}
+                okLabel={addSubAccountStep !== 3 ? "Back" : "Add Sub Account"}
+                cancelLabel={addSubAccountStep === 1 ? "Cancel" : "Back"}
+                onClick={addSubAccountStep === 3 ? submitSubAccount : addUnitBackFunction}
+                onClickSecondary={addSubBackFunction}
                 disablePrimary={addSubAccountStep !== 3}
                 toggle={() => setAddSubAccount(false)}
                 >
                 {addSubAccountStep === 1 && <>
                     <Input label="Search Resident Email or Name"
                         compact
+                        fullwidth
                         icon={<FiSearch />}
                         inputValue={search} setInputValue={setSearch}
                     />
@@ -178,14 +199,20 @@ function Component({ id }) {
                     />
                 </>}
                 {addSubAccountStep === 2 && <>
-                    <Input type="button" inputValue={subAccount.label} onClick={() => { }} />
+                    <Resident id={subAccount.id} onClick={()=>{}}/>
+                    <hr/>
+                    <p>Ownership status: </p>
                     <Filter
-                        data={[
-                        ]}
+                        data={[{label: "Rent", value: "rent"}, {label: "Own", value: "own"}]}
                         onClick={(el) => {
+                            setOwnershipStatus(el);
                             setAddSubAccountStep(3);
                         }}
                     />
+                </>}
+                {addSubAccountStep === 3 && <>
+                    <Resident id={subAccount.id} onClick={()=>{}}/>
+                    <Input fullwidth type="button" label={"Sub Account Ownership Status"} inputValue={ownershipStatus.label} onClick={() => { }} />
                 </>}
             </Modal>
             <Modal
@@ -194,8 +221,8 @@ function Component({ id }) {
                 disableFooter={addUnitStep === 1}
                 okLabel={addUnitStep !== 3 ? "Back" : "Add Unit"}
                 cancelLabel={"Back"}
-                onClick={addUnitStep === 3 ? submitFunction : backFunction}
-                onClickSecondary={backFunction}
+                onClick={addUnitStep === 3 ? submitFunction : addUnitBackFunction}
+                onClickSecondary={addUnitBackFunction}
                 disablePrimary={addUnitStep !== 3}
                 toggle={() => setAddUnit(false)}
             >
@@ -275,7 +302,12 @@ function Component({ id }) {
             <Table
                 columns={columnsUnit}
                 data={unit.items.map( el =>
-                    el.level === 'main' ? ({ expandable: true, subComponent: SubAccountList, ...el}) : el
+                    el.level === 'main' ? ({ 
+                        expandable: true, 
+                        subComponent: SubAccountList, 
+                        expand: selectedUnit ? selectedUnit.unit_id === expanded : undefined ,
+                        ...el
+                    }) : el
                 )}
                 loading={loading}
                 pageCount={unit.total_pages}

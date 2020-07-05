@@ -217,6 +217,7 @@ function Component({
                         </tbody> :
                         <tbody {...getTableBodyProps()}>
                             {page.map((row, i) => {
+                                //row.isExpanded = row.original.expand;
                                 prepareRow(row);
 
                                 const MenuActions = [

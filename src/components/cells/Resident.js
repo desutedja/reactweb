@@ -38,7 +38,7 @@ function Component({ id, compact=false, onClick=null, onClickPath='' }) {
     }, [dispatch, id])
 
     return (
-        <div className={ !compact ? "Item" : "Item-compact" } onClick={(e) => onClickAction(e)}>
+        <div className={ !compact ? "Item" : "Item-compact" } onClick={() => onClickAction(data)}>
             <Avatar className="Item-avatar" size="40" src={data.photo}
                 name={data.firstname + ' ' + data.lastname} round
                 email={data.photo ? null : data.email} />
