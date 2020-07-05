@@ -9,7 +9,7 @@ import Input from '../../components/Input';
 import Tile from '../../components/Tile';
 import Pill from '../../components/Pill';
 import { getMerchant, setSelected, deleteMerchant, getMerchantDetails } from '../slices/merchant';
-import { toSentenceCase, dateTimeFormatter } from '../../utils';
+import { toSentenceCase, dateTimeFormatterCell } from '../../utils';
 import { merchant_types, endpointMerchant } from '../../settings';
 import { get } from '../slice';
 
@@ -27,7 +27,7 @@ const columns = [
             ]} />
         }
     },
-    { Header: 'Open Until', accessor: row => row.is_open === 1 ? dateTimeFormatter(row.is_open_until) : "-" }
+    { Header: 'Open Until', accessor: row => row.is_open === 1 ? dateTimeFormatterCell(row.is_open_until) : "-" }
 ]
 
 function Component() {

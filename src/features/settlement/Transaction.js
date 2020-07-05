@@ -5,7 +5,7 @@ import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
 import { getTransactionDetails, getTransactionSettlement } from '../slices/transaction';
-import { toMoney, dateTimeFormatter } from '../../utils';
+import { toMoney, dateTimeFormatterCell } from '../../utils';
 import { endpointTransaction } from '../../settings';
 import { get } from '../slice';
 
@@ -15,7 +15,7 @@ const columns = [
     { Header: 'Amount', accessor: row => toMoney(row.total_price) },
     {
         Header: 'Settlement Date', accessor: row => row.payment_settled_date ?
-            dateTimeFormatter(row.payment_settled_date) : '-'
+            dateTimeFormatterCell(row.payment_settled_date) : '-'
     },
 ];
 

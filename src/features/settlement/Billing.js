@@ -1,4 +1,4 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useMemo} from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch, FiCheck, FiFile } from 'react-icons/fi';
@@ -9,25 +9,12 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
+import Pill from '../../components/Pill';
+import Building from '../../components/cells/Building';
 import { getBillingSettlement } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
-import { toMoney, dateTimeFormatter } from '../../utils';
+import { toMoney, dateTimeFormatterCell, removeLastFromPath } from '../../utils';
 import { get, post } from '../slice';
-
-const columns = [
-    { Header: 'ID', accessor: 'id' },
-    { Header: 'Trx Code', accessor: 'trx_code' },
-    { Header: 'Building', accessor: 'building_name' },
-    { Header: 'Unit', accessor: 'unit_id' },
-    { Header: 'Management', accessor: 'management_name' },
-    { Header: 'Resident', accessor: 'resident_name' },
-    { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
-    {
-        Header: 'Settlement', accessor: row => row.payment_settled_date ?
-            dateTimeFormatter(row.payment_settled_date) : '-'
-    },
-    // { Header: 'Disbursement', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
-]
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
@@ -54,6 +41,24 @@ function Component() {
             return sum + el.selling_price
         }, 0)
     }
+
+    const columns = useMemo(() => [
+        { Header: 'ID', accessor: 'id' },
+        { Header: 'Trx Code', accessor: 'trx_code' },
+        { Header: 'Building', accessor: row => <Building id={row.building_id} 
+            onClickPath={removeLastFromPath(path, 2) + "/building"} /> },
+        { Header: 'Unit', accessor: 'unit_id' },
+        //{ Header: 'Management', accessor: 'management_name' },
+        { Header: 'Resident', accessor: 'resident_name' },
+        { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
+        { Header: 'Settled', accessor: row => row.payment_settled_date ? <Pill color="success">Settled</Pill> :
+        <Pill color="secondary">Unsettled</Pill> },
+        {
+            Header: 'Settlement Date', accessor: row => row.payment_settled_date ?
+                dateTimeFormatterCell(row.payment_settled_date) : '-'
+        },
+        // { Header: 'Disbursement', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
+    ], [path])
 
     useEffect(() => {
         (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +

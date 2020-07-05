@@ -9,7 +9,7 @@ import './style.css';
 import { setSelected } from '../../features/slices/building';
 
 
-function Component({ id }) {
+function Component({ id, onClickPath='' }) {
     const [data, setData] = useState({
         email: '',
         name: '',
@@ -18,7 +18,9 @@ function Component({ id }) {
 
     let dispatch = useDispatch();
     let history = useHistory();
-    const { path } = useRouteMatch();
+    let { path } = useRouteMatch();
+
+    path = onClickPath === '' ? path : onClickPath
 
     useEffect(() => {
         dispatch(get(endpointAdmin + '/building/details/' + id, res => {

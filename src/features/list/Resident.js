@@ -2,11 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { FiPlus } from 'react-icons/fi';
-import { Badge } from 'reactstrap';
 import MoonLoader from "react-spinners/MoonLoader";
 
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
+import Pill from '../../components/Pill';
 
 import Resident from '../../components/cells/Resident';
 
@@ -23,21 +23,26 @@ const columns = [
         accessor: row => <Resident id={row.id} />,
     },
     {
+        Header: "Onboarded",
+        accessor: row => <Pill color={row.onboarding === "yes" ? "success": "secondary"}>
+            {toSentenceCase(row.onboarding)}</Pill>,
+    },
+    {
         Header: "Email", accessor: row => <a target="_blank" rel="noopener noreferrer"
             href={'mailto:' + row.email}>{row.email}</a>
     },
     { Header: "Phone", accessor: "phone" },
-    {
-        Header: "Status", accessor: row => row.status ?
-            <h5><Badge pill color="success">{toSentenceCase(row.status)}</Badge></h5>
-            :
-            <h5><Badge pill color="secondary">Inactive</Badge></h5>
-    },
+    //{
+    //    Header: "Status", accessor: row => row.status ?
+    //    <Pill color="success">{toSentenceCase(row.status)}</Pill>
+    //        :
+    //        <Pill color="secondary">Inactive</Pill>
+    //},
     {
         Header: "KYC Status", accessor: row => row.status_kyc ?
-            <h5><Badge pill color="primary">{toSentenceCase(row.status_kyc)}</Badge></h5>
+        <Pill color="primary">{toSentenceCase(row.status_kyc)}</Pill>
             :
-            <h5><Badge pill color="secondary">None</Badge></h5>
+            <Pill color="secondary">None</Pill>
     },
 ]
 

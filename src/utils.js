@@ -30,7 +30,7 @@ export const months = [
     { value: 12, label: 'December' },
 ];
 
-export function dateTimeFormatter(serverDateTime, whenzero='-') {
+export function dateTimeFormatterCell(serverDateTime, whenzero='-') {
     if (serverDateTime == "0001-01-01T00:00:00Z") 
         return whenzero;
 
@@ -47,6 +47,21 @@ export function dateTimeFormatter(serverDateTime, whenzero='-') {
         <div><FiClock /> {time + ' WIB'}</div>
         </div>
     </>;
+}
+
+export function dateTimeFormatter(serverDateTime, whenzero='-') {
+    if (serverDateTime == "0001-01-01T00:00:00Z") 
+        return whenzero;
+
+    let date = serverDateTime.split('T')[0];
+    let time = serverDateTime.split('T')[1].split('Z')[0];
+    time = time.split(':').slice(0, 2).join(':');
+
+    let year = date.split('-')[0];
+    let month = parseInt(date.split('-')[1], 10);
+    let day = date.split('-')[2];
+
+    return day + ' ' + months[month - 1].label + ' ' + year + ' ' + time + ' WIB';
 }
 
 export function dateFormatter(serverDateTime, whenzero='-') {
@@ -80,9 +95,12 @@ export function toMoney(money) {
     return money === null || money === undefined ? "-" : "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
 }
 
-export function removeLastFromPath(path) {
+export function removeLastFromPath(path, lastn=1) {
     var newpath = path.split("/")
-    newpath.pop()
+    do {
+        newpath.pop()
+        lastn--;
+    } while(newpath.length > 0 && lastn > 0);
     return newpath.join("/")
 }
 
