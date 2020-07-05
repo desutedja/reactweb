@@ -1,9 +1,7 @@
 import React from 'react';
 import { toSentenceCase } from '../utils';
 
-function Component({ data, onClick, onClickAll }) {
-    console.log("Filter -->");
-    console.log(data);
+function Component({ data, onClick, onClickAll, customComponent=null,  altDataComponent=null}) {
     return (
         <div className="Filter">
             <div className="List">
@@ -14,15 +12,18 @@ function Component({ data, onClick, onClickAll }) {
                 >
                     All
                 </button>}
-                {data && data.map(el =>
-                    <button
-                        key={el.value ? el.value : el}
-                        className={el.className === 'load-more' ? "ListItem load-more" : "ListItem"}
-                        onClick={() => onClick(el)}
-                    >
-                        {el.label ? el.label : toSentenceCase(el)}
-                    </button>
-                )}
+                {data && data.map(el => {
+                    return ( !customComponent ?
+                        <button
+                            key={el.value ? el.value : el}
+                            className={el.className === 'load-more' ? "ListItem load-more" : "ListItem"}
+                            onClick={() => onClick(el)}
+                        >
+                            {el.label ? el.label : toSentenceCase(el)}
+                        </button> : customComponent(el, onClick)
+                    );
+                })}
+                {altDataComponent && altDataComponent()}
             </div>
         </div>
     )

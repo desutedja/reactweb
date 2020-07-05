@@ -12,14 +12,13 @@ import Filter from '../../../../components/Filter';
 import { toSentenceCase, removeLastFromPath } from '../../../../utils';
 import SectionSeparator from '../../../../components/SectionSeparator';
 import Resident from '../../../../components/cells/Resident';
-import './style.css';
 
 import {
     getResidentUnit,
     addResidentUnit,
     refresh
 } from '../../../slices/resident';
-import { endpointAdmin } from '../../../../settings';
+import { endpointAdmin, endpointResident } from '../../../../settings';
 import { get } from '../../../slice';
 
 const columnsUnit = [
@@ -30,14 +29,14 @@ const columnsUnit = [
     { Header: "Type", accessor: row => row.unit_type + " - " + row.unit_size },
 ]
 
-
 function Component({ id }) {
     const [addUnit, setAddUnit] = useState(false);
     const [addUnitStep, setAddUnitStep] = useState(1);
 
     const [addSubAccount, setAddSubAccount] = useState(false);
     const [addSubAccountStep, setAddSubAccountStep] = useState(false);
-    const [existing, setExisting] = useState("");
+    const [residents, setResidents] = useState([]);
+    const [subAccount, setSubAccount] = useState('');
 
     const [search, setSearch] = useState('');
 
@@ -61,7 +60,17 @@ function Component({ id }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, refreshToggle, id])
 
-    useEffect(() => { }, [ ])
+    useEffect(() => {
+        addSubAccount  && addSubAccountStep === 1 && (!search || search.length >= 3) && 
+            dispatch(get(endpointResident + '/management/resident/read' +
+            '?page=1' +
+            '&limit=10' +
+            '&search=' + search,
+
+            res => {
+                setResidents(res.data.data.items);
+            }))
+    }, [addSubAccount, addSubAccountStep, dispatch, search]);
 
     useEffect(() => {
         addUnit && addUnitStep === 1 && (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +
@@ -106,25 +115,35 @@ function Component({ id }) {
     function SubAccountList(item) {
         let subs = item.unit_sub_account
         return (
-                    <>
-                    <div >
-                            <div style={{ marginBottom: '1vw'  }} ><b>Subaccounts in this unit: </b></div>
-                            <div style={{ display: 'flex', marginLeft: '50px' }} >
-                            { subs.map(el => 
-                                <span onClick={ () => dispatch(refresh()) } >
-                                    <Resident id={el.id} onClickPath={ removeLastFromPath(path) }/>
-                                </span>
-                              )}
-                              { subs.length < 5 && 
-                                <div style={{ padding: '10px', marginLeft: '20px' }} >
-                                    <span style={{ color: 'dodgerblue', cursor: 'pointer' }} 
-                                        onClick={() => setAddSubAccount(true) }> 
-                                        <FiPlus/> Add Subaccount </span>
-                                </div> }
-                            </div>
-                    </div>
-                </>
+            <>
+                <div >
+                        <div style={{ marginBottom: '1vw'  }} ><b>Subaccounts in this unit: </b></div>
+                        <div style={{ display: 'flex', marginLeft: '50px' }} >
+                        { subs.map(el => 
+                            <span onClick={ () => dispatch(refresh()) } >
+                                <Resident id={el.id} onClickPath={ removeLastFromPath(path) }/>
+                            </span>
+                          )}
+                          { subs.length < 5 && 
+                            <div style={{ padding: '10px', marginLeft: '20px' }} >
+                                <span style={{ color: 'dodgerblue', cursor: 'pointer' }}
+                                    onClick={() => {setAddSubAccount(true); setAddSubAccountStep(1);} }> 
+                                    <FiPlus/> Add Subaccount </span>
+                            </div> }
+                        </div>
+                </div>
+            </>
         )
+    }
+
+    function SubAccountItemList(resident, onClick) { 
+        return <Resident id={resident.value.id} onClick={onClick}/>
+    }
+
+    function AddSubAccountNotFound() {
+       return (<div><p>No resident with specified name or email is found. 
+               <span onClick={() => history.push({pathname: removeLastFromPath(path) + '/add'})}
+                    style={{ color: "dodgerblue", cursor:"pointer" }}>Please register here.</span></p></div>)
     }
 
     return (
@@ -134,33 +153,41 @@ function Component({ id }) {
                 title={"Add Sub Account"}
                 disableFooter={addSubAccountStep === 1}
                 okLabel={addSubAccountStep !== 2 ? "Back" : "Add Sub Account"}
-                cancelLabel={"Back"}
+                cancelLabel={"Cancel"}
                 onClick={addSubAccountStep === 3 ? submitSubAccount : backFunction}
                 onClickSecondary={backFunction}
                 disablePrimary={addSubAccountStep !== 3}
                 toggle={() => setAddSubAccount(false)}
                 >
                 {addSubAccountStep === 1 && <>
+                    <Input label="Search Resident Email or Name"
+                        compact
+                        icon={<FiSearch />}
+                        inputValue={search} setInputValue={setSearch}
+                    />
                     <Filter
-                        data={[
-                                { label: "Existing Resident", value: "existing"}, 
-                                { label: "New Resident", value: "new"}
-                        ]}
+                        data={residents.map(el => {
+                            return { label: el.firstname + ' ' + el.lastname, value: el };
+                        })}
+                        altDataComponent={search.length >= 3 && residents.length === 0 && AddSubAccountNotFound}
+                        customComponent={SubAccountItemList}
                         onClick={(el) => {
-                            setExisting(el.value);
+                            setSubAccount(el);
                             setAddSubAccountStep(2);
                         }}
                     />
                 </>}
                 {addSubAccountStep === 2 && <>
+                    <Input type="button" inputValue={subAccount.label} onClick={() => { }} />
                     <Filter
-                        data={[]}
+                        data={[
+                        ]}
                         onClick={(el) => {
+                            setAddSubAccountStep(3);
                         }}
                     />
                 </>}
             </Modal>
-
             <Modal
                 isOpen={addUnit}
                 title={"Add Unit"}
