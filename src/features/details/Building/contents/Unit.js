@@ -99,6 +99,7 @@ function Component() {
                 </form>
             </Modal>
             <Table
+                noContainer={true}
                 columns={columnsUnit}
                 data={unit.items}
                 loading={loading}

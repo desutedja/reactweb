@@ -17,6 +17,7 @@ import FilterButton from './FilterButton';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 function Component({
+    noContainer,
     columns,
     data,
     totalItems,
@@ -132,7 +133,7 @@ function Component({
     }, [page, selectedRowIds]);
 
     return (
-        <div className="Table box-self">
+        <div className={noContainer ? 'Table' : 'Table box-self'}>
             <Modal
                 disableFooter={true}
                 disableHeader={true}
