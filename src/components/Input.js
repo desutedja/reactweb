@@ -24,7 +24,6 @@ function Component({
 }) {
     const [value, setValue] = useState(inputValue ? inputValue : "");
     const [uploading, setUploading] = useState(false);
-    const [dropShow, setDropShow] = useState(false);
     let uploader = useRef();
 
     useEffect(() => {
@@ -267,13 +266,13 @@ function Component({
                     </div>
                 </div>
                 <div className="row">
-                    <div className="d-flex col-12 col-md-6" >
+                    <div className={"d-flex col-12" + (isValidate ? " col-md-6" : "")} >
                         {renderInput(type)}
                         { addons && <div className="addons">{addons}</div>}
                     </div>
-                    <div className="col-12 col-md-6 d-flex align-items-center">
-                        {isValidate && <span className="validation-error">{ validationMsg }</span>}
-                    </div>
+                    {isValidate && <div className="col-12 col-md-6 d-flex align-items-center">
+                        <span className="validation-error">{ validationMsg }</span>
+                    </div>}
                 </div>
 
             </div>
