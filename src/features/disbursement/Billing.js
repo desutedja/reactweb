@@ -13,8 +13,8 @@ import MyButton from '../../components/Button';
 const formatValue = (value) => toMoney(value.toFixed(0));
 
 const columns = [
-    { Header: 'Billing Refcode', accessor: 'payment_ref_code' },
-    { Header: 'Unit', accessor: 'number' },
+    { Header: 'Billing Refcode', accessor: 'trx_code' },
+    // { Header: 'Unit', accessor: 'number' },
     { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
 ]
 
@@ -41,7 +41,7 @@ function Component() {
         dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
             setInfo(res.data.data);
         }))
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/disbursement/management/' +
