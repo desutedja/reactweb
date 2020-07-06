@@ -187,7 +187,7 @@ function Component({
 
             default:
                 return (
-                    <div className="Input-container">
+                    <div className="Input-container w-100">
                         {icon && <div className="InputIcon">
                             {icon}
                         </div>}
@@ -243,30 +243,40 @@ function Component({
     }
 
     return (options.length !== 0 || type !== 'select') && (
-        <div className={(fullwidth ? "FullInput": "Input")
-            + (type === "textarea" ? " textarea" : "")
-            + (type === "select" ? " select" : "")
-            + (type === "multiselect" ? " multiselect" : "")
-            + (hidden ? " hidden" : "")
-        }>
-            {!compact && <>
-                <div style={{ display: 'flex' }} >
-                    <label className="Input-label" htmlFor={label}>
-                        {label}
-                    </label>
-                    {Object.keys(actionlabels).map(action =>
-                        // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                        <a key={action} style={{ margin: '4px' }}
-                            href="#" onClick={actionlabels[action]} >{action}</a>
-                    )}
+        <div className="row w-100 m-0 mb-4">
+            <div className="col px-0">
+                <div className="row">
+                    <div className={(fullwidth ? "FullInput": "Input")
+                        + (type === "textarea" ? " textarea" : "")
+                        + (type === "select" ? " select" : "")
+                        + (type === "multiselect" ? " multiselect" : "")
+                        + (hidden ? " hidden" : "") + ' col m-0'
+                    }>
+                        {!compact && <>
+                            <div style={{ display: 'flex' }}>
+                                <label className="Input-label" htmlFor={label}>
+                                    {label}
+                                </label>
+                                {Object.keys(actionlabels).map(action =>
+                                    // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                                    <a key={action} style={{ margin: '4px' }}
+                                        href="#" onClick={actionlabels[action]} >{action}</a>
+                                )}
+                            </div>
+                        </>}
+                    </div>
                 </div>
-            </>}
+                <div className="row">
+                    <div className="d-flex col-12 col-md-6" >
+                        {renderInput(type)}
+                        { addons && <div className="addons">{addons}</div>}
+                    </div>
+                    <div className="col-12 col-md-6 d-flex align-items-center">
+                        {isValidate && <span className="validation-error">{ validationMsg }</span>}
+                    </div>
+                </div>
 
-            <div style={{ display: 'flex' }} >
-                {renderInput(type)}
-                { addons && <div className="addons">{addons}</div>}
             </div>
-            {isValidate && <span className="validation-error">{ validationMsg }</span>}
         </div>
     )
 }
