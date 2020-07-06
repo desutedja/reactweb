@@ -8,6 +8,7 @@ import { getBillingDisbursement } from '../slices/billing';
 import { toMoney } from '../../utils';
 import { endpointBilling } from '../../settings';
 import { get } from '../slice';
+import MyButton from '../../components/Button';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
@@ -20,6 +21,7 @@ const columns = [
 function Component() {
     const [active, setActive] = useState(0);
     const [info, setInfo] = useState({});
+    const [amount, setAmount] = useState('');
 
     const [data, setData] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
@@ -32,14 +34,22 @@ function Component() {
     let { path } = useRouteMatch();
 
     useEffect(() => {
-        dispatch(getBillingDisbursement( 0, 1000, ''));
-    }, [dispatch, ]);
+        dispatch(getBillingDisbursement(0, 1000, ''));
+    }, [dispatch]);
 
     useEffect(() => {
-        dispatch(get(endpointBilling + '/management/billing/settlement/info',  res => {
+        dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
             setInfo(res.data.data);
         }))
     }, []);
+
+    useEffect(() => {
+        dispatch(get(endpointBilling + '/management/billing/disbursement/management/' +
+            'amount?management_id=' + disbursement.items[active].id,
+            res => {
+                setAmount(res.data.data.undisburse_amount);
+            }))
+    }, [active, disbursement.items, dispatch]);
 
     return (
         <div>
@@ -102,34 +112,54 @@ function Component() {
                                 {el.management_name + ' - ' + el.building_name}
                             </div>)}
                         </div>}
-                        <div className="Container" style={{
-                            flex: 3,
+                        <div style={{
+                            flex: 2,
                             flexDirection: 'column',
                         }}>
-                            <Table
-                                columns={columns}
-                                data={data}
-                                loading={dataLoading}
-                                pageCount={dataPages}
-                                fetchData={useCallback((pageIndex, pageSize, search) => {
-                                    setDataLoading(true);
-                                    get(endpointBilling + '/management/billing/disbursement' +
-                                        '/list/transaction?limit=1000&page=1&search='
-                                        + '&building_id=' +
-                                        disbursement.items[active]?.building_id
-                                        + '&management_id=' +
-                                        disbursement.items[active]?.id,
-                                         res => {
-                                            setData(res.data.data.items);
-                                            setDataPages(res.data.data.total_pages);
-                                            setDataLoading(false);
-                                        })
+                            <div className="Container" style={{
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                            }}>
+                                <div>
+                                Total Undisbursed Amount
 
-                                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                                }, [dispatch, refreshToggle,  active])}
-                                filters={[]}
-                                actions={[]}
-                            />
+                                </div>
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}>
+                                <b style={{
+                                    fontSize: '1.2rem',
+                                    marginRight: 16,
+                                }}>
+                                    {toMoney(amount)}
+                                </b>
+                                <MyButton label="Disburse All" />
+                                </div>
+                            </div>
+                            <div className="Container">
+                                <Table
+                                    columns={columns}
+                                    data={data}
+                                    loading={dataLoading}
+                                    pageCount={dataPages}
+                                    fetchData={useCallback((pageIndex, pageSize, search) => {
+                                        setDataLoading(true);
+                                        dispatch(get(endpointBilling + '/management/billing/disbursement' +
+                                            '/list/transaction?limit=1000&page=1&search='
+                                            + '&building_id=' +
+                                            disbursement.items[active]?.building_id
+                                            + '&management_id=' +
+                                            disbursement.items[active]?.id,
+                                            res => {
+                                                setData(res.data.data.items);
+                                                setDataPages(res.data.data.total_pages);
+                                                setDataLoading(false);
+                                            }))
+                                        // eslint-disable-next-line react-hooks/exhaustive-deps
+                                    }, [dispatch, refreshToggle, active])}
+                                />
+                            </div>
                         </div>
                     </div>
                 </Route>

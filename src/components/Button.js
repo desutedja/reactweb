@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 
-function Component({ icon, label, onClick, selected, color, disabled }) {
+function MyButton({ icon, label, onClick, selected, color, disabled }) {
     return (
         <Button
             className="Button"
@@ -26,4 +26,4 @@ function Component({ icon, label, onClick, selected, color, disabled }) {
     )
 }
 
-export default Component;
+export default MyButton;

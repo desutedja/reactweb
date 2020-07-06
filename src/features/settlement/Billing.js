@@ -45,11 +45,11 @@ function Component() {
     const columns = useMemo(() => [
         { Header: 'ID', accessor: 'id' },
         { Header: 'Trx Code', accessor: 'trx_code' },
-        { Header: 'Building', accessor: row => <Building id={row.building_id} 
-            onClickPath={removeLastFromPath(path, 2) + "/building"} /> },
-        { Header: 'Unit', accessor: 'unit_id' },
+        // { Header: 'Building', accessor: row => <Building id={row.building_id} 
+        //     onClickPath={removeLastFromPath(path, 2) + "/building"} /> },
+        // { Header: 'Unit', accessor: 'unit_id' },
         //{ Header: 'Management', accessor: 'management_name' },
-        { Header: 'Resident', accessor: 'resident_name' },
+        // { Header: 'Resident', accessor: 'resident_name' },
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
         { Header: 'Settled', accessor: row => row.payment_settled_date ? <Pill color="success">Settled</Pill> :
         <Pill color="secondary">Unsettled</Pill> },
@@ -58,7 +58,7 @@ function Component() {
                 dateTimeFormatterCell(row.payment_settled_date) : '-'
         },
         // { Header: 'Disbursement', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
-    ], [path])
+    ], [])
 
     useEffect(() => {
         (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +
