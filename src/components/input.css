@@ -69,6 +69,7 @@
 }
 
 .Input-container select {
+  width: 100%;
   padding: 6px;
   margin-top: 3px;
   padding-right: 24px;
