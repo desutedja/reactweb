@@ -74,6 +74,7 @@ function Component() {
                 }} />
             </Modal>
             <Table
+                noContainer={true}
                 columns={columns}
                 data={selected.task_reports}
                 loading={false}

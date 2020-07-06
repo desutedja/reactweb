@@ -75,7 +75,7 @@ function Component({
                     )
                 }
                 return (
-                    <div className="Input-container">
+                    <div className="Input-container w-100">
                         <select
                             disabled={disabled}
                             style={{

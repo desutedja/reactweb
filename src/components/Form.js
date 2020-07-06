@@ -41,9 +41,7 @@ function Component({ children, onSubmit, loading, isModal=false, showSubmit = tr
                 {!isModal && <SectionSeparator className="mt-4 mx-4" />}
                 {!isModal && showSubmit && <div className="Form-control">
                     <Loading loading={loading}>
-                        <Button label="Submit" className="m-0" onClick={() => {
-                            // console.log('sth');
-                        }} />
+                        <Button label="Submit" className="m-0"/>    
                         {showCancel && <div className="btn btn-danger mb-2 mt-1 ml-3" onClick={onCancel}>Cancel</div>}
                     </Loading>
                 </div>}

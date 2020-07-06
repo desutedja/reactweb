@@ -315,6 +315,7 @@ function Component({ id }) {
                 </>}
             </Modal>
             <Table
+                noContainer={true}
                 columns={columnsUnit}
                 data={unit.items.map( el =>
                     el.level === 'main' ? ({ 

@@ -18,7 +18,7 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [],
     return (
         <>
             <Breadcrumb />
-            <Container>
+            <div>
                 <Table totalItems={total_items}
                     columns={columns}
                     data={items}
@@ -37,7 +37,7 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [],
                     } : null}
                     {...props}
                 />
-            </Container>
+            </div>
         </>
     )
 }
