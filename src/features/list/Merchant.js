@@ -19,7 +19,7 @@ const columns = [
     { Header: 'ID', accessor: 'id' },
     { Header: 'Name', accessor: 'name' },
     { Header: 'Type', accessor: row => toSentenceCase(row.type) },
-    { Header: 'Category', accessor: row => toSentenceCase(row.category) },
+    { Header: 'Category', accessor: row => row.category ? toSentenceCase(row.category) : '-' },
     {
         Header: 'Open', accessor: row => {
             return <Tile items={[

@@ -24,6 +24,7 @@ function Component() {
     const [amount, setAmount] = useState('');
 
     const [data, setData] = useState([]);
+    const [trxCodes, setTrxCodes] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
     const [dataPages, setDataPages] = useState('');
 
@@ -45,7 +46,7 @@ function Component() {
 
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/disbursement/management/' +
-            'amount?management_id=' + disbursement.items[active].id,
+            'amount?management_id=' + disbursement.items[active]?.id,
             res => {
                 setAmount(res.data.data.undisburse_amount);
             }))

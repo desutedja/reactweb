@@ -243,13 +243,13 @@ function Component({
 
     return (options.length !== 0 || type !== 'select') && (
         <div className="row w-100 m-0 mb-4">
-            <div className="col px-0">
+            <div className={"col px-0" + (hidden ? " hidden" : "")}>
                 <div className="row">
                     <div className={(fullwidth ? "FullInput": "Input")
                         + (type === "textarea" ? " textarea" : "")
                         + (type === "select" ? " select" : "")
                         + (type === "multiselect" ? " multiselect" : "")
-                        + (hidden ? " hidden" : "") + ' col m-0'
+                        + ' col m-0'
                     }>
                         {!compact && <>
                             <div style={{ display: 'flex' }}>

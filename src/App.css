@@ -248,7 +248,7 @@
   align-items: flex-end;
 }
 
-.Input.hidden {
+.hidden {
   display: none;
 }
 
