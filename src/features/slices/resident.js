@@ -210,6 +210,22 @@ export const addSubaccount = ( data) => dispatch => {
     }))
 }
 
+export const deleteSubaccount = ( unit, parent, owner ) => dispatch => {
+  dispatch(startAsync());
+
+    dispatch(del(residentEndpoint + '/delete_unit_sub?' + 
+        'unit=' + unit +
+        '&parent=' + parent +
+        '&sub=' + owner,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    }))
+}
+
 export const createSubaccount = ( data, history) => dispatch => {
   dispatch(startAsync());
 

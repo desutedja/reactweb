@@ -9,7 +9,7 @@ import './style.css';
 import { setSelected } from '../../features/slices/resident';
 
 
-function Component({ id, compact=false, onClickPath='' }) {
+function Resident({ id, compact=false, onClick=null, onClickPath='' }) {
     const [data, setData] = useState({
         email: '',
         firstname: '',
@@ -23,6 +23,14 @@ function Component({ id, compact=false, onClickPath='' }) {
 
     path = onClickPath !== '' ? onClickPath : path;
 
+    const onClickAction = onClick ? onClick :  () => {
+        history.push({
+            pathname: path + '/' + id,
+            state: data
+        });
+        dispatch(setSelected(data));
+    }
+
     useEffect(() => {
         dispatch(get(endpointResident + '/management/resident/detail/' + id, res => {
             setData(res.data.data);
@@ -30,13 +38,7 @@ function Component({ id, compact=false, onClickPath='' }) {
     }, [dispatch, id])
 
     return (
-        <div className={ !compact ? "Item" : "Item-compact" } onClick={() => {
-            history.push({
-                pathname: path + '/' + id,
-                state: data
-            });
-            dispatch(setSelected(data));
-        }}>
+        <div className={ !compact ? "Item" : "Item-compact" } onClick={() => onClickAction(data)}>
             <Avatar className="Item-avatar" size="40" src={data.photo}
                 name={data.firstname + ' ' + data.lastname} round
                 email={data.photo ? null : data.email} />
@@ -53,4 +55,4 @@ function Component({ id, compact=false, onClickPath='' }) {
     );
 }
 
-export default Component;
+export default Resident;

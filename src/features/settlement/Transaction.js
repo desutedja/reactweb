@@ -8,9 +8,9 @@ import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { getTransactionDetails, getTransactionSettlement } from '../slices/transaction';
-import { toMoney, dateTimeFormatter } from '../../utils';
-import { endpointTransaction, endpointMerchant } from '../../settings';
-import { get, post } from '../slice';
+import { toMoney, dateTimeFormatterCell } from '../../utils';
+import { endpointTransaction } from '../../settings';
+import { get } from '../slice';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -18,7 +18,7 @@ const columns = [
     { Header: 'Amount', accessor: row => toMoney(row.total_price) },
     {
         Header: 'Settlement Date', accessor: row => row.payment_settled_date ?
-            dateTimeFormatter(row.payment_settled_date) : '-'
+            dateTimeFormatterCell(row.payment_settled_date) : '-'
     },
 ];
 

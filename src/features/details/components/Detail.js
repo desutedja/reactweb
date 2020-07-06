@@ -11,6 +11,7 @@ function Component({ data, labels, type = "", editable = true, renderButtons = (
 
     let history = useHistory();
     let { url } = useRouteMatch();
+
     function formatLabel(label) {
         if (label === 'id') label = type + " ID";
         if (label.includes('pic_')) label = label.split('_')[1];
@@ -59,10 +60,10 @@ function Component({ data, labels, type = "", editable = true, renderButtons = (
                         {labels[group].map(el =>
                             <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={el} >
                                 <Column flex={3} style={{ fontWeight: 'bold', fontSize: '1em', textAlign: 'left' }}>
-                                    {formatLabel(el)}
+                                    {el.labelFormatter ? el.labelFormatter(el) : formatLabel(el)}
                                 </Column>
                                 <Column flex={9} style={{ fontWeight: 'normal', fontSize: '1em', }}>
-                                    {formatValue(el, data[el])}
+                                    {el.valueFormatter ? el.valueFormatter(data[el.label]) : formatValue(el, data[el])}
                                 </Column>
                             </Row>
                         )}

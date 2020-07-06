@@ -11,7 +11,7 @@ import Settlement from '../settlement/Transaction';
 import Disbursement from '../disbursement/Transaction';
 import { getTransaction, getTransactionDetails, setSelected } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
-import { toMoney, toSentenceCase, dateTimeFormatter } from '../../utils';
+import { toMoney, toSentenceCase, dateTimeFormatterCell } from '../../utils';
 import Pill from '../../components/Pill';
 
 const payment_status = [
@@ -28,12 +28,12 @@ const columns = [
     { Header: 'Merchant', accessor: 'merchant_name' },
     { Header: 'Resident', accessor: 'resident_name' },
     {
-        Header: 'Transaction Date', accessor: row => dateTimeFormatter(row.created_on)
+        Header: 'Transaction Date', accessor: row => dateTimeFormatterCell(row.created_on)
     },
     { Header: 'Payment Amount', accessor: row => toMoney(row.payment_amount) },
     {
         Header: 'Payment Date', accessor: row => row.payment_date ?
-            dateTimeFormatter(row.payment_date) : 'Unpaid'
+            dateTimeFormatterCell(row.payment_date) : 'Unpaid'
     },
     {
         Header: 'Status', accessor: row => row.status ?

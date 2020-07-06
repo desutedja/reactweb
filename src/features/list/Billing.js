@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { FiSearch } from 'react-icons/fi';
@@ -11,18 +11,8 @@ import { toSentenceCase, toMoney } from '../../utils';
 import { get } from '../slice';
 
 import Template from './components/Template';
-
-const columns = [
-    // { Header: 'ID', accessor: 'code' },
-    { Header: 'ID', accessor: 'id' },
-    {
-        Header: 'Unit', accessor: row => toSentenceCase(row.section_type) + ' '
-            + row.section_name + ' ' + row.number
-    },
-    { Header: 'Building', accessor: 'building_name' },
-    { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
-    { Header: 'Unpaid Amount', accessor: row => toMoney(row.unpaid_amount) },
-]
+import Building from '../../components/cells/Building';
+import Resident from '../../components/cells/Resident';
 
 function Component() {
     const [search, setSearch] = useState('');
@@ -34,6 +24,29 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
+
+    const columns = useMemo(() => [
+        {
+            Header: 'Unit', accessor: row =>
+                <div className="Item" onClick={() => {
+                    dispatch(getBillingUnitDetails(row, history, url))
+                }}>
+                    <div>
+                        <b>Nomor {row.number}</b>
+                        <p className="Item-subtext">{toSentenceCase(row.section_type) + ' '
+                            + row.section_name}</p>
+                    </div>
+                </div>
+    
+        },
+        { Header: 'Building', accessor: row => <Building id={row.building_id} /> },
+        { Header: 'Resident', accessor: row => <Resident id={row.resident_id} /> },
+        {
+            Header: 'Unpaid Amount', accessor: row => row.unpaid_amount ? <b style={{
+                fontSize: '1.2rem'
+            }}>{toMoney(row.unpaid_amount)}</b> : '-'
+        },
+    ], [dispatch, history, url]);
 
     useEffect(() => {
         (!search || search.length >= 3) && get(endpointAdmin + '/building' +
@@ -85,10 +98,6 @@ function Component() {
                         </>
                 },
             ]}
-            actions={[]}
-            onClickDetails={row => {
-                dispatch(getBillingUnitDetails(row, history, url))
-            }}
         />
     )
 }

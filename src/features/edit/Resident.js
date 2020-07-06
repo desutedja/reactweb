@@ -15,6 +15,12 @@ import { get } from '../slice';
 
 function Component() {
     const [email, setEmail] = useState('');
+    const [validation, setValidation] = useState({
+        tel: {
+            value: '',
+            isErr: false
+        }
+    })
 
     const [district, setDistrict] = useState("");
     const [districts, setDistricts] = useState([]);
@@ -100,7 +106,37 @@ function Component() {
                 {(selected.email) && <>
                     <Input label="First Name" name="firstname" inputValue={selected.firstname} />
                     <Input label="Last Name" name="lastname" inputValue={selected.lastname} />
-                    <Input label="Phone" type="tel" inputValue={selected.phone} />
+                    <Input label="Phone" type="tel"
+                        inputValue={selected.phone || validation.tel.value}
+                        placeholder="e.g 6281xxxxxxx"
+                        isValidate={validation.tel.isErr}
+                        validationMsg="The phone number must contain 62" onFocus={(e) => {
+                            setValidation({
+                                ...validation,
+                                tel: {
+                                    ...validation.tel,
+                                    value: '62'
+                                }
+                            })
+                        }}
+                        onBlur={(e) => {
+                            if (e.target.value.includes(e.target.value.match(/^62/))) {
+                                setValidation({
+                                    ...validation,
+                                    tel: {
+                                        ...validation.tel,
+                                        isErr: false
+                                    }
+                                })
+                            } else setValidation({
+                                ...validation,
+                                tel: {
+                                    ...validation.tel,
+                                    isErr: true
+                                }
+                            })
+                        }}
+                    />
                     <Select label="Birth Place" name="birthplace" options={bcities}
                         inputValue={bcity ? bcity.value : selected.birthplace} setInputValue={setBCity}
                         loading={bcloading}

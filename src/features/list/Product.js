@@ -20,8 +20,10 @@ const columns = [
         Header: 'Product', accessor: row => <Product id={row.id} merchantName={row.merchant_name}/>
     },
     { Header: 'Selling Price', accessor: row => {
-        return row.discount_fee > 0 ? <div style={{ display: 'block' }} ><div style={{ textDecoration: 'line-through' }} >{toMoney(row.total_selling_price)}</div><div>{toMoney(row.total_selling_price - row.discount_price)}</div></div> : 
-                        <span>{toMoney(row.selling_price)}</span>
+        return row.discount_fee > 0 ? <div style={{ display: 'block' }} >
+            <div style={{ textDecoration: 'line-through' }} >{toMoney(row.total_selling_price)}</div>
+            <div>{toMoney(row.total_selling_price - row.discount_price)}</div>
+            </div> : <span>{toMoney(row.total_selling_price)}</span>
         }
     },
     //    { Header: 'Merchant Name', accessor: 'merchant_name' },

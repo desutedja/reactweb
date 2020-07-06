@@ -25,7 +25,6 @@ function Component() {
     const [dataLoading, setDataLoading] = useState(false);
     const [dataPages, setDataPages] = useState('');
 
-    
     const { disbursement, refreshToggle } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
@@ -39,7 +38,7 @@ function Component() {
         dispatch(get(endpointBilling + '/management/billing/settlement/info',  res => {
             setInfo(res.data.data);
         }))
-    }, []);
+    }, [dispatch]);
 
     return (
         <div>
@@ -113,7 +112,7 @@ function Component() {
                                 pageCount={dataPages}
                                 fetchData={useCallback((pageIndex, pageSize, search) => {
                                     setDataLoading(true);
-                                    get(endpointBilling + '/management/billing/disbursement' +
+                                    dispatch(get(endpointBilling + '/management/billing/disbursement' +
                                         '/list/transaction?limit=1000&page=1&search='
                                         + '&building_id=' +
                                         disbursement.items[active]?.building_id
@@ -123,8 +122,7 @@ function Component() {
                                             setData(res.data.data.items);
                                             setDataPages(res.data.data.total_pages);
                                             setDataLoading(false);
-                                        })
-
+                                        }))
                                     // eslint-disable-next-line react-hooks/exhaustive-deps
                                 }, [dispatch, refreshToggle,  active])}
                                 filters={[]}

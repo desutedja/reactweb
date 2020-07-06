@@ -15,6 +15,12 @@ import countries from '../../countries';
 
 function Component() {
     const { loading, selected } = useSelector(state => state.staff);
+    const [validation, setValidation] = useState({
+        tel: {
+            value: '',
+            isErr: false
+        }
+    })
 
     const [bManagementID, setBManagementID] = useState('');
     const [bManagementName, setBManagementName] = useState('');
@@ -149,7 +155,37 @@ function Component() {
                 <Input label="Firstname" inputValue={selected.firstname} />
                 <Input label="Lastname" inputValue={selected.lastname} />
                 <Input label="Email" type="email" inputValue={selected.email} />
-                <Input label="Phone" type="tel" inputValue={selected.phone} />
+                <Input label="Phone" type="tel"
+                    inputValue={selected.phone || validation.tel.value}
+                    placeholder="e.g 6281xxxxxxx"
+                    isValidate={validation.tel.isErr}
+                    validationMsg="The phone number must contain 62" onFocus={(e) => {
+                        setValidation({
+                            ...validation,
+                            tel: {
+                                ...validation.tel,
+                                value: '62'
+                            }
+                        })
+                    }}
+                    onBlur={(e) => {
+                        if (e.target.value.includes(e.target.value.match(/^62/))) {
+                            setValidation({
+                                ...validation,
+                                tel: {
+                                    ...validation.tel,
+                                    isErr: false
+                                }
+                            })
+                        } else setValidation({
+                            ...validation,
+                            tel: {
+                                ...validation.tel,
+                                isErr: true
+                            }
+                        })
+                    }}
+                />
                 <SectionSeparator />
 
                 <Input label="Nationality" inputValue={selected.nationality} type="select"
