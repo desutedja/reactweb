@@ -26,8 +26,6 @@ function Component() {
     let { url } = useRouteMatch();
 
     const columns = useMemo(() => [
-        // { Header: 'ID', accessor: 'code' },
-        // { Header: 'ID', accessor: 'id' },
         {
             Header: 'Unit', accessor: row =>
                 <div className="Item" onClick={() => {

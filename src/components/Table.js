@@ -210,7 +210,7 @@ function Component({
                     {page.length === 0 ?
                         <tbody>
                             <tr>
-                                <td colspan={columns.length + 2} style={{ textAlign: "center" }} >
+                                <td colSpan={columns.length + 2} style={{ textAlign: "center" }} >
                                     No items.
                                 </td>
                             </tr>
