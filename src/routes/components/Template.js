@@ -183,7 +183,7 @@ function Component({ role, menu }) {
                     </div>
                     <div className={profile ? "ProfileButton-menu" : "ProfileButton-menu-hide"}>
                         <div className="ProfileButton-menuItem" onClick={() => {
-                            qiscus.isLogin && qiscus.disconnect();
+                            // qiscus.isLogin && qiscus.disconnect();
                             dispatch(logout());
                         }}>
                             <FiLogOut style={{
