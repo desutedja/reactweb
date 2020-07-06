@@ -17,7 +17,7 @@ import FilterButton from './FilterButton';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 function Component({
-    noSelector = false,
+    noContainer,
     columns,
     data,
     totalItems,
@@ -73,11 +73,14 @@ function Component({
                                 <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
                             </div>
                         ),
-                        Cell: ({ row }) => (
-                            <div >
-                                <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-                            </div>
-                        ),
+                        Cell: ({ row }) => {
+                            // console.log(row.getToggleRowSelectedProps())
+                            return (
+                                <div >
+                                    <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                                </div>
+                            )
+                        }
                     },
                     {
                         id: 'expander',
@@ -95,6 +98,8 @@ function Component({
             })
         }
     );
+
+    console.log('LOG', page)
 
     const [search, setSearch] = useState("");
     const [searchToggle, toggleSearch] = useState("");
@@ -122,13 +127,13 @@ function Component({
         const selectedRows = selectedRowIds ?
             Object.keys(selectedRowIds).map(el => page[el].original) : [];
 
-        // console.log(selectedRows);
         onSelection && onSelection(selectedRows);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, selectedRowIds]);
 
     return (
-        <div className="Table">
+        <div className={noContainer ? 'Table' : 'Table box-self'}>
             <Modal
                 disableFooter={true}
                 disableHeader={true}
@@ -372,10 +377,12 @@ const IndeterminateCheckbox = forwardRef(
         const defaultRef = useRef()
         const resolvedRef = ref || defaultRef
 
+        // console.log('LOG', resolvedRef)
+
+
         useEffect(() => {
             resolvedRef.current.indeterminate = indeterminate
-        },
-            [resolvedRef, indeterminate])
+        }, [resolvedRef, indeterminate])
 
         return (
             <input type="checkbox" ref={resolvedRef} {...rest} />

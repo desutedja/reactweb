@@ -39,7 +39,7 @@ function Component() {
 
     return (
         <>
-            <div className="Container">
+            <div className="box-self d-flex mb-4">
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -125,7 +125,9 @@ function Component() {
                     </div>
                 </div>
             </div>
-            <Table totalItems={settlement.total_items}
+            {/* {console.log('columns', columns)} */}
+            <Table
+                totalItems={settlement.total_items}
                 columns={columns}
                 data={settlement.items}
                 loading={loading}

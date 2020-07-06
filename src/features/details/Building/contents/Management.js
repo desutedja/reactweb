@@ -154,6 +154,7 @@ function Component() {
                 </Form>
             </Modal>
             <Table
+                noContainer={true}
                 columns={columnsManagement}
                 data={management.items}
                 loading={loading}

@@ -59,7 +59,7 @@ function Component() {
     return (
         <div>
             <Switch>
-                <   Redirect exact from={path} to={`${path}/list`} />
+                <Redirect exact from={path} to={`${path}/list`} />
                 <Route path={`${path}/list`}>
                     <Table totalItems={total_items}
                         columns={columns}

@@ -118,6 +118,7 @@ function Component() {
                 </Form>
             </Modal>
             <Table
+                    noContainer={true}
                     columns={columnsService}
                     data={service.items}
                     loading={loading}
