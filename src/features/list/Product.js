@@ -64,9 +64,7 @@ function Component() {
     useEffect(() => {
         (!search || search.length >= 3) && dispatch(get(endpointMerchant + '/admin/categories' + '?name=' + search, res => {
             let data = res.data.data;
-
             let formatted = data.map(el => ({ label: el.name, value: el.id }));
-
             setCats(formatted);
         }))
     }, [search, dispatch]);

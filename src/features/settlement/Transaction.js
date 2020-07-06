@@ -2,12 +2,15 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
-
+import Button from '../../components/Button';
+import Filter from '../../components/Filter';
+import Input from '../../components/Input';
+import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import { getTransactionDetails, getTransactionSettlement } from '../slices/transaction';
 import { toMoney, dateTimeFormatter } from '../../utils';
-import { endpointTransaction } from '../../settings';
-import { get } from '../slice';
+import { endpointTransaction, endpointMerchant } from '../../settings';
+import { get, post } from '../slice';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -23,7 +26,8 @@ const formatValue = (value) => toMoney(value.toFixed(0));
 
 function Component() {
     const [info, setInfo] = useState({});
-    
+    const [settleSingle, setSettleSingle] = useState(false);
+    const [merchantPayload, setMerchantDetails] = useState();
     
     const { loading, settlement, refreshToggle } = useSelector(state => state.transaction);
 
@@ -39,6 +43,30 @@ function Component() {
 
     return (
         <>
+        <Modal isOpen={settleSingle}
+        toggle={() => setSettleSingle(false)} disableFooter disableHeader >
+                Are you sure you want settle this transaction?
+                <div style={{
+                    display: 'flex',
+                    marginTop: 16,
+                }}>
+                    
+
+                    <Button label="No" secondary
+                        onClick={() => setSettleSingle(false)}
+                    />
+                    <Button label="Yes"
+                        onClick={() => {
+                            dispatch(
+                         //    get(endpointMerchant+'/admin?id='+)   
+                            )
+                            setSettleSingle(false);
+                            //todo: add dispatch to settle things
+                            //dispatch(resolveTask(selectedRow));
+                        }}
+                    />
+                </div>
+            </Modal>
             <div className="Container">
                 <div style={{
                     display: 'flex',
@@ -137,6 +165,11 @@ function Component() {
                 filters={[]}
                 actions={[]}
                 onClickDetails={row => dispatch(getTransactionDetails(row,  history, url))}
+                onClickSettle={row=>{
+                    //load merchant details
+                   
+                    setSettleSingle(true);
+                }}
             />
         </>
     )

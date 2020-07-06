@@ -5,7 +5,7 @@ import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
-    FiEdit, FiCheck, FiUserPlus, FiMessageSquare,
+    FiEdit, FiCheck, FiUserPlus, FiMessageSquare, FiDollarSign
 } from 'react-icons/fi'
 import {
     FaCaretRight, FaCaretDown,
@@ -32,6 +32,7 @@ function Component({
     onClickDelete,
     onClickDetails,
     onClickEdit,
+    onClickSettle,
     renderActions,
     deleteSelection,
     onSelection,
@@ -252,6 +253,11 @@ function Component({
                                         onClick: () => onClickDelete(row.original),
                                         color: "danger",
                                         icon: <FiTrash />,
+                                    } : ""),
+                                    (onClickSettle ? {
+                                        name: "Settle",
+                                        onClick: () => onClickSettle(row.original),
+                                        icon: <FiDollarSign />,
                                     } : ""),
                                 ].filter(x => x !== "")
 

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { endpointTransaction } from '../../settings';
-import { get } from '../slice';
+import { endpointTransaction, endpointMerchant } from '../../settings';
+import { get,post } from '../slice';
 
 const transactionEndpoint = endpointTransaction + '/admin/transaction';
 
@@ -40,6 +40,7 @@ export const slice = createSlice({
       state.total_items = data.filtered_item;
       state.total_pages = data.filtered_page;
     },
+
     setSettlement: (state, action) => {
       const data = action.payload;
 
@@ -49,7 +50,7 @@ export const slice = createSlice({
     },
     setDisbursement: (state, action) => {
       const data = action.payload;
-
+      
       state.disbursement.items = data.items;
       state.disbursement.total_items = data.filtered_item;
       state.disbursement.total_pages = data.filtered_page;
@@ -150,3 +151,33 @@ export const getTransactionDisbursement = (
       dispatch(stopAsync());
     }))
 }
+
+
+export const setSingleTransactionSettled = (
+ data
+)=>dispatch=>{
+  dispatch(startAsync());
+
+  dispatch(post(transactionEndpoint + '/settlement/create'),data,
+  res=>{
+    //
+
+    dispatch(stopAsync());
+  })
+}
+
+
+export const getMerchantDetails = (
+  merchant_id
+ )=>dispatch=>{
+   dispatch(startAsync());
+ 
+   dispatch(get(endpointMerchant + '/admin?id='+merchant_id.toString()),
+   res=>{
+     
+ 
+     dispatch(stopAsync());
+   })
+ }
+ 
+ 
