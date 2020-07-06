@@ -9,7 +9,7 @@ import './style.css';
 import { setSelected } from '../../features/slices/building';
 
 
-function Component({ id, onClickPath='' }) {
+function Building({ id, onClickPath='' }) {
     const [data, setData] = useState({
         email: '',
         name: '',
@@ -50,4 +50,4 @@ function Component({ id, onClickPath='' }) {
     );
 }
 
-export default Component;
+export default Building;

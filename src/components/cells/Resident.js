@@ -9,7 +9,7 @@ import './style.css';
 import { setSelected } from '../../features/slices/resident';
 
 
-function Component({ id, compact=false, onClick=null, onClickPath='' }) {
+function Resident({ id, compact=false, onClick=null, onClickPath='' }) {
     const [data, setData] = useState({
         email: '',
         firstname: '',
@@ -55,4 +55,4 @@ function Component({ id, compact=false, onClick=null, onClickPath='' }) {
     );
 }
 
-export default Component;
+export default Resident;
