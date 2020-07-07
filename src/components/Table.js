@@ -176,7 +176,7 @@ function Component({
                     </div>
                 </div>
             </div>
-            <div className="Table-content">
+            <div className="Table-content scroller">
                 <table {...getTableProps()}>
                     {loading &&
                         <tbody className="TableLoading">

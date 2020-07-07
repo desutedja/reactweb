@@ -17,6 +17,24 @@
   scrollbar-width: none;
 }
 
+.scroller-y {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-color: #afb3b9 #f1f1f1;
+  scrollbar-width: thin;
+}
+.scroller-x {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-color: #afb3b9 #f1f1f1;
+  scrollbar-width: thin;
+}
+.scroller {
+  overflow: auto;
+  scrollbar-color: #afb3b9 #f1f1f1;
+  scrollbar-width: thin;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 6px;
