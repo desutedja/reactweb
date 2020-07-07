@@ -90,7 +90,6 @@ export const getResident = (
     '&status=',
     
     res => {
-      console.log(res);
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());

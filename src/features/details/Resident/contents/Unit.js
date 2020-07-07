@@ -56,6 +56,8 @@ function Component({ id }) {
 
     const { unit, loading, refreshToggle } = useSelector(state => state.resident);
 
+    console.log('LOG', unit)
+
     let dispatch = useDispatch();
     let history = useHistory();
     let { path } = useRouteMatch();
@@ -315,6 +317,7 @@ function Component({ id }) {
                 </>}
             </Modal>
             <Table
+                totalItems={unit.items.length}
                 noContainer={true}
                 columns={columnsUnit}
                 data={unit.items.map( el =>
