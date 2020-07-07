@@ -33,7 +33,7 @@ function Component() {
   const [province, setProvince] = useState("");
   const [provinces, setProvinces] = useState([]);
 
-  const [inBuilding, setBuilding] = useState();
+  const [inBuilding, setBuilding] = useState(0);
   const [inBuildings, setBuildings] = useState([]);
 
   const [category, setCategory] = useState("");
@@ -46,11 +46,13 @@ function Component() {
   let history = useHistory();
 
   useEffect(() => {
-    setBuilding("");
+    setBuilding(0);
     dispatch(get(endpointAdmin + "/building?page=1&limit=9999", (res) => {
       let formatted = res.data.data.items.map((el) => ({
         label: el.name,
         value: el.id,
+        lat: el.lat,
+        long: el.long,
       }));
       setBuildings(formatted);
     }));
@@ -110,6 +112,10 @@ function Component() {
         }
       ));
   }, [city, dispatch, selected.city]);
+
+  // useEffect(() => {
+  //   setLat();
+  // }, [inBuilding])
 
   return (
     <Template>
@@ -226,18 +232,6 @@ function Component() {
           ]}
           inputValue={selected.status}
         />
-        <SectionSeparator />
-        <h2
-          style={{
-            color: "gray",
-          }}
-        >
-          PIC Info
-        </h2>
-        <SectionSeparator />
-        <Input label="Name" name="pic_name" inputValue={selected.pic_name} />
-        <Input label="Phone" name="pic_phone" inputValue={selected.pic_phone} />
-        <Input label="Email" name="pic_mail" inputValue={selected.pic_mail} />
         <Input label="Open Time" name="open_at" type="time"
           inputValue={selected.open_at} />
         <Input label="Close Time" name="closed_at" type="time"
@@ -250,18 +244,42 @@ function Component() {
           name="in_building"
           options={inBuildings}
           inputValue={inBuilding ? inBuilding : selected.in_building}
-          setInputValue={setBuilding}
+          setInputValue={value => {
+            setBuilding(value);
+            // console.log(inBuildings.find(el => el.value === value));
+            setLat(inBuildings.find(el => el.value === value)?.lat);
+            setLng(inBuildings.find(el => el.value === value)?.long);
+          }}
         />
-        {!inBuilding && <><Input label="Select Location" type="button"
+        <Input label="Select Location" type="button"
           onClick={() => {
             setLat(-6.2107863);
             setLng(106.8137977);
             setModal(true);
           }}
+          hidden={inBuilding}
         />
-          <Input label="Latitude" name="lat" inputValue={lat ? lat : selected.lat} setInputValue={setLat} />
-          <Input label="Longitude" name="long" inputValue={lng ? lng : selected.long} setInputValue={setLng} />
-          <Input label="Address" type="textarea" inputValue={selected.address} /></>}
+        <Input label="Latitude" name="lat" inputValue={lat ? lat : selected.lat}
+          setInputValue={setLat}
+          hidden={inBuilding}
+        />
+        <Input label="Longitude" name="long" inputValue={lng ? lng : selected.long}
+          setInputValue={setLng}
+          hidden={inBuilding}
+        />
+        <Input label="Address" type="textarea" inputValue={selected.address} />
+        <SectionSeparator />
+        <h2
+          style={{
+            color: "gray",
+          }}
+        >
+          PIC Info
+        </h2>
+        <SectionSeparator />
+        <Input label="Name" name="pic_name" inputValue={selected.pic_name} />
+        <Input label="Phone" name="pic_phone" inputValue={selected.pic_phone} />
+        <Input label="Email" name="pic_mail" inputValue={selected.pic_mail} />
         <SectionSeparator />
         <h2
           style={{

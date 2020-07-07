@@ -13,12 +13,12 @@
   --background-color: #f3f3fa;
   background-color: #f3f3fa;
   /* background-color: rgba(245, 245, 245, 1); */
-  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none;
 }
 
-::-webkit-scrollbar { 
-  display: none;  /* Safari and Chrome */
+::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 
 body {
@@ -45,7 +45,8 @@ label {
   margin-left: 0;
 }
 
-p, a {
+p,
+a {
   margin: 0;
   /* margin-left: 4px; */
   /* margin-right: 4px; */
@@ -85,20 +86,20 @@ textarea {
 }
 
 .withaddons {
-    border-radius: 4px 0px 0px 4px;
+  border-radius: 4px 0px 0px 4px;
 }
 
 .addons {
-    border-radius: 0px 4px 4px 0px;
-    border-top: 0.5px;
-    border-bottom: 0.5px;
-    border-right: 0.5px;
-    border-left: 0px;
-    border-color: silver;
-    border-style: solid;
-    padding: 6px;
-    margin-top: 3px;
-    background-color: #f3f3fa;
+  border-radius: 0px 4px 4px 0px;
+  border-top: 0.5px;
+  border-bottom: 0.5px;
+  border-right: 0.5px;
+  border-left: 0px;
+  border-color: silver;
+  border-style: solid;
+  padding: 6px;
+  margin-top: 3px;
+  background-color: #f3f3fa;
 }
 
 input[type="button"] {
@@ -112,6 +113,16 @@ input[type="file"] {
   border: none;
   padding: 4px;
   margin-left: 12px;
+}
+
+.list-autocomplete {
+  position: absolute;
+  padding: 0;
+  top: 100%;
+}
+
+.list-autocomplete li {
+  list-style: none;
 }
 
 h5 {
@@ -157,7 +168,7 @@ table tr:last-child td:last-child {
 }
 
 .shadow {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   /* transition: all 0.3s cubic-bezier(.25,.8,.25,1); */
 }
 
@@ -169,25 +180,31 @@ table tr:last-child td:last-child {
 }
 
 .shadow:hover {
-  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 }
 
 .shine {
   background: #f6f7f8;
-  background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+  background-image: linear-gradient(
+    to right,
+    #f6f7f8 0%,
+    #edeef1 20%,
+    #f6f7f8 40%,
+    #f6f7f8 100%
+  );
   background-repeat: no-repeat;
-  background-size: 800px 400px; 
+  background-size: 800px 400px;
   display: inline-block;
-  position: relative; 
-  
+  position: relative;
+
   animation-duration: 1s;
-  animation-fill-mode: forwards; 
+  animation-fill-mode: forwards;
   animation-iteration-count: infinite;
   animation-name: placeholderShimmer;
   animation-timing-function: linear;
 
   -webkit-animation-duration: 1s;
-  -webkit-animation-fill-mode: forwards; 
+  -webkit-animation-fill-mode: forwards;
   -webkit-animation-iteration-count: infinite;
   -webkit-animation-name: placeholderShimmer;
   -webkit-animation-timing-function: linear;
@@ -197,9 +214,9 @@ table tr:last-child td:last-child {
   0% {
     background-position: -468px 0;
   }
-  
+
   100% {
-    background-position: 468px 0; 
+    background-position: 468px 0;
   }
 }
 
@@ -207,8 +224,8 @@ table tr:last-child td:last-child {
   0% {
     background-position: -468px 0;
   }
-  
+
   100% {
-    background-position: 468px 0; 
+    background-position: 468px 0;
   }
 }

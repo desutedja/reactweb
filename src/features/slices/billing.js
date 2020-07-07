@@ -169,22 +169,28 @@ export const getBillingUnitItem = ( pageIndex, pageSize, search = '', selected, 
     }))
 }
 
+
 export const getBillingUnitItemDetails = (row,  history, url) => dispatch => {
   dispatch(setSelectedUnit(row));
   history.push(url + '/details');
 }
 
 export const createBillingUnitItem = ( data, selected, history) => dispatch => {
-  dispatch(startAsync());
 
-  dispatch(post(billingEndpoint, {
+  const dataBilling = {
     ...data,
     "resident_building": selected.building_id,
     "resident_unit": selected.id,
     "resident_id": selected.resident_id,
     "resident_name": selected.resident_name,
     'additional_charge': []
-  }, 
+  }
+
+  // console.log(dataBilling)
+
+  dispatch(startAsync());
+
+  dispatch(post(billingEndpoint, dataBilling, 
     res => {
       history.goBack();
 
@@ -201,9 +207,23 @@ export const createBillingUnitItem = ( data, selected, history) => dispatch => {
 }
 
 export const editBillingUnitItem = ( data, selected, history, id) => dispatch => {
+
+  const dataBilling = {
+    id: id,
+    ...data,
+    "resident_building": selected.building_id,
+    "resident_unit": selected.id,
+    "resident_id": selected.resident_id,
+    "resident_name": selected.resident_name,
+    'additional_charge': []
+  }
+
+  // console.log(dataBilling)
+
+
   dispatch(startAsync());
 
-  dispatch(put(billingEndpoint, { id: id, ...data }, 
+  dispatch(put(billingEndpoint, dataBilling, 
     res => {
       history.goBack();
 

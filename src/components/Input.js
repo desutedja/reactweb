@@ -70,9 +70,9 @@ function Component({
                                 // comboName={}
                                 comboValue={value}
                                 setComboValue={e => {
-                                    console.log(e.target.value.toString());
-                                    setValue(e.target.value.toString());
-                                    setInputValue && setInputValue(e.target.value.toString());
+                                    console.log(e.target.value);
+                                    setValue(e.target.value);
+                                    setInputValue && setInputValue(e.target.value);
                                 }}
                             />
                             <input name={name ? name : label.toLowerCase().replace(/ /g, '_')}
