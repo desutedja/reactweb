@@ -69,7 +69,7 @@ function App() {
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <Router>
-          <div className="App" id="App">
+          <div className="App scroller" id="App">
             <Switch>
               <Redirect exact from="/" to={"/sa"} />
               {/* superadmin routes */}

@@ -3,6 +3,16 @@ import countries from './countries';
 import { banks } from './settings';
 import { FiCalendar, FiClock } from 'react-icons/fi'
 
+export const rangeNumber = (from = 0, to = 0) => {
+    let arr = [];
+    for (let i = from; i <= to; i++) {
+        let n = i.toString();
+        n.length < 2 ? (n = '0' + n) : (n = i.toString())
+        arr.push(n);
+    }
+    return arr
+}
+
 export const yearsOnRange = (range) => {
     const currentYear = Number(new Date().getFullYear());
     const arrYears = [];

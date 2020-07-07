@@ -119,63 +119,63 @@ function Component() {
                 </Form>
             </Modal>
             <Table
-                    noContainer={true}
-                    columns={columnsService}
-                    data={service.items}
-                    loading={loading}
-                    pageCount={service.total_pages}
-                    fetchData={useCallback((pageIndex, pageSize, search) => {
-                        dispatch(getBuildingService( pageIndex, pageSize, search, selected, sGroupFilter.value));
-                        // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [dispatch, refreshToggle,  sGroupFilter])}
-                    totalItems={service.total_items}
-                    filters={[
-                        {
-                            button: <Button key="Group: All"
-                                label={sGroupFilter.label ? sGroupFilter.label : "Group: All"}
-                                selected={sGroupFilter.label}
-                            />,
-                            hidex: !sGroupFilter.label,
-                            label: <p>{sGroupFilter.label ? "Group: " + sGroupFilter.label : "Group: All"}</p>,
-                            delete: () => { setSGroupFilter({}); },
-                            component: (toggleModal) =>
-                                <Filter
-                                    data={serviceGroup}
-                                    onClick={(el) => {
-                                        setSGroupFilter(el);
-                                        toggleModal(false);
-                                    }}
-                                    onClickAll={() => {
-                                        setSGroupFilter("");
-                                        toggleModal(false);
-                                    }}
-                                />
-                        },
-                    ]}
-                    actions={[
-                        <Button key="Add Billing Service" label="Add Billing Service" icon={<FiPlus />}
-                            onClick={() => {
-                                setEdit(false);
-                                setRow({});
+                noContainer={true}
+                columns={columnsService}
+                data={service.items}
+                loading={loading}
+                pageCount={service.total_pages}
+                fetchData={useCallback((pageIndex, pageSize, search) => {
+                    dispatch(getBuildingService( pageIndex, pageSize, search, selected, sGroupFilter.value));
+                    // eslint-disable-next-line react-hooks/exhaustive-deps
+                }, [dispatch, refreshToggle,  sGroupFilter])}
+                totalItems={service.items.length}
+                filters={[
+                    {
+                        button: <Button key="Group: All"
+                            label={sGroupFilter.label ? sGroupFilter.label : "Group: All"}
+                            selected={sGroupFilter.label}
+                        />,
+                        hidex: !sGroupFilter.label,
+                        label: <p>{sGroupFilter.label ? "Group: " + sGroupFilter.label : "Group: All"}</p>,
+                        delete: () => { setSGroupFilter({}); },
+                        component: (toggleModal) =>
+                            <Filter
+                                data={serviceGroup}
+                                onClick={(el) => {
+                                    setSGroupFilter(el);
+                                    toggleModal(false);
+                                }}
+                                onClickAll={() => {
+                                    setSGroupFilter("");
+                                    toggleModal(false);
+                                }}
+                            />
+                    },
+                ]}
+                actions={[
+                    <Button key="Add Billing Service" label="Add Billing Service" icon={<FiPlus />}
+                        onClick={() => {
+                            setEdit(false);
+                            setRow({});
 
-                                setAddService(true);
-                            }}
-                        />
-                    ]}
-                    onClickEdit={row => {
-                        setRow(row);
-                        console.log(row);
-                        setPriceType(row.price_fixed > 0 ? 'fixed' : 'unit');
-                        setTaxType(row.tax);
-                        setEdit(true);
-                        setAddService(true);
-                    }}
-                    onClickDelete={row => {
-                        // setRow(row);
-                        dispatch(deleteBuildingService(row, ))
-                        // setConfirm(true);
-                    }}
-                />
+                            setAddService(true);
+                        }}
+                    />
+                ]}
+                onClickEdit={row => {
+                    setRow(row);
+                    console.log(row);
+                    setPriceType(row.price_fixed > 0 ? 'fixed' : 'unit');
+                    setTaxType(row.tax);
+                    setEdit(true);
+                    setAddService(true);
+                }}
+                onClickDelete={row => {
+                    // setRow(row);
+                    dispatch(deleteBuildingService(row, ))
+                    // setConfirm(true);
+                }}
+            />
         </>
     )
 }

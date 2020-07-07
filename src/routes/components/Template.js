@@ -195,7 +195,7 @@ function Component({ role, menu }) {
                 </div>
             </div>
             <Row>
-                <div className="Menu shadow">
+                <div className="Menu shadow scroller-y">
                     <div className={menuWide ? "Logo-container" : "Logo-container-small"}
                         onClick={() => history.push('/' + role)}
                     >
@@ -246,7 +246,7 @@ function Component({ role, menu }) {
                         </Fragment>
                     )}
                 </div>
-                <div className={menuWide ? "Content" : "Content-wide"}>
+                <div className={(menuWide ? "Content" : "Content-wide") + " scroller-y"}>
                     <Info />
                     <Switch>
                         <Redirect exact from={"/" + role} to={"/" + role + menu[0].route} />

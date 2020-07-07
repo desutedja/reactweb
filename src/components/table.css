@@ -5,7 +5,7 @@
 }
 
 .Table-content {
-  overflow: scroll;
+  overflow: auto;
   border-top: 1px solid #f3f3fa;
   /* border-radius: 4px; */
 }

@@ -28,7 +28,8 @@ function Component({ children, onSubmit, loading, isModal=false, showSubmit = tr
                         entry[0].includes('billing_duedate') ? (parseFloat(entry[1])) :
                         entry[0].includes('date') ? (entry[1] + ' 00:00:00') :
                         entry[1].includes(':/') ? entry[1] :
-                        entry[1].includes(':') ? (entry[1] + ':00') :
+                        entry[1].includes(':') ? entry[1] :
+                        // entry[1].includes(':') ? (entry[1] + ':00') :
                         isNaN(parseFloat(entry[1])) || parseFloat(entry[1]) > 999999 ?
                         entry[1] : parseFloat(entry[1]);
                         return all
