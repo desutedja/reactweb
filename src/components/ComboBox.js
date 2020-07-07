@@ -78,9 +78,7 @@ export default function UseAutocomplete({
         {/* <label className={classes.label} {...getInputLabelProps()}>
           useAutocomplete
         </label> */}
-        <input className={classes.input} {...getInputProps()} placeholder={label}
-        
-        />
+        <input className={classes.input} {...getInputProps()} placeholder={label} />
       </div>
       {groupedOptions.length > 0 ? (
         <ul className={classes.listbox} {...getListboxProps()}>

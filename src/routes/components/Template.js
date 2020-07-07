@@ -43,7 +43,7 @@ function Component({ role, menu }) {
         const userID = "superadmin" + user.id + user.email;
 
         Qiscus.init({
-            AppId: 'fastelsar-tvx6nj235zm',
+            AppId: 'fastel-sa-hkxoyooktyv',
             options: {
                 newMessagesCallback: message => {
                     console.log('received', message);
