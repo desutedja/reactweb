@@ -17,9 +17,9 @@ import Template from './components/Template';
 const columnsService = [
     { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: "name" },
+    { Header: "Unit", accessor: "denom_unit" },
     { Header: "Group", accessor: "group" },
     { Header: "Description", accessor: "description" },
-    { Header: "Denom Unit", accessor: "denom_unit" },
     { Header: "Price Fixed", accessor: "price_fixed" },
     { Header: "Price Unit", accessor: "price_unit" },
     { Header: "Tax", accessor: "tax" },
@@ -32,6 +32,7 @@ function Component() {
 
     const [service, setService] = useState('');
     const [serviceName, setServiceName] = useState('');
+    const [serviceUnit, setServiceUnit] = useState('');
     const [services, setServices] = useState([]);
     const [servicesPageCount, setServicesPageCount] = useState(1);
     const [servicesLoading, setServicesLoading] = useState(false);
@@ -100,6 +101,7 @@ function Component() {
                         // console.log(row)
                         setService(row.id);
                         setServiceName(row.name);
+                        setServiceUnit(row.denom_unit);
                         setModal(false);
                     }}
                 />
@@ -122,8 +124,12 @@ function Component() {
                 <Input label="Service" hidden inputValue={selectedUnit.service ? selectedUnit.service
                     : service} />
                 <Input label="Name" inputValue={selectedUnit?.name} />
-                <Input label="Previous Usage" type="number" inputValue={selectedUnit?.previous_usage + ''} />
-                <Input label="Recent Usage" type="number" inputValue={selectedUnit?.recent_usage + ''} />
+                <Input label="Previous Usage" type="number" inputValue={selectedUnit?.previous_usage + ''}
+                    addons={serviceUnit}
+                />
+                <Input label="Recent Usage" type="number" inputValue={selectedUnit?.recent_usage + ''}
+                    addons={serviceUnit}
+                />
                 <Input label="Remarks" type="textarea" inputValue={selectedUnit?.remarks} />
                 <Input label="Month" type="select" options={months} inputValue={selectedUnit?.month} />
                 <Input label="Year" type="select"  options={yearsOnRange(10)} inputValue={selectedUnit?.year} />

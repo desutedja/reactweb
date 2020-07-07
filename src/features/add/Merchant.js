@@ -241,13 +241,16 @@ function Component() {
           label="Building"
           type="select"
           name="in_building"
-          options={inBuildings}
+          options={[{
+            label: 'None',
+            value: 0,
+          }, ...inBuildings]}
           inputValue={inBuilding ? inBuilding : selected.in_building ? selected.in_building : '0'}
           setInputValue={value => {
             setBuilding(value);
-            // console.log(inBuildings.find(el => el.value === value));
-            setLat(inBuildings.find(el => el.value === value)?.lat);
-            setLng(inBuildings.find(el => el.value === value)?.long);
+            console.log(inBuildings.find(el => el.value === parseInt(value)));
+            setLat(inBuildings.find(el => el.value === parseInt(value))?.lat);
+            setLng(inBuildings.find(el => el.value === parseInt(value))?.long);
           }}
         />
         <Input label="Select Location" type="button"
@@ -260,11 +263,9 @@ function Component() {
         />
         <Input label="Latitude" name="lat" inputValue={lat ? lat : selected.lat}
           setInputValue={setLat}
-          hidden={inBuilding}
         />
         <Input label="Longitude" name="long" inputValue={lng ? lng : selected.long}
           setInputValue={setLng}
-          hidden={inBuilding}
         />
         <Input label="Address" type="textarea" inputValue={selected.address} />
         <SectionSeparator />

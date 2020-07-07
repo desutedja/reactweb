@@ -6,7 +6,7 @@ import Template from '../components/Template';
 
 import { useLocation, useParams } from 'react-router-dom';
 import { get } from '../../slice';
-import { endpointResident } from '../../../settings';
+import { endpointManagement } from '../../../settings';
 
 const details = {
     'Profile': ['created_on', 'gender', 'nationality', 'marital_status', 'status_kyc'],
@@ -23,7 +23,7 @@ function Component() {
     let { id } = useParams();
 
     useEffect(() => {
-        !state && dispatch(get(endpointResident + '/admin/staff/' + id, res => {
+        !state && dispatch(get(endpointManagement + '/admin/staff/' + id, res => {
             setData(res.data.data);
         }))
     }, [dispatch, id, state])

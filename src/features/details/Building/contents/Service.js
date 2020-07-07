@@ -21,6 +21,7 @@ const serviceGroup = [
 const columnsService = [
     { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: "name" },
+    { Header: "Unit", accessor: "denom_unit" },
     { Header: "Group", accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
     { Header: "Description", accessor: row => row.description ? row.description : '-' },
     {
@@ -84,37 +85,37 @@ function Component() {
                         }, selectedRow.id)) :
                             dispatch(createBuildingService( { ...data, building_id: selected.id }));
 
-
                         setAddService(false);
                         setEdit(false);
                         setRow({});      
                     }}
                 >
-                    <Input label="Name" inputValue={selectedRow.name} />
+                    <Input label="Name" inputValue={selectedRow.name} optional />
+                    <Input label="Unit" name="denom_unit" inputValue={selectedRow.denom_unit} optional />
                     <Input label="Group" type="select" inputValue={selectedRow.group} options={[
                         { value: 'ipl', label: 'IPL' },
                         { value: 'nonipl', label: 'Non-IPL' },
-                    ]} />
-                    <Input label="Description" inputValue={selectedRow.description} />
+                    ]} optional />
+                    <Input label="Description" inputValue={selectedRow.description} optional />
                     <Input label="Price Type" type="select" inputValue={priceType ? priceType : selectedRow.price_type} options={[
                         { value: 'unit', label: 'Unit' },
                         { value: 'fixed', label: 'Fixed' },
-                    ]} setInputValue={setPriceType} />
+                    ]} setInputValue={setPriceType} optional />
                     <Input label="Price" name="price_unit" type="number"
-                        hidden={priceType === 'fixed'} inputValue={selectedRow.price_unit} />
+                        hidden={priceType === 'fixed'} inputValue={selectedRow.price_unit} optional />
                     <Input label="Unit" placeholder="Denom Unit Name, ex: kWh, m^3" name="denom_unit"
                         hidden={priceType === 'fixed'} inputValue={selectedRow.denom_unit}
-                    />
+                    optional />
                     <Input label="Price" name="price_fixed" type="number"
-                        hidden={priceType === 'unit'} inputValue={selectedRow.price_fixed} />
+                        hidden={priceType === 'unit'} inputValue={selectedRow.price_fixed} optional />
                     <Input label="Tax Type" name="tax" type="select"
                         options={[
                             { value: 'value', label: 'Value' },
                             { value: 'percentage', label: 'Percentage' },
                         ]}
-                        setInputValue={setTaxType} inputValue={taxType ? taxType : selectedRow.tax} />
-                    <Input label="Tax Value" hidden={taxType === 'value'} inputValue={selectedRow.tax_value} />
-                    <Input label="Tax Amount" hidden={taxType === 'percentage'} inputValue={selectedRow.tax_amount} />
+                        setInputValue={setTaxType} inputValue={taxType ? taxType : selectedRow.tax} optional />
+                    <Input label="Tax Value" hidden={taxType === 'value'} inputValue={selectedRow.tax_value} optional />
+                    <Input label="Tax Amount" hidden={taxType === 'percentage'} inputValue={selectedRow.tax_amount} optional />
                 </Form>
             </Modal>
             <Table

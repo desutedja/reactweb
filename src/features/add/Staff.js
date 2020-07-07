@@ -112,7 +112,7 @@ function Component() {
                     dispatch(createStaff( data, history))}
                 loading={loading}
             >
-                <Input label="Staff Role" type="select"
+                {!selected.id && <Input label="Staff Role" type="select"
                     options={[
                         { value: 'gm_bm', label: 'GM BM' },
                         { value: 'pic_bm', label: 'PIC BM' },
@@ -122,7 +122,7 @@ function Component() {
                     ]}
                     inputValue={role ? role : selected.staff_role}
                     setInputValue={setRole}
-                />
+                />}
                 {role === "courier" && <Input label="On Centratama?" type="select"
                     name="on_centratama"
                     options={[
@@ -137,20 +137,18 @@ function Component() {
                         { value: 'billing', label: 'Billing' },
                         { value: 'others', label: 'Others' },
                     ]} inputValue={selected.staff_specialization} />}
-                <SectionSeparator />
-
                 <Input label="Building Management ID" hidden
                     inputValue={bManagementID ? bManagementID : selected.building_management_id}
                     setInputValue={setBManagementID}
                 />
                 <Input label="Building Management Name" hidden
-                    inputValue={bManagementName ? bManagementName : selected.id ?
-                        selected.building_name + ' by ' + selected.management_name : null}
+                    inputValue={bManagementName ? bManagementName : selected.building_management_id ?
+                        selected.building_name + ' by ' + selected.management_name : "No Management"}
                     setInputValue={setBManagementName}
                 />
                 <Input label="Select Building Management" type="button"
-                    inputValue={bManagementName ? bManagementName : selected.id ?
-                        selected.building_name + ' by ' + selected.management_name : null}
+                    inputValue={bManagementName ? bManagementName : selected.building_management_id ?
+                        selected.building_name + ' by ' + selected.management_name : "No Management"}
                     onClick={() => setModal(true)}
                 />
                 <Input label="Staff ID" inputValue={selected.staff_id} />

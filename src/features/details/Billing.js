@@ -40,7 +40,6 @@ function Component() {
     const [status, setStatus] = useState('');
     const [items, setItems] = useState([]);
     const [active, setActive] = useState(0);
-
     
     const { selected, loading, unit, refreshToggle } = useSelector(state => state.billing);
 
@@ -54,8 +53,9 @@ function Component() {
     }, [dispatch, refreshToggle,  selected, status])
 
     useEffect(() => {
-        unit.items[active] && setItems(unit.items[active].billing_item);
-    }, [unit.items, active])
+        unit.items[active] && setItems(unit.items[active].billing_item
+            .filter(el => status === '' ? true : el.payment === status));
+    }, [unit.items, active, status]);
 
     return (
         <div>
@@ -102,7 +102,6 @@ function Component() {
                         data={items}
                         loading={loading}
                         pageCount={unit.total_pages}
-                        // fetchData={}
                         filters={[
                             {
                                 label: <p>{"Status: " + (status ? toSentenceCase(status) : "All")}</p>,
