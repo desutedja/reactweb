@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FiChevronDown, FiX } from 'react-icons/fi';
 import MoonLoader from "react-spinners/MoonLoader";
 import ComboBox from './ComboBox';
+import { rangeNumber } from '../utils'
 
 import { storageRef } from '../firebase';
 
@@ -22,13 +23,29 @@ function Component({
     hidden, max, min, disabled, isValidate = false, validationMsg, accept = "image/*",
     addons,
 }) {
+    const ch = new Date().getHours().toString().length < 2 ?
+    '0' + new Date().getHours() : new Date().getHours().toString()
+    const cm = new Date().getMinutes().toString().length < 2 ?
+    '0' + new Date().getMinutes() : new Date().getMinutes().toString()
+
     const [value, setValue] = useState(inputValue ? inputValue : "");
     const [uploading, setUploading] = useState(false);
+    const [hours, setHours] = useState(ch);
+    const [minutes, setMinutes] = useState(cm);
+    const [timePick, setTimePick] = useState(inputValue ? inputValue : (hours + ':' + minutes));
+    const [modalTime, setModalTime] = useState(false);
+
     let uploader = useRef();
+    
+    useEffect(() => {
+        setTimePick(hours + ':' + minutes)
+    }, [hours, minutes])
 
     useEffect(() => {
         inputValue && setValue(inputValue);
+        inputValue && setTimePick(inputValue)
     }, [inputValue])
+
 
 
     const renderInput = type => {
@@ -139,7 +156,6 @@ function Component({
                     ))}
                 </div>
             )
-
             case 'file': return <div className="Input-container">
                 {uploading && <div className="InputIcon">
                     <MoonLoader
@@ -191,7 +207,50 @@ function Component({
                     onClick={onClick}
                 />
             </div>;
-
+            case 'time':
+                return (
+                    <div className="Input-container">
+                        <input
+                            type="text"
+                            id={label}
+                            value={timePick}
+                            name={name ? name : label.toLowerCase().replace(/ /g, '_')}
+                            onChange={e => {
+                                setTimePick(e.target.value);
+                                setInputValue && setInputValue(e.target.value);
+                            }}
+                            onClick={e => {
+                                setModalTime(!modalTime);
+                            }}
+                            onBlur={e => {
+                                !e.target.value || !e.target.value.match(/:/g) ? setTimePick('00:00') : setTimePick(e.target.value)
+                            }}
+                        />
+                        <div className={(modalTime ? 'd-flex' : 'd-none') + ' time-pick'}>
+                            <div className="time-wrap w-50 text-center">
+                                {rangeNumber(0, 23).map(n => (
+                                        <p className={(n === hours ? 'active' : '') + ' text-center py-2'}
+                                            onClick={e => {
+                                                setHours(e.target.innerHTML)
+                                            }}
+                                        >{n}</p>
+                                    ))
+                                }
+                            </div>
+                            <div className="time-wrap w-50">
+                                {rangeNumber(0, 59).map(n => (
+                                        <p className={(n === minutes ? 'active' : '') + ' text-center py-2'}
+                                            onClick={e => {
+                                                setMinutes(e.target.innerHTML)
+                                                // setModalTime(false)
+                                            }}
+                                        >{n}</p>
+                                    ))
+                                }
+                            </div>
+                        </div>
+                    </div>
+                )
             default:
                 // console.log(inputValue)
                 return (

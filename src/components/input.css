@@ -47,6 +47,46 @@
   background-color: rgba(0, 0, 0, .03);
 }
 
+.time-pick {
+  position: absolute;
+  top: 100%;
+  background-color: white;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .1);
+  height: 200px;
+  width: 130px;
+  border-radius: 4px;
+  z-index: 1;
+  margin-bottom: 2rem;
+  padding: 0 4px;
+}
+
+.time-wrap {
+  overflow-y: auto;
+  scrollbar-width: 0;
+  padding: 4px 0;
+}
+.time-wrap:first-child {
+  margin-right: 2px;
+}
+.time-wrap:last-child {
+  margin-left: 2px;
+}
+.time-wrap::-webkit-scrollbar {
+  display: none;
+}
+.time-wrap p {
+  cursor: pointer;
+  border-radius: 4px;
+}
+.time-wrap p:hover {
+  background-color: rgba(0, 0, 0, .03);
+  font-weight: bold;
+}
+.time-wrap p.active {
+  background-color: rgba(0, 0, 0, .03);
+  font-weight: bold;
+}
+
 .Form .Input {
   margin-bottom: 16px;
   margin-right: 8px;

@@ -158,6 +158,7 @@ function Component() {
       </Modal>
       <Form
         onSubmit={(data) => {
+          // console.log(data)
           selected.id ?
             dispatch(editMerchant(data, history, selected.id))
             :
