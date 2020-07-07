@@ -232,10 +232,6 @@ function Component() {
           ]}
           inputValue={selected.status}
         />
-        <Input label="Open Time" name="open_at" type="time"
-          inputValue={selected.open_at} />
-        <Input label="Close Time" name="closed_at" type="time"
-          inputValue={selected.closed_at} />
         <Input label="Description" type="textarea" inputValue={selected.description} />
         <Input
           optional
