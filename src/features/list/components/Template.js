@@ -13,13 +13,15 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [],
     const { loading, items, total_pages, total_items, refreshToggle } =
         useSelector(state => state[slice]);
 
+
     let dispatch = useDispatch();
 
     return (
         <>
             <Breadcrumb />
             <div>
-                <Table totalItems={total_items}
+                <Table
+                    totalItems={items.length}
                     columns={columns}
                     data={items}
                     loading={loading}

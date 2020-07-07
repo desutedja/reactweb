@@ -87,7 +87,7 @@ function Component() {
                 data={section.items}
                 loading={loading}
                 pageCount={section.total_pages}
-                totalItems={section.total_items}
+                totalItems={section.items.length}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
                     dispatch(getBuildingSection( pageIndex, pageSize, search, selected, sTypeFilter.value));
                     // eslint-disable-next-line react-hooks/exhaustive-deps

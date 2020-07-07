@@ -155,7 +155,7 @@ function Component() {
                 data={management.items}
                 loading={loading}
                 pageCount={management.total_pages}
-                totalItems={management.total_items}
+                totalItems={management.items.length}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
                     dispatch(getBuildingManagement( pageIndex, pageSize, search, selected));
                     // eslint-disable-next-line react-hooks/exhaustive-deps

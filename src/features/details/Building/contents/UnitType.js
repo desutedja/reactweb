@@ -101,7 +101,7 @@ function Component() {
                 data={unit_type.items}
                 loading={loading}
                 pageCount={unit_type.total_pages}
-                totalItems={unit_type.total_items}
+                totalItems={unit_type.items.length}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
                     dispatch(getBuildingUnitType( pageIndex, pageSize, search, selected, utNameFilter.value));
                     // eslint-disable-next-line react-hooks/exhaustive-deps

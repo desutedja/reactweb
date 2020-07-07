@@ -36,6 +36,7 @@ function Component() {
     
     const { selected, loading, unit, section, unit_type, refreshToggle } = useSelector(state => state.building);
 
+
     let dispatch = useDispatch();
 
     return (
@@ -104,7 +105,7 @@ function Component() {
                 data={unit.items}
                 loading={loading}
                 pageCount={unit.total_pages}
-                totalItems={unit.total_items}
+                totalItems={unit.items.length}
                 fetchData={useCallback((pageIndex, pageSize, search) =>
                     dispatch(getBuildingUnit( pageIndex, pageSize, search, selected)),
                     // eslint-disable-next-line react-hooks/exhaustive-deps
