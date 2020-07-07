@@ -21,7 +21,7 @@ const sectionTypes = [
 
 const columnsSection = [
     { Header: "ID", accessor: "id" },
-    { Header: "Name", accessor: "section_name" },
+    { Header: "Name", accessor: row => toSentenceCase(row.section_name) },
     { Header: "Type", accessor: row => toSentenceCase(row.section_type) },
 ]
 

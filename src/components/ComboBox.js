@@ -66,6 +66,11 @@ export default function UseAutocomplete({
   useEffect(() => {
     setIndexValue(0)
   }, [options])
+
+  // useEffect(() => {
+  //   console.log(comboValue);
+  //   setIndexValue(comboValue);
+  // }, [comboValue])
   
   return (
     <div className={classes.wrapper}>
@@ -73,7 +78,9 @@ export default function UseAutocomplete({
         {/* <label className={classes.label} {...getInputLabelProps()}>
           useAutocomplete
         </label> */}
-        <input className={classes.input} {...getInputProps()} placeholder={label}/>
+        <input className={classes.input} {...getInputProps()} placeholder={label}
+        
+        />
       </div>
       {groupedOptions.length > 0 ? (
         <ul className={classes.listbox} {...getListboxProps()}>

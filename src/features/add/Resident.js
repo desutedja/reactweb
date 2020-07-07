@@ -242,7 +242,7 @@ function Component() {
                         inputValue={validation.tel.value}
                         placeholder="e.g 6281xxxxxxx"
                         isValidate={validation.tel.isErr}
-                        validationMsg="The phone number must contain 62" onFocus={(e) => {
+                        validationMsg="The phone number must begin 62" onFocus={(e) => {
                             setValidation({
                                 ...validation,
                                 tel: {

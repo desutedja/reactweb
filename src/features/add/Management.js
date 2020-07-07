@@ -35,7 +35,7 @@ function Component() {
                 <Input label="Phone" type="tel" placeholder="e.g 6281xxxxxxx"
                     inputValue={selected.phone || validation.tel.value}
                     isValidate={validation.tel.isErr}
-                    validationMsg="The phone number must contain 62" onFocus={(e) => {
+                    validationMsg="The phone number must begin 62" onFocus={(e) => {
                         setValidation({
                             ...validation,
                             tel: {

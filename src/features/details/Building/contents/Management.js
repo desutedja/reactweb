@@ -17,12 +17,12 @@ import { get } from '../../../slice';
 const columnsManagement = [
     { Header: "ID", accessor: "id" },
     { Header: "Management Name", accessor: "management_name" },
-    { Header: "Billing Duedate", accessor: row => "Day " + row.billing_duedate },
     { Header: "Billing Published", accessor: row => "Day " + row.billing_published },
+    { Header: "Billing Duedate", accessor: row => "Day " + row.billing_duedate },
+    { Header: "Penalty Fee", accessor: row => row.penalty_fee + ' %' },
     { Header: "Courier Fee", accessor: row => toMoney(row.courier_fee) },
-    { Header: "Internal Courier Markup", accessor: row => toMoney(row.courier_internal_markup) },
-    { Header: "External Courier Markup", accessor: row => toMoney(row.courier_external_markup) },
-    { Header: "Penalty Fee", accessor: row => toMoney(row.penalty_fee) },
+    { Header: "Internal Courier Markup", accessor: row => row.courier_internal_markup + ' %' },
+    { Header: "External Courier Markup", accessor: row => row.courier_external_markup + ' %' },
     {
         Header: "Status",
         accessor: row => <CustomInput type="switch" label={row.status} id={"managementStatus-" + row.id}
@@ -121,16 +121,12 @@ function Component() {
                         inputValue={managementName ? managementName : selectedRow.management_name}
                         setInputValue={setManagementName}
                     />
-                    <Input label="Management: All" type="button"
+                    <Input label="Select Management" type="button"
                         inputValue={managementName ? managementName : selectedRow.management_name}
                         onClick={() => setModalManagement(true)}
                         disabled={edit}
                     />
-                    <Input label="Status" type="select" inputValue={selectedRow.status}
-                        options={[
-                            { label: 'Active', value: 'active' },
-                            { label: 'Inactive', value: 'inactive' },
-                        ]} />
+                    <Input label="Status" hidden inputValue="inactive" />
                     <Input label="Settlement Bank" type="select" options={banks} inputValue={selectedRow.settlement_bank} />
                     <Input label="Settlement Account No" inputValue={selectedRow.settlement_account_no} />
                     <Input label="Settlement Account Name"
@@ -140,15 +136,15 @@ function Component() {
                     />
                     <Input label="Billing Due (Date)" name="billing_duedate" type="number"
                         inputValue={selectedRow.billing_duedate} />
-                    <Input label="Penalty Fee" type="number"
+                    <Input label="Penalty Fee" type="number" addons="%"
                         inputValue={selectedRow.penalty_fee} />
-                    <Input label="Courier Fee" type="number"
+                    <Input label="Courier Fee" type="number" addons="rupiah"
                         inputValue={selectedRow.courier_fee}
                     />
-                    <Input label="Courier Internal Markup" type="number"
+                    <Input label="Courier Internal Markup" type="number" addons="%"
                         inputValue={selectedRow.courier_internal_markup}
                     />
-                    <Input label="Courier External Markup" type="number"
+                    <Input label="Courier External Markup" type="number" addons="%"
                         inputValue={selectedRow.courier_external_markup}
                     />
                 </Form>

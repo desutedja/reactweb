@@ -56,7 +56,7 @@ function Component() {
 
                 setBManagements(formatted);
             }))
-    }, [ search]);
+    }, [dispatch, search]);
 
     useEffect(() => {
         dispatch(get(endpointResident + '/geo/province',
@@ -66,7 +66,7 @@ function Component() {
                 setProvinces(formatted);
             }
         ))
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         setCity("");
@@ -77,7 +77,7 @@ function Component() {
                 setCities(formatted);
             }
         ))
-    }, [ province, selected.province]);
+    }, [dispatch, province, selected.province]);
 
     useEffect(() => {
         setDistrict("");
@@ -123,12 +123,20 @@ function Component() {
                     inputValue={role ? role : selected.staff_role}
                     setInputValue={setRole}
                 />
-                {role === "courier" && <Input label="Is Internal?" type="select"
+                {role === "courier" && <Input label="On Centratama?" type="select"
                     name="on_centratama"
                     options={[
                         { value: 1, label: 'Yes' },
                         { value: 0, label: 'No' },
                     ]} inputValue={selected.on_centratama} />}
+                {role === "technician" && <Input label="Specialization" type="select"
+                    name="staff_specialization"
+                    options={[
+                        { value: 'electricity', label: 'Electricity' },
+                        { value: 'plumbing', label: 'Plumbing' },
+                        { value: 'billing', label: 'Billing' },
+                        { value: 'others', label: 'Others' },
+                    ]} inputValue={selected.staff_specialization} />}
                 <SectionSeparator />
 
                 <Input label="Building Management ID" hidden
@@ -159,7 +167,7 @@ function Component() {
                     inputValue={selected.phone || validation.tel.value}
                     placeholder="e.g 6281xxxxxxx"
                     isValidate={validation.tel.isErr}
-                    validationMsg="The phone number must contain 62" onFocus={(e) => {
+                    validationMsg="The phone number must begin 62" onFocus={(e) => {
                         setValidation({
                             ...validation,
                             tel: {

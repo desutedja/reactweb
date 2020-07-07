@@ -16,7 +16,7 @@ const MultiSelectItem = ({ value, onClickDelete }) => {
 
 
 function Component({
-    label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
+    label = "", actionlabels = {}, placeholder = null, compact, name, optional = false,
     type = "text", rows = 2, options = [], fullwidth = false,
     inputValue, setInputValue, icon, onClick, onFocus, onBlur, cancelValue,
     hidden, max, min, disabled, isValidate = false, validationMsg, accept = "image/*",
@@ -63,15 +63,23 @@ function Component({
             case 'select':
                 if (options.length > 10) {
                     return (
-                        <ComboBox
-                            options={options}
-                            label={label}
-                            comboName={name ? name : label.toLowerCase().replace(/ /g, '_')}
-                            comboValue={value}
-                            setComboValue={e => {
-                                setInputValue && setInputValue(e.target.value.toString());
-                            }}
-                        />
+                        <>
+                            <ComboBox
+                                options={options}
+                                label={label}
+                                // comboName={}
+                                comboValue={value}
+                                setComboValue={e => {
+                                    console.log(e.target.value.toString());
+                                    setValue(e.target.value.toString());
+                                    setInputValue && setInputValue(e.target.value.toString());
+                                }}
+                            />
+                            <input name={name ? name : label.toLowerCase().replace(/ /g, '_')}
+                                className="hidden"
+                                value={value}
+                            />
+                        </>
                     )
                 }
                 return (
@@ -122,7 +130,7 @@ function Component({
                                         id={el.label}
                                         value={el.value} />
                                 }
-                               
+
                                 <label className="form-check-label m-0 ml-2" for={el.label}>
                                     {el.label}
                                 </label>
@@ -207,6 +215,13 @@ function Component({
                                 if (type === 'url') {
                                     setValue('http://' + e.target.value.replace('http://', ''));
                                     setInputValue && setInputValue('http://' + e.target.value.replace('http://', ''));
+                                } if (type === 'tel') {
+                                    const { value } = e.target;
+                                    const regex = /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/;
+                                    if (regex.test(value.toString())) {
+                                        !onClick && setValue(e.target.value);
+                                        setInputValue && setInputValue(e.target.value);
+                                    }
                                 } else {
                                     !onClick && setValue(e.target.value);
                                     setInputValue && setInputValue(e.target.value);
@@ -217,19 +232,19 @@ function Component({
                             list={type === 'searchable' ? ('options-' + label) : null}
                         />
                         {cancelValue && value && <div
-                        onClick={() => {
-                            setValue('')
-                        }}
-                        style={{
-                            position: 'absolute',
-                            right: '40px',
-                            height: '24px',
-                            width: '24px',
-                            textAlign: 'center',
-                            borderRadius: '50px',
-                            cursor: 'pointer',
-                            backgroundColor: 'rgba(0, 0, 0, .05)'
-                        }}><FiX /></div> }
+                            onClick={() => {
+                                setValue('')
+                            }}
+                            style={{
+                                position: 'absolute',
+                                right: '40px',
+                                height: '24px',
+                                width: '24px',
+                                textAlign: 'center',
+                                borderRadius: '50px',
+                                cursor: 'pointer',
+                                backgroundColor: 'rgba(0, 0, 0, .05)'
+                            }}><FiX /></div>}
                         {type === 'searchable' &&
                             <datalist id={"options-" + label}>
                                 {options.map(el =>
@@ -242,10 +257,10 @@ function Component({
     }
 
     return (options.length !== 0 || type !== 'select') && (
-        <div className="row w-100 m-0 mb-4">
-            <div className={"col px-0" + (hidden ? " hidden" : "")}>
+        <div className={"row w-100 m-0 mb-4" + (hidden ? " hidden" : "")}>
+            <div className="col px-0">
                 <div className="row">
-                    <div className={(fullwidth ? "FullInput": "Input")
+                    <div className={(fullwidth ? "FullInput" : "Input")
                         + (type === "textarea" ? " textarea" : "")
                         + (type === "select" ? " select" : "")
                         + (type === "multiselect" ? " multiselect" : "")
@@ -268,10 +283,10 @@ function Component({
                 <div className="row">
                     <div className={"d-flex col-12" + (isValidate ? " col-md-6" : "")} >
                         {renderInput(type)}
-                        { addons && <div className="addons">{addons}</div>}
+                        {addons && <div className="addons">{addons}</div>}
                     </div>
                     {isValidate && <div className="col-12 col-md-6 d-flex align-items-center">
-                        <span className="validation-error">{ validationMsg }</span>
+                        <span className="validation-error">{validationMsg}</span>
                     </div>}
                 </div>
 

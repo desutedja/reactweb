@@ -30,7 +30,7 @@ function Component() {
     const [provinceName, setProvinceName] = useState("");
     const [provinces, setProvinces] = useState([]);
 
-    
+
     const { loading, selected } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
@@ -38,13 +38,13 @@ function Component() {
 
     useEffect(() => {
         dispatch(get(endpointResident + '/geo/province',
-            
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setProvinces(formatted);
             }
         ))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -52,33 +52,33 @@ function Component() {
 
         setCity("");
         (province || selected.province) && dispatch(get(endpointResident + '/geo/province/' + (province ? province : selected.province),
-            
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setCities(formatted);
             }
         ))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ province, selected.province]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [province, selected.province]);
 
     useEffect(() => {
         city && setCityName(cities.find(el => el.value + '' === city).label);
 
         setDistrict("");
         (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city ? city : selected.city),
-            
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setDistricts(formatted);
             }
         ))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ city, selected.city]);
-    
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [city, selected.city]);
+
     useEffect(() => {
         district && setDistrictName(districts.find(el => el.value + '' === district).label);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [district, ]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [district,]);
 
     return (
         <Template>
@@ -86,23 +86,32 @@ function Component() {
                 setLat('');
                 setLng('');
                 setModal(false);
-            }} onClick={() => setModal(false) } okLabel={"select"} >
+            }} onClick={() => setModal(false)} okLabel={"select"} >
                 <div style={{ height: '40rem', width: '100%' }}>
                     <GoogleMapReact
                         bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
-                        center={{
-                            lat: lat,
-                            lng: lng,
+                        defaultCenter={{
+                            lat: -6.210786300000009,
+                            lng: 106.81379770000001,
                         }}
                         zoom={12}
                         onClick={({ x, y, lat, lng, event }) => {
-                            /* AVID_TODO: Handle onmouseup event */
                             setLat(lat);
                             setLng(lng);
                             console.log(lat, lng);
                         }}
+                        onChange={({ center }) => {
+                            setLat(center.lat);
+                            setLng(center.lng);
+                            console.log(center.lat, center.lng);
+                        }}
                     >
-                        <FiMapPin size={40} />
+                        <div style={{
+                            position: 'absolute',
+                            transform: 'translate(-50%, -50%)'
+                        }}>
+                            <FiMapPin size={40} color="dodgerblue" />
+                        </div>
                     </GoogleMapReact>
                 </div>
                 <div className="MapForm">
@@ -113,11 +122,11 @@ function Component() {
             <Form
                 onSubmit={data => {
                     // console.log(data)
-                        selected.id ?
-                            dispatch(editBuilding( data, history, selected.id))
-                            :
-                            dispatch(createBuilding( data, history))
-                    }
+                    selected.id ?
+                        dispatch(editBuilding(data, history, selected.id))
+                        :
+                        dispatch(createBuilding(data, history))
+                }
                 }
                 loading={loading}
             >

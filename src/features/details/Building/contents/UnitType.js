@@ -35,7 +35,6 @@ const columnsUnitType = [
 
 function Component() {
     const [selectedRow, setRow] = useState({});
-    const [confirm, setConfirm] = useState(false);
     const [edit, setEdit] = useState(false);
     const [addUnitType, setAddUnitType] = useState(false);
 
@@ -85,7 +84,7 @@ function Component() {
                         type="select" options={unitTypes}
                         disabled={edit}
                     />
-                    <Input label="Type Size"
+                    <Input label="Type Size" addons={<p>m<sup>2</sup></p>}
                         inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeSize}
                         setInputValue={setTypeSize} />
                     <div style={{

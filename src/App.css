@@ -201,7 +201,7 @@
   padding: 85px 22px 16px 96px;
   /* padding-right: 8px;
   padding-top: 72px; */
-  min-height: 100vh;
+  height: 100vh;
   box-sizing: border-box;
   transition: all 0.3s ease;
   width: 100%;
@@ -249,7 +249,7 @@
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .ProfileButton {

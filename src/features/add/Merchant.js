@@ -17,6 +17,7 @@ import GoogleMapReact from "google-map-react";
 import { FiMapPin } from "react-icons/fi";
 import { get } from "../slice";
 import Template from "./components/Template";
+
 function Component() {
   const [modal, setModal] = useState(false);
   const [lat, setLat] = useState('');
@@ -32,13 +33,13 @@ function Component() {
   const [province, setProvince] = useState("");
   const [provinces, setProvinces] = useState([]);
 
-  const [inBuilding, setBuilding] = useState("");
+  const [inBuilding, setBuilding] = useState();
   const [inBuildings, setBuildings] = useState([]);
 
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState([]);
 
-  
+
   const { loading, selected } = useSelector((state) => state.merchant);
 
   let dispatch = useDispatch();
@@ -46,7 +47,7 @@ function Component() {
 
   useEffect(() => {
     setBuilding("");
-    dispatch(get(endpointAdmin + "/building?page=1&limit=9999",  (res) => {
+    dispatch(get(endpointAdmin + "/building?page=1&limit=9999", (res) => {
       let formatted = res.data.data.items.map((el) => ({
         label: el.name,
         value: el.id,
@@ -57,7 +58,7 @@ function Component() {
 
   useEffect(() => {
     setCategory("");
-    dispatch(get(endpointMerchant + "/admin/categories",  (res) => {
+    dispatch(get(endpointMerchant + "/admin/categories", (res) => {
       let formatted = res.data.data.map((el) => ({
         label: el.name,
         value: el.name,
@@ -67,7 +68,7 @@ function Component() {
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(get(endpointResident + "/geo/province",  (res) => {
+    dispatch(get(endpointResident + "/geo/province", (res) => {
       let formatted = res.data.data.map((el) => ({
         label: el.name,
         value: el.id,
@@ -79,11 +80,11 @@ function Component() {
   useEffect(() => {
     setCity("");
     (province || selected.province) &&
-    dispatch(get(
+      dispatch(get(
         endpointResident +
         "/geo/province/" +
         (province ? province : selected.province),
-        
+
         (res) => {
           let formatted = res.data.data.map((el) => ({
             label: el.name,
@@ -97,9 +98,9 @@ function Component() {
   useEffect(() => {
     setDistrict("");
     (city || selected.city) &&
-    dispatch(get(
+      dispatch(get(
         endpointResident + "/geo/city/" + (city ? city : selected.city),
-        
+
         (res) => {
           let formatted = res.data.data.map((el) => ({
             label: el.name,
@@ -113,39 +114,48 @@ function Component() {
   return (
     <Template>
       <Modal isOpen={modal} toggle={() => {
-                setLat('');
-                setLng('');
-                setModal(false);
+        setLat('');
+        setLng('');
+        setModal(false);
       }} onClick={() => setModal(false)} okLabel={"select"}>
-                <div style={{ height: '40rem', width: '100%' }}>
-                    <GoogleMapReact
-                        bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
-                        center={{
-                            lat: lat,
-                            lng: lng,
-                        }}
-                        zoom={12}
-                        onClick={({ x, y, lat, lng, event }) => {
-                            /* AVID_TODO: handle when not click, but drag (onMouseUp) */
-                            setLat(lat);
-                            setLng(lng);
-                            console.log(lat, lng);
-                        }}
-                    >
-                        <FiMapPin size={40} />
-                    </GoogleMapReact>
-                </div>
-                <div className="MapForm">
-                    <Input label='Latitude' compact inputValue={lat} setInputValue={setLat} />
-                    <Input label='Longitude' compact inputValue={lng} setInputValue={setLng} />
-                </div>
-            </Modal>
+        <div style={{ height: '40rem', width: '100%' }}>
+          <GoogleMapReact
+            bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
+            defaultCenter={{
+              lat: -6.210786300000009,
+              lng: 106.81379770000001,
+            }}
+            zoom={12}
+            onClick={({ x, y, lat, lng, event }) => {
+              setLat(lat);
+              setLng(lng);
+              console.log(lat, lng);
+            }}
+            onChange={({ center }) => {
+              setLat(center.lat);
+              setLng(center.lng);
+              console.log(center.lat, center.lng);
+            }}
+          >
+            <div style={{
+              position: 'absolute',
+              transform: 'translate(-50%, -50%)'
+            }}>
+              <FiMapPin size={40} color="dodgerblue" />
+            </div>
+          </GoogleMapReact>
+        </div>
+        <div className="MapForm">
+          <Input label='Latitude' compact inputValue={lat} setInputValue={setLat} />
+          <Input label='Longitude' compact inputValue={lng} setInputValue={setLng} />
+        </div>
+      </Modal>
       <Form
         onSubmit={(data) => {
           selected.id ?
-            dispatch(editMerchant( data, history, selected.id))
+            dispatch(editMerchant(data, history, selected.id))
             :
-            dispatch(createMerchant( data, history));
+            dispatch(createMerchant(data, history));
         }}
         loading={loading}
       >
@@ -208,14 +218,6 @@ function Component() {
           setInputValue={setDistrict}
         />
         <Input
-          label="Building"
-          type="select"
-          name="in_building"
-          options={inBuildings}
-          inputValue={inBuilding ? inBuilding : selected.in_building}
-          setInputValue={setBuilding}
-        />
-        <Input
           label="Status"
           type="radio"
           options={[
@@ -241,16 +243,25 @@ function Component() {
         <Input label="Close Time" name="closed_at" type="time"
           inputValue={selected.closed_at} />
         <Input label="Description" type="textarea" inputValue={selected.description} />
-        <Input label="Select Location" type="button"
-                    onClick={() => {
-                        setLat(-6.2107863);
-                        setLng(106.8137977);
-                        setModal(true);
-                    }}
-                />
-                <Input label="Latitude" name="lat" inputValue={lat ? lat : selected.lat} setInputValue={setLat} />
-                <Input label="Longitude" name="long" inputValue={lng ? lng : selected.long} setInputValue={setLng} />
-        <Input label="Address" type="textarea" inputValue={selected.address} />
+        <Input
+          optional
+          label="Building"
+          type="select"
+          name="in_building"
+          options={inBuildings}
+          inputValue={inBuilding ? inBuilding : selected.in_building}
+          setInputValue={setBuilding}
+        />
+        {!inBuilding && <><Input label="Select Location" type="button"
+          onClick={() => {
+            setLat(-6.2107863);
+            setLng(106.8137977);
+            setModal(true);
+          }}
+        />
+          <Input label="Latitude" name="lat" inputValue={lat ? lat : selected.lat} setInputValue={setLat} />
+          <Input label="Longitude" name="long" inputValue={lng ? lng : selected.long} setInputValue={setLng} />
+          <Input label="Address" type="textarea" inputValue={selected.address} /></>}
         <SectionSeparator />
         <h2
           style={{
@@ -262,7 +273,7 @@ function Component() {
         <SectionSeparator />
         <Input label="Account No" name="account_no" inputValue={selected.account_no} />
         <Input label="Account Name" name="account_name" inputValue={selected.account_name} />
-        <Input label="Account Bank" name="account_bank"  type="select" options={banks} inputValue={selected.account_bank} />
+        <Input label="Account Bank" name="account_bank" type="select" options={banks} inputValue={selected.account_bank} />
         <SectionSeparator />
       </Form>
     </Template>
