@@ -174,7 +174,6 @@ function Component() {
         </h2>
         <SectionSeparator />
         <Input label="Name" inputValue={selected.name} />
-        <Input label="Email" inputValue={selected.email} />
         <Input label="Phone" type="phone" inputValue={selected.phone} />
         <Input
           label="Legal"
@@ -243,7 +242,7 @@ function Component() {
           type="select"
           name="in_building"
           options={inBuildings}
-          inputValue={inBuilding ? inBuilding : selected.in_building}
+          inputValue={inBuilding ? inBuilding : selected.in_building ? selected.in_building : '0'}
           setInputValue={value => {
             setBuilding(value);
             // console.log(inBuildings.find(el => el.value === value));

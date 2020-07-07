@@ -154,9 +154,12 @@ function Component() {
                                                 "Message-own" : "Message"}>{el.message}
                                         </div>
                                         <div className="MessageTime">
-                                            {dateTimeFormatter(el.timestamp).split(',')[1].split(':')[0]
+                                            {dateTimeFormatter(el.timestamp).split(',')[1] ?
+                                                dateTimeFormatter(el.timestamp).split(',')[1].split(':')[0]
                                                 + ':' +
-                                                dateTimeFormatter(el.timestamp).split(',')[1].split(':')[1]}
+                                                dateTimeFormatter(el.timestamp).split(',')[1].split(':')[1]
+                                                : ''
+                                            }
                                         </div>
                                     </div>
                                     {messages[index + 1]?.username !== el.username &&
