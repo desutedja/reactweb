@@ -193,6 +193,7 @@ function Component({
             </div>;
 
             default:
+                // console.log(inputValue)
                 return (
                     <div className="Input-container w-100">
                         {icon && <div className="InputIcon">

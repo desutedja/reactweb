@@ -13,6 +13,7 @@ import { FiChevronRight } from 'react-icons/fi';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
 import { get } from '../slice';
 import Template from './components/Template';
+import { current } from '@reduxjs/toolkit';
 
 const columnsService = [
     { Header: "ID", accessor: "id" },
@@ -39,16 +40,24 @@ function Component() {
     const { loading, selected, unit } = useSelector(state => state.billing);
     const selectedUnit = unit.selected;
 
+    console.log(selectedUnit, serviceName)
+
+    useEffect(() => {
+        dispatch(get(endpointAdmin + '/building/service' +
+            '?page=1&building_id=' + selected.building_id,
+            res => {
+                const { items } = res.data.data;
+                const currentItem = items.find(item => item.id === selectedUnit.service)
+                setServiceName(currentItem.name)
+            }));
+    })
+
     
     // const [selectedUnit, setSelectedUnit] = useState({})
     // useEffect(() => {
     //     setSelectedUnit(unit.selected)
     //     console.log('selectedUnit', selectedUnit)
     // }, [selectedUnit, unit])
-
-    useEffect(() => {
-        console.log('services', serviceName)
-    })
     
     let dispatch = useDispatch();
     let history = useHistory();
@@ -97,7 +106,6 @@ function Component() {
                     //     setModal(false);
                     // }}
                     onClickRow={row => {
-                        // console.log(row)
                         setService(row.id);
                         setServiceName(row.name);
                         setModal(false);
@@ -113,9 +121,7 @@ function Component() {
                 }}
                 loading={loading}
             >
-                <Input label="Service: All" icon={<FiChevronRight />} inputValue={
-                    selectedUnit.service_name ? selectedUnit.service_name :
-                    serviceName}
+                <Input label="Service: All" icon={<FiChevronRight />} inputValue={serviceName}
                     cancelValue={true}
                     onClick={() => setModal(true)}
                 />
