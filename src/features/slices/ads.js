@@ -64,7 +64,7 @@ export const {
   setScheduleData,
 } = slice.actions;
 
-export const getAds = ( pageIndex, pageSize, search = '', age_from, age_to) => dispatch => {
+export const getAds = ( pageIndex, pageSize, search = '', age_from = '', age_to = '', os = '', gender = '', media = '', appear_as = '') => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(adsEndpoint +
@@ -72,6 +72,10 @@ export const getAds = ( pageIndex, pageSize, search = '', age_from, age_to) => d
     '&limit=' + pageSize +
     '&age_from=' + age_from +
     '&age_to=' + age_to +
+    '&os=' + os +
+    '&gender=' + gender +
+    '&appear_as=' + appear_as +
+    '&media=' + media +
     '&search=' + search,
     
     res => {
