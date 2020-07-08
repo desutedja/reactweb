@@ -18,7 +18,7 @@ const MultiSelectItem = ({ value, onClickDelete }) => {
 
 function Component({
     label = "", actionlabels = {}, placeholder = null, compact, name, optional = false,
-    type = "text", rows = 2, options = [], fullwidth = false,
+    type = "text", rows = 2, options = [], fullwidth = false, className,
     inputValue, setInputValue, icon, onClick, onFocus, onBlur, cancelValue,
     hidden, max, min, disabled, isValidate = false, validationMsg, accept = "image/*",
     addons,
@@ -319,7 +319,7 @@ function Component({
     }
 
     return (options.length !== 0 || type !== 'select') && (
-        <div className={"row w-100 m-0 mb-4" + (hidden ? " hidden" : "")}>
+        <div className={"row w-100 m-0" + (hidden ? " hidden " : "") + className && className}>
             <div className="col px-0">
                 <div className="row">
                     <div className={(fullwidth ? "FullInput" : "Input")
@@ -330,7 +330,7 @@ function Component({
                     }>
                         {!compact && <>
                             <div style={{ display: 'flex' }}>
-                                <label className="Input-label" htmlFor={label}>
+                                <label className="Input-label mt-4" htmlFor={label}>
                                     {label}
                                 </label>
                                 {Object.keys(actionlabels).map(action =>

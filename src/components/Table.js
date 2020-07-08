@@ -150,7 +150,7 @@ function Component({
                     {actions}
                     {renderActions != null ? renderActions(selectedRowIds, page) : []}
                 </div>
-                <div className="TableAction-right">
+                <div className="TableAction-right d-flex align-items-center">
                     {
                         filters.map((el, index) => !el.hidden &&
                             <FilterButton
@@ -165,7 +165,7 @@ function Component({
                                 onClickDelete={el.delete} />
                         )
                     }
-                    <div className="TableSearch">
+                    <div className="TableSearch d-flex align-items-center">
                         <Input
                             label="Search"
                             compact

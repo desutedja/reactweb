@@ -7,8 +7,7 @@ import Breadcrumb from '../../../components/Breadcrumb';
 
 import { setConfirmDelete } from '../../slice';
 
-function Component({ columns, slice, getAction, filterVars = [], filters = [],
-    actions = [], deleteAction, ...props }) {
+function Component({ columns, slice, getAction, filterVars = [], filters = [], actions = [], deleteAction, ...props }) {
 
     const { loading, items, total_pages, total_items, refreshToggle } =
         useSelector(state => state[slice]);
