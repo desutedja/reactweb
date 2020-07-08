@@ -1,16 +1,40 @@
 import React from 'react';
 import countries from './countries';
 import { banks } from './settings';
-import { FiCalendar, FiClock } from 'react-icons/fi'
+import { FiCalendar, FiClock } from 'react-icons/fi';
+
+export const osType = [
+    { label: 'Android', value: 'Android' },
+    { label: 'iOS', value: 'iOS' }
+]
+
+export const genders = [
+    { label: 'Male', value: 'Male'},
+    { label: 'Female', value: 'Female'}
+]
+
+export const rangeNumberArrObj = (from = 0, to = 0) => {
+    if (to <= from) return null;
+    let arr = [];
+    for (let i = from; i <= to; i++) {
+        let n = i.toString();
+        arr.push({
+            label: n,
+            value: n
+        })
+    }
+    return arr;
+}
 
 export const rangeNumber = (from = 0, to = 0) => {
+    if (to <= from) return null;
     let arr = [];
     for (let i = from; i <= to; i++) {
         let n = i.toString();
         n.length < 2 ? (n = '0' + n) : (n = i.toString())
         arr.push(n);
     }
-    return arr
+    return arr;
 }
 
 export const yearsOnRange = (range) => {
@@ -18,7 +42,7 @@ export const yearsOnRange = (range) => {
     const arrYears = [];
     for (let i = 0; i <= range * 2; i++) {
         arrYears.push({
-            value: i + 1,
+            value: ((currentYear - range) + i).toString(),
             label: ((currentYear - range) + i).toString()
         })
     }
@@ -89,6 +113,8 @@ export function dateFormatter(serverDateTime, whenzero='-') {
 }
 
 export function toSentenceCase(sentence) {
+    console.log(sentence)
+    if (sentence === null) return null;
     if (sentence.length < 3) {
         return sentence.toUpperCase();
     }
