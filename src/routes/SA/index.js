@@ -1,10 +1,21 @@
 import React, {  } from 'react';
 import { 
-    FiUsers, FiHome, FiBarChart2, FiShoppingCart, FiZap, FiVolume2,
-    FiRss, FiTarget, FiBriefcase, FiAward, FiShoppingBag, FiDollarSign
+    FiUsers,
+    // FiHome,
+    FiBarChart2,
+    FiShoppingCart,
+    FiZap,
+    FiVolume2,
+    FiRss,
+    // FiTarget,
+    FiBriefcase,
+    // FiAward,
+    FiShoppingBag,
+    // FiDollarSign
 } from "react-icons/fi";
 import {
-    RiStore2Line, RiTaskLine, RiAdvertisementLine,
+    RiStore2Line, RiTaskLine,
+    // RiAdvertisementLine,
     RiBuilding2Line, RiCustomerService2Line,
 } from "react-icons/ri";
 

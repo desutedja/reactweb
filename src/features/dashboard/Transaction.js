@@ -1,34 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import AnimatedNumber from "animated-number-react";
+import { 
+    // useSelector,
+    useDispatch
+} from 'react-redux';
+// import AnimatedNumber from "animated-number-react";
 
 import { toMoney } from '../../utils';
-import { endpointBilling, endpointManagement, endpointMerchant, endpointTransaction } from '../../settings';
+import { endpointMerchant, endpointTransaction } from '../../settings';
 
 import './style.css';
-import { AreaChart, XAxis, YAxis, CartesianGrid, Tooltip, Area, PieChart, Pie, ComposedChart } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, Area, PieChart, Pie, ComposedChart } from 'recharts';
 import { get } from '../slice';
 
-const formatValue = (value) => value.toFixed(0);
-const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
+// const formatValue = (value) => value.toFixed(0);
+// const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
 
 function Component() {
     const [trxData, setTrxData] = useState([]);
-    const [range, setRange] = useState('ytd');
-    const [scale, setScale] = useState('monthly');
+    const [
+        range,
+        // setRange
+    ] = useState('ytd');
+    const [
+        scale,
+        // setScale
+    ] = useState('monthly');
 
     const [trxSumm, setTrxSumm] = useState({});
 
     const [successData, setSuccessData] = useState([]);
-    const [successType, setSuccessType] = useState('year');
+    const [
+        successType,
+        // setSuccessType
+    ] = useState('year');
 
     const [failedData, setFailedData] = useState([]);
-    const [failedType, setFailedType] = useState('year');
+    const [
+        failedType,
+        // setFailedType
+    ] = useState('year');
 
     const [merchantInfo, setMerchantInfo] = useState({});
 
     const [orderData, setOrderData] = useState([]);
-    const [orderType, setOrderType] = useState('year');
+    const [
+        orderType,
+        // setOrderType
+    ] = useState('year');
 
     let dispatch = useDispatch();
 

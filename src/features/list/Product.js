@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
-import { getProduct, getProductDetails } from '../slices/product';
+import {
+    getProduct,
+    // getProductDetails
+} from '../slices/product';
 import { merchant_types, endpointMerchant } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
 import { FiSearch } from 'react-icons/fi';
-import UserAvatar from '../../components/UserAvatar';
+// import UserAvatar from '../../components/UserAvatar';
 import { get } from '../slice';
 import Product from '../../components/cells/Product'; 
 
@@ -48,8 +50,8 @@ function Component() {
     const [type, setType] = useState('');
 
     let dispatch = useDispatch();
-    let history = useHistory();
-    let { url } = useRouteMatch();
+    // let history = useHistory();
+    // let { url } = useRouteMatch();
 
     useEffect(() => {
         (!search || search.length >= 3) && dispatch(get(endpointMerchant + '/admin/list' +
@@ -64,7 +66,7 @@ function Component() {
     }, [search, dispatch]);
 
     useEffect(() => {
-        (!search || search.length >= 3) && dispatch(get(endpointMerchant + '/admin/categories' + '?name=' + search, res => {
+        (!search || search.length >= 3) && dispatch(get(endpointMerchant + '/admin/categories?name=' + search, res => {
             let data = res.data.data;
 
             let formatted = data.map(el => ({ label: el.name, value: el.id }));

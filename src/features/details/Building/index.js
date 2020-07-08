@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import {
+    // useSelector,
+    useDispatch
+} from 'react-redux';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
@@ -31,7 +34,7 @@ function Component() {
         }))
     }, [id, state, dispatch])
 
-    const { selected } = useSelector(state => state.building);
+    // const { selected } = useSelector(state => state.building);
 
 
 

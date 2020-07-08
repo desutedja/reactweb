@@ -9,7 +9,7 @@ import Details from '../details/Transaction';
 import Filter from '../../components/Filter';
 import Settlement from '../settlement/Transaction';
 import Disbursement from '../disbursement/Transaction';
-import { getTransaction, getTransactionDetails, setSelected } from '../slices/transaction';
+import { getTransaction, getTransactionDetails } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
 import { toMoney, toSentenceCase, dateTimeFormatterCell } from '../../utils';
 import Pill from '../../components/Pill';

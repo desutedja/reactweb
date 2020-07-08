@@ -43,7 +43,10 @@ export default function UseAutocomplete({
   options = [], label = '', comboValue = '', setComboValue, comboName
 }) {
   const [indexValue, setIndexValue] = useState(options.findIndex(option => option.value === comboValue));
-  const [defaultValue, setDefaultValue] = useState(options[indexValue])
+  const [
+    defaultValue,
+    // setDefaultValue
+  ] = useState(options[indexValue])
   // const indexValue = options.findIndex(option => option.value === inputValue);
 
   const classes = useStyles();
