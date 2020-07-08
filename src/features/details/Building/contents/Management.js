@@ -9,26 +9,10 @@ import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import Filter from '../../../../components/Filter';
 import Form from '../../../../components/Form';
-import { editBuildingManagement, createBuildingManagement, getBuildingManagement, deleteBuildingManagement } from '../../../slices/building';
+import { editBuildingManagement, createBuildingManagement, getBuildingManagement, deleteBuildingManagement, changeBuildingManagement } from '../../../slices/building';
 import { banks, endpointAdmin } from '../../../../settings';
 import { toMoney } from '../../../../utils';
 import { get } from '../../../slice';
-
-const columnsManagement = [
-    { Header: "ID", accessor: "id" },
-    { Header: "Management Name", accessor: "management_name" },
-    { Header: "Billing Published", accessor: row => "Day " + row.billing_published },
-    { Header: "Billing Duedate", accessor: row => "Day " + row.billing_duedate },
-    { Header: "Penalty Fee", accessor: row => row.penalty_fee + ' %' },
-    { Header: "Courier Fee", accessor: row => toMoney(row.courier_fee) },
-    { Header: "Internal Courier Markup", accessor: row => row.courier_internal_markup + ' %' },
-    { Header: "External Courier Markup", accessor: row => row.courier_external_markup + ' %' },
-    {
-        Header: "Status",
-        accessor: row => <CustomInput type="switch" label={row.status} id={"managementStatus-" + row.id}
-            checked={row.status === "active"} />
-    },
-]
 
 
 function Component() {
@@ -43,9 +27,50 @@ function Component() {
     const [modalManagement, setModalManagement] = useState(false);
     const [managements, setManagements] = useState([]);
 
+    const [confirmChange, handleConfirm] = useState(false);
+    const [managementChose, setManagementChose] = useState({});
+
     const { selected, management, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
+    
+    const columnsManagement = [
+        { Header: "ID", accessor: "id" },
+        { Header: "Management Name", accessor: "management_name" },
+        { Header: "Billing Published", accessor: row => "Day " + row.billing_published },
+        { Header: "Billing Duedate", accessor: row => "Day " + row.billing_duedate },
+        { Header: "Penalty Fee", accessor: row => row.penalty_fee + ' %' },
+        { Header: "Courier Fee", accessor: row => toMoney(row.courier_fee) },
+        { Header: "Internal Courier Markup", accessor: row => row.courier_internal_markup + ' %' },
+        { Header: "External Courier Markup", accessor: row => row.courier_external_markup + ' %' },
+        {
+            Header: "Status",
+            accessor: row => {
+                return (
+                    <CustomInput
+                        style={{
+                            cursor: 'pointer'
+                        }}
+                        type="switch"
+                        label={row.status}
+                        id={"managementStatus-" + row.id}
+                        onClick={e => {
+                            if (row.status === 'active') return;
+                            const data = {
+                                building_id: row.building_id,
+                                management_id: row.management_id,
+                                status: 'active',
+                                management_name: row.management_name
+                            }
+                            handleConfirm(true);
+                            setManagementChose(data);
+                        }}
+                        checked={row.status === "active"}
+                    />
+                )
+            }
+        },
+    ]
 
     useEffect(() => {
         (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/management' +
@@ -68,10 +93,37 @@ function Component() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, search, loadDefault]);
 
+    // useEffect(() => {
+    //     console.log(managements)
+    // }, [managements])
+
 
     return (
         <>
-            <Modal isOpen={addManagement} toggle={() => setAddManagement(false)} title={edit ? "Edit Management" : "Add Management"} disableFooter={true}
+            <Modal
+                disableHeader={true}
+                isOpen={confirmChange}
+                onClick={() => {
+                    delete managementChose.management_name
+                    dispatch(changeBuildingManagement(managementChose))
+                    handleConfirm(false)
+                }}
+                onClickSecondary={() => handleConfirm(false)}
+                okLabel={"Sure"}
+            >
+                <h4 className="mb-3" style={{
+                    fontSize: '1.2rem'
+                }}>Are you sure to set <strong>{managementChose.management_name}</strong> as Active?</h4>
+                <span style={{
+                    color: '#ffa707',
+                    fontSize: '.9rem'
+                }}>This will make all other management Inactive.</span>
+            </Modal>
+            <Modal
+                isOpen={addManagement}
+                toggle={() => setAddManagement(false)}
+                title={edit ? "Edit Management" : "Add Management"}
+                disableFooter={true}
                 okLabel={edit ? "Save" : "Add"} >
                 <Form
                     noContainer={true}

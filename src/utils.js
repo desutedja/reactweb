@@ -113,7 +113,6 @@ export function dateFormatter(serverDateTime, whenzero='-') {
 }
 
 export function toSentenceCase(sentence) {
-    console.log(sentence)
     if (sentence === null) return null;
     if (sentence.length < 3) {
         return sentence.toUpperCase();

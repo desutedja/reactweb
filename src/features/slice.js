@@ -74,7 +74,7 @@ export const setInfo = data => dispatch => {
 
   setTimeout(() => dispatch(setInfoData({
     message: '',
-  })), 10000);
+  })), 5000);
 }
 
 const responseAlert = response => async dispatch => {
