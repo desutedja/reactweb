@@ -133,27 +133,29 @@ function Component({
 
             case 'radio': return (
                 <div className="row">
-                    {options.map(el => (
-                        <div className="col-6">
-                            <div className="form-check">
-                                {inputValue === el.value ?
-                                    <input className="form-check-input" type="radio"
-                                        name={label}
-                                        id={el.label}
-                                        value={el.value}
-                                        checked /> :
-                                    <input className="form-check-input" type="radio"
-                                        name={label}
-                                        id={el.label}
-                                        value={el.value} />
-                                }
-
-                                <label className="form-check-label m-0 ml-2" for={el.label}>
-                                    {el.label}
-                                </label>
+                    {options.map(el => {
+                        return (
+                            <div className="col-6">
+                                <div className="form-check">
+                                    {inputValue === el.value ?
+                                        <input className="form-check-input" type="radio"
+                                            name={name ? name : label.toLowerCase().replace(/ /g, '_')}
+                                            id={el.label}
+                                            value={el.value}
+                                            checked /> :
+                                        <input className="form-check-input" type="radio"
+                                            name={name ? name : label.toLowerCase().replace(/ /g, '_')}
+                                            id={el.label}
+                                            value={el.value} />
+                                    }
+    
+                                    <label className="form-check-label m-0 ml-2" for={el.label}>
+                                        {el.label}
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        )
+                    })}
                 </div>
             )
             case 'file': return <div className="Input-container">
