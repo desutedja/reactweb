@@ -48,7 +48,10 @@ function Component() {
 
     const [calculatedPrice, setCalculatedPrice] = useState(0);
     
-    const { selected, refresh } = useSelector(state => state.product);
+    const {
+        selected,
+        // refresh
+    } = useSelector(state => state.product);
 
     let dispatch = useDispatch();
 

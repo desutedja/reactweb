@@ -1,10 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiSearch, FiCheck, FiFile } from 'react-icons/fi';
+import {
+    // FiSearch,
+    FiCheck,
+    // FiFile
+} from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 
-import Input from '../../components/Input';
+// import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';

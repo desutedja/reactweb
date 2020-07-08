@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+    useDispatch,
+    // useSelector
+} from 'react-redux';
 import { FiPlus, FiSearch } from 'react-icons/fi';
 
 import Button from '../../components/Button';

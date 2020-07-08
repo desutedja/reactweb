@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import {
+    useDispatch,
+    // useSelector
+} from 'react-redux';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';

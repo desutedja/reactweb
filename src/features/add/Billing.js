@@ -13,7 +13,6 @@ import { FiChevronRight } from 'react-icons/fi';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
 import { get } from '../slice';
 import Template from './components/Template';
-import { current } from '@reduxjs/toolkit';
 
 const columnsService = [
     { Header: "ID", accessor: "id" },

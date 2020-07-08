@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import { get } from '../../features/slice';
-import { toMoney } from '../../utils';
+// import { toMoney } from '../../utils';
 import { endpointMerchant } from '../../settings';
 import './style.css';
 import { setSelected } from '../../features/slices/product';

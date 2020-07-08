@@ -10,10 +10,9 @@ import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
-import Building from '../../components/cells/Building';
 import { getBillingSettlement } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
-import { toMoney, dateTimeFormatterCell, removeLastFromPath } from '../../utils';
+import { toMoney, dateTimeFormatterCell } from '../../utils';
 import { get, post } from '../slice';
 
 const formatValue = (value) => toMoney(value.toFixed(0));

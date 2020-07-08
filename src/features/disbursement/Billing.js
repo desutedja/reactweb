@@ -24,7 +24,7 @@ function Component() {
     const [amount, setAmount] = useState('');
 
     const [data, setData] = useState([]);
-    const [trxCodes, setTrxCodes] = useState([]);
+    // const [trxCodes, setTrxCodes] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
     const [dataPages, setDataPages] = useState('');
 

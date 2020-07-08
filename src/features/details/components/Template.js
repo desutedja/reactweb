@@ -1,12 +1,17 @@
 import React, { useState } from 'react';
-import { FiGlobe, FiPhone, FiHome, FiMail } from 'react-icons/fi';
+import {
+    FiGlobe,
+    FiPhone,
+    // FiHome,
+    FiMail
+} from 'react-icons/fi';
 import {
     RiStore2Line, 
 } from "react-icons/ri";
 
-import Container from '../../../components/Container';
-import Row from '../../../components/Row';
-import Column from '../../../components/Column';
+// import Container from '../../../components/Container';
+// import Row from '../../../components/Row';
+// import Column from '../../../components/Column';
 import Tab from '../../../components/Tab';
 import Breadcrumb from '../../../components/Breadcrumb';
 

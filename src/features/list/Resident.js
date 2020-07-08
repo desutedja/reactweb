@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { FiPlus } from 'react-icons/fi';
-import MoonLoader from "react-spinners/MoonLoader";
 
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
