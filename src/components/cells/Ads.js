@@ -6,7 +6,7 @@ import { get } from '../../features/slice';
 import { endpointAds } from '../../settings';
 import './style.css';
 import { toSentenceCase } from '../../utils';
-import { setSelected } from '../../features/slices/staff';
+import { setSelected } from '../../features/slices/ads';
 
 
 function AdsCell({ id, compact=false }) {
