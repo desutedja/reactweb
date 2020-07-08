@@ -21,7 +21,7 @@ function Component() {
                         <img src={'https://via.placeholder.com/200'} alt="media_url" />
                     }
                 </div>
-                <div style={{
+                <div className="ml-4" style={{
                     flex: 3
                 }}>
                     <p style={{ fontWeight: 'bold', fontSize: '1.2rem', marginBottom: 8 }}>

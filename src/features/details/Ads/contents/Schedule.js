@@ -40,9 +40,10 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={addSchedule} toggle={() => setAddSchedule(false)}>
+            <Modal isOpen={addSchedule} disableFooter={true} toggle={() => setAddSchedule(false)}>
                 Add Schedule
                 <Form
+                    noContainer={true}
                     onSubmit={data => {
                         dispatch(createAdsSchedule({ ...data, adv_id: selected.id }))
                         setAddSchedule(false);
@@ -54,6 +55,7 @@ function Component() {
                 </Form>
             </Modal>
             <Table
+                noContainer={true}
                 columns={columns}
                 data={schedule.items}
                 loading={loading}
