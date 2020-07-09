@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FiAlertCircle } from 'react-icons/fi';
 import { Field } from 'formik';
 
@@ -7,10 +7,19 @@ function TextInput({
     onChange = () => { }, ...rest
 }) {
     const [isFocused, setFocus] = useState(false);
-    // const [value, setValue] = useState('');
 
-    const { errors, touched, setFieldValue, handleChange } = rest;
+    const { errors, touched, setFieldValue, handleChange, values } = rest;
     const fixedName = name + (options ? '_label' : '');
+
+    //this repopulate the label field when editing, provided BE doesnt send them
+    useEffect(() => {
+        options && !values[fixedName] && 
+        // console.log(fixedName, values[name], options.find(el => el.value == values[name])?.label)
+        setFieldValue(fixedName, 
+            // eslint-disable-next-line eqeqeq
+            options.find(el => el.value == values[name])?.label);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [options])
 
     return (
         <>

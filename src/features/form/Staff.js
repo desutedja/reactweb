@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import Modal from '../../components/Modal';
-import Filter from '../../components/Filter';
+
 import SectionSeparator from '../../components/SectionSeparator';
 import { editStaff, createStaff } from '../slices/staff';
 import { endpointResident, endpointAdmin, banks } from '../../settings';
@@ -49,23 +48,9 @@ const staffPayload = {
 
 function Component() {
     const { loading, selected } = useSelector(state => state.staff);
-    const [validation, setValidation] = useState({
-        tel: {
-            value: '',
-            isErr: false
-        }
-    })
-
-    const [bManagementID, setBManagementID] = useState('');
-    const [bManagementName, setBManagementName] = useState('');
     const [bManagements, setBManagements] = useState([]);
 
-    const [search, setSearch] = useState('');
-    const [modal, setModal] = useState(false);
-
-    const [district, setDistrict] = useState("");
     const [districts, setDistricts] = useState([]);
-
     const [city, setCity] = useState("");
     const [cities, setCities] = useState([]);
 
@@ -76,9 +61,9 @@ function Component() {
     let history = useHistory();
 
     useEffect(() => {
-        (!search || search >= 3) && dispatch(get(endpointAdmin + '/management/building' +
+        dispatch(get(endpointAdmin + '/management/building' +
             '?limit=10&page=1' +
-            '&search=' + search, res => {
+            '&search=', res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({
@@ -88,7 +73,7 @@ function Component() {
 
                 setBManagements(formatted);
             }))
-    }, [dispatch, search]);
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(get(endpointResident + '/geo/province',
@@ -112,7 +97,6 @@ function Component() {
     }, [dispatch, province, selected.province]);
 
     useEffect(() => {
-        setDistrict("");
         (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city ? city : selected.city),
 
             res => {
