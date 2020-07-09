@@ -155,7 +155,9 @@ function Component() {
                     flex: 3,
                     flexDirection: 'column',
                 }}>
-                    <Table totalItems={disbursement.total_items}
+                    <Table 
+                        noContainer={true}
+                        totalItems={disbursement.total_items}
                         columns={columns}
                         data={disbursement.items}
                         loading={loading}

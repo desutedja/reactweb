@@ -8,19 +8,39 @@ import {
 } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 
-// import Input from '../../components/Input';
+import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import { getTransactionDetails, getTransactionSettlement } from '../slices/transaction';
-import { toMoney, dateTimeFormatterCell } from '../../utils';
+import { trxStatusColor } from '../../settings';
+import { toMoney, dateTimeFormatterCell, toSentenceCase } from '../../utils';
 import { endpointTransaction } from '../../settings';
+import Pill from '../../components/Pill';
 import { get, post } from '../slice';
+
+const status_settlement = [
+    { label: "Settled", value: "settled" },
+    { label: "Unsettled", value: "unsettled" }
+]
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
     { Header: 'Trx Code', accessor: 'trx_code' },
     { Header: 'Amount', accessor: row => toMoney(row.total_price) },
+    {
+        Header: 'Settlement Status', accessor: row => {
+            console.log(row)
+            return (
+                row.payment_settled === 1 ?
+                    <Pill color={trxStatusColor['paid']}>
+                        {toSentenceCase('settled')}
+                    </Pill> : <Pill color={trxStatusColor['requested']}>
+                        {toSentenceCase('unsettled')}
+                    </Pill>
+                )
+        }
+    },
     {
         Header: 'Settlement Date', accessor: row => row.payment_settled_date ?
             dateTimeFormatterCell(row.payment_settled_date) : '-'
@@ -34,6 +54,8 @@ function Component() {
     // const [inputValue, setInputValue] = useState('');
     
     const { loading, settlement, refreshToggle } = useSelector(state => state.transaction);
+
+    const [statusSettlement, setStatusSettlement] = useState('')
 
     const [settleModal, setSettleModal] = useState(false);
     const [selected, setSelected] = useState([]);
@@ -55,6 +77,11 @@ function Component() {
             setInfo(res.data.data);
         }));
     }, [dispatch]);
+
+    useEffect(() => {
+        // console.log(settlement)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <>
@@ -225,11 +252,31 @@ function Component() {
                 loading={loading}
                 pageCount={settlement.total_pages}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getTransactionSettlement( pageIndex, pageSize, search));
+                    dispatch(getTransactionSettlement( pageIndex, pageSize, search, statusSettlement.value));
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle ])}
-                onClickDetails={row => dispatch(getTransactionDetails(row,  history, url))}
-                filters={[]}
+                }, [dispatch, refreshToggle, statusSettlement])}
+                onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}
+                filters={[
+                    {
+                        hidex: statusSettlement === "",
+                        label: <p>{statusSettlement ? "Status: " + statusSettlement.label : "Status: All"}</p>,
+                        delete: () => { setStatusSettlement(""); },
+                        component: (toggleModal) =>
+                            <>
+                                <Filter
+                                    data={status_settlement}
+                                    onClick={(el) => {
+                                        setStatusSettlement(el);
+                                        toggleModal(false);
+                                    }}
+                                    onClickAll={() => {
+                                        setStatusSettlement("");
+                                        toggleModal(false);
+                                    }}
+                                />
+                            </>
+                    },
+                ]}
                 actions={[]}
                 renderActions={(selectedRowIds, page) => {
                     // console.log(selectedRowIds);

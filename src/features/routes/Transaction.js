@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import Table from '../../components/Table';
 import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
@@ -51,10 +51,15 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
     let { path, url } = useRouteMatch();
-
+    
     const [statusPayment, setStatusPayment] = useState('');
     const [status, setStatus] = useState('');
     const [type, setType] = useState('');
+
+    useEffect(() => {
+        // console.log(items)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div>

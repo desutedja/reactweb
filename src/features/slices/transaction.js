@@ -99,6 +99,9 @@ export const getTransaction = (
 }
 
 export const getTransactionDetails = (row,  history, url) => dispatch => {
+  url = '/sa/transaction'
+  // console.log(url)
+  // if (url) return
   dispatch(startAsync());
 
   dispatch(get(transactionEndpoint + '/' + row.trx_code, 
@@ -111,15 +114,15 @@ export const getTransactionDetails = (row,  history, url) => dispatch => {
 }
 
 export const getTransactionSettlement = (
-   pageIndex, pageSize,
-  search = '',
+  pageIndex, pageSize,
+  search = '', settlementStatus = ''
 ) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(transactionEndpoint + '/list' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
-    '&settlement_status=unsettled'+
+    '&settlement_status=' + settlementStatus +
     '&status=completed' +
     '&search=' + search,
     
