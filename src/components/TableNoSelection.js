@@ -1,5 +1,7 @@
-import React, { useEffect, useState, forwardRef, useRef } from 'react'
-import { useTable, usePagination, useSortBy, useRowSelect, } from 'react-table'
+import React, { useEffect, useState } from 'react'
+import { useTable, usePagination, useSortBy,
+    // useRowSelect
+} from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
 import {
     FiChevronsLeft, FiChevronLeft,
@@ -322,21 +324,5 @@ function Component({
         </div>
     )
 }
-
-const IndeterminateCheckbox = forwardRef(
-    ({ indeterminate, ...rest }, ref) => {
-        const defaultRef = useRef()
-        const resolvedRef = ref || defaultRef
-
-        useEffect(() => {
-            resolvedRef.current.indeterminate = indeterminate
-        },
-            [resolvedRef, indeterminate])
-
-        return (
-            <input type="checkbox" ref={resolvedRef} {...rest} />
-        )
-    }
-);
 
 export default Component;

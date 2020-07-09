@@ -24,7 +24,7 @@ function Component() {
     const [amount, setAmount] = useState('');
 
     const [data, setData] = useState([]);
-    const [trxCodes, setTrxCodes] = useState([]);
+    // const [trxCodes, setTrxCodes] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
     const [dataPages, setDataPages] = useState('');
 
@@ -140,6 +140,7 @@ function Component() {
                             </div>
                             <div className="Container">
                                 <Table
+                                    noContainer={true}
                                     columns={columns}
                                     data={data}
                                     loading={dataLoading}

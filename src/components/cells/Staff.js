@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Avatar from 'react-avatar';
 import { useDispatch } from 'react-redux';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { get } from '../../features/slice';
 import { endpointManagement } from '../../settings';
@@ -21,7 +21,6 @@ function Component({ id, compact=false }) {
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path } = useRouteMatch();
 
     useEffect(() => {
         dispatch(get(endpointManagement + '/admin/staff/' + id, res => {

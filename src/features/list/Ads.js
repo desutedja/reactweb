@@ -10,7 +10,7 @@ import Pill from '../../components/Pill';
 import Button from '../../components/Button';
 
 import Template from './components/Template';
-import { getAds, deleteAds, setSelected, getAdsDetails } from '../slices/ads';
+import { getAds, deleteAds, setSelected } from '../slices/ads';
 import { dateFormatter } from '../../utils';
 import AdsCell from '../../components/cells/Ads';
 

@@ -1,11 +1,19 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+// import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
-import { getTransactionDetails, setSelected, getTransactionSettlement, getTransactionDisbursement } from '../slices/transaction';
-import { toMoney, toSentenceCase, dateTimeFormatter } from '../../utils';
+import {
+    // getTransactionDetails,
+    // setSelected,
+    // getTransactionSettlement,
+    getTransactionDisbursement } from '../slices/transaction';
+import {
+    toMoney,
+    // toSentenceCase,
+    // dateTimeFormatter
+} from '../../utils';
 import { endpointTransaction, endpointMerchant } from '../../settings';
 import { get } from '../slice';
 
@@ -14,19 +22,28 @@ const formatValue = (value) => toMoney(value.toFixed(0));
 function Component() {
     const [info, setInfo] = useState({});
     const [active, setActive] = useState(0);
-    const [type, setType] = useState('merchant');
+    const [
+        type,
+        // setType
+    ] = useState('merchant');
 
-    const [merchant, setMerchant] = useState('');
+    const [
+        merchant,
+        // setMerchant
+    ] = useState('');
     const [merchants, setMerchants] = useState([]);
-    const [courier, setCourier] = useState('');
-    const [couriers, setCouriers] = useState([]);
+    const [
+        courier,
+        // setCourier
+    ] = useState('');
+    // const [couriers, setCouriers] = useState([]);
 
     
     const { loading, refreshToggle, disbursement } = useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
-    let history = useHistory();
-    let { url } = useRouteMatch();
+    // let history = useHistory();
+    // let { url } = useRouteMatch();
 
     const columns = useMemo(() => [
         { Header: 'ID', accessor: 'id' },
@@ -138,7 +155,9 @@ function Component() {
                     flex: 3,
                     flexDirection: 'column',
                 }}>
-                    <Table totalItems={disbursement.total_items}
+                    <Table 
+                        noContainer={true}
+                        totalItems={disbursement.total_items}
                         columns={columns}
                         data={disbursement.items}
                         loading={loading}

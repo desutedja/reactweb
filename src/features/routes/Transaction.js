@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import Table from '../../components/Table';
 import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
@@ -9,7 +9,7 @@ import Details from '../details/Transaction';
 import Filter from '../../components/Filter';
 import Settlement from '../settlement/Transaction';
 import Disbursement from '../disbursement/Transaction';
-import { getTransaction, getTransactionDetails, setSelected } from '../slices/transaction';
+import { getTransaction, getTransactionDetails } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
 import { toMoney, toSentenceCase, dateTimeFormatterCell } from '../../utils';
 import Pill from '../../components/Pill';
@@ -51,10 +51,15 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
     let { path, url } = useRouteMatch();
-
+    
     const [statusPayment, setStatusPayment] = useState('');
     const [status, setStatus] = useState('');
     const [type, setType] = useState('');
+
+    useEffect(() => {
+        // console.log(items)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div>

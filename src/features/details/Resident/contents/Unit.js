@@ -3,7 +3,6 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { FiX, FiSearch, FiPlus } from 'react-icons/fi';
 import { useSelector, useDispatch } from 'react-redux';
 
-import UserAvatar from '../../../../components/UserAvatar'; 
 import Button from '../../../../components/Button';
 import Table from '../../../../components/Table';
 import Modal from '../../../../components/Modal';
@@ -51,7 +50,10 @@ function Component({ id }) {
     const [selectedUnit, setSelectedUnit] = useState({});
     const [units, setUnits] = useState([]);
 
-    const [level, setLevel] = useState('main');
+    const [
+        level,
+        // setLevel
+    ] = useState('main');
     const [status, setStatus] = useState('own');
 
     const { unit, loading, refreshToggle } = useSelector(state => state.resident);

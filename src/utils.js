@@ -65,7 +65,7 @@ export const months = [
 ];
 
 export function dateTimeFormatterCell(serverDateTime, whenzero='-') {
-    if (serverDateTime == "0001-01-01T00:00:00Z") 
+    if (serverDateTime === "0001-01-01T00:00:00Z") 
         return whenzero;
 
     let date = serverDateTime.split('T')[0];
@@ -84,7 +84,7 @@ export function dateTimeFormatterCell(serverDateTime, whenzero='-') {
 }
 
 export function dateTimeFormatter(serverDateTime, whenzero='-') {
-    if (serverDateTime == "0001-01-01T00:00:00Z") 
+    if (serverDateTime === "0001-01-01T00:00:00Z") 
         return whenzero;
 
     let date = serverDateTime.split('T')[0];
@@ -99,7 +99,7 @@ export function dateTimeFormatter(serverDateTime, whenzero='-') {
 }
 
 export function dateFormatter(serverDateTime, whenzero='-') {
-    if (serverDateTime == "0001-01-01T00:00:00Z") 
+    if (serverDateTime === "0001-01-01T00:00:00Z") 
         return whenzero;
 
     let date = serverDateTime.split('T')[0];
@@ -113,7 +113,6 @@ export function dateFormatter(serverDateTime, whenzero='-') {
 }
 
 export function toSentenceCase(sentence) {
-    console.log(sentence)
     if (sentence === null) return null;
     if (sentence.length < 3) {
         return sentence.toUpperCase();

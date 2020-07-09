@@ -53,6 +53,7 @@ function Component() {
                 setProvinces(formatted);
             }
         ))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -64,6 +65,7 @@ function Component() {
                 setCities(formatted);
             }
         ))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ province]);
 
     useEffect(() => {
@@ -75,6 +77,7 @@ function Component() {
                 setDistricts(formatted);
             }
         ))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ city]);
 
     useEffect(() => {
@@ -89,6 +92,7 @@ function Component() {
                 setBCLoading(false);
             }
         ))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

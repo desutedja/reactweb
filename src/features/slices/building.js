@@ -294,6 +294,28 @@ export const getBuildingManagement = ( pageIndex, pageSize, search, row) => disp
     }))
 }
 
+export const changeBuildingManagement = ( data ) => dispatch => {
+  dispatch(startAsync())
+
+  dispatch(post(buildingEndpoint + '/management/status', data, 
+    res => {
+      dispatch(refresh());
+      console.log(res.data)
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Management status has been changed.'
+      }));
+
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    }))
+
+  dispatch(stopAsync())
+}
+
 export const createBuildingUnit = ( data) => dispatch => {
   dispatch(startAsync());
 

@@ -51,7 +51,8 @@ function Page({ role }) {
                         }}>(ini harusnya 1 menit, cuma di persingkat buat dev purposes)</p>
                         {tick > 0 ? <p>00:0{tick}</p> :
                             <button type="button" onClick={() => {
-                                dispatch(login(email));
+                                dispatch(login(role, email, history));
+                                // dispatch(otpCheck(role, email, otp, history));
                                 setTick(time);
                             }}>Resend OTP</button>}
                         <input className="Auth-input" type="text" id="otp"
