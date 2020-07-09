@@ -33,6 +33,7 @@ const pic = {
     'Information': [
         "pic_name",
         "pic_phone",
+        "pic_mail",
     ]
 };
 

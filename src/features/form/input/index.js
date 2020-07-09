@@ -1,7 +1,5 @@
 import React, { } from 'react';
 
-import "./style.css";
-
 import TextInput from './Text';
 import MultiSelectInput from './MultiSelect';
 import RadioInput from './Radio';

@@ -17,7 +17,7 @@ function Component({ data, labels, type = "", editable = true, renderButtons = (
         if (label.includes('pic_')) label = label.split('_')[1];
         if (label === 'created_on') label = "Registered Since";
         if (label === 'name_legal') label = "Legal Name";
-        if (label === 'address') label = "Streed Address";
+        if (label === 'address') label = "Street Address";
 
         return toSentenceCase(label);
     }

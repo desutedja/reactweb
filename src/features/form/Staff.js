@@ -1,17 +1,51 @@
 import React, { useEffect, useState } from 'react';
-
-import Input from '../../components/Input';
-import Form from '../../components/Form';
+import { useHistory } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import Modal from '../../components/Modal';
 import Filter from '../../components/Filter';
 import SectionSeparator from '../../components/SectionSeparator';
-import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
 import { editStaff, createStaff } from '../slices/staff';
 import { endpointResident, endpointAdmin, banks } from '../../settings';
 import { get } from '../slice';
-import Template from './components/Template';
+import Template from './components/TemplateWithFormik';
 import countries from '../../countries';
+
+import { Form } from 'formik';
+import Input from './input';
+import { staffSchema } from "./schemas";
+
+const staffPayload = {
+    staff_role: "",
+    on_centratama: '1',
+    staff_specialization: "",
+    building_management_id: "",
+    staff_id: "",
+    status: "active",
+    firstname: "",
+    lastname: "",
+    email: "",
+    phone: "",
+    nationality: "",
+    gender: 'P',
+    marital_status: "",
+    address: "",
+    province: "",
+    city: "",
+    district: "",
+    account_bank: "",
+    account_number: "",
+    account_name: "",
+
+    staff_role_label: "",
+    staff_specialization_label: "",
+    building_management_id_label: "",
+    nationality_label: "",
+    marital_status_label: "",
+    province_label: "",
+    city_label: "",
+    district_label: "",
+    account_bank_label: "",
+}
 
 function Component() {
     const { loading, selected } = useSelector(state => state.staff);
@@ -38,15 +72,13 @@ function Component() {
     const [province, setProvince] = useState("");
     const [provinces, setProvinces] = useState([]);
 
-    const [role, setRole] = useState("");
-
     let dispatch = useDispatch();
     let history = useHistory();
 
     useEffect(() => {
         (!search || search >= 3) && dispatch(get(endpointAdmin + '/management/building' +
             '?limit=10&page=1' +
-            '&search=' + search,  res => {
+            '&search=' + search, res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({
@@ -60,7 +92,7 @@ function Component() {
 
     useEffect(() => {
         dispatch(get(endpointResident + '/geo/province',
-            
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setProvinces(formatted);
@@ -71,7 +103,7 @@ function Component() {
     useEffect(() => {
         setCity("");
         (province || selected.province) && dispatch(get(endpointResident + '/geo/province/' + (province ? province : selected.province),
-            
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setCities(formatted);
@@ -82,7 +114,7 @@ function Component() {
     useEffect(() => {
         setDistrict("");
         (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city ? city : selected.city),
-            
+
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setDistricts(formatted);
@@ -91,142 +123,113 @@ function Component() {
     }, [city, dispatch, selected.city]);
 
     return (
-        <Template>
-            <Modal isOpen={modal} toggle={() => setModal(false)}>
-                <Input label="Search"
-                    inputValue={search} setInputValue={setSearch}
-                />
-                <Filter
-                    data={bManagements}
-                    onClick={(el) => {
-                        setBManagementID(el.value);
-                        setBManagementName(el.label);
-                        setModal(false);
-                    }}
-                />
-            </Modal>
-            <Form
-                onSubmit={data => selected.id ?
-                    dispatch(editStaff( data, history, selected.id))
-                    :
-                    dispatch(createStaff( data, history))}
-                loading={loading}
-            >
-                {!selected.id && <Input label="Staff Role" type="select"
-                    options={[
-                        { value: 'gm_bm', label: 'GM BM' },
-                        { value: 'pic_bm', label: 'PIC BM' },
-                        { value: 'technician', label: 'Technician' },
-                        { value: 'courier', label: 'Courier' },
-                        { value: 'security', label: 'Security' },
-                    ]}
-                    inputValue={role ? role : selected.staff_role}
-                    setInputValue={setRole}
-                />}
-                {role === "courier" && <Input label="On Centratama?" type="select"
-                    name="on_centratama"
-                    options={[
-                        { value: 1, label: 'Yes' },
-                        { value: 0, label: 'No' },
-                    ]} inputValue={selected.on_centratama} />}
-                {role === "technician" && <Input label="Specialization" type="select"
-                    name="staff_specialization"
-                    options={[
-                        { value: 'electricity', label: 'Electricity' },
-                        { value: 'plumbing', label: 'Plumbing' },
-                        { value: 'billing', label: 'Billing' },
-                        { value: 'others', label: 'Others' },
-                    ]} inputValue={selected.staff_specialization} />}
-                <Input label="Building Management ID" hidden
-                    inputValue={bManagementID ? bManagementID : selected.building_management_id}
-                    setInputValue={setBManagementID}
-                />
-                <Input label="Building Management Name" hidden
-                    inputValue={bManagementName ? bManagementName : selected.building_management_id ?
-                        selected.building_name + ' by ' + selected.management_name : "No Management"}
-                    setInputValue={setBManagementName}
-                />
-                <Input label="Select Building Management" type="button"
-                    inputValue={bManagementName ? bManagementName : selected.building_management_id ?
-                        selected.building_name + ' by ' + selected.management_name : "No Management"}
-                    onClick={() => setModal(true)}
-                />
-                <Input label="Staff ID" inputValue={selected.staff_id} />
-                <Input label="Status" type="select" options={[
-                    { value: 'active', label: 'Active' },
-                    { value: 'inactive', label: 'Inactive' },
-                ]} inputValue={selected.status ? selected.status : 'active'} />
-                <SectionSeparator />
+        <Template
+            slice="staff"
+            payload={selected.id ? {...staffPayload, ...selected} : staffPayload}
+            schema={staffSchema}
+            formatValues={values => ({
+                ...values,
+                on_centratama: parseInt(values.on_centratama, 10),
+                phone: '62' + values.phone,
+                province: parseInt(values.province, 10),
+                city: parseInt(values.city, 10),
+                district: parseInt(values.district, 10),
+            })}
+            edit={data => dispatch(editStaff(data, history, selected.id))}
+            add={data => dispatch(createStaff(data, history))}
+            renderChild={props => {
+                const { values } = props;
 
-                <Input label="Firstname" inputValue={selected.firstname} />
-                <Input label="Lastname" inputValue={selected.lastname} />
-                <Input label="Email" type="email" inputValue={selected.email} />
-                <Input label="Phone" type="tel"
-                    inputValue={selected.phone || validation.tel.value}
-                    placeholder="e.g 6281xxxxxxx"
-                    isValidate={validation.tel.isErr}
-                    validationMsg="The phone number must begin 62" onFocus={(e) => {
-                        setValidation({
-                            ...validation,
-                            tel: {
-                                ...validation.tel,
-                                value: '62'
+                return (<Form className="Form">
+                            {!selected.id && <Input {...props} label="Staff Role"
+                                options={[
+                                    { value: 'gm_bm', label: 'GM BM' },
+                                    { value: 'pic_bm', label: 'PIC BM' },
+                                    { value: 'technician', label: 'Technician' },
+                                    { value: 'courier', label: 'Courier' },
+                                    { value: 'security', label: 'Security' },
+                                ]}
+                            />}
+                            {values['staff_role'] === "courier" && <Input {...props} label="On Centratama?"
+                                name="on_centratama"
+                                type="radio"
+                                options={[
+                                    { value: '1', label: 'Yes' },
+                                    { value: '0', label: 'No' },
+                                ]} />}
+                            {values['staff_role'] === "technician" && <Input {...props} label="Specialization"
+                                name="staff_specialization"
+                                options={[
+                                    { value: 'electricity', label: 'Electricity' },
+                                    { value: 'plumbing', label: 'Plumbing' },
+                                    { value: 'billing', label: 'Billing' },
+                                    { value: 'others', label: 'Others' },
+                                ]} />}
+                            <Input {...props} label="Building Management"
+                                name="building_management_id"
+                                options={bManagements}
+                            />
+                            <Input {...props} label="Staff ID" />
+                            <Input {...props} label="Status"
+                                type="radio"
+                                options={[
+                                    { value: 'active', label: 'Active' },
+                                    { value: 'inactive', label: 'Inactive' },
+                                ]}
+                            />
+
+                            <SectionSeparator />
+
+                            <Input {...props} label="Firstname" />
+                            <Input {...props} label="Lastname" />
+                            <Input {...props} label="Email" />
+                            <Input {...props} label="Phone" prefix="+62" />
+
+                            <SectionSeparator />
+
+                            <Input {...props} label="Nationality" options={countries} />
+                            <Input {...props} label="Gender"
+                                type="radio"
+                                options={[
+                                    { value: 'P', label: 'Female' },
+                                    { value: 'L', label: 'Male' },
+                                ]}
+                            />
+                            <Input {...props}
+                                label="Marital Status"
+                                options={[
+                                    { value: 'single', label: 'Single' },
+                                    { value: 'married', label: 'Married' },
+                                    { value: 'divorce', label: 'Divorced' },
+                                    { value: 'other', label: 'Other' },
+                                ]}
+                            />
+                            <Input {...props} label="Address" type="textarea" />
+                            <Input {...props} label="Province" options={provinces}
+                                onChange={el => setProvince(el.value)}
+                            />
+                            {values.province && <Input {...props} label="City" options={cities}
+                                onChange={el => setCity(el.value)}
+                            />}
+                            {values.city && <Input {...props} label="District"
+                                options={districts} />}
+
+                            <SectionSeparator />
+
+                            <Input {...props} label="Account Bank" options={banks} />
+                            <Input {...props} label="Account Number" />
+                            <Input {...props} label="Account Name" />
+                            {!loading &&
+                                <button type="submit"
+                                    onClick={() => console.log(values)}
+                                >
+                                    Submit
+                            </button>
                             }
-                        })
-                    }}
-                    onBlur={(e) => {
-                        if (e.target.value.includes(e.target.value.match(/^62/))) {
-                            setValidation({
-                                ...validation,
-                                tel: {
-                                    ...validation.tel,
-                                    isErr: false
-                                }
-                            })
-                        } else setValidation({
-                            ...validation,
-                            tel: {
-                                ...validation.tel,
-                                isErr: true
-                            }
-                        })
-                    }}
-                />
-                <SectionSeparator />
-
-                <Input label="Nationality" inputValue={selected.nationality} type="select"
-                    options={countries}
-                />
-                <Input label="Gender" type="radio" options={[
-                    { value: 'P', label: 'Perempuan' },
-                    { value: 'L', label: 'Laki-Laki' },
-                ]} inputValue={selected.gender} />
-                <Input label="Marital Status" type="select" options={[
-                    { value: 'single', label: 'Single' },
-                    { value: 'married', label: 'Married' },
-                    { value: 'divorce', label: 'Divorced' },
-                    { value: 'other', label: 'Other' },
-                ]} inputValue={selected.marital_status} />
-                <SectionSeparator />
-
-                <Input label="Address" type="textarea" inputValue={selected.address} />
-                <Input label="Province" type="select" options={provinces}
-                    inputValue={province ? province : selected.province} setInputValue={setProvince}
-                />
-                <Input label="City" type="select" options={cities}
-                    inputValue={city ? city : selected.city} setInputValue={setCity}
-                />
-                <Input label="District" type="select" options={districts}
-                    inputValue={district ? district : selected.district} setInputValue={setDistrict}
-                />
-                <SectionSeparator />
-
-                <Input label="Account Bank" type="select" options={banks} inputValue={selected.account_bank} />
-                <Input label="Account Number" inputValue={selected.account_no} />
-                <Input label="Account Name"
-                    inputValue={selected.account_name} />
-            </Form>
-        </Template>
+                        </Form>
+                )
+            }}
+        />
     )
 }
 

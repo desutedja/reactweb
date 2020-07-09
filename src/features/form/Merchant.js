@@ -1,61 +1,23 @@
 import React, { useState, useEffect } from "react";
+import { FiMapPin } from "react-icons/fi";
+import { useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import GoogleMapReact from "google-map-react";
 
 import Modal from "../../components/Modal";
 import SectionSeparator from "../../components/SectionSeparator";
-import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
 import {
   endpointAdmin,
   endpointMerchant,
   banks,
 } from "../../settings";
 import { createMerchant, editMerchant } from "../slices/merchant";
-import GoogleMapReact from "google-map-react";
-import { FiMapPin } from "react-icons/fi";
 import { get } from "../slice";
-import Template from "./components/Template";
+import Template from "./components/TemplateWithFormik";
 
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
-
-import TextInput from './input/Text';
-import MultiSelectInput from './input/MultiSelect';
-import RadioInput from './input/Radio';
-import FileInput from './input/File';
-
-const defaultRequiredError = 'This field is required.';
-
-const Text = Yup.string().required(defaultRequiredError);
-
-const TextOptional = Yup.string();
-
-const Phone = Yup.string()
-  .matches(/^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, "Phone number should not contain unnecesarry characters.")
-  .max(12, "Phone number must be less than 14.")
-  .min(9, "Phone number more than 11.")
-  .required(defaultRequiredError);
-
-const Email = Yup.string().email('Invalid email').required(defaultRequiredError);
-
-const merchantSchema = Yup.object().shape({
-  "name": Text,
-  "phone": Phone,
-  "type": Text,
-  "legal": Text,
-  "category": Text,
-  "status": Text,
-  "description": Text,
-  "in_building": TextOptional,
-  "lat": Text,
-  "long": Text,
-  "address": Text,
-  "pic_name": Text,
-  "pic_phone": Phone,
-  "pic_mail": Email,
-  "account_bank": Text,
-  "account_no": Text,
-  "account_name": Text,
-});
+import { Form } from 'formik';
+import { merchantSchema } from "./schemas";
+import Input from './input';
 
 const merchantPayload = {
   "name": "",
@@ -75,57 +37,10 @@ const merchantPayload = {
   "account_bank": "",
   "account_no": "",
   "account_name": "",
+
   "category_label": "",
   "in_building_label": "None",
   "account_bank_label": "",
-}
-
-function Input({ optional = false, ...props }) {
-  const {
-      label = "", actionlabels = {}, compact, type = "text", hidden, name
-  } = props;
-  const fixedName = name ? name : label.toLowerCase().replace(/ /g, '_');
-
-  const renderInput = type => {
-      switch (type) {
-          case 'multiselect': return <MultiSelectInput name={fixedName} {...props} />;
-          case 'radio': return <RadioInput name={fixedName} {...props} />;
-          case 'file': return <FileInput name={fixedName} {...props} />;
-          case 'textarea': return <TextInput as="textarea" name={fixedName} {...props} />;
-          case 'select':
-          default:
-              return <TextInput name={fixedName} {...props} />;
-      }
-  }
-
-  return (
-      <div className={"Input"
-          + (type === "textarea" ? " textarea" : "")
-          + (type === "select" ? " select" : "")
-          + (type === "multiselect" ? " multiselect" : "")
-          + (hidden ? " hidden" : "")
-      }>
-          {!compact && <>
-              <div style={{ display: 'flex' }}>
-                  <div style={{ display: 'flex' }}>
-                      <label className="Input-label" htmlFor={label}>
-                          {label}
-                      </label>
-                      {optional && <span style={{
-                          marginLeft: 4,
-                          color: 'grey',
-                      }}>(optional)</span>}
-                  </div>
-                  {Object.keys(actionlabels).map(action =>
-                      // eslint-disable-next-line jsx-a11y/anchor-is-valid
-                      <a key={action} style={{ margin: '4px' }}
-                          href="#" onClick={actionlabels[action]} >{action}</a>
-                  )}
-              </div>
-          </>}
-          {renderInput(type)}
-      </div>
-  )
 }
 
 function Component() {
@@ -162,139 +77,130 @@ function Component() {
   }, [dispatch]);
 
   return (
-    <Template>
-      <Formik
-        initialValues={selected.id ? {
-          ...selected,
-          "category_label": selected.category,
-          "in_building_label": selected.in_building,
-          "account_bank_label": selected.account_bank,
-        } : merchantPayload}
-        validationSchema={merchantSchema}
-        onSubmit={(values) => {
-          const data = { ...values, phone: '+62' + values.phone };
+    <Template
+      slice="merchant"
+      payload={selected.id ? {...merchantPayload, ...selected} : merchantPayload}
+      schema={merchantSchema}
+      formatValues={values => ({
+        ...values,
+        phone: '62' + values.phone,
+        pic_phone: '62' + values.pic_phone,
+      })}
+      edit={data => dispatch(editMerchant(data, history, selected.id))}
+      add={data => dispatch(createMerchant(data, history))}
+      renderChild={props => {
+        const { setFieldValue, values } = props;
+        // console.log(rest);
 
-          console.log(data);
-
-          selected.id ?
-            dispatch(editMerchant(data, history, selected.id))
-            :
-            dispatch(createMerchant(data, history));
-        }}
-      >
-        {props => {
-          const { setFieldValue, values } = props;
-          // console.log(rest);
-          return (
-            <Form className="Form">
-              <Modal isOpen={modal} toggle={() => {
-                setModal(false);
-              }} onClick={() => setModal(false)} okLabel={"Select"}>
-                <div style={{ height: '40rem', width: '100%' }}>
-                  <GoogleMapReact
-                    bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
-                    defaultCenter={{
-                      lat: -6.2107863,
-                      lng: 106.8137977,
-                    }}
-                    zoom={12}
-                    onClick={({ x, y, lat, lng, event }) => {
-                      setFieldValue('lat', lat);
-                      setFieldValue('long', lng);
-                      console.log(lat, lng);
-                    }}
-                    onChange={({ center }) => {
-                      setFieldValue('lat', center.lat);
-                      setFieldValue('long', center.lng);
-                      console.log(center.lat, center.lng);
-                    }}
-                  >
-                    <div style={{
-                      position: 'absolute',
-                      transform: 'translate(-50%, -50%)'
-                    }}>
-                      <FiMapPin size={40} color="dodgerblue" />
-                    </div>
-                  </GoogleMapReact>
-                </div>
-              </Modal>
-
-              <Input {...props} label="Name" />
-              <Input {...props} label="Phone" prefix="+62" />
-              <Input {...props} label="Type"
-                type="radio"
-                options={[
-                  { value: "goods", label: "Goods" },
-                  { value: "services", label: "Services" },
-                ]}
-              />
-              <Input {...props} label="Legal"
-                type="radio"
-                options={[
-                  { value: "individual", label: "Individu" },
-                  { value: "company", label: "Perusahaan" },
-                ]}
-              />
-              <Input {...props}
-                label="Category"
-                type="select"
-                options={categories}
-              />
-              <Input {...props} label="Status" type="radio"
-                options={[
-                  { value: "active", label: "Active" },
-                  { value: "inactive", label: "Inactive" },
-                ]}
-              />
-              <Input {...props} label="Description" type="textarea" />
-
-              <SectionSeparator />
-
-              <Input
-                {...props}
-                optional
-                label="Building"
-                type="select"
-                name="in_building"
-                options={inBuildings}
-                onChange={el => {
-                  console.log(el);
-                  setFieldValue('lat', el.lat);
-                  setFieldValue('long', el.long);
-                }}
-              />
-              {!values['in_building'] &&
-                <button type="button" onClick={() => setModal(true)}>
-                  Select Location
-                </button>
-              }
-              <Input {...props} label="Latitude" name="lat" />
-              <Input {...props} label="Longitude" name="long" />
-              <Input {...props} label="Address" type="textarea" />
-
-              <SectionSeparator />
-
-              <Input {...props} label="PIC Name" />
-              <Input {...props} label="PIC Phone" prefix="+62" />
-              <Input {...props} label="PIC Mail" />
-
-              <SectionSeparator />
-
-              <Input {...props} label="Bank Account" name="account_bank" options={banks} />
-              <Input {...props} label="Bank Account Number" name="account_no" />
-              <Input {...props} label="Bank Account Name" name="account_name" />
-              {!loading &&
-                <button type="submit"
-                  onClick={() => console.log(values)}
+        return (
+          <Form className="Form">
+            <Modal isOpen={modal} toggle={() => {
+              setModal(false);
+            }} onClick={() => setModal(false)} okLabel={"Select"}>
+              <div style={{ height: '40rem', width: '100%' }}>
+                <GoogleMapReact
+                  bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
+                  defaultCenter={{
+                    lat: -6.2107863,
+                    lng: 106.8137977,
+                  }}
+                  zoom={12}
+                  onClick={({ x, y, lat, lng, event }) => {
+                    setFieldValue('lat', lat);
+                    setFieldValue('long', lng);
+                    console.log(lat, lng);
+                  }}
+                  onChange={({ center }) => {
+                    setFieldValue('lat', center.lat);
+                    setFieldValue('long', center.lng);
+                    console.log(center.lat, center.lng);
+                  }}
                 >
-                  Submit
+                  <div style={{
+                    position: 'absolute',
+                    transform: 'translate(-50%, -50%)'
+                  }}>
+                    <FiMapPin size={40} color="dodgerblue" />
+                  </div>
+                </GoogleMapReact>
+              </div>
+            </Modal>
+
+            <Input {...props} label="Name" />
+            <Input {...props} label="Phone" prefix="+62" />
+            <Input {...props} label="Type"
+              type="radio"
+              options={[
+                { value: "goods", label: "Goods" },
+                { value: "services", label: "Services" },
+              ]}
+            />
+            <Input {...props} label="Legal"
+              type="radio"
+              options={[
+                { value: "individual", label: "Individu" },
+                { value: "company", label: "Perusahaan" },
+              ]}
+            />
+            <Input {...props}
+              label="Category"
+              type="select"
+              options={categories}
+            />
+            <Input {...props} label="Status" type="radio"
+              options={[
+                { value: "active", label: "Active" },
+                { value: "inactive", label: "Inactive" },
+              ]}
+            />
+            <Input {...props} label="Description" type="textarea" />
+
+            <SectionSeparator />
+
+            <Input
+              {...props}
+              optional
+              label="Building"
+              type="select"
+              name="in_building"
+              options={inBuildings}
+              onChange={el => {
+                console.log(el);
+                setFieldValue('lat', el.lat);
+                setFieldValue('long', el.long);
+              }}
+            />
+            {!values['in_building'] &&
+              <button type="button" onClick={() => setModal(true)}>
+                Select Location
                 </button>
-              }
-            </Form>
-          )
-        }}
-      </Formik>
-    </Template>
+            }
+            <Input {...props} label="Latitude" name="lat" />
+            <Input {...props} label="Longitude" name="long" />
+            <Input {...props} label="Address" type="textarea" />
+
+            <SectionSeparator />
+
+            <Input {...props} label="PIC Name" />
+            <Input {...props} label="PIC Phone" prefix="+62" />
+            <Input {...props} label="PIC Mail" />
+
+            <SectionSeparator />
+
+            <Input {...props} label="Bank Account" name="account_bank" options={banks} />
+            <Input {...props} label="Bank Account Number" name="account_no" />
+            <Input {...props} label="Bank Account Name" name="account_name" />
+            {!loading &&
+              <button type="submit"
+                onClick={() => console.log(values)}
+              >
+                Submit
+              </button>
+            }
+          </Form>
+        )
+      }}
+    />
   );
 }
 

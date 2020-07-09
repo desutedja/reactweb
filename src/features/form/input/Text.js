@@ -35,6 +35,7 @@ function TextInput({
                         handleChange(e);
                         // onChange();
                     }}
+                    autoComplete={options ? "off" : ""}
                     {...rest}
                 />
                 {suffix && <div className="Input-suffix">
