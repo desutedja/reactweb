@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import Input from "../../components/Input";
 import Modal from "../../components/Modal";
 import SectionSeparator from "../../components/SectionSeparator";
 import { useSelector, useDispatch } from "react-redux";
@@ -19,6 +18,11 @@ import Template from "./components/Template";
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 
+import TextInput from './input/Text';
+import MultiSelectInput from './input/MultiSelect';
+import RadioInput from './input/Radio';
+import FileInput from './input/File';
+
 const defaultRequiredError = 'This field is required.';
 
 const Text = Yup.string().required(defaultRequiredError);
@@ -27,8 +31,8 @@ const TextOptional = Yup.string();
 
 const Phone = Yup.string()
   .matches(/^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, "Phone number should not contain unnecesarry characters.")
-  .max(14, "Phone number must be less than 14.")
-  .min(11, "Phone number more than 11.")
+  .max(12, "Phone number must be less than 14.")
+  .min(9, "Phone number more than 11.")
   .required(defaultRequiredError);
 
 const Email = Yup.string().email('Invalid email').required(defaultRequiredError);
@@ -74,6 +78,54 @@ const merchantPayload = {
   "category_label": "",
   "in_building_label": "None",
   "account_bank_label": "",
+}
+
+function Input({ optional = false, ...props }) {
+  const {
+      label = "", actionlabels = {}, compact, type = "text", hidden, name
+  } = props;
+  const fixedName = name ? name : label.toLowerCase().replace(/ /g, '_');
+
+  const renderInput = type => {
+      switch (type) {
+          case 'multiselect': return <MultiSelectInput name={fixedName} {...props} />;
+          case 'radio': return <RadioInput name={fixedName} {...props} />;
+          case 'file': return <FileInput name={fixedName} {...props} />;
+          case 'textarea': return <TextInput as="textarea" name={fixedName} {...props} />;
+          case 'select':
+          default:
+              return <TextInput name={fixedName} {...props} />;
+      }
+  }
+
+  return (
+      <div className={"Input"
+          + (type === "textarea" ? " textarea" : "")
+          + (type === "select" ? " select" : "")
+          + (type === "multiselect" ? " multiselect" : "")
+          + (hidden ? " hidden" : "")
+      }>
+          {!compact && <>
+              <div style={{ display: 'flex' }}>
+                  <div style={{ display: 'flex' }}>
+                      <label className="Input-label" htmlFor={label}>
+                          {label}
+                      </label>
+                      {optional && <span style={{
+                          marginLeft: 4,
+                          color: 'grey',
+                      }}>(optional)</span>}
+                  </div>
+                  {Object.keys(actionlabels).map(action =>
+                      // eslint-disable-next-line jsx-a11y/anchor-is-valid
+                      <a key={action} style={{ margin: '4px' }}
+                          href="#" onClick={actionlabels[action]} >{action}</a>
+                  )}
+              </div>
+          </>}
+          {renderInput(type)}
+      </div>
+  )
 }
 
 function Component() {

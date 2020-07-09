@@ -46,8 +46,6 @@ function Component({
         inputValue && setTimePick(inputValue)
     }, [inputValue])
 
-
-
     const renderInput = type => {
         switch (type) {
             case 'multiselect':
@@ -319,7 +317,7 @@ function Component({
     }
 
     return (options.length !== 0 || type !== 'select') && (
-        <div className={"row w-100 m-0" + (hidden ? " hidden " : "") + className && className}>
+        <div className={"row w-100 m-0" + (hidden ? " hidden " : "") + (className && className)}>
             <div className="col px-0">
                 <div className="row">
                     <div className={(fullwidth ? "FullInput" : "Input")

@@ -1,7 +1,7 @@
 import React, {  } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 
-import Add from '../add/Billing';
+import Add from '../form/Billing';
 import Details from '../details/Billing';
 import DetailsItem from '../details/BillingItem';
 import Settlement from '../settlement/Billing';

@@ -2,9 +2,9 @@ import React, { } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
 import List from '../list/Resident';
-import Add from '../add/Resident';
+import Add from '../form/Resident';
 import Edit from '../edit/Resident';
-import AddSub from '../add/ResidentSub';
+import AddSub from '../form/ResidentSub';
 import Details from '../details/Resident';
 
 function Component() {

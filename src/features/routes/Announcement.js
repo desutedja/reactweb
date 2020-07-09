@@ -1,7 +1,7 @@
 import React, {  } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
-import Add from '../add/Announcement';
+import Add from '../form/Announcement';
 import Details from '../details/Announcement';
 
 import List from '../list/Announcement';

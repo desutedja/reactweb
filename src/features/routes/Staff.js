@@ -1,7 +1,7 @@
 import React, { } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
-import Add from '../add/Staff';
+import Add from '../form/Staff';
 import List from '../list/Staff';
 import Details from '../details/Staff';
 
