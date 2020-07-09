@@ -1,18 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import {
-    // FiSearch,
-    FiCheck,
-    // FiFile
-} from 'react-icons/fi';
+import { FiCheck } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
-import { getTransactionDetails, getTransactionSettlement } from '../slices/transaction';
+import { getTransactionDetails, getTransactionSettlement, refresh } from '../slices/transaction';
 import { trxStatusColor } from '../../settings';
 import { toMoney, dateTimeFormatterCell, toSentenceCase } from '../../utils';
 import { endpointTransaction } from '../../settings';
@@ -30,7 +26,6 @@ const columns = [
     { Header: 'Amount', accessor: row => toMoney(row.total_price) },
     {
         Header: 'Settlement Status', accessor: row => {
-            console.log(row)
             return (
                 row.payment_settled === 1 ?
                     <Pill color={trxStatusColor['paid']}>
@@ -79,9 +74,9 @@ function Component() {
     }, [dispatch]);
 
     useEffect(() => {
-        // console.log(settlement)
+        console.log(selected)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [selected])
 
     return (
         <>
@@ -89,18 +84,17 @@ function Component() {
                 title="Settlement Selection"
                 okLabel="Flag as Settled"
                 onClick={() => {
-                    const currentDate = new Date().toISOString()
+                    const currentDate = new Date().toISOString().split('.')[0] + '+7:00'
                     const trx_codes = selected.map(el => el.trx_code)
                     const dataSettle = {
                         trx_codes,
                         amount: getSum(selected),
                         settled_on: currentDate
                     }
-                    // console.log(dataSettle)
-
                     dispatch(post(endpointTransaction + '/admin/transaction/settlement/create', dataSettle,  res => {
-                        console.log(res)
                         setSettleModal(false);
+                        dispatch(refresh());
+                        console.log(res)
                     }))
                 }}
             >

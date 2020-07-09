@@ -134,9 +134,12 @@ export const getTransactionSettlement = (
 }
 
 export const getTransactionDisbursement = (
-   pageIndex, pageSize,
+  pageIndex, pageSize,
   search = '', type, merchant = '', courier = ''
 ) => dispatch => {
+  // console.log(merchant)
+  // if (merchant) return
+
   dispatch(startAsync());
 
   dispatch(get(endpointTransaction + '/admin/disbursement/' + type +

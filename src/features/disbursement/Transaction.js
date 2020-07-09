@@ -1,42 +1,49 @@
 import React, { useCallback, useEffect, useState, useMemo } from 'react';
 // import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import Button from '../../components/Button';
+import Modal from '../../components/Modal';
+import Input from '../../components/Input';
+import MoonLoader from "react-spinners/MoonLoader";
+import { FiCheck } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
+import Tab from '../../components/Tab';
 
 import Table from '../../components/Table';
+import { getTransactionDisbursement, refresh } from '../slices/transaction';
 import {
-    // getTransactionDetails,
-    // setSelected,
-    // getTransactionSettlement,
-    getTransactionDisbursement } from '../slices/transaction';
-import {
-    toMoney,
-    // toSentenceCase,
-    // dateTimeFormatter
+    toMoney
 } from '../../utils';
+import { trxStatusColor, endpointManagement } from '../../settings';
+import { toSentenceCase, dateTimeFormatterCell } from '../../utils';
+import Pill from '../../components/Pill';
 import { endpointTransaction, endpointMerchant } from '../../settings';
-import { get } from '../slice';
+import { get, post } from '../slice';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
 function Component() {
     const [info, setInfo] = useState({});
     const [active, setActive] = useState(0);
+    const [selected, setSelected] = useState([]);
+    const [loadingMerchant, setLoadingMerchant] = useState(false)
+    const [loadingCourier, setLoadingCourier] = useState(false)
+    const [transferCode, setTransferCode] = useState('');
     const [
         type,
-        // setType
+        setType
     ] = useState('merchant');
-
+    const [disburseModal, setDisburseModal] = useState(false);
     const [
         merchant,
-        // setMerchant
+        setMerchant
     ] = useState('');
     const [merchants, setMerchants] = useState([]);
     const [
         courier,
-        // setCourier
+        setCourier
     ] = useState('');
-    // const [couriers, setCouriers] = useState([]);
+    const [couriers, setCouriers] = useState([]);
 
     
     const { loading, refreshToggle, disbursement } = useSelector(state => state.transaction);
@@ -45,20 +52,64 @@ function Component() {
     // let history = useHistory();
     // let { url } = useRouteMatch();
 
-    const columns = useMemo(() => [
-        { Header: 'ID', accessor: 'id' },
-        { Header: 'Trx Code', accessor: 'trx_code' },
-        {
-            Header: 'Amount', accessor: row => type === 'merchant' ?
-                toMoney(row.total_selling_price) : toMoney(row.assignee_fee)
-        },
-        {
-            Header: 'Disbursement Date', accessor: row => type === 'merchant' ?
-                row.disbursement_date ? row.disbursement_date : '-'
-                :
-                row.courier_disbursement_date ? row.courier_disbursement_date : '-'
-        },
-    ], [type]);
+    const getSum = items => {
+        return items.reduce((sum, el) => {
+            return type === 'merchant' ? sum + el.total_selling_price : sum + el.assignee_fee;
+        }, 0)
+    }
+
+    const columns = useMemo(() => {
+        if (type === 'merchant') return [
+            { Header: 'ID', accessor: 'id' },
+            { Header: 'Trx Code', accessor: 'trx_code' },
+            {
+                Header: 'Amount', accessor: row => type === 'merchant' ?
+                    toMoney(row.total_selling_price) : toMoney(row.assignee_fee)
+            },    {
+                Header: 'Disbursement Status', accessor: row => {
+                    // console.log(row)
+                    return (
+                        row.disbursement_date !== null ?
+                            <Pill color={trxStatusColor['paid']}>
+                                {toSentenceCase('disbursed')}
+                            </Pill> : <Pill color={trxStatusColor['requested']}>
+                                {toSentenceCase('undisbursed')}
+                            </Pill>
+                        )
+                }
+            },
+            {
+                Header: 'Disbursement Date', accessor: row => type === 'merchant' ?
+                    row.disbursement_date ? dateTimeFormatterCell(row.disbursement_date) : '-'
+                    :
+                    row.disbursement_date ? dateTimeFormatterCell(row.disbursement_date) : '-'
+            },
+        ]
+        else return [
+            { Header: 'ID', accessor: 'id' },
+            { Header: 'Ref Code', accessor: 'ref_code' },
+            {
+                Header: 'Assignee Fee', accessor: row => toMoney(row.assignee_fee)
+            },
+            {
+                Header: 'Completed On', accessor: row => dateTimeFormatterCell(row.completed_on)
+            },
+            {
+                Header: 'Disbursement Status', accessor: row => row.disbursement_date !== null ?
+                    <Pill color={trxStatusColor['paid']}>
+                        {toSentenceCase('disbursed')}
+                    </Pill> : <Pill color={trxStatusColor['requested']}>
+                        {toSentenceCase('undisbursed')}
+                    </Pill>
+            },
+            {
+                Header: 'Disbursement Date', accessor: row => type === 'merchant' ?
+                    row.disbursement_date ? dateTimeFormatterCell(row.disbursement_date) : '-'
+                    :
+                    row.disbursement_date ? dateTimeFormatterCell(row.disbursement_date) : '-'
+            },
+        ]
+    }, [type]);
 
     useEffect(() => {
         dispatch(get(endpointTransaction + '/admin/transaction/summary',  res => {
@@ -67,13 +118,132 @@ function Component() {
     }, [dispatch]);
 
     useEffect(() => {
-        dispatch(get(endpointMerchant + '/admin/list?filter=disbursed',  res => {
+        setLoadingMerchant(true);
+        type === 'courier ' && setLoadingCourier(true);
+        type === 'merchant' && dispatch(get(endpointMerchant + '/admin/list?filter=',  res => {
             setMerchants(res.data.data.items);
-        }));
-    }, [dispatch]);
+            setMerchant(res.data.data.items[active].id);
+            setLoadingMerchant(false);
+        }))
+        type === 'courier' && dispatch(get(endpointManagement + '/admin/staff/list?staff_role=courier', res => {
+            setCouriers(res.data.data.items);
+            setCourier(res.data.data.items[active].id);
+            setLoadingCourier(false);
+        }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, type]);
+
+    useEffect(() => {
+        console.log(selected)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [merchant, selected])
 
     return (
         <>
+            <Modal
+                isOpen={disburseModal} toggle={() => setDisburseModal(!disburseModal)}
+                title="Disbursement Selection"
+                okLabel="Flag as Disbursed"
+                onClick={() => {
+                    const currentDate = new Date().toISOString()
+                    const trx_codes = selected.map(el => el.trx_code)
+                    const ref_codes = selected.map(el => el.ref_code)
+                    const dataDisburse = type === 'merchant' ? {
+                        trx_codes,
+                        merchant_id: Number(merchant),
+                        amount: getSum(selected),
+                        disbursed_on: currentDate,
+                        disbursed_code: transferCode
+                    } : {
+                        trx_codes: ref_codes,
+                        courier_id: Number(courier),
+                        amount: getSum(selected),
+                        disbursed_on: currentDate,
+                        disbursed_code: transferCode
+                    }
+
+                    type === 'merchant' ? dispatch(post(endpointTransaction + '/admin/disbursement/merchant/create', dataDisburse,  res => {
+                        setDisburseModal(false);
+                        dispatch(refresh());
+                    })) : dispatch(post(endpointTransaction + '/admin/disbursement/courier/create', dataDisburse,  res => {
+                        setDisburseModal(false);
+                        dispatch(refresh());
+                    }));
+                }}
+            >
+                <div style={{
+                    display: 'flex',
+                    marginBottom: 32,
+                    position: 'relative'
+                }}>
+                    <Input compact
+                        type="text"
+                        label="Transfer Code"
+                        inputValue={transferCode}
+                        setInputValue={setTransferCode}
+                        noMargin={true}
+                        // onClick={e => {
+                        //     console.log(e.target)
+                        // }}
+                    />
+                </div>
+                <div style={{
+                    minHeight: 300,
+                }}>
+                    {type === 'merchant' && selected.map(el => {
+                        // console.log(el)
+                        return (
+                            <div key={el.id} style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                                padding: 12,
+                                marginBottom: 8,
+                                borderRadius: 6,
+                                backgroundColor: 'rgb(215, 215, 215)',
+                            }}>
+                                <div>
+                                    <div>Trx Code</div>
+                                    {el.trx_code}
+                                </div>
+                                <div style={{
+                                    fontWeight: 'bold'
+                                }}>
+                                    {toMoney(el.total_selling_price)}
+                                </div>
+                            </div>
+                        )}
+                    )}
+                    {type === 'courier' && selected.map(el => {
+                        return (
+                            <div key={el.id} style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                                padding: 12,
+                                marginBottom: 8,
+                                borderRadius: 6,
+                                backgroundColor: 'rgb(215, 215, 215)',
+                            }}>
+                                <div>
+                                    <div>Ref Code</div>
+                                    {el.ref_code}
+                                </div>
+                                <div style={{
+                                    fontWeight: 'bold'
+                                }}>
+                                    {toMoney(el.assignee_fee)}
+                                </div>
+                            </div>
+                        )}
+                    )}
+                </div>
+                <div style={{
+                    marginTop: 16,
+                }}>
+                    <h5>Total {toMoney(getSum(selected))}</h5>
+                </div>
+            </Modal>
             <div className="Container">
                 <div style={{
                     display: 'flex',
@@ -136,26 +306,75 @@ function Component() {
                 display: 'flex',
                 marginTop: 16,
             }}>
-                {merchants.length > 0 && <div className="Container" style={{
+                <div className="Container" style={{
                     flexDirection: 'column',
                     marginRight: 16,
                 }}>
-                    <h5 style={{
-                        marginBottom: 16,
-                    }}>Select Merchant</h5>
-                    {merchants.map((el, index) => <div
-                        key={index}
-                        className={index === active ? "GroupActive" : "Group"}
-                        onClick={() => setActive(index)}
-                    >
-                        {el.management_name + ' - ' + el.building_name}
-                    </div>)}
-                </div>}
+                    <Tab
+                        labels={["Merchant", "Courier"]}
+                        setTab={setType}
+                        tabActive={setActive}
+                        contents={[
+                            <> 
+                                <h5 style={{
+                                    marginBottom: 16,
+                                }}>Select Merchant</h5>
+                                {loadingMerchant && <div className="w-100 py-5 d-flex justify-content-center">
+                                    <MoonLoader
+                                        size={34}
+                                        color={"grey"}
+                                        loading={loadingMerchant}
+                                    />
+                                </div>}
+                                {!loadingMerchant && merchants.map((el, index) => <div
+                                    key={index}
+                                    className={index === active ? "GroupActive" : "Group"}
+                                    onClick={() => {
+                                        setMerchant(el.id.toString());
+                                        setCourier('');
+                                        setActive(index)
+                                    }}
+                                >
+                                    {el.name}
+                                </div>)}
+                            </>,
+                            <>
+                                <h5 style={{
+                                    marginBottom: 16,
+                                }}>Select Courier</h5>
+                                {loadingCourier && <div className="w-100 py-5 d-flex justify-content-center">
+                                    <MoonLoader
+                                        size={34}
+                                        color={"grey"}
+                                        loading={loadingCourier}
+                                    />
+                                </div>}
+                                {!loadingCourier && couriers.map((el, index) => <div
+                                    key={index}
+                                    className={index === active ? "GroupActive" : "Group"}
+                                    onClick={() => {
+                                        setCourier(el.id.toString());
+                                        setMerchant('');
+                                        setActive(index)
+                                    }}
+                                >
+                                    {el.firstname} {el.lastname}
+                                </div>)}
+                            </>,
+                        ]}
+                        activeTab={0}
+                    />
+                    
+                    
+                </div>
                 <div className="Container" style={{
                     flex: 3,
                     flexDirection: 'column',
                 }}>
-                    <Table 
+                    <Table
+                        onSelection={(selectedRows) => {
+                            setSelected(selectedRows);
+                        }}
                         noContainer={true}
                         totalItems={disbursement.total_items}
                         columns={columns}
@@ -166,9 +385,21 @@ function Component() {
                             dispatch(getTransactionDisbursement( pageIndex, pageSize, search,
                                 type, merchant, courier));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, ])}
+                        }, [dispatch, refreshToggle, merchant, courier])}
                         filters={[]}
                         actions={[]}
+                        renderActions={(selectedRowIds, page) => {
+                            return ([
+                                <Button
+                                    disabled={Object.keys(selectedRowIds).length === 0}
+                                    onClick={() => {
+                                        setDisburseModal(true);
+                                    }}
+                                    icon={<FiCheck />}
+                                    label="Disburse Selection"
+                                />
+                            ])
+                        }}
                     />
                 </div>
             </div>

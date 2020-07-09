@@ -65,6 +65,7 @@ export const months = [
 ];
 
 export function dateTimeFormatterCell(serverDateTime, whenzero='-') {
+    if (!serverDateTime) return;
     if (serverDateTime === "0001-01-01T00:00:00Z") 
         return whenzero;
 
