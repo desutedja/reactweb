@@ -140,6 +140,7 @@ function Component() {
                             </div>
                             <div className="Container">
                                 <Table
+                                    noContainer={true}
                                     columns={columns}
                                     data={data}
                                     loading={dataLoading}
