@@ -11,7 +11,7 @@ function Component({ children, onSubmit, loading, isModal=false, showSubmit = tr
     return (
         <>
         { isModal || noContainer ? null : <SectionSeparator /> }
-        <div className={isModal || noContainer ? "" : "box-self"}>
+        <div className={isModal || noContainer ? "" : "Container"}>
             <Form innerRef={formRef} className={isModal || noContainer ? "" : "Form"} onSubmit={async e => {
                 e.preventDefault();
 
