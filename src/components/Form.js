@@ -36,8 +36,8 @@ function Component({ children, onSubmit, loading, isModal=false, showSubmit = tr
                     }, {});
                     
                     
-                console.log(dataObject)
-                // onSubmit(dataObject);
+                // console.log(dataObject)
+                onSubmit(dataObject);
             }}>
                 {children}
                 {!isModal && <SectionSeparator className="mt-4" />}
