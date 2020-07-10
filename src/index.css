@@ -141,7 +141,7 @@ textarea {
   border-color: silver;
   border-style: solid;
   padding: 6px;
-  margin-top: 3px;
+  /* margin-top: 3px; why? */
   background-color: #f3f3fa;
 }
 

@@ -18,7 +18,7 @@ const MultiSelectItem = ({ value, onClickDelete }) => {
 
 function Component({
     label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
-    type = "text", rows = 2, options = [], fullwidth = false, className,
+    type = "text", rows = 2, options = [], fullwidth = false, inputClassName='',
     inputValue, setInputValue, icon, onClick, onFocus, onBlur, cancelValue,
     hidden, max, min, disabled, isValidate = false, validationMsg, accept = "image/*",
     addons,
@@ -317,7 +317,7 @@ function Component({
     }
 
     return (options.length !== 0 || type !== 'select') && (
-        <div className={"row w-100 m-0 " + (hidden ? " hidden " : "") + (className ? " ${className}" : "")}>
+        <div className={"row w-100 m-0 " + (hidden ? " hidden " : "") + (inputClassName ? " ${inputClassName}" : "")}>
             <div className="col px-0">
                 <div className="row">
                     <div className={(fullwidth ? "FullInput" : "Input")

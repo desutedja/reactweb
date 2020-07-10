@@ -216,7 +216,7 @@ function Component() {
                     <Input onFocus={() => setEmailRegistered(false)} label="Email" placeholder={"Input Resident Email"} type="email" compact inputValue={email}
                         setInputValue={setEmail} />
                     {emailRegistered && <span className="validation-error">Email is already registered</span>}
-                    {exist && <Input label="Check" type="button" compact className="px-3 m-0 mt-3"
+                    {exist && <Input label="Check" type="button" compact inputClassName="px-3 m-0 mt-3"
                         onClick={() => {
                             dispatch(post(endpointResident + '/management/resident/check', {
                                 email: email
