@@ -11,7 +11,7 @@ function Component() {
 
     return (
         <div style={{
-            marginRight: 16,
+            marginRight: 32,
         }}>
             <Alert color={info.color} isOpen={!!info.message} toggle={() => dispatch(setInfo({}))}>
                 {info.message}

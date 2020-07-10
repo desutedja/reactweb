@@ -17,7 +17,7 @@ const MultiSelectItem = ({ value, onClickDelete }) => {
 
 
 function Component({
-    label = "", actionlabels = {}, placeholder = null, compact, name, optional = false,
+    label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
     type = "text", rows = 2, options = [], fullwidth = false, className,
     inputValue, setInputValue, icon, onClick, onFocus, onBlur, cancelValue,
     hidden, max, min, disabled, isValidate = false, validationMsg, accept = "image/*",

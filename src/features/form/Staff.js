@@ -146,7 +146,6 @@ function Component() {
                                 options={[
                                     { value: 'electricity', label: 'Electricity' },
                                     { value: 'plumbing', label: 'Plumbing' },
-                                    { value: 'billing', label: 'Billing' },
                                     { value: 'others', label: 'Others' },
                                 ]} />}
                             <Input {...props} label="Building Management"

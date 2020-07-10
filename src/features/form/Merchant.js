@@ -13,8 +13,8 @@ import {
 } from "../../settings";
 import { createMerchant, editMerchant } from "../slices/merchant";
 import { get } from "../slice";
-import Template from "./components/TemplateWithFormik";
 
+import Template from "./components/TemplateWithFormik";
 import { Form } from 'formik';
 import { merchantSchema } from "./schemas";
 import Input from './input';
@@ -138,8 +138,8 @@ function Component() {
             <Input {...props} label="Legal"
               type="radio"
               options={[
-                { value: "individual", label: "Individu" },
-                { value: "company", label: "Perusahaan" },
+                { value: "individual", label: "Individual" },
+                { value: "company", label: "Company" },
               ]}
             />
             <Input {...props}

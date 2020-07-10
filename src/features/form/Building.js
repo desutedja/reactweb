@@ -4,32 +4,50 @@ import { useHistory } from 'react-router-dom';
 import GoogleMapReact from 'google-map-react';
 import { FiMapPin } from 'react-icons/fi';
 
-import Input from '../../components/Input';
-import Form from '../../components/Form';
 import SectionSeparator from '../../components/SectionSeparator';
 import Modal from '../../components/Modal';
 import { createBuilding, editBuilding } from '../slices/building';
 import { endpointResident } from '../../settings';
 import { get } from '../slice';
-import Template from './components/Template';
+
+import Template from './components/TemplateWithFormik';
+import Input from './input';
+import { Form } from 'formik';
+import { buildingSchema } from './schemas';
+
+const buildingPayload = {
+    name: "",
+    legal_name: "",
+    code_name: "",
+    logo: "",
+    website: "",
+    owner_name: "",
+    phone: "",
+    email: "",
+    max_sections: "",
+    max_floors: "",
+    max_units: "",
+    lat: "",
+    long: "",
+    address: "",
+    zipcode: "",
+    province: "",
+    city: "",
+    district: "",
+    province_label: "",
+    city_label: "",
+    district_label: "",
+}
 
 function Component() {
     const [modal, setModal] = useState(false);
-    const [lat, setLat] = useState('');
-    const [lng, setLng] = useState('');
-
-    const [district, setDistrict] = useState("");
-    const [districtName, setDistrictName] = useState("");
     const [districts, setDistricts] = useState([]);
 
     const [city, setCity] = useState("");
-    const [cityName, setCityName] = useState("");
     const [cities, setCities] = useState([]);
 
     const [province, setProvince] = useState("");
-    const [provinceName, setProvinceName] = useState("");
     const [provinces, setProvinces] = useState([]);
-
 
     const { loading, selected } = useSelector(state => state.building);
 
@@ -48,8 +66,6 @@ function Component() {
     }, []);
 
     useEffect(() => {
-        province && setProvinceName(provinces.find(el => el.value + '' === province).label);
-
         setCity("");
         (province || selected.province) && dispatch(get(endpointResident + '/geo/province/' + (province ? province : selected.province),
 
@@ -62,9 +78,6 @@ function Component() {
     }, [province, selected.province]);
 
     useEffect(() => {
-        city && setCityName(cities.find(el => el.value + '' === city).label);
-
-        setDistrict("");
         (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city ? city : selected.city),
 
             res => {
@@ -75,108 +88,86 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [city, selected.city]);
 
-    useEffect(() => {
-        district && setDistrictName(districts.find(el => el.value + '' === district).label);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [district,]);
-
     return (
-        <Template>
-            <Modal isOpen={modal} toggle={() => {
-                setLat('');
-                setLng('');
-                setModal(false);
-            }} onClick={() => setModal(false)} okLabel={"select"} >
-                <div style={{ height: '40rem', width: '100%' }}>
-                    <GoogleMapReact
-                        bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
-                        defaultCenter={{
-                            lat: -6.210786300000009,
-                            lng: 106.81379770000001,
-                        }}
-                        zoom={12}
-                        onClick={({ x, y, lat, lng, event }) => {
-                            setLat(lat);
-                            setLng(lng);
-                            console.log(lat, lng);
-                        }}
-                        onChange={({ center }) => {
-                            setLat(center.lat);
-                            setLng(center.lng);
-                            console.log(center.lat, center.lng);
-                        }}
-                    >
-                        <div style={{
-                            position: 'absolute',
-                            transform: 'translate(-50%, -50%)'
-                        }}>
-                            <FiMapPin size={40} color="dodgerblue" />
-                        </div>
-                    </GoogleMapReact>
-                </div>
-                <div className="MapForm">
-                    <Input label='Latitude' compact inputValue={lat} setInputValue={setLat} />
-                    <Input label='Longitude' compact inputValue={lng} setInputValue={setLng} />
-                </div>
-            </Modal>
-            <Form
-                onSubmit={data => {
-                    // console.log(data)
-                    selected.id ?
-                        dispatch(editBuilding(data, history, selected.id))
-                        :
-                        dispatch(createBuilding(data, history))
-                }
-                }
-                loading={loading}
-            >
-                <Input label="Building Name" name="name" inputValue={selected.name} />
-                <Input label="Legal Name" inputValue={selected.legal_name} />
-                <Input label="Code Name" inputValue={selected.code_name} />
-                <Input label="Max Units" inputValue={selected.max_units} />
-                <Input label="Max Floors" inputValue={selected.max_floors} />
-                <Input label="Max Sections" inputValue={selected.max_sections} />
-                <Input label="Website" type="url" inputValue={selected.website} />
-                <Input label="Logo" type="file" inputValue={selected.logo} />
-                <SectionSeparator />
-                <Input label="Owner Name" inputValue={selected.owner_name} />
-                <Input label="Phone" type="tel" inputValue={selected.phone} />
-                <Input label="Email" type="email" inputValue={selected.email} />
-                <SectionSeparator />
-                <Input label="Select Location" type="button"
-                    onClick={() => {
-                        setLat(-6.2107863);
-                        setLng(106.8137977);
-                        setModal(true);
-                    }}
-                />
-                <Input label="Latitude" name="lat" inputValue={lat ? lat : selected.lat} setInputValue={setLat} />
-                <Input label="Longitude" name="long" inputValue={lng ? lng : selected.long} setInputValue={setLng} />
-                <Input label="Address" type="textarea" inputValue={selected.address} />
-                <Input label="Province" type="select" options={provinces}
-                    inputValue={province ? province : selected.province} setInputValue={setProvince}
-                />
-                <Input label="City" type="select" options={cities}
-                    inputValue={city ? city : selected.city} setInputValue={setCity}
-                />
-                <Input label="District" type="select" options={districts}
-                    inputValue={district ? district : selected.district} setInputValue={setDistrict}
-                />
-                <Input label="Province Name" hidden
-                    inputValue={provinceName ? provinceName :
-                        selected.province_name}
-                />
-                <Input label="City Name" hidden
-                    inputValue={cityName ? cityName :
-                        selected.city_name}
-                />
-                <Input label="District Name" hidden
-                    inputValue={districtName ? districtName :
-                        selected.district_name}
-                />
-                <Input label="ZIP Code" type="number" name="zipcode" inputValue={selected.zipcode} />
-            </Form>
-        </Template>
+        <Template
+            slice="building"
+            payload={buildingPayload}
+            schema={buildingSchema}
+            formatValues={values => ({
+                ...values,
+                phone: '62' + values.phone,
+            })}
+            edit={data => dispatch(editBuilding(data, history, selected.id))}
+            add={data => dispatch(createBuilding(data, history))}
+            renderChild={props => {
+                const { setFieldValue, values } = props;
+
+                return (
+                    <Form className="Form">
+                        <Modal isOpen={modal} toggle={() => {
+                            setModal(false);
+                        }} onClick={() => setModal(false)} okLabel={"Select"}>
+                            <div style={{ height: '40rem', width: '100%' }}>
+                                <GoogleMapReact
+                                    bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
+                                    defaultCenter={{
+                                        lat: -6.2107863,
+                                        lng: 106.8137977,
+                                    }}
+                                    zoom={12}
+                                    onClick={({ x, y, lat, lng, event }) => {
+                                        setFieldValue('lat', lat);
+                                        setFieldValue('long', lng);
+                                        console.log(lat, lng);
+                                    }}
+                                    onChange={({ center }) => {
+                                        setFieldValue('lat', center.lat);
+                                        setFieldValue('long', center.lng);
+                                        console.log(center.lat, center.lng);
+                                    }}
+                                >
+                                    <div style={{
+                                        position: 'absolute',
+                                        transform: 'translate(-50%, -50%)'
+                                    }}>
+                                        <FiMapPin size={40} color="dodgerblue" />
+                                    </div>
+                                </GoogleMapReact>
+                            </div>
+                        </Modal>
+
+                        <Input {...props} label="Building Name" name="name" />
+                        <Input {...props} label="Legal Name" />
+                        <Input {...props} label="Code Name" />
+                        <Input {...props} label="Max Units" />
+                        <Input {...props} label="Max Floors" />
+                        <Input {...props} label="Max Sections" />
+                        <Input {...props} label="Website" />
+                        <Input {...props} label="Logo" type="file" />
+                        <SectionSeparator />
+                        <Input {...props} label="Owner Name" />
+                        <Input {...props} label="Phone" prefix="+62" />
+                        <Input {...props} label="Email" />
+                        <SectionSeparator />
+                        <button onClick={() => setModal(true)}>Select Location</button>
+                        <Input {...props} label="Latitude" name="lat" />
+                        <Input {...props} label="Longitude" name="long" />
+                        <Input {...props} label="Address" type="textarea" />
+                        <Input {...props} label="Province" options={provinces}
+                            onChange={el => setProvince(el.value)}
+                        />
+                        {values.province && <Input {...props} label="City" options={cities}
+                            onChange={el => setCity(el.value)}
+                        />}
+                        {values.city && <Input {...props} label="District"
+                            options={districts} />}
+                        <Input {...props} label="ZIP Code" name="zipcode" />
+                        <button>Submit</button>
+                    </Form>
+                )
+            }
+            }
+        />
     )
 }
 

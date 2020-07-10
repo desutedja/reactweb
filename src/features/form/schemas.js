@@ -14,6 +14,32 @@ const Phone = Yup.string()
 
 const Email = Yup.string().email('Invalid email').required(defaultRequiredError);
 
+const URL = Yup.string().matches(/\./, 'Invalid URL').required(defaultRequiredError);
+
+const URLStrict = Yup.string().url('Invalid URL').required(defaultRequiredError);
+
+
+export const buildingSchema = Yup.object().shape({
+    name: Text,
+    legal_name: Text,
+    code_name: Text,
+    logo: URLStrict,
+    website: URL,
+    owner_name: Text,
+    phone: Phone,
+    email: Email,
+    max_sections: Text,
+    max_floors: Text,
+    max_units: Text,
+    lat: Text,
+    long: Text,
+    address: Text,
+    province: Text,
+    city: Text,
+    district: Text,
+    zipcode: Text,
+})
+
 export const merchantSchema = Yup.object().shape({
     "name": Text,
     "phone": Phone,

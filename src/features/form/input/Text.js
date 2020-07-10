@@ -9,7 +9,7 @@ function TextInput({
     const [isFocused, setFocus] = useState(false);
 
     const { setFieldValue, ...restInput } = rest;
-    const { errors, touched, handleChange, values } = restInput;
+    const { errors, touched, values } = restInput;
     const fixedName = name + (options ? '_label' : '');
 
     //this repopulate the label field when editing, provided BE doesnt send them
@@ -41,10 +41,6 @@ function TextInput({
                         borderBottomRightRadius: suffix && 0,
                     }}
                     placeholder={label}
-                    onChange={e => {
-                        handleChange(e);
-                        // onChange();
-                    }}
                     autoComplete={options ? "off" : ""}
                     {...restInput}
                 />

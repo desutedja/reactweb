@@ -54,6 +54,7 @@
   margin-left: 8px;
   /* min-width: calc(100% / 2 - 16px); */
   /* max-width: calc(100% / 2 - 16px); */
+  position: relative;
 }
 
 .Form input {
@@ -70,7 +71,7 @@
 .Input-container {
   position: relative;
   display: flex;
-  align-items: center;
+  /* align-items: center; */
 }
 
 .Input-container select {

@@ -13,7 +13,7 @@ function Input({ optional = false, ...props }) {
 
     //extract non input props to reduce warnings, there should be other ways lol but at this point, whatevs
     const { isSubmitting, isValidating, submitCount, initialValues, initialErrors, initialTouched,
-        initialStatus, handleBlur, handleChange, handleReset, handleSubmit, resetForm,
+        initialStatus, handleBlur, handleReset, handleSubmit, resetForm,
         setErrors, setFormikState, setFieldTouched, setFieldError, setStatus,
         setSubmitting, setTouched, setValues, submitForm, validateForm, validateField,
         isValid, unregisterField, registerField, getFieldProps, getFieldMeta, getFieldHelpers,
