@@ -5,7 +5,7 @@ import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 import MoonLoader from "react-spinners/MoonLoader";
-import { FiCheck } from 'react-icons/fi';
+import { FiCheck, FiSearch } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import Tab from '../../components/Tab';
 
@@ -29,6 +29,7 @@ function Component() {
     const [loadingMerchant, setLoadingMerchant] = useState(false)
     const [loadingCourier, setLoadingCourier] = useState(false)
     const [transferCode, setTransferCode] = useState('');
+    const [searchValue, setSearchValue] = useState('');
     const [
         type,
         setType
@@ -119,7 +120,7 @@ function Component() {
 
     useEffect(() => {
         setLoadingMerchant(true);
-        type === 'courier ' && setLoadingCourier(true);
+        setLoadingCourier(true);
         type === 'merchant' && dispatch(get(endpointMerchant + '/admin/list?filter=',  res => {
             setMerchants(res.data.data.items);
             setMerchant(res.data.data.items[active].id);
@@ -162,10 +163,11 @@ function Component() {
                         disbursed_code: transferCode
                     }
 
-                    type === 'merchant' ? dispatch(post(endpointTransaction + '/admin/disbursement/merchant/create', dataDisburse,  res => {
+                    if (type === 'merchant') dispatch(post(endpointTransaction + '/admin/disbursement/merchant/create', dataDisburse,  res => {
                         setDisburseModal(false);
                         dispatch(refresh());
-                    })) : dispatch(post(endpointTransaction + '/admin/disbursement/courier/create', dataDisburse,  res => {
+                    }))
+                    if (type === 'courier') dispatch(post(endpointTransaction + '/admin/disbursement/courier/create', dataDisburse,  res => {
                         setDisburseModal(false);
                         dispatch(refresh());
                     }));
@@ -191,7 +193,6 @@ function Component() {
                     minHeight: 300,
                 }}>
                     {type === 'merchant' && selected.map(el => {
-                        // console.log(el)
                         return (
                             <div key={el.id} style={{
                                 display: 'flex',
@@ -319,6 +320,7 @@ function Component() {
                                 <h5 style={{
                                     marginBottom: 16,
                                 }}>Select Merchant</h5>
+                                <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
                                 {loadingMerchant && <div className="w-100 py-5 d-flex justify-content-center">
                                     <MoonLoader
                                         size={34}
@@ -342,6 +344,7 @@ function Component() {
                                 <h5 style={{
                                     marginBottom: 16,
                                 }}>Select Courier</h5>
+                                <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
                                 {loadingCourier && <div className="w-100 py-5 d-flex justify-content-center">
                                     <MoonLoader
                                         size={34}
@@ -408,3 +411,11 @@ function Component() {
 }
 
 export default Component;
+
+
+const InputSearch = (props) => (
+    <div className="search-input mb-3">
+        <label htmlFor="search"><FiSearch /></label>
+        <input {...props} id="search" type="text" placeholder="Search"/>
+    </div>
+)
