@@ -168,71 +168,73 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                    <Table totalItems={settlement.total_items}
-                        onSelection={(selectedRows) => {
-                            setSelected(selectedRows);
-                        }}
-                        columns={columns}
-                        data={settlement.items}
-                        loading={loading}
-                        pageCount={settlement.total_pages}
-                        fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getBillingSettlement( pageIndex, pageSize, search,
-                                building));
-                            // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle,  building])}
-                        filters={[
-                            {
-                                hidex: building === "",
-                                label: <p>Building: {building ? buildingName : "All"}</p>,
-                                delete: () => setBuilding(''),
-                                component: (toggleModal) =>
-                                    <>
-                                        <Input
-                                            label="Search"
-                                            compact
-                                            icon={<FiSearch />}
-                                            inputValue={search}
-                                            setInputValue={setSearch}
-                                        />
-                                        <Filter
-                                            data={buildings}
-                                            onClick={(el) => {
-                                                setBuilding(el.value);
-                                                setBuildingName(el.label);
-                                                toggleModal(false);
-                                                setSearch("");
-                                            }}
-                                            onClickAll={() => {
-                                                setBuilding("");
-                                                setBuildingName("");
-                                                toggleModal(false);
-                                                setSearch("");
-                                            }}
-                                        />
-                                    </>
-                            },
-                        ]}
-                        actions={[]}
-                        renderActions={(selectedRowIds, page) => {
-                            // console.log(selectedRowIds, page);
-                            return ([
-                                <Button
-                                    disabled={Object.keys(selectedRowIds).length === 0}
-                                    onClick={() => {
-                                        setSettleModal(true);
-                                    }}
-                                    icon={<FiCheck />}
-                                    label="Settle"
-                                />,
-                                <Button
-                                    onClick={() => { }}
-                                    icon={<FiFile />}
-                                    label="Upload Settlement"
-                                />,
-                            ])
-                        }}
-                    />
+                    <div className="Container">
+                        <Table totalItems={settlement.total_items}
+                            onSelection={(selectedRows) => {
+                                setSelected(selectedRows);
+                            }}
+                            columns={columns}
+                            data={settlement.items}
+                            loading={loading}
+                            pageCount={settlement.total_pages}
+                            fetchData={useCallback((pageIndex, pageSize, search) => {
+                                dispatch(getBillingSettlement( pageIndex, pageSize, search,
+                                    building));
+                                // eslint-disable-next-line react-hooks/exhaustive-deps
+                            }, [dispatch, refreshToggle,  building])}
+                            filters={[
+                                {
+                                    hidex: building === "",
+                                    label: <p>Building: {building ? buildingName : "All"}</p>,
+                                    delete: () => setBuilding(''),
+                                    component: (toggleModal) =>
+                                        <>
+                                            <Input
+                                                label="Search"
+                                                compact
+                                                icon={<FiSearch />}
+                                                inputValue={search}
+                                                setInputValue={setSearch}
+                                            />
+                                            <Filter
+                                                data={buildings}
+                                                onClick={(el) => {
+                                                    setBuilding(el.value);
+                                                    setBuildingName(el.label);
+                                                    toggleModal(false);
+                                                    setSearch("");
+                                                }}
+                                                onClickAll={() => {
+                                                    setBuilding("");
+                                                    setBuildingName("");
+                                                    toggleModal(false);
+                                                    setSearch("");
+                                                }}
+                                            />
+                                        </>
+                                },
+                            ]}
+                            actions={[]}
+                            renderActions={(selectedRowIds, page) => {
+                                // console.log(selectedRowIds, page);
+                                return ([
+                                    <Button
+                                        disabled={Object.keys(selectedRowIds).length === 0}
+                                        onClick={() => {
+                                            setSettleModal(true);
+                                        }}
+                                        icon={<FiCheck />}
+                                        label="Settle"
+                                    />,
+                                    <Button
+                                        onClick={() => { }}
+                                        icon={<FiFile />}
+                                        label="Upload Settlement"
+                                    />,
+                                ])
+                            }}
+                        />
+                    </div>
                 </Route>
             </Switch>
         </div>

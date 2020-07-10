@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch, FiPlus } from 'react-icons/fi';
 
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
@@ -116,7 +116,6 @@ function Component() {
     }, [dispatch, search]);
 
     useEffect(() => {
-        console.log(selectedRow);
 
         let role = selectedRow.task_type === 'security' ? 'security' :
             selectedRow.task_type === 'service' ? 'technician' : 'courier';
@@ -168,20 +167,20 @@ function Component() {
                     display: 'flex',
                     marginTop: 16,
                 }}>
-                        <Button label="No" secondary
-                            onClick={() => setAssign(false)}
-                        />
-                        <Button label="Yes"
-                            onClick={() => {
-                                setStaff({});
-                                setAssign(false);
-                                dispatch(reassignTask({
-                                    "task_id": selectedRow.id,
-                                    "assignee_id": staff.value,
-                                }));
-                            }}
-                        />
-                    </div>}
+                    <Button label="No" secondary
+                        onClick={() => setAssign(false)}
+                    />
+                    <Button label="Yes"
+                        onClick={() => {
+                            setStaff({});
+                            setAssign(false);
+                            dispatch(reassignTask({
+                                "task_id": selectedRow.id,
+                                "assignee_id": staff.value,
+                            }));
+                        }}
+                    />
+                </div>}
             </Modal>
             <Template
                 columns={columns}
@@ -274,6 +273,14 @@ function Component() {
                                 }}
                             />
                     },
+                ]}
+                actions={[
+                    <Button key="Add Task" label="Add Task" icon={<FiPlus />}
+                        onClick={() => {
+                            dispatch(setSelected({}));
+                            history.push(url + "/add")
+                        }}
+                    />
                 ]}
                 onClickDetails={row => dispatch(getTaskDetails(row, history, url))}
                 onClickResolve={row => {

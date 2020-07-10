@@ -150,7 +150,7 @@ function Component() {
                     <h5>Total {toMoney(getSum(selected))}</h5>
                 </div>
             </Modal>
-            <div className="box-self d-flex mb-4">
+            <div className="Container d-flex mb-4">
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -236,56 +236,58 @@ function Component() {
                     </div>
                 </div>
             </div>
-            <Table
-                totalItems={settlement.total_items}
-                onSelection={(selectedRows) => {
-                    setSelected(selectedRows);
-                }}
-                columns={columns}
-                data={settlement.items}
-                loading={loading}
-                pageCount={settlement.total_pages}
-                fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getTransactionSettlement( pageIndex, pageSize, search, statusSettlement.value));
-                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle, statusSettlement])}
-                onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}
-                filters={[
-                    {
-                        hidex: statusSettlement === "",
-                        label: <p>{statusSettlement ? "Status: " + statusSettlement.label : "Status: All"}</p>,
-                        delete: () => { setStatusSettlement(""); },
-                        component: (toggleModal) =>
-                            <>
-                                <Filter
-                                    data={status_settlement}
-                                    onClick={(el) => {
-                                        setStatusSettlement(el);
-                                        toggleModal(false);
-                                    }}
-                                    onClickAll={() => {
-                                        setStatusSettlement("");
-                                        toggleModal(false);
-                                    }}
-                                />
-                            </>
-                    },
-                ]}
-                actions={[]}
-                renderActions={(selectedRowIds, page) => {
-                    // console.log(selectedRowIds);
-                    return ([
-                        <Button
-                            disabled={Object.keys(selectedRowIds).length === 0}
-                            onClick={() => {
-                                setSettleModal(true);
-                            }}
-                            icon={<FiCheck />}
-                            label="Settle Selection"
-                        />
-                    ])
-                }}
-            />
+            <div className="Container">
+                <Table
+                    totalItems={settlement.total_items}
+                    onSelection={(selectedRows) => {
+                        setSelected(selectedRows);
+                    }}
+                    columns={columns}
+                    data={settlement.items}
+                    loading={loading}
+                    pageCount={settlement.total_pages}
+                    fetchData={useCallback((pageIndex, pageSize, search) => {
+                        dispatch(getTransactionSettlement( pageIndex, pageSize, search, statusSettlement.value));
+                        // eslint-disable-next-line react-hooks/exhaustive-deps
+                    }, [dispatch, refreshToggle, statusSettlement])}
+                    onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}
+                    filters={[
+                        {
+                            hidex: statusSettlement === "",
+                            label: <p>{statusSettlement ? "Status: " + statusSettlement.label : "Status: All"}</p>,
+                            delete: () => { setStatusSettlement(""); },
+                            component: (toggleModal) =>
+                                <>
+                                    <Filter
+                                        data={status_settlement}
+                                        onClick={(el) => {
+                                            setStatusSettlement(el);
+                                            toggleModal(false);
+                                        }}
+                                        onClickAll={() => {
+                                            setStatusSettlement("");
+                                            toggleModal(false);
+                                        }}
+                                    />
+                                </>
+                        },
+                    ]}
+                    actions={[]}
+                    renderActions={(selectedRowIds, page) => {
+                        // console.log(selectedRowIds);
+                        return ([
+                            <Button
+                                disabled={Object.keys(selectedRowIds).length === 0}
+                                onClick={() => {
+                                    setSettleModal(true);
+                                }}
+                                icon={<FiCheck />}
+                                label="Settle Selection"
+                            />
+                        ])
+                    }}
+                />
+            </div>
         </>
     )
 }
