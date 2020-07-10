@@ -14,6 +14,7 @@ import Resident from '../../components/cells/Resident';
 import Staff from '../../components/cells/Staff';
 // import Building from '../../components/cells/Building';
 
+import { useSelector } from 'react-redux';
 import { toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import { getTask, getTaskDetails, resolveTask, reassignTask, setSelected } from '../slices/task';
@@ -99,6 +100,8 @@ function Component() {
     const [prio, setPrio] = useState('');
     const [prioLabel, setPrioLabel] = useState('');
 
+    const { role } = useSelector(state => state.auth)
+
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
@@ -137,6 +140,10 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, search, selectedRow]);
 
+    useEffect(() => {
+        console.log(role)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
     return (
         <>
             <Modal isOpen={resolve} toggle={() => setResolve(false)} disableFooter disableHeader >
@@ -275,7 +282,7 @@ function Component() {
                     },
                 ]}
                 actions={[
-                    <Button key="Add Task" label="Add Task" icon={<FiPlus />}
+                    role === 'bm' && <Button key="Add Task" label="Add Task" icon={<FiPlus />}
                         onClick={() => {
                             dispatch(setSelected({}));
                             history.push(url + "/add")
