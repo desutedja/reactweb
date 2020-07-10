@@ -3,7 +3,6 @@ import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
 import List from '../list/Resident';
 import Add from '../form/Resident';
-import AddSub from '../form/ResidentSub';
 import Details from '../details/Resident';
 
 function Component() {
@@ -20,9 +19,6 @@ function Component() {
                 </Route>
                 <Route path={`${path}/edit`}>
                     <Add />
-                </Route>
-                <Route path={`${path}/add-subaccount`}>
-                    <AddSub />
                 </Route>
                 <Route path={`${path}/:id`}>
                     <Details />

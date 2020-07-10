@@ -1,78 +1,69 @@
 import React, { useState } from 'react';
 
-import Input from '../../components/Input';
-import Form from '../../components/Form';
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { createManagement, editManagement } from '../slices/management';
 import { useHistory } from 'react-router-dom';
-import Template from './components/Template';
+
+import Template from "./components/TemplateWithFormik";
+import { Form } from 'formik';
+import Input from './input';
+import { managementSchema } from './schemas';
+
+const managementPayload = {
+    name: "",
+    name_legal: "",
+    logo: "",
+    email: "",
+    phone: "",
+    website: "",
+    pic_email: "",
+    pic_name: "",
+    pic_phone: "",
+}
 
 function Component() {
-    
     const { loading, selected } = useSelector(state => state.management);
-    const [validation, setValidation] = useState({
-        tel: {
-            value: '',
-            isErr: false
-        }
-    })
 
     let dispatch = useDispatch();
     let history = useHistory();
 
     return (
-        <Template>
-            <Form
-                onSubmit={data => selected.id ?
-                    dispatch(editManagement( data, history, selected.id))
-                    :
-                    dispatch(createManagement( data, history))}
-                loading={loading}
-            >
-                <Input label="Name" inputValue={selected.name} />
-                <Input label="Legal Name" name="name_legal" inputValue={selected.name_legal} />
-                <Input label="Phone" type="tel" placeholder="e.g 6281xxxxxxx"
-                    inputValue={selected.phone || validation.tel.value}
-                    isValidate={validation.tel.isErr}
-                    validationMsg="The phone number must begin 62" onFocus={(e) => {
-                        setValidation({
-                            ...validation,
-                            tel: {
-                                ...validation.tel,
-                                value: '62'
-                            }
-                        })
-                        console.log(validation.tel)
-                    }}
-                    onBlur={(e) => {
-                        if (e.target.value.includes(e.target.value.match(/^62/))) {
-                            setValidation({
-                                ...validation,
-                                tel: {
-                                    ...validation.tel,
-                                    isErr: false
-                                }
-                            })
-                        } else setValidation({
-                            ...validation,
-                            tel: {
-                                ...validation.tel,
-                                isErr: true
-                            }
-                        })
-                    }}
-                />
-                <Input label="Email" type="email" inputValue={selected.email} />
-                <Input label="Website" type="url" inputValue={selected.website} />
-                <SectionSeparator />
-                <Input label="Logo" type="file" inputValue={selected.logo} />
-                <SectionSeparator />
-                <Input label="PIC Name" inputValue={selected.pic_name} />
-                <Input label="PIC Phone" type="tel" inputValue={selected.pic_phone} />
-                <Input label="PIC Email" type="email" inputValue={selected.pic_email} />
-            </Form>
-        </Template>
+        <Template
+            slice="management"
+            payload={selected.id ? {
+                ...managementPayload, ...selected,
+                phone: selected.phone.slice(2),
+                pic_phone: selected.pic_phone.slice(2),
+            } : managementPayload}
+            schema={managementSchema}
+            formatValues={values => ({
+                ...values,
+                phone: '62' + values.phone,
+                pic_phone: '62' + values.pic_phone,
+            })}
+            edit={data => dispatch(editManagement(data, history, selected.id))}
+            add={data => dispatch(createManagement(data, history))}
+            renderChild={props => {
+                return (
+                    <Form className="Form">
+                        <Input {...props} label="Name" />
+                        <Input {...props} label="Legal Name" name="name_legal" />
+                        <Input {...props} label="Phone" prefix="+62"
+                        />
+                        <Input {...props} label="Email" />
+                        <Input {...props} label="Website" />
+                        <SectionSeparator />
+                        <Input {...props} label="Logo" type="file" />
+                        <SectionSeparator />
+                        <Input {...props} label="PIC Name" />
+                        <Input {...props} label="PIC Phone" prefix="+62" />
+                        <Input {...props} label="PIC Email" />
+                        <button>Submit</button>
+                    </Form>
+                )
+            }}
+        />
     )
 }
 

@@ -109,7 +109,9 @@ function Component() {
     return (
         <Template
             slice="staff"
-            payload={selected.id ? {...staffPayload, ...selected} : staffPayload}
+            payload={selected.id ? {...staffPayload, ...selected,
+                phone: selected.phone.slice(2),
+            } : staffPayload}
             schema={staffSchema}
             formatValues={values => ({
                 ...values,

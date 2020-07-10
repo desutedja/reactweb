@@ -91,11 +91,18 @@ function Component() {
     return (
         <Template
             slice="building"
-            payload={buildingPayload}
+            payload={selected.id ? {
+                ...buildingPayload, ...selected,
+                phone: selected.phone.slice(2),
+            } : buildingPayload}
             schema={buildingSchema}
             formatValues={values => ({
                 ...values,
                 phone: '62' + values.phone,
+                max_sections: parseInt(values.max_sections, 10),
+                max_floors: parseInt(values.max_floors, 10),
+                max_units: parseInt(values.max_units, 10),
+                zipcode: parseInt(values.zipcode),
             })}
             edit={data => dispatch(editBuilding(data, history, selected.id))}
             add={data => dispatch(createBuilding(data, history))}
