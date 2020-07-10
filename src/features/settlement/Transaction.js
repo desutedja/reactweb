@@ -23,7 +23,7 @@ const status_settlement = [
 const columns = [
     { Header: 'ID', accessor: 'id' },
     { Header: 'Trx Code', accessor: 'trx_code' },
-    { Header: 'Amount', accessor: row => toMoney(row.total_price) },
+    { Header: 'Amount', accessor: row => toMoney(row.payment_amount - row.payment_charge) },
     {
         Header: 'Settlement Status', accessor: row => {
             return (
