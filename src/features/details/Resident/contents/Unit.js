@@ -42,12 +42,14 @@ function Component({ id }) {
     const [subAccount, setSubAccount] = useState('');
     const [ownershipStatus, setOwnershipStatus] = useState('');
 
+    const [mainOwner, setMainOwner] = useState('');
+
     const [search, setSearch] = useState('');
 
     const [selectedBuilding, setSelectedBuilding] = useState({});
     const [buildings, setBuildings] = useState([]);
 
-    const [selectedUnit, setSelectedUnit] = useState({});
+    const [selectedUnit, setSelectedUnit] = useState('');
     const [units, setUnits] = useState([]);
 
     const [
@@ -68,6 +70,15 @@ function Component({ id }) {
         dispatch(getResidentUnit(pageIndex, pageSize, search, id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, refreshToggle, id])
+
+    useEffect(() => {
+        addUnitStep === 3 && selectedUnit !== '' && dispatch(get(endpointResident + '/management/resident/get_main_owner/' + selectedUnit.value.id, 
+                   res => {
+                       if (res.data.data.resident && res.data.data.resident.id !== 0) {
+                           setMainOwner(res.data.data.resident);
+                       }
+                   }))
+    }, [addUnitStep, selectedUnit, dispatch]);
 
     useEffect(() => {
         addSubAccount  && addSubAccountStep === 1 && (search.length >= 3) && 
@@ -248,7 +259,7 @@ function Component({ id }) {
                 cancelLabel={"Back"}
                 onClick={addUnitStep === 3 ? submitFunction : addUnitBackFunction}
                 onClickSecondary={addUnitBackFunction}
-                disablePrimary={addUnitStep !== 3}
+                disablePrimary={addUnitStep !== 3 || mainOwner}
                 toggle={() => setAddUnit(false)}
             >
                 {addUnitStep === 1 && <>
@@ -270,7 +281,7 @@ function Component({ id }) {
                     />
                 </>}
                 {addUnitStep === 2 && <>
-                    <Input label="Building:" fullwidth type="button" inputValue={selectedBuilding.label} onClick={() => { }} />
+                    <Input label="Selected Building" fullwidth type="button" inputValue={selectedBuilding.label} onClick={() => { }} />
                     <SectionSeparator />
                     <Input label="Search Unit Number"
                         compact
@@ -295,18 +306,19 @@ function Component({ id }) {
                 </>}
                 {addUnitStep === 3 && <>
                     <form>
-                        <Input fullwidth label="Building:" type="button" inputValue={selectedBuilding.label} onClick={() => {
+                        <Input fullwidth label="Selected Building" type="button" inputValue={selectedBuilding.label} onClick={() => {
 
                         }} />
-                        <Input fullwidth label="Unit Number: "type="button" inputValue={
+                        <Input fullwidth label="Selected Unit Number" type="button" inputValue={
                             "Room " +
                             selectedUnit.value.number + " - " +
                             toSentenceCase(selectedUnit.value.section_type) + " " +
                             selectedUnit.value.section_name + " "
                         } onClick={() => {
-
+                            
                         }} />
                         <SectionSeparator />
+                        {!mainOwner ?
                         <Input fullwidth label="Status" type="select"
                             inputValue={status}
                             setInputValue={setStatus}
@@ -314,7 +326,14 @@ function Component({ id }) {
                                 { value: 'own', label: 'Own' },
                                 { value: 'rent', label: 'Rent' },
                             ]}
-                        />
+                        /> : mainOwner.id == id ?
+                        <p>This resident is already the owner of this unit.</p> :
+                        <>
+                        <p>This unit already has main owner, click below to get to the main owner page : </p>
+                        <div onClick={() => {setAddUnitStep(1); setAddUnit(false)} } style={{ display: 'flex', justifyContent: 'space-between' }} >
+                            <Resident id={mainOwner.id}  onClickPath={removeLastFromPath(path)} />
+                        </div>
+                        </>}
                     </form>
                 </>}
             </Modal>
@@ -326,7 +345,6 @@ function Component({ id }) {
                     el.level === 'main' ? ({ 
                         expandable: true, 
                         subComponent: SubAccountList, 
-                        expand: selectedUnit ? selectedUnit.unit_id === expanded : undefined ,
                         ...el
                     }) : el
                 )}
