@@ -96,7 +96,7 @@ function Component({ role, menu }) {
     }
 
     return (
-        <div>
+        <>
             {notif.title && <Toast className="Toast">
                 <ToastHeader>
                     {notif.title}
@@ -194,7 +194,9 @@ function Component({ role, menu }) {
                     </div>
                 </div>
             </div>
-            <Row>
+            <Row style={{
+                height: '100vh',
+            }}>
                 <div className="Menu shadow scroller-y">
                     <div className={menuWide ? "Logo-container" : "Logo-container-small"}
                         onClick={() => history.push('/' + role)}
@@ -246,7 +248,7 @@ function Component({ role, menu }) {
                         </Fragment>
                     )}
                 </div>
-                <div className={(menuWide ? "Content" : "Content-wide") + " scroller-y"}>
+                <div className={(menuWide ? "Content" : "Content-wide")}>
                     <Info />
                     <Switch>
                         <Redirect exact from={"/" + role} to={"/" + role + menu[0].route} />
@@ -259,7 +261,7 @@ function Component({ role, menu }) {
                     </Switch>
                 </div>
             </Row>
-        </div>
+        </>
     )
 }
 

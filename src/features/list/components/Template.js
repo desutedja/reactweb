@@ -23,7 +23,7 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [], a
     return (
         <>
             <Breadcrumb />
-            <div>
+            <div className="Container">
                 <Table
                     totalItems={items.length}
                     columns={columns}

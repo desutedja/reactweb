@@ -17,7 +17,7 @@ function RadioInput(props) {
                             value={el.value}
                             defaultChecked={values[name] === el.value}
                         />
-                        <label className="form-check-label m-0 ml-2" for={el.label}>
+                        <label className="form-check-label m-0 ml-2" htmlFor={el.label}>
                             {el.label}
                         </label>
                     </div>

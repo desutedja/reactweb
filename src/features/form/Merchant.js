@@ -144,7 +144,6 @@ function Component() {
             />
             <Input {...props}
               label="Category"
-              type="select"
               options={categories}
             />
             <Input {...props} label="Status" type="radio"
@@ -161,7 +160,6 @@ function Component() {
               {...props}
               optional
               label="Building"
-              type="select"
               name="in_building"
               options={inBuildings}
               onChange={el => {

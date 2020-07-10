@@ -8,12 +8,13 @@ function TextInput({
 }) {
     const [isFocused, setFocus] = useState(false);
 
-    const { errors, touched, setFieldValue, handleChange, values } = rest;
+    const { setFieldValue, ...restInput } = rest;
+    const { errors, touched, handleChange, values } = restInput;
     const fixedName = name + (options ? '_label' : '');
 
     //this repopulate the label field when editing, provided BE doesnt send them
     useEffect(() => {
-        options && !values[fixedName] && 
+        options && !values[fixedName] && values[name] &&
         // console.log(fixedName, values[name], options.find(el => el.value == values[name])?.label)
         setFieldValue(fixedName, 
             // eslint-disable-next-line eqeqeq
@@ -45,7 +46,7 @@ function TextInput({
                         // onChange();
                     }}
                     autoComplete={options ? "off" : ""}
-                    {...rest}
+                    {...restInput}
                 />
                 {suffix && <div className="Input-suffix">
                     {suffix}

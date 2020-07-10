@@ -132,7 +132,7 @@ function Component({
     }, [page, selectedRowIds]);
 
     return (
-        <div className={noContainer ? 'Table' : 'Table box-self'}>
+        <div className="Table">
             <Modal
                 disableFooter={true}
                 disableHeader={true}

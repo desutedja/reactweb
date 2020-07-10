@@ -5,7 +5,7 @@ import { toSentenceCase } from '../../../utils';
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 
-function Template({ slice, payload, schema, renderChild = () => { }, formatValues = () => {},
+function Template({ slice, payload, schema, renderChild = () => { }, formatValues = () => { },
     edit = () => { }, add = () => { } }) {
 
     let { path } = useRouteMatch();
@@ -13,15 +13,15 @@ function Template({ slice, payload, schema, renderChild = () => { }, formatValue
     const { selected } = useSelector((state) => state[slice]);
 
     return (
-        <div className="row">
-            <div className="col">
-                <Breadcrumb title={toSentenceCase(path.split('/').reverse()[0])} />
+        <>
+            <Breadcrumb title={toSentenceCase(path.split('/').reverse()[0])} />
+            <div className="Container">
                 <Formik
                     initialValues={payload}
                     validationSchema={schema}
                     onSubmit={(values) => {
                         const data = formatValues(values);
-                         
+
                         selected.id ?
                             edit(data)
                             :
@@ -31,7 +31,7 @@ function Template({ slice, payload, schema, renderChild = () => { }, formatValue
                     {props => renderChild(props)}
                 </Formik>
             </div>
-        </div>
+        </>
     )
 }
 

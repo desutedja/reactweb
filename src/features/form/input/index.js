@@ -11,15 +11,23 @@ function Input({ optional = false, ...props }) {
     } = props;
     const fixedName = name ? name : label.toLowerCase().replace(/ /g, '_');
 
+    //extract non input props to reduce warnings, there should be other ways lol but at this point, whatevs
+    const { isSubmitting, isValidating, submitCount, initialValues, initialErrors, initialTouched,
+        initialStatus, handleBlur, handleChange, handleReset, handleSubmit, resetForm,
+        setErrors, setFormikState, setFieldTouched, setFieldError, setStatus,
+        setSubmitting, setTouched, setValues, submitForm, validateForm, validateField,
+        isValid, unregisterField, registerField, getFieldProps, getFieldMeta, getFieldHelpers,
+        validateOnBlur, validateOnChange, validateOnMount, dirty, ...inputProps } = props;
+
     const renderInput = type => {
         switch (type) {
-            case 'multiselect': return <MultiSelectInput name={fixedName} {...props} />;
-            case 'radio': return <RadioInput name={fixedName} {...props} />;
-            case 'file': return <FileInput name={fixedName} {...props} />;
-            case 'textarea': return <TextInput as="textarea" name={fixedName} {...props} />;
+            case 'multiselect': return <MultiSelectInput name={fixedName} {...inputProps} />;
+            case 'radio': return <RadioInput name={fixedName} {...inputProps} />;
+            case 'file': return <FileInput name={fixedName} {...inputProps} />;
+            case 'textarea': return <TextInput as="textarea" name={fixedName} {...inputProps} />;
             case 'select':
             default:
-                return <TextInput name={fixedName} {...props} />;
+                return <TextInput name={fixedName} {...inputProps} />;
         }
     }
 
