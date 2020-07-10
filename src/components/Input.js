@@ -277,7 +277,7 @@ function Component({
                                     setInputValue && setInputValue('http://' + e.target.value.replace('http://', ''));
                                 } if (type === 'tel') {
                                     const { value } = e.target;
-                                    const regex = /^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/;
+                                    const regex = /^[0-9]*$/;
                                     if (regex.test(value.toString())) {
                                         !onClick && setValue(e.target.value);
                                         setInputValue && setInputValue(e.target.value);

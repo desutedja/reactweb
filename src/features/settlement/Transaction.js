@@ -84,7 +84,7 @@ function Component() {
                 title="Settlement Selection"
                 okLabel="Flag as Settled"
                 onClick={() => {
-                    const currentDate = new Date().toISOString().split('.')[0] + '+7:00'
+                    const currentDate = new Date().toISOString();
                     const trx_codes = selected.map(el => el.trx_code)
                     const dataSettle = {
                         trx_codes,
@@ -94,7 +94,6 @@ function Component() {
                     dispatch(post(endpointTransaction + '/admin/transaction/settlement/create', dataSettle,  res => {
                         setSettleModal(false);
                         dispatch(refresh());
-                        console.log(res)
                     }))
                 }}
             >
@@ -120,7 +119,6 @@ function Component() {
                     minHeight: 300,
                 }}>
                     {selected.map(el => {
-                        // console.log(el)
                         return (
                             <div key={el.id} style={{
                                 display: 'flex',

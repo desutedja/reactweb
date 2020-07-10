@@ -216,7 +216,7 @@ function Component() {
                     <Input onFocus={() => setEmailRegistered(false)} label="Email" placeholder={"Input Resident Email"} type="email" compact inputValue={email}
                         setInputValue={setEmail} />
                     {emailRegistered && <span className="validation-error">Email is already registered</span>}
-                    {exist && <Input label="Check" type="button" compact className="mt-3"
+                    {exist && <Input label="Check" type="button" compact className="px-3 m-0 mt-3"
                         onClick={() => {
                             dispatch(post(endpointResident + '/management/resident/check', {
                                 email: email
@@ -250,7 +250,6 @@ function Component() {
                                     value: '62'
                                 }
                             })
-                            console.log(validation.tel)
                         }}
                         onBlur={(e) => {
                             if (e.target.value.includes(e.target.value.match(/^62/))) {

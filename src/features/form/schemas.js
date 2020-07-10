@@ -3,8 +3,10 @@ import * as Yup from 'yup';
 const defaultRequiredError = 'This field is required.';
 
 const Text = Yup.string().required(defaultRequiredError);
-
 const TextOptional = Yup.string();
+
+const Number = Yup.number("This value shoud be number.")
+    .positive("This value should be positive.").required(defaultRequiredError);
 
 const Phone = Yup.string()
     .matches(/^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, "Phone number should not contain unnecesarry characters.")
@@ -15,9 +17,19 @@ const Phone = Yup.string()
 const Email = Yup.string().email('Invalid email').required(defaultRequiredError);
 
 const URL = Yup.string().matches(/\./, 'Invalid URL').required(defaultRequiredError);
-
 const URLStrict = Yup.string().url('Invalid URL').required(defaultRequiredError);
 
+export const managementSchema = Yup.object().shape({
+    name: Text,
+    name_legal: Text,
+    logo: URLStrict,
+    email: Email,
+    phone: Phone,
+    website: URL,
+    pic_email: Email,
+    pic_name: Text,
+    pic_phone: Phone,
+})
 
 export const buildingSchema = Yup.object().shape({
     name: Text,
@@ -28,9 +40,9 @@ export const buildingSchema = Yup.object().shape({
     owner_name: Text,
     phone: Phone,
     email: Email,
-    max_sections: Text,
-    max_floors: Text,
-    max_units: Text,
+    max_sections: Number,
+    max_floors: Number,
+    max_units: Number,
     lat: Text,
     long: Text,
     address: Text,
