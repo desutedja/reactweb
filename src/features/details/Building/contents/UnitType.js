@@ -13,6 +13,7 @@ import { getBuildingUnitType, getBuildingSection, editBuildingUnitType,
 
 const unitTypes = [
     { label: 'Studio', value: 'studio' },
+    { label: 'Penthouse', value: 'penthouse' },
     { label: '1BR', value: '1BR' },
     { label: '2BR', value: '2BR' },
     { label: '3BR', value: '3BR' },
@@ -23,13 +24,16 @@ const unitTypes = [
 const columnsUnitType = [
     { Header: "ID", accessor: "id" },
     {
-        Header: "Type Name", accessor: row => row.unit_type.length > 3 ? toSentenceCase(row.unit_type)
+        Header: "Type", accessor: row => row.unit_type.length > 3 ? toSentenceCase(row.unit_type)
             : row.unit_type.toUpperCase()
     },
     {
         Header: "Size", accessor: row => <div>
             {row.unit_size + ' m'}<sup>2</sup>
         </div>
+    },
+    {
+        Header: "Trivial Name", accessor: row => row.trivial ? toSentenceCase(row.trivial) : '-'
     },
 ]
 
@@ -40,6 +44,7 @@ function Component() {
 
     const [typeName, setTypeName] = useState('');
     const [typeSize, setTypeSize] = useState('');
+    const [typeTrivial, setTypeTrivial] = useState('');
 
     const [utNameFilter, setUtNameFilter] = useState({});
 
@@ -63,22 +68,25 @@ function Component() {
                             "building_id": selected.id,
                             "unit_type": typeName ? typeName : selectedRow.unit_type,
                             "unit_size": parseFloat(typeSize ? typeSize : selectedRow.unit_size),
+                            "trivial": typeTrivial ? typeTrivial : selectedRow.trivial,
                         }, selectedRow.id))
                         :
                         dispatch(createBuildingUnitType( {
                             "building_id": selected.id,
                             "unit_type": typeName ? typeName : selectedRow.unit_type,
                             "unit_size": parseFloat(typeSize ? typeSize : selectedRow.unit_size),
+                            "trivial": typeTrivial ? typeTrivial : selectedRow.trivial,
                         }))
                     setAddUnitType(false);
                     setEdit(false);
                     setRow({});
                     setTypeName('');
                     setTypeSize('');
+                    setTypeTrivial('');
                 }}
             >
                 <form >
-                    <Input label="Type Name"
+                    <Input label="Type"
                         inputValue={selectedRow.unit_type ? selectedRow.unit_type : typeName}
                         setInputValue={setTypeName}
                         type="select" options={unitTypes}
@@ -87,6 +95,9 @@ function Component() {
                     <Input label="Type Size" addons={<p>m<sup>2</sup></p>}
                         inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeSize}
                         setInputValue={setTypeSize} />
+                    <Input label="Type Trivial Name"  placeholder="e.g. Greenwood, Sandalwood"
+                        inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeTrivial}
+                        setInputValue={setTypeTrivial} />
                     <div style={{
                         display: 'flex',
                         marginTop: 16,

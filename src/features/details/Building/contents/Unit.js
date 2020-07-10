@@ -7,6 +7,7 @@ import Button from '../../../../components/Button';
 import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import { toSentenceCase } from '../../../../utils';
+import { endpointAdmin } from '../../../../settings';
 import { deleteBuildingUnit, getBuildingUnit, editBuildingUnit, createBuildingUnit } from '../../../slices/building';
 
 const columnsUnit = [
@@ -33,9 +34,7 @@ function Component() {
     const [floor, setFloor] = useState('');
     const [number, setNumber] = useState('');
 
-    
     const { selected, loading, unit, section, unit_type, refreshToggle } = useSelector(state => state.building);
-
 
     let dispatch = useDispatch();
 
@@ -75,7 +74,7 @@ function Component() {
                         setInputValue={setNumber} disabled={edit} />
                     <Input label="Floor" inputValue={selectedRow.floor ? selectedRow.floor : floor}
                         setInputValue={setFloor} />
-                    <Input label="Section" type="select"
+                    <Input label="Section" type="select" placeholder="Select Section"
                         inputValue={selectedRow.building_section ? selectedRow.building_section : sectionID}
                         setInputValue={setSectionID}
                         options={section.items.map(el => ({
@@ -83,11 +82,11 @@ function Component() {
                             value: el.id
                         }))}
                     />
-                    <Input label="Unit Type" type="select"
+                    <Input label="Unit Type" type="select" placeholder="Select Unit Type"
                         inputValue={selectedRow.unit_type ? selectedRow.unit_type : unitTypeID}
                         setInputValue={setUnitTypeID}
                         options={unit_type.items.map(el => ({
-                            label: el.unit_type + ' - ' + el.unit_size,
+                            label: el.unit_type + ' - ' + el.unit_size + (el.trivial ? ' - ' + el.trivial : ''),
                             value: el.id
                         }))}
                     />

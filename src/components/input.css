@@ -91,6 +91,7 @@
 .InputIcon {
   position: absolute;
   right: 8px;
+  top: 14px;
   color: gray;
   margin-left: 16px;
 }

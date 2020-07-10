@@ -20,7 +20,7 @@ function Component({
     label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
     type = "text", rows = 2, options = [], fullwidth = false, inputClassName='',
     inputValue, setInputValue, icon, onClick, onFocus, onBlur, cancelValue,
-    hidden, max, min, disabled, isValidate = false, validationMsg, accept = "image/*",
+    hidden, max, min, disabled=false, isValidate = false, validationMsg, accept = "image/*",
     addons,
 }) {
     const ch = new Date().getHours().toString().length < 2 ?
@@ -85,7 +85,6 @@ function Component({
                                 // comboName={}
                                 comboValue={value}
                                 setComboValue={e => {
-                                    console.log(e.target.value);
                                     setValue(e.target.value);
                                     setInputValue && setInputValue(e.target.value);
                                 }}
@@ -118,7 +117,7 @@ function Component({
                             }}
                             onClick={onClick}
                         >
-                            {!inputValue && <option value="">{label}</option>}
+                            {(!inputValue || placeholder) && <option value="">{placeholder == null ? label : placeholder}</option>}
                             {options.map(el =>
                                 <option key={el.value} value={el.value}>{el.label}</option>
                             )}
@@ -316,7 +315,7 @@ function Component({
         }
     }
 
-    return (options.length !== 0 || type !== 'select') && (
+    return (
         <div className={"row w-100 m-0 " + (hidden ? " hidden " : "") + (inputClassName ? " "+inputClassName+" " : "")}>
             <div className="col px-0">
                 <div className="row">

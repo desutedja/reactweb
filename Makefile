@@ -2,6 +2,7 @@ TAG=latest
 REPO=registry.gitlab.com/clink1/building-management-apps-web/web:${TAG}
 
 npmbuild:
+	rm -rf build
 	npm run build
 
 build: npmbuild
