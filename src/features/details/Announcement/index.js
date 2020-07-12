@@ -15,8 +15,8 @@ const details =
 {
     'Information': [
         'id',
-        { label: 'created_on', lfmt: () => "Created On" , vfmt: (val) => dateTimeFormatter(val, "-") },
-        { label: 'modified_on', lfmt: () => "Last Modified", vfmt: (val) => dateTimeFormatter(val, "-") },
+        { label: 'created_on', lfmt: () => "Created On" , vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
+        { label: 'modified_on', lfmt: () => "Last Modified", vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
     ],
     'Consumer': [
         { label: 'consumer_role', vfmt: (val) => toSentenceCase(val) },
