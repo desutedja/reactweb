@@ -298,3 +298,16 @@ table tr:last-child td:last-child {
     background-position: 468px 0;
   }
 }
+
+.NoDecorationLink div {
+    text-decoration: none;
+}
+
+.Link {
+    color: dodgerblue;
+    cursor: pointer;
+}
+
+.Link:hover {
+    text-decoration: underline;
+}

@@ -1,21 +1,33 @@
 import React, { useState, useCallback, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+import { FiSearch } from 'react-icons/fi';
 
-import Input from '../../components/Input';
-import Form from '../../components/Form';
-import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Link from '../../components/Link';
 import Editor from '../../components/Editor';
-import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
-import { FiChevronRight } from 'react-icons/fi';
-import { RiCheckDoubleLine, RiCheckLine } from 'react-icons/ri';
+import SectionSeparator from '../../components/SectionSeparator';
+import Modal from '../../components/Modal';
 import { toSentenceCase } from '../../utils';
+
 import { endpointAdmin } from '../../settings';
 import { createAnnouncement, editAnnouncement } from '../slices/announcement';
+import { endpointResident } from '../../settings';
 import { get } from '../slice';
-import Template from './components/Template';
+
+import Template from './components/TemplateWithFormik';
+import Input from './input';
+import { Form } from 'formik';
+import { announcementSchema } from './schemas';
+
+const announcementPayload = {
+    title: "",
+    building: "",
+    consumer_role: "",
+    image: "",
+    description: "",
+}
 
 const columnsBuilding = [
     { Header: 'ID', accessor: 'id' },
@@ -45,197 +57,106 @@ const roles = [
     { value: 'merchant', label: 'Merchant' },
 ]
 
+const types = [
+    { label: "All Building", value: "allbuilding"},
+    { label: "Specific Building(s)", value: "specificbuilding"},
+]
+
 function Component() {
+    const { loading, selected } = useSelector(state => state.building);
+
     const [modalBuilding, setModalBuilding] = useState(false);
     const [modalUnit, setModalUnit] = useState(false);
 
     const [buildings, setBuildings] = useState([]);
-    const [buildingsSelected, setBuildingsSelected] = useState([]);
-    const [buildingsPageCount, setBuildingsPageCount] = useState(1);
-    const [buildingsLoading, setBuildingsLoading] = useState(false);
+    const [selectedBuildings, setSelectedBuildings] = useState([]);
 
     const [units, setUnits] = useState([]);
     const [unitsSelected, setUnitsSelected] = useState([]);
     const [unitsPageCount, setUnitsPageCount] = useState(1);
     const [unitsLoading, setUnitsLoading] = useState(false);
 
-    
-    const { loading, selected } = useSelector(state => state.announcement);
+    const [searchbuilding, setSearchbuilding] = useState('');
+    const [searchUnit, setSearchUnit] = useState('');
+    const [stillLoading, setStillLoading] = useState(false);
 
     let dispatch = useDispatch();
     let history = useHistory();
 
     useEffect(() => {
-        console.log(buildingsSelected[0])
-    }, [buildingsSelected]);
+        searchbuilding.length > 3 && setStillLoading(true); 
+        searchbuilding.length > 3 && dispatch(get(endpointAdmin + '/building' +
+            '?limit=5&page=1' +
+            '&search=' + searchbuilding, res => {
+                let data = res.data.data.items;
+
+                let formatted = data.map(el => ({ label: el.name, value: el.id }));
+
+                setBuildings(formatted);
+                setStillLoading(false);
+            }));
+    }, [dispatch, searchbuilding]);
 
     useEffect(() => {
-        let selectedBuildings = selected.building?.map(el => ({
-            id: el.building_id,
-            name: el.building_name
-        }));
-        selected.building && setBuildingsSelected(selectedBuildings);
-    }, [ selected.building]);
+        selectedBuildings.length === 1 && searchUnit.length > 2 && setStillLoading(true); 
+        selectedBuildings.length === 1 && searchUnit.length > 2 && 
+            dispatch(get(endpointAdmin + '/building/unit?building_id=' + selectedBuildings[0].value +
+            '&limit=5&page=1' +
+            '&search=' + searchUnit, res => {
+                let data = res.data.data.items;
+
+                let formatted = data.map(el => ({ label: "Room " + el.number + ", Section: " +  el.section_name, value: el.id }));
+
+                setUnits(formatted);
+                setStillLoading(false);
+            }));
+    }, [dispatch, searchUnit, selectedBuildings]);
 
     return (
-        <Template>
-            <Modal isOpen={modalBuilding} toggle={() => setModalBuilding(false)}>
-                <p className="Title" style={{
-                    marginBottom: 16
-                }}>Select Building</p>
-                <Table
-                    columns={columnsBuilding}
-                    data={buildings}
-                    loading={buildingsLoading}
-                    pageCount={buildingsPageCount}
-                    fetchData={useCallback((pageIndex, pageSize, search) => {
-                        setBuildingsLoading(true);
-                        dispatch(get(endpointAdmin + '/building' +
-                            '?page=' + (pageIndex + 1) +
-                            '&search=' + search +
-                            '&limit=' + pageSize,
-                            
-                            res => {
-                                const { items, total_pages } = res.data.data;
-                                setBuildings(items);
-                                setBuildingsPageCount(total_pages);
+        <>
+        <Template
+            slice="announcement"
+            payload={selected.id ? {
+                ...announcementPayload, ...selected,
+            } : announcementPayload}
+            schema={announcementSchema}
+            formatValues={values => ({
+                ...values,
+            })}
+            edit={data => dispatch(editAnnouncement(data, history, selected.id))}
+            add={data => dispatch(createAnnouncement(data, history))}
+            renderChild={props => {
+                const { setFieldValue, values } = props;
 
-                                setBuildingsLoading(false);
-                            }));
-                        // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [])}
-                    renderActions={(selectedRowIds, page) => {
-                        // console.log(selectedRowIds, page);
-                        return ([
-                            <Button
-                                disabled={Object.keys(selectedRowIds).length === 0}
-                                key="Select"
-                                label="Select"
-                                icon={<RiCheckLine />}
-                                onClick={() => {
-                                    let selectedBuildings =
-                                        page.filter(el => Object.keys(selectedRowIds).includes(el.id))
-                                            .map(el => el.original);
-
-                                    console.log(selectedBuildings);
-                                    setBuildingsSelected(selectedBuildings);
-                                    setModalBuilding(false);
-                                }}
-                            />,
-                        ])
-                    }}
-                />
-            </Modal>
-            <Modal isOpen={modalUnit} toggle={() => setModalUnit(false)}>
-                <p className="Title" style={{
-                    marginBottom: 16
-                }}>Select Unit</p>
-                <Table
-                    columns={columnsUnit}
-                    data={units}
-                    loading={unitsLoading}
-                    pageCount={unitsPageCount}
-                    fetchData={useCallback((pageIndex, pageSize, search) => {
-                        setUnitsLoading(true);
-                        dispatch(get(endpointAdmin + '/building/unit' +
-                            '?page=' + (pageIndex + 1) +
-                            '&building_id=' + buildingsSelected[0]?.id +
-                            '&search=' + search +
-                            '&limit=' + pageSize,
-                            
-                            res => {
-                                const { items, total_pages } = res.data.data;
-                                setUnits(items);
-                                setUnitsPageCount(total_pages);
-
-                                setUnitsLoading(false);
-                            }));
-                        // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [ buildingsSelected])}
-                    renderActions={(selectedRowIds, page) => {
-                        return ([
-                            <Button
-                                disabled={Object.keys(selectedRowIds).length === 0}
-                                key="Select"
-                                label="Select"
-                                icon={<RiCheckLine />}
-                                onClick={() => {
-                                    let selectedUnits =
-                                        page.filter(el => Object.keys(selectedRowIds).includes(el.id))
-                                            .map(el => el.original);
-
-                                    console.log(selectedUnits);
-                                    setUnitsSelected(selectedUnits);
-                                    setModalUnit(false);
-                                }}
-                            />,
-                            <Button key="All: All" label="All: All" icon={<RiCheckDoubleLine />}
-                                onClick={() => {
-                                    let selectedUnits =
-                                        page.map(el => el.original);
-
-                                    console.log(selectedUnits);
-                                    setUnitsSelected(selectedUnits);
-                                    setModalUnit(false);
-                                }}
-                            />,
-                        ])
-                    }}
-                />
-            </Modal>
-            <Form
-                onSubmit={data => {
-                    selected.id ?
-                        dispatch(editAnnouncement( data, history, selected.id))
-                        :
-                        dispatch(createAnnouncement( data, history));
-                }}
-                loading={loading}
-            >
-                <Input label="Title" type="textarea" inputValue={selected.title} />
-                <Input label="Building" hidden inputValue={JSON.stringify(buildingsSelected.map(el =>
-                    el.id
-                ))} />
-                <Input label="Building: All"
-                    actionlabels={
-                        buildingsSelected.length > 0 ? { "Deselect All": () => setBuildingsSelected([]) } : {}
-                    }
-                    type="multiselect"
-                    icon={<FiChevronRight />}
-                    onClick={() => setModalBuilding(true)}
-                    inputValue={buildingsSelected.map(el => ({
-                        value: el.name,
-                        onClickDelete: () => {
-                            setBuildingsSelected(buildingsSelected.filter(el2 => el2.id !== el.id));
-                            setUnitsSelected([]);
-                        }
-                    }))} />
-                <Input label="Building Unit" hidden inputValue={JSON.stringify(unitsSelected.map(el =>
-                    ({
-                        "building_id": buildingsSelected[0]?.id,
-                        "building_unit_id": el.id
-                    })
-                ))} />
-                {buildingsSelected.length === 1 && <Input label="Unit: All"
-                    actionlabels={
-                        unitsSelected.length > 0 ? { "Deselect All": () => setUnitsSelected([]) } : {}
-                    }
-                    type="multiselect"
-                    icon={<FiChevronRight />}
-                    onClick={() => setModalUnit(true)}
-                    inputValue={unitsSelected.map(el => ({
-                        value: toSentenceCase(el.section_type) + " " + el.section_name + " " + el.number,
-                        onClickDelete: () => {
-                            setUnitsSelected(unitsSelected.filter(el2 => el2.id !== el.id))
-                        }
-                    }))} />}
-                <Input label="Consumer Role" type="select" options={roles}
-                    inputValue={selected.consumer_role}
-                />
-                <Input label="Image" type="file" inputValue={selected.image} />
-                <Editor label="Description" inputValue={selected.description} />
-            </Form>
-        </Template>
+                return (
+                    <Form className="Form">
+                        <Input {...props} label="Title" placeholder="Input Announcement Title" name="title"/>
+                        <Input {...props} type="select" label="Consumer Role" placeholder="Select Consumer Role" 
+                            name="consumer_role" options={roles} />
+                        {values.consumer_role !== 'centratama' && 
+                            <Input {...props} label="Target" type="radio" options={types} 
+                                onChange={ el => setFieldValue(el.value) }/>}
+                        {values.consumer_role !== 'centratama' && values.target === "specificbuilding" && 
+                            <Input {...props} type="multiselect" 
+                                label="Select Building(s)" name="building"
+                                placeholder="Start typing building name to add" options={buildings} loading={stillLoading}
+                                onInputChange={ (e, value) => setSearchbuilding(value) }
+                                onChange={ (e, value) => { setSelectedBuildings(value); console.log(value);} }
+                            /> }
+                        {values.consumer_role === 'resident' && values.building.length === 1 && 
+                            <Input {...props} type="multiselect" label="Select Unit(s)" name="unit"
+                                onInputChange={ (e, value) => setSearchUnit(value) } 
+                                placeholder="Start typing room number to add" 
+                                hint="Selecting unit is only valid when selecting only one building"
+                                options={units}
+                            />}
+                        <Input {...props} type="file" label="Optional Image" name="image" placeholder=""/> 
+                        <Input {...props} type="textarea" label="Description" placeholder="Insert content of announcement"/> 
+                    </Form>
+                )
+            }
+            }
+        /></>
     )
 }
 

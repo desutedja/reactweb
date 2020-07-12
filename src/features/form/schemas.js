@@ -94,3 +94,11 @@ export const staffSchema = Yup.object().shape({
     account_number: Text,
     account_name: Text,
 });
+
+export const announcementSchema = Yup.object().shape({
+    title: Text,
+    building: TextOptional,
+    consumer_role: Text,
+    image: Text,
+    description: Text,
+});

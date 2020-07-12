@@ -166,7 +166,7 @@ function Component({ id }) {
                           )}
                           { subs.length < 5 && 
                             <div style={{ padding: '10px', marginLeft: '50px' }} >
-                                <span style={{ color: 'dodgerblue', cursor: 'pointer' }}
+                                <span className="Link"
                                     onClick={() => {
                                         setAddSubAccount(true); 
                                         setAddSubAccountStep(1); 
@@ -188,7 +188,7 @@ function Component({ id }) {
     function AddSubAccountNotFound() {
         return (<div style={{ margin: "20px 0" }} ><p align="center">No resident with specified name or email is found. </p>
                <span onClick={() => history.push({pathname: removeLastFromPath(path) + '/add'})}
-                    style={{ color: "dodgerblue", cursor:"pointer" }}>Please register here.</span></div>)
+                    className="Link">Please register here.</span></div>)
     }
 
     return (
