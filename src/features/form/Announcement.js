@@ -71,13 +71,13 @@ const target_merchants = [
 ]
 
 function Component() {
-    const { loading, selected } = useSelector(state => state.building);
+    const { loading, selected } = useSelector(state => state.announcement);
 
     const [modalBuilding, setModalBuilding] = useState(false);
     const [modalUnit, setModalUnit] = useState(false);
 
     const [buildings, setBuildings] = useState([]);
-    const [selectedBuildings, setSelectedBuildings] = useState([]);
+    const [selectedBuildings, setSelectedBuildings] = useState(selected.building ? selected.building : []);
 
     const [units, setUnits] = useState([]);
     const [unitsSelected, setUnitsSelected] = useState([]);
@@ -111,7 +111,6 @@ function Component() {
     }, [dispatch, searchmerchant]);
 
     useEffect(() => {
-        searchbuilding.length > 1 && setStillLoading(true); 
         searchbuilding.length > 1 && dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
             '&search=' + searchbuilding, res => {
@@ -120,14 +119,18 @@ function Component() {
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setBuildings(formatted);
-                setStillLoading(false);
             }));
     }, [dispatch, searchbuilding]);
 
     useEffect(() => {
-        selectedBuildings.length === 1 && searchUnit.length > 1 && setStillLoading(true); 
+        if (selectedBuildings.length === 0) return;
+
+        /* We might have different structure we got from selected or from multiselect input */
+        let buildingid = selectedBuildings[0].building_id ? 
+            selectedBuildings[0].building_id : selectedBuildings[0].value;
+
         selectedBuildings.length === 1 && searchUnit.length > 1 && 
-            dispatch(get(endpointAdmin + '/building/unit?building_id=' + selectedBuildings[0].value +
+            dispatch(get(endpointAdmin + '/building/unit?building_id=' + buildingid + 
             '&limit=5&page=1' +
             '&search=' + searchUnit, res => {
                 let data = res.data.data.items;
@@ -135,17 +138,25 @@ function Component() {
                 let formatted = data.map(el => ({ label: "Room " + el.number + ", Section: " +  el.section_name, value: el.id }));
 
                 setUnits(formatted);
-                setStillLoading(false);
             }));
     }, [dispatch, searchUnit, selectedBuildings]);
+
+    const payload = selected.id ? {
+                ...announcementPayload, ...selected,
+                /* when it's editing, the format from server isn't the same as we expected, so we need to reformat again */
+                target_building: selected.building && selected.building.length > 0 ? 'specificbuilding' : 'allbuilding',
+                target_merchant: selected.merchant && selected.merchant.length > 0 ? 'specificmerchant' : 'allmerchant',
+                merchant: selected.merchant && selected.merchant.map(el => ({label: el.name, value: el.id})),
+                building: selected.building && selected.building.map(el => ({label: el.building_name, value: el.building_id})),
+                building_unit: selected.building_unit && selected.building_unit.map(el => 
+                    ({label: "Room " + el.number + ", Section: " + el.section_name, value: el.building_unit_id })) }
+                : announcementPayload;
 
     return (
         <>
         <Template
             slice="announcement"
-            payload={selected.id ? {
-                ...announcementPayload, ...selected,
-            } : announcementPayload}
+            payload={payload}
             schema={announcementSchema}
             formatValues={values => ({
                 ...values,
@@ -182,13 +193,21 @@ function Component() {
                                 && values.consumer_role !== 'centratama' &&
                             <Input {...props} type="multiselect" 
                                 label="Select Building(s)" name="building"
+                                defaultValue={values.building}
                                 placeholder="Start typing building name to add" options={buildings} 
                                 onInputChange={ (e, value) => value === '' ? setBuildings([]) : setSearchbuilding(value) }
-                                onChange={ (e, value) => setSelectedBuildings(value) }
+                                onChange={ (e, value) => {
+                                    // if there's change in selected buildings, clear units
+                                    if (value !== selectedBuildings) {
+                                        setFieldValue("building_unit", []);
+                                    }
+                                    setSelectedBuildings(value)
+                                }}
                             /> }
                         {values.target_merchant === "specificmerchant" && values.consumer_role === 'merchant' &&
                             <Input {...props} type="multiselect" 
                                 label="Select Building(s)" name="merchant"
+                                defaultValue={values.merchant}
                                 placeholder="Start typing merchant name to add" options={merchants} 
                                 onInputChange={ (e, value) => value === '' ? setMerchants([]) : setSearchmerchant(value) }
                                 onChange={ (e, value) => setSelectedMerchants(value) }
@@ -196,6 +215,7 @@ function Component() {
                         {values.consumer_role === 'resident' && values.building.length === 1 && values.target_building === "specificbuilding" && 
                             <Input {...props} type="multiselect" label="Select Unit(s)" name="building_unit"
                                 onInputChange={ (e, value) => value === '' ? setUnits([]) : setSearchUnit(value) } 
+                                defaultValue={values.building_unit}
                                 hint={"Selecting unit is only valid when consumer is resident and when selecting only 1 building.  " + 
                                      "Not specifying unit means targeting the announcement for all resident."}
                                 placeholder="Start typing room number to add" 

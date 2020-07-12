@@ -4,7 +4,7 @@ import NoSsr from '@material-ui/core/NoSsr';
 import { FiX, FiCheck } from 'react-icons/fi';
 
 function MultiSelectInput({ 
-    placeholder, options, hint, onBlur= () => {}, onInputChange = () => {}, onChange = () => {}, ...props
+    placeholder, options, hint, defaultValue=[], onBlur= () => {}, onInputChange = () => {}, onChange = () => {}, ...props
 }) {
     const { setFieldValue, name, fixedName } = props;
 
@@ -28,7 +28,7 @@ function MultiSelectInput({
         setAnchorEl,
     } = useAutocomplete({
         id: 'multiselectinput',
-        defaultValue: [],
+        defaultValue: defaultValue,
         multiple: true,
         options: options,
         onInputChange: onInputChange,
