@@ -1,13 +1,13 @@
 import React, { } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import { dateTimeFormatter, toSentenceCase } from '../../../utils'
 
 import Detail from '../components/Detail';
 import Button from '../../../components/Button';
 import Pill from '../../../components/Pill';
 import Template from '../components/Template';
-import { publishAnnouncement } from '../../slices/announcement';
+import { publishAnnouncement, setSelected } from '../../slices/announcement';
 
 import Content from './contents/Content';
 
@@ -16,7 +16,7 @@ const details =
     'Information': [
         'id',
         { label: 'created_on', lfmt: () => "Created On" , vfmt: (val) => dateTimeFormatter(val, "-") },
-        { label: 'modified_on', lfmt: () => "Last Modified"}
+        { label: 'modified_on', lfmt: () => "Last Modified", vfmt: (val) => dateTimeFormatter(val, "-") },
     ],
     'Consumer': [
         { label: 'consumer_role', vfmt: (val) => toSentenceCase(val) },
@@ -40,6 +40,8 @@ const details =
 function Component() {
     const { selected } = useSelector(state => state.announcement);
     let dispatch = useDispatch();
+    let history = useHistory();
+    let { url } = useRouteMatch();
 
     return (
         <Template
@@ -53,7 +55,12 @@ function Component() {
                 <Button label="Publish" disabled={selected.publish === 1} 
                     onClick={() => { dispatch(publishAnnouncement(selected)) }} />,
                 <Button label="Duplicate" 
-                    onClick={() => { }} />,
+                    onClick={() => { 
+                        history.push({
+                            pathname: url.split("/").slice(0, -1).join("/") + "/add",
+                        });
+                        dispatch(setSelected({ ...selected, duplicate: true}));
+                    }} />,
                 ]}
                 />,
                 <Content />,

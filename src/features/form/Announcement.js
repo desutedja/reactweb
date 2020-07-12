@@ -143,6 +143,8 @@ function Component() {
 
     const payload = selected.id ? {
                 ...announcementPayload, ...selected,
+                title: selected.duplicate ? "Duplicate of " + selected.title : selected.title,
+                duplicate: selected.duplicate,
                 /* when it's editing, the format from server isn't the same as we expected, so we need to reformat again */
                 target_building: selected.building && selected.building.length > 0 ? 'specificbuilding' : 'allbuilding',
                 target_merchant: selected.merchant && selected.merchant.length > 0 ? 'specificmerchant' : 'allmerchant',

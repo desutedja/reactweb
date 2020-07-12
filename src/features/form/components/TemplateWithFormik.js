@@ -23,7 +23,7 @@ function Template({ slice, payload, schema, renderChild = () => { }, formatValue
                         const data = formatValues(values);
 
                         selected.id ?
-                            edit(data)
+                            data.duplicate ? add(data) : edit(data)
                             :
                             add(data);
                     }}
