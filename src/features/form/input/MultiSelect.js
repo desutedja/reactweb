@@ -4,7 +4,7 @@ import NoSsr from '@material-ui/core/NoSsr';
 import { FiX, FiCheck } from 'react-icons/fi';
 
 function MultiSelectInput({ 
-    placeholder, options, hint, onInputChange = () => {}, onChange = () => {}, ...props
+    placeholder, options, hint, onBlur= () => {}, onInputChange = () => {}, onChange = () => {}, ...props
 }) {
     const { setFieldValue, name, fixedName } = props;
 
@@ -22,6 +22,7 @@ function MultiSelectInput({
         getListboxProps,
         getOptionProps,
         groupedOptions,
+        inputValue,
         value,
         focused,
         setAnchorEl,
@@ -33,7 +34,8 @@ function MultiSelectInput({
         onInputChange: onInputChange,
         onChange: onValueChange,
         getOptionLabel: (option) => option.label,
-        getOptionSelected: (option, value) => option.value === value.value
+        getOptionSelected: (option, value) => option.value === value.value,
+        getOptionDisabled: (option) => option.value === 0,
     });
 
     function Tag({label, onDelete, ...props}) {
@@ -47,26 +49,26 @@ function MultiSelectInput({
         <NoSsr>
             <div>
                 <div {...getRootProps()}>
-                    {hint && <div>{hint}</div>}
-                    <div ref={setAnchorEl} className={"MultiSelectItemWrapper" + (focused ? ' focused ': '')}>
+                    {hint && <div><i>{hint}</i></div>}
+                    <div className="Input-container">
+                        <input {...getInputProps()} placeholder={placeholder}/>
+                    </div>
+                    <ul className="MultiSelectDropDown" {...getListboxProps()}>
+                        {groupedOptions.length === 0 ? 
+                            (inputValue.length > 0 ? <li><span>No Result</span></li> : null) : 
+                            groupedOptions.map((option, index) => 
+                            <li style={{ display: 'flex' }} {...getOptionProps({ index, option })} >
+                                <span>{option.label}</span>
+                                <FiCheck size="20"/>
+                            </li>
+                        )}
+                    </ul>
+                    <div ref={setAnchorEl} className={"MultiSelectItemWrapper"}>
                         {value.map((option, index) => (
                             <Tag label={option.label} {...getTagProps({ index })} />
                         ))}
                     </div>
-                    <div className="Input-container">
-                        <input {...getInputProps()} placeholder={placeholder}/>
-                    </div>
                 </div>
-                {groupedOptions.length > 0 ? (
-                    <ul className="MultiSelectDropDown" {...getListboxProps()}>
-                        {groupedOptions.map((option, index) => {
-                            return (<li style={{ display: 'flex' }} {...getOptionProps({ index, option })} >
-                                <span>{option.label}</span>
-                                <FiCheck size="20"/>
-                            </li>)
-                        })}
-                    </ul>
-                ) : null}
             </div>
         </NoSsr>
     );
