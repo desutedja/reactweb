@@ -11,7 +11,7 @@ import SectionSeparator from '../../components/SectionSeparator';
 import Modal from '../../components/Modal';
 import { toSentenceCase } from '../../utils';
 
-import { endpointAdmin } from '../../settings';
+import { endpointAdmin, endpointMerchant } from '../../settings';
 import { createAnnouncement, editAnnouncement } from '../slices/announcement';
 import { endpointResident } from '../../settings';
 import { get } from '../slice';
@@ -48,7 +48,7 @@ const columnsUnit = [
 
 const roles = [
     { value: 'centratama', label: 'Centratama' },
-    { value: 'management', label: 'Management' },
+    { value: 'management', label: 'Building Management' },
     { value: 'staff', label: 'Staff' },
     { value: 'staff_courier', label: 'Staff Courier' },
     { value: 'staff_security', label: 'Staff Security' },
@@ -57,9 +57,14 @@ const roles = [
     { value: 'merchant', label: 'Merchant' },
 ]
 
-const types = [
+const target_buildings = [
     { label: "All Building", value: "allbuilding"},
     { label: "Specific Building(s)", value: "specificbuilding"},
+]
+
+const target_merchants = [
+    { label: "All Merchant", value: "allmerchant"},
+    { label: "Specific Merchant(s)", value: "specificmerchant"},
 ]
 
 function Component() {
@@ -80,12 +85,31 @@ function Component() {
     const [searchUnit, setSearchUnit] = useState('');
     const [stillLoading, setStillLoading] = useState(false);
 
+    const [searchmerchant, setSearchmerchant] = useState('');
+    const [merchants, setMerchants] = useState([]);
+    const [selectedMerchants, setSelectedMerchants] = useState([]);
+
     let dispatch = useDispatch();
     let history = useHistory();
 
     useEffect(() => {
-        searchbuilding.length > 3 && setStillLoading(true); 
-        searchbuilding.length > 3 && dispatch(get(endpointAdmin + '/building' +
+        searchmerchant.length > 1 && setStillLoading(true); 
+        searchmerchant.length > 1 && dispatch(get(endpointMerchant + '/admin/list' +
+            '?limit=5&page=1' +
+            '&search=' + searchmerchant, res => {
+                let data = res.data.data.items;
+
+                let formatted = data.map(el => ({ label: el.name, value: el.id }));
+
+                console.log(formatted);
+                setMerchants(formatted);
+                setStillLoading(false);
+            }));
+    }, [dispatch, searchmerchant]);
+
+    useEffect(() => {
+        searchbuilding.length > 1 && setStillLoading(true); 
+        searchbuilding.length > 1 && dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
             '&search=' + searchbuilding, res => {
                 let data = res.data.data.items;
@@ -98,8 +122,8 @@ function Component() {
     }, [dispatch, searchbuilding]);
 
     useEffect(() => {
-        selectedBuildings.length === 1 && searchUnit.length > 2 && setStillLoading(true); 
-        selectedBuildings.length === 1 && searchUnit.length > 2 && 
+        selectedBuildings.length === 1 && searchUnit.length > 1 && setStillLoading(true); 
+        selectedBuildings.length === 1 && searchUnit.length > 1 && 
             dispatch(get(endpointAdmin + '/building/unit?building_id=' + selectedBuildings[0].value +
             '&limit=5&page=1' +
             '&search=' + searchUnit, res => {
@@ -133,25 +157,38 @@ function Component() {
                         <Input {...props} label="Title" placeholder="Input Announcement Title" name="title"/>
                         <Input {...props} type="select" label="Consumer Role" placeholder="Select Consumer Role" 
                             name="consumer_role" options={roles} />
-                        {values.consumer_role !== 'centratama' && 
-                            <Input {...props} label="Target" type="radio" options={types} 
+                        {values.consumer_role.length > 0 && values.consumer_role !== 'centratama' && values.consumer_role !== 'merchant' &&
+                            <Input {...props} label="Target Building" name="target_building" type="radio" options={target_buildings} 
                                 onChange={ el => setFieldValue(el.value) }/>}
-                        {values.consumer_role !== 'centratama' && values.target === "specificbuilding" && 
+                        {values.consumer_role.length > 0 && values.consumer_role === 'merchant' && 
+                            <Input {...props} label="Target Merchant" name="target_merchant" type="radio" options={target_merchants} 
+                                onChange={ el => setFieldValue(el.value) }/>}
+                        {values.target_building === "specificbuilding" && values.consumer_role !== 'merchant' 
+                                && values.consumer_role !== 'centratama' &&
                             <Input {...props} type="multiselect" 
                                 label="Select Building(s)" name="building"
-                                placeholder="Start typing building name to add" options={buildings} loading={stillLoading}
-                                onInputChange={ (e, value) => setSearchbuilding(value) }
-                                onChange={ (e, value) => { setSelectedBuildings(value); console.log(value);} }
+                                placeholder="Start typing building name to add" options={buildings} 
+                                onInputChange={ (e, value) => value == '' ? setBuildings([]) : setSearchbuilding(value) }
+                                onChange={ (e, value) => setSelectedBuildings(value) }
+                            /> }
+                        {values.target_merchant === "specificmerchant" && values.consumer_role === 'merchant' &&
+                            <Input {...props} type="multiselect" 
+                                label="Select Building(s)" name="merchant"
+                                placeholder="Start typing merchant name to add" options={merchants} 
+                                onInputChange={ (e, value) => value == '' ? setMerchants([]) : setSearchmerchant(value) }
+                                onChange={ (e, value) => setSelectedMerchants(value) }
                             /> }
                         {values.consumer_role === 'resident' && values.building.length === 1 && 
                             <Input {...props} type="multiselect" label="Select Unit(s)" name="unit"
-                                onInputChange={ (e, value) => setSearchUnit(value) } 
+                                onInputChange={ (e, value) => value == '' ? setUnits([]) : setSearchUnit(value) } 
+                                onBlur={ () => setSearchUnit('') }
                                 placeholder="Start typing room number to add" 
-                                hint="Selecting unit is only valid when selecting only one building"
+                                hint={"Selecting unit is only valid when selecting only one building," + 
+                                     "not specifying unit means targeting the announcement for all resident"}
                                 options={units}
                             />}
-                        <Input {...props} type="file" label="Optional Image" name="image" placeholder=""/> 
-                        <Input {...props} type="textarea" label="Description" placeholder="Insert content of announcement"/> 
+                        <Input {...props} type="file" label="Image (optional)" name="image" placeholder="Image URL"/> 
+                        <Input {...props} type="textarea" label="Description" placeholder="Insert Announcement Description"/> 
                     </Form>
                 )
             }
