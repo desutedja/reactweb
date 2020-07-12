@@ -1,43 +1,62 @@
 import React, { } from 'react';
+import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
+import { dateTimeFormatter, toSentenceCase } from '../../../utils'
 
 import Detail from '../components/Detail';
+import Button from '../../../components/Button';
+import Pill from '../../../components/Pill';
 import Template from '../components/Template';
+import { publishAnnouncement } from '../../slices/announcement';
 
 import Content from './contents/Content';
 
 const details =
 {
     'Information': [
-        'consumer_id',
-        'consumer_role',
-        'created_on',
         'id',
-        'image',
-        'modified_on',
-        'publish',
-        'publisher',
+        { label: 'created_on', lfmt: () => "Created On" , vfmt: (val) => dateTimeFormatter(val, "-") },
+        { label: 'modified_on', lfmt: () => "Last Modified"}
+    ],
+    'Consumer': [
+        { label: 'consumer_role', vfmt: (val) => toSentenceCase(val) },
+        //{ label: 'consumer_id', lfmt: () => "Consumer ID" },
+        { label: 'building', lfmt: () => "Target Building", vfmt: (v) => v.length > 0 ? v.map( el => el.building_name ).join(', ') : "-" },
+        { label: 'building_unit', lfmt: () => "Target Unit", vfmt: (v) => v.length > 0 ? v.map( el => el.number + " " + el.section_name ).join(', ') : "-" },
+    ],
+    'Publisher': [
+        { label: 'publish', lfmt: () => "Status", vfmt: (val) => val === 0 ? <Pill color="secondary">Draft</Pill> : 
+        <Pill color="success">Published</Pill> },
+        { label: 'publisher', lfmt: () => "Publisher ID" },
         'publisher_name',
-        'publisher_role',
-        'read',
-        'topic',
-        'topic_ref_id',
+        { label: 'publisher_role', vfmt: (v) => { 
+            if (v === "sa") return "Super Admin";
+            else if(v === "bm") return "Building Management Admin"
+            else return v;
+        }},
     ],
 };
 
 function Component() {
     const { selected } = useSelector(state => state.announcement);
+    let dispatch = useDispatch();
 
     return (
         <Template
-            image={selected.logo}
-            title={selected.name}
-            website={selected.website}
-            phone={selected.phone}
-            labels={["Content", "Details"]}
+            image={selected.image}
+            title={selected.title}
+            imageTitle=''
+            labels={["Details", "Contents"]}
             contents={[
+            <Detail type="Announcement" data={selected} labels={details} editable={selected.publish === 0}
+                renderButtons={() => [
+                <Button label="Publish" disabled={selected.publish === 1} 
+                    onClick={() => { dispatch(publishAnnouncement(selected)) }} />,
+                <Button label="Duplicate" 
+                    onClick={() => { }} />,
+                ]}
+                />,
                 <Content />,
-                <Detail type="Announcement" data={selected} labels={details} />,
             ]}
         />
     )

@@ -16,7 +16,7 @@ import Tab from '../../../components/Tab';
 import Breadcrumb from '../../../components/Breadcrumb';
 
 function Component({ image, title, website, phone, merchant,
-    email, labels, contents, activeTab }) {
+    email, labels, contents, activeTab, imageTitle=''}) {
 
     const [imgLoading, setImgLoading] = useState(true);
 
@@ -52,7 +52,7 @@ function Component({ image, title, website, phone, merchant,
                                 }}
                                 onLoad={() => setImgLoading(false)}
                             />
-                            {title && <h3 style={{
+                            {imageTitle && title && <h3 style={{
                                 marginBottom: 16,
                             }}>{title}</h3>}
                         </div>

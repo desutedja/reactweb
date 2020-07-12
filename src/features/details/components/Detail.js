@@ -13,6 +13,9 @@ function Component({ data, labels, type = "", editable = true, renderButtons = (
     let { url } = useRouteMatch();
 
     function formatLabel(label) {
+        if (label.label) 
+            label = label.label;
+
         if (label === 'id') label = type + " ID";
         if (label.includes('pic_')) label = label.split('_')[1];
         if (label === 'created_on') label = "Registered Since";
@@ -60,10 +63,10 @@ function Component({ data, labels, type = "", editable = true, renderButtons = (
                         {labels[group].map(el =>
                             <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={el} >
                                 <Column flex={3} style={{ fontWeight: 'bold', fontSize: '1em', textAlign: 'left' }}>
-                                    {el.labelFormatter ? el.labelFormatter(el) : formatLabel(el)}
+                                    {el.lfmt ? el.lfmt(el) : formatLabel(el)}
                                 </Column>
                                 <Column flex={9} style={{ fontWeight: 'normal', fontSize: '1em', }}>
-                                    {el.valueFormatter ? el.valueFormatter(data[el.label]) : formatValue(el, data[el])}
+                                    {el.vfmt ? el.vfmt(data[el.label]) : formatValue(el, data[el])}
                                 </Column>
                             </Row>
                         )}

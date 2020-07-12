@@ -23,10 +23,13 @@ import { announcementSchema } from './schemas';
 
 const announcementPayload = {
     title: "",
-    building: "",
+    target_building: "allbuilding",
+    target_merchant: "allmerchant",
+    building: [],
     consumer_role: "",
     image: "",
     description: "",
+    building_unit: [],
 }
 
 const columnsBuilding = [
@@ -146,9 +149,20 @@ function Component() {
             schema={announcementSchema}
             formatValues={values => ({
                 ...values,
+                building: values.consumer_role === 'centratama' || values.consumer_role === 'merchant' ? [] : 
+                    values.building.map( el => el.value ),
+                building_unit: (values.consumer_role !== 'resident' || values.building.length !== 1) ? [] : 
+                    values.building_unit.map(el => ({ building_id: values.building[0].value, building_unit_id: el.value })),
+                merchant: values.consumer_role === 'merchant' ? values.merchant.map(el => el.value) : [],
             })}
-            edit={data => dispatch(editAnnouncement(data, history, selected.id))}
-            add={data => dispatch(createAnnouncement(data, history))}
+            edit={data => {
+                //console.log(data);
+                dispatch(editAnnouncement(data, history, selected.id))
+            }}
+            add={data => {
+                //console.log(data);
+                dispatch(createAnnouncement(data, history))
+            }}
             renderChild={props => {
                 const { setFieldValue, values } = props;
 
@@ -156,9 +170,10 @@ function Component() {
                     <Form className="Form">
                         <Input {...props} label="Title" placeholder="Input Announcement Title" name="title"/>
                         <Input {...props} type="select" label="Consumer Role" placeholder="Select Consumer Role" 
-                            name="consumer_role" options={roles} />
+                            options={roles} />
                         {values.consumer_role.length > 0 && values.consumer_role !== 'centratama' && values.consumer_role !== 'merchant' &&
-                            <Input {...props} label="Target Building" name="target_building" type="radio" options={target_buildings} 
+                        <Input {...props} label="Target Building" name="target_building" type="radio" options={target_buildings} 
+                                defaultValue="allbuilding"
                                 onChange={ el => setFieldValue(el.value) }/>}
                         {values.consumer_role.length > 0 && values.consumer_role === 'merchant' && 
                             <Input {...props} label="Target Merchant" name="target_merchant" type="radio" options={target_merchants} 
@@ -168,27 +183,27 @@ function Component() {
                             <Input {...props} type="multiselect" 
                                 label="Select Building(s)" name="building"
                                 placeholder="Start typing building name to add" options={buildings} 
-                                onInputChange={ (e, value) => value == '' ? setBuildings([]) : setSearchbuilding(value) }
+                                onInputChange={ (e, value) => value === '' ? setBuildings([]) : setSearchbuilding(value) }
                                 onChange={ (e, value) => setSelectedBuildings(value) }
                             /> }
                         {values.target_merchant === "specificmerchant" && values.consumer_role === 'merchant' &&
                             <Input {...props} type="multiselect" 
                                 label="Select Building(s)" name="merchant"
                                 placeholder="Start typing merchant name to add" options={merchants} 
-                                onInputChange={ (e, value) => value == '' ? setMerchants([]) : setSearchmerchant(value) }
+                                onInputChange={ (e, value) => value === '' ? setMerchants([]) : setSearchmerchant(value) }
                                 onChange={ (e, value) => setSelectedMerchants(value) }
                             /> }
-                        {values.consumer_role === 'resident' && values.building.length === 1 && 
-                            <Input {...props} type="multiselect" label="Select Unit(s)" name="unit"
-                                onInputChange={ (e, value) => value == '' ? setUnits([]) : setSearchUnit(value) } 
-                                onBlur={ () => setSearchUnit('') }
+                        {values.consumer_role === 'resident' && values.building.length === 1 && values.target_building === "specificbuilding" && 
+                            <Input {...props} type="multiselect" label="Select Unit(s)" name="building_unit"
+                                onInputChange={ (e, value) => value === '' ? setUnits([]) : setSearchUnit(value) } 
+                                hint={"Selecting unit is only valid when consumer is resident and when selecting only 1 building.  " + 
+                                     "Not specifying unit means targeting the announcement for all resident."}
                                 placeholder="Start typing room number to add" 
-                                hint={"Selecting unit is only valid when selecting only one building," + 
-                                     "not specifying unit means targeting the announcement for all resident"}
                                 options={units}
                             />}
                         <Input {...props} type="file" label="Image (optional)" name="image" placeholder="Image URL"/> 
                         <Input {...props} type="textarea" label="Description" placeholder="Insert Announcement Description"/> 
+                        <button type="submit">Submit</button>
                     </Form>
                 )
             }

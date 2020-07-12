@@ -12,29 +12,30 @@ import { toSentenceCase } from '../../utils';
 
 import Template from './components/Template';
 
-const columns = [
-    { Header: 'ID', accessor: 'id' },
-    { Header: 'Title', accessor: 'title' },
-    // { Header: 'Topic', accessor: row => toSentenceCase(row.topic) },
-    { Header: 'Consumer', accessor: row => toSentenceCase(row.consumer_role.replace(/_/g, ' ')) },
-    {
-        Header: 'Description', accessor: row => row.description.length > 50 ?
-            parse(row.description).slice(0, 50) + '...' : parse(row.description)
-    },
-    { Header: 'Publisher', accessor: 'publisher_name' },
-    {
-        Header: 'Status', accessor: row => row.publish ?
-            <h5><Badge pill color="success">Published</Badge></h5>
-            :
-            <h5><Badge pill color="secondary">Draft</Badge></h5>
-    },
-]
-
 function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
+
+    const columns = [
+        { Header: 'ID', accessor: 'id' },
+        { Header: 'Title', accessor: row => <div className={"Link"}
+            onClick={() => dispatch(getAnnouncementDetails(row, history, url))}>{row.title}</div>},
+        // { Header: 'Topic', accessor: row => toSentenceCase(row.topic) },
+        { Header: 'Consumer', accessor: row => toSentenceCase(row.consumer_role.replace(/_/g, ' ')) },
+        {
+            Header: 'Description', accessor: row => row.description.length > 50 ?
+                parse(row.description).slice(0, 50) + '...' : parse(row.description)
+        },
+        { Header: 'Publisher', accessor: 'publisher_name' },
+        {
+            Header: 'Status', accessor: row => row.publish ?
+                <h5><Badge pill color="success">Published</Badge></h5>
+                :
+                <h5><Badge pill color="secondary">Draft</Badge></h5>
+        },
+    ]
 
     return (
         <Template
