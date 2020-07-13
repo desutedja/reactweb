@@ -13,6 +13,8 @@ export const genders = [
     { label: 'Female', value: 'Female'}
 ]
 
+export const days = ['Sunday','Monday','Tuesday','Wednesbay','Thursday','Friday','Saturday']
+
 export const rangeNumberArrObj = (from = 0, to = 0) => {
     if (to <= from) return null;
     let arr = [];

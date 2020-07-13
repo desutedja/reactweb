@@ -19,6 +19,7 @@ const EmailOptional = Yup.string().email('Invalid email');
 
 const URL = Yup.string().matches(/\./, 'Invalid URL').required(defaultRequiredError);
 const URLStrict = Yup.string().url('Invalid URL').required(defaultRequiredError);
+const URLStrictOptional = Yup.string().url('Invalid URL');
 
 export const managementSchema = Yup.object().shape({
     name: Text,
@@ -135,5 +136,19 @@ export const announcementSchema = Yup.object().shape({
 });
 
 export const adsSchema = Yup.object().shape({
-    
+    appear_as: Text,
+    media: Text,
+    start_date: Text,
+    end_date: Text,
+    gender: Text,
+    occupation: Text,
+    age_from: Number.min(10, 'Target age cannot be lower than 10.'),
+    age_to: Number.max(85, "Target age cannot be more than 85."),
+    os: Text,
+    content_name: Text,
+    content_type: Text,
+    content_image: URLStrictOptional,
+    content_video: URLStrictOptional,
+    content_description: Text,
+    total_priority_score: Text,
 })

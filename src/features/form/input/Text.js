@@ -14,7 +14,7 @@ function TextInput({
     const fixedName = name + (options ? '_label' : '');
 
     useEffect(() => {
-        setFieldValue(fixedName, externalValue);
+        externalValue && setFieldValue(fixedName, externalValue);
     }, [externalValue])
 
     //this repopulate the label field when editing, provided BE doesnt send them

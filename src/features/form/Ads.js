@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import moment from 'moment';
 
 import SectionSeparator from '../../components/SectionSeparator';
 import { editAds, createAds } from '../slices/ads';
 
 import Template from "./components/TemplateWithFormik";
-import { Form } from 'formik';
+import { Form, FieldArray, Field } from 'formik';
 import { adsSchema } from "./schemas";
 import Input from './input';
+import { days } from '../../utils';
 
 const adsPayload = {
     appear_as: "banner",
     media: "apps",
-    start_date: "",
-    end_date: "",
+    start_date: moment().format('YYYY-MM-DD'),
+    end_date: moment().format('YYYY-MM-DD'),
 
     gender: "A",
     occupation: "all",
@@ -29,6 +31,44 @@ const adsPayload = {
     content_description: "",
 
     total_priority_score: 0,
+
+    schedules: [
+        {
+            day: 1,
+            hour_from: '00:00:00',
+            hour_to: '00:00:00',
+        },
+        {
+            day: 2,
+            hour_from: '00:00:00',
+            hour_to: '00:00:00',
+        },
+        {
+            day: 3,
+            hour_from: '00:00:00',
+            hour_to: '00:00:00',
+        },
+        {
+            day: 4,
+            hour_from: '00:00:00',
+            hour_to: '00:00:00',
+        },
+        {
+            day: 5,
+            hour_from: '00:00:00',
+            hour_to: '00:00:00',
+        },
+        {
+            day: 6,
+            hour_from: '00:00:00',
+            hour_to: '00:00:00',
+        },
+        {
+            day: 7,
+            hour_from: '00:00:00',
+            hour_to: '00:00:00',
+        },
+    ],
 }
 
 function Component() {
@@ -61,11 +101,28 @@ function Component() {
             slice="ads"
             payload={selected.id ? {
                 ...adsPayload, ...selected,
+                gender: selected.gender ? selected.gender : 'A',
+                occupation: selected.occupation ? selected.occupation : 'all',
+                os: selected.os ? selected.os : 'all',
+                start_date: selected.start_date.split('T')[0],
+                end_date: selected.end_date.split('T')[0],
             } : adsPayload}
             schema={adsSchema}
-            formatValues={values => ({
-                ...values,
-            })}
+            formatValues={values => {
+                const { schedules, ...ads } = values;
+
+                return {
+                    ads: {
+                        ...ads,
+                        gender: ads.gender === 'A' ? null : ads.gender,
+                        occupation: ads.occupation === 'all' ? null : ads.occupation,
+                        os: ads.os === 'all' ? null : ads.os,
+                        start_date: ads.start_date + ' 00:00:00',
+                        end_date: ads.end_date + ' 23:59:59',
+                    },
+                    schedules: schedules,
+                }
+            }}
             edit={data => dispatch(editAds(data, history, selected.id))}
             add={data => dispatch(createAds(data, history))}
             renderChild={props => {
@@ -135,7 +192,41 @@ function Component() {
                             <Input {...props} label="Video" name="content_video" type="file" accept="video/*" />
                         }
                         <Input {...props} label="Content" name="content_description" type="textarea" />
-                        <button>Submit</button>
+
+                        {!selected.id && <>
+                            <p className="Input-label" style={{
+                                marginBottom: 16,
+                            }}>Schedules</p>
+                            <FieldArray
+                                name="schedules"
+                                render={arrayHelpers => (
+                                    <div className="Input" style={{
+
+                                    }}>
+                                        {values.schedules.map((friend, index) => (
+                                            <div key={index} style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                            }}>
+                                                <p style={{
+                                                    marginRight: 16,
+                                                    flex: 1,
+                                                }}>{days[values.schedules[index].day - 1]}: </p>
+                                                <Field name={`schedules.${index}.hour_from`} type="time" step="1" />
+                                                <p style={{
+                                                    marginLeft: 16,
+                                                    marginRight: 16,
+                                                    flex: 1,
+                                                    textAlign: 'center',
+                                                }}>-</p>
+                                                <Field name={`schedules.${index}.hour_to`} type="time" step="1" />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            />
+                        </>}
+                        <button onClick={() => console.log(values)}>Submit</button>
                     </Form>
                 )
             }}

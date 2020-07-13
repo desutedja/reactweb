@@ -1,9 +1,10 @@
 import React, { } from 'react';
 import { Field } from 'formik';
+import { FiAlertCircle } from 'react-icons/fi';
 
 function RadioInput({ onChange = () => { }, ...props }) {
     const {
-        options = [], values, name, handleChange,
+        options = [], values, name, handleChange, errors, touched
     } = props;
 
     return (
@@ -27,6 +28,13 @@ function RadioInput({ onChange = () => { }, ...props }) {
                     </div>
                 </div>
             ))}
+            {errors[name] && touched[name] ? (
+                <div className="Input-error">
+                    <FiAlertCircle style={{
+                        marginRight: 4
+                    }} />
+                    {errors ? errors[name] : ''}</div>
+            ) : null}
         </div>
     )
 }
