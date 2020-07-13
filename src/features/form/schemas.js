@@ -15,6 +15,7 @@ const Phone = Yup.string()
     .required(defaultRequiredError);
 
 const Email = Yup.string().email('Invalid email').required(defaultRequiredError);
+const EmailOptional = Yup.string().email('Invalid email');
 
 const URL = Yup.string().matches(/\./, 'Invalid URL').required(defaultRequiredError);
 const URLStrict = Yup.string().url('Invalid URL').required(defaultRequiredError);
@@ -50,6 +51,36 @@ export const buildingSchema = Yup.object().shape({
     city: Text,
     district: Text,
     zipcode: Text,
+})
+
+export const residentSchema = Yup.object().shape({
+    email: EmailOptional,
+    firstname: Text,
+    lastname: Text,
+    phone: Phone,
+    birthplace: Text,
+    birthdate: Text,
+    nationality: Text,
+    gender: Text,
+    marital_status: Text,
+    occupation: Text,
+    address: Text,
+    province: Text,
+    city: Text,
+    district: Text,
+    account_bank: Text,
+    account_name: Text,
+    account_number: Text,
+})
+
+export const billingSchema = Yup.object().shape({
+    service: Text,
+    name: Text,
+    previous_usage: Number,
+    recent_usage: Number,
+    month: Text,
+    year: Text,
+    remarks: Text,
 })
 
 export const merchantSchema = Yup.object().shape({

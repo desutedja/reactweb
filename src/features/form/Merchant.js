@@ -10,6 +10,7 @@ import {
   endpointAdmin,
   endpointMerchant,
   banks,
+  endpointResident,
 } from "../../settings";
 import { createMerchant, editMerchant } from "../slices/merchant";
 import { get } from "../slice";
@@ -49,6 +50,14 @@ function Component() {
   const [inBuildings, setBuildings] = useState([]);
   const [categories, setCategories] = useState([]);
 
+  const [districts, setDistricts] = useState([]);
+
+  const [city, setCity] = useState("");
+  const [cities, setCities] = useState([]);
+
+  const [province, setProvince] = useState("");
+  const [provinces, setProvinces] = useState([]);
+
   const { loading, selected } = useSelector((state) => state.merchant);
 
   let dispatch = useDispatch();
@@ -76,10 +85,45 @@ function Component() {
     }));
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(get(endpointResident + '/geo/province',
+
+      res => {
+        let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
+        setProvinces(formatted);
+      }
+    ))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setCity("");
+    (province || selected.province) && dispatch(get(endpointResident + '/geo/province/' + (province ? province : selected.province),
+
+      res => {
+        let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
+        setCities(formatted);
+      }
+    ))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [province, selected.province]);
+
+  useEffect(() => {
+    (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city ? city : selected.city),
+
+      res => {
+        let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
+        setDistricts(formatted);
+      }
+    ))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [city, selected.city]);
+
   return (
     <Template
       slice="merchant"
-      payload={selected.id ? {...merchantPayload, ...selected, 
+      payload={selected.id ? {
+        ...merchantPayload, ...selected,
         phone: selected.phone.slice(2),
         pic_phone: selected.pic_phone.slice(2),
       } : merchantPayload}
@@ -179,6 +223,14 @@ function Component() {
             <Input {...props} label="Latitude" name="lat" />
             <Input {...props} label="Longitude" name="long" />
             <Input {...props} label="Address" type="textarea" />
+            <Input {...props} label="Province" options={provinces}
+              onChange={el => setProvince(el.value)}
+            />
+            {values.province && <Input {...props} label="City" options={cities}
+              onChange={el => setCity(el.value)}
+            />}
+            {values.city && <Input {...props} label="District"
+              options={districts} />}
 
             <SectionSeparator />
 

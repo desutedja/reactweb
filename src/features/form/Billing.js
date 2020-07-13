@@ -1,7 +1,5 @@
 import React, { useState, useCallback, useEffect } from 'react';
 
-import Input from '../../components/Input';
-import Form from '../../components/Form';
 import Modal from '../../components/Modal';
 import TableNoSelection from '../../components/TableNoSelection';
 import SectionSeparator from '../../components/SectionSeparator';
@@ -12,7 +10,25 @@ import { endpointAdmin } from '../../settings';
 import { FiChevronRight } from 'react-icons/fi';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
 import { get } from '../slice';
-import Template from './components/Template';
+
+import Template from "./components/TemplateWithFormik";
+import { Form } from 'formik';
+import { billingSchema } from "./schemas";
+import Input from './input';
+
+const billingPayload = {
+    service: "",
+    name: "",
+    previous_usage: "",
+    recent_usage: "",
+    month: "",
+    year: "",
+    remarks: "",
+
+    service_label: "",
+    month_label: "",
+    year_label: "",
+}
 
 const columnsService = [
     { Header: "ID", accessor: "id" },
@@ -36,11 +52,9 @@ function Component() {
     const [services, setServices] = useState([]);
     const [servicesPageCount, setServicesPageCount] = useState(1);
     const [servicesLoading, setServicesLoading] = useState(false);
-    
+
     const { loading, selected, unit } = useSelector(state => state.billing);
     const selectedUnit = unit.selected;
-
-    console.log(selectedUnit, serviceName)
 
     useEffect(() => {
         dispatch(get(endpointAdmin + '/building/service' +
@@ -52,96 +66,103 @@ function Component() {
             }));
     })
 
-    
-    // const [selectedUnit, setSelectedUnit] = useState({})
-    // useEffect(() => {
-    //     setSelectedUnit(unit.selected)
-    //     console.log('selectedUnit', selectedUnit)
-    // }, [selectedUnit, unit])
-    
+    useEffect(() => {
+        dispatch(get(endpointAdmin + '/building/service' +
+            '?page=1' +
+            '&building_id=' + selected.building_id +
+            '&search=' +
+            '&limit=1000',
+
+            res => {
+                const { items } = res.data.data;
+                setServices(items.map(el => ({
+                    label: el.name,
+                    value: el.id,
+                    unit: el.denom_unit,
+                })));
+            }));
+    })
+
     let dispatch = useDispatch();
     let history = useHistory();
 
-    return (
-        <Template>
-            <Modal
-                isOpen={modal} toggle={() => setModal(false)}
-                disableFooter={true}
-                width="1400px"
-                style={{
-                    display: 'flex',
-                    justifyContent: 'center'
-                }}
-            >
-                <p className="Title" style={{
-                    marginBottom: 16
-                }}>Select Service</p>
-                <TableNoSelection
-                    columns={columnsService}
-                    data={services}
-                    loading={servicesLoading}
-                    pageCount={servicesPageCount}
-                    fetchData={useCallback((pageIndex, pageSize, search) => {
-                        setServicesLoading(true);
-                        dispatch(get(endpointAdmin + '/building/service' +
-                            '?page=' + (pageIndex + 1) +
-                            '&building_id=' + selected.building_id +
-                            // '&group=' + servicesGroup +
-                            '&search=' + search +
-                            '&limit=' + pageSize,
-                            
-                            res => {
-                                const { items, total_pages } = res.data.data;
-                                setServices(items);
-                                setServicesPageCount(total_pages);
+    const fetchData = useCallback((pageIndex, pageSize, search) => {
+        setServicesLoading(true);
+        dispatch(get(endpointAdmin + '/building/service' +
+            '?page=' + (pageIndex + 1) +
+            '&building_id=' + selected.building_id +
+            // '&group=' + servicesGroup +
+            '&search=' + search +
+            '&limit=' + pageSize,
 
-                                setServicesLoading(false);
-                            }));
-                        // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [ selected])}
-                    // onClickResolve={row => {
-                    //     console.log(row)
-                    //     setService(row.id);
-                    //     setServiceName(row.name);
-                    //     setModal(false);
-                    // }}
-                    onClickRow={row => {
-                        setService(row.id);
-                        setServiceName(row.name);
-                        setServiceUnit(row.denom_unit);
-                        setModal(false);
-                    }}
-                />
-            </Modal>
-            <Form
-                onSubmit={data => {
-                    selectedUnit.id ?
-                        dispatch(editBillingUnitItem( data, selected, history, selectedUnit.id))
-                        :
-                        dispatch(createBillingUnitItem( data, selected, history))
-                }}
-                loading={loading}
-            >
-                <Input label="Service: All" icon={<FiChevronRight />} inputValue={serviceName}
-                    cancelValue={true}
-                    onClick={() => setModal(true)}
-                />
-                <Input label="Service" hidden inputValue={selectedUnit.service ? selectedUnit.service
-                    : service} />
-                <Input label="Name" inputValue={selectedUnit?.name} />
-                <Input label="Previous Usage" type="number" inputValue={selectedUnit?.previous_usage + ''}
-                    addons={serviceUnit}
-                />
-                <Input label="Recent Usage" type="number" inputValue={selectedUnit?.recent_usage + ''}
-                    addons={serviceUnit}
-                />
-                <Input label="Remarks" type="textarea" inputValue={selectedUnit?.remarks} />
-                <Input label="Month" type="select" options={months} inputValue={selectedUnit?.month} />
-                <Input label="Year" type="select"  options={yearsOnRange(10)} inputValue={selectedUnit?.year} />
-                {/* <Input label="Due Date" type="date" inputValue={selectedUnit.due_date?.split('T')[0]} /> */}
-                <SectionSeparator />
-            </Form>
-        </Template>
+            res => {
+                const { items, total_pages } = res.data.data;
+                // setServices(items);
+                setServicesPageCount(total_pages);
+
+                setServicesLoading(false);
+            }));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selected]);
+
+    return (
+        <Template
+            slice="billing"
+            payload={selected.id ? {
+                ...billingPayload, ...selected,
+            } : billingPayload}
+            schema={billingSchema}
+            formatValues={values => ({
+                ...values,
+            })}
+            edit={data => dispatch(editBillingUnitItem(data, selected, history, selectedUnit.id))}
+            add={data => dispatch(createBillingUnitItem(data, selected, history))}
+            renderChild={props => {
+                return (
+                    <Form className="Form">
+                        <Modal
+                            isOpen={modal} toggle={() => setModal(false)}
+                            disableFooter={true}
+                            width="1400px"
+                            style={{
+                                display: 'flex',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <p className="Title" style={{
+                                marginBottom: 16
+                            }}>Select Service</p>
+                            <TableNoSelection
+                                columns={columnsService}
+                                data={services}
+                                loading={servicesLoading}
+                                pageCount={servicesPageCount}
+                                fetchData={fetchData}
+                                onClickRow={row => {
+                                    setService(row.id);
+                                    setServiceName(row.name);
+                                    setServiceUnit(row.denom_unit);
+                                    setModal(false);
+                                }}
+                            />
+                        </Modal>
+
+                        <Input {...props} label="Service" options={services} onChange={el => {
+                            console.log('changed');
+                            setServiceUnit(el.unit);
+                        }} />
+                        <Input {...props} label="Name" />
+                        <Input {...props} label="Previous Usage" suffix={serviceUnit} />
+                        <Input {...props} label="Recent Usage" suffix={serviceUnit} />
+                        <Input {...props} label="Remarks" type="textarea" />
+                        <Input {...props} label="Month" options={months} />
+                        <Input {...props} label="Year" options={yearsOnRange(10)} />
+                        <button>Submit</button>
+                        <SectionSeparator />
+                    </Form>
+                )
+            }}
+        />
     )
 }
 

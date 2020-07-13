@@ -2,20 +2,50 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Input from '../../components/Input';
-import Select from '../../components/Select';
-import Form from '../../components/Form';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import SectionSeparator from '../../components/SectionSeparator';
-import { createResident, addSubaccount } from '../slices/resident';
+import { createResident, addSubaccount, editResident } from '../slices/resident';
 import { toSentenceCase } from '../../utils';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';
 import { Badge } from 'reactstrap';
 import { get, post } from '../slice';
-import Template from './components/Template';
+
+import Template from "./components/TemplateWithFormik";
+import { Form } from 'formik';
+import { residentSchema } from "./schemas";
+import Input from './input';
+
+const residentPayload = {
+    email: "",
+    firstname: "",
+    lastname: "",
+    phone: "",
+    birthplace: "",
+    birthdate: "",
+    nationality: "",
+    gender: "P",
+    marital_status: "",
+    occupation: "",
+    address: "",
+    province: "",
+    city: "",
+    district: "",
+    account_bank: "",
+    account_name: "",
+    account_number: "",
+
+    birthplace_label: "",
+    nationality_label: "",
+    marital_status_label: "",
+    occupation_label: "",
+    province_label: "",
+    city_label: "",
+    district_label: "",
+    account_bank_label: "",
+}
 
 const columns = [
     { Header: "ID", accessor: "id" },
@@ -37,30 +67,23 @@ const columns = [
 ]
 
 function Component() {
+    const { loading, selected } = useSelector(state => state.resident);
+
     const [step, setStep] = useState(2);
     const [resident, setResident] = useState({});
     const [residents, setResidents] = useState([]);
     const [residentsPage, setResidentsPage] = useState('');
     const [loadingResident, setLoadingResident] = useState(false);
     const [emailRegistered, setEmailRegistered] = useState(false);
-    const [validation, setValidation] = useState({
-        tel: {
-            value: '',
-            isErr: false
-        }
-    })
 
     const [unitID, setUnitID] = useState('');
     const [units, setUnits] = useState([]);
 
-    const [exist, setExist] = useState(true);
+    const [exist, setExist] = useState(selected.id ? false : true);
     const [sub, setSub] = useState({});
 
     const [modal, setModal] = useState(false);
 
-    const [email, setEmail] = useState('');
-
-    const [district, setDistrict] = useState("");
     const [districts, setDistricts] = useState([]);
 
     const [city, setCity] = useState("");
@@ -69,17 +92,13 @@ function Component() {
     const [province, setProvince] = useState("");
     const [provinces, setProvinces] = useState([]);
 
-    const [bcity, setBCity] = useState("");
     const [bcities, setBCities] = useState([]);
     const [bcloading, setBCLoading] = useState(true);
 
-    const [nat, setNat] = useState("");
 
-    const { loading } = useSelector(state => state.resident);
-    
     let dispatch = useDispatch();
     let history = useHistory();
-    
+
     useEffect(() => {
         dispatch(get(endpointResident + '/geo/province',
 
@@ -92,25 +111,24 @@ function Component() {
 
     useEffect(() => {
         setCity("");
-        (province) && dispatch(get(endpointResident + '/geo/province/' + (province),
+        (province || selected.province) && dispatch(get(endpointResident + '/geo/province/' + (province),
 
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setCities(formatted);
             }
         ))
-    }, [dispatch, province]);
+    }, [dispatch, province, selected.province]);
 
     useEffect(() => {
-        setDistrict("");
-        (city) && dispatch(get(endpointResident + '/geo/city/' + (city),
+        (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city),
 
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
                 setDistricts(formatted);
             }
         ))
-    }, [city, dispatch]);
+    }, [city, dispatch, selected.city]);
 
     useEffect(() => {
         setBCLoading(true);
@@ -157,166 +175,153 @@ function Component() {
     }, [dispatch, resident])
 
     return (
-        <Template>
-            <Modal title={"Add Resident"} okLabel={"Yes"}
-                isOpen={modal} toggle={() => setModal(false)} onClick={() => setStep(2)}>
-                {step === 1 && <p>
-                    Resident with the provided email already exist.
-                    Add as sub account to another resident?
-                </p>}
-                {step === 2 && <>
-                    <p className="Title" style={{
-                        marginBottom: 16
-                    }}>Select Resident</p>
-                    <Table
-                        columns={columns}
-                        data={residents}
-                        loading={loadingResident}
-                        pageCount={residentsPage}
-                        fetchData={getResident}
-                        onClickResolve={row => {
-                            setResident(row);
-                            setStep(3);
-                        }}
-                    />
-                    <Button label="Back" secondary
-                        onClick={() => setStep(1)}
-                    />
-                </>}
-                {step === 3 && <>
-                    <p style={{ marginBottom: 16 }}>Add as sub account to
-                {' ' + resident.firstname + ' ' + resident.lastname + ' '}
-                in</p>
-                    <Input label="Unit" type="select" options={units.map(el => ({
-                        label: el.number,
-                        value: el.unit_id
-                    }))} inputValue={unitID} setInputValue={setUnitID} />
-                    <div style={{ marginTop: 16 }} />
-                    {unitID && <Input type="button" label="Add as Subaccount" compact
-                        onClick={() => {
-                            dispatch(addSubaccount({
-                                unit_id: parseInt(unitID),
-                                parent_id: resident.id,
-                                owner_id: sub.id,
-                                level: 'sub',
-                            }, history));
-                            history.goBack();
-                        }}
-                    />}
-                </>}
-            </Modal>
-            <Form
-                showSubmit={!exist}
-                onSubmit={data => dispatch(createResident(data, history))}
-                loading={loading}
-            >
-                <div style={{
-                    width: '100%'
-                }}>
-                    <Input onFocus={() => setEmailRegistered(false)} label="Email" placeholder={"Input Resident Email"} type="email" compact inputValue={email}
-                        setInputValue={setEmail} />
-                    {emailRegistered && <span className="validation-error">Email is already registered</span>}
-                    {exist && <Input label="Check" type="button" compact inputClassName="px-3 m-0 mt-3"
-                        onClick={() => {
-                            dispatch(post(endpointResident + '/management/resident/check', {
-                                email: email
-                            },
-                                res => {
-                                    setSub(res.data.data);
-                                    res.data.data.id
-                                        ?
-                                        setEmailRegistered(true)
-                                        // setModal(true)
-                                        :
-                                        setExist(false)
+        <Template
+            slice="resident"
+            payload={selected.id ? {
+                ...residentPayload, ...selected,
+                phone: selected.phone.slice(2),
+                birthdate: selected.birthdate.split('T')[0],
+            } : residentPayload}
+            schema={residentSchema}
+            formatValues={values => ({
+                ...values,
+                phone: '62' + values.phone,
+                birthdate: values.birthdate + ' 00:00:00',
+            })}
+            edit={data => dispatch(editResident(data, history, selected.id))}
+            add={data => dispatch(createResident(data, history))}
+            renderChild={props => {
+                const { values } = props;
+
+                return (
+                    <Form className="Form">
+                        <Modal title={"Add Resident"} okLabel={"Yes"}
+                            isOpen={modal} toggle={() => setModal(false)} onClick={() => setStep(2)}>
+                            {step === 1 && <p>
+                                Resident with the provided email already exist.
+                                Add as sub account to another resident?
+                                </p>}
+                            {step === 2 && <>
+                                <p className="Title" style={{
+                                    marginBottom: 16
+                                }}>Select Resident</p>
+                                <Table
+                                    columns={columns}
+                                    data={residents}
+                                    loading={loadingResident}
+                                    pageCount={residentsPage}
+                                    fetchData={getResident}
+                                    onClickResolve={row => {
+                                        setResident(row);
+                                        setStep(3);
+                                    }}
+                                />
+                                <Button label="Back" secondary
+                                    onClick={() => setStep(1)}
+                                />
+                            </>}
+                            {step === 3 && <>
+                                <p style={{ marginBottom: 16 }}>Add as sub account to
+                                    {' ' + resident.firstname + ' ' + resident.lastname + ' '}
+                                    in</p>
+                                <Input label="Unit" type="select" options={units.map(el => ({
+                                    label: el.number,
+                                    value: el.unit_id
+                                }))} inputValue={unitID} setInputValue={setUnitID} />
+                                <div style={{ marginTop: 16 }} />
+                                {unitID && <Input type="button" label="Add as Subaccount" compact
+                                    onClick={() => {
+                                        dispatch(addSubaccount({
+                                            unit_id: parseInt(unitID),
+                                            parent_id: resident.id,
+                                            owner_id: sub.id,
+                                            level: 'sub',
+                                        }, history));
+                                        history.goBack();
+                                    }}
+                                />}
+                            </>}
+                        </Modal>
+
+                        <Input {...props} onFocus={() => setEmailRegistered(false)} label="Email"
+                            placeholder={"Input Resident Email"} type="email" compact disabled={!exist} />
+                        {emailRegistered && <span style={{
+                            marginBottom: 12
+                        }} className="validation-error">Email is already registered</span>}
+                        {exist && <button
+                            type="button"
+                            onClick={() => {
+                                dispatch(post(endpointResident + '/management/resident/check', {
+                                    email: values.email
                                 },
-                            ))
-                        }}
-                    />}
-                    <SectionSeparator />
-                </div>
-                {(!exist) && <>
-                    <Input label="First Name" name="firstname" />
-                    <Input label="Last Name" name="lastname" />
-                    <Input label="Phone" type="tel"
-                        inputValue={validation.tel.value}
-                        placeholder="e.g 6281xxxxxxx"
-                        isValidate={validation.tel.isErr}
-                        validationMsg="The phone number must begin 62" onFocus={(e) => {
-                            setValidation({
-                                ...validation,
-                                tel: {
-                                    ...validation.tel,
-                                    value: '62'
-                                }
-                            })
-                        }}
-                        onBlur={(e) => {
-                            if (e.target.value.includes(e.target.value.match(/^62/))) {
-                                setValidation({
-                                    ...validation,
-                                    tel: {
-                                        ...validation.tel,
-                                        isErr: false
-                                    }
-                                })
-                            } else setValidation({
-                                ...validation,
-                                tel: {
-                                    ...validation.tel,
-                                    isErr: true
-                                }
-                            })
-                        }}
-                    />
-                    <Select label="Birth Place" name="birthplace" options={bcities}
-                        inputValue={bcity.value} setInputValue={setBCity}
-                        loading={bcloading}
-                    />
-                    <Input label="Birth Date" name="birthdate" type="date" />
-                    <SectionSeparator />
-                    <Select label="Nationality" options={countries}
-                        setInputValue={setNat} inputValue={nat.label}
-                    />
-                    <Input hidden name="nationality" inputValue={nat.value} />
-                    <Input label="Gender" type="radio" options={[
-                        { value: 'P', label: 'Perempuan' },
-                        { value: 'L', label: 'Laki-Laki' },
-                    ]} />
-                    <Input label="Marital Status" type="select" options={[
-                        { value: 'single', label: 'Single' },
-                        { value: 'married', label: 'Married' },
-                        { value: 'divorce', label: 'Divorced' },
-                        { value: 'other', label: 'Other' },
-                    ]} />
-                    <Input label="Occupation" type="select" options={[
-                        { value: 'unemployed', label: 'Unemployed' },
-                        { value: 'student', label: 'Student' },
-                        { value: 'university_student', label: 'University Student' },
-                        { value: 'professional', label: 'Professional' },
-                        { value: 'housewife', label: 'Housewife' },
-                    ]} />
-                    <SectionSeparator />
+                                    res => {
+                                        setSub(res.data.data);
+                                        res.data.data.id
+                                            ?
+                                            setEmailRegistered(true)
+                                            :
+                                            setExist(false)
+                                    },
+                                ))
+                            }}
+                            disabled={!values.email}
+                        >
+                            Check
+                            </button>}
+                        <SectionSeparator />
 
-                    <Input label="Address" type="textarea" />
-                    <Input label="Province" type="select" options={provinces}
-                        inputValue={province} setInputValue={setProvince}
-                    />
-                    <Input label="City" type="select" options={cities}
-                        inputValue={city} setInputValue={setCity}
-                    />
-                    <Input label="District" type="select" options={districts}
-                        inputValue={district} setInputValue={setDistrict}
-                    />
-                    <SectionSeparator />
+                        {(!exist) && <>
+                            <Input {...props} label="First Name" name="firstname" />
+                            <Input {...props} label="Last Name" name="lastname" />
+                            <Input {...props} label="Phone" prefix="+62" />
+                            <SectionSeparator />
 
-                    <Input label="Account Bank" type="select" options={banks} />
-                    <Input label="Account Number" />
-                    <Input label="Account Name"
-                    />
-                </>}
-            </Form>
-        </Template>
+                            <Input {...props} label="Birth Place" name="birthplace" options={bcities}
+                                loading={bcloading}
+                            />
+                            <Input {...props} label="Birth Date" name="birthdate" type="date" />
+                            <Input {...props} label="Nationality" options={countries}
+                            />
+                            <Input {...props} hidden name="nationality" />
+                            <Input {...props} label="Gender" type="radio" options={[
+                                { value: 'P', label: 'Female' },
+                                { value: 'L', label: 'Male' },
+                            ]} />
+                            <Input {...props} label="Marital Status" options={[
+                                { value: 'single', label: 'Single' },
+                                { value: 'married', label: 'Married' },
+                                { value: 'divorce', label: 'Divorced' },
+                                { value: 'other', label: 'Other' },
+                            ]} />
+                            <Input {...props} label="Occupation" options={[
+                                { value: 'unemployed', label: 'Unemployed' },
+                                { value: 'student', label: 'Student' },
+                                { value: 'university_student', label: 'University Student' },
+                                { value: 'professional', label: 'Professional' },
+                                { value: 'housewife', label: 'Housewife' },
+                            ]} />
+                            <SectionSeparator />
+
+                            <Input {...props} label="Address" type="textarea" />
+                            <Input {...props} label="Province" options={provinces}
+                                onChange={el => setProvince(el.value)}
+                            />
+                            {values.province && <Input {...props} label="City" options={cities}
+                                onChange={el => setCity(el.value)}
+                            />}
+                            {values.city && <Input {...props} label="District"
+                                options={districts} />}
+                            <SectionSeparator />
+
+                            <Input {...props} label="Account Bank" options={banks} />
+                            <Input {...props} label="Account Number" />
+                            <Input {...props} label="Account Name" />
+                            <button>Submit</button>
+                        </>}
+                    </Form>
+                )
+            }}
+        />
     )
 }
 

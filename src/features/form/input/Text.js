@@ -7,19 +7,20 @@ function TextInput({
     onChange = () => { }, ...rest
 }) {
     const [isFocused, setFocus] = useState(false);
+    const [value, setValue] = useState('');
 
-    const { setFieldValue, ...restInput } = rest;
+    const { handleChange, setFieldValue, ...restInput } = rest;
     const { errors, touched, values } = restInput;
     const fixedName = name + (options ? '_label' : '');
 
     //this repopulate the label field when editing, provided BE doesnt send them
     useEffect(() => {
         options && !values[fixedName] && values[name] &&
-        // console.log(fixedName, values[name], options.find(el => el.value == values[name])?.label)
-        setFieldValue(fixedName, 
-            // eslint-disable-next-line eqeqeq
-            options.find(el => el.value == values[name])?.label);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+            // console.log(fixedName, values[name], options.find(el => el.value == values[name])?.label)
+            setFieldValue(fixedName,
+                // eslint-disable-next-line eqeqeq
+                options.find(el => el.value == values[name])?.label);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [options])
 
     return (
@@ -31,7 +32,9 @@ function TextInput({
                 <Field
                     as={as}
                     rows="4"
-                    onClick={() => setFocus(!isFocused)}
+                    // onClick={() => setFocus(!isFocused)}
+                    onFocus={() => setFocus(!isFocused)}
+                    onBlur={() => setTimeout(() => setFocus(!isFocused), 100)}
                     name={fixedName}
                     className={errors[name] && touched[name] && "error"}
                     style={{
@@ -42,6 +45,10 @@ function TextInput({
                     }}
                     placeholder={label}
                     autoComplete={options ? "off" : ""}
+                    onChange={e => {
+                        setValue(e.target.value);
+                        handleChange(e);
+                    }}
                     {...restInput}
                 />
                 {suffix && <div className="Input-suffix">
@@ -58,22 +65,24 @@ function TextInput({
             {isFocused && options && <div
                 className="Input-options"
             >
-                {options.map(el =>
-                    <p
-                        key={el.value}
-                        className="Input-optionItem"
-                        onClick={() => {
-                            console.log('clicked');
-                            // setValue(el.value);
-                            setFieldValue(fixedName, el.label);
-                            setFieldValue(name, el.value);
-                            onChange(el);
-                            setFocus(false);
-                        }}
-                    >
-                        {el.label}
-                    </p>
-                )}
+                {options
+                    .filter(el => el.label.toLowerCase().includes(value.toLowerCase()))
+                    .map(el =>
+                        <p
+                            key={el.value}
+                            className="Input-optionItem"
+                            onClick={() => {
+                                console.log('clicked');
+                                // setValue(el.value);
+                                setFieldValue(fixedName, el.label);
+                                setFieldValue(name, el.value);
+                                onChange(el);
+                                setFocus(false);
+                            }}
+                        >
+                            {el.label}
+                        </p>
+                    )}
             </div>}
         </>
     )

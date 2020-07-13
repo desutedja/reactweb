@@ -1,19 +1,9 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { FiSearch } from 'react-icons/fi';
-
-import Table from '../../components/Table';
-import Button from '../../components/Button';
-import Link from '../../components/Link';
-import Editor from '../../components/Editor';
-import SectionSeparator from '../../components/SectionSeparator';
-import Modal from '../../components/Modal';
-import { toSentenceCase } from '../../utils';
 
 import { endpointAdmin, endpointMerchant } from '../../settings';
 import { createAnnouncement, editAnnouncement } from '../slices/announcement';
-import { endpointResident } from '../../settings';
 import { get } from '../slice';
 
 import Template from './components/TemplateWithFormik';
@@ -31,23 +21,6 @@ const announcementPayload = {
     description: "",
     building_unit: [],
 }
-
-const columnsBuilding = [
-    { Header: 'ID', accessor: 'id' },
-    { Header: 'Name', accessor: 'name' },
-    { Header: 'Legal Name', accessor: 'legal_name' },
-    { Header: 'Code Name', accessor: 'code_name' },
-    { Header: 'Owner', accessor: 'owner_name' },
-    { Header: 'Website', accessor: row => <Link>{row.website}</Link> },
-]
-
-const columnsUnit = [
-    { Header: "ID", accessor: "id" },
-    { Header: "Number", accessor: "number" },
-    { Header: "Floor", accessor: "floor" },
-    { Header: "Section", accessor: row => toSentenceCase(row.section_type) + " " + row.section_name },
-    { Header: "Type", accessor: row => row.unit_type_name + " - " + row.unit_size },
-]
 
 const roles = [
     { value: 'centratama', label: 'Centratama' },

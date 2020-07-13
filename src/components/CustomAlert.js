@@ -22,7 +22,7 @@ function Component({ isOpen, toggle, title, content }) {
             modalTransition={{ timeout: 1 }}
             backdropTransition={{ timeout: 1 }}
         >
-            <ModalHeader toggle={toggle} close={closeBtn}><h5>{title}</h5></ModalHeader>
+            <ModalHeader toggle={toggle} close={closeBtn}>{title}</ModalHeader>
             <ModalBody>
                 {content}
             </ModalBody>
