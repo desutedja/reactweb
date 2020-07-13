@@ -18,8 +18,7 @@ const task_categories = [
 const task_priorities = [
     {label: 'Low', value: 'low'},
     {label: 'Normal', value: 'normal'},
-    {label: 'High', value: 'high'},
-    {label: 'Emergency', value: 'emergency'},
+    {label: 'High', value: 'high'}
 ]
 export default function Component() {
     const history = useHistory();
