@@ -305,24 +305,29 @@ table tr:last-child td:last-child {
 .radio-indicator {
   position: absolute;
   top: 0;
+  left: 0;
   height: 100%;
-  width: 34.33333%;
+  width: 27%;
   border-radius: 4px;
   z-index: 1;
   transition: .4s cubic-bezier(0.54, 0.11, 0.07, 1.14);
 }
 
 .radio-indicator.emergency {
-  background-color: rgb(235, 76, 76);
-  left: 65.6666%;
+  background-color: #dc3545;
+  left: 73%;
+}
+.radio-indicator.high {
+  background-color: #ffc107;
+  left: 48%;
 }
 .radio-indicator.normal {
-  background-color: rgb(76, 158, 235);
-  left: 31.3333%;
+  background-color: #28a745;
+  left: 24%;
 }
 .radio-indicator.low {
-  background-color: rgba(228, 231, 57, 0.952);
-  left: 0%;
+  background-color: #28a745;
+  left: -2%;
 }
 
 @media only screen and (max-width: 575px) {
@@ -331,25 +336,30 @@ table tr:last-child td:last-child {
     top: 0;
     left: 0;
     width: 100%;
-    height: 33.33333%;
+    height: 25%;
     border-radius: 6px;
     z-index: 1;
     transition: .4s cubic-bezier(0.54, 0.11, 0.07, 1.14);
   }
   
   .radio-indicator.emergency {
-    background-color: rgb(235, 76, 76);
+    background-color: #dc3545;
     top: 0%;
     left: 0;
   }
+  .radio-indicator.high {
+    background-color: #ffc107;
+    top: 25%;
+    left: 0;
+  }
   .radio-indicator.normal {
-    background-color: rgb(76, 158, 235);
-    top: 33.3333%;
+    background-color: #28a745;
+    top: 50%;
     left: 0;
   }
   .radio-indicator.low {
-    background-color: rgba(228, 231, 57, 0.952);
-    top: 66.6666%;
+    background-color: #28a745;
+    top: 75%;
     left: 0;
   }
 }
@@ -374,17 +384,22 @@ table tr:last-child td:last-child {
 }
 
 .radio-box label.emergency {
-  /* background-color: rgb(235, 76, 76); */
+  /* background-color: #dc3545; */
   color: white;
   transition: .1s;
 }
+.radio-box label.high {
+  /* background-color: #28a745; */
+  color: #212529;
+  transition: .1s;
+}
 .radio-box label.normal {
-  /* background-color: rgb(76, 158, 235); */
+  /* background-color: #28a745; */
   color: white;
   transition: .1s;
 }
 .radio-box label.low {
-  /* background-color: rgba(228, 231, 57, 0.952); */
+  /* background-color: #28a745; */
   color: white;
   transition: .1s;
 }

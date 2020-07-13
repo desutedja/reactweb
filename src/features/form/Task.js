@@ -18,6 +18,7 @@ const task_categories = [
 const task_priorities = [
     {label: 'Low', value: 'low'},
     {label: 'Normal', value: 'normal'},
+    {label: 'High', value: 'high'},
     {label: 'Emergency', value: 'emergency'},
 ]
 export default function Component() {
@@ -83,7 +84,7 @@ export default function Component() {
                                     res => {
                                         console.log(res);
                                         dispatch(refresh())
-                                        history.push('/bms/task');
+                                        history.push('/bm/task');
                                     }
                                 ))
                             }}
