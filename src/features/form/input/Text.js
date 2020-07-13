@@ -3,7 +3,7 @@ import { FiAlertCircle } from 'react-icons/fi';
 import { Field } from 'formik';
 
 function TextInput({
-    as, label, name, prefix, suffix, options,
+    as, label, name, prefix, suffix, options, externalValue,
     onChange = () => { }, ...rest
 }) {
     const [isFocused, setFocus] = useState(false);
@@ -13,10 +13,13 @@ function TextInput({
     const { errors, touched, values } = restInput;
     const fixedName = name + (options ? '_label' : '');
 
+    useEffect(() => {
+        setFieldValue(fixedName, externalValue);
+    }, [externalValue])
+
     //this repopulate the label field when editing, provided BE doesnt send them
     useEffect(() => {
         options && !values[fixedName] && values[name] &&
-            // console.log(fixedName, values[name], options.find(el => el.value == values[name])?.label)
             setFieldValue(fixedName,
                 // eslint-disable-next-line eqeqeq
                 options.find(el => el.value == values[name])?.label);
@@ -46,6 +49,8 @@ function TextInput({
                     placeholder={label}
                     autoComplete={options ? "off" : ""}
                     onChange={e => {
+                        !options && onChange(e.target.value);
+
                         setValue(e.target.value);
                         handleChange(e);
                     }}

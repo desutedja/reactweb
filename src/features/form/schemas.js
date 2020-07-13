@@ -133,3 +133,7 @@ export const announcementSchema = Yup.object().shape({
     image: Text,
     description: Text,
 });
+
+export const adsSchema = Yup.object().shape({
+    
+})

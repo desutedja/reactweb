@@ -40,7 +40,7 @@ function Input({ optional = false, ...props }) {
         }>
             {!compact && <>
                 <div style={{ display: 'flex' }}>
-                    <div style={{ display: 'flex' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
                         <label className="Input-label" htmlFor={label}>
                             {label}
                         </label>
