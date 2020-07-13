@@ -3,9 +3,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  /* flex-wrap: wrap; */
   padding: 16px;
+  overflow: auto;
 }
 
 .Form-control {
@@ -27,7 +26,7 @@
   max-height: 100px;
   top: 100%;
   background-color: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   z-index: 1;
   overflow-y: auto;
   border-radius: 5px;
@@ -45,7 +44,7 @@
 }
 
 .lists ul li:hover {
-  background-color: rgba(0, 0, 0, .03);
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
 .Form .Input {
@@ -100,7 +99,8 @@
   font-weight: bold;
 }
 
-.Input-prefix, .Input-suffix {
+.Input-prefix,
+.Input-suffix {
   border-radius: 4px 0px 0px 4px;
   border-top: 0.5px;
   border-bottom: 0.5px;
@@ -183,7 +183,6 @@
   margin-left: 5px;
 }
 
-
 .MultiSelectItem-delete {
   /* margin-left: 4px; */
   cursor: pointer;
@@ -212,54 +211,54 @@
 }
 
 .MultiSelectDropDown {
-   width: 100%;
-   margin: 0;
-   padding: 0;
-   position: absolute;
-   list-style: none;
-   background-color: #fff;
-   overflow: auto;
-   max-height: 250px;
-   border-width: 0px;
-   border-style: solid;
-   border-color: #000;
-   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-   z-index: 1;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  list-style: none;
+  background-color: #fff;
+  overflow: auto;
+  max-height: 250px;
+  border-width: 0px;
+  border-style: solid;
+  border-color: #000;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1;
 }
 
 .MultiSelectDropDown li {
-   padding: 12px 12px;
-   display: flex;
+  padding: 12px 12px;
+  display: flex;
 }
 
 .MultiSelectDropDown li span {
-    flex-grow: 1;
+  flex-grow: 1;
 }
 
 .MultiSelectDropDown li svg {
-    color: transparent;
+  color: transparent;
 }
 
-.MultiSelectDropDown li[aria-selected='true'] {
-    background-color: #fafafa;
-    font-weight: 600;
+.MultiSelectDropDown li[aria-selected="true"] {
+  background-color: #fafafa;
+  font-weight: 600;
 }
 
-.MultiSelectDropDown li[aria-selected='true'] svg {
-    color: var(--color-primary);
+.MultiSelectDropDown li[aria-selected="true"] svg {
+  color: var(--color-primary);
 }
 
-.MultiSelectDropDown li[data-focus='true'] {
-    background-color: #e6f7ff;
-    cursor: pointer;
+.MultiSelectDropDown li[data-focus="true"] {
+  background-color: #e6f7ff;
+  cursor: pointer;
 }
 
-.MultiSelectDropDown li[data-focus='true'] svg {
-    color: #000;
+.MultiSelectDropDown li[data-focus="true"] svg {
+  color: #000;
 }
 
 .MultiSelectItemWrapper {
-   display: flex;
-   padding: 12px 0px 10px 0px;
-   flex-wrap: wrap;
+  display: flex;
+  padding: 12px 0px 10px 0px;
+  flex-wrap: wrap;
 }

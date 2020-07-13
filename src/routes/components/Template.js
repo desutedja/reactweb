@@ -194,9 +194,7 @@ function Component({ role, menu }) {
                     </div>
                 </div>
             </div>
-            <Row style={{
-                height: '100vh',
-            }}>
+            <Row>
                 <div className="Menu shadow scroller-y">
                     <div className={menuWide ? "Logo-container" : "Logo-container-small"}
                         onClick={() => history.push('/' + role)}

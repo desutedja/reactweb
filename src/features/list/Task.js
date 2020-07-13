@@ -25,9 +25,11 @@ import Template from './components/Template';
 const columns = [
     // { Header: "ID", accessor: "id" },
     { Header: "Title", accessor: row => <Tile items={[row.title, <small>{toEllipsis(row.ref_code, 17)}</small>]} /> },
-    { Header: "Type", accessor: row =>  row.task_type === "service" ? <>{ toSentenceCase(row.task_type) + 
-            (row.task_specialization ? ("- " + row.task_specialization) : "") }</> : 
-        toSentenceCase(row.task_type) },
+    {
+        Header: "Type", accessor: row => row.task_type === "service" ? <>{toSentenceCase(row.task_type) +
+            (row.task_specialization ? ("- " + row.task_specialization) : "")}</> :
+            toSentenceCase(row.task_type)
+    },
     {
         Header: "Priority", accessor: row =>
             <Pill color={
@@ -142,26 +144,22 @@ function Component() {
 
     useEffect(() => {
         console.log(role)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
     return (
         <>
-            <Modal isOpen={resolve} toggle={() => setResolve(false)} disableFooter disableHeader >
+            <Modal isOpen={resolve} toggle={() => setResolve(false)} disableHeader
+                okLabel="Yes"
+                onClick={() => {
+                    setResolve(false);
+                    dispatch(resolveTask(selectedRow));
+                }}
+                cancelLabel="No"
+                onClickSecondary={() => {
+                    setResolve(false);
+                }}
+            >
                 Are you sure you want to resolve this task?
-                <div style={{
-                    display: 'flex',
-                    marginTop: 16,
-                }}>
-                    <Button label="No" secondary
-                        onClick={() => setResolve(false)}
-                    />
-                    <Button label="Yes"
-                        onClick={() => {
-                            setResolve(false);
-                            dispatch(resolveTask(selectedRow));
-                        }}
-                    />
-                </div>
             </Modal>
             <Modal isOpen={assign} toggle={() => setAssign(false)}>
                 Choose assignee:
@@ -174,20 +172,20 @@ function Component() {
                     display: 'flex',
                     marginTop: 16,
                 }}>
-                    <Button label="No" secondary
-                        onClick={() => setAssign(false)}
-                    />
-                    <Button label="Yes"
-                        onClick={() => {
-                            setStaff({});
-                            setAssign(false);
-                            dispatch(reassignTask({
-                                "task_id": selectedRow.id,
-                                "assignee_id": staff.value,
-                            }));
-                        }}
-                    />
-                </div>}
+                        <Button label="No" secondary
+                            onClick={() => setAssign(false)}
+                        />
+                        <Button label="Yes"
+                            onClick={() => {
+                                setStaff({});
+                                setAssign(false);
+                                dispatch(reassignTask({
+                                    "task_id": selectedRow.id,
+                                    "assignee_id": staff.value,
+                                }));
+                            }}
+                        />
+                    </div>}
             </Modal>
             <Template
                 columns={columns}

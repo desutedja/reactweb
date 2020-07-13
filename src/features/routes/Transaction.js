@@ -12,7 +12,6 @@ function Component() {
     let { path } = useRouteMatch();
 
     return (
-        <div>
             <Switch>
                 <Redirect exact from={path} to={`${path}/list`} />
                 <Route path={`${path}/list`}>
@@ -28,7 +27,6 @@ function Component() {
                     <Disbursement />
                 </Route>
             </Switch>
-        </div>
     )
 }
 

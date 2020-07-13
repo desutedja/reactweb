@@ -2,6 +2,9 @@
   border-radius: 4px;
   /* background-color: white; */
   width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .Table-content {
@@ -34,7 +37,8 @@
   padding: 16px;
 }
 
-.Container .Pagination, .ReactModalPortal .Pagination {
+.Container .Pagination,
+.ReactModalPortal .Pagination {
   padding: 0;
   padding-top: 16px;
 }
@@ -74,7 +78,8 @@
   justify-content: space-between;
 }
 
-.Container .TableAction, .ReactModalPortal .TableAction {
+.Container .TableAction,
+.ReactModalPortal .TableAction {
   padding: 0;
   padding-bottom: 8px;
 }
@@ -91,6 +96,14 @@
 .TableHeader {
   display: flex;
   align-items: center;
+}
+
+.TableSearch input {
+  padding: 6px;
+}
+
+.TableSearch .InputIcon {
+  top: 6px;
 }
 
 .TableEmpty {
@@ -125,7 +138,8 @@
   display: flex;
 }
 
-.SelectActions-options, .SelectActions-options-hide {
+.SelectActions-options,
+.SelectActions-options-hide {
   position: absolute;
   top: 36px;
   background-color: white;

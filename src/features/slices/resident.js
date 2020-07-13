@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { endpointResident } from '../../settings';
 import { get, post, del, put } from '../slice';
 
@@ -78,7 +78,7 @@ export const {
 } = slice.actions;
 
 export const getResident = (
-   pageIndex, pageSize,
+  pageIndex, pageSize,
   search = '',
 ) => dispatch => {
   dispatch(startAsync());
@@ -88,7 +88,7 @@ export const getResident = (
     '&limit=' + pageSize +
     '&search=' + search +
     '&status=',
-    
+
     res => {
       dispatch(setData(res.data.data));
 
@@ -96,10 +96,10 @@ export const getResident = (
     }))
 }
 
-export const createResident = ( data, history) => dispatch => {
+export const createResident = (data, history) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(residentEndpoint + '/register/parent', data, 
+  dispatch(post(residentEndpoint + '/register/parent', data,
     res => {
       history.push("/sa/resident");
 
@@ -110,10 +110,10 @@ export const createResident = ( data, history) => dispatch => {
     }))
 }
 
-export const editResident = ( data, history, id) => dispatch => {
+export const editResident = (data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(residentEndpoint + '/edit', { ...data, id: id }, 
+  dispatch(put(residentEndpoint + '/edit', { ...data, id: id },
     res => {
       dispatch(setSelected(res.data.data));
       history.push(`${id}`);
@@ -125,20 +125,20 @@ export const editResident = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteResident = (row, ) => dispatch => {
+export const deleteResident = (row,) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(residentEndpoint + '/delete/' + row.id, 
+  dispatch(del(residentEndpoint + '/delete/' + row.id,
     res => {
       dispatch(refresh());
       dispatch(stopAsync())
     }))
 }
 
-export const getResidentDetails = (row,  history, url) => dispatch => {
+export const getResidentDetails = (row, history, url) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(residentEndpoint + '/detail/' + row.id, 
+  dispatch(get(residentEndpoint + '/detail/' + row.id,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
@@ -147,46 +147,80 @@ export const getResidentDetails = (row,  history, url) => dispatch => {
     }))
 }
 
-export const getSubaccount = ( pageIndex, pageSize, search, id) => dispatch => {
-    dispatch(startAsync());
+export const getSubaccount = (pageIndex, pageSize, search, id) => dispatch => {
+  dispatch(startAsync());
 
-    dispatch(get(residentEndpoint + '/subaccount' +
-        '?page=' + (pageIndex + 1) +
-        '&id=' + id + 
-        '&limit=' + pageSize +
-        '&search=' + search,
-        
-        res => {
-            dispatch(setSubaccountData(res.data.data));
-            console.log("->", res);
+  dispatch(get(residentEndpoint + '/subaccount' +
+    '?page=' + (pageIndex + 1) +
+    '&id=' + id +
+    '&limit=' + pageSize +
+    '&search=' + search,
 
-            dispatch(stopAsync())
+    res => {
+      dispatch(setSubaccountData(res.data.data));
+      console.log("->", res);
+
+      dispatch(stopAsync())
+    }
+  ))
+}
+
+export const getResidentUnit = (pageIndex, pageSize, search, id) => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(get(residentEndpoint + '/unit' +
+    '?page=' + (pageIndex + 1) +
+    '&id=' + id +
+    '&limit=' + pageSize +
+    '&search=' + search,
+
+    res => {
+      console.log(res.data.data);
+      dispatch(setUnitData(res.data.data));
+
+      dispatch(stopAsync())
+    }
+  ))
+}
+
+export const addResidentUnit = (data) => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(post(residentEndpoint + '/add_unit', data,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    }))
+}
+
+export const addSubaccount = (data) => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(post(residentEndpoint + '/add_unit', data,
+    res => {
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    }))
+}
+
+export const deleteSubaccount = (unit, parent, owner) => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(put(residentEndpoint + '/delete_unit_sub',
+    {
+      "delete": [
+        {
+          "unit_id": unit,
+          "owner_id": owner
         }
-    ))
-}
-
-export const getResidentUnit = ( pageIndex, pageSize, search, id) => dispatch => {
-    dispatch(startAsync());
-    
-    dispatch(get(residentEndpoint + '/unit' + 
-        '?page=' + (pageIndex + 1) +
-        '&id=' + id + 
-        '&limit=' + pageSize +
-        '&search=' + search,
-        
-        res => {
-            console.log(res.data.data);
-            dispatch(setUnitData(res.data.data));
-
-            dispatch(stopAsync())
-        }
-    ))
-}
-
-export const addResidentUnit = ( data) => dispatch => {
-  dispatch(startAsync());
-
-  dispatch(post(residentEndpoint + '/add_unit', data, 
+      ]
+    },
     res => {
       dispatch(refresh());
       dispatch(stopAsync());
@@ -196,39 +230,10 @@ export const addResidentUnit = ( data) => dispatch => {
     }))
 }
 
-export const addSubaccount = ( data) => dispatch => {
+export const createSubaccount = (data, history) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(residentEndpoint + '/add_unit', data, 
-    res => {
-      dispatch(refresh());
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
-
-export const deleteSubaccount = ( unit, parent, owner ) => dispatch => {
-  dispatch(startAsync());
-
-    dispatch(del(residentEndpoint + '/delete_unit_sub?' + 
-        'unit=' + unit +
-        '&parent=' + parent +
-        '&sub=' + owner,
-    res => {
-      dispatch(refresh());
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
-
-export const createSubaccount = ( data, history) => dispatch => {
-  dispatch(startAsync());
-
-  dispatch(post(residentEndpoint + '/register/subaccount', data, 
+  dispatch(post(residentEndpoint + '/register/subaccount', data,
     res => {
       history.push("/resident");
 

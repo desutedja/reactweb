@@ -9,22 +9,20 @@ function Component() {
     let { path } = useRouteMatch();
 
     return (
-        <div>
-            <Switch>
-                <Route exact path={path}>
-                    <List />
-                </Route>
-                <Route path={`${path}/add`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/edit`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/:id`}>
-                    <Details />
-                </Route>
-            </Switch>
-        </div>
+        <Switch>
+            <Route exact path={path}>
+                <List />
+            </Route>
+            <Route path={`${path}/add`}>
+                <Add />
+            </Route>
+            <Route path={`${path}/edit`}>
+                <Add />
+            </Route>
+            <Route path={`${path}/:id`}>
+                <Details />
+            </Route>
+        </Switch>
     )
 }
 
