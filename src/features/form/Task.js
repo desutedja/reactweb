@@ -1,221 +1,356 @@
 import React, { useEffect, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import SectionSeparator from '../../components/SectionSeparator';
-import { editStaff, createStaff } from '../slices/staff';
-import { endpointResident, endpointAdmin, banks } from '../../settings';
-import { get } from '../slice';
-import Template from './components/TemplateWithFormik';
-import countries from '../../countries';
+import { post } from '../slice';
+import { refresh } from '../slices/task';
+import { task_types, endpointTask } from '../../settings';
+import { toSentenceCase } from '../../utils';
+import { FiChevronDown } from 'react-icons/fi';
 
-import { Form } from 'formik';
-import Input from './input';
-import { staffSchema } from "./schemas";
+import Breadcrumb from '../../components/Breadcrumb';
 
-const staffPayload = {
-    staff_role: "",
-    on_centratama: '1',
-    staff_specialization: "",
-    building_management_id: "",
-    staff_id: "",
-    status: "active",
-    firstname: "",
-    lastname: "",
-    email: "",
-    phone: "",
-    nationality: "",
-    gender: 'P',
-    marital_status: "",
-    address: "",
-    province: "",
-    city: "",
-    district: "",
-    account_bank: "",
-    account_number: "",
-    account_name: "",
+const task_categories = [
+    {label: '⚡ Electricity', value: 'electricity'},
+    {label: '👨‍🔧 Plumbing', value: 'plumbing'},
+    {label: 'others', value: 'others'},
+]
+const task_priorities = [
+    {label: 'Low', value: 'low'},
+    {label: 'Normal', value: 'normal'},
+    {label: 'Emergency', value: 'emergency'},
+]
+export default function Component() {
+    const history = useHistory();
+    const dispatch = useDispatch();
 
-    staff_role_label: "",
-    staff_specialization_label: "",
-    building_management_id_label: "",
-    nationality_label: "",
-    marital_status_label: "",
-    province_label: "",
-    city_label: "",
-    district_label: "",
-    account_bank_label: "",
-}
+    const { path } = useRouteMatch();
+    const { items, unit } = useSelector(state => state.building);
+    // const idUnit = units.find(u => u.section_name === )
+    
+    //! must contain integer!
+    const [unitValue, setUnitValue] = useState('');
 
-function Component() {
-    const { loading, selected } = useSelector(state => state.staff);
-    const [bManagements, setBManagements] = useState([]);
-
-    const [districts, setDistricts] = useState([]);
-    const [city, setCity] = useState("");
-    const [cities, setCities] = useState([]);
-
-    const [province, setProvince] = useState("");
-    const [provinces, setProvinces] = useState([]);
-
-    let dispatch = useDispatch();
-    let history = useHistory();
+    const [typeTask, setTypeTask] = useState([]);
+    const [units, setUnits] = useState(unit.items || []);
+    const [selectedUnit, setSelectedUnit] = useState({});
+    const [taskData, setTaskData] = useState({
+        title: '',
+        // attachments: 5,
+        // attachment_1: "a",
+        // attachment_2: "b",
+        // attachment_3: "c",
+        // attachment_4: "d",
+        // attachment_5: "e",
+        description: '',
+        priority: 'low',
+        
+        // integer
+        building_unit_id: '',
+        task_type: '',
+        category: ''
+    })
+    
+    const idBuilding = items[0].id;
 
     useEffect(() => {
-        dispatch(get(endpointAdmin + '/management/building' +
-            '?limit=10&page=1' +
-            '&search=', res => {
-                let data = res.data.data.items;
-
-                let formatted = data.map(el => ({
-                    label: el.building_name + ' by ' + el.management_name,
-                    value: el.id
-                }));
-
-                setBManagements(formatted);
-            }))
-    }, [dispatch]);
-
+        const condition = new RegExp(unitValue.toString())
+        setUnits(unit.items.filter(u => (
+                condition.test(u.section_type + ' ' + u.number) ||
+                condition.test(u.section_type + ' ' + u.section_name + ' ' + u.number)
+            )
+        ));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [unitValue])
+    
     useEffect(() => {
-        dispatch(get(endpointResident + '/geo/province',
-
-            res => {
-                let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
-                setProvinces(formatted);
-            }
-        ))
-    }, [dispatch]);
-
-    useEffect(() => {
-        setCity("");
-        (province || selected.province) && dispatch(get(endpointResident + '/geo/province/' + (province ? province : selected.province),
-
-            res => {
-                let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
-                setCities(formatted);
-            }
-        ))
-    }, [dispatch, province, selected.province]);
-
-    useEffect(() => {
-        (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city ? city : selected.city),
-
-            res => {
-                let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
-                setDistricts(formatted);
-            }
-        ))
-    }, [city, dispatch, selected.city]);
+        // console.log(taskData)
+    }, [taskData])
 
     return (
-        <Template
-            slice="staff"
-            payload={selected.id ? {...staffPayload, ...selected} : staffPayload}
-            schema={staffSchema}
-            formatValues={values => ({
-                ...values,
-                on_centratama: parseInt(values.on_centratama, 10),
-                phone: '62' + values.phone,
-                province: parseInt(values.province, 10),
-                city: parseInt(values.city, 10),
-                district: parseInt(values.district, 10),
-            })}
-            edit={data => dispatch(editStaff(data, history, selected.id))}
-            add={data => dispatch(createStaff(data, history))}
-            renderChild={props => {
-                const { values } = props;
+        <>
+            <Breadcrumb title={toSentenceCase(path.split('/').reverse()[0])} />
+            <div className="Container">
+                <div className="row justify-content-center w-100 no-gutters mt-5">
+                    <div className="col-12 col-md-6">
+                        <form
+                            className=""
+                            onSubmit={e => {
+                                e.preventDefault();
+                                const url = endpointTask + '/admin/create';
+                                console.log(taskData)
+                                dispatch(post(url, taskData,
+                                    res => {
+                                        console.log(res);
+                                        dispatch(refresh())
+                                        history.push('/bms/task');
+                                    }
+                                ))
+                            }}
+                        >
+                            <SelectOption
+                                className="mb-4"
+                                label="Unit"
+                                placeholder="Select Unit"
+                                options={units}
+                                value={unitValue}
+                                onChange={e => {
+                                    setUnitValue(e.target.value)
+                                }}
+                                optionClick={el => {
+                                    setTaskData({
+                                        ...taskData,
+                                        building_unit_id: Number(el.id)
+                                    })
+                                    setUnitValue(el.section_type + ' ' + el.section_name + ' ' + el.number)
+                                }}
+                            />
+                            <Radio
+                                className="mb-4"
+                                label="Type"
+                                options={task_types}
+                                optionClick={el => {
+                                    el.value === 'service' ?
+                                    setTaskData({
+                                        ...taskData,
+                                        task_type: el.value
+                                    }) :
+                                    setTaskData({
+                                        ...taskData,
+                                        task_type: el.value,
+                                        category: '-'
+                                    })
+                                }}
+                            />
+                            {taskData.task_type === 'service' && <Radio
+                                className="mb-4"
+                                label="Category"
+                                options={task_categories}
+                                optionClick={el => {
+                                    setTaskData({
+                                        ...taskData,
+                                        category: el.value
+                                    })
+                                }}
+                            />}
+                            <RadioBox
+                                className="mb-4"
+                                label="Priority"
+                                options={task_priorities}
+                                optionClick={el => {
+                                    setTaskData({
+                                        ...taskData,
+                                        priority: el.value,
+                                    })
+                                }}
+                                active={taskData.priority}
+                            />
+                            <OtherInput
+                                className="mb-4"
+                                label="Title"
+                                type="text"
+                                value={taskData.title}
+                                onChange={(e) => {
+                                    setTaskData({
+                                        ...taskData,
+                                        title: e.target.value
+                                    })
+                                }}
+                                placeholder="Type title..."
+                            />
+                            <OtherInput
+                                className="mb-4"
+                                label="Description"
+                                type="textarea"
+                                value={taskData.description}
+                                onChange={(e) => {
+                                    setTaskData({
+                                        ...taskData,
+                                        description: e.target.value
+                                    })
+                                }}
+                                placeholder="Type Description..."
+                                rows="5"
+                            />
+                            <MultipleUpload
+                                className="mb-4"
 
-                return (
-                    <Form className="Form">
-                        {!selected.id && <Input {...props} label="Staff Role"
-                            options={[
-                                { value: 'gm_bm', label: 'GM BM' },
-                                { value: 'pic_bm', label: 'PIC BM' },
-                                { value: 'technician', label: 'Technician' },
-                                { value: 'courier', label: 'Courier' },
-                                { value: 'security', label: 'Security' },
-                            ]}
-                        />}
-                        {values['staff_role'] === "courier" && <Input {...props} label="On Centratama?"
-                            name="on_centratama"
-                            type="radio"
-                            options={[
-                                { value: '1', label: 'Yes' },
-                                { value: '0', label: 'No' },
-                            ]} />}
-                        {values['staff_role'] === "technician" && <Input {...props} label="Specialization"
-                            name="staff_specialization"
-                            options={[
-                                { value: 'electricity', label: 'Electricity' },
-                                { value: 'plumbing', label: 'Plumbing' },
-                                { value: 'billing', label: 'Billing' },
-                                { value: 'others', label: 'Others' },
-                            ]} />}
-                        <Input {...props} label="Building Management"
-                            name="building_management_id"
-                            options={bManagements}
-                        />
-                        <Input {...props} label="Staff ID" />
-                        <Input {...props} label="Status"
-                            type="radio"
-                            options={[
-                                { value: 'active', label: 'Active' },
-                                { value: 'inactive', label: 'Inactive' },
-                            ]}
-                        />
-
-                        <SectionSeparator />
-
-                        <Input {...props} label="Firstname" />
-                        <Input {...props} label="Lastname" />
-                        <Input {...props} label="Email" />
-                        <Input {...props} label="Phone" prefix="+62" />
-
-                        <SectionSeparator />
-
-                        <Input {...props} label="Nationality" options={countries} />
-                        <Input {...props} label="Gender"
-                            type="radio"
-                            options={[
-                                { value: 'P', label: 'Female' },
-                                { value: 'L', label: 'Male' },
-                            ]}
-                        />
-                        <Input {...props}
-                            label="Marital Status"
-                            options={[
-                                { value: 'single', label: 'Single' },
-                                { value: 'married', label: 'Married' },
-                                { value: 'divorce', label: 'Divorced' },
-                                { value: 'other', label: 'Other' },
-                            ]}
-                        />
-                        <Input {...props} label="Address" type="textarea" />
-                        <Input {...props} label="Province" options={provinces}
-                            onChange={el => setProvince(el.value)}
-                        />
-                        {values.province && <Input {...props} label="City" options={cities}
-                            onChange={el => setCity(el.value)}
-                        />}
-                        {values.city && <Input {...props} label="District"
-                            options={districts} />}
-
-                        <SectionSeparator />
-
-                        <Input {...props} label="Account Bank" options={banks} />
-                        <Input {...props} label="Account Number" />
-                        <Input {...props} label="Account Name" />
-                        {!loading &&
-                            <button type="submit"
-                                onClick={() => console.log(values)}
-                            >
-                                Submit
-                        </button>
-                        }
-                    </Form>
-                )
-            }}
-        />
+                            />
+                            <div className="row no-gutters">
+                                <div className="col-12 col-sm-3 col-md-4 col-lg-2 offset-sm-9 offset-md-8 offset-lg-10 no-gutters">
+                                    <button className="btn btn-primary w-100">Add Task</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </>
     )
 }
 
-export default Component;
+
+
+const MultipleUpload = ({
+    className = ''
+}) => {
+    return (
+        <>
+            <div className={"form-group " + (className && className)}>
+            </div>
+        </>
+    )
+}
+
+const SelectOption = ({
+    className, options, label = '',
+    optionClick = null, ...rest
+}) => {
+    const [dropDown, setDropDown] = useState(false);
+    return (
+        <>
+            <div className={"form-group " + (className && className)}>
+                <label
+                    htmlFor={label.toLowerCase()}
+                    className="font-weight-bold"
+                >{label}</label>
+                <div className="p-relative">
+                    <input
+                        id={label.toLowerCase()}
+                        className="form-control py-4 pr-5"
+                        onFocus={() => setDropDown(true)}
+                        onBlur={() => {
+                            setTimeout(() => setDropDown(false), 10)
+                        }}
+                        {...rest}
+                    />
+                    <div className={'icon' + (dropDown ? ' up' : '')}>
+                        <label
+                            className="m-0"
+                            htmlFor={label.toLowerCase()}
+                        >
+                            <FiChevronDown />
+                        </label>
+                    </div>
+                    <div
+                        className={'custom-options' + (dropDown ? ' to-down' : '')}
+                    >
+                        <ul className="py-1 px-0 m-0">
+                        {options.length >= 1 ? options.map(el => (
+                            <li
+                                className="no-list selectable px-3 py-2"
+                                onClick={() => optionClick && optionClick(el)}
+                            >
+                                {el.section_type + ' ' + el.section_name + ' ' + el.number}
+                            </li>
+                        )) : (
+                            <li
+                                className="no-list selectable px-3 py-1"
+                            >No Items</li>
+                        )}
+                        </ul>
+                    </div>
+                </div>
+                {/* <small 
+                    id="emailHelp" className="form-text text-danger p-0"
+                >We'll never share your email with anyone else.</small> */}
+            </div>
+        </>
+    )
+}
+
+const Radio = ({
+    label = '', options = null, optionClick = null,
+    className = ''
+}) => {
+    return (
+        <>
+            <div className={"form-group " + (className && className)}>
+                <label className="font-weight-bold" htmlFor="">{label}</label>
+                <div className="row no-gutters">
+                    {options && options.map(el => (
+                    <div class="form-check col-12 mb-2 col-sm col-md-3">
+                        <input
+                        className="form-check-input ml-0"
+                        name={label}
+                        type="radio"
+                        id={el.label.toLowerCase()}
+                        value={el.value}
+                        onClick={() => optionClick && optionClick(el)}
+                        />
+                        <label
+                        className="form-check-label mt-0 ml-4"
+                        htmlFor={el.label.toLowerCase()}>
+                            {el.label}
+                        </label>
+                    </div>
+                    ))}
+                </div>
+            </div>
+        </>
+    )
+}
+
+const RadioBox = ({
+    label = '', options = null, optionClick = null, className = '',
+    active = ''
+}) => {
+
+    return (
+        <>
+            <div className={"form-group d-flex d-sm-inline-flex flex-column " + (className && className)}>
+                <label className="font-weight-bold mb-2" htmlFor="">{label}</label>
+                <div className="radio-boxes d-flex flex-column-reverse flex-sm-row w-100 w-sm-auto">
+                    {options && options.map(el => (
+                    <div class="radio-box w-100 w-sm-auto">
+                        <input
+                        className="form-check-input ml-0"
+                        name={label}
+                        type="radio"
+                        id={el.label.toLowerCase()}
+                        value={el.value}
+                        onClick={() => optionClick && optionClick(el)}
+                        />
+                        <label
+                        className={"form-check-label text-center w-100 " + (active === el.label.toLowerCase() ? active : '')}
+                        htmlFor={el.label.toLowerCase()}>
+                            {el.label}
+                        </label>
+                    </div>
+                    ))}
+                    <div className={"radio-indicator " + (active.length >= 1 ? active : '')}></div>
+                </div>
+            </div>
+        </>
+    )
+}
+
+const OtherInput = ({
+    label = '', className = '', type = '', ...rest
+}) => {
+    return (
+        <>
+            <div className={"form-group " + className && className}>
+                <label
+                    htmlFor={label.toLowerCase()}
+                    className="font-weight-bold"
+                >{label}</label>
+                {type === 'text' ? <input
+                    className="form-control py-4"
+                    id={label.toLowerCase()}
+                    type={type}
+                    {...rest}
+                /> : <textarea
+                    style={{resize: 'none'}}
+                    className="form-control"
+                    id={label.toLowerCase()}
+                    {...rest}
+                >
+                </textarea>}
+                {/* <small
+                    className="form-text text-danger"
+                >We'll never share your email with anyone else.</small> */}
+            </div>
+        </>
+    )
+}

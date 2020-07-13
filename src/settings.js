@@ -94,3 +94,8 @@ export const merchant_types = [
     {label: 'Goods', value: 'Goods'},
 ]
 
+export const task_types = [
+    {label: 'Service', value: 'service'},
+    {label: 'Security', value: 'security'},
+    {label: 'Delivery', value: 'delivery'}
+]
