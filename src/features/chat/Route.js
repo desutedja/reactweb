@@ -11,28 +11,6 @@ import { FiSend } from 'react-icons/fi';
 
 import './style.css';
 
-// avatar: ""
-// comments: []
-// count_notif: 2
-// custom_subtitle: null
-// custom_title: null
-// id: 17159434
-// isChannel: false
-// isLoaded: false
-// last_comment: {comment_before_id: 294549503, comment_before_id_str: "294549503", disable_link_preview: false, email: "superadmin4meriororen@gmail.com", extras: {…}, …}
-// last_comment_id: 294549551
-// last_comment_message: "test"
-// last_comment_message_created_at: "2020-06-24T14:50:22Z"
-// last_comment_topic_title: undefined
-// name: "taskchat admin sama resident"
-// options: "{}"
-// participantNumber: undefined
-// participants: (5) [{…}, {…}, {…}, {…}, {…}]
-// room_type: "group"
-// secret_code: undefined
-// topics: []
-// unique_id: "1641e1a7-6ec4-487b-be44-3e5ad5
-
 function Component() {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
@@ -92,7 +70,7 @@ function Component() {
             page: 1,
             limit: 100,
             show_participants: false,
-            show_empty: false
+            show_empty: true
         }
 
         setLoadingRooms(true);
@@ -111,6 +89,20 @@ function Component() {
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, qiscus]);
+
+    const sendMessage = () => {
+        setLoadingSend(true);
+        qiscus.sendComment(roomID, message)
+            .then(function (comment) {
+                // On success
+                setRefresh(!refresh);
+                setMessage('');
+                setLoadingSend(false);
+            })
+            .catch(function (error) {
+                // On error
+            })
+    }
 
     return (
         <div style={{
@@ -171,66 +163,24 @@ function Component() {
                         )}
                     </Loading>
                 </div>
-                <div className="Container" style={{
-                    flex: 0,
-                    marginBottom: 0,
-                    marginTop: 16,
-                }}>
-                    <Input compact label="Send a message.." type="textarea"
-                        inputValue={message} setInputValue={setMessage}
-                    />
+                <form className="Container" onSubmit={() => sendMessage()}>
+                    <Input compact label="Send a message.." inputValue={message} setInputValue={setMessage} />
                     <Loading loading={qiscus ? (loadingSend || !qiscus.sendComment) : true} >
                         <IconButton onClick={() => {
-                            setLoadingSend(true);
-                            qiscus.sendComment(roomID, message)
-                                .then(function (comment) {
-                                    // On success
-                                    setRefresh(!refresh);
-                                    setMessage('');
-                                    setLoadingSend(false);
-                                })
-                                .catch(function (error) {
-                                    // On error
-                                })
+                            sendMessage()
                         }}>
                             <FiSend />
                         </IconButton>
                     </Loading>
-                </div>
+                </form>
             </div>
             <div className="Container" style={{
-                height: '100%',
                 marginLeft: 16,
                 flexDirection: 'column',
             }}>
                 <Tab
-                    labels={['Room Info', 'Room List']}
+                    labels={['Room List', 'Room Info']}
                     contents={[
-                        <>
-                            <p style={{
-                                fontWeight: 'bold',
-                                marginBottom: 8,
-                            }}>Room Name</p>
-                            <p style={{
-                                marginBottom: 24,
-                            }}>{messages[0]?.room_name + ' (ID: ' + roomID + ')'}</p>
-                            <p style={{
-                                fontWeight: 'bold',
-                                marginBottom: 8,
-                            }}>Participants</p>
-                            <Loading loading={loadingParticipants}>
-                                {participants.map((el, index) =>
-                                    <div key={index} className="Participant">
-                                        <img alt="avatar" className="MessageAvatar" src={el.avatar_url} style={{
-                                            marginRight: 8,
-                                            marginBottom: 4,
-                                            borderRadius: 4,
-                                        }} />
-                                        {el.username}
-                                    </div>
-                                )}
-                            </Loading>
-                        </>,
                         <Loading loading={loadingRooms}>
                             {rooms.map((el, index) =>
                                 <div
@@ -258,7 +208,32 @@ function Component() {
                                     </div>
                                 </div>
                             )}
-                        </Loading>
+                        </Loading>,
+                        <>
+                            <p style={{
+                                fontWeight: 'bold',
+                                marginBottom: 8,
+                            }}>Room Name</p>
+                            <p style={{
+                                marginBottom: 24,
+                            }}>{messages[0]?.room_name + ' (ID: ' + roomID + ')'}</p>
+                            <p style={{
+                                fontWeight: 'bold',
+                                marginBottom: 8,
+                            }}>Participants</p>
+                            <Loading loading={loadingParticipants}>
+                                {participants.map((el, index) =>
+                                    <div key={index} className="Participant">
+                                        <img alt="avatar" className="MessageAvatar" src={el.avatar_url} style={{
+                                            marginRight: 8,
+                                            marginBottom: 4,
+                                            borderRadius: 4,
+                                        }} />
+                                        {el.username}
+                                    </div>
+                                )}
+                            </Loading>
+                        </>,
                     ]}
                 />
             </div>
