@@ -11,6 +11,7 @@ import UnitType from './contents/UnitType';
 import Section from './contents/Section';
 import Service from './contents/Service';
 import Management from './contents/Management';
+import Module from './contents/Module';
 import { endpointAdmin } from '../../../settings';
 import { useLocation, useParams } from 'react-router-dom';
 import { get } from '../../slice';
@@ -43,7 +44,7 @@ function Component() {
             title={state ? state.name : data.name}
             website={state ? state.website : data.website}
             phone={state ? state.phone : data.phone}
-            labels={["Details", "Unit", "Unit Type", "Section", "Service", "Management"]}
+            labels={["Details", "Unit", "Unit Type", "Section", "Service", "Management", "Module"]}
             contents={[
                 <Detail data={state ? state : data} labels={labels} />,
                 <Unit />,
@@ -51,6 +52,7 @@ function Component() {
                 <Section />,
                 <Service />,
                 <Management />,
+                <Module />
             ]}
         />
     )

@@ -5,6 +5,7 @@ import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 import MoonLoader from "react-spinners/MoonLoader";
+import ClinkLoader from '../../components/ClinkLoader';
 import { FiCheck, FiSearch } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import Tab from '../../components/Tab';
@@ -322,11 +323,12 @@ function Component() {
                                 }}>Select Merchant</h5>
                                 <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
                                 {loadingMerchant && <div className="w-100 py-5 d-flex justify-content-center">
-                                    <MoonLoader
+                                    {/* <MoonLoader
                                         size={34}
                                         color={"grey"}
                                         loading={loadingMerchant}
-                                    />
+                                    /> */}
+                                    <ClinkLoader/>
                                 </div>}
                                 {!loadingMerchant && merchants.map((el, index) => <div
                                     key={index}
@@ -346,11 +348,12 @@ function Component() {
                                 }}>Select Courier</h5>
                                 <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
                                 {loadingCourier && <div className="w-100 py-5 d-flex justify-content-center">
-                                    <MoonLoader
+                                    {/* <MoonLoader
                                         size={34}
                                         color={"grey"}
                                         loading={loadingCourier}
-                                    />
+                                    /> */}
+                                    <ClinkLoader/>
                                 </div>}
                                 {!loadingCourier && couriers.map((el, index) => <div
                                     key={index}
