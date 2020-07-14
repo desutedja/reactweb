@@ -430,12 +430,13 @@ input[type="button"]:disabled {
   opacity: 0;
 }
 
-.switch-on {
+.switch-on label {
   background-color: #3a81ec;
   color: white;
+  box-shadow: 0 4px 0 #bbbbbb;
 }
 
-.switch-off {
+.switch-off label {
   background-color: #c0c0c0;
   color: white;
 }
