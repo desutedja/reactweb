@@ -29,6 +29,8 @@ function Component() {
     const [edit, setEdit] = useState(false);
     const [addUnit, setAddUnit] = useState(false);
 
+    const [expanded, setExpanded] = useState(0);
+
     const [sectionID, setSectionID] = useState('');
     const [unitTypeID, setUnitTypeID] = useState('');
     const [floor, setFloor] = useState('');
