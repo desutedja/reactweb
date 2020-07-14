@@ -1,6 +1,8 @@
 import React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
+import defaultImg from '../../../assets/fallback.jpg';
+
 import { FaPhone } from 'react-icons/fa';
 
 import Row from '../../../components/Row';
@@ -46,11 +48,20 @@ function Component({ imgPreview = false, data, labels, type = "", editable = tru
             {imgPreview && <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
                 <div className="row no-gutters h-100">
                     <div className="col-12">
-                        <img
+                        {data.assignee_photo ?
+                            <img
                             style={{
                                 width: '100%'
                             }}
-                            src={data.assignee_photo} alt=""/>
+                            src={data.assignee_photo} alt=""
+                            /> :
+                            <img
+                            style={{
+                                width: '100%'
+                            }}
+                            src={defaultImg} alt=""
+                            />
+                        }
                     </div>
                     <div className="col-12 mt-3 d-flex align-items-center">
                         <FaPhone className="mr-2 h5 m-0" /><span className="h5 m-0">+{data.assignee_phone}</span>
