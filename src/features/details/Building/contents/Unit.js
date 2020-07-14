@@ -7,7 +7,6 @@ import Button from '../../../../components/Button';
 import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import { toSentenceCase } from '../../../../utils';
-import { endpointAdmin } from '../../../../settings';
 import { deleteBuildingUnit, getBuildingUnit, editBuildingUnit, createBuildingUnit } from '../../../slices/building';
 
 const columnsUnit = [

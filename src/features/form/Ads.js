@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import moment from 'moment';
 
@@ -80,7 +80,7 @@ function Component() {
     const [job, setJob] = useState('all');
     const [os, setOS] = useState('all');
 
-    const { loading, selected } = useSelector(state => state.ads);
+    const { selected } = useSelector(state => state.ads);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -126,7 +126,7 @@ function Component() {
             edit={data => dispatch(editAds(data, history, selected.id))}
             add={data => dispatch(createAds(data, history))}
             renderChild={props => {
-                const { values, setFieldValue } = props;
+                const { values } = props;
 
                 return (
                     <Form className="Form">

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, forwardRef, useRef } from 'react'
 import { useTable, useExpanded, usePagination, useSortBy, useRowSelect, } from 'react-table'
-import MoonLoader from "react-spinners/MoonLoader";
 import ClinkLoader from './ClinkLoader';
 import {
     FiChevronsLeft, FiChevronLeft,

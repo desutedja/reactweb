@@ -1,14 +1,8 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-import Table from '../../components/Table';
-import { useRouteMatch, Switch, Route, useHistory, Redirect } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
-
-import Details from '../details/Transaction';
-// import Details from './Details';
 import Filter from '../../components/Filter';
-import Settlement from '../settlement/Transaction';
-import Disbursement from '../disbursement/Transaction';
 import { getTransaction, getTransactionDetails } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
 import { toMoney, toSentenceCase, dateTimeFormatterCell } from '../../utils';
@@ -46,22 +40,13 @@ const columns = [
 ]
 
 function Component() {
-
-    const { loading, items, total_pages, total_items, refreshToggle } =
-        useSelector(state => state.transaction);
-
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     const [statusPayment, setStatusPayment] = useState('');
     const [status, setStatus] = useState('');
     const [type, setType] = useState('');
-
-    useEffect(() => {
-        // console.log(items)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     return (
         <Template

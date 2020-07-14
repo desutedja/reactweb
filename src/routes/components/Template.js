@@ -2,7 +2,7 @@ import React, { useState, Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/auth/slice';
 import {
-    FiMenu, FiLogOut, FiChevronDown, FiChevronUp, FiSettings,
+    FiMenu, FiLogOut, FiChevronDown, FiChevronUp,
 } from "react-icons/fi";
 import { MdChatBubble, MdNotifications, MdSettings } from "react-icons/md";
 import { Switch, Route, useHistory, Redirect, useRouteMatch } from 'react-router-dom';

@@ -21,6 +21,13 @@ const columns = [
     { Header: 'Type', accessor: row => toSentenceCase(row.type) },
     { Header: 'Category', accessor: row => row.category ? toSentenceCase(row.category) : '-' },
     {
+        Header: 'PIC', accessor: row => <div>
+            <b>{row.pic_name}</b>
+            <p>{row.pic_mail}</p>
+            <p>{row.pic_phone}</p>
+        </div>
+    },
+    {
         Header: 'Open', accessor: row => {
             return <Tile items={[
                 row.is_open === 1 ? <Pill color="primary">Open</Pill> : <Pill color="secondary">Closed</Pill>,

@@ -67,7 +67,7 @@ const columns = [
 ]
 
 function Component() {
-    const { loading, selected } = useSelector(state => state.resident);
+    const { selected } = useSelector(state => state.resident);
 
     const [step, setStep] = useState(2);
     const [resident, setResident] = useState({});
@@ -94,8 +94,6 @@ function Component() {
 
     const [bcities, setBCities] = useState([]);
     const [bcloading, setBCLoading] = useState(true);
-
-    const [nat, setNat] = useState('');
 
     let dispatch = useDispatch();
     let history = useHistory();

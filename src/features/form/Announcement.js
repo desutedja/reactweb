@@ -46,30 +46,21 @@ const target_merchants = [
 function Component() {
     const { selected } = useSelector(state => state.announcement);
 
-    const [modalBuilding, setModalBuilding] = useState(false);
-    const [modalUnit, setModalUnit] = useState(false);
-
     const [buildings, setBuildings] = useState([]);
     const [selectedBuildings, setSelectedBuildings] = useState(selected.building ? selected.building : []);
 
     const [units, setUnits] = useState([]);
-    const [unitsSelected, setUnitsSelected] = useState([]);
-    const [unitsPageCount, setUnitsPageCount] = useState(1);
-    const [unitsLoading, setUnitsLoading] = useState(false);
 
     const [searchbuilding, setSearchbuilding] = useState('');
     const [searchUnit, setSearchUnit] = useState('');
-    const [stillLoading, setStillLoading] = useState(false);
 
     const [searchmerchant, setSearchmerchant] = useState('');
     const [merchants, setMerchants] = useState([]);
-    const [selectedMerchants, setSelectedMerchants] = useState([]);
 
     let dispatch = useDispatch();
     let history = useHistory();
 
     useEffect(() => {
-        searchmerchant.length > 1 && setStillLoading(true);
         searchmerchant.length > 1 && dispatch(get(endpointMerchant + '/admin/list' +
             '?limit=5&page=1' +
             '&search=' + searchmerchant, res => {
@@ -79,7 +70,6 @@ function Component() {
 
                 console.log(formatted);
                 setMerchants(formatted);
-                setStillLoading(false);
             }));
     }, [dispatch, searchmerchant]);
 
@@ -186,7 +176,6 @@ function Component() {
                                     defaultValue={values.merchant}
                                     placeholder="Start typing merchant name to add" options={merchants}
                                     onInputChange={(e, value) => value === '' ? setMerchants([]) : setSearchmerchant(value)}
-                                    onChange={(e, value) => setSelectedMerchants(value)}
                                 />}
                             {values.consumer_role === 'resident' && values.building.length === 1 && values.target_building === "specificbuilding" &&
                                 <Input {...props} type="multiselect" label="Select Unit(s)" name="building_unit"

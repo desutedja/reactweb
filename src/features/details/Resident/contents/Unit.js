@@ -34,8 +34,6 @@ function Component({ id }) {
     const [confirmDelete, setConfirmDelete] = useState(false);
     const [addUnitStep, setAddUnitStep] = useState(1);
 
-    const [expanded, setExpanded] = useState(0);
-
     const [addSubAccount, setAddSubAccount] = useState(false);
     const [addSubAccountStep, setAddSubAccountStep] = useState(false);
     const [residents, setResidents] = useState([]);
@@ -171,7 +169,6 @@ function Component({ id }) {
                                         setAddSubAccount(true); 
                                         setAddSubAccountStep(1); 
                                         setSelectedUnit(item);
-                                        setExpanded(item.unit_id);
                                     } }> 
                                     <FiPlus/> Add Subaccount </span>
                             </div> }
@@ -326,7 +323,7 @@ function Component({ id }) {
                                 { value: 'own', label: 'Own' },
                                 { value: 'rent', label: 'Rent' },
                             ]}
-                        /> : mainOwner.id == id ?
+                        /> : mainOwner.id === id ?
                         <p>This resident is already the owner of this unit.</p> :
                         <>
                         <p>This unit already has main owner, click below to get to the main owner page : </p>

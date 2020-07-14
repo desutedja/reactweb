@@ -10,7 +10,7 @@ function RadioInput({ onChange = () => { }, ...props }) {
     return (
         <div className="Radio row">
             {options.map(el => (
-                <div className="col">
+                <div className="col" key={el.value}>
                     <div className="form-check">
                         <Field className="form-check-input" type="radio"
                             name={name}

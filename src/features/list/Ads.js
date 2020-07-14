@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import Filter from '../../components/Filter';
 import RangeInput from '../../components/RangeInput';
 import { FiPlus } from 'react-icons/fi';
-import { osType, genders, rangeNumberArrObj } from '../../utils';
+import { osType, genders } from '../../utils';
 
 import Pill from '../../components/Pill';
 import Button from '../../components/Button';
@@ -15,20 +15,11 @@ import { dateFormatter } from '../../utils';
 import AdsCell from '../../components/cells/Ads';
 
 const columns = [
-    // { Header: "ID", accessor: "id" },
     { Header: "Title", accessor: row => <AdsCell id={row.id} /> },
-    // {
-    //     Header: "Target", accessor: row =>
-    //         row.gender + ", " + row.age_from + "-" + row.age_to + ", " + row.os
-    // },
     { Header: "Gender", accessor: "gender" },
     { Header: "Age", accessor: row => row.age_from + " - " + row.age_to },
     { Header: "Platform", accessor: "os" },
     { Header: "Priority", accessor: "total_priority_score" },
-    // { Header: "Appear As", accessor: "appear_as" },
-    // { Header: "Image", accessor: "" },
-    // { Header: "Media Type", accessor: "media" },
-    // { Header: "Media URL", accessor: "media_url" },
     { Header: "Date", accessor: row => dateFormatter(row.start_date) + ' - ' 
         + dateFormatter(row.end_date)},
     { Header: "Status", accessor: row => <Pill
@@ -43,10 +34,8 @@ function Component() {
 
     const [os, setOs] = useState('');
     const [ageFrom, setAgeFrom] = useState('');
-    const [ageTo, setAgeTo] = useState('');
     const [gender, setGender] = useState('');
     const [media, setMedia] = useState('');
-    const [appearAs, setAppearAs] = useState('');
 
     const mediaType = [
         { label: 'Apps', value: 'Apps' },
@@ -54,8 +43,8 @@ function Component() {
     ]
 
     useEffect(() => {
-        console.log(os, gender, ageFrom, ageTo, media, appearAs);
-    }, [os, gender, ageFrom, ageTo, media, appearAs])
+        console.log(os, gender, ageFrom, media);
+    }, [os, gender, ageFrom, media])
 
     return (
         <Template
@@ -73,11 +62,11 @@ function Component() {
             ]}
             filterVars={[
                 ageFrom.toLowerCase(),
-                ageTo.toLowerCase(),
+                // ageTo.toLowerCase(),
                 os.toLowerCase(),
                 gender[0],
                 media.toLowerCase(),
-                appearAs.toLowerCase()
+                // appearAs.toLowerCase()
             ]}
             filters={[
                 {

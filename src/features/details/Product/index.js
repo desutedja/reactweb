@@ -31,7 +31,7 @@ const labels = {
     "Pricing": [
         { label: "base_price", labelFormatter: () => "Base Price", valueFormatter: (val) => toMoney(val) },
         { label: "selling_price", labelFormatter: () => "Selling Price", valueFormatter: (val) => toMoney(val) },
-        { label: "total_selling_price", labelFormatter: (el) => "Display Price", valueFormatter: (val) => toMoney(val)  },
+        { label: "total_selling_price", labelFormatter: (el) => "Display Price", valueFormatter: (val) => toMoney(val) },
         { label: "admin_fee", labelFormatter: (el) => "Admin Fee", valueFormatter: (val) => val + "%" },
         { label: "pg_fee", labelFormatter: (el) => "PG Markup", valueFormatter: (val) => val + "%" },
         { label: "discount_fee", labelFormatter: (el) => "Discount", valueFormatter: (val) => val + "%" },
@@ -47,7 +47,7 @@ function Component() {
     const [discFee, setDiscFee] = useState('');
 
     const [calculatedPrice, setCalculatedPrice] = useState(0);
-    
+
     const {
         selected,
         // refresh
@@ -56,8 +56,8 @@ function Component() {
     let dispatch = useDispatch();
 
     useEffect(() => {
-        (discFee !== ""  || adminFee !== "") && (setCalculatedPrice(
-            <span style={{ color: "red"}}>{toMoney(selected.selling_price + Math.ceil(selected.selling_price * (adminFee)/100) - Math.ceil(selected.selling_price * (discFee/100)))}</span>
+        (discFee !== "" || adminFee !== "") && (setCalculatedPrice(
+            <span style={{ color: "red" }}>{toMoney(selected.selling_price + Math.ceil(selected.selling_price * (adminFee) / 100) - Math.ceil(selected.selling_price * (discFee / 100)))}</span>
         ));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [discFee, adminFee]);
@@ -71,13 +71,15 @@ function Component() {
                     objectFit: 'cover',
                 }} />
             </Modal>
-            <Modal title="Adjust Fees" 
-                okLabel={"Set Fees"} isOpen={modalFee} 
-                toggle={() => { setModalFee(false); 
-                    setAdminFee(""); 
-                    setDiscFee(""); }}
+            <Modal title="Adjust Fees"
+                okLabel={"Set Fees"} isOpen={modalFee}
+                toggle={() => {
+                    setModalFee(false);
+                    setAdminFee("");
+                    setDiscFee("");
+                }}
                 onClick={() => {
-                    dispatch(patchAdminFee( {
+                    dispatch(patchAdminFee({
                         item_id: selected.id,
                         merchant_id: selected.merchant_id,
                         admin_fee: parseInt(adminFee),
@@ -99,15 +101,15 @@ function Component() {
                         alignItems: 'center',
                     }}>
                         <Input label="Admin Fee" type="text" inputValue={adminFee} addons={"%"}
-                            setInputValue={setAdminFee}/>
+                            setInputValue={setAdminFee} />
                         <Input label="Discount" type="text" inputValue={discFee} addons={"%"}
-                            setInputValue={setDiscFee}/>
+                            setInputValue={setDiscFee} />
                     </div>
                     <div style={{
                         display: 'block',
                         marginTop: 16,
                     }}>
-                        <hr/>
+                        <hr />
                         <h5>Selling Price: {toMoney(selected.selling_price)}</h5>
                         <h5>Display Price: {calculatedPrice}</h5>
                     </div>
@@ -120,14 +122,14 @@ function Component() {
                 labels={["Details", "Images"]}
                 contents={[
                     <Detail data={selected} labels={labels} editable={false}
-                    renderButtons={() => [
-                    <Button label="Adjust Fees & Discount" onClick={() => {
-                        setModalFee(true);
-                        setAdminFee(selected.admin_fee); 
-                        setDiscFee(selected.discount_fee);
-                    }} />,
-                        <Button label="Take Down Product" onClick={() => {}} />,
-                    ]}
+                        renderButtons={() => [
+                            <Button label="Adjust Fees & Discount" onClick={() => {
+                                setModalFee(true);
+                                setAdminFee(selected.admin_fee);
+                                setDiscFee(selected.discount_fee);
+                            }} />,
+                            <Button label="Take Down Product" onClick={() => { }} />,
+                        ]}
                     />,
                     <div style={{
                         display: 'flex',

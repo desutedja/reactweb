@@ -25,23 +25,14 @@ export default function Component() {
     const dispatch = useDispatch();
 
     const { path } = useRouteMatch();
-    const { items, unit } = useSelector(state => state.building);
-    // const idUnit = units.find(u => u.section_name === )
-    
+    const { unit } = useSelector(state => state.building);
+
     //! must contain integer!
     const [unitValue, setUnitValue] = useState('');
 
-    const [typeTask, setTypeTask] = useState([]);
     const [units, setUnits] = useState(unit.items || []);
-    const [selectedUnit, setSelectedUnit] = useState({});
     const [taskData, setTaskData] = useState({
         title: '',
-        // attachments: 5,
-        // attachment_1: "a",
-        // attachment_2: "b",
-        // attachment_3: "c",
-        // attachment_4: "d",
-        // attachment_5: "e",
         description: '',
         priority: 'low',
         
@@ -50,8 +41,6 @@ export default function Component() {
         task_type: '',
         category: ''
     })
-    
-    const idBuilding = items[0].id;
 
     useEffect(() => {
         const condition = new RegExp(unitValue.toString())
@@ -62,10 +51,6 @@ export default function Component() {
         ));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [unitValue])
-    
-    useEffect(() => {
-        // console.log(taskData)
-    }, [taskData])
 
     return (
         <>

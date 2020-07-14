@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
-import MoonLoader from "react-spinners/MoonLoader";
 import ClinkLoader from '../../components/ClinkLoader';
 import { FiCheck, FiSearch } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";

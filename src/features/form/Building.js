@@ -49,7 +49,7 @@ function Component() {
     const [province, setProvince] = useState("");
     const [provinces, setProvinces] = useState([]);
 
-    const { loading, selected } = useSelector(state => state.building);
+    const { selected } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
     let history = useHistory();

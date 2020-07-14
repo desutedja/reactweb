@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {  } from 'react';
 
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
@@ -23,7 +23,7 @@ const managementPayload = {
 }
 
 function Component() {
-    const { loading, selected } = useSelector(state => state.management);
+    const { selected } = useSelector(state => state.management);
 
     let dispatch = useDispatch();
     let history = useHistory();

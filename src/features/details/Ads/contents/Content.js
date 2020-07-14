@@ -16,7 +16,7 @@ function Component() {
                     flex: 1
                 }}>
                     {selected.media_url ?
-                        <img className="Logo" src={selected.media_url} alt="media_url" />
+                        <img className="Logo" src={selected.content_image} alt="media_url" />
                         :
                         <img src={'https://via.placeholder.com/200'} alt="media_url" />
                     }

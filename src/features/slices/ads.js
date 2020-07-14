@@ -108,10 +108,10 @@ export const editAds = (data, history, id) => dispatch => {
 
   const {schedules, ...rest} = data;
 
-  dispatch(put(adsEndpoint, { ...rest, ads: { ...rest.ads, id: id } },
+  dispatch(put(adsEndpoint, { ...rest.ads, id: id },
     res => {
       dispatch(setSelected(res.data.data));
-      history.push("/sa/advertisement/details");
+      history.push("/sa/advertisement/" + id);
 
       dispatch(setInfo({
         color: 'success',

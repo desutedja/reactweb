@@ -36,8 +36,6 @@ function Component() {
 
     // const { selected } = useSelector(state => state.building);
 
-
-
     return (
         <Template
             image={state ? state.logo : data.logo}

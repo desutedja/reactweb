@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { months, yearsOnRange } from '../../utils';
 import { endpointAdmin } from '../../settings';
-import { FiChevronRight } from 'react-icons/fi';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
 import { get } from '../slice';
 
@@ -46,25 +45,13 @@ const columnsService = [
 function Component() {
     const [modal, setModal] = useState(false);
 
-    const [service, setService] = useState('');
-    const [serviceName, setServiceName] = useState('');
     const [serviceUnit, setServiceUnit] = useState('');
     const [services, setServices] = useState([]);
     const [servicesPageCount, setServicesPageCount] = useState(1);
     const [servicesLoading, setServicesLoading] = useState(false);
 
-    const { loading, selected, unit } = useSelector(state => state.billing);
+    const { selected, unit } = useSelector(state => state.billing);
     const selectedUnit = unit.selected;
-
-    useEffect(() => {
-        dispatch(get(endpointAdmin + '/building/service' +
-            '?page=1&building_id=' + selected.building_id,
-            res => {
-                const { items } = res.data.data;
-                const currentItem = items.find(item => item.id === selectedUnit.service)
-                setServiceName(currentItem.name)
-            }));
-    })
 
     useEffect(() => {
         dispatch(get(endpointAdmin + '/building/service' +
@@ -91,13 +78,11 @@ function Component() {
         dispatch(get(endpointAdmin + '/building/service' +
             '?page=' + (pageIndex + 1) +
             '&building_id=' + selected.building_id +
-            // '&group=' + servicesGroup +
             '&search=' + search +
             '&limit=' + pageSize,
 
             res => {
-                const { items, total_pages } = res.data.data;
-                // setServices(items);
+                const { total_pages } = res.data.data;
                 setServicesPageCount(total_pages);
 
                 setServicesLoading(false);
@@ -139,8 +124,6 @@ function Component() {
                                 pageCount={servicesPageCount}
                                 fetchData={fetchData}
                                 onClickRow={row => {
-                                    setService(row.id);
-                                    setServiceName(row.name);
                                     setServiceUnit(row.denom_unit);
                                     setModal(false);
                                 }}

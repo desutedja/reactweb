@@ -39,6 +39,9 @@ export const slice = createSlice({
     setAdminFee: (state, action) => {
       state.selected.admin_fee = action.payload;
     },
+    setDiscountFee: (state, action) => {
+      state.selected.discount_fee = action.payload;
+    },
   },
 });
 
@@ -49,12 +52,13 @@ export const {
   setSelected,
   refresh,
   setAdminFee,
+  setDiscountFee
 } = slice.actions;
 
 export default slice.reducer;
 
 export const getProduct = (
-   pageIndex, pageSize,
+  pageIndex, pageSize,
   search = '', merchant, category, type
 ) => dispatch => {
   dispatch(startAsync());
@@ -66,7 +70,7 @@ export const getProduct = (
     '&category_id=' + category +
     '&merchant_type=' + type +
     '&search=' + search,
-    
+
     res => {
       dispatch(setData(res.data.data));
 
@@ -74,10 +78,10 @@ export const getProduct = (
     }))
 }
 
-export const getProductDetails = (row,  history, url) => dispatch => {
+export const getProductDetails = (row, history, url) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(merchantEndpoint + '/items?id=' + row.id, 
+  dispatch(get(merchantEndpoint + '/items?id=' + row.id,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
@@ -86,12 +90,13 @@ export const getProductDetails = (row,  history, url) => dispatch => {
     }))
 }
 
-export const patchAdminFee = ( data, item) => dispatch => {
+export const patchAdminFee = (data, item) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(patch(merchantEndpoint + '/items/adjust_fee', data, 
+  dispatch(patch(merchantEndpoint + '/items/adjust_fee', data,
     res => {
       dispatch(setAdminFee(res.data.data.admin_fee));
+      dispatch(setDiscountFee(res.data.data.discount_fee));
 
       dispatch(setInfo({
         color: 'success',
