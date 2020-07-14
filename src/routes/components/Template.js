@@ -2,9 +2,9 @@ import React, { useState, Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/auth/slice';
 import {
-    FiMenu, FiLogOut, FiChevronDown, FiChevronUp,
+    FiMenu, FiLogOut, FiChevronDown, FiChevronUp, FiSettings,
 } from "react-icons/fi";
-import { MdChatBubble, MdNotifications } from "react-icons/md";
+import { MdChatBubble, MdNotifications, MdSettings } from "react-icons/md";
 import { Switch, Route, useHistory, Redirect, useRouteMatch } from 'react-router-dom';
 import QiscusSDKCore from 'qiscus-sdk-core';
 
@@ -20,6 +20,7 @@ import { closeAlert, setConfirmDelete, setNotif } from '../../features/slice';
 import { setQiscus, updateMessages, setUnread } from '../../features/chat/slice';
 import { Toast, ToastHeader, ToastBody } from 'reactstrap';
 import Axios from 'axios';
+import Settings from '../../features/settings';
 
 const Qiscus = new QiscusSDKCore();
 
@@ -180,6 +181,16 @@ function Component({ role, menu }) {
                             <MdNotifications />
                         </IconButton>
                     </div>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}>
+                        <IconButton
+                            onClick={() => history.push('/' + role + '/settings')}
+                        >
+                            <MdSettings />
+                        </IconButton>
+                    </div>
                     <div className="ProfileButton" onClick={() => {
                         setProfile(!profile)
                     }}>
@@ -262,6 +273,9 @@ function Component({ role, menu }) {
                         </Route>)}
                         <Route path={"/" + role + "/chat"}>
                             <Chat />
+                        </Route>
+                        <Route path={"/" + role + "/settings"}>
+                            <Settings />
                         </Route>
                     </Switch>
                 </div>

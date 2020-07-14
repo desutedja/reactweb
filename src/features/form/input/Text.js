@@ -15,6 +15,7 @@ function TextInput({
 
     useEffect(() => {
         externalValue && setFieldValue(fixedName, externalValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [externalValue])
 
     //this repopulate the label field when editing, provided BE doesnt send them
@@ -83,6 +84,9 @@ function TextInput({
                                 setFieldValue(name, el.value);
                                 onChange(el);
                                 setFocus(false);
+                            }}
+                            style={{
+                                padding: 8,
                             }}
                         >
                             {el.label}

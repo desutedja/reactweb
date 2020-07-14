@@ -1,7 +1,7 @@
 import React from 'react';
 import MoonLoader from "react-spinners/MoonLoader";
 
-function Component({ loading, children }) {
+function Loading({ loading, children }) {
     return (
         loading ? (
             <div className="Spinner">
@@ -15,4 +15,4 @@ function Component({ loading, children }) {
     )
 }
 
-export default Component;
+export default Loading;

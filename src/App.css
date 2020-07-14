@@ -339,3 +339,15 @@
   color: grey;
   /* background-color: red; */
 }
+
+.Settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 600px;
+  padding: 8px;
+}
+
+.Settings-item:hover {
+  background-color: #f3f3fa;
+}
