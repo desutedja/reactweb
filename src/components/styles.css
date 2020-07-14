@@ -415,15 +415,15 @@ input[type="button"]:disabled {
   justify-content: center;
   font-weight: bold;
   text-transform: uppercase;
-  box-shadow: 0 4px 0 rgb(184, 184, 184);
-  border-radius: 4px;
+  box-shadow: 0 4px 0 #d8d8d8;
+  border-radius: 6px;
   cursor: pointer;
   transition: .1s;
 }
 
 .switch-box label:active {
   transform: translateY(4px);
-  box-shadow: 0 0px 0 rgb(184, 184, 184);
+  box-shadow: 0 0px 0 #d8d8d8;
 }
 
 .switch-box input {
@@ -436,6 +436,6 @@ input[type="button"]:disabled {
 }
 
 .switch-off {
-  background-color: rgb(231, 36, 75);
+  background-color: #c0c0c0;
   color: white;
 }
