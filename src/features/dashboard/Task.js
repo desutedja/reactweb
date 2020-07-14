@@ -35,7 +35,9 @@ function Component() {
     }, [dispatch]);
 
     return (
-        <>
+        <div style={{
+            marginLeft: 16,
+        }}>
             <div className="box-self mb-4 pb-5">
                 <div className="row mb-5 justify-content-between">
                     <div className="col">
@@ -162,7 +164,7 @@ function Component() {
                 </div>
 
             </div>
-        </>
+        </div>
     )
 }
 

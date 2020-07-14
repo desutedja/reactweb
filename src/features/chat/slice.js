@@ -32,7 +32,7 @@ export const slice = createSlice({
       state.messages = action.payload;
     },
     updateMessages: (state, action) => {
-      state.messages = [...action.payload, ...state.messages];
+      state.messages = [...state.messages, ...action.payload];
     },
     setUnread: (state, action) => {
       state.unread = action.payload;

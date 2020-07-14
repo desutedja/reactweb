@@ -54,7 +54,7 @@ function Component() {
         roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
             .then(function (comments) {
                 // On success
-                dispatch(setMessages(comments));
+                dispatch(setMessages(comments.reverse()));
                 setLoadingMessages(false);
 
                 qiscus.readComment(roomID, room.last_comment_id);
@@ -163,7 +163,10 @@ function Component() {
                         )}
                     </Loading>
                 </div>
-                <form className="Container" onSubmit={() => sendMessage()}>
+                <form className="Container" onSubmit={e => {
+                    e.preventDefault();
+                    sendMessage();
+                }}>
                     <Input compact label="Send a message.." inputValue={message} setInputValue={setMessage} />
                     <Loading loading={qiscus ? (loadingSend || !qiscus.sendComment) : true} >
                         <IconButton onClick={() => {
