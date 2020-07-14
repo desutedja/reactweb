@@ -1,13 +1,15 @@
-import React, { } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { dateTimeFormatter, toSentenceCase } from '../../../utils'
 
+import { FiTrash } from 'react-icons/fi';
 import Detail from '../components/Detail';
+import Modal from '../../../components/Modal';
 import Button from '../../../components/Button';
 import Pill from '../../../components/Pill';
 import Template from '../components/Template';
-import { publishAnnouncement, setSelected } from '../../slices/announcement';
+import { deleteAnnouncement, publishAnnouncement, setSelected } from '../../slices/announcement';
 
 import Content from './contents/Content';
 
@@ -39,11 +41,27 @@ const details =
 
 function Component() {
     const { selected } = useSelector(state => state.announcement);
+
+    const [ confirmDelete, setConfirmDelete ] = useState(false);
+
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
 
     return (
+        <>
+        <Modal 
+            isOpen={confirmDelete}
+            disableHeader={true}
+            onClick={
+               () => dispatch(deleteAnnouncement(selected, history))
+            }
+            toggle={() => setConfirmDelete(false)}
+            okLabel={"Delete"}
+            cancelLabel={"Cancel"}
+        >
+            Are you sure you want to delete this announcement?
+        </Modal>
         <Template
             image={selected.image}
             title={selected.title}
@@ -61,11 +79,14 @@ function Component() {
                         });
                         dispatch(setSelected({ ...selected, duplicate: true}));
                     }} />,
+                <Button color="danger" icon={<FiTrash/>} label="Delete" 
+                    onClick={() => setConfirmDelete(true) } />,
                 ]}
                 />,
                 <Content />,
             ]}
         />
+        </>
     )
 }
 

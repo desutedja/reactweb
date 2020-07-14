@@ -122,16 +122,17 @@ export const editAnnouncement = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteAnnouncement = (row, ) => dispatch => {
+export const deleteAnnouncement = (row, history=null) => dispatch => {
   dispatch(startAsync());
 
   dispatch(del(announcementEndpoint + '/' + row.id, 
     res => {
+      history && history.push('/sa/announcement');
       dispatch(refresh());
 
       dispatch(setInfo({
         color: 'success',
-        message: 'Announcement has been deleted.'
+        message: 'Announcement ID ' + row.id + ' has been deleted.'
       }));
 
       dispatch(stopAsync())
