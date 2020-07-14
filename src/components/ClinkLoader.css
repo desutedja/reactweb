@@ -1,0 +1,35 @@
+
+@keyframes roll {
+  0%, 25% { transform: rotate(0) }
+  100% { transform: rotate(360deg) }
+}
+
+@keyframes breath {
+  0% { transform: scale(1) }
+  10% { transform: scale(1.2) }
+  40%, 100% { transform: scale(1) }
+}
+
+.roll {
+  animation-name: roll;
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0.58, 0.02, 0.25, 1);
+  animation-iteration-count: infinite;
+}
+
+.breath {
+  animation-name: breath;
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0, 0, 0.4, 0.97);
+  animation-iteration-count: infinite;
+}
+
+.clink-loader {
+  width: 32px;
+  height: 32px;
+}
+
+.clink-loader img {
+  height: 100%;
+  object-fit: cover;
+}

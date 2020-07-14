@@ -5,7 +5,9 @@ function Component({ labels = [], contents = [], activeTab = 0, setTab = null, t
 
     return (
         <div style={{
+            flex: 1,
             width: '100%',
+            overflow: 'auto',
         }}>
             {labels.length > 1 && <div className="Tab">
                 {labels.map((el, index) =>

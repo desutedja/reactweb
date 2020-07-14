@@ -115,8 +115,8 @@ function Component() {
                     fontSize: '1.2rem'
                 }}>Are you sure to set <strong>{managementChose.management_name}</strong> as Active?</h4>
                 <span style={{
-                    color: '#ffa707',
-                    fontSize: '.9rem'
+                    color: '#ff1212',
+                    fontSize: '.97rem'
                 }}>This will make all other management Inactive.</span>
             </Modal>
             <Modal

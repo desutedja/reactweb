@@ -15,10 +15,14 @@ function TextInput({
 
     useEffect(() => {
         externalValue && setFieldValue(fixedName, externalValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [externalValue])
 
     //this repopulate the label field when editing, provided BE doesnt send them
     useEffect(() => {
+        options && options.length === 0 && setFieldValue(fixedName, 'Loading...')
+        options && values[fixedName] === 'Loading...' && setFieldValue(fixedName, '');
+
         options && !values[fixedName] && values[name] &&
             setFieldValue(fixedName,
                 // eslint-disable-next-line eqeqeq
@@ -37,7 +41,7 @@ function TextInput({
                     rows="4"
                     // onClick={() => setFocus(!isFocused)}
                     onFocus={() => setFocus(!isFocused)}
-                    onBlur={() => setTimeout(() => setFocus(!isFocused), 100)}
+                    onBlur={() => setTimeout(() => setFocus(!isFocused), 500)}
                     name={fixedName}
                     className={errors[name] && touched[name] && "error"}
                     style={{
@@ -83,6 +87,9 @@ function TextInput({
                                 setFieldValue(name, el.value);
                                 onChange(el);
                                 setFocus(false);
+                            }}
+                            style={{
+                                padding: 8,
                             }}
                         >
                             {el.label}

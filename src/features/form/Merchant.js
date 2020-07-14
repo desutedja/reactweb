@@ -208,6 +208,8 @@ function Component() {
               optional
               label="Building"
               name="in_building"
+              type="multiselect"
+              placeholder="Select building(s)"
               options={inBuildings}
               onChange={el => {
                 console.log(el);
@@ -215,11 +217,9 @@ function Component() {
                 setFieldValue('long', el.long);
               }}
             />
-            {!values['in_building'] &&
-              <button type="button" onClick={() => setModal(true)}>
-                Select Location
-                </button>
-            }
+            <button type="button" onClick={() => setModal(true)}>
+              Select Location
+            </button>
             <Input {...props} label="Latitude" name="lat" />
             <Input {...props} label="Longitude" name="long" />
             <Input {...props} label="Address" type="textarea" />

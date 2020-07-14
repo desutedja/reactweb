@@ -1,5 +1,7 @@
-import React, { } from 'react';
+import React from 'react';
 import { useHistory, useRouteMatch } from 'react-router-dom';
+
+import { FaPhone } from 'react-icons/fa';
 
 import Row from '../../../components/Row';
 import Column from '../../../components/Column';
@@ -7,7 +9,7 @@ import Button from '../../../components/Button';
 
 import { toSentenceCase, dateFormatter, getCountryFromCode, getBank } from '../../../utils';
 
-function Component({ data, labels, type = "", editable = true, renderButtons = () => {} }) {
+function Component({ imgPreview = false, data, labels, type = "", editable = true, renderButtons = () => {} }) {
 
     let history = useHistory();
     let { url } = useRouteMatch();
@@ -40,12 +42,22 @@ function Component({ data, labels, type = "", editable = true, renderButtons = (
     }
 
     return (
-        <div style={{
-            display: 'flex',
-        }}>
-            <div style={{
-                flex: 1,
-            }}>
+        <div className="row no-gutters">
+            {imgPreview && <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
+                <div className="row no-gutters h-100">
+                    <div className="col-12">
+                        <img
+                            style={{
+                                width: '100%'
+                            }}
+                            src={data.assignee_photo} alt=""/>
+                    </div>
+                    <div className="col-12 mt-3 d-flex align-items-center">
+                        <FaPhone className="mr-2 h5 m-0" /><span className="h5 m-0">+{data.assignee_phone}</span>
+                    </div>
+                </div>
+            </div>}
+            <div className="col">
                 {Object.keys(labels).map((group, i) =>
                     <div key={i} style={{
                         marginBottom: 16,

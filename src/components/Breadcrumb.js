@@ -3,7 +3,7 @@ import { useLocation, useHistory } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
 import { toSentenceCase } from '../utils';
 
-function Component({ title }) {
+function Breadcrumb({ title }) {
     let history = useHistory();
     let location = useLocation();
 
@@ -52,4 +52,4 @@ function Component({ title }) {
     )
 }
 
-export default Component;
+export default Breadcrumb;

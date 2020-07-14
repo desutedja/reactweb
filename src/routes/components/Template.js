@@ -2,9 +2,9 @@ import React, { useState, Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../features/auth/slice';
 import {
-    FiMenu, FiLogOut, FiChevronDown, FiChevronUp,
+    FiMenu, FiLogOut, FiChevronDown, FiChevronUp, FiSettings,
 } from "react-icons/fi";
-import { MdChatBubble, MdNotifications } from "react-icons/md";
+import { MdChatBubble, MdNotifications, MdSettings } from "react-icons/md";
 import { Switch, Route, useHistory, Redirect, useRouteMatch } from 'react-router-dom';
 import QiscusSDKCore from 'qiscus-sdk-core';
 
@@ -19,6 +19,8 @@ import { toSentenceCase } from '../../utils';
 import { closeAlert, setConfirmDelete, setNotif } from '../../features/slice';
 import { setQiscus, updateMessages, setUnread } from '../../features/chat/slice';
 import { Toast, ToastHeader, ToastBody } from 'reactstrap';
+import Axios from 'axios';
+import Settings from '../../features/settings';
 
 const Qiscus = new QiscusSDKCore();
 
@@ -63,20 +65,26 @@ function Component({ role, menu }) {
 
             !Qiscus.isLogin && Qiscus.setUser(userID, 'kucing', user.firstname + ' ' + user.lastname,
                 'https://avatars.dicebear.com/api/male/' + user.email + '.svg', user)
-                .then(function (authData) {
+                .then(function () {
                     // On success
-                    console.log(authData);
-                    console.log(Qiscus.isLogin);
+                    console.log('Qiscus login: ' + Qiscus.isLogin);
 
                     dispatch(setQiscus(Qiscus));
+
+                    Axios.post('https://api.qiscus.com/api/v2.1/rest/add_room_participants', {
+                        "room_id": "19278255",
+                        "user_ids": [userID],
+                    }, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "QISCUS-SDK-APP-ID": "fastel-sa-hkxoyooktyv",
+                            "QISCUS-SDK-SECRET": "20b6212e9782708f9260032856be6fcb",
+                        }
+                    })
+                    .then(res => console.log(res))
+                    .catch(err => console.log(err))
                 })
-                .catch(function (error) {
-                    // On error
-                    // alert('setUser: ' + error);
-                })
-        }).catch(error => {
-            // alert('init: ' + error);
-        });
+        })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
@@ -173,6 +181,16 @@ function Component({ role, menu }) {
                             <MdNotifications />
                         </IconButton>
                     </div>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center'
+                    }}>
+                        <IconButton
+                            onClick={() => history.push('/' + role + '/settings')}
+                        >
+                            <MdSettings />
+                        </IconButton>
+                    </div>
                     <div className="ProfileButton" onClick={() => {
                         setProfile(!profile)
                     }}>
@@ -255,6 +273,9 @@ function Component({ role, menu }) {
                         </Route>)}
                         <Route path={"/" + role + "/chat"}>
                             <Chat />
+                        </Route>
+                        <Route path={"/" + role + "/settings"}>
+                            <Settings />
                         </Route>
                     </Switch>
                 </div>

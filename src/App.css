@@ -235,6 +235,7 @@
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   /* height: fit-content; */
   overflow: hidden;
+  /* margin-top: 16px; */
 }
 
 .Details {
@@ -337,4 +338,16 @@
   text-align: center;
   color: grey;
   /* background-color: red; */
+}
+
+.Settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 600px;
+  padding: 8px;
+}
+
+.Settings-item:hover {
+  background-color: #f3f3fa;
 }
