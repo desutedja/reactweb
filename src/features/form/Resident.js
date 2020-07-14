@@ -37,7 +37,7 @@ const residentPayload = {
     account_name: "",
     account_number: "",
 
-    birthplace_label: "",
+    birthplace_label: "Others",
     nationality_label: "",
     marital_status_label: "",
     occupation_label: "",
@@ -95,6 +95,7 @@ function Component() {
     const [bcities, setBCities] = useState([]);
     const [bcloading, setBCLoading] = useState(true);
 
+    const [nat, setNat] = useState('');
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -276,12 +277,12 @@ function Component() {
                             <Input {...props} label="Phone" prefix="+62" />
                             <SectionSeparator />
 
+                            <Input {...props} label="Nationality" options={countries}
+                            />
                             <Input {...props} label="Birth Place" name="birthplace" options={bcities}
                                 loading={bcloading}
                             />
                             <Input {...props} label="Birth Date" name="birthdate" type="date" />
-                            <Input {...props} label="Nationality" options={countries}
-                            />
                             <Input {...props} hidden name="nationality" />
                             <Input {...props} label="Gender" type="radio" options={[
                                 { value: 'P', label: 'Female' },
@@ -316,7 +317,9 @@ function Component() {
                             <Input {...props} label="Account Bank" options={banks} />
                             <Input {...props} label="Account Number" />
                             <Input {...props} label="Account Name" />
-                            <button>Submit</button>
+                            <button onClick={() => {
+                                console.log(values);
+                            }}>Submit</button>
                         </>}
                     </Form>
                 )

@@ -4,8 +4,8 @@ import "firebase/storage";
 // Set the configuration for your app
 // TODO: Replace with your app's config object
 var firebaseConfig = {
-    apiKey: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8',
-    storageBucket: 'clink-e9290.appspot.com',
+    apiKey: 'AIzaSyBw115oaVaGghAnkJA3kHchRpETcuL5BF0',
+    storageBucket: 'centratama-group-bm.appspot.com',
 };
 firebase.initializeApp(firebaseConfig);
 
