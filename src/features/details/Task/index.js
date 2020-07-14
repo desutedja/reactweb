@@ -34,7 +34,6 @@ const attachments = [
 const assignee = {
     "Profile": [
         "assignee_name",
-        "assignee_photo",
         "assigned_by",
         "assigned_on",
         "assignee",
@@ -67,7 +66,7 @@ function Component() {
                         }}>None</div>
                     }
                 </>,
-                <Details data={selected} labels={assignee} editable={false} />,
+                <Details imgPreview={true} data={selected} labels={assignee} editable={false} />,
                 <Details data={selected} labels={requester} editable={false} />,
                 <Reports />,
             ]}
