@@ -1,6 +1,7 @@
 import React, { useEffect, useState, forwardRef, useRef } from 'react'
 import { useTable, useExpanded, usePagination, useSortBy, useRowSelect, } from 'react-table'
 import MoonLoader from "react-spinners/MoonLoader";
+import ClinkLoader from './ClinkLoader';
 import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
@@ -181,11 +182,14 @@ function Component({
                     {loading &&
                         <tbody className="TableLoading">
                             <tr className="Spinner">
-                                <td><MoonLoader
+                                <td>
+                                    <ClinkLoader
+                                    />
+                                    {/* <MoonLoader
                                     size={34}
                                     color={"grey"}
                                     loading={loading}
-                                />
+                                    /> */}
                                 </td>
                             </tr>
                         </tbody>
