@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { dateTimeFormatter, toSentenceCase } from '../../../utils'
@@ -13,32 +13,6 @@ import { deleteAnnouncement, publishAnnouncement, setSelected } from '../../slic
 
 import Content from './contents/Content';
 
-const details =
-{
-    'Information': [
-        'id',
-        { label: 'created_on', lfmt: () => "Created On" , vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
-        { label: 'modified_on', lfmt: () => "Last Modified", vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
-    ],
-    'Consumer': [
-        { label: 'consumer_role', vfmt: (val) => toSentenceCase(val) },
-        //{ label: 'consumer_id', lfmt: () => "Consumer ID" },
-        { label: 'building', lfmt: () => "Target Building", vfmt: (v) => v.length > 0 ? v.map( el => el.building_name ).join(', ') : "-" },
-        { label: 'building_unit', lfmt: () => "Target Unit", vfmt: (v) => v.length > 0 ? v.map( el => el.number + " " + el.section_name ).join(', ') : "-" },
-    ],
-    'Publisher': [
-        { label: 'publish', lfmt: () => "Status", vfmt: (val) => val === 0 ? <Pill color="secondary">Draft</Pill> : 
-        <Pill color="success">Published</Pill> },
-        { label: 'publisher', lfmt: () => "Publisher ID" },
-        'publisher_name',
-        { label: 'publisher_role', vfmt: (v) => { 
-            if (v === "sa") return "Super Admin";
-            else if(v === "bm") return "Building Management Admin"
-            else return v;
-        }},
-    ],
-};
-
 function Component() {
     const { selected } = useSelector(state => state.announcement);
 
@@ -47,6 +21,42 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
+
+    const details =
+        useMemo(() => ({
+        'Information': [
+            'id',
+            { label: 'created_on', lfmt: () => "Created On" , vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
+            { label: 'modified_on', lfmt: () => "Last Modified", vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
+        ],
+        'Consumer': [
+            { label: 'consumer_role', vfmt: (val) => toSentenceCase(val) },
+            //{ label: 'consumer_id', lfmt: () => "Consumer ID" },
+            { label: 'building', 
+                disabled: !(selected.consumer_role === 'merchant' && selected.consumer_role === 'centratama'),
+                lfmt: () => "Target Building", 
+                vfmt: (v) => v && v.length > 0 ? v.map( el => el.building_name ).join(', ') : "All" },
+            { label: 'building_unit', 
+                disabled: selected.consumer_role !== 'resident',
+                lfmt: () => "Target Unit", 
+                vfmt: (v) => v && v.length > 0 ? v.map( el => el.number + " " + el.section_name ).join(', ') : "All" },
+            { label: 'merchant',
+                disabled: selected.consumer_role !== 'merchant',
+                lfmt: () => "Target Merchant",
+                vfmt: (v) => v && v.length > 0 ? v.map( el => el.name ).join(', ') : "All" },
+        ],
+        'Publisher': [
+            { label: 'publish', lfmt: () => "Status", vfmt: (val) => val === 0 ? <Pill color="secondary">Draft</Pill> : 
+            <Pill color="success">Published</Pill> },
+            { label: 'publisher', lfmt: () => "Publisher ID" },
+            'publisher_name',
+            { label: 'publisher_role', vfmt: (v) => { 
+                if (v === "sa") return "Super Admin";
+                else if(v === "bm") return "Building Management Admin"
+                else return v;
+            }},
+        ],
+    }),[selected]);
 
     return (
         <>

@@ -83,7 +83,8 @@ function Component({ imgPreview = false, data, labels, type = "", editable = tru
                         }}>
                             {group}
                         </div>
-                        {labels[group].map(el =>
+                        {labels[group].map(el => {
+                            return !el.disabled ? 
                             <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={el} >
                                 <Column flex={3} style={{ fontWeight: 'bold', fontSize: '1em', textAlign: 'left' }}>
                                     {el.lfmt ? el.lfmt(el) : formatLabel(el)}
@@ -91,8 +92,8 @@ function Component({ imgPreview = false, data, labels, type = "", editable = tru
                                 <Column flex={9} style={{ fontWeight: 'normal', fontSize: '1em', }}>
                                     {el.vfmt ? el.vfmt(data[el.label]) : formatValue(el, data[el])}
                                 </Column>
-                            </Row>
-                        )}
+                            </Row> : null;
+                        })}
                     </div>
                 )}
             </div>
