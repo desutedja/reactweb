@@ -5,7 +5,7 @@ import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 import ClinkLoader from '../../components/ClinkLoader';
-import { FiCheck, FiSearch } from 'react-icons/fi';
+import { FiCheck, FiSearch, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import Tab from '../../components/Tab';
 
@@ -19,6 +19,7 @@ import { toSentenceCase, dateTimeFormatterCell } from '../../utils';
 import Pill from '../../components/Pill';
 import { endpointTransaction, endpointMerchant } from '../../settings';
 import { get, post } from '../slice';
+import MyButton from '../../components/Button';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
@@ -366,7 +367,33 @@ function Component() {
                         activeTab={0}
                     />
                 </div>
-                <div className="Container" style={{
+                <div style={{
+                    flex: 2,
+                }}>
+                    <div className="Container" style={{
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                    }}>
+                        <div>
+                            Total Undisbursed Amount
+                                </div>
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}>
+                            <b style={{
+                                fontSize: '1.2rem',
+                                marginRight: 16,
+                            }}>
+                                Not implemented yet
+                            </b>
+                            <MyButton label="Disburse All" />
+                            <Button label="Download .csv" icon={<FiDownload />}
+                                onClick={() => { }}
+                            />
+                        </div>
+                    </div>
+                    <div className="Container" style={{
                     flex: 3,
                     flexDirection: 'column',
                 }}>
@@ -400,6 +427,7 @@ function Component() {
                             ])
                         }}
                     />
+                    </div>
                 </div>
             </div>
         </>

@@ -173,11 +173,10 @@ export const getBillingDisbursement = (pageIndex, pageSize, search = '', buildin
     }))
 }
 
-export const downloadBillingDisbursement = (search = '') => dispatch => {
+export const downloadBillingDisbursement = () => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(billingEndpoint + '/disbursement/list/management' +
-    '?search=' + search +
     '&export=true',
 
     res => {

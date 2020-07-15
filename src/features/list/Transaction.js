@@ -9,6 +9,8 @@ import { toMoney, toSentenceCase, dateTimeFormatterCell } from '../../utils';
 import Pill from '../../components/Pill';
 
 import Template from './components/Template';
+import MyButton from '../../components/Button';
+import { FiDownload } from 'react-icons/fi';
 
 const payment_status = [
     { label: "Paid", value: "paid" },
@@ -112,6 +114,11 @@ function Component() {
                             />
                         </>
                 },
+            ]}
+            actions={[
+                <MyButton label="Download .csv" icon={<FiDownload />}
+                    onClick={() => {}}
+                />
             ]}
             onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}
         />

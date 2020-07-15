@@ -10,7 +10,7 @@ import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
-import { getBillingSettlement, downloadBillingUnit } from '../slices/billing';
+import { getBillingSettlement, downloadBillingSettlement } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
 import { toMoney, dateTimeFormatterCell } from '../../utils';
 import { get, post } from '../slice';
@@ -216,13 +216,7 @@ function Component() {
                                         </>
                                 },
                             ]}
-                            actions={[
-                                <Button label="Download .csv" icon={<FiDownload />}
-                                    onClick={() => dispatch(downloadBillingUnit(search, building))}
-                                />
-                            ]}
                             renderActions={(selectedRowIds, page) => {
-                                // console.log(selectedRowIds, page);
                                 return ([
                                     <Button
                                         disabled={Object.keys(selectedRowIds).length === 0}
@@ -237,6 +231,9 @@ function Component() {
                                         icon={<FiFile />}
                                         label="Upload Settlement"
                                     />,
+                                    <Button label="Download .csv" icon={<FiDownload />}
+                                        onClick={() => dispatch(downloadBillingSettlement(search, building))}
+                                    />
                                 ])
                             }}
                         />
