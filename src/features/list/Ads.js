@@ -19,6 +19,7 @@ const columns = [
     { Header: "Gender", accessor: "gender" },
     { Header: "Age", accessor: row => row.age_from + " - " + row.age_to },
     { Header: "Platform", accessor: "os" },
+    { Header: "Specialty", accessor: "specialty_store" },
     { Header: "Priority", accessor: "total_priority_score" },
     { Header: "Date", accessor: row => dateFormatter(row.start_date) + ' - ' 
         + dateFormatter(row.end_date)},

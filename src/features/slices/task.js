@@ -98,13 +98,12 @@ export const reassignTask = (data) => dispatch => {
     }))
 }
 
-export const getTaskDetails = (row, history, url) => dispatch => {
+export const getTaskDetails = (row, history) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(taskEndpoint + '/' + row.id,
     res => {
       dispatch(setSelected(res.data.data));
-      history.push(url + '/' + row.id);
 
       dispatch(stopAsync())
     }))

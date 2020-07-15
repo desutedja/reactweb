@@ -24,7 +24,7 @@ function Template({ slice, payload, schema, renderChild = () => { }, formatValue
                         const data = formatValues(values);
 
                         selected.id ?
-                            slice === 'billing' ? unit.id ? edit(data) : add(data) :
+                            slice === 'billing' ? unit.selected.id ? edit(data) : add(data) :
                             data.duplicate ? add(data) : edit(data)
                             :
                             add(data);

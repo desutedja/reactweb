@@ -68,7 +68,7 @@ function Component() {
                     unit: el.denom_unit,
                 })));
             }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     let dispatch = useDispatch();
@@ -94,16 +94,24 @@ function Component() {
     return (
         <Template
             slice="billing"
-            payload={selected.id ? {
-                ...billingPayload, ...selected,
+            payload={unit.selected.id ? {
+                ...billingPayload, ...unit.selected,
             } : billingPayload}
             schema={billingSchema}
             formatValues={values => ({
                 ...values,
+                recent_usage: parseFloat(values.recent_usage),
+                year: parseInt(values.year, 10),
+                resident_building: unit.selected.resident_building,
+                resident_unit: unit.selected.id,
+                resident_id: unit.selected.resident_id,
+                resident_name: unit.selected.resident_name,
             })}
-            edit={data => dispatch(editBillingUnitItem(data, selected, history, selectedUnit.id))}
-            add={data => dispatch(createBillingUnitItem(data, selected, history))}
+            edit={data => dispatch(editBillingUnitItem(data, unit.selected, history, selectedUnit.id))}
+            add={data => dispatch(createBillingUnitItem(data, unit.selected, history))}
             renderChild={props => {
+                const { values } = props;
+
                 return (
                     <Form className="Form">
                         <Modal
@@ -141,7 +149,9 @@ function Component() {
                         <Input {...props} label="Remarks" type="textarea" />
                         <Input {...props} label="Month" options={months} />
                         <Input {...props} label="Year" options={yearsOnRange(10)} />
-                        <button>Submit</button>
+                        <button onClick={() => {
+                            console.log(values);
+                        }}>Submit</button>
                         <SectionSeparator />
                     </Form>
                 )

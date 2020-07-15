@@ -6,9 +6,10 @@ import { FiSearch, FiPlus } from 'react-icons/fi';
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
-import Tile from '../../components/Tile';
 import Pill from '../../components/Pill';
-import { getMerchant, setSelected, deleteMerchant, getMerchantDetails } from '../slices/merchant';
+import Tile from '../../components/Tile';
+import Merchant from '../../components/cells/Merchant';
+import { getMerchant, setSelected, deleteMerchant } from '../slices/merchant';
 import { toSentenceCase, dateTimeFormatterCell } from '../../utils';
 import { merchant_types, endpointMerchant } from '../../settings';
 import { get } from '../slice';
@@ -16,15 +17,17 @@ import { get } from '../slice';
 import Template from './components/Template';
 
 const columns = [
-    { Header: 'ID', accessor: 'id' },
-    { Header: 'Name', accessor: 'name' },
-    { Header: 'Type', accessor: row => toSentenceCase(row.type) },
+    {
+        Header: 'Name', accessor: row => <Merchant id={row.id} data={row} items={[
+            <b>{row.name}</b>,
+            <p>{toSentenceCase(row.type)}</p>
+        ]} />
+    },
     { Header: 'Category', accessor: row => row.category ? toSentenceCase(row.category) : '-' },
     {
         Header: 'PIC', accessor: row => <div>
             <b>{row.pic_name}</b>
             <p>{row.pic_mail}</p>
-            <p>{row.pic_phone}</p>
         </div>
     },
     {
@@ -131,7 +134,6 @@ function Component() {
                     }}
                 />
             ]}
-            onClickDetails={row => dispatch(getMerchantDetails(row, history, url))}
         />
     )
 }

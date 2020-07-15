@@ -16,7 +16,7 @@ import Staff from '../../components/cells/Staff';
 import { useSelector } from 'react-redux';
 import { toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
-import { getTask, getTaskDetails, resolveTask, reassignTask, setSelected } from '../slices/task';
+import { getTask, resolveTask, reassignTask, setSelected } from '../slices/task';
 import { get } from '../slice';
 
 import Template from './components/Template';
@@ -294,7 +294,6 @@ function Component() {
                         }}
                     />
                 ]}
-                onClickDetails={row => dispatch(getTaskDetails(row, history, url))}
                 onClickResolve={row => {
                     setRow(row);
                     setResolve(true);

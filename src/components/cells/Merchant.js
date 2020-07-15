@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import { getTaskDetails } from '../../features/slices/task';
+import { setSelected } from '../../features/slices/merchant';
 
 function Component({ items, id, data }) {
     let dispatch = useDispatch();
@@ -9,10 +9,10 @@ function Component({ items, id, data }) {
 
     return <div style={{ display: "block" }} className="Item" onClick={() => {
             history.push({
-                pathname: 'task/' + id,
+                pathname: 'merchant/' + id,
                 state: data
             });
-            dispatch(getTaskDetails(data, history))
+            dispatch(setSelected(data));
         }}>
         { items.map((el, i) =>
             <div key={i}>

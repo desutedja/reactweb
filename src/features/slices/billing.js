@@ -223,8 +223,6 @@ export const createBillingUnitItem = (data, selected, history) => dispatch => {
     'additional_charge': []
   }
 
-  // console.log(dataBilling)
-
   dispatch(startAsync());
 
   dispatch(post(billingEndpoint, dataBilling,
@@ -244,23 +242,9 @@ export const createBillingUnitItem = (data, selected, history) => dispatch => {
 }
 
 export const editBillingUnitItem = (data, selected, history, id) => dispatch => {
-
-  const dataBilling = {
-    id: id,
-    ...data,
-    "resident_building": selected.building_id,
-    "resident_unit": selected.id,
-    "resident_id": selected.resident_id,
-    "resident_name": selected.resident_name,
-    'additional_charge': []
-  }
-
-  // console.log(dataBilling)
-
-
   dispatch(startAsync());
 
-  dispatch(put(billingEndpoint, dataBilling,
+  dispatch(put(billingEndpoint, { ...data, id: selected.id },
     res => {
       history.goBack();
 
