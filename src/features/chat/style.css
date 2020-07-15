@@ -17,13 +17,12 @@
   margin-right: 8px;
   margin-left: 8px;
   max-width: 500px;
-  background-color: var(--primary-color);
-  color: white;
+  color: black;
 }
 
 .Message-own {
-  background-color: white;
-  color: black;
+  background-color: var(--primary-color);
+  color: white;
 }
 
 .MessageAvatar {

@@ -101,6 +101,17 @@ export function dateTimeFormatter(serverDateTime, whenzero='-') {
     return day + ' ' + months[month - 1].label + ' ' + year + ' ' + time + ' WIB';
 }
 
+export function timeFormatter(serverDateTime, whenzero='-') {
+    if (serverDateTime === "0001-01-01T00:00:00Z") 
+        return whenzero;
+
+    let time = serverDateTime.split('T')[1].split('Z')[0];
+    time = time.split(':').slice(0, 2).join(':');
+
+
+    return time + ' WIB';
+}
+
 export function dateFormatter(serverDateTime, whenzero='-') {
     if (serverDateTime === "0001-01-01T00:00:00Z") 
         return whenzero;

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Input from '../../components/Input';
 import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
-import { dateTimeFormatter } from '../../utils';
+import { timeFormatter } from '../../utils';
 import { setMessages, setRoomID, setRoomUniqueID } from './slice';
 import { FiSend } from 'react-icons/fi';
 
@@ -28,6 +28,13 @@ function Component() {
     const { qiscus, roomID, roomUniqueID, messages } = useSelector(state => state.chat);
 
     let dispatch = useDispatch();
+
+    const chatref = useRef();
+
+    useEffect(() => {
+        //console.log(chatref);
+        chatref.current.scrollTo(0, chatref.current.scrollHeight)
+    },[refresh])
 
     useEffect(() => {
         setLoadingParticipants(true);
@@ -118,7 +125,7 @@ function Component() {
                     height: 584,
                     paddingRight: 16,
                     overflow: 'scroll',
-                }}>
+                }} ref={chatref}>
                     <Loading loading={loadingMessages}>
                         {messages.map((el, index) =>
                             <div key={el.timestamp} className={
@@ -146,12 +153,7 @@ function Component() {
                                                 "Message-own" : "Message"}>{el.message}
                                         </div>
                                         <div className="MessageTime">
-                                            {dateTimeFormatter(el.timestamp).split(',')[1] ?
-                                                dateTimeFormatter(el.timestamp).split(',')[1].split(':')[0]
-                                                + ':' +
-                                                dateTimeFormatter(el.timestamp).split(',')[1].split(':')[1]
-                                                : ''
-                                            }
+                                            {timeFormatter(el.timestamp)}
                                         </div>
                                     </div>
                                     {messages[index + 1]?.username !== el.username &&
