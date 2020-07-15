@@ -20,6 +20,7 @@ const announcementPayload = {
     image: "",
     description: "",
     building_unit: [],
+    merchant: [],
 }
 
 const roles = [
