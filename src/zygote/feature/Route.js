@@ -19,33 +19,31 @@ function Component() {
     let { path, url } = useRouteMatch();
 
     return (
-        <div>
-            <Switch>
-                <Route exact path={path}>
-                    <Table
-                        columns={columns}
-                        data={[]}
-                        loading={true}
-                        pageCount={1}
-                        fetchData={useCallback((pageIndex, pageSize, search) => {
+        <Switch>
+            <Route exact path={path}>
+                <Table
+                    columns={columns}
+                    data={[]}
+                    loading={true}
+                    pageCount={1}
+                    fetchData={useCallback((pageIndex, pageSize, search) => {
 
-                            // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, headers])}
-                        filters={[]}
-                        actions={[]}
-                    />
-                </Route>
-                <Route path={`${path}/add`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/edit`}>
-                    <Add />
-                </Route>
-                <Route path={`${path}/details`}>
-                    <Details />
-                </Route>
-            </Switch>
-        </div>
+                        // eslint-disable-next-line react-hooks/exhaustive-deps
+                    }, [dispatch, refreshToggle, headers])}
+                    filters={[]}
+                    actions={[]}
+                />
+            </Route>
+            <Route path={`${path}/add`}>
+                <Add />
+            </Route>
+            <Route path={`${path}/edit`}>
+                <Add />
+            </Route>
+            <Route path={`${path}/details`}>
+                <Details />
+            </Route>
+        </Switch>
     )
 }
 

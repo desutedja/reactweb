@@ -5,12 +5,14 @@ import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
 import Button from '../../components/Button';
-import { getBillingDisbursement, downloadBillingDisbursement } from '../slices/billing';
-import { toMoney } from '../../utils';
+import Modal from '../../components/Modal';
+import Input from '../../components/Input';
+import { getBillingDisbursement, downloadBillingDisbursement, refresh } from '../slices/billing';
+import { toMoney, dateTimeFormatter } from '../../utils';
 import { endpointBilling } from '../../settings';
-import { get } from '../slice';
+import { get, post } from '../slice';
 import MyButton from '../../components/Button';
-import { FiDownload } from 'react-icons/fi';
+import { FiDownload, FiSearch, FiCheck } from 'react-icons/fi';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
@@ -18,18 +20,22 @@ const columns = [
     { Header: 'Billing Refcode', accessor: 'trx_code' },
     // { Header: 'Unit', accessor: 'number' },
     { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
+    {
+        Header: 'Disbursed at', accessor: row => row.disbursement_date ?
+            dateTimeFormatter(row.disbursement_date) : '-'
+    },
 ]
 
 function Component() {
     const [active, setActive] = useState(0);
     const [info, setInfo] = useState({});
     const [amount, setAmount] = useState('');
+    const [modal, setModal] = useState(false);
 
     const [data, setData] = useState([]);
-    // const [trxCodes, setTrxCodes] = useState([]);
+    const [selected, setSelected] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
     const [dataPages, setDataPages] = useState('');
-
 
     const { disbursement, refreshToggle } = useSelector(state => state.billing);
 
@@ -54,8 +60,62 @@ function Component() {
             }))
     }, [active, disbursement.items, dispatch]);
 
+    const getSum = items => {
+        return items.reduce((sum, el) => {
+            return sum + el.selling_price
+        }, 0)
+    }
+
     return (
         <div>
+            <Modal isOpen={modal} toggle={() => setModal(!modal)}
+                title="Disbursement Selection"
+                okLabel="Flag as Disbursed"
+                onClick={() => {
+                    dispatch(post(endpointBilling + '/management/billing/disbursement/flag', {
+                        trx_code: selected.map(el => el.trx_code)
+                    }, res => {
+                        dispatch(refresh());
+                        setModal(false);
+                    }))
+                }}
+            >
+                <div style={{
+                    display: 'flex',
+                    marginBottom: 16,
+                }}>
+                    <Input compact label="Search" icon={<FiSearch />} />
+                    <Button label="Add" />
+                </div>
+                <div style={{
+                    minHeight: 300,
+                }}>
+                    {selected.map(el => <div key={el.id} style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        width: '100%',
+                        padding: 8,
+                        marginBottom: 4,
+                        border: '1px solid silver',
+                        borderRadius: 4,
+                    }}>
+                        <div>
+                            <div>Trx Code</div>
+                            {el.trx_code}
+                        </div>
+                        <div style={{
+                            fontWeight: 'bold'
+                        }}>
+                            {toMoney(el.selling_price)}
+                        </div>
+                    </div>)}
+                </div>
+                <div style={{
+                    marginTop: 16,
+                }}>
+                    <h5>Total {toMoney(getSum(selected))}</h5>
+                </div>
+            </Modal>
             <Switch>
                 <Route exact path={path}>
                     <div className="Container">
@@ -125,7 +185,6 @@ function Component() {
                             }}>
                                 <div>
                                     Total Undisbursed Amount
-
                                 </div>
                                 <div style={{
                                     display: 'flex',
@@ -137,7 +196,10 @@ function Component() {
                                     }}>
                                         {toMoney(amount)}
                                     </b>
-                                    <MyButton label="Disburse All" />
+                                    <MyButton label="Disburse All" onClick={() => {
+                                        setSelected(data.filter(el => !el.disbursement_date));
+                                        setModal(true);
+                                    }} />
                                     <Button label="Download .csv" icon={<FiDownload />}
                                         onClick={() => dispatch(downloadBillingDisbursement())}
                                     />
@@ -145,6 +207,9 @@ function Component() {
                             </div>
                             <div className="Container">
                                 <Table
+                                    onSelection={(selectedRows) => {
+                                        setSelected(selectedRows);
+                                    }}
                                     noContainer={true}
                                     columns={columns}
                                     data={data}
@@ -165,6 +230,18 @@ function Component() {
                                             }))
                                         // eslint-disable-next-line react-hooks/exhaustive-deps
                                     }, [dispatch, refreshToggle, active])}
+                                    renderActions={(selectedRowIds, page) => {
+                                        return ([
+                                            <Button
+                                                disabled={Object.keys(selectedRowIds).length === 0}
+                                                onClick={() => {
+                                                    setModal(true);
+                                                }}
+                                                icon={<FiCheck />}
+                                                label="Disburse Selection"
+                                            />
+                                        ])
+                                    }}
                                 />
                             </div>
                         </div>
