@@ -41,8 +41,14 @@ const columns = [
                 {toSentenceCase(row.priority)}
             </Pill>
     },
-    { Header: "Requester", accessor: row => <Resident compact={true} id={row.requester_id} data={row} onClickPath={"resident"} /> },
-    { Header: "Assignee", accessor: row => row.assignee_id ? <Staff compact={true} id={row.assignee_id} data={row} /> : "-" },
+    {
+        Header: "Requester", accessor: row => <Resident compact={true} id={row.requester_id}
+            data={row.requester_details} onClickPath={"resident"} />
+    },
+    {
+        Header: "Assignee", accessor: row => row.assignee_id ? <Staff compact={true} id={row.assignee_id}
+            data={row.assignee_details} /> : "-"
+    },
     { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
     {
         Header: "Status", accessor: row => row.status ?
