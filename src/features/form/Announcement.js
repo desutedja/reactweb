@@ -112,7 +112,7 @@ function Component() {
         /* when it's editing, the format from server isn't the same as we expected, so we need to reformat again */
         target_building: selected.building && selected.building.length > 0 ? 'specificbuilding' : 'allbuilding',
         target_merchant: selected.merchant && selected.merchant.length > 0 ? 'specificmerchant' : 'allmerchant',
-        merchant: selected.merchant && selected.merchant.map(el => ({ label: el.name, value: el.id })),
+        merchant: selected.merchant && selected.merchant.map(el => ({ label: el.merchant_name, value: el.id })),
         building: selected.building && selected.building.map(el => ({ label: el.building_name, value: el.building_id })),
         building_unit: selected.building_unit && selected.building_unit.map(el =>
             ({ label: "Room " + el.number + ", Section: " + el.section_name, value: el.building_unit_id }))
