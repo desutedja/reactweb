@@ -77,7 +77,6 @@ export const residentSchema = Yup.object().shape({
 export const billingSchema = Yup.object().shape({
     service: Text,
     name: Text,
-    previous_usage: Number,
     recent_usage: Number,
     month: Text,
     year: Text,

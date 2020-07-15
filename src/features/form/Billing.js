@@ -18,7 +18,6 @@ import Input from './input';
 const billingPayload = {
     service: "",
     name: "",
-    previous_usage: "",
     recent_usage: "",
     month: "",
     year: "",
@@ -144,7 +143,6 @@ function Component() {
                             setServiceUnit(el.unit);
                         }} />
                         <Input {...props} label="Name" />
-                        <Input {...props} label="Previous Usage" suffix={serviceUnit} />
                         <Input {...props} label="Recent Usage" suffix={serviceUnit} />
                         <Input {...props} label="Remarks" type="textarea" />
                         <Input {...props} label="Month" options={months} />
