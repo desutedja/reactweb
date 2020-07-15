@@ -1,30 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, {  } from 'react';
 import Avatar from 'react-avatar';
 import { useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 
-import { get } from '../../features/slice';
-import { endpointAdmin } from '../../settings';
 import './style.css';
 import { setSelected } from '../../features/slices/management';
 
 
-function Component({ id }) {
-    const [data, setData] = useState({
-        email: '',
-        name: '',
-        logo: '',
-    });
-
+function Component({ id, data }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { path } = useRouteMatch();
-
-    useEffect(() => {
-        dispatch(get(endpointAdmin + '/management/details/' + id, res => {
-            setData(res.data.data);
-        }))
-    }, [dispatch, id])
 
     return (
         <div className="Item" onClick={() => {

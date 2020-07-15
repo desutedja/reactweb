@@ -7,12 +7,11 @@ import Button from '../../components/Button';
 import Filter from '../../components/Filter';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
-import Tile from '../../components/Tile';
+import Task from '../../components/cells/Task';
 import Pill from '../../components/Pill';
 
 import Resident from '../../components/cells/Resident';
 import Staff from '../../components/cells/Staff';
-// import Building from '../../components/cells/Building';
 
 import { useSelector } from 'react-redux';
 import { toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
@@ -23,8 +22,11 @@ import { get } from '../slice';
 import Template from './components/Template';
 
 const columns = [
-    // { Header: "ID", accessor: "id" },
-    { Header: "Title", accessor: row => <Tile items={[row.title, <small>{toEllipsis(row.ref_code, 17)}</small>]} /> },
+    {
+        Header: "Title", accessor: row => <Task
+            id={row.id} data={row}
+            items={[row.title, <small>{toEllipsis(row.ref_code, 17)}</small>]} />
+    },
     {
         Header: "Type", accessor: row => row.task_type === "service" ? <>{toSentenceCase(row.task_type) +
             (row.task_specialization ? ("- " + row.task_specialization) : "")}</> :
@@ -39,9 +41,8 @@ const columns = [
                 {toSentenceCase(row.priority)}
             </Pill>
     },
-    { Header: "Requester", accessor: row => <Resident compact={true} id={row.requester_id} onClickPath={"resident"} /> },
-    // { Header: "Building", accessor: row => <Building id={row.requester_building_id} /> },
-    { Header: "Assignee", accessor: row => row.assignee_id ? <Staff compact={true} id={row.assignee_id} /> : "-" },
+    { Header: "Requester", accessor: row => <Resident compact={true} id={row.requester_id} data={row} onClickPath={"resident"} /> },
+    { Header: "Assignee", accessor: row => row.assignee_id ? <Staff compact={true} id={row.assignee_id} data={row} /> : "-" },
     { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
     {
         Header: "Status", accessor: row => row.status ?

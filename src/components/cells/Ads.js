@@ -1,28 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, {  } from 'react';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { get } from '../../features/slice';
-import { endpointAds } from '../../settings';
 import './style.css';
 import { toSentenceCase } from '../../utils';
 import { setSelected } from '../../features/slices/ads';
 
 
-function AdsCell({ id, compact=false }) {
-    const [data, setData] = useState({
-        content_name: '',
-        appear_as: '',
-    });
-
+function AdsCell({ id, data, compact=false }) {
     let dispatch = useDispatch();
     let history = useHistory();
-
-    useEffect(() => {
-        dispatch(get(endpointAds + '/management/ads/' + id, res => {
-            setData(res.data.data);
-        }))
-    }, [dispatch, id])
 
     return (
         <div className={ !compact ? "Item" : "Item-compact" } onClick={() => {

@@ -48,10 +48,7 @@ function Component() {
 
     const [calculatedPrice, setCalculatedPrice] = useState(0);
 
-    const {
-        selected,
-        // refresh
-    } = useSelector(state => state.product);
+    const { selected } = useSelector(state => state.product);
 
     let dispatch = useDispatch();
 
@@ -135,7 +132,7 @@ function Component() {
                         display: 'flex',
                         marginTop: 16,
                     }}>
-                        {selected.images.map((el, id) =>
+                        {selected.images?.map((el, id) =>
                             <img src={el} alt="product images"
                                 key={id}
                                 height={100}

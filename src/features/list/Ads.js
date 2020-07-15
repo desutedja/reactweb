@@ -15,7 +15,7 @@ import { dateFormatter } from '../../utils';
 import AdsCell from '../../components/cells/Ads';
 
 const columns = [
-    { Header: "Title", accessor: row => <AdsCell id={row.id} /> },
+    { Header: "Title", accessor: row => <AdsCell id={row.id} data={row} /> },
     { Header: "Gender", accessor: "gender" },
     { Header: "Age", accessor: row => row.age_from + " - " + row.age_to },
     { Header: "Platform", accessor: "os" },

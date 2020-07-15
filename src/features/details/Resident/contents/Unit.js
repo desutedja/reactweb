@@ -37,10 +37,10 @@ function Component({ id }) {
     const [addSubAccount, setAddSubAccount] = useState(false);
     const [addSubAccountStep, setAddSubAccountStep] = useState(false);
     const [residents, setResidents] = useState([]);
-    const [subAccount, setSubAccount] = useState('');
+    const [subAccount, setSubAccount] = useState({});
     const [ownershipStatus, setOwnershipStatus] = useState('');
 
-    const [mainOwner, setMainOwner] = useState('');
+    const [mainOwner, setMainOwner] = useState({});
 
     const [search, setSearch] = useState('');
 
@@ -157,7 +157,7 @@ function Component({ id }) {
                         <div style={{ display: 'flex', flexWrap: 'wrap' }} >
                         { subs.map(el => 
                             <div style={{ display: 'flex', marginLeft: '50px' }} onClick={ () => dispatch(refresh()) } >
-                                <Resident id={el.id} onClickPath={ removeLastFromPath(path) }/>
+                                <Resident id={el.id} data={el} onClickPath={ removeLastFromPath(path) }/>
                                 <FiX size={15} style={{ marginTop: '10px', cursor: 'pointer'}} 
                                     onClick={ () => {setConfirmDelete(true); setSelectedUnit(item); setSubAccount(el)} } />
                             </div>
@@ -179,7 +179,7 @@ function Component({ id }) {
     }
 
     function SubAccountItemList(resident, itemOnClick) { 
-        return <Resident id={resident.value.id} onClick={itemOnClick}/>
+        return <Resident id={resident.value.id} data={resident.value} onClick={itemOnClick}/>
     }
 
     function AddSubAccountNotFound() {
@@ -231,7 +231,7 @@ function Component({ id }) {
                     />
                 </>}
                 {addSubAccountStep === 2 && <>
-                    <Resident id={subAccount.id} onClick={()=>{}}/>
+                    <Resident id={subAccount.id} data={subAccount} onClick={()=>{}}/>
                     <hr/>
                     <p>Ownership status: </p>
                     <Filter
@@ -243,7 +243,7 @@ function Component({ id }) {
                     />
                 </>}
                 {addSubAccountStep === 3 && <>
-                    <Resident id={subAccount.id} onClick={()=>{}}/>
+                    <Resident id={subAccount.id} data={subAccount} onClick={()=>{}}/>
                     <Input fullwidth type="button" label={"Sub Account Ownership Status"} inputValue={ownershipStatus.label} onClick={() => { }} />
                 </>}
             </Modal>
@@ -328,7 +328,7 @@ function Component({ id }) {
                         <>
                         <p>This unit already has main owner, click below to get to the main owner page : </p>
                         <div onClick={() => {setAddUnitStep(1); setAddUnit(false)} } style={{ display: 'flex', justifyContent: 'space-between' }} >
-                            <Resident id={mainOwner.id}  onClickPath={removeLastFromPath(path)} />
+                            <Resident id={mainOwner.id} data={mainOwner} onClickPath={removeLastFromPath(path)} />
                         </div>
                         </>}
                     </form>
