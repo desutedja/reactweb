@@ -46,7 +46,7 @@ function Component() {
     ] = useState('');
     const [couriers, setCouriers] = useState([]);
 
-    
+
     const { loading, refreshToggle, disbursement } = useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
@@ -66,7 +66,7 @@ function Component() {
             {
                 Header: 'Amount', accessor: row => type === 'merchant' ?
                     toMoney(row.total_selling_price) : toMoney(row.assignee_fee)
-            },    {
+            }, {
                 Header: 'Disbursement Status', accessor: row => {
                     // console.log(row)
                     return (
@@ -76,7 +76,7 @@ function Component() {
                             </Pill> : <Pill color={trxStatusColor['requested']}>
                                 {toSentenceCase('undisbursed')}
                             </Pill>
-                        )
+                    )
                 }
             },
             {
@@ -113,7 +113,7 @@ function Component() {
     }, [type]);
 
     useEffect(() => {
-        dispatch(get(endpointTransaction + '/admin/transaction/summary',  res => {
+        dispatch(get(endpointTransaction + '/admin/transaction/summary', res => {
             setInfo(res.data.data);
         }));
     }, [dispatch]);
@@ -121,7 +121,7 @@ function Component() {
     useEffect(() => {
         setLoadingMerchant(true);
         setLoadingCourier(true);
-        type === 'merchant' && dispatch(get(endpointMerchant + '/admin/list?filter=',  res => {
+        type === 'merchant' && dispatch(get(endpointMerchant + '/admin/list?filter=', res => {
             setMerchants(res.data.data.items);
             setMerchant(res.data.data.items[active].id);
             setLoadingMerchant(false);
@@ -131,12 +131,12 @@ function Component() {
             setCourier(res.data.data.items[active].id);
             setLoadingCourier(false);
         }))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, type]);
 
     useEffect(() => {
         console.log(selected)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [merchant, selected])
 
     return (
@@ -156,18 +156,18 @@ function Component() {
                         disbursed_on: currentDate,
                         disbursed_code: transferCode
                     } : {
-                        trx_codes: ref_codes,
-                        courier_id: Number(courier),
-                        amount: getSum(selected),
-                        disbursed_on: currentDate,
-                        disbursed_code: transferCode
-                    }
+                            trx_codes: ref_codes,
+                            courier_id: Number(courier),
+                            amount: getSum(selected),
+                            disbursed_on: currentDate,
+                            disbursed_code: transferCode
+                        }
 
-                    if (type === 'merchant') dispatch(post(endpointTransaction + '/admin/disbursement/merchant/create', dataDisburse,  res => {
+                    if (type === 'merchant') dispatch(post(endpointTransaction + '/admin/disbursement/merchant/create', dataDisburse, res => {
                         setDisburseModal(false);
                         dispatch(refresh());
                     }))
-                    if (type === 'courier') dispatch(post(endpointTransaction + '/admin/disbursement/courier/create', dataDisburse,  res => {
+                    if (type === 'courier') dispatch(post(endpointTransaction + '/admin/disbursement/courier/create', dataDisburse, res => {
                         setDisburseModal(false);
                         dispatch(refresh());
                     }));
@@ -184,9 +184,6 @@ function Component() {
                         inputValue={transferCode}
                         setInputValue={setTransferCode}
                         noMargin={true}
-                        // onClick={e => {
-                        //     console.log(e.target)
-                        // }}
                     />
                 </div>
                 <div style={{
@@ -213,7 +210,8 @@ function Component() {
                                     {toMoney(el.total_selling_price)}
                                 </div>
                             </div>
-                        )}
+                        )
+                    }
                     )}
                     {type === 'courier' && selected.map(el => {
                         return (
@@ -236,7 +234,8 @@ function Component() {
                                     {toMoney(el.assignee_fee)}
                                 </div>
                             </div>
-                        )}
+                        )
+                    }
                     )}
                 </div>
                 <div style={{
@@ -245,7 +244,10 @@ function Component() {
                     <h5>Total {toMoney(getSum(selected))}</h5>
                 </div>
             </Modal>
-            <div className="Container">
+            <div className="Container" style={{
+                flex: 'none',
+                height: 120,
+            }}>
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -316,30 +318,27 @@ function Component() {
                         setTab={setType}
                         tabActive={setActive}
                         contents={[
-                            <> 
+                            <>
                                 <h5 style={{
                                     marginBottom: 16,
                                 }}>Select Merchant</h5>
                                 <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
                                 {loadingMerchant && <div className="w-100 py-5 d-flex justify-content-center">
-                                    {/* <MoonLoader
-                                        size={34}
-                                        color={"grey"}
-                                        loading={loadingMerchant}
-                                    /> */}
-                                    <ClinkLoader/>
+                                    <ClinkLoader />
                                 </div>}
-                                {!loadingMerchant && merchants.map((el, index) => <div
-                                    key={index}
-                                    className={index === active ? "GroupActive" : "Group"}
-                                    onClick={() => {
-                                        setMerchant(el.id.toString());
-                                        setCourier('');
-                                        setActive(index)
-                                    }}
-                                >
-                                    {el.name}
-                                </div>)}
+                                {!loadingMerchant && merchants
+                                    .filter(el => el.name.toLowerCase().includes(searchValue.toLowerCase()))
+                                    .map((el, index) => <div
+                                        key={index}
+                                        className={index === active ? "GroupActive" : "Group"}
+                                        onClick={() => {
+                                            setMerchant(el.id.toString());
+                                            setCourier('');
+                                            setActive(index)
+                                        }}
+                                    >
+                                        {el.name}
+                                    </div>)}
                             </>,
                             <>
                                 <h5 style={{
@@ -347,30 +346,25 @@ function Component() {
                                 }}>Select Courier</h5>
                                 <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
                                 {loadingCourier && <div className="w-100 py-5 d-flex justify-content-center">
-                                    {/* <MoonLoader
-                                        size={34}
-                                        color={"grey"}
-                                        loading={loadingCourier}
-                                    /> */}
-                                    <ClinkLoader/>
+                                    <ClinkLoader />
                                 </div>}
-                                {!loadingCourier && couriers.map((el, index) => <div
-                                    key={index}
-                                    className={index === active ? "GroupActive" : "Group"}
-                                    onClick={() => {
-                                        setCourier(el.id.toString());
-                                        setMerchant('');
-                                        setActive(index)
-                                    }}
-                                >
-                                    {el.firstname} {el.lastname}
-                                </div>)}
+                                {!loadingCourier && couriers
+                                    .filter(el => (el.firstname + ' ' + el.lastname).toLowerCase().includes(searchValue.toLowerCase()))
+                                    .map((el, index) => <div
+                                        key={index}
+                                        className={index === active ? "GroupActive" : "Group"}
+                                        onClick={() => {
+                                            setCourier(el.id.toString());
+                                            setMerchant('');
+                                            setActive(index)
+                                        }}
+                                    >
+                                        {el.firstname} {el.lastname}
+                                    </div>)}
                             </>,
                         ]}
                         activeTab={0}
                     />
-                    
-                    
                 </div>
                 <div className="Container" style={{
                     flex: 3,
@@ -387,7 +381,7 @@ function Component() {
                         loading={loading}
                         pageCount={disbursement.total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getTransactionDisbursement( pageIndex, pageSize, search,
+                            dispatch(getTransactionDisbursement(pageIndex, pageSize, search,
                                 type, merchant, courier));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
                         }, [dispatch, refreshToggle, merchant, courier])}
@@ -418,6 +412,6 @@ export default Component;
 const InputSearch = (props) => (
     <div className="search-input mb-3">
         <label htmlFor="search"><FiSearch /></label>
-        <input {...props} id="search" type="text" placeholder="Search"/>
+        <input {...props} id="search" type="text" placeholder="Search" />
     </div>
 )

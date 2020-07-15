@@ -97,24 +97,6 @@ function Component() {
                     }))
                 }}
             >
-                {/* <div style={{
-                    display: 'flex',
-                    marginBottom: 32,
-                    position: 'relative'
-                }}>
-                    <Input compact
-                        type="text"
-                        label="Search"
-                        icon={<FiSearch />}
-                        inputValue={inputValue}
-                        setInputValue={setInputValue}
-                        noMargin={true}
-                        // onClick={e => {
-                        //     console.log(e.target)
-                        // }}
-                    />
-                    <Button label="Add" />
-                </div> */}
                 <div style={{
                     minHeight: 300,
                 }}>
@@ -148,7 +130,10 @@ function Component() {
                     <h5>Total {toMoney(getSum(selected))}</h5>
                 </div>
             </Modal>
-            <div className="Container d-flex mb-4">
+            <div className="Container" style={{
+                flex: 'none',
+                height: 120,
+            }}>
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
