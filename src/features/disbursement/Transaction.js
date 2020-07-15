@@ -51,8 +51,6 @@ function Component() {
     const { loading, refreshToggle, disbursement } = useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
-    // let history = useHistory();
-    // let { url } = useRouteMatch();
 
     const getSum = items => {
         return items.reduce((sum, el) => {
@@ -126,12 +124,20 @@ function Component() {
             setMerchants(res.data.data.items);
             setMerchant(res.data.data.items[active].id);
             setLoadingMerchant(false);
-        }))
+        }, err => {
+            console.log('FAILED GET LIST DISBURSEMENT MERCHANT:', err)
+            setLoadingMerchant(false);
+        }
+        ))
         type === 'courier' && dispatch(get(endpointManagement + '/admin/staff/list?staff_role=courier', res => {
             setCouriers(res.data.data.items);
             setCourier(res.data.data.items[active].id);
             setLoadingCourier(false);
-        }))
+        }, err => {
+            console.log('FAILED GET LIST DISBURSEMENT COURIER:', err)
+            setLoadingMerchant(false);
+        }
+        ))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, type]);
 
@@ -199,7 +205,8 @@ function Component() {
                                 padding: 12,
                                 marginBottom: 8,
                                 borderRadius: 6,
-                                backgroundColor: 'rgb(215, 215, 215)',
+                                border: '1px solid rgba(0, 0, 0, .3',
+                                backgroundColor: 'white'
                             }}>
                                 <div>
                                     <div>Trx Code</div>
@@ -376,7 +383,7 @@ function Component() {
                     }}>
                         <div>
                             Total Undisbursed Amount
-                                </div>
+                        </div>
                         <div style={{
                             display: 'flex',
                             alignItems: 'center',
@@ -385,11 +392,17 @@ function Component() {
                                 fontSize: '1.2rem',
                                 marginRight: 16,
                             }}>
-                                Not implemented yet
+                                Rp {info.total_undisbursed_transaction_amount}
                             </b>
-                            <MyButton label="Disburse All" />
+                            <MyButton label="Disburse All"
+                                disabled={disbursement.items.some(item => item.disbursement_date)}
+                                onClick={() => {
+                                    setSelected(disbursement.items);
+                                    setDisburseModal(true);
+                                }}
+                            />
                             <Button label="Download .csv" icon={<FiDownload />}
-                                onClick={() => { }}
+                                onClick={() => {}}
                             />
                         </div>
                     </div>
@@ -440,6 +453,6 @@ export default Component;
 const InputSearch = (props) => (
     <div className="search-input mb-3">
         <label htmlFor="search"><FiSearch /></label>
-        <input {...props} id="search" type="text" placeholder="Search" />
+        <input className="py-2" {...props} id="search" type="text" placeholder="Search" />
     </div>
 )
