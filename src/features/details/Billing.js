@@ -53,6 +53,7 @@ function Component() {
     }, [dispatch, refreshToggle,  selected, status])
 
     useEffect(() => {
+        setItems([]);
         unit.items[active] && setItems(unit.items[active].billing_item
             .filter(el => status === '' ? true : el.payment === status));
     }, [unit.items, active, status]);

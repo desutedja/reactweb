@@ -10,7 +10,7 @@ import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
-import { getBillingSettlement, downloadBillingSettlement } from '../slices/billing';
+import { getBillingSettlement, downloadBillingSettlement, refresh } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
 import { toMoney, dateTimeFormatterCell } from '../../utils';
 import { get, post } from '../slice';
@@ -44,11 +44,6 @@ function Component() {
     const columns = useMemo(() => [
         { Header: 'ID', accessor: 'id' },
         { Header: 'Trx Code', accessor: 'trx_code' },
-        // { Header: 'Building', accessor: row => <Building id={row.building_id} 
-        //     onClickPath={removeLastFromPath(path, 2) + "/building"} /> },
-        // { Header: 'Unit', accessor: 'unit_id' },
-        //{ Header: 'Management', accessor: 'management_name' },
-        // { Header: 'Resident', accessor: 'resident_name' },
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
         {
             Header: 'Settled', accessor: row => row.payment_settled_date ? <Pill color="success">Settled</Pill> :
@@ -58,7 +53,6 @@ function Component() {
             Header: 'Settlement Date', accessor: row => row.payment_settled_date ?
                 dateTimeFormatterCell(row.payment_settled_date) : '-'
         },
-        // { Header: 'Disbursement', accessor: row => row.disbursement_date ? row.disbursement_date : '-' },
     ], [])
 
     useEffect(() => {
@@ -88,6 +82,7 @@ function Component() {
                     dispatch(post(endpointBilling + '/management/billing/settlement', {
                         trx_code: selected.map(el => el.trx_code)
                     }, res => {
+                        dispatch(refresh());
                         setSettleModal(false);
                     }))
                 }}
