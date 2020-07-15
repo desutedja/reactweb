@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
+
+import { get, post } from '../../../slice';
+import { endpointAdmin } from '../../../../settings';
+import ClinkLoader from '../../../../components/ClinkLoader';
 
 const modules = [
   {label: 'Security', value: 'security'},
@@ -8,13 +14,13 @@ const modules = [
   {label: 'Advertisement', value: 'advertisement'}
 ]
 
-const active_modules = [
-  // 'technician',
-  // 'security',
-  // 'merchant',
-  // 'billing',
-  'advertisement',
-]
+// const active_modules = [
+//   // 'technician',
+//   // 'security',
+//   // 'merchant',
+//   // 'billing',
+//   // 'advertisement',
+// ]
 
 const modulesFiltered = (arrA, arrB) => {
   let res = [];
@@ -27,16 +33,39 @@ const modulesFiltered = (arrA, arrB) => {
   return res;
 }
 
-export default () => {
-  const [activeModules, setActiveModules] = useState(active_modules || [])
+export default (props) => {
+  const {id} = useParams()
+  const dispatch = useDispatch()
+  const [activeModules, setActiveModules] = useState([]);
+  const [modulesLabel, setModulesLabel] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    console.log(activeModules)
-  }, [activeModules])
+    dispatch(get(endpointAdmin + '/modules/building?id=' + id,
+      res => {
+        setActiveModules(res.data.data.active_modules)
+        setModulesLabel(modulesFiltered(modules, res.data.data.active_modules))
+        setIsLoading(false);
+      },
+      err => console.log(err.response)
+    ))
+  }, [dispatch, id])
+
+  useEffect(() => {
+    setIsLoading(true)
+    dispatch(post(endpointAdmin + '/modules/building?id=' + id,
+      {
+        active_modules: activeModules
+      },
+      res => {
+        setIsLoading(false)
+      }
+    ))
+  }, [activeModules, dispatch, id])
   return (
     <>
       <div className="row no-gutters mt-4">
-        {modulesFiltered && modulesFiltered(modules, activeModules).map((el, i) => (
+        {modulesLabel && modulesLabel.map((el, i) => (
         <div key={i}
         className="col-12 col-sm-6 col-md-6 col-lg
         d-flex justify-content-center p-2">
@@ -50,6 +79,12 @@ export default () => {
           />
         </div>
         ))}
+        {isLoading && (
+        <div className="col-12 d-flex flex-column justify-content-center align-items-center">
+          <ClinkLoader />
+          <span className="mt-2 text-secondary">please wait...</span>
+        </div>
+        )}
       </div>
     </>
   )
