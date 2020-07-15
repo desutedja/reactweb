@@ -16,6 +16,7 @@ import {
     getResidentUnit,
     addResidentUnit,
     deleteSubaccount,
+    deleteUnit,
     refresh
 } from '../../../slices/resident';
 import { endpointAdmin, endpointResident } from '../../../../settings';
@@ -31,7 +32,11 @@ const columnsUnit = [
 
 function Component({ id }) {
     const [addUnit, setAddUnit] = useState(false);
+    const [delUnit, setDelUnit] = useState({
+        delete: []
+    })
     const [confirmDelete, setConfirmDelete] = useState(false);
+    const [confirmDeleteUnit, setConfirmDeleteUnit] = useState(false);
     const [addUnitStep, setAddUnitStep] = useState(1);
 
     const [addSubAccount, setAddSubAccount] = useState(false);
@@ -58,7 +63,6 @@ function Component({ id }) {
 
     const { unit, loading, refreshToggle } = useSelector(state => state.resident);
 
-    console.log('LOG', unit)
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -113,6 +117,10 @@ function Component({ id }) {
             }))
     }, [addUnit, search, addUnitStep, selectedBuilding, dispatch]);
 
+    useEffect(() => {
+        console.log(delUnit)
+    }, [delUnit])
+
     const addUnitBackFunction = useCallback(() => setAddUnitStep(addUnitStep - 1), [addUnitStep]);
     const addSubBackFunction = useCallback(() => setAddSubAccountStep(addSubAccountStep - 1), [addSubAccountStep]);
 
@@ -140,8 +148,6 @@ function Component({ id }) {
     }
 
     const deleteSub = (e) => {
-        console.log("selectedunit");
-        console.log(subAccount);
         dispatch(deleteSubaccount(
             selectedUnit.unit_id, parseInt(id), subAccount.id,
         ))
@@ -199,6 +205,21 @@ function Component({ id }) {
                 cancelLabel={"Cancel"}
             >
                 Are you sure you want to remove <b>{subAccount.firstname + ' ' + subAccount.lastname}</b> from this unit?
+            </Modal>
+            <Modal 
+                isOpen={confirmDeleteUnit}
+                disableHeader={true}
+                onClick={() => {
+                    dispatch(deleteUnit(delUnit));
+                    setConfirmDeleteUnit(false);
+                }}
+                toggle={() => setConfirmDeleteUnit(false)}
+                btnDanger={true}
+                okLabel={"Delete"}
+                cancelLabel={"Cancel"}
+            >
+                <p className="h5">Are you sure you want to remove this unit?</p>
+                {delUnit.delete.length > 1 && <span className="text-danger">This will make remove all other subaccount.</span>}
             </Modal>
             <Modal
                 isOpen={addSubAccount}
@@ -354,6 +375,20 @@ function Component({ id }) {
                         onClick={() => setAddUnit(true)}
                     />
                 ]}
+                onClickDelete={row => {
+                    let del = row.unit_sub_account ? row.unit_sub_account.map(item => ({
+                        unit_id: Number(row.unit_id),
+                        owner_id: Number(item.id)
+                    })) : []
+                    del.push({
+                        unit_id: Number(row.unit_id),
+                        owner_id: Number(id)
+                    })
+                    setDelUnit({
+                        delete: del
+                    })
+                    setConfirmDeleteUnit(true)
+                }}
             />
         </>
     )
