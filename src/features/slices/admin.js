@@ -129,7 +129,7 @@ export const getAdminDetails = (row,  history, url) => dispatch => {
   dispatch(get(adminEndpoint + '/details/' + row.id, 
     res => {
       dispatch(setSelected(res.data.data));
-      history.push(url + '/details');
+      history.push(url + '/' + row.id);
 
       dispatch(stopAsync())
     }))

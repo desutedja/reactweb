@@ -7,7 +7,7 @@ import './style.css';
 import { setSelected } from '../../features/slices/resident';
 
 
-function Component({ id, data, compact=false, onClick=null, onClickPath='' }) {
+function Component({ id, data = {}, compact=false, onClick=null, onClickPath='' }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { path } = useRouteMatch();

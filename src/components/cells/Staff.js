@@ -7,7 +7,7 @@ import './style.css';
 import { toSentenceCase } from '../../utils';
 import { setSelected } from '../../features/slices/staff';
 
-function Component({ id, data, compact = false }) {
+function Component({ id, data = {}, compact = false }) {
     let dispatch = useDispatch();
     let history = useHistory();
 
