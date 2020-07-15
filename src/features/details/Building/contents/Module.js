@@ -49,21 +49,19 @@ export default (props) => {
       },
       err => console.log(err.response)
     ))
-  }, [])
+  }, [dispatch, id])
 
   useEffect(() => {
-    // console.log(activeModules)
     setIsLoading(true)
     dispatch(post(endpointAdmin + '/modules/building?id=' + id,
       {
         active_modules: activeModules
       },
       res => {
-        console.log(res.data.data)
         setIsLoading(false)
       }
     ))
-  }, [activeModules])
+  }, [activeModules, dispatch, id])
   return (
     <>
       <div className="row no-gutters mt-4">
