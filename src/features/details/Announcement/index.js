@@ -43,7 +43,7 @@ function Component() {
             { label: 'merchant',
                 disabled: selected.consumer_role !== 'merchant',
                 lfmt: () => "Target Merchant",
-                vfmt: (v) => v && v.length > 0 ? v.map( el => el.name ).join(', ') : "All" },
+                vfmt: (v) => v && v.length > 0 ? v.map( el => el.merchant_name ).join(', ') : "All" },
         ],
         'Publisher': [
             { label: 'publish', lfmt: () => "Status", vfmt: (val) => val === 0 ? <Pill color="secondary">Draft</Pill> : 
