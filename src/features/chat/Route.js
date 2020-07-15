@@ -28,13 +28,11 @@ function Component() {
     const { qiscus, roomID, roomUniqueID, messages } = useSelector(state => state.chat);
 
     let dispatch = useDispatch();
-
-    const chatref = useRef();
+    let messageBottom = useRef();
 
     useEffect(() => {
-        //console.log(chatref);
-        chatref.current.scrollTo(0, chatref.current.scrollHeight)
-    },[refresh])
+        !!messages.length && messageBottom.current.scrollIntoView({ behavior: 'smooth' });
+    }, [messages])
 
     useEffect(() => {
         setLoadingParticipants(true);
@@ -54,7 +52,7 @@ function Component() {
         var options = {
             // last_comment_id: 10,
             // after: false,
-            // limit: 20
+            limit: 50
         }
 
         setLoadingMessages(true);
@@ -122,10 +120,10 @@ function Component() {
                 flex: 2,
             }}>
                 <div style={{
-                    height: 584,
+                    flex: 1,
                     paddingRight: 16,
                     overflow: 'scroll',
-                }} ref={chatref}>
+                }} >
                     <Loading loading={loadingMessages}>
                         {messages.map((el, index) =>
                             <div key={el.timestamp} className={
@@ -164,8 +162,14 @@ function Component() {
                             </div>
                         )}
                     </Loading>
+                    <div style={{ float: "left", clear: "both" }}
+                        ref={messageBottom}>
+                    </div>
                 </div>
-                <form className="Container" onSubmit={e => {
+                <form className="Container" style={{
+                    flex: 'none',
+                    height: 80,
+                }} onSubmit={e => {
                     e.preventDefault();
                     sendMessage();
                 }}>
@@ -218,7 +222,7 @@ function Component() {
                             <p style={{
                                 fontWeight: 'bold',
                                 marginBottom: 8,
-                            }}>Room Name</p>
+                            }}>Room</p>
                             <p style={{
                                 marginBottom: 24,
                             }}>{messages[0]?.room_name + ' (ID: ' + roomID + ')'}</p>

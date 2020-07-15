@@ -19,7 +19,7 @@ import { endpointResident } from '../../settings';
 const columns = [
     {
         Header: "Resident",
-        accessor: row => <Resident id={row.id} />,
+        accessor: row => <Resident id={row.id} data={row} />,
     },
     {
         Header: "Onboarded",

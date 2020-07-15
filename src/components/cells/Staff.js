@@ -1,32 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, {  } from 'react';
 import Avatar from 'react-avatar';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { get } from '../../features/slice';
-import { endpointManagement } from '../../settings';
 import './style.css';
 import { toSentenceCase } from '../../utils';
 import { setSelected } from '../../features/slices/staff';
 
-function Component({ id, compact = false }) {
-    const [data, setData] = useState({
-        email: '',
-        staff_role: '',
-        staff_specialization: '',
-        firstname: '',
-        lastname: '',
-        photo: '',
-    });
-
+function Component({ id, data, compact = false }) {
     let dispatch = useDispatch();
     let history = useHistory();
-
-    useEffect(() => {
-        dispatch(get(endpointManagement + '/admin/staff/' + id, res => {
-            setData(res.data.data);
-        }))
-    }, [dispatch, id])
 
     return (
         <div className={!compact ? "Item" : "Item-compact"} onClick={() => {

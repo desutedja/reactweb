@@ -5,12 +5,10 @@ import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import {
     getProduct,
-    // getProductDetails
 } from '../slices/product';
 import { merchant_types, endpointMerchant } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
 import { FiSearch } from 'react-icons/fi';
-// import UserAvatar from '../../components/UserAvatar';
 import { get } from '../slice';
 import Product from '../../components/cells/Product'; 
 
@@ -19,7 +17,7 @@ import Template from './components/Template';
 const columns = [
     { Header: 'ID', accessor: 'id' },
     {
-        Header: 'Product', accessor: row => <Product id={row.id} merchantName={row.merchant_name}/>
+        Header: 'Product', accessor: row => <Product id={row.id} data={row} merchantName={row.merchant_name}/>
     },
     { Header: 'Selling Price', accessor: row => {
         return row.discount_fee > 0 ? <div style={{ display: 'block' }} >
@@ -28,12 +26,10 @@ const columns = [
             </div> : <span>{toMoney(row.total_selling_price)}</span>
         }
     },
-    //    { Header: 'Merchant Name', accessor: 'merchant_name' },
     { Header: 'Category', accessor: 'category_name' },
     { Header: 'Type', accessor: row => toSentenceCase(row.item_type) },
     { Header: 'Admin Fee', accessor: row => row.admin_fee + '%' },
     { Header: 'Discount', accessor: row => <span className={row.discount_fee > 0 ? "HighlightValue-Red" : ""} >{row.discount_fee + '%'}</span> },
-    //{ Header: 'PG Markup', accessor: row => row.pg_fee + '%' },
 ]
 
 function Component() {
@@ -50,8 +46,6 @@ function Component() {
     const [type, setType] = useState('');
 
     let dispatch = useDispatch();
-    // let history = useHistory();
-    // let { url } = useRouteMatch();
 
     useEffect(() => {
         (!search || search.length >= 3) && dispatch(get(endpointMerchant + '/admin/list' +

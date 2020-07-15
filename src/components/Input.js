@@ -42,7 +42,7 @@ function Component({
     }, [hours, minutes])
 
     useEffect(() => {
-        inputValue && setValue(inputValue);
+        setValue(inputValue);
         inputValue && setTimePick(inputValue)
     }, [inputValue])
 

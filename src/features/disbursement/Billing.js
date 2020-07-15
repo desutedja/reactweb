@@ -4,11 +4,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
-import { getBillingDisbursement } from '../slices/billing';
+import Button from '../../components/Button';
+import { getBillingDisbursement, downloadBillingDisbursement } from '../slices/billing';
 import { toMoney } from '../../utils';
 import { endpointBilling } from '../../settings';
 import { get } from '../slice';
 import MyButton from '../../components/Button';
+import { FiDownload } from 'react-icons/fi';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
@@ -28,7 +30,7 @@ function Component() {
     const [dataLoading, setDataLoading] = useState(false);
     const [dataPages, setDataPages] = useState('');
 
-    
+
     const { disbursement, refreshToggle } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
@@ -122,20 +124,23 @@ function Component() {
                                 justifyContent: 'space-between',
                             }}>
                                 <div>
-                                Total Undisbursed Amount
+                                    Total Undisbursed Amount
 
                                 </div>
                                 <div style={{
                                     display: 'flex',
                                     alignItems: 'center',
                                 }}>
-                                <b style={{
-                                    fontSize: '1.2rem',
-                                    marginRight: 16,
-                                }}>
-                                    {toMoney(amount)}
-                                </b>
-                                <MyButton label="Disburse All" />
+                                    <b style={{
+                                        fontSize: '1.2rem',
+                                        marginRight: 16,
+                                    }}>
+                                        {toMoney(amount)}
+                                    </b>
+                                    <MyButton label="Disburse All" />
+                                    <Button label="Download .csv" icon={<FiDownload />}
+                                        onClick={() => dispatch(downloadBillingDisbursement())}
+                                    />
                                 </div>
                             </div>
                             <div className="Container">

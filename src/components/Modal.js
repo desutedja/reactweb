@@ -5,7 +5,7 @@ function Component({
     width = '450px',
     isOpen, toggle, title, onClick, children, okLabel = "Yes", cancelLabel = '',
     disableHeader = false, disableFooter = false, onClickSecondary = null,
-    disablePrimary = false, disableSecondary = false, subtitle="",
+    disablePrimary = false, disableSecondary = false, subtitle="", btnDanger = false,
     className
 }) {
     const closeBtn = <button className="close" onClick={toggle}>&times;</button>;
@@ -30,7 +30,7 @@ function Component({
                     {children}
                 </ModalBody>
                 {!disableFooter && (<ModalFooter>
-                    {!disablePrimary && <Button color="primary" onClick={onClick}>{okLabel}</Button>}
+                    {!disablePrimary && <Button color={btnDanger ? "danger" : "primary"} onClick={onClick}>{okLabel}</Button>}
                     {' '}
                     {!disableSecondary &&
                         <Button color="secondary" onClick={onClickSecondary !== null ? onClickSecondary : toggle}>

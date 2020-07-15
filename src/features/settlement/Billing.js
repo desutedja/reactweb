@@ -1,7 +1,7 @@
-import React, { useCallback, useState, useEffect, useMemo} from 'react';
+import React, { useCallback, useState, useEffect, useMemo } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiSearch, FiCheck, FiFile } from 'react-icons/fi';
+import { FiSearch, FiCheck, FiFile, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/Table';
@@ -10,7 +10,7 @@ import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
-import { getBillingSettlement } from '../slices/billing';
+import { getBillingSettlement, downloadBillingSettlement } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
 import { toMoney, dateTimeFormatterCell } from '../../utils';
 import { get, post } from '../slice';
@@ -18,7 +18,7 @@ import { get, post } from '../slice';
 const formatValue = (value) => toMoney(value.toFixed(0));
 
 function Component() {
-    
+
     const { loading, settlement, refreshToggle } = useSelector(state => state.billing);
 
     const [search, setSearch] = useState('');
@@ -50,8 +50,10 @@ function Component() {
         //{ Header: 'Management', accessor: 'management_name' },
         // { Header: 'Resident', accessor: 'resident_name' },
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
-        { Header: 'Settled', accessor: row => row.payment_settled_date ? <Pill color="success">Settled</Pill> :
-        <Pill color="secondary">Unsettled</Pill> },
+        {
+            Header: 'Settled', accessor: row => row.payment_settled_date ? <Pill color="success">Settled</Pill> :
+                <Pill color="secondary">Unsettled</Pill>
+        },
         {
             Header: 'Settlement Date', accessor: row => row.payment_settled_date ?
                 dateTimeFormatterCell(row.payment_settled_date) : '-'
@@ -62,7 +64,7 @@ function Component() {
     useEffect(() => {
         (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
-            '&search=' + search,  res => {
+            '&search=' + search, res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
@@ -72,7 +74,7 @@ function Component() {
     }, [dispatch, search]);
 
     useEffect(() => {
-        dispatch(get(endpointBilling + '/management/billing/settlement/info',  res => {
+        dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
             setInfo(res.data.data);
         }))
     }, [dispatch]);
@@ -85,7 +87,7 @@ function Component() {
                 onClick={() => {
                     dispatch(post(endpointBilling + '/management/billing/settlement', {
                         trx_code: selected.map(el => el.trx_code)
-                    },  res => {
+                    }, res => {
                         setSettleModal(false);
                     }))
                 }}
@@ -178,10 +180,10 @@ function Component() {
                             loading={loading}
                             pageCount={settlement.total_pages}
                             fetchData={useCallback((pageIndex, pageSize, search) => {
-                                dispatch(getBillingSettlement( pageIndex, pageSize, search,
+                                dispatch(getBillingSettlement(pageIndex, pageSize, search,
                                     building));
                                 // eslint-disable-next-line react-hooks/exhaustive-deps
-                            }, [dispatch, refreshToggle,  building])}
+                            }, [dispatch, refreshToggle, building])}
                             filters={[
                                 {
                                     hidex: building === "",
@@ -214,9 +216,7 @@ function Component() {
                                         </>
                                 },
                             ]}
-                            actions={[]}
                             renderActions={(selectedRowIds, page) => {
-                                // console.log(selectedRowIds, page);
                                 return ([
                                     <Button
                                         disabled={Object.keys(selectedRowIds).length === 0}
@@ -231,6 +231,9 @@ function Component() {
                                         icon={<FiFile />}
                                         label="Upload Settlement"
                                     />,
+                                    <Button label="Download .csv" icon={<FiDownload />}
+                                        onClick={() => dispatch(downloadBillingSettlement(search, building))}
+                                    />
                                 ])
                             }}
                         />

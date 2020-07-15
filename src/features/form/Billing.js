@@ -68,7 +68,8 @@ function Component() {
                     unit: el.denom_unit,
                 })));
             }));
-    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     let dispatch = useDispatch();
     let history = useHistory();

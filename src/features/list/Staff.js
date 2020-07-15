@@ -17,15 +17,11 @@ import { getStaff, setSelected, deleteStaff } from '../slices/staff';
 import Template from './components/Template';
 
 const columns = [
-    // { Header: "ID", accessor: "id" },
     {
         Header: "Staff",
-        accessor: row => <Staff id={row.id} />,
+        accessor: row => <Staff id={row.id} data={row} />,
     },
-    //{ Header: "Ongoing Task", accessor: row => row.ongoing_task ? row.ongoing_task : "-"},
     { Header: "Email", accessor: row => <a href={"mailto:" + row.email}>{row.email}</a> },
-    //{ Header: "Phone", accessor: "phone" },
-    //{ Header: "Gender", accessor: "gender" },
     { Header: "Building", accessor: "building_name" },
     {
         Header: "Management", accessor: row => row.staff_role === "courier" ?

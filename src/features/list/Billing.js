@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch, FiDownload } from 'react-icons/fi';
 
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
-import { getBillingUnit, getBillingUnitDetails } from '../slices/billing';
+import Button from '../../components/Button';
+import { getBillingUnit, getBillingUnitDetails, downloadBillingUnit } from '../slices/billing';
 import { endpointAdmin } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
 import { get } from '../slice';
@@ -85,7 +86,11 @@ function Component() {
                         </>
                 },
             ]}
-            actions={[]}
+            actions={[
+                <Button label="Download .csv" icon={<FiDownload />}
+                    onClick={() => dispatch(downloadBillingUnit(search, building))}
+                />
+            ]}
             onClickDetails={row => {
                 dispatch(getBillingUnitDetails(row, history, url))
             }}

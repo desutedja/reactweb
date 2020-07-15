@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import {
     useDispatch,
-    // useSelector
 } from 'react-redux';
 import { FiPlus, FiSearch } from 'react-icons/fi';
 
@@ -10,7 +9,7 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Link from '../../components/Link';
 import Building from '../../components/cells/Building';
-import { getBuilding, deleteBuilding, getBuildingDetails, setSelected } from '../slices/building';
+import { getBuilding, deleteBuilding, setSelected } from '../slices/building';
 import { endpointResident } from '../../settings';
 import { get } from '../slice';
 
@@ -18,7 +17,7 @@ import Template from './components/Template';
 
 const columns = [
     // { Header: 'ID', accessor: 'id' },
-    { Header: 'Name', accessor: row => <Building id={row.id} /> },
+    { Header: 'Name', accessor: row => <Building id={row.id} data={row} /> },
     { Header: 'Legal Name', accessor: 'legal_name' },
     { Header: 'Code Name', accessor: 'code_name' },
     { Header: 'Owner', accessor: 'owner_name' },
@@ -196,7 +195,6 @@ function Component() {
                     }}
                 />
             ]}
-            onClickDetails={row => dispatch(getBuildingDetails(row, history, url))}
         />
     )
 }

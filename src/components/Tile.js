@@ -1,7 +1,7 @@
 import React from 'react';
 
-function Component({ items }) {
-    return <div style={{ display: "block" }} >
+function Component({ items, onClick = () => {} }) {
+    return <div style={{ display: "block" }} onClick={onClick} >
         { items.map((el, i) =>
             <div key={i}>
                 {i === 0 ? <b>{el}</b> : <>{el}</>}

@@ -100,7 +100,7 @@ export const {
 
 export default slice.reducer;
 
-export const getBillingUnit = ( pageIndex, pageSize, search = '', building, unit) => dispatch => {
+export const getBillingUnit = (pageIndex, pageSize, search = '', building, unit) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(billingEndpoint + '/unit' +
@@ -108,7 +108,7 @@ export const getBillingUnit = ( pageIndex, pageSize, search = '', building, unit
     '&limit=' + pageSize +
     '&resident_building=' + building +
     '&search=' + search,
-    
+
     res => {
       dispatch(setData(res.data.data));
 
@@ -116,7 +116,20 @@ export const getBillingUnit = ( pageIndex, pageSize, search = '', building, unit
     }))
 }
 
-export const getBillingSettlement = ( pageIndex, pageSize, search = '', building, unit) => dispatch => {
+export const downloadBillingUnit = (search = '', building) => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(get(billingEndpoint + '/unit' +
+    '?search=' + search +
+    '&resident_building=' + building +
+    '&export=true',
+
+    res => {
+      dispatch(stopAsync());
+    }))
+}
+
+export const getBillingSettlement = (pageIndex, pageSize, search = '', building, unit) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(billingEndpoint + '/settlement' +
@@ -124,7 +137,7 @@ export const getBillingSettlement = ( pageIndex, pageSize, search = '', building
     '&limit=' + pageSize +
     '&building_id=' + building +
     '&search=' + search,
-    
+
     res => {
       dispatch(setSettlement(res.data.data));
 
@@ -132,14 +145,27 @@ export const getBillingSettlement = ( pageIndex, pageSize, search = '', building
     }))
 }
 
-export const getBillingDisbursement = ( pageIndex, pageSize, search = '', building, unit,) => dispatch => {
+export const downloadBillingSettlement = (search = '', building) => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(get(billingEndpoint + '/settlement' +
+    '?building_id=' + building +
+    '&search=' + search +
+    '&export=true',
+
+    res => {
+      dispatch(stopAsync());
+    }))
+}
+
+export const getBillingDisbursement = (pageIndex, pageSize, search = '', building, unit,) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(billingEndpoint + '/disbursement/list/management' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search,
-    
+
     res => {
       dispatch(setDisbursement(res.data.data));
 
@@ -147,12 +173,23 @@ export const getBillingDisbursement = ( pageIndex, pageSize, search = '', buildi
     }))
 }
 
-export const getBillingUnitDetails = (row,  history, url) => dispatch => {
+export const downloadBillingDisbursement = () => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(get(billingEndpoint + '/disbursement/list/management' +
+    '&export=true',
+
+    res => {
+      dispatch(stopAsync());
+    }))
+}
+
+export const getBillingUnitDetails = (row, history, url) => dispatch => {
   dispatch(setSelected(row));
   history.push(url + '/item');
 }
 
-export const getBillingUnitItem = ( pageIndex, pageSize, search = '', selected, status) => dispatch => {
+export const getBillingUnitItem = (pageIndex, pageSize, search = '', selected, status) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(billingEndpoint + '/unit/group' +
@@ -161,7 +198,7 @@ export const getBillingUnitItem = ( pageIndex, pageSize, search = '', selected, 
     '&unit_id=' + selected.id +
     '&building_id=' + selected.building_id +
     '&search=' + search,
-    
+
     res => {
       dispatch(setUnit(res.data.data));
 
@@ -170,12 +207,12 @@ export const getBillingUnitItem = ( pageIndex, pageSize, search = '', selected, 
 }
 
 
-export const getBillingUnitItemDetails = (row,  history, url) => dispatch => {
+export const getBillingUnitItemDetails = (row, history, url) => dispatch => {
   dispatch(setSelectedUnit(row));
   history.push(url + '/details');
 }
 
-export const createBillingUnitItem = ( data, selected, history) => dispatch => {
+export const createBillingUnitItem = (data, selected, history) => dispatch => {
 
   const dataBilling = {
     ...data,
@@ -190,7 +227,7 @@ export const createBillingUnitItem = ( data, selected, history) => dispatch => {
 
   dispatch(startAsync());
 
-  dispatch(post(billingEndpoint, dataBilling, 
+  dispatch(post(billingEndpoint, dataBilling,
     res => {
       history.goBack();
 
@@ -206,7 +243,7 @@ export const createBillingUnitItem = ( data, selected, history) => dispatch => {
     }))
 }
 
-export const editBillingUnitItem = ( data, selected, history, id) => dispatch => {
+export const editBillingUnitItem = (data, selected, history, id) => dispatch => {
 
   const dataBilling = {
     id: id,
@@ -223,7 +260,7 @@ export const editBillingUnitItem = ( data, selected, history, id) => dispatch =>
 
   dispatch(startAsync());
 
-  dispatch(put(billingEndpoint, dataBilling, 
+  dispatch(put(billingEndpoint, dataBilling,
     res => {
       history.goBack();
 
@@ -239,10 +276,10 @@ export const editBillingUnitItem = ( data, selected, history, id) => dispatch =>
     }))
 }
 
-export const deleteBillingUnitItem = (id, ) => dispatch => {
+export const deleteBillingUnitItem = (id,) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(del(billingEndpoint + '/' + id, 
+  dispatch(del(billingEndpoint + '/' + id,
     res => {
       dispatch(setInfo({
         color: 'success',
@@ -254,10 +291,10 @@ export const deleteBillingUnitItem = (id, ) => dispatch => {
     }))
 }
 
-export const payByCash = ( data) => dispatch => {
+export const payByCash = (data) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(billingEndpoint + '/cash', data,  res => {
+  dispatch(post(billingEndpoint + '/cash', data, res => {
     dispatch(setInfo({
       color: 'success',
       message: 'Billing has been set as paid by cash.'

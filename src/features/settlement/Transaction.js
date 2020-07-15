@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiCheck } from 'react-icons/fi';
+import { FiCheck, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 
 import Filter from '../../components/Filter';
@@ -14,6 +14,7 @@ import { toMoney, dateTimeFormatterCell, toSentenceCase } from '../../utils';
 import { endpointTransaction } from '../../settings';
 import Pill from '../../components/Pill';
 import { get, post } from '../slice';
+import MyButton from '../../components/Button';
 
 const status_settlement = [
     { label: "Settled", value: "settled" },
@@ -33,7 +34,7 @@ const columns = [
                     </Pill> : <Pill color={trxStatusColor['requested']}>
                         {toSentenceCase('unsettled')}
                     </Pill>
-                )
+            )
         }
     },
     {
@@ -47,7 +48,7 @@ const formatValue = (value) => toMoney(value.toFixed(0));
 function Component() {
     const [info, setInfo] = useState({});
     // const [inputValue, setInputValue] = useState('');
-    
+
     const { loading, settlement, refreshToggle } = useSelector(state => state.transaction);
 
     const [statusSettlement, setStatusSettlement] = useState('')
@@ -66,16 +67,16 @@ function Component() {
             return sum + el.total_price
         }, 0)
     }
-    
+
     useEffect(() => {
-        dispatch(get(endpointTransaction + '/admin/transaction/summary',  res => {
+        dispatch(get(endpointTransaction + '/admin/transaction/summary', res => {
             setInfo(res.data.data);
         }));
     }, [dispatch]);
 
     useEffect(() => {
         console.log(selected)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selected])
 
     return (
@@ -91,30 +92,12 @@ function Component() {
                         amount: getSum(selected),
                         settled_on: currentDate
                     }
-                    dispatch(post(endpointTransaction + '/admin/transaction/settlement/create', dataSettle,  res => {
+                    dispatch(post(endpointTransaction + '/admin/transaction/settlement/create', dataSettle, res => {
                         setSettleModal(false);
                         dispatch(refresh());
                     }))
                 }}
             >
-                {/* <div style={{
-                    display: 'flex',
-                    marginBottom: 32,
-                    position: 'relative'
-                }}>
-                    <Input compact
-                        type="text"
-                        label="Search"
-                        icon={<FiSearch />}
-                        inputValue={inputValue}
-                        setInputValue={setInputValue}
-                        noMargin={true}
-                        // onClick={e => {
-                        //     console.log(e.target)
-                        // }}
-                    />
-                    <Button label="Add" />
-                </div> */}
                 <div style={{
                     minHeight: 300,
                 }}>
@@ -139,7 +122,8 @@ function Component() {
                                     {toMoney(el.total_price)}
                                 </div>
                             </div>
-                        )}
+                        )
+                    }
                     )}
                 </div>
                 <div style={{
@@ -148,7 +132,10 @@ function Component() {
                     <h5>Total {toMoney(getSum(selected))}</h5>
                 </div>
             </Modal>
-            <div className="Container d-flex mb-4">
+            <div className="Container" style={{
+                flex: 'none',
+                height: 120,
+            }}>
                 <div style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -245,7 +232,7 @@ function Component() {
                     loading={loading}
                     pageCount={settlement.total_pages}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
-                        dispatch(getTransactionSettlement( pageIndex, pageSize, search, statusSettlement.value));
+                        dispatch(getTransactionSettlement(pageIndex, pageSize, search, statusSettlement.value));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, statusSettlement])}
                     onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}
@@ -281,6 +268,9 @@ function Component() {
                                 }}
                                 icon={<FiCheck />}
                                 label="Settle Selection"
+                            />,
+                            <MyButton label="Download .csv" icon={<FiDownload />}
+                                onClick={() => { }}
                             />
                         ])
                     }}
