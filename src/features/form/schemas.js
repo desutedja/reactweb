@@ -152,3 +152,7 @@ export const adsSchema = Yup.object().shape({
     content_description: Text,
     total_priority_score: Text,
 })
+
+export const adminSchema = Yup.object().shape({
+
+})

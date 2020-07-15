@@ -31,8 +31,10 @@ import Resident from '../../features/routes/Resident';
 import Staff from '../../features/routes/Staff';
 import Task from '../../features/routes/Task';
 import Transaction from '../../features/routes/Transaction';
+import Admin from '../../features/admin';
 
 import Template from '../components/Template';
+import { FaIdBadge } from 'react-icons/fa';
 
 const menu = [
     {
@@ -122,6 +124,12 @@ const menu = [
         label: "Announcement",
         route: "/announcement",
         component: <Announcement />,
+    },
+    {
+        icon: <FaIdBadge className="MenuItem-icon" />,
+        label: "Admin",
+        route: "/admin",
+        component: <Admin />,
     },
 ]
 
