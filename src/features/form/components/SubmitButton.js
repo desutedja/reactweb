@@ -15,7 +15,9 @@ const SubmitButton = ({ loading, errors }) => {
                     Your form is incomplete or there are some errors in your form.
                 </div>
             }
-            <button type="submit">Submit</button>
+            <button type="submit" onClick={() => {
+                console.log(errors)
+            }}>Submit</button>
         </Loading>
     )
 }

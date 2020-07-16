@@ -13,7 +13,6 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [], a
         loading,
         items,
         total_pages,
-        // total_items,
         refreshToggle
     } = useSelector(state => state[slice]);
 

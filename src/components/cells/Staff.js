@@ -1,4 +1,4 @@
-import React, {  } from 'react';
+import React, { } from 'react';
 import Avatar from 'react-avatar';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
@@ -15,7 +15,7 @@ function Component({ id, data = {}, compact = false }) {
         <div className={!compact ? "Item" : "Item-compact"} onClick={() => {
             history.push({
                 pathname: 'staff/' + id,
-                state: data
+                state: data,
             });
             dispatch(setSelected(data));
         }}>
@@ -23,15 +23,13 @@ function Component({ id, data = {}, compact = false }) {
                 name={data.firstname + ' ' + data.lastname} round
                 email={data.photo ? null : data.email} />
             {!compact &&
-                <>
-                    <span> </span>
-                    <div >
-                        <b>{data.firstname + ' ' + data.lastname}</b>
-                        <p className="Item-subtext">{toSentenceCase(data.staff_role)
-                            + toSentenceCase(data.staff_specialization ? ' - '
-                                + data.staff_specialization : '')}</p>
-                    </div>
-                </>}
+                <div>
+                    <b>{data.firstname + ' ' + data.lastname}</b>
+                    <p className="Item-subtext">{toSentenceCase(data.staff_role)
+                        + toSentenceCase(data.staff_specialization ? ' - '
+                            + data.staff_specialization : '')}</p>
+                </div>
+            }
         </div>
     );
 }

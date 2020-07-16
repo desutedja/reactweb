@@ -112,6 +112,8 @@ function Component() {
             slice="staff"
             payload={selected.id ? {...staffPayload, ...selected,
                 phone: selected.phone.slice(3),
+                on_centratama: selected.on_centratama ? selected.on_centratama : '',
+                staff_specialization: selected.staff_specialization ? selected.staff_specialization : '',
             } : staffPayload}
             schema={staffSchema}
             formatValues={values => ({
