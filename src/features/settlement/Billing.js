@@ -56,7 +56,7 @@ function Component() {
     ], [])
 
     useEffect(() => {
-        (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +
+        (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;

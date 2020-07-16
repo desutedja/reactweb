@@ -213,19 +213,9 @@ export const getBillingUnitItemDetails = (row, history, url) => dispatch => {
 }
 
 export const createBillingUnitItem = (data, selected, history) => dispatch => {
-
-  const dataBilling = {
-    ...data,
-    "resident_building": selected.building_id,
-    "resident_unit": selected.id,
-    "resident_id": selected.resident_id,
-    "resident_name": selected.resident_name,
-    'additional_charge': []
-  }
-
   dispatch(startAsync());
 
-  dispatch(post(billingEndpoint, dataBilling,
+  dispatch(post(billingEndpoint, data,
     res => {
       history.goBack();
 

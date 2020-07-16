@@ -71,7 +71,7 @@ function Component() {
     ]
 
     useEffect(() => {
-        (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/management' +
+        (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/management' +
         '?limit=' + loadDefault + '&page=1' +
         '&search=' + search,  res => {
             let data = res.data.data.items;

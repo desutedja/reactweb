@@ -116,7 +116,7 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +
+        (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
@@ -132,7 +132,7 @@ function Component() {
         let role = selectedRow.task_type === 'security' ? 'security' :
             selectedRow.task_type === 'service' ? 'technician' : 'courier';
 
-        assign && (!search || search.length >= 3) && dispatch(get(endpointManagement + '/admin/staff/list' +
+        assign && (!search || search.length >= 1) && dispatch(get(endpointManagement + '/admin/staff/list' +
             '?limit=5&page=1&max_ongoing_task=1' +
             '&staff_role=' + role + "&status=active" +
             (selectedRow.priority === "emergency" ? '&is_ongoing_emergency=true' : '') +

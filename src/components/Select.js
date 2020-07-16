@@ -15,7 +15,7 @@ function Component({
     const [searched, setSearched] = useState(options);
 
     useEffect(() => {
-        if (!search || search.length >= 3) {
+        if (!search || search.length >= 1) {
             let result = options.filter(el => el.label.toLowerCase().includes(search.toLowerCase()));
 
             setSearched(result);

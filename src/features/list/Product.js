@@ -48,7 +48,7 @@ function Component() {
     let dispatch = useDispatch();
 
     useEffect(() => {
-        (!search || search.length >= 3) && dispatch(get(endpointMerchant + '/admin/list' +
+        (!search || search.length >= 1) && dispatch(get(endpointMerchant + '/admin/list' +
             '?limit=5&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
@@ -60,7 +60,7 @@ function Component() {
     }, [search, dispatch]);
 
     useEffect(() => {
-        (!search || search.length >= 3) && dispatch(get(endpointMerchant + '/admin/categories?name=' + search, res => {
+        (!search || search.length >= 1) && dispatch(get(endpointMerchant + '/admin/categories?name=' + search, res => {
             let data = res.data.data;
 
             let formatted = data.map(el => ({ label: el.name, value: el.id }));

@@ -75,7 +75,7 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        search.length >= 3 && dispatch(get(endpointAdmin + '/building' +
+        search.length >= 1 && dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
@@ -87,7 +87,7 @@ function Component() {
     }, [dispatch, search]);
 
     useEffect(() => {
-        search.length >= 3 && dispatch(get(endpointAdmin + '/management' +
+        search.length >= 1 && dispatch(get(endpointAdmin + '/management' +
             '?limit=5&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;

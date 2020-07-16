@@ -83,7 +83,7 @@ function Component({ id }) {
     }, [addUnitStep, selectedUnit, dispatch]);
 
     useEffect(() => {
-        addSubAccount  && addSubAccountStep === 1 && (search.length >= 3) && 
+        addSubAccount  && addSubAccountStep === 1 && (search.length >= 1) && 
             dispatch(get(endpointResident + '/management/resident/read' +
             '?page=1' +
             '&limit=5' +
@@ -95,7 +95,7 @@ function Component({ id }) {
     }, [addSubAccount, addSubAccountStep, dispatch, search]);
 
     useEffect(() => {
-        addUnit && addUnitStep === 1 && (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building' +
+        addUnit && addUnitStep === 1 && (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
             '?page=1' +
             '&limit=10' +
             '&search=' + search,
@@ -106,7 +106,7 @@ function Component({ id }) {
     }, [addUnit, addUnitStep, dispatch, search]);
 
     useEffect(() => {
-        addUnit && addUnitStep === 2 && (!search || search.length >= 3) && dispatch(get(endpointAdmin + '/building/unit' +
+        addUnit && addUnitStep === 2 && (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building/unit' +
             '?page=1' +
             '&building_id=' + selectedBuilding.value.id +
             '&search=' + search +
@@ -243,7 +243,7 @@ function Component({ id }) {
                         data={residents.map(el => {
                             return { label: el.firstname + ' ' + el.lastname, value: el };
                         })}
-                        altDataComponent={search.length >= 3 && residents.length === 0 && AddSubAccountNotFound}
+                        altDataComponent={search.length >= 1 && residents.length === 0 && AddSubAccountNotFound}
                         customComponent={SubAccountItemList}
                         onClick={(el) => {
                             setSubAccount(el);

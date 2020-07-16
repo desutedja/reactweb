@@ -37,7 +37,7 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        (!search || search.length >= 3) && get(endpointAdmin + '/building' +
+        (!search || search.length >= 1) && get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
