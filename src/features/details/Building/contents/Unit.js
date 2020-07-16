@@ -77,7 +77,7 @@ function Component() {
                         inputValue={selectedRow.building_section ? selectedRow.building_section : sectionID}
                         setInputValue={setSectionID}
                         options={section.items.map(el => ({
-                            label: el.section_name,
+                            label: toSentenceCase(el.section_name),
                             value: el.id
                         }))}
                     />

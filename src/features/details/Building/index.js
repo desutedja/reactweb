@@ -42,12 +42,12 @@ function Component() {
             title={state ? state.name : data.name}
             website={state ? state.website : data.website}
             phone={state ? state.phone : data.phone}
-            labels={["Details", "Unit", "Unit Type", "Section", "Service", "Management", "Module"]}
+            labels={["Details", "Section", "Unit Type", "Unit", "Service", "Management", "Module"]}
             contents={[
                 <Detail data={state ? state : data} labels={labels} />,
-                <Unit />,
-                <UnitType />,
                 <Section />,
+                <UnitType />,
+                <Unit />,
                 <Service />,
                 <Management />,
                 <Module />

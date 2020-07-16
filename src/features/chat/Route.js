@@ -26,6 +26,7 @@ function Component() {
 
     const { user } = useSelector(state => state.auth);
     const { qiscus, roomID, roomUniqueID, messages } = useSelector(state => state.chat);
+    const userID = "centratama-clink-" + user.id;
 
     let dispatch = useDispatch();
     let messageBottom = useRef();
@@ -119,12 +120,13 @@ function Component() {
                 <div style={{
                     flex: 1,
                     paddingRight: 16,
+                    paddingLeft: 16,
                     overflow: 'scroll',
                 }} >
                     <Loading loading={loadingMessages}>
                         {messages.map((el, index) =>
                             <div key={el.id} className={
-                                el.email === "superadmin" + user.id + user.email ?
+                                el.email === userID ?
                                     "MessageContainer-own" : "MessageContainer"}>
                                 {index > 0 && messages[index - 1].username === el.username ?
                                     <div className="MessageAvatar" /> :
@@ -132,7 +134,7 @@ function Component() {
                                 <div style={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    alignItems: el.email === "superadmin" + user.id + user.email ?
+                                    alignItems: el.email === userID ?
                                         'flex-end' : 'flex-start',
                                 }}>
                                     {index > 0 && messages[index - 1].username === el.username ?
@@ -140,11 +142,11 @@ function Component() {
                                         <div className="MessageUsername">{el.username}</div>}
                                     <div style={{
                                         display: 'flex',
-                                        flexDirection: el.email === "superadmin" + user.id + user.email ?
+                                        flexDirection: el.email === userID ?
                                             'row-reverse' : 'row',
                                     }}>
                                         <div className={
-                                            el.email === "superadmin" + user.id + user.email ?
+                                            el.email === userID ?
                                                 "Message-own" : "Message"}>{el.message}
                                         </div>
                                         <div className="MessageTime">

@@ -157,7 +157,7 @@ function Component() {
                         <Input {...props} label="Phone" prefix="+62" />
                         <Input {...props} label="Email" />
                         <SectionSeparator />
-                        <button onClick={() => setModal(true)}>Select Location</button>
+                        <button type="button" onClick={() => setModal(true)}>Select Location</button>
                         <Input {...props} label="Latitude" name="lat" />
                         <Input {...props} label="Longitude" name="long" />
                         <Input {...props} label="Address" type="textarea" />

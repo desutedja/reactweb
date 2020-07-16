@@ -96,7 +96,7 @@ function Component() {
                         inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeSize}
                         setInputValue={setTypeSize} />
                     <Input label="Type Trivial Name"  placeholder="e.g. Greenwood, Sandalwood"
-                        inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeTrivial}
+                        inputValue={selectedRow.trivial_name ? selectedRow.trivial_name : typeTrivial}
                         setInputValue={setTypeTrivial} />
                     <div style={{
                         display: 'flex',

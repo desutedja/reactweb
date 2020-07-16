@@ -42,7 +42,7 @@ function Component({ role, menu }) {
     let { path, url } = useRouteMatch();
 
     useEffect(() => {
-        const userID = "superadmin" + user.id + user.email;
+        const userID = "centratama-clink-" + user.id;
 
         Qiscus.init({
             AppId: 'fastel-sa-hkxoyooktyv',

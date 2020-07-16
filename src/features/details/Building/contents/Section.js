@@ -66,7 +66,7 @@ function Component() {
             >
                 <form >
                     <Input label="Section Name"
-                        inputValue={selectedRow.section_name ? selectedRow.section_name : sectionName}
+                        inputValue={selectedRow.section_name ? toSentenceCase(selectedRow.section_name) : sectionName}
                         setInputValue={setSectionName} disabled={edit} />
                     <Input label="Section Type"
                         inputValue={selectedRow.section_type ? selectedRow.section_type : sectionType}
