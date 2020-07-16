@@ -17,6 +17,7 @@ import Template from "./components/TemplateWithFormik";
 import { Form } from 'formik';
 import { residentSchema } from "./schemas";
 import Input from './input';
+import SubmitButton from './components/SubmitButton';
 
 const residentPayload = {
     email: "",
@@ -67,7 +68,7 @@ const columns = [
 ]
 
 function Component() {
-    const { selected } = useSelector(state => state.resident);
+    const { selected, loading } = useSelector(state => state.resident);
 
     const [step, setStep] = useState(2);
     const [resident, setResident] = useState({});
@@ -190,7 +191,7 @@ function Component() {
             edit={data => dispatch(editResident(data, history, selected.id))}
             add={data => dispatch(createResident(data, history))}
             renderChild={props => {
-                const { values } = props;
+                const { values, errors } = props;
 
                 return (
                     <Form className="Form">
@@ -315,9 +316,7 @@ function Component() {
                             <Input {...props} label="Account Bank" options={banks} />
                             <Input {...props} label="Account Number" />
                             <Input {...props} label="Account Name" />
-                            <button onClick={() => {
-                                console.log(values);
-                            }}>Submit</button>
+                            <SubmitButton loading={loading} errors={errors} />
                         </>}
                     </Form>
                 )

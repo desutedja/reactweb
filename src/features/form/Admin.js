@@ -6,8 +6,8 @@ import Template from "./components/TemplateWithFormik";
 import { Form } from 'formik';
 import Input from './input';
 import { adminSchema } from './schemas';
-import Loading from '../../components/Loading';
 import { createAdmin, editAdmin } from '../slices/admin';
+import SubmitButton from './components/SubmitButton';
 
 const adminPayload = {
     firstname: "",
@@ -16,6 +16,9 @@ const adminPayload = {
     email: "",
     group: "",
     status: "",
+
+    group_label: "",
+    status_label: "",
 }
 
 function AdminForm() {
@@ -39,6 +42,8 @@ function AdminForm() {
             edit={data => dispatch(editAdmin(data, history, selected.id))}
             add={data => dispatch(createAdmin(data, history))}
             renderChild={props => {
+                const { errors } = props;
+
                 return (
                     <Form className="Form">
                         <Input {...props} label="First Name" name="firstname" />
@@ -55,9 +60,7 @@ function AdminForm() {
                             { value: 'active', label: 'Active' },
                             { value: 'inactive', label: 'Inactive' },
                         ]} />
-                        <Loading loading={loading}>
-                            <button>Submit</button>
-                        </Loading>
+                        <SubmitButton loading={loading} errors={errors} />
                     </Form>
                 )
             }}

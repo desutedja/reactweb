@@ -20,7 +20,8 @@ function Template({ slice, payload, schema, renderChild = () => { }, formatValue
                 <Formik
                     initialValues={payload}
                     validationSchema={schema}
-                    onSubmit={(values) => {
+                    onSubmit={(values, bag) => {
+                        console.log(bag);
                         const data = formatValues(values);
 
                         selected.id ?

@@ -153,5 +153,10 @@ export const adsSchema = Yup.object().shape({
 })
 
 export const adminSchema = Yup.object().shape({
-
+    firstname: Text,
+    lastname: Text,
+    phone: Phone,
+    email: Email,
+    group: Text,
+    status: Text,
 })

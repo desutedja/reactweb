@@ -12,6 +12,7 @@ import countries from '../../countries';
 import { Form } from 'formik';
 import Input from './input';
 import { staffSchema } from "./schemas";
+import SubmitButton from './components/SubmitButton';
 
 const staffPayload = {
     staff_role: "",
@@ -124,7 +125,7 @@ function Component() {
             edit={data => dispatch(editStaff(data, history, selected.id))}
             add={data => dispatch(createStaff(data, history))}
             renderChild={props => {
-                const { values } = props;
+                const { values, errors } = props;
 
                 return (<Form className="Form">
                             {!selected.id && <Input {...props} label="Staff Role"
@@ -204,13 +205,7 @@ function Component() {
                             <Input {...props} label="Account Bank" options={banks} />
                             <Input {...props} label="Account Number" />
                             <Input {...props} label="Account Name" />
-                            {!loading &&
-                                <button type="submit"
-                                    onClick={() => console.log(values)}
-                                >
-                                    Submit
-                            </button>
-                            }
+                            <SubmitButton loading={loading} errors={errors} />
                         </Form>
                 )
             }}

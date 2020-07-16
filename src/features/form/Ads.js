@@ -11,6 +11,7 @@ import { Form, FieldArray, Field } from 'formik';
 import { adsSchema } from "./schemas";
 import Input from './input';
 import { days } from '../../utils';
+import SubmitButton from './components/SubmitButton';
 
 const adsPayload = {
     appear_as: "banner",
@@ -80,7 +81,7 @@ function Component() {
     const [job, setJob] = useState('all');
     const [os, setOS] = useState('all');
 
-    const { selected } = useSelector(state => state.ads);
+    const { selected, loading } = useSelector(state => state.ads);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -126,7 +127,7 @@ function Component() {
             edit={data => dispatch(editAds(data, history, selected.id))}
             add={data => dispatch(createAds(data, history))}
             renderChild={props => {
-                const { values } = props;
+                const { values, errors } = props;
 
                 return (
                     <Form className="Form">
@@ -226,7 +227,7 @@ function Component() {
                                 )}
                             />
                         </>}
-                        <button onClick={() => console.log(values)}>Submit</button>
+                        <SubmitButton loading={loading} errors={errors} />
                     </Form>
                 )
             }}

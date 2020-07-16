@@ -19,6 +19,7 @@ import Template from "./components/TemplateWithFormik";
 import { Form } from 'formik';
 import { merchantSchema } from "./schemas";
 import Input from './input';
+import SubmitButton from "./components/SubmitButton";
 
 const merchantPayload = {
   "name": "",
@@ -136,8 +137,7 @@ function Component() {
       edit={data => dispatch(editMerchant(data, history, selected.id))}
       add={data => dispatch(createMerchant(data, history))}
       renderChild={props => {
-        const { setFieldValue, values } = props;
-        // console.log(rest);
+        const { setFieldValue, values, errors } = props;
 
         return (
           <Form className="Form">
@@ -243,13 +243,7 @@ function Component() {
             <Input {...props} label="Bank Account" name="account_bank" options={banks} />
             <Input {...props} label="Bank Account Number" name="account_no" />
             <Input {...props} label="Bank Account Name" name="account_name" />
-            {!loading &&
-              <button type="submit"
-                onClick={() => console.log(values)}
-              >
-                Submit
-              </button>
-            }
+            <SubmitButton loading={loading} errors={errors} />
           </Form>
         )
       }}

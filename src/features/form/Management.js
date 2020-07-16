@@ -9,6 +9,7 @@ import Template from "./components/TemplateWithFormik";
 import { Form } from 'formik';
 import Input from './input';
 import { managementSchema } from './schemas';
+import SubmitButton from './components/SubmitButton';
 
 const managementPayload = {
     name: "",
@@ -23,7 +24,7 @@ const managementPayload = {
 }
 
 function Component() {
-    const { selected } = useSelector(state => state.management);
+    const { selected, loading } = useSelector(state => state.management);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -45,6 +46,8 @@ function Component() {
             edit={data => dispatch(editManagement(data, history, selected.id))}
             add={data => dispatch(createManagement(data, history))}
             renderChild={props => {
+                const { errors } = props;
+
                 return (
                     <Form className="Form">
                         <Input {...props} label="Name" />
@@ -59,7 +62,7 @@ function Component() {
                         <Input {...props} label="PIC Name" />
                         <Input {...props} label="PIC Phone" prefix="+62" />
                         <Input {...props} label="PIC Email" />
-                        <button>Submit</button>
+                        <SubmitButton loading={loading} errors={errors} />
                     </Form>
                 )
             }}

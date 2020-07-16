@@ -10,6 +10,7 @@ import Template from './components/TemplateWithFormik';
 import Input from './input';
 import { Form } from 'formik';
 import { announcementSchema } from './schemas';
+import SubmitButton from './components/SubmitButton';
 
 const announcementPayload = {
     title: "",
@@ -45,7 +46,7 @@ const target_merchants = [
 ]
 
 function Component() {
-    const { selected } = useSelector(state => state.announcement);
+    const { selected, loading } = useSelector(state => state.announcement);
 
     const [buildings, setBuildings] = useState([]);
     const [selectedBuildings, setSelectedBuildings] = useState(selected.building ? selected.building : []);
@@ -142,7 +143,7 @@ function Component() {
                     dispatch(createAnnouncement(data, history))
                 }}
                 renderChild={props => {
-                    const { setFieldValue, values } = props;
+                    const { setFieldValue, values, errors } = props;
 
                     return (
                         <Form className="Form">
@@ -189,7 +190,7 @@ function Component() {
                                 />}
                             <Input {...props} type="file" label="Image (optional)" name="image" placeholder="Image URL" />
                             <Input {...props} type="textarea" label="Description" placeholder="Insert Announcement Description" />
-                            <button type="submit">Submit</button>
+                            <SubmitButton loading={loading} errors={errors} />
                         </Form>
                     )
                 }

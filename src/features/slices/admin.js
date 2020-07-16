@@ -85,7 +85,6 @@ export const createAdmin = ( data, history) => dispatch => {
     }))
 }
 
-//link still wrong, inexist in BE
 export const editAdmin = ( data, history, id) => dispatch => {
   dispatch(startAsync());
 
@@ -106,7 +105,6 @@ export const editAdmin = ( data, history, id) => dispatch => {
     }))
 }
 
-//link still wrong, inexist in BE
 export const deleteAdmin = (row, ) => dispatch => {
   dispatch(startAsync());
 

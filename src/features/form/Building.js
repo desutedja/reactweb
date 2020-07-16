@@ -14,6 +14,7 @@ import Template from './components/TemplateWithFormik';
 import Input from './input';
 import { Form } from 'formik';
 import { buildingSchema } from './schemas';
+import SubmitButton from './components/SubmitButton';
 
 const buildingPayload = {
     name: "",
@@ -49,7 +50,7 @@ function Component() {
     const [province, setProvince] = useState("");
     const [provinces, setProvinces] = useState([]);
 
-    const { selected } = useSelector(state => state.building);
+    const { selected, loading } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -107,7 +108,7 @@ function Component() {
             edit={data => dispatch(editBuilding(data, history, selected.id))}
             add={data => dispatch(createBuilding(data, history))}
             renderChild={props => {
-                const { setFieldValue, values } = props;
+                const { setFieldValue, values, errors } = props;
 
                 return (
                     <Form className="Form">
@@ -169,7 +170,7 @@ function Component() {
                         {values.city && <Input {...props} label="District"
                             options={districts} />}
                         <Input {...props} label="ZIP Code" name="zipcode" />
-                        <button>Submit</button>
+                        <SubmitButton loading={loading} errors={errors} />
                     </Form>
                 )
             }

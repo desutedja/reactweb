@@ -5,7 +5,7 @@ import { FiPlus } from 'react-icons/fi';
 
 import Button from '../../components/Button';
 import Template from './components/Template';
-import { getAdmin, setSelected } from '../slices/admin';
+import { getAdmin, setSelected, deleteAdmin } from '../slices/admin';
 import Admin from '../../components/cells/Admin';
 import { toSentenceCase } from '../../utils';
 
@@ -26,7 +26,7 @@ function Component() {
             columns={columns}
             slice="admin"
             getAction={getAdmin}
-            // deleteAction={deleteAdmin}
+            deleteAction={deleteAdmin}
             actions={[
                 <Button key="Add" label="Add" icon={<FiPlus />}
                     onClick={() => {

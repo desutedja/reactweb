@@ -20,6 +20,7 @@ const task_priorities = [
     {label: 'Normal', value: 'normal'},
     {label: 'High', value: 'high'}
 ]
+
 export default function Component() {
     const history = useHistory();
     const dispatch = useDispatch();
@@ -173,8 +174,6 @@ export default function Component() {
         </>
     )
 }
-
-
 
 const MultipleUpload = ({
     className = ''

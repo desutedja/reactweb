@@ -14,6 +14,7 @@ import Template from "./components/TemplateWithFormik";
 import { Form } from 'formik';
 import { billingSchema } from "./schemas";
 import Input from './input';
+import SubmitButton from './components/SubmitButton';
 
 const billingPayload = {
     service: "",
@@ -49,7 +50,7 @@ function Component() {
     const [servicesPageCount, setServicesPageCount] = useState(1);
     const [servicesLoading, setServicesLoading] = useState(false);
 
-    const { selected, unit } = useSelector(state => state.billing);
+    const { selected, unit, loading } = useSelector(state => state.billing);
     const selectedUnit = unit.selected;
 
     useEffect(() => {
@@ -109,7 +110,7 @@ function Component() {
             edit={data => dispatch(editBillingUnitItem(data, unit.selected, history, selectedUnit.id))}
             add={data => dispatch(createBillingUnitItem(data, unit.selected, history))}
             renderChild={props => {
-                const { values } = props;
+                const { errors } = props;
 
                 return (
                     <Form className="Form">
@@ -147,10 +148,8 @@ function Component() {
                         <Input {...props} label="Remarks" type="textarea" />
                         <Input {...props} label="Month" options={months} />
                         <Input {...props} label="Year" options={yearsOnRange(10)} />
-                        <button onClick={() => {
-                            console.log(values);
-                        }}>Submit</button>
                         <SectionSeparator />
+                        <SubmitButton loading={loading} errors={errors} />
                     </Form>
                 )
             }}
