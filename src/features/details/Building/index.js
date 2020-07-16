@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-    useDispatch
-} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
@@ -23,9 +21,12 @@ const labels = {
     'Others': ['max_units', 'max_floors', 'max_sections'],
 }
 
+const tabs = ["Details", "Section", "Unit Type", "Unit", "Service", "Management", "Module"];
+
 function Component() {
     let { state } = useLocation();
     const [data, setData] = useState(state ? state : {});
+    const {auth} = useSelector(state => state)
     
     let dispatch = useDispatch();
     let history = useHistory();
@@ -43,7 +44,7 @@ function Component() {
             title={data.name}
             website={data.website}
             phone={data.phone}
-            labels={["Details", "Section", "Unit Type", "Unit", "Service", "Management", "Module"]}
+            labels={auth.role !== 'sa' ? tabs.filter(tab => tab !== 'Module') : tabs}
             contents={[
                 <Detail data={data} labels={labels}
                     onDelete={() => dispatch(deleteBuilding(data, history))}
@@ -53,7 +54,7 @@ function Component() {
                 <Unit />,
                 <Service />,
                 <Management />,
-                <Module />
+                auth.role === 'sa' && <Module />
             ]}
         />
     )

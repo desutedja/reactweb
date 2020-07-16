@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { get, post } from '../../../slice';
@@ -33,14 +33,32 @@ const modulesFiltered = (arrA, arrB) => {
   return res;
 }
 
+function useDidUpdateEffect(fn, inputs) {
+  const didMountRef = useRef(false);
+
+  useEffect(() => {
+    if (didMountRef.current)
+      fn();
+    else
+      didMountRef.current = true;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, inputs);
+}
+
+
+
 export default (props) => {
+  const {auth} = useSelector(state => state)
   const {id} = useParams()
   const dispatch = useDispatch()
   const [activeModules, setActiveModules] = useState([]);
   const [modulesLabel, setModulesLabel] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const isInitialMount = useRef(true)
+
   useEffect(() => {
+    if (auth.role !== 'sa') return;
     dispatch(get(endpointAdmin + '/modules/building?id=' + id,
       res => {
         setActiveModules(res.data.data.active_modules)
@@ -48,20 +66,41 @@ export default (props) => {
         setIsLoading(false);
       },
       err => console.log(err.response)
-    ))
-  }, [dispatch, id])
+      ))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [auth.role, id])
 
-  useEffect(() => {
-    setIsLoading(true)
-    dispatch(post(endpointAdmin + '/modules/building?id=' + id,
-      {
-        active_modules: activeModules
-      },
-      res => {
-        setIsLoading(false)
-      }
-    ))
-  }, [activeModules, dispatch, id])
+  function toggleButton() {
+    if (auth.role !== 'sa') return;
+      setIsLoading(true)
+      dispatch(post(endpointAdmin + '/modules/building?id=' + id,
+        {
+          active_modules: activeModules
+        },
+        res => {
+          setIsLoading(false)
+        }
+      ))
+  }
+
+  useDidUpdateEffect(toggleButton, [activeModules])
+  
+  // useEffect(() => {
+  //   if (auth.role !== 'sa') return;
+  //   setIsLoading(true)
+  //   dispatch(post(endpointAdmin + '/modules/building?id=' + id,
+  //     {
+  //       active_modules: activeModules
+  //     },
+  //     res => {
+  //       setIsLoading(false)
+  //     }
+  //   ))
+
+  // // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [activeModules])
+
+
   return (
     <>
       <div className="row no-gutters mt-4">
@@ -71,10 +110,11 @@ export default (props) => {
         d-flex justify-content-center p-2">
           <SwitchBox
             value={el.value}
-            onClick={e => activeModules.find(am => am === e) ?
+            onClick={e => {
+              activeModules.find(am => am === e) ?
               setActiveModules(activeModules.filter(am => am !== e)) :
               setActiveModules([e, ...activeModules])
-            }
+            }}
             label={el.label}
           />
         </div>
