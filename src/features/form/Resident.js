@@ -23,7 +23,7 @@ const residentPayload = {
     firstname: "",
     lastname: "",
     phone: "",
-    birthplace: "",
+    birthplace: "others",
     birthdate: "",
     nationality: "",
     gender: "P",
