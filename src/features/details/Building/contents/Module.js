@@ -45,8 +45,6 @@ function useDidUpdateEffect(fn, inputs) {
   }, inputs);
 }
 
-
-
 export default (props) => {
   const {auth} = useSelector(state => state)
   const {id} = useParams()
@@ -54,8 +52,6 @@ export default (props) => {
   const [activeModules, setActiveModules] = useState([]);
   const [modulesLabel, setModulesLabel] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-
-  const isInitialMount = useRef(true)
 
   useEffect(() => {
     if (auth.role !== 'sa') return;

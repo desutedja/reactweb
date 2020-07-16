@@ -13,6 +13,7 @@ import Building from '../../features/routes/Building';
 import Resident from '../../features/routes/Resident';
 import Staff from '../../features/routes/Staff';
 import Task from '../../features/routes/Task';
+// eslint-disable-next-line no-unused-vars
 import { MdSettingsInputSvideo } from 'react-icons/md';
 
 const modules = [
@@ -68,6 +69,7 @@ const modules = [
 function Component() {
 
     const { auth } = useSelector(state => state);
+    // eslint-disable-next-line no-unused-vars
     const [menus, setMenus] = useState(modules || [])
 
     useEffect(() => {
