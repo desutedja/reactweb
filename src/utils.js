@@ -9,11 +9,11 @@ export const osType = [
 ]
 
 export const genders = [
-    { label: 'Male', value: 'Male'},
-    { label: 'Female', value: 'Female'}
+    { label: 'Male', value: 'Male' },
+    { label: 'Female', value: 'Female' }
 ]
 
-export const days = ['Sunday','Monday','Tuesday','Wednesbay','Thursday','Friday','Saturday']
+export const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesbay', 'Thursday', 'Friday', 'Saturday']
 
 export const rangeNumberArrObj = (from = 0, to = 0) => {
     if (to <= from) return null;
@@ -66,9 +66,9 @@ export const months = [
     { value: 12, label: 'December' },
 ];
 
-export function dateTimeFormatterCell(serverDateTime, whenzero='-') {
+export function dateTimeFormatterCell(serverDateTime, whenzero = '-') {
     if (!serverDateTime) return;
-    if (serverDateTime === "0001-01-01T00:00:00Z") 
+    if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
     let date = serverDateTime.split('T')[0];
@@ -80,14 +80,14 @@ export function dateTimeFormatterCell(serverDateTime, whenzero='-') {
     let day = date.split('-')[2];
 
     return <><div style={{ display: 'block' }}>
-        <div><FiCalendar/> {day + ' ' + months[month - 1].label + ' ' + year}</div>
+        <div><FiCalendar /> {day + ' ' + months[month - 1].label + ' ' + year}</div>
         <div><FiClock /> {time + ' WIB'}</div>
-        </div>
+    </div>
     </>;
 }
 
-export function dateTimeFormatter(serverDateTime, whenzero='-') {
-    if (serverDateTime === "0001-01-01T00:00:00Z") 
+export function dateTimeFormatter(serverDateTime, whenzero = '-') {
+    if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
     let date = serverDateTime.split('T')[0];
@@ -101,19 +101,20 @@ export function dateTimeFormatter(serverDateTime, whenzero='-') {
     return day + ' ' + months[month - 1].label + ' ' + year + ' ' + time + ' WIB';
 }
 
-export function timeFormatter(serverDateTime, whenzero='-') {
-    if (serverDateTime === "0001-01-01T00:00:00Z") 
+export function timeFormatter(serverDateTime, whenzero = '-', plusHour = 0) {
+    if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
     let time = serverDateTime.split('T')[1].split('Z')[0];
-    time = time.split(':').slice(0, 2).join(':');
+    let hour = parseInt(time.split(':')[0], 10) + plusHour;
+    let minute = time.split(':')[1];
+    // let second = time.split(':')[2];
 
-
-    return time + ' WIB';
+    return hour + ':' + minute + ' WIB';
 }
 
-export function dateFormatter(serverDateTime, whenzero='-') {
-    if (serverDateTime === "0001-01-01T00:00:00Z") 
+export function dateFormatter(serverDateTime, whenzero = '-') {
+    if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
     let date = serverDateTime.split('T')[0];
@@ -121,7 +122,6 @@ export function dateFormatter(serverDateTime, whenzero='-') {
     let year = date.split('-')[0];
     let month = parseInt(date.split('-')[1], 10);
     let day = date.split('-')[2];
-
 
     return day + ' ' + months[month - 1].label + ' ' + year;
 }
@@ -144,12 +144,12 @@ export function toMoney(money) {
     return money === null || money === undefined ? "-" : "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
 }
 
-export function removeLastFromPath(path, lastn=1) {
+export function removeLastFromPath(path, lastn = 1) {
     var newpath = path.split("/")
     do {
         newpath.pop()
         lastn--;
-    } while(newpath.length > 0 && lastn > 0);
+    } while (newpath.length > 0 && lastn > 0);
     return newpath.join("/")
 }
 

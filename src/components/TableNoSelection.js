@@ -223,7 +223,7 @@ function Component({
 
                                 return (
                                     <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : onClickRow && 'selectable'}
-                                        onClick={() => onClickRow(row.original)}
+                                        onClick={() => onClickRow ? onClickRow(row.original) : null}
                                     >
 
                                         {row.cells.map(cell => {

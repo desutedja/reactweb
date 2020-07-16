@@ -168,31 +168,29 @@ function Component() {
             >
                 Are you sure you want to resolve this task?
             </Modal>
-            <Modal isOpen={assign} toggle={() => setAssign(false)}>
+            <Modal isOpen={assign} toggle={() => setAssign(false)} disableHeader
+                disableFooter={staffs.length === 0}
+                okLabel="Yes"
+                onClick={() => {
+                    setStaff({});
+                    setAssign(false);
+                    dispatch(reassignTask({
+                        "task_id": selectedRow.id,
+                        "assignee_id": staff.value,
+                    }));
+                }}
+                cancelLabel="No"
+                onClickSecondary={() => {
+                    setAssign(false);
+                }}
+            >
                 Choose assignee:
                 {staffs.length !== 0 && !staff.value && <Input label="Search" icon={<FiSearch />}
                     compact inputValue={search} setInputValue={setSearch} />}
                 <Filter data={staff.value ? [staff] : staffs} onClick={el => setStaff(el)} />
-                {staffs.length === 0 ? <p style={{
+                {staffs.length === 0 && <p style={{
                     fontStyle: 'italic'
-                }}>No elligible staff found.</p> : <div style={{
-                    display: 'flex',
-                    marginTop: 16,
-                }}>
-                        <Button label="No" secondary
-                            onClick={() => setAssign(false)}
-                        />
-                        <Button label="Yes"
-                            onClick={() => {
-                                setStaff({});
-                                setAssign(false);
-                                dispatch(reassignTask({
-                                    "task_id": selectedRow.id,
-                                    "assignee_id": staff.value,
-                                }));
-                            }}
-                        />
-                    </div>}
+                }}>No elligible staff found.</p>}
             </Modal>
             <Template
                 columns={columns}

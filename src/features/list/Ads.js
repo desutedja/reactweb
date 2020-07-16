@@ -16,16 +16,21 @@ import AdsCell from '../../components/cells/Ads';
 
 const columns = [
     { Header: "Title", accessor: row => <AdsCell id={row.id} data={row} /> },
-    { Header: "Gender", accessor: "gender" },
+    { Header: "Gender", accessor: row => row.gender ? row.gender : '-' },
     { Header: "Age", accessor: row => row.age_from + " - " + row.age_to },
-    { Header: "Platform", accessor: "os" },
-    { Header: "Specialty", accessor: "specialty_store" },
-    { Header: "Priority", accessor: "total_priority_score" },
-    { Header: "Date", accessor: row => dateFormatter(row.start_date) + ' - ' 
-        + dateFormatter(row.end_date)},
-    { Header: "Status", accessor: row => <Pill
-        color={row.published && 'success'}
-    >{row.published ? 'Published' : 'Draft' }</Pill>},
+    { Header: "Platform", accessor: row => row.os ? row.os : '-' },
+    { Header: "Weight", accessor: "total_priority_score" },
+    {
+        Header: "Start Date", accessor: row => dateFormatter(row.start_date)
+    },
+    {
+        Header: "End Date", accessor: row => dateFormatter(row.end_date)
+    },
+    {
+        Header: "Status", accessor: row => <Pill
+            color={row.published && 'success'}
+        >{row.published ? 'Published' : 'Draft'}</Pill>
+    },
 ]
 
 function Component() {
@@ -36,16 +41,10 @@ function Component() {
     const [os, setOs] = useState('');
     const [ageFrom, setAgeFrom] = useState('');
     const [gender, setGender] = useState('');
-    const [media, setMedia] = useState('');
-
-    const mediaType = [
-        { label: 'Apps', value: 'Apps' },
-        { label: 'URL', value: 'URL' }
-    ]
 
     useEffect(() => {
-        console.log(os, gender, ageFrom, media);
-    }, [os, gender, ageFrom, media])
+        console.log(os, gender, ageFrom);
+    }, [os, gender, ageFrom])
 
     return (
         <Template
@@ -66,7 +65,6 @@ function Component() {
                 // ageTo.toLowerCase(),
                 os.toLowerCase(),
                 gender[0],
-                media.toLowerCase(),
                 // appearAs.toLowerCase()
             ]}
             filters={[
@@ -107,25 +105,6 @@ function Component() {
                     )
                 },
                 {
-                    hidex: media === "",
-                    label: <p>{media ? "Media: " + media : "Media: All"}</p>,
-                    delete: () => setMedia(''),
-                    component: toggleModal => (
-                        <Filter
-                            data={mediaType}
-                            onClick={el => {
-                                setMedia(el.value);
-                                toggleModal(false);
-                            }}
-                            onClickAll={() => {
-                                setMedia('');
-                                toggleModal(false);
-                            }}
-                        />
-                    )
-
-                },
-                {
                     hidex: ageFrom === "",
                     label: <p>{ageFrom ? "Ages: " + ageFrom : "Ages: Any"}</p>,
                     delete: () => setAgeFrom(''),
@@ -144,7 +123,7 @@ function Component() {
 
                 }
             ]}
-            // onClickDetails={row => dispatch(getAdsDetails(row,  history, url))}
+        // onClickDetails={row => dispatch(getAdsDetails(row,  history, url))}
         />
     )
 }

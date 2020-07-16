@@ -136,7 +136,8 @@ export const deleteAds = (row,) => dispatch => {
 
       dispatch(refresh());
       dispatch(stopAsync())
-    }))
+    },
+    err => dispatch(stopAsync())))
 }
 
 export const getAdsDetails = (row, history, url) => dispatch => {

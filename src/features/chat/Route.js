@@ -104,9 +104,6 @@ function Component() {
                 setMessage('');
                 setLoadingSend(false);
             })
-            .catch(function (error) {
-                // On error
-            })
     }
 
     return (
@@ -126,7 +123,7 @@ function Component() {
                 }} >
                     <Loading loading={loadingMessages}>
                         {messages.map((el, index) =>
-                            <div key={el.timestamp} className={
+                            <div key={el.id} className={
                                 el.email === "superadmin" + user.id + user.email ?
                                     "MessageContainer-own" : "MessageContainer"}>
                                 {index > 0 && messages[index - 1].username === el.username ?
@@ -151,7 +148,7 @@ function Component() {
                                                 "Message-own" : "Message"}>{el.message}
                                         </div>
                                         <div className="MessageTime">
-                                            {timeFormatter(el.timestamp)}
+                                            {timeFormatter(el.timestamp, '-', 7)}
                                         </div>
                                     </div>
                                     {messages[index + 1]?.username !== el.username &&
