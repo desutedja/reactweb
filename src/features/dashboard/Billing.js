@@ -4,7 +4,7 @@ import AnimatedNumber from "animated-number-react";
 import { FiUsers, FiBriefcase } from 'react-icons/fi';
 import { FaTools, FaBoxOpen } from 'react-icons/fa';
 import { MdSecurity } from 'react-icons/md';
-import { RiStore2Line, RiBuilding2Line } from 'react-icons/ri';
+import { RiBuilding2Line } from 'react-icons/ri';
 
 import { toMoney } from '../../utils';
 import { endpointBilling, endpointManagement } from '../../settings';
