@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import AnimatedNumber from "animated-number-react";
 
+import { FiUsers, FiBriefcase } from 'react-icons/fi';
+import { FaTools, FaBoxOpen } from 'react-icons/fa';
+import { MdSecurity } from 'react-icons/md';
+import { RiStore2Line, RiBuilding2Line } from 'react-icons/ri';
+
 import { toMoney } from '../../utils';
 import { endpointBilling, endpointManagement } from '../../settings';
 
@@ -31,95 +36,94 @@ function Component() {
 
     return (
         <>
-            <div className="Container" style={{
+            <div className="" style={{
                 marginRight: 0,
                 flexDirection: 'column',
                 padding: 0,
             }}>
-                <div style={{
-                    padding: 16,
-                    borderBottom: '1px solid #f3f3fa',
-                }}>
-                    <h5>User Count</h5>
-                </div>
-                <div style={{
-                    display: 'flex'
-                }}>
-                    <div style={{
-                        flex: 1,
-                        padding: 16,
-                        borderRight: '1px solid #f3f3fa',
-                    }}>
-                        <AnimatedNumber className="BigNumber" value={staffData.num_of_building}
-                            formatValue={formatValue}
-                        />
-                        <p>Resident</p>
+                <div className="row no-gutters">
+                    <div className="Container col-12 col-md-3 col-lg px-3 align-items-center color-1">
+                        <FiUsers className="h1 mr-4 my-0" />
+                        <div style={{
+                            flex: 1,
+                            // padding: 16,
+                            // borderRight: '1px solid #f3f3fa',
+                        }}>
+                            {/* <FiUsers className="h3 mr-2" /> */}
+                            <AnimatedNumber className="BigNumber white" value={staffData.num_of_resident || '0'}
+                                formatValue={formatValue}
+                            />
+                            <p>Resident</p>
+                        </div>
                     </div>
-                    <div style={{
-                        flex: 1,
-                        padding: 16,
-                        borderRight: '1px solid #f3f3fa',
-                    }}>
-                        <AnimatedNumber className="BigNumber" value={staffData.num_of_unit}
-                            formatValue={formatValue}
-                        />
-                        <p>Technician</p>
+                    <div className="Container col-12 col-md-3 col-lg px-3 align-items-center color-1">
+                        <FaTools className="h2 mr-4 my-0" />
+                        <div style={{
+                            flex: 1,
+                            // padding: 16,
+                            // borderRight: '1px solid #f3f3fa',
+                        }}>
+                            <AnimatedNumber className="BigNumber white" value={staffData.num_of_technician || '0'}
+                                formatValue={formatValue}
+                            />
+                            <p>Technician</p>
+                        </div>
                     </div>
-                    <div style={{
-                        flex: 1,
-                        padding: 16,
-                        borderRight: '1px solid #f3f3fa',
-                    }}>
-                        <AnimatedNumber className="BigNumber" value={staffData.num_of_unit
-                            / staffData.num_of_building}
-                            formatValue={formatValue}
-                        />
-                        <p>Security</p>
+                    <div className="Container col-12 col-md-3 col-lg px-3 align-items-center color-1">
+                        <MdSecurity className="h1 mr-4 my-0" />
+                        <div style={{
+                            flex: 1,
+                            // padding: 16,
+                            // borderRight: '1px solid #f3f3fa',
+                        }}>
+                            <AnimatedNumber className="BigNumber white" value={staffData.num_of_security || '0'}
+                                formatValue={formatValue}
+                            />
+                            <p>Security</p>
+                        </div>
                     </div>
-                    <div style={{
-                        flex: 1,
-                        padding: 16,
-                        borderRight: '1px solid #f3f3fa',
-                    }}>
-                        <AnimatedNumber className="BigNumber" value={staffData.num_of_unit
-                            / staffData.num_of_building}
-                            formatValue={formatValue}
-                        />
-                        <p>Merchant</p>
+                    <div className="Container col-12 col-md-3 col-lg px-3 align-items-center color-1">
+                        <FaBoxOpen className="h1 mr-4 my-0" />
+                        <div style={{
+                            flex: 1,
+                            // padding: 16,
+                            // borderRight: '1px solid #f3f3fa',
+                        }}>
+                            <AnimatedNumber className="BigNumber white" value={staffData.num_of_unit
+                                / staffData.num_of_courier || '0'}
+                                formatValue={formatValue}
+                            />
+                            <p>Courier</p>
+                        </div>
                     </div>
-                    <div style={{
-                        flex: 1,
-                        padding: 16,
-                        borderRight: '1px solid #f3f3fa',
-                    }}>
-                        <AnimatedNumber className="BigNumber" value={staffData.num_of_unit
-                            / staffData.num_of_building}
-                            formatValue={formatValue}
-                        />
-                        <p>Courier</p>
+                    <div className="Container col-12 col-md-3 col-lg px-3 align-items-center color-1">
+                        <RiBuilding2Line className="h1 mr-4 my-0" />
+                        <div style={{
+                            flex: 1,
+                            // padding: 16,
+                            // borderRight: '1px solid #f3f3fa',
+                        }}>
+                            <AnimatedNumber className="BigNumber white" value={staffData.num_of_unit
+                                / staffData.num_of_building || '0'}
+                                formatValue={formatValue}
+                            />
+                            <p className="text-nowrap">Building Manager</p>
+                        </div>
                     </div>
-                    <div style={{
-                        flex: 1,
-                        padding: 16,
-                        borderRight: '1px solid #f3f3fa',
-                    }}>
-                        <AnimatedNumber className="BigNumber" value={staffData.num_of_unit
-                            / staffData.num_of_building}
-                            formatValue={formatValue}
-                        />
-                        <p>Building Manager</p>
-                    </div>
-                    <div style={{
-                        flex: 1,
-                        padding: 16,
-                        borderRight: '1px solid #f3f3fa',
-                    }}>
-                        <AnimatedNumber className="BigNumber" value={staffData.num_of_unit
-                            / staffData.num_of_building}
-                            formatValue={formatValue}
-                        />
-                        <p>General Manager</p>
-                    </div>
+                    <div className="Container col-12 col-md-3 col-lg px-3 align-items-center color-1">
+                        <FiBriefcase className="h1 mr-4 my-0" />
+                        <div style={{
+                            flex: 1,
+                            // padding: 16,
+                            // borderRight: '1px solid #f3f3fa',
+                        }}>
+                            <AnimatedNumber className="BigNumber white" value={staffData.num_of_unit
+                                / staffData.num_of_building || '0'}
+                                formatValue={formatValue}
+                            />
+                            <p className="text-nowrap">General Manager</p>
+                        </div>
+                    </div> 
                 </div>
             </div>
             <div className="Row">

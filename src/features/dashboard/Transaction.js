@@ -9,7 +9,7 @@ import { toMoney } from '../../utils';
 import { endpointMerchant, endpointTransaction } from '../../settings';
 
 import './style.css';
-import { XAxis, YAxis, CartesianGrid, Tooltip, Area, PieChart, Pie, ComposedChart } from 'recharts';
+import { XAxis, YAxis, CartesianGrid, Tooltip, Area, PieChart, Pie, ComposedChart, ResponsiveContainer } from 'recharts';
 import { get } from '../slice';
 
 // const formatValue = (value) => value.toFixed(0);
@@ -101,41 +101,46 @@ function Component() {
                     flex: 3,
                     flexDirection: 'column',
                 }}>
-                    <h5>Transaction Statistics</h5>
+                    <h5 className="mb-4">Transaction Statistics</h5>
                     {/* {JSON.stringify(trxData)} */}
-                    <ComposedChart width={730} height={250} data={trxData}
-                        margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                        <defs>
-                            <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-                            </linearGradient>
-                            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                                <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-                            </linearGradient>
-                        </defs>
-                        <XAxis dataKey="date" />
-                        <YAxis yAxisId="left" dataKey="value_1"
-                            tickFormatter={el => el && toMoney((el + '').slice(0, -3)).slice(3) + 'k'} />
-                        <YAxis yAxisId="right" dataKey="value_2" orientation="right" />
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <Tooltip />
-                        <Area type="monotone" dataKey="value_1" stroke="#8884d8"
-                            fillOpacity={1} fill="url(#colorUv)" yAxisId="left" />
-                        <Area type="monotone" dataKey="value_2" stroke="#82ca9d"
-                            fillOpacity={1} fill="url(#colorPv)" yAxisId="right" />
-                    </ComposedChart>
+                    <ResponsiveContainer width='100%'>
+                        <ComposedChart
+                        // width={730}
+                        // height={250}
+                        data={trxData}
+                            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                            <defs>
+                                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                                </linearGradient>
+                                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
+                                    <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
+                                </linearGradient>
+                            </defs>
+                            <XAxis dataKey="date" />
+                            <YAxis yAxisId="left" dataKey="value_1"
+                                tickFormatter={el => el && toMoney((el + '').slice(0, -3)).slice(3) + 'k'} />
+                            <YAxis yAxisId="right" dataKey="value_2" orientation="right" />
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <Tooltip />
+                            <Area type="monotone" dataKey="value_1" stroke="#8884d8"
+                                fillOpacity={1} fill="url(#colorUv)" yAxisId="left" />
+                            <Area type="monotone" dataKey="value_2" stroke="#82ca9d"
+                                fillOpacity={1} fill="url(#colorPv)" yAxisId="right" />
+                        </ComposedChart>
+                    </ResponsiveContainer>
                 </div>
                 <div className="Container" style={{
                     marginRight: 0,
                     flexDirection: 'column',
                 }}>
-                    <h5>Transaction Summary</h5>
+                    <h5 className="mb-3">Transaction Summary</h5>
                     {/* {JSON.stringify(trxSumm)} */}
-                    <div>Orders {trxSumm.total_transaction_count}</div>
-                    <div>Amount {toMoney(trxSumm.total_transaction_amount)}</div>
-                    <div>Settled {toMoney(trxSumm.total_settled_transaction_amount)}</div>
+                    <div className="mb-2">Orders {trxSumm.total_transaction_count}</div>
+                    <div className="mb-2">Amount {toMoney(trxSumm.total_transaction_amount)}</div>
+                    <div className="mb-2">Settled {toMoney(trxSumm.total_settled_transaction_amount)}</div>
                     <div>Unsettled {toMoney(trxSumm.total_unsettled_transaction_amount)}</div>
                 </div>
             </div>
