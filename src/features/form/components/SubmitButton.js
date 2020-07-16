@@ -12,10 +12,10 @@ const SubmitButton = ({ loading, errors }) => {
                     <FiAlertCircle style={{
                         marginRight: 4
                     }} />
-                    There are some errors in your form.
+                    Your form is incomplete or there are some errors in your form.
                 </div>
             }
-            <button>Submit</button>
+            <button type="submit">Submit</button>
         </Loading>
     )
 }

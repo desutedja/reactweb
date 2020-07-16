@@ -124,11 +124,13 @@ export const editAds = (data, history, id) => dispatch => {
     }))
 }
 
-export const deleteAds = (row,) => dispatch => {
+export const deleteAds = (row, history) => dispatch => {
   dispatch(startAsync());
 
   dispatch(del(adsEndpoint + '/' + row.id,
     res => {
+      history && history.goBack();
+
       dispatch(setInfo({
         color: 'success',
         message: 'Advertisement has been deleted.'

@@ -11,13 +11,14 @@ import Button from '../../../components/Button';
 
 import { toSentenceCase, dateFormatter, getCountryFromCode, getBank } from '../../../utils';
 
-function Component({ imgPreview = false, data, labels, type = "", editable = true, renderButtons = () => {} }) {
+function Component({ imgPreview = false, data, labels, type = "",
+    editable = true, onDelete, renderButtons = () => { } }) {
 
     let history = useHistory();
     let { url } = useRouteMatch();
 
     function formatLabel(label) {
-        if (label.label) 
+        if (label.label)
             label = label.label;
 
         if (label === 'id') label = type + " ID";
@@ -31,16 +32,17 @@ function Component({ imgPreview = false, data, labels, type = "", editable = tru
 
     function formatValue(label, value) {
         return (value == null || value === "") ? "-" :
-            label === "birthdate" ? dateFormatter(value, '-') :
-                label === "birthplace" ? value.toUpperCase() :
-                    label === "address" ? toSentenceCase(value) :
-                        label === "created_on" ? dateFormatter(value, '-') :
-                            label === "nationality" ? getCountryFromCode(value) :
-                                label === "account_bank" ? getBank(value) :
-                                    label === "gender" ?
-                                        (value === "L" ? "Male" :
-                                            value === "P" ? "Female" : "Undefined") :
-                                        value
+            label.includes('phone') ? '+' + value :
+                label === "birthdate" ? dateFormatter(value, '-') :
+                    label === "birthplace" ? value.toUpperCase() :
+                        label === "address" ? toSentenceCase(value) :
+                            label === "created_on" ? dateFormatter(value, '-') :
+                                label === "nationality" ? getCountryFromCode(value) :
+                                    label === "account_bank" ? getBank(value) :
+                                        label === "gender" ?
+                                            (value === "L" ? "Male" :
+                                                value === "P" ? "Female" : "Undefined") :
+                                            value
     }
 
     return (
@@ -50,16 +52,16 @@ function Component({ imgPreview = false, data, labels, type = "", editable = tru
                     <div className="col-12">
                         {data.assignee_photo ?
                             <img
-                            style={{
-                                width: '100%'
-                            }}
-                            src={data.assignee_photo} alt=""
+                                style={{
+                                    width: '100%'
+                                }}
+                                src={data.assignee_photo} alt=""
                             /> :
                             <img
-                            style={{
-                                width: '100%'
-                            }}
-                            src={defaultImg} alt=""
+                                style={{
+                                    width: '100%'
+                                }}
+                                src={defaultImg} alt=""
                             />
                         }
                     </div>
@@ -84,15 +86,15 @@ function Component({ imgPreview = false, data, labels, type = "", editable = tru
                             {group}
                         </div>
                         {labels[group].map(el => {
-                            return !el.disabled ? 
-                            <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={el} >
-                                <Column flex={3} style={{ fontWeight: 'bold', fontSize: '1em', textAlign: 'left' }}>
-                                    {el.lfmt ? el.lfmt(el) : formatLabel(el)}
-                                </Column>
-                                <Column flex={9} style={{ fontWeight: 'normal', fontSize: '1em', }}>
-                                    {el.vfmt ? el.vfmt(data[el.label]) : formatValue(el, data[el])}
-                                </Column>
-                            </Row> : null;
+                            return !el.disabled ?
+                                <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={el} >
+                                    <Column flex={3} style={{ fontWeight: 'bold', fontSize: '1em', textAlign: 'left' }}>
+                                        {el.lfmt ? el.lfmt(el) : formatLabel(el)}
+                                    </Column>
+                                    <Column flex={9} style={{ fontWeight: 'normal', fontSize: '1em', }}>
+                                        {el.vfmt ? el.vfmt(data[el.label]) : formatValue(el, data[el])}
+                                    </Column>
+                                </Row> : null;
                         })}
                     </div>
                 )}
@@ -105,6 +107,7 @@ function Component({ imgPreview = false, data, labels, type = "", editable = tru
                     pathname: url.split('/').slice(0, -1).join('/') + "/edit",
                     state: data,
                 })} />}
+                {onDelete && <Button label="Delete" onClick={onDelete} />}
                 {renderButtons()}
             </div>
         </div>

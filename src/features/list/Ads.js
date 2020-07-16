@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import Filter from '../../components/Filter';
 import RangeInput from '../../components/RangeInput';
 import { FiPlus } from 'react-icons/fi';
-import { osType, genders } from '../../utils';
+import { osType, genders, toSentenceCase } from '../../utils';
 
 import Pill from '../../components/Pill';
 import Button from '../../components/Button';
@@ -15,10 +15,12 @@ import { dateFormatter } from '../../utils';
 import AdsCell from '../../components/cells/Ads';
 
 const columns = [
+    { Header: "ID", accessor: 'id' },
     { Header: "Title", accessor: row => <AdsCell id={row.id} data={row} /> },
-    { Header: "Gender", accessor: row => row.gender ? row.gender : '-' },
+    { Header: "Gender", accessor: row => row.gender ? row.gender : 'All' },
     { Header: "Age", accessor: row => row.age_from + " - " + row.age_to },
-    { Header: "Platform", accessor: row => row.os ? row.os : '-' },
+    { Header: "Platform", accessor: row => row.os ? row.os : 'All' },
+    { Header: "Occupation", accessor: row => row.occupation ? toSentenceCase(row.occupation) : 'All' },
     { Header: "Weight", accessor: "total_priority_score" },
     {
         Header: "Start Date", accessor: row => dateFormatter(row.start_date)
@@ -62,10 +64,8 @@ function Component() {
             ]}
             filterVars={[
                 ageFrom.toLowerCase(),
-                // ageTo.toLowerCase(),
                 os.toLowerCase(),
                 gender[0],
-                // appearAs.toLowerCase()
             ]}
             filters={[
                 {
@@ -123,7 +123,6 @@ function Component() {
 
                 }
             ]}
-        // onClickDetails={row => dispatch(getAdsDetails(row,  history, url))}
         />
     )
 }

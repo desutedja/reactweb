@@ -125,14 +125,14 @@ function Component() {
       slice="merchant"
       payload={selected.id ? {
         ...merchantPayload, ...selected,
-        phone: selected.phone.slice(2),
-        pic_phone: selected.pic_phone.slice(2),
+        phone: selected.phone.slice(3),
+        pic_phone: selected.pic_phone.slice(3),
       } : merchantPayload}
       schema={merchantSchema}
       formatValues={values => ({
         ...values,
-        phone: '62' + values.phone,
-        pic_phone: '62' + values.pic_phone,
+        phone: '628' + values.phone,
+        pic_phone: '628' + values.pic_phone,
       })}
       edit={data => dispatch(editMerchant(data, history, selected.id))}
       add={data => dispatch(createMerchant(data, history))}
@@ -174,7 +174,7 @@ function Component() {
             </Modal>
 
             <Input {...props} label="Name" />
-            <Input {...props} label="Phone" prefix="+62" />
+            <Input {...props} label="Phone" prefix="+628" />
             <Input {...props} label="Type"
               type="radio"
               options={[
@@ -235,7 +235,7 @@ function Component() {
             <SectionSeparator />
 
             <Input {...props} label="PIC Name" />
-            <Input {...props} label="PIC Phone" prefix="+62" />
+            <Input {...props} label="PIC Phone" prefix="+628" />
             <Input {...props} label="PIC Mail" />
 
             <SectionSeparator />

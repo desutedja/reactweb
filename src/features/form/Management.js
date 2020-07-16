@@ -34,14 +34,14 @@ function Component() {
             slice="management"
             payload={selected.id ? {
                 ...managementPayload, ...selected,
-                phone: selected.phone.slice(2),
-                pic_phone: selected.pic_phone.slice(2),
+                phone: selected.phone.slice(3),
+                pic_phone: selected.pic_phone.slice(3),
             } : managementPayload}
             schema={managementSchema}
             formatValues={values => ({
                 ...values,
-                phone: '62' + values.phone,
-                pic_phone: '62' + values.pic_phone,
+                phone: '628' + values.phone,
+                pic_phone: '628' + values.pic_phone,
             })}
             edit={data => dispatch(editManagement(data, history, selected.id))}
             add={data => dispatch(createManagement(data, history))}
@@ -52,7 +52,7 @@ function Component() {
                     <Form className="Form">
                         <Input {...props} label="Name" />
                         <Input {...props} label="Legal Name" name="name_legal" />
-                        <Input {...props} label="Phone" prefix="+62"
+                        <Input {...props} label="Phone" prefix="+628"
                         />
                         <Input {...props} label="Email" />
                         <Input {...props} label="Website" />
@@ -60,7 +60,7 @@ function Component() {
                         <Input {...props} label="Logo" type="file" />
                         <SectionSeparator />
                         <Input {...props} label="PIC Name" />
-                        <Input {...props} label="PIC Phone" prefix="+62" />
+                        <Input {...props} label="PIC Phone" prefix="+628" />
                         <Input {...props} label="PIC Email" />
                         <SubmitButton loading={loading} errors={errors} />
                     </Form>

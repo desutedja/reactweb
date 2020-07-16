@@ -94,16 +94,19 @@ function Component() {
             slice="building"
             payload={selected.id ? {
                 ...buildingPayload, ...selected,
-                phone: selected.phone.slice(2),
+                phone: selected.phone.slice(3),
             } : buildingPayload}
             schema={buildingSchema}
             formatValues={values => ({
                 ...values,
-                phone: '62' + values.phone,
+                phone: '628' + values.phone,
                 max_sections: parseInt(values.max_sections, 10),
                 max_floors: parseInt(values.max_floors, 10),
                 max_units: parseInt(values.max_units, 10),
                 zipcode: parseInt(values.zipcode),
+                province_name: values.province_label,
+                city_name: values.city_label,
+                district_name: values.district_label,
             })}
             edit={data => dispatch(editBuilding(data, history, selected.id))}
             add={data => dispatch(createBuilding(data, history))}
@@ -154,7 +157,7 @@ function Component() {
                         <Input {...props} label="Logo" type="file" />
                         <SectionSeparator />
                         <Input {...props} label="Owner Name" />
-                        <Input {...props} label="Phone" prefix="+62" />
+                        <Input {...props} label="Phone" prefix="+628" />
                         <Input {...props} label="Email" />
                         <SectionSeparator />
                         <button type="button" onClick={() => setModal(true)}>Select Location</button>

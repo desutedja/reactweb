@@ -179,13 +179,13 @@ function Component() {
             slice="resident"
             payload={selected.id ? {
                 ...residentPayload, ...selected,
-                phone: selected.phone.slice(2),
+                phone: selected.phone.slice(3),
                 birthdate: selected.birthdate.split('T')[0],
             } : residentPayload}
             schema={residentSchema}
             formatValues={values => ({
                 ...values,
-                phone: '62' + values.phone,
+                phone: '628' + values.phone,
                 birthdate: values.birthdate + ' 00:00:00',
             })}
             edit={data => dispatch(editResident(data, history, selected.id))}
@@ -273,7 +273,7 @@ function Component() {
                         {(!exist) && <>
                             <Input {...props} label="First Name" name="firstname" />
                             <Input {...props} label="Last Name" name="lastname" />
-                            <Input {...props} label="Phone" prefix="+62" />
+                            <Input {...props} label="Phone" prefix="+628" />
                             <SectionSeparator />
 
                             <Input {...props} label="Nationality" options={countries}

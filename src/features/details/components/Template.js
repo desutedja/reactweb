@@ -2,16 +2,12 @@ import React, { useState } from 'react';
 import {
     FiGlobe,
     FiPhone,
-    // FiHome,
     FiMail
 } from 'react-icons/fi';
 import {
     RiStore2Line,
 } from "react-icons/ri";
 
-// import Container from '../../../components/Container';
-// import Row from '../../../components/Row';
-// import Column from '../../../components/Column';
 import Tab from '../../../components/Tab';
 import Breadcrumb from '../../../components/Breadcrumb';
 
@@ -58,49 +54,25 @@ function Component({ image, title, website, phone, merchant,
                     }}>{title}</h3>}
                     {website && <div className="row">
                         <div className="col d-flex">
-                            <FiGlobe
-                                className="mr-3 h4"
-                            // style={{
-                            // marginRight: 8,
-                            // fontSize: '1.2rem',
-                            // }}
-                            />
+                            <FiGlobe className="mr-3 h4" />
                             <h5><a href={website}>{website}</a></h5>
                         </div>
                     </div>}
                     {email && <div className="row">
                         <div className="col d-flex">
-                            <FiMail
-                                className="mr-3 h4"
-                            // style={{
-                            // marginRight: 8,
-                            // fontSize: '1.2rem',
-                            // }}
-                            />
+                            <FiMail className="mr-3 h4" />
                             <h5><a href={"mailto:" + email}>{email}</a></h5>
                         </div>
                     </div>}
                     {phone && <div className="row">
                         <div className="col d-flex">
-                            <FiPhone
-                                className="mr-3 h4"
-                            // style={{
-                            // marginRight: 8,
-                            // fontSize: '1.2rem',
-                            // }}
-                            />
-                            <h5>{phone}</h5>
+                            <FiPhone className="mr-3 h4" />
+                            <h5>{'+' + phone}</h5>
                         </div>
                     </div>}
                     {merchant && <div className="row">
                         <div className="col d-flex">
-                            <RiStore2Line
-                                className="mr-3 h4"
-                            // style={{
-                            // marginRight: 8,
-                            // fontSize: '1.2rem',
-                            // }}
-                            />
+                            <RiStore2Line className="mr-3 h4" />
                             <h5>{merchant}</h5>
                         </div>
                     </div>}

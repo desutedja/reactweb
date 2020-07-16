@@ -111,13 +111,13 @@ function Component() {
         <Template
             slice="staff"
             payload={selected.id ? {...staffPayload, ...selected,
-                phone: selected.phone.slice(2),
+                phone: selected.phone.slice(3),
             } : staffPayload}
             schema={staffSchema}
             formatValues={values => ({
                 ...values,
                 on_centratama: parseInt(values.on_centratama, 10),
-                phone: '62' + values.phone,
+                phone: '628' + values.phone,
                 province: parseInt(values.province, 10),
                 city: parseInt(values.city, 10),
                 district: parseInt(values.district, 10),
@@ -169,7 +169,7 @@ function Component() {
                             <Input {...props} label="Firstname" />
                             <Input {...props} label="Lastname" />
                             <Input {...props} label="Email" />
-                            <Input {...props} label="Phone" prefix="+62" />
+                            <Input {...props} label="Phone" prefix="+628" />
 
                             <SectionSeparator />
 

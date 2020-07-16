@@ -8,19 +8,10 @@ import Modal from '../../../../components/Modal';
 import Form from '../../../../components/Form';
 import Input from '../../../../components/Input';
 import { getAdsSchedule, deleteAdsSchedule, createAdsSchedule } from '../../../slices/ads';
-
-const days = [
-    { value: 1, label: "Senin" },
-    { value: 2, label: "Selasa" },
-    { value: 3, label: "Rabu" },
-    { value: 4, label: "Kamis" },
-    { value: 5, label: "Jumat" },
-    { value: 6, label: "Sabtu" },
-    { value: 7, label: "Minggu" },
-]
+import { days } from '../../../../utils';
 
 const columns = [
-    { Header: "Day", accessor: row => days.find(el => el.value === row.day)?.label },
+    { Header: "Day", accessor: row => days[row.day - 1] },
     { Header: "Hour From", accessor: "hour_from" },
     { Header: "Hour To", accessor: "hour_to" },
 ]

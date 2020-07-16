@@ -31,7 +31,6 @@ function Component() {
         ],
         'Consumer': [
             { label: 'consumer_role', vfmt: (val) => toSentenceCase(val) },
-            //{ label: 'consumer_id', lfmt: () => "Consumer ID" },
             { label: 'building', 
                 disabled: !(selected.consumer_role === 'merchant' && selected.consumer_role === 'centratama'),
                 lfmt: () => "Target Building", 
@@ -79,6 +78,7 @@ function Component() {
             labels={["Details", "Contents"]}
             contents={[
             <Detail type="Announcement" data={selected} labels={details} editable={selected.publish === 0}
+                onDelete={() => {}}
                 renderButtons={() => [
                 <Button label="Publish" disabled={selected.publish === 1} 
                     onClick={() => { dispatch(publishAnnouncement(selected)) }} />,
