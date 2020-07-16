@@ -48,9 +48,7 @@ function Component() {
             accessor: row => {
                 return (
                     <CustomInput
-                        style={{
-                            cursor: 'pointer'
-                        }}
+                        className="cursor-pointer"
                         type="switch"
                         label={row.status}
                         id={"managementStatus-" + row.id}
