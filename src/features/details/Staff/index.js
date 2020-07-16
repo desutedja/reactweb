@@ -18,7 +18,7 @@ const details = {
 
 function Component() {
     let { state } = useLocation();
-    const [data, setData] = useState({});
+    const [data, setData] = useState(state ? state : {});
 
     let dispatch = useDispatch();
     let { id } = useParams();

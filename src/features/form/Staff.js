@@ -165,7 +165,6 @@ function Component() {
                                     { value: 'inactive', label: 'Inactive' },
                                 ]}
                             />
-
                             <SectionSeparator />
 
                             <Input {...props} label="Firstname" />
