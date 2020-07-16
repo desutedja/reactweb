@@ -105,11 +105,13 @@ export const editStaff = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteStaff = (row, ) => dispatch => {
+export const deleteStaff = (row, history) => dispatch => {
   dispatch(startAsync());
 
   dispatch(del(staffEndpoint + '/delete?id=' + row.id, 
     res => {
+      history && history.goBack()
+
       dispatch(refresh());
       
       dispatch(setInfo({

@@ -8,9 +8,10 @@ import Detail from '../components/Detail';
 import Template from '../components/Template';
 
 import Unit from './contents/Unit';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, useHistory } from 'react-router-dom';
 import { get } from '../../slice';
 import { endpointResident } from '../../../settings';
+import { deleteResident } from '../../slices/resident';
 
 const details = {
     'Profile': ['created_on', 'gender', 'birthplace', 'birthdate', 'nationality', 'marital_status', 'status_kyc'],
@@ -19,11 +20,12 @@ const details = {
 };
 
 function Component() {
+    let { state } = useLocation();
     const [data, setData] = useState({});
 
     let dispatch = useDispatch();
-    let { state } = useLocation();
     let { id } = useParams();
+    let history = useHistory();
 
     useEffect(() => {
         !state && dispatch(get(endpointResident + '/management/resident/detail/' + id, res => {
@@ -33,14 +35,16 @@ function Component() {
 
     return (
         <Template
-            image={state ? state.photo : data.photo}
-            title={state ? state.firstname + ' ' + state.lastname : data.firstname + ' ' + data.lastname}
-            email={state ? state.email : data.email}
-            phone={state ? state.phone : data.phone}
+            image={data.photo}
+            title={data.firstname + ' ' + data.lastname}
+            email={data.email}
+            phone={data.phone}
             labels={["Details", "Unit"]}
             activeTab={0}
             contents={[
-                <Detail data={state ? state : data} labels={details} />,
+                <Detail data={data} labels={details}
+                    onDelete={() => dispatch(deleteResident(data, history))}
+                />,
                 <Unit id={id} />,
             ]}
         />

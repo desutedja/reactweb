@@ -1,8 +1,12 @@
-import React, { } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
+import { useLocation, useHistory, useParams } from 'react-router-dom';
+import { get } from '../../slice';
+import { endpointMerchant } from '../../../settings';
+import { setSelected, deleteMerchant } from '../../slices/merchant';
 
 const info = {
     'Information': [
@@ -46,18 +50,31 @@ const account = {
 };
 
 function Component() {
-    const { selected } = useSelector(state => state.merchant);
+    let { state } = useLocation();
+    const [data, setData] = useState(state ? state : {});
+    
+    let dispatch = useDispatch();
+    let history = useHistory();
+    let { id } = useParams();
+    useEffect(() => {
+        !state && dispatch(get(endpointMerchant + '/admin?id=' + id, res => {
+            setData(res.data.data);
+            setSelected(res.data.data);
+        }))
+    }, [id, state, dispatch])
 
     return (
         <Template
-            image={selected.logo}
-            title={selected.name}
-            phone={selected.phone}
+            image={data.logo}
+            title={data.name}
+            phone={data.phone}
             labels={["Details", "Contact Person", "Bank Account"]}
             contents={[
-                <Detail data={selected} labels={info} />,
-                <Detail data={selected} labels={pic} />,
-                <Detail data={selected} labels={account} />,
+                <Detail data={data} labels={info}
+                    onDelete={() => dispatch(deleteMerchant(data, history))}
+                />,
+                <Detail data={data} labels={pic} />,
+                <Detail data={data} labels={account} />,
             ]}
         />
     )

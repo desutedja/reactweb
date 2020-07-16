@@ -78,7 +78,6 @@ function Component() {
             labels={["Details", "Contents"]}
             contents={[
             <Detail type="Announcement" data={selected} labels={details} editable={selected.publish === 0}
-                onDelete={() => {}}
                 renderButtons={() => [
                 <Button label="Publish" disabled={selected.publish === 1} 
                     onClick={() => { dispatch(publishAnnouncement(selected)) }} />,

@@ -10,6 +10,7 @@ import Column from '../../../components/Column';
 import Button from '../../../components/Button';
 
 import { toSentenceCase, dateFormatter, getCountryFromCode, getBank } from '../../../utils';
+import { FiTrash, FiEdit } from 'react-icons/fi';
 
 function Component({ imgPreview = false, data, labels, type = "",
     editable = true, onDelete, renderButtons = () => { } }) {
@@ -103,11 +104,11 @@ function Component({ imgPreview = false, data, labels, type = "",
                 display: 'flex',
                 flexDirection: 'column',
             }}>
-                {editable && <Button label="Edit" onClick={() => history.push({
+                {editable && <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
                     pathname: url.split('/').slice(0, -1).join('/') + "/edit",
                     state: data,
                 })} />}
-                {onDelete && <Button label="Delete" onClick={onDelete} />}
+                {onDelete && <Button icon={<FiTrash />} color="danger" label="Delete" onClick={onDelete} />}
                 {renderButtons()}
             </div>
         </div>

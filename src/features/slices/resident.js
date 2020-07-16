@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointResident } from '../../settings';
-import { get, post, del, put } from '../slice';
+import { get, post, del, put, setInfo } from '../slice';
 
 const residentEndpoint = endpointResident + '/management/resident';
 
@@ -103,6 +103,11 @@ export const createResident = (data, history) => dispatch => {
     res => {
       history.push("/sa/resident");
 
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Resident has been created.'
+      }));
+
       dispatch(stopAsync());
     },
     err => {
@@ -118,6 +123,11 @@ export const editResident = (data, history, id) => dispatch => {
       dispatch(setSelected(res.data.data));
       history.push(`${id}`);
 
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Resident has been edited.'
+      }));
+
       dispatch(stopAsync());
     },
     err => {
@@ -125,12 +135,19 @@ export const editResident = (data, history, id) => dispatch => {
     }))
 }
 
-export const deleteResident = (row,) => dispatch => {
+export const deleteResident = (row, history) => dispatch => {
   dispatch(startAsync());
 
   dispatch(del(residentEndpoint + '/delete/' + row.id,
     res => {
+      history && history.goBack()
+
       dispatch(refresh());
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Resident has been deleted.'
+      }));
       dispatch(stopAsync())
     }))
 }
@@ -189,6 +206,12 @@ export const addResidentUnit = (data) => dispatch => {
   dispatch(post(residentEndpoint + '/add_unit', data,
     res => {
       dispatch(refresh());
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Resident unit has been created.'
+      }));
+
       dispatch(stopAsync());
     },
     err => {
@@ -202,6 +225,12 @@ export const addSubaccount = (data) => dispatch => {
   dispatch(post(residentEndpoint + '/add_unit', data,
     res => {
       dispatch(refresh());
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Resident subaccount has been created.'
+      }));
+
       dispatch(stopAsync());
     },
     err => {
@@ -215,6 +244,12 @@ export const deleteUnit = data => dispatch => {
   dispatch(put(residentEndpoint + '/delete_unit_sub', data,
     res => {
       dispatch(refresh());
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Resident unit has been deleted.'
+      }));
+
       dispatch(stopAsync());
     },
     err => {
@@ -237,19 +272,11 @@ export const deleteSubaccount = (unit, parent, owner) => dispatch => {
     },
     res => {
       dispatch(refresh());
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
 
-export const createSubaccount = (data, history) => dispatch => {
-  dispatch(startAsync());
-
-  dispatch(post(residentEndpoint + '/register/subaccount', data,
-    res => {
-      history.push("/resident");
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Resident subaacount has been deleted.'
+      }));
 
       dispatch(stopAsync());
     },

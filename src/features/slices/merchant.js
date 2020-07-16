@@ -121,11 +121,13 @@ export const editMerchant = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteMerchant = (row, ) => dispatch => {
+export const deleteMerchant = (row, history) => dispatch => {
   dispatch(startAsync());
 
   dispatch(del(merchantEndpoint + '?id=' + row.id, 
     res => {
+      history && history.goBack()
+
       dispatch(refresh());
 
       dispatch(setInfo({

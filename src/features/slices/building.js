@@ -182,11 +182,13 @@ export const editBuilding = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteBuilding = (row, ) => dispatch => {
+export const deleteBuilding = (row, history) => dispatch => {
   dispatch(startAsync());
 
   dispatch(del(buildingEndpoint + '/' + row.id, 
     res => {
+      history && history.goBack();
+
       dispatch(setInfo({
         color: 'success',
         message: 'Building has been deleted.'
@@ -194,6 +196,9 @@ export const deleteBuilding = (row, ) => dispatch => {
 
       dispatch(refresh());
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 

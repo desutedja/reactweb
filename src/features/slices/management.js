@@ -105,11 +105,13 @@ export const editManagement = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteManagement = (row, ) => dispatch => {
+export const deleteManagement = (row, history) => dispatch => {
   dispatch(startAsync());
 
   dispatch(del(managementEndpoint + '/' + row.id, 
     res => {
+      history && history.goBack()
+      
       dispatch(refresh());
 
       dispatch(setInfo({
