@@ -21,7 +21,6 @@ const serviceGroup = [
 const columnsService = [
     { Header: "ID", accessor: "id" },
     { Header: "Name", accessor: "name" },
-    { Header: "Unit", accessor: "denom_unit" },
     { Header: "Group", accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
     { Header: "Description", accessor: row => row.description ? row.description : '-' },
     {
@@ -42,7 +41,7 @@ function Component() {
 
     const [addService, setAddService] = useState(false);
 
-    const [priceType, setPriceType] = useState('fixed');
+    const [priceType, setPriceType] = useState('');
     const [taxType, setTaxType] = useState('percentage');
 
     const [sGroupFilter, setSGroupFilter] = useState({});
@@ -90,32 +89,38 @@ function Component() {
                         setRow({});      
                     }}
                 >
-                    <Input label="Name" inputValue={selectedRow.name} optional />
-                    <Input label="Unit" name="denom_unit" inputValue={selectedRow.denom_unit} optional />
-                    <Input label="Group" type="select" inputValue={selectedRow.group} options={[
+                    <Input label="Name" placeholder="Input Service Name (e.g. Elecricity, Water)" 
+                        inputValue={selectedRow.name} />
+                    <Input label="Group" placeholder="Select billing group" 
+                        type="select" inputValue={selectedRow.group} options={[
                         { value: 'ipl', label: 'IPL' },
                         { value: 'nonipl', label: 'Non-IPL' },
                     ]} optional />
-                    <Input label="Description" inputValue={selectedRow.description} optional />
-                    <Input label="Price Type" type="select" inputValue={priceType ? priceType : selectedRow.price_type} options={[
+                    <Input label="Description" placeholder="Input service description" 
+                        inputValue={selectedRow.description} optional />
+                    <Input label="Price Type" type="select" placeholder="Select pricing type (fixed or per unit usage)"
+                        inputValue={priceType ? priceType : selectedRow.price_type} options={[
                         { value: 'unit', label: 'Unit' },
                         { value: 'fixed', label: 'Fixed' },
                     ]} setInputValue={setPriceType} optional />
-                    <Input label="Price" name="price_unit" type="number"
-                        hidden={priceType === 'fixed'} inputValue={selectedRow.price_unit} optional />
-                    <Input label="Unit" placeholder="Denom Unit Name, ex: kWh, m^3" name="denom_unit"
-                        hidden={priceType === 'fixed'} inputValue={selectedRow.denom_unit}
+                    <Input label="Unit Name" placeholder="Unit name, ex: kWh, m^3" name="denom_unit"
+                        hidden={priceType === 'fixed' || priceType === ''} inputValue={selectedRow.denom_unit}
                     optional />
+                    <Input label="Price" name="price_unit" type="number" placeholder="Price per unit usage"
+                        hidden={priceType === 'fixed' || priceType === ''} inputValue={selectedRow.price_unit} 
+                            addons="rupiah" optional />
                     <Input label="Price" name="price_fixed" type="number"
-                        hidden={priceType === 'unit'} inputValue={selectedRow.price_fixed} optional />
+                        hidden={priceType === 'unit' || priceType === ''} inputValue={selectedRow.price_fixed} 
+                        addons="rupiah" optional />
                     <Input label="Tax Type" name="tax" type="select"
                         options={[
                             { value: 'value', label: 'Value' },
                             { value: 'percentage', label: 'Percentage' },
                         ]}
                         setInputValue={setTaxType} inputValue={taxType ? taxType : selectedRow.tax} optional />
-                    <Input label="Tax Value" hidden={taxType === 'value'} inputValue={selectedRow.tax_value} optional />
-                    <Input label="Tax Amount" hidden={taxType === 'percentage'} inputValue={selectedRow.tax_amount} optional />
+                    <Input label="Tax Value" hidden={taxType === 'value'} inputValue={selectedRow.tax_value} addons="%" optional />
+                    <Input label="Tax Amount" hidden={taxType === 'percentage'} inputValue={selectedRow.tax_amount} addons="rupiah" 
+                        optional />
                 </Form>
             </Modal>
             <Table

@@ -40,11 +40,11 @@ function Component({ children, onSubmit, loading, isModal=false, showSubmit = tr
                 onSubmit(dataObject);
             }}>
                 {children}
-                {!isModal && <SectionSeparator className="mt-4" />}
-                {!isModal && showSubmit && <div className="Form-control">
+                {!isModal && <SectionSeparator className="mt-1" />}
+                {!isModal && showSubmit && <div className="Form-control" style={{ justifyContent: 'right', flexDirection: 'row-reverse' }} >
                     <Loading loading={loading}>
-                        <Button label="Submit" className="m-0"/>    
-                        {showCancel && <div className="btn btn-danger mb-2 mt-1 ml-3" onClick={onCancel}>Cancel</div>}
+                        {showCancel && <div className="btn btn-secondary mb-2 mt-1 ml-3" onClick={onCancel}>Cancel</div>}
+                        <Button label="Submit" className="btn btn-primary ml-2"/>    
                     </Loading>
                 </div>}
             </Form>
