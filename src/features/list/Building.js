@@ -19,7 +19,7 @@ const columns = [
     // { Header: 'ID', accessor: 'id' },
     { Header: 'Name', accessor: row => <Building id={row.id} data={row} /> },
     { Header: 'Legal Name', accessor: 'legal_name' },
-    { Header: 'Code Name', accessor: 'code_name' },
+    { Header: 'Site ID', accessor: 'code_name' },
     { Header: 'Owner', accessor: 'owner_name' },
     { Header: 'Website', accessor: row => <Link>{row.website}</Link> },
 ]

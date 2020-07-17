@@ -52,7 +52,7 @@ function Component() {
                     <Form className="Form">
                         <Input {...props} label="Name" />
                         <Input {...props} label="Legal Name" name="name_legal" />
-                        <Input {...props} label="Phone" prefix="+628"
+                        <Input {...props} label="Phone" prefix="+62"
                         />
                         <Input {...props} label="Email" />
                         <Input {...props} label="Website" />
@@ -60,7 +60,7 @@ function Component() {
                         <Input {...props} label="Logo" type="file" />
                         <SectionSeparator />
                         <Input {...props} label="PIC Name" />
-                        <Input {...props} label="PIC Phone" prefix="+628" />
+                        <Input {...props} label="PIC Phone" prefix="+62" />
                         <Input {...props} label="PIC Email" />
                         <SubmitButton loading={loading} errors={errors} />
                     </Form>

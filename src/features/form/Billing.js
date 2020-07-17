@@ -143,11 +143,11 @@ function Component() {
                             console.log('changed');
                             setServiceUnit(el.unit);
                         }} />
-                        <Input {...props} label="Name" />
-                        <Input {...props} label="Recent Usage" suffix={serviceUnit} />
-                        <Input {...props} label="Remarks" type="textarea" />
                         <Input {...props} label="Month" options={months} />
                         <Input {...props} label="Year" options={yearsOnRange(10)} />
+                        <Input {...props} label="Name" placeholder=""/>
+                        <Input {...props} label="Recent Usage" suffix={serviceUnit} />
+                        <Input {...props} label="Remarks" type="textarea" />
                         <SectionSeparator />
                         <SubmitButton loading={loading} errors={errors} />
                     </Form>

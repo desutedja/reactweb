@@ -170,7 +170,7 @@ function Component() {
                             <Input {...props} label="Firstname" />
                             <Input {...props} label="Lastname" />
                             <Input {...props} label="Email" />
-                            <Input {...props} label="Phone" prefix="+628" />
+                            <Input {...props} label="Phone" prefix="+62" />
 
                             <SectionSeparator />
 

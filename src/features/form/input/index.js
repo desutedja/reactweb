@@ -7,7 +7,7 @@ import FileInput from './File';
 
 function Input({ optional = false, ...props }) {
     const {
-        label = "", actionlabels = {}, compact, type = "text", hidden, name
+        label = "", actionlabels = {}, compact, type = "text", hidden, name, hint=''
     } = props;
     const fixedName = name ? name : label.toLowerCase().replace(/ /g, '_');
 
@@ -55,6 +55,9 @@ function Input({ optional = false, ...props }) {
                             href="#" onClick={actionlabels[action]} >{action}</a>
                     )}
                 </div>
+                {hint && <div style={{ fontStyle: 'italic', marginBottom: '8px' }} >
+                    *{hint}
+                </div>}
             </>}
             {renderInput(type)}
         </div>

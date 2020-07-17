@@ -174,7 +174,7 @@ function Component() {
             </Modal>
 
             <Input {...props} label="Name" />
-            <Input {...props} label="Phone" prefix="+628" />
+            <Input {...props} label="Phone" prefix="+62" />
             <Input {...props} label="Type"
               type="radio"
               options={[
@@ -235,7 +235,7 @@ function Component() {
             <SectionSeparator />
 
             <Input {...props} label="PIC Name" />
-            <Input {...props} label="PIC Phone" prefix="+628" />
+            <Input {...props} label="PIC Phone" prefix="+62" />
             <Input {...props} label="PIC Mail" />
 
             <SectionSeparator />
