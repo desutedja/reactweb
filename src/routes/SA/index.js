@@ -42,7 +42,7 @@ const menu = [
         label: "Dashboard",
         route: "/dashboard",
         subroutes: [
-            '/billing',
+            '/building',
             '/transaction',
             '/task',
             '/advertisement',
