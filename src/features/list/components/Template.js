@@ -12,6 +12,7 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [], a
     const {
         loading,
         items,
+        total_items,
         total_pages,
         refreshToggle
     } = useSelector(state => state[slice]);
@@ -24,7 +25,7 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [], a
             <Breadcrumb />
             <div className="Container">
                 <Table
-                    totalItems={items.length}
+                    totalItems={total_items}
                     columns={columns}
                     data={items}
                     loading={loading}
