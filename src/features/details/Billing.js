@@ -59,33 +59,34 @@ function Component() {
     }, [unit.items, active, status]);
 
     useEffect(() => {
-        console.log(Object.keys(selected))
+        console.log(selected)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
-        <div className="row no-gutters">
-            <div className="col-12 col-md-6 col-lg-5">
-                <div className="Container">
-                    <div className="Details m-0">
-                        {Object.keys(selected).filter(el => !exception.includes(el))
-                            .map(el =>
-                                <LabeledText
-                                    key={el}
-                                    label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                                    value={selected[el]}
-                                />
-                            )}
-                    </div>
-                    {/* <div className="Photos">
-                        <Button label="Edit" onClick={() => history.push(
-                            url.split('/').slice(0, -1).join('/') + "/edit"
-                        )} />
-                    </div> */}
+        <div>
+            <div className="Container">
+                <div className="Details" style={{
+
+                }}>
+                    {Object.keys(selected).filter(el => !exception.includes(el))
+                        .map(el =>
+                            <LabeledText
+                                key={el}
+                                label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
+                                value={selected[el]}
+                            />
+                        )}
                 </div>
+                {/* <div className="Photos">
+                    <Button label="Edit" onClick={() => history.push(
+                        url.split('/').slice(0, -1).join('/') + "/edit"
+                    )} />
+                </div> */}
             </div>
-            <div className="col-12 col-md" style={{
-                display: 'flex'
+            <div style={{
+                display: 'flex',
+                marginTop: 16,
             }}>
                 {unit.items.length > 0 && <div className="Container" style={{
                     flexDirection: 'column',
