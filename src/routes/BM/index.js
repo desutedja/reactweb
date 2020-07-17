@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
-    FiHome, FiUsers, FiZap, FiRss, FiVolume2
+    FiHome, FiUsers, FiZap, FiRss, FiVolume2, FiBarChart2
 } from "react-icons/fi";
 import { RiStore2Line, RiTaskLine, RiCustomerService2Line } from 'react-icons/ri';
 
 import Template from '../components/Template';
 import { useSelector } from 'react-redux';
 
+import Dashboard from '../../features/dashboard/Route';
 import Ads from '../../features/routes/Ads';
 import Announcement from '../../features/routes/Announcement';
 import Billing from '../../features/routes/Billing';
@@ -20,6 +21,18 @@ import Merchant from '../../features/routes/Merchant';
 import { MdSettingsInputSvideo } from 'react-icons/md';
 
 const modules = [
+    {
+        icon: <FiBarChart2 className="MenuItem-icon" />,
+        label: "Dashboard",
+        route: "/dashboard",
+        subroutes: [
+            '/building',
+            '/transaction',
+            '/task',
+            '/advertisement',
+        ],
+        component: <Dashboard />,
+    },
     {
         icon: <FiHome className="MenuItem-icon" />,
         label: "Building",
