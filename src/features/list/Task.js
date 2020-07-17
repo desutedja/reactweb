@@ -25,7 +25,7 @@ const columns = [
     {
         Header: "Title", accessor: row => <Task
             id={row.id} data={row}
-            items={[row.title, <small>{toEllipsis(row.ref_code, 17)}</small>]} />
+            items={[row.title, <small>{row.ref_code}</small>]} />
     },
     {
         Header: "Type", accessor: row => row.task_type === "service" ? <>{toSentenceCase(row.task_type) +

@@ -42,12 +42,14 @@ function Component() {
         // { Header: 'ID', accessor: 'code' },
         { Header: 'ID', accessor: 'id' },
         {
-            Header: 'Unit', accessor: row => toSentenceCase(row.section_type) + ' '
-                + row.section_name + ' ' + row.number
+            Header: 'Unit', accessor: row => <span className="Link"
+                onClick={ () => dispatch(getBillingUnitDetails(row, history, url))} 
+              >{toSentenceCase(row.section_type) + ' '
+                + row.section_name + ' ' + row.number}</span>
         },
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
-        { Header: 'Unpaid Amount', accessor: row => toMoney(row.unpaid_amount) },
+        { Header: 'Unpaid Amount', accessor: row => <b>{toMoney(row.unpaid_amount)}</b> },
         { Header: 'Action', accessor: row => (
             <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
                 onClick={() => {
@@ -102,9 +104,6 @@ function Component() {
                     onClick={() => dispatch(downloadBillingUnit(search, building))}
                 />
             ]}
-            onClickDetails={row => {
-                dispatch(getBillingUnitDetails(row, history, url))
-            }}
         />
     )
 }
