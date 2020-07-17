@@ -176,6 +176,7 @@ function Component() {
                 }}
                 cancelLabel="No"
                 onClickSecondary={() => {
+                    setStaff({});
                     setAssign(false);
                 }}
             >

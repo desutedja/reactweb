@@ -27,7 +27,8 @@ function TextInput({
             setFieldValue(fixedName,
                 // eslint-disable-next-line eqeqeq
                 options.find(el => el.value == values[name])?.label);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [options])
 
     return (

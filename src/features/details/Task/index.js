@@ -1,7 +1,8 @@
-import React, { } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 
 import Details from '../components/Detail';
+import Modal from '../../../components/Modal';
 import Template from '../components/Template';
 
 import Reports from './contents/Reports';
@@ -15,8 +16,6 @@ const detail = {
         "priority",
         "r_lat",
         "r_long",
-        "service",
-        "service_schedule",
         "status",
         "completed_on",
     ],
@@ -49,28 +48,47 @@ const requester = {
 };
 
 function Component() {
+    const [modal, setModal] = useState(false);
+    const [image, setImage] = useState('');
+
     const { selected } = useSelector(state => state.task);
 
     return (
-        <Template
-            labels={["Details", "Assignee", "Requester", "Reports"]}
-            contents={[
-                <>
-                    <Details data={selected} labels={detail} editable={false} />
-                    {selected.attachment_1 ?
-                        attachments.map(el => selected[el] && <img src={selected[el]} alt="Attachment" />)
-                    :
-                        <div style={{
-                            color: 'silver',
-                            marginLeft: 8,
-                        }}>None</div>
-                    }
-                </>,
-                <Details imgPreview={true} data={selected} labels={assignee} editable={false} />,
-                <Details data={selected} labels={requester} editable={false} />,
-                <Reports />,
-            ]}
-        />
+        <>
+            <Modal disableFooter disableHeader isOpen={modal} toggle={() => setModal(false)}>
+                <img src={image} alt='attachment' style={{
+                    maxHeight: 600,
+                    maxWidth: '100%',
+                }} />
+            </Modal>
+            <Template
+                labels={["Details", "Assignee", "Requester", "Reports"]}
+                contents={[
+                    <>
+                        <Details data={selected} labels={detail} editable={false} />
+                        {selected.attachment_1 ?
+                            attachments.map(el => selected[el] && <img src={selected[el]} alt='attachment'
+                                onClick={() => {
+                                    setModal(true);
+                                    setImage(selected[el]);
+                                }}
+                                style={{
+                                    height: 80,
+                                    aspectRatio: 1,
+                                }} />)
+                            :
+                            <div style={{
+                                color: 'silver',
+                                marginLeft: 8,
+                            }}>None</div>
+                        }
+                    </>,
+                    <Details imgPreview={true} data={selected} labels={assignee} editable={false} />,
+                    <Details data={selected} labels={requester} editable={false} />,
+                    <Reports />,
+                ]}
+            />
+        </>
     )
 }
 
