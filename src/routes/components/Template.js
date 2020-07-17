@@ -81,8 +81,8 @@ function Component({ role, menu }) {
                             "QISCUS-SDK-SECRET": "20b6212e9782708f9260032856be6fcb",
                         }
                     })
-                    .then(res => console.log(res))
-                    .catch(err => console.log(err))
+                    .then(res => console.log('RESULT Qiscuss: ', res))
+                    .catch(err => console.log('ERROR Qiscuss: ', err))
                 })
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps

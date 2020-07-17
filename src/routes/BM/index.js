@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
-    FiHome, FiUsers, FiZap, FiAward, FiTarget, FiRss, FiVolume2
+    FiHome, FiUsers, FiZap, FiRss, FiVolume2
 } from "react-icons/fi";
+import { RiStore2Line, RiTaskLine, RiCustomerService2Line } from 'react-icons/ri';
 
 import Template from '../components/Template';
 import { useSelector } from 'react-redux';
@@ -13,6 +14,8 @@ import Building from '../../features/routes/Building';
 import Resident from '../../features/routes/Resident';
 import Staff from '../../features/routes/Staff';
 import Task from '../../features/routes/Task';
+import Merchant from '../../features/routes/Merchant';
+
 // eslint-disable-next-line no-unused-vars
 import { MdSettingsInputSvideo } from 'react-icons/md';
 
@@ -41,16 +44,22 @@ const modules = [
         component: <Billing />,
     },
     {
-        icon: <FiAward className="MenuItem-icon" />,
+        icon: <RiCustomerService2Line className="MenuItem-icon" />,
         label: "Staff",
         route: "/staff",
         component: <Staff />,
     },
     {
-        icon: <FiTarget className="MenuItem-icon" />,
+        icon: <RiTaskLine className="MenuItem-icon" />,
         label: "Task",
         route: "/task",
         component: <Task />,
+    },
+    {
+        icon: <RiStore2Line className="MenuItem-icon" />,
+        label: "Merchant",
+        route: "/merchant",
+        component: <Merchant />,
     },
     {
         icon: <FiRss className="MenuItem-icon" />,
@@ -68,21 +77,19 @@ const modules = [
 
 function Component() {
 
-    const { auth } = useSelector(state => state);
+    const { blacklist_modules } = useSelector(state => state.auth.user);
     // eslint-disable-next-line no-unused-vars
     const [menus, setMenus] = useState(modules || [])
 
     useEffect(() => {
-        if (auth.role === 'bm') {
-            const modulesLabel = auth.user.blacklist_modules.map(module => module.module);
-            const modulesFilter = menus.filter(menu => modulesLabel.some(module => menu.label.toLowerCase() !== module))
-            
-            console.log(modulesFilter)
-            // auth.user.blacklist_modules.length > 0 &&
-            // setMenus()
-        }
+        const modulesLabel = blacklist_modules.map(module => module.module);
+        const modulesFilter = menus.filter(menu => {
+            const truthy = modulesLabel.some(label => label === menu.label.toLowerCase())
+            return !truthy
+        })
+        setMenus(modulesFilter)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [auth])
+    }, [blacklist_modules])
 
     return (
         <Template role="bm" menu={menus} />

@@ -129,12 +129,12 @@ function Component() {
 
     useEffect(() => {
 
-        let role = selectedRow.task_type === 'security' ? 'security' :
+        let staffRole = selectedRow.task_type === 'security' ? 'security' :
             selectedRow.task_type === 'service' ? 'technician' : 'courier';
 
         assign && (!search || search.length >= 1) && dispatch(get(endpointManagement + '/admin/staff/list' +
             '?limit=5&page=1&max_ongoing_task=1' +
-            '&staff_role=' + role + "&status=active" +
+            '&staff_role=' + staffRole + "&status=active" +
             (selectedRow.priority === "emergency" ? '&is_ongoing_emergency=true' : '') +
             '&search=' + search, res => {
                 let data = res.data.data.items;
@@ -148,11 +148,6 @@ function Component() {
             }))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, search, selectedRow]);
-
-    useEffect(() => {
-        console.log(role)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
     return (
         <>
             <Modal isOpen={resolve} toggle={() => setResolve(false)} disableHeader
