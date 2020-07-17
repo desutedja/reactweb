@@ -1,16 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Modal from '../../components/Modal';
-import Table from '../../components/Table';
-import Button from '../../components/Button';
 import SectionSeparator from '../../components/SectionSeparator';
-import { createResident, addSubaccount, editResident } from '../slices/resident';
-import { toSentenceCase } from '../../utils';
+import { createResident, editResident } from '../slices/resident';
 import { endpointResident, banks } from '../../settings';
 import countries from '../../countries';
-import { Badge } from 'reactstrap';
 import { get, post } from '../slice';
 
 import Template from "./components/TemplateWithFormik";
@@ -24,8 +19,8 @@ const residentPayload = {
     firstname: "",
     lastname: "",
     phone: "",
-    birthplace: "others",
-    birthdate: "",
+    birthplace: "",
+    birth_date: "",
     nationality: "",
     gender: "P",
     marital_status: "",
@@ -36,9 +31,9 @@ const residentPayload = {
     district: "",
     account_bank: "",
     account_name: "",
-    account_number: "",
+    account_no: "",
 
-    birthplace_label: "Others",
+    birthplace_label: "",
     nationality_label: "",
     marital_status_label: "",
     occupation_label: "",
@@ -48,42 +43,11 @@ const residentPayload = {
     account_bank_label: "",
 }
 
-const columns = [
-    { Header: "ID", accessor: "id" },
-    { Header: "Name", accessor: row => row.firstname + ' ' + row.lastname },
-    { Header: "Phone", accessor: "phone" },
-    { Header: "Email", accessor: "email" },
-    { Header: "Gender", accessor: "gender" },
-    { Header: "Nationality", accessor: "nationality" },
-    {
-        Header: "Status", accessor: row => row.status ?
-            <h5><Badge pill color="success">{toSentenceCase(row.status)}</Badge></h5>
-            :
-            <h5><Badge pill color="danger">Inactive</Badge></h5>
-    },
-    {
-        Header: "KYC Status", accessor: row => row.status_kyc ? row.status_kyc :
-            <h5><Badge pill color="secondary">None</Badge></h5>
-    },
-]
-
 function Component() {
     const { selected, loading } = useSelector(state => state.resident);
 
-    const [step, setStep] = useState(2);
-    const [resident, setResident] = useState({});
-    const [residents, setResidents] = useState([]);
-    const [residentsPage, setResidentsPage] = useState('');
-    const [loadingResident, setLoadingResident] = useState(false);
     const [emailRegistered, setEmailRegistered] = useState(false);
-
-    const [unitID, setUnitID] = useState('');
-    const [units, setUnits] = useState([]);
-
     const [exist, setExist] = useState(selected.id ? false : true);
-    const [sub, setSub] = useState({});
-
-    const [modal, setModal] = useState(false);
 
     const [districts, setDistricts] = useState([]);
 
@@ -111,7 +75,7 @@ function Component() {
 
     useEffect(() => {
         setCity("");
-        (province || selected.province) && dispatch(get(endpointResident + '/geo/province/' + (province),
+        (province || selected.province) && dispatch(get(endpointResident + '/geo/province/' + (province || selected.province),
 
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
@@ -121,7 +85,7 @@ function Component() {
     }, [dispatch, province, selected.province]);
 
     useEffect(() => {
-        (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city),
+        (city || selected.city) && dispatch(get(endpointResident + '/geo/city/' + (city || selected.city),
 
             res => {
                 let formatted = res.data.data.map(el => ({ label: el.name, value: el.id }));
@@ -144,49 +108,19 @@ function Component() {
         ))
     }, [dispatch]);
 
-    const getResident = useCallback((pageIndex, pageSize, search) => {
-        setLoadingResident(true);
-        dispatch(get(endpointResident + '/management/resident/read' +
-            '?page=' + (pageIndex + 1) +
-            '&limit=' + pageSize +
-            '&search=' + search +
-            '&status=',
-
-            res => {
-                setResidents(res.data.data.items);
-                setResidentsPage(res.data.data.total_pages);
-
-                setLoadingResident(false)
-            }))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-        dispatch(get(endpointResident + '/management/resident/unit' +
-            '?page=' + 1 +
-            '&id=' + resident.id +
-            '&limit=' + 10 +
-            '&search=',
-
-            res => {
-                setUnits(res.data.data.items);
-            }
-        ))
-    }, [dispatch, resident])
-
     return (
         <Template
             slice="resident"
             payload={selected.id ? {
                 ...residentPayload, ...selected,
                 phone: selected.phone.slice(3),
-                birthdate: selected.birthdate.split('T')[0],
+                birth_date: selected.birth_date.split('T')[0],
             } : residentPayload}
             schema={residentSchema}
             formatValues={values => ({
                 ...values,
                 phone: '628' + values.phone,
-                birthdate: values.birthdate + ' 00:00:00',
+                birth_date: values.birth_date + ' 00:00:00',
             })}
             edit={data => dispatch(editResident(data, history, selected.id))}
             add={data => dispatch(createResident(data, history))}
@@ -195,54 +129,6 @@ function Component() {
 
                 return (
                     <Form className="Form">
-                        <Modal title={"Add Resident"} okLabel={"Yes"}
-                            isOpen={modal} toggle={() => setModal(false)} onClick={() => setStep(2)}>
-                            {step === 1 && <p>
-                                Resident with the provided email already exist.
-                                Add as sub account to another resident?
-                                </p>}
-                            {step === 2 && <>
-                                <p className="Title" style={{
-                                    marginBottom: 16
-                                }}>Select Resident</p>
-                                <Table
-                                    columns={columns}
-                                    data={residents}
-                                    loading={loadingResident}
-                                    pageCount={residentsPage}
-                                    fetchData={getResident}
-                                    onClickResolve={row => {
-                                        setResident(row);
-                                        setStep(3);
-                                    }}
-                                />
-                                <Button label="Back" secondary
-                                    onClick={() => setStep(1)}
-                                />
-                            </>}
-                            {step === 3 && <>
-                                <p style={{ marginBottom: 16 }}>Add as sub account to
-                                    {' ' + resident.firstname + ' ' + resident.lastname + ' '}
-                                    in</p>
-                                <Input label="Unit" type="select" options={units.map(el => ({
-                                    label: el.number,
-                                    value: el.unit_id
-                                }))} inputValue={unitID} setInputValue={setUnitID} />
-                                <div style={{ marginTop: 16 }} />
-                                {unitID && <Input type="button" label="Add as Subaccount" compact
-                                    onClick={() => {
-                                        dispatch(addSubaccount({
-                                            unit_id: parseInt(unitID),
-                                            parent_id: resident.id,
-                                            owner_id: sub.id,
-                                            level: 'sub',
-                                        }, history));
-                                        history.goBack();
-                                    }}
-                                />}
-                            </>}
-                        </Modal>
-
                         <Input {...props} onFocus={() => setEmailRegistered(false)} label="Email"
                             placeholder={"Input Resident Email"} type="email" compact disabled={!exist} />
                         {emailRegistered && <span style={{
@@ -255,7 +141,6 @@ function Component() {
                                     email: values.email
                                 },
                                     res => {
-                                        setSub(res.data.data);
                                         res.data.data.id
                                             ?
                                             setEmailRegistered(true)
@@ -281,7 +166,7 @@ function Component() {
                             <Input {...props} label="Birth Place" name="birthplace" options={bcities}
                                 loading={bcloading}
                             />
-                            <Input {...props} label="Birth Date" name="birthdate" type="date" />
+                            <Input {...props} label="Birth Date" name="birth_date" type="date" />
                             <Input {...props} hidden name="nationality" />
                             <Input {...props} label="Gender" type="radio" options={[
                                 { value: 'P', label: 'Female' },
@@ -314,7 +199,7 @@ function Component() {
                             <SectionSeparator />
 
                             <Input {...props} label="Account Bank" options={banks} />
-                            <Input {...props} label="Account Number" />
+                            <Input {...props} label="Account Number" name="account_no" />
                             <Input {...props} label="Account Name" />
                             <SubmitButton loading={loading} errors={errors} />
                         </>}

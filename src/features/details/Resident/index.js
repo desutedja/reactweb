@@ -14,7 +14,7 @@ import { endpointResident } from '../../../settings';
 import { deleteResident } from '../../slices/resident';
 
 const details = {
-    'Profile': ['created_on', 'gender', 'birthplace', 'birthdate', 'nationality', 'marital_status', 'status_kyc'],
+    'Profile': ['created_on', 'gender', 'birthplace', 'birth_date', 'nationality', 'marital_status', 'status_kyc'],
     'Address': ['address', 'district_name', 'city_name', 'province_name'],
     'Bank Account': ['account_name', 'account_no', 'account_bank'],
 };
