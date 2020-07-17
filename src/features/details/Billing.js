@@ -133,7 +133,7 @@ function Component() {
                             },
                         ]}
                         actions={[
-                            <Button key="Add" label="Add" icon={<FiPlus />}
+                            <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
                                 onClick={() => {
                                     dispatch(setSelectedUnit({}));
                                     history.push(url + "/add");

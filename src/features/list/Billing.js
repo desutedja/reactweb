@@ -48,7 +48,7 @@ function Component() {
         { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
         { Header: 'Unpaid Amount', accessor: row => toMoney(row.unpaid_amount) },
         { Header: 'Action', accessor: row => (
-            <Button key="Add" label="Add" icon={<FiPlus />}
+            <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
                 onClick={() => {
                     dispatch(getBillingUnitDetails(row, history, url))
                     history.push(url + '/item/add');
