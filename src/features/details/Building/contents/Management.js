@@ -16,6 +16,7 @@ import { get } from '../../../slice';
 
 
 function Component() {
+    const {auth} = useSelector(state => state)
     const [selectedRow, setRow] = useState({});
     const [edit, setEdit] = useState(false);
     const [addManagement, setAddManagement] = useState(false);
@@ -36,10 +37,11 @@ function Component() {
     
     const columnsManagement = [
         { Header: "ID", accessor: "id" },
-        { Header: "Management Name", accessor: "management_name" },
+        { Header: "Management Name", accessor: row => 
+            <a class="Link" href={"/" + auth.role + "/management/" + row.management_id}>{row.management_name}</a> },
         { Header: "Billing Published", accessor: row => "Day " + row.billing_published },
         { Header: "Billing Duedate", accessor: row => "Day " + row.billing_duedate },
-        { Header: "Penalty Fee", accessor: row => row.penalty_fee + ' %' },
+        { Header: "Billing Penalty Fee", accessor: row => row.penalty_fee + ' %' },
         { Header: "Courier Fee", accessor: row => toMoney(row.courier_fee) },
         { Header: "Internal Courier Markup", accessor: row => row.courier_internal_markup + ' %' },
         { Header: "External Courier Markup", accessor: row => row.courier_external_markup + ' %' },

@@ -49,7 +49,7 @@ function AdminForm() {
                         <Input {...props} label="First Name" name="firstname" />
                         <Input {...props} label="Last Name" name="lastname" />
                         <Input {...props} label="Email" />
-                        <Input {...props} label="Phone" prefix="+628" />
+                        <Input {...props} label="Phone" prefix="+62" />
                         <Input {...props} label="Group" options={[
                             { value: 'editor', label: 'Editor' },
                             { value: 'viewer', label: 'Viewer' },

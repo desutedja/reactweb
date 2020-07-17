@@ -149,15 +149,18 @@ function Component() {
 
                         <Input {...props} label="Building Name" name="name" />
                         <Input {...props} label="Legal Name" />
-                        <Input {...props} label="Code Name" />
-                        <Input {...props} label="Max Units" />
-                        <Input {...props} label="Max Floors" />
-                        <Input {...props} label="Max Sections" />
+                        <Input {...props} label="Site ID" />
+                        <Input {...props} label="Max Units" placeholder="Input max units" 
+                            hint="Maximum unit that can be registered on this Building" />
+                        <Input {...props} label="Max Floors" placeholder="Input max floors"
+                            hint="Maximum floor that can be registered on each section"/>
+                        <Input {...props} label="Max Sections" 
+                            hint="Maximum section (Tower/Wing) that can be register on this Building"/>
                         <Input {...props} label="Website" />
                         <Input {...props} label="Logo" type="file" />
                         <SectionSeparator />
                         <Input {...props} label="Owner Name" />
-                        <Input {...props} label="Phone" prefix="+628" />
+                        <Input {...props} label="Phone" prefix="+62" />
                         <Input {...props} label="Email" />
                         <SectionSeparator />
                         <button type="button" onClick={() => setModal(true)}>Select Location</button>

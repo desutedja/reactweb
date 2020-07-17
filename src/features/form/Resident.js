@@ -158,7 +158,7 @@ function Component() {
                         {(!exist) && <>
                             <Input {...props} label="First Name" name="firstname" />
                             <Input {...props} label="Last Name" name="lastname" />
-                            <Input {...props} label="Phone" prefix="+628" />
+                            <Input {...props} label="Phone" prefix="+62" />
                             <SectionSeparator />
 
                             <Input {...props} label="Nationality" options={countries}
