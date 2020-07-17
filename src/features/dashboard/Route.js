@@ -20,7 +20,7 @@ function Component() {
             <Route path={`${path}/advertisement`}>
                 <Advertisement />
             </Route>
-            <Route path={`${path}/billing`}>
+            <Route path={`${path}/building`}>
                 <Billing />
             </Route>
             <Route path={`${path}/transaction`}>

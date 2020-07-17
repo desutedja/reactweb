@@ -28,8 +28,6 @@ const info = {
         "closed_at",
         "status",
         "status_updated",
-        "promoted",
-        "promoted_until",
     ]
 };
 

@@ -23,7 +23,7 @@ const columns = [
     },
     {
         Header: "Onboarded",
-        accessor: row => <Pill color={row.onboarding === "yes" ? "success": "secondary"}>
+        accessor: row => <Pill color={row.onboarding === "yes" ? "success" : "secondary"}>
             {toSentenceCase(row.onboarding)}</Pill>,
     },
     {
@@ -31,15 +31,9 @@ const columns = [
             href={'mailto:' + row.email}>{row.email}</a>
     },
     { Header: "Phone", accessor: "phone" },
-    //{
-    //    Header: "Status", accessor: row => row.status ?
-    //    <Pill color="success">{toSentenceCase(row.status)}</Pill>
-    //        :
-    //        <Pill color="secondary">Inactive</Pill>
-    //},
     {
         Header: "KYC Status", accessor: row => row.status_kyc ?
-        <Pill color="primary">{toSentenceCase(row.status_kyc)}</Pill>
+            <Pill color="primary">{toSentenceCase(row.status_kyc)}</Pill>
             :
             <Pill color="secondary">None</Pill>
     },

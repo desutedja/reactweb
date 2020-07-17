@@ -60,7 +60,7 @@ export const residentSchema = Yup.object().shape({
     lastname: Text,
     phone: Phone,
     birthplace: Text,
-    birthdate: Text,
+    birth_date: Text,
     nationality: Text,
     gender: Text,
     marital_status: Text,
@@ -71,7 +71,7 @@ export const residentSchema = Yup.object().shape({
     district: Text,
     account_bank: Text,
     account_name: Text,
-    account_number: Text,
+    account_no: Text,
 })
 
 export const billingSchema = Yup.object().shape({
@@ -95,6 +95,9 @@ export const merchantSchema = Yup.object().shape({
     "lat": Text,
     "long": Text,
     "address": Text,
+    province: Text,
+    city: Text,
+    district: Text,
     "pic_name": Text,
     "pic_phone": Phone,
     "pic_mail": Email,

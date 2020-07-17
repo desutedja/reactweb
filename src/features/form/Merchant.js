@@ -31,6 +31,9 @@ const merchantPayload = {
   "description": "",
   "in_building": 0,
   "address": "",
+  province: "",
+  city: "",
+  district: "",
   "lat": "",
   "long": "",
   "pic_name": "",
@@ -43,6 +46,9 @@ const merchantPayload = {
   "category_label": "",
   "in_building_label": "None",
   "account_bank_label": "",
+  province_label: "",
+  city_label: "",
+  district_label: "",
 }
 
 function Component() {
