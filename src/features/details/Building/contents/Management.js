@@ -133,6 +133,7 @@ function Component() {
                         setEdit(false);
                     }}
                     onSubmit={data => {
+                        console.log(data)
                     edit ?
                         dispatch(editBuildingManagement( {
                             "building_id": selected.id, building_name: selected.name, ...data,

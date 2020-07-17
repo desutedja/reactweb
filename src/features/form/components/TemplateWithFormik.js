@@ -21,8 +21,8 @@ function Template({ slice, payload, schema, renderChild = () => { }, formatValue
                     initialValues={payload}
                     validationSchema={schema}
                     onSubmit={(values, bag) => {
-                        console.log(bag);
                         const data = formatValues(values);
+                        console.log(data);
 
                         selected.id ?
                             slice === 'billing' ? unit.selected.id ? edit(data) : add(data) :

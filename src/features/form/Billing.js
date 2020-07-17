@@ -6,7 +6,7 @@ import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { months, yearsOnRange } from '../../utils';
-import { endpointAdmin } from '../../settings';
+import { endpointAdmin, endpointBilling } from '../../settings';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
 import { get } from '../slice';
 
@@ -19,6 +19,7 @@ import SubmitButton from './components/SubmitButton';
 const billingPayload = {
     service: "",
     name: "",
+    previous_usage: "",
     recent_usage: "",
     month: "",
     year: "",
@@ -44,14 +45,18 @@ const columnsService = [
 
 function Component() {
     const [modal, setModal] = useState(false);
+    const [previous, setPrevious] = useState('');
 
-    const [serviceUnit, setServiceUnit] = useState('');
+    const [service, setService] = useState({});
     const [services, setServices] = useState([]);
     const [servicesPageCount, setServicesPageCount] = useState(1);
     const [servicesLoading, setServicesLoading] = useState(false);
 
     const { selected, unit, loading } = useSelector(state => state.billing);
     const selectedUnit = unit.selected;
+
+    let dispatch = useDispatch();
+    let history = useHistory();
 
     useEffect(() => {
         dispatch(get(endpointAdmin + '/building/service' +
@@ -69,10 +74,17 @@ function Component() {
                 })));
             }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
 
-    let dispatch = useDispatch();
-    let history = useHistory();
+    // useEffect(() => {
+    //     dispatch(get(endpointBilling + '/billing/get_latest_usage_unit' +
+    //         '?unit_id=' + selected.id,
+    //         '&service_id=' + selected.building_id,
+
+    //         res => {
+    //             setPrevious(res.data.data.recent_usage);
+    //         }));
+    // }, [dispatch, selected.building_id, selected.id, service])
 
     const fetchData = useCallback((pageIndex, pageSize, search) => {
         setServicesLoading(true);
@@ -102,10 +114,10 @@ function Component() {
                 ...values,
                 recent_usage: parseFloat(values.recent_usage),
                 year: parseInt(values.year, 10),
-                resident_building: unit.selected.resident_building,
-                resident_unit: unit.selected.id,
-                resident_id: unit.selected.resident_id,
-                resident_name: unit.selected.resident_name,
+                resident_building: selected.building_id,
+                resident_unit: selected.id,
+                resident_id: selected.resident_id,
+                resident_name: selected.resident_name,
             })}
             edit={data => dispatch(editBillingUnitItem(data, unit.selected, history, selectedUnit.id))}
             add={data => dispatch(createBillingUnitItem(data, unit.selected, history))}
@@ -133,7 +145,7 @@ function Component() {
                                 pageCount={servicesPageCount}
                                 fetchData={fetchData}
                                 onClickRow={row => {
-                                    setServiceUnit(row.denom_unit);
+                                    setService(row);
                                     setModal(false);
                                 }}
                             />
@@ -141,12 +153,13 @@ function Component() {
 
                         <Input {...props} label="Service" options={services} onChange={el => {
                             console.log('changed');
-                            setServiceUnit(el.unit);
+                            setService(el.unit);
                         }} />
                         <Input {...props} label="Month" options={months} />
                         <Input {...props} label="Year" options={yearsOnRange(10)} />
-                        <Input {...props} label="Name" placeholder=""/>
-                        <Input {...props} label="Recent Usage" suffix={serviceUnit} />
+                        <Input {...props} label="Name" placeholder="Billing description e.g. Electricity for July 2020" />
+                        <Input {...props} label="Previous Usage" externalValue={services} suffix={service.unit} />
+                        <Input {...props} label="Recent Usage" suffix={service.unit} />
                         <Input {...props} label="Remarks" type="textarea" />
                         <SectionSeparator />
                         <SubmitButton loading={loading} errors={errors} />
