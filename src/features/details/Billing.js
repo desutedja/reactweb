@@ -58,6 +58,11 @@ function Component() {
             .filter(el => status === '' ? true : el.payment === status));
     }, [unit.items, active, status]);
 
+    useEffect(() => {
+        console.log(selected)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     return (
         <div>
             <div className="Container">
