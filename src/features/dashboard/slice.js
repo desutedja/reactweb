@@ -49,8 +49,7 @@ export const getSOS = (
   dispatch(startAsync());
 
   dispatch(get(chartEndpoint + '/sos/statistics' + 
-    '?timegroup=' + range +
-    '&limit=',
+    '?range=' + range,
     
     res => {
       console.log(res);

@@ -16,7 +16,7 @@ const colors = ['#2ad170', '#007bff', '#f7b733', '#ed4057'];
 
 function Component() {
     // task
-    const [range, setRange] = useState('daily');
+    const [range, setRange] = useState('dtd');
     const [pieData, setPieData] = useState([]);
     const [taskData, setTaskData] = useState({});
 
@@ -67,20 +67,20 @@ function Component() {
                                     display: 'flex',
                                 }}>
                                     <div
-                                        className={range === 'daily' ? "GroupActive" : "Group"}
-                                        onClick={() => setRange('daily') }
+                                        className={range === 'dtd' ? "GroupActive" : "Group"}
+                                        onClick={() => setRange('dtd') }
                                     >
                                         DTD
                                     </div>
                                     <div
-                                        className={range === 'monthly' ? "GroupActive" : "Group"}
-                                        onClick={() => setRange('monthly')}
+                                        className={range === 'mtd' ? "GroupActive" : "Group"}
+                                        onClick={() => setRange('mtd')}
                                     >
                                         MTD
                                     </div>
                                     <div
-                                        className={range === 'annual' ? "GroupActive" : "Group"}
-                                        onClick={() => setRange('annual')}
+                                        className={range === 'ytd' ? "GroupActive" : "Group"}
+                                        onClick={() => setRange('ytd')}
                                     >
                                         YTD
                                     </div>
@@ -89,7 +89,7 @@ function Component() {
                         </div>
                         <div className="row">
                             <div className="col pr-5 pb-3" style={{
-                                height: '400px'
+                                height: '390px'
                             }}>
                                 <ResponsiveContainer width='100%'>
                                     <AreaChart
@@ -136,7 +136,7 @@ function Component() {
                             <div className="col" style={{
                                 height: '300px'
                             }}>
-                                <ResponsiveContainer className="mt-4" width='100%'>
+                                <ResponsiveContainer className="mt-5" width='100%'>
                                     <PieChart>
                                         <Pie data={pieData} dataKey="num_of_task" nameKey="task_type"
                                         cx="50%" cy="50%" innerRadius={85} outerRadius={120}
@@ -150,11 +150,23 @@ function Component() {
                                 </ResponsiveContainer>
                             </div>
                         </div>
-                        <div className="row">
+                        <div className="border-bottom mt-5 pt-4 mx-auto"></div>
+                        <div className="row mt-5">
                             <div className="col">
-                                <ul>
-                                    {pieData.map((data) => (
-                                        <li>{data.task_type}</li>
+                                <ul className="row" style={{
+                                    listStyle: 'none',
+                                    padding: '0'
+                                }}>
+                                    {pieData.map((data, i) => (
+                                        <>
+                                        <li className="text-capitalize py-1 col-6">
+                                            <svg height="12" width="12" >
+                                                <circle cx="6" cy="6" r="6" fill={colors[i]} />
+                                                Sorry, your browser does not support inline SVG.  
+                                            </svg>
+                                            <span className="ml-3 h6">{data.task_type}</span>
+                                        </li>
+                                        </>
                                     ))}
                                 </ul>
                             </div>
