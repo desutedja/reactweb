@@ -6,7 +6,7 @@ import { FiSearch, FiDownload, FiPlus } from 'react-icons/fi';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Button from '../../components/Button';
-import { getBillingUnit, getBillingUnitDetails, downloadBillingUnit } from '../slices/billing';
+import { getBillingUnit, getBillingUnitDetails, downloadBillingUnit, setSelectedUnit } from '../slices/billing';
 import { endpointAdmin } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
 import { get } from '../slice';
@@ -51,7 +51,8 @@ function Component() {
         { Header: 'Action', accessor: row => (
             <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
                 onClick={() => {
-                    dispatch(setSelected(row))
+                    dispatch(setSelected(row));
+                    dispatch(setSelectedUnit({}));
                     dispatch(getBillingUnitDetails(row, history, url))
                     history.push(url + '/item/add');
                 }}

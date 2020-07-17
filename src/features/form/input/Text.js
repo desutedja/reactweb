@@ -14,7 +14,7 @@ function TextInput({
     const fixedName = name + (options ? '_label' : '');
 
     useEffect(() => {
-        externalValue && setFieldValue(fixedName, externalValue);
+        (externalValue || externalValue === 0) && setFieldValue(fixedName, externalValue);
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [externalValue])
 
