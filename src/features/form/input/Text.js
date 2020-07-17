@@ -23,15 +23,13 @@ function TextInput({
         options && options.length === 0 && setFieldValue(fixedName, 'Loading...')
         options && values[fixedName] === 'Loading...' && setFieldValue(fixedName, '');
 
-        options && values[name] && console.log(values[name], 'tes: ', options.find(el => el.value == values[name]));
-
-        options && options.length > 0 && !values[fixedName] && values[name] &&
+        options && !values[fixedName] && values[name] &&
             setFieldValue(fixedName,
                 // eslint-disable-next-line eqeqeq
-                options.find(el => el.value == values[name]).label);
+                options.find(el => el.value == values[name])?.label);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fixedName, name, options, setFieldValue])
+    }, [options])
 
     return (
         <>

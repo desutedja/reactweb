@@ -19,7 +19,7 @@ const residentPayload = {
     firstname: "",
     lastname: "",
     phone: "",
-    birthplace: "",
+    birthplace: "others",
     birth_date: "",
     nationality: "",
     gender: "P",
@@ -33,7 +33,7 @@ const residentPayload = {
     account_name: "",
     account_no: "",
 
-    birthplace_label: "",
+    birthplace_label: "Others",
     nationality_label: "",
     marital_status_label: "",
     occupation_label: "",
