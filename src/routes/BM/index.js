@@ -27,7 +27,6 @@ const modules = [
         route: "/dashboard",
         subroutes: [
             '/building',
-            '/transaction',
             '/task',
             '/advertisement',
         ],
