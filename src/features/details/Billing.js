@@ -11,7 +11,7 @@ import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteB
 import { FiPlus } from 'react-icons/fi';
 
 const exception = [
-    'created_on', 'modified_on', 'deleted', 'billing_item'
+    'created_on', 'modified_on', 'deleted', 'billing_item', 'id'
 ];
 
 const columns = [
@@ -59,34 +59,33 @@ function Component() {
     }, [unit.items, active, status]);
 
     useEffect(() => {
-        console.log(selected)
+        console.log(Object.keys(selected))
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
-        <div>
-            <div className="Container">
-                <div className="Details" style={{
-
-                }}>
-                    {Object.keys(selected).filter(el => !exception.includes(el))
-                        .map(el =>
-                            <LabeledText
-                                key={el}
-                                label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
-                                value={selected[el]}
-                            />
-                        )}
+        <div className="row no-gutters">
+            <div className="col-12 col-md-6 col-lg-5">
+                <div className="Container">
+                    <div className="Details m-0">
+                        {Object.keys(selected).filter(el => !exception.includes(el))
+                            .map(el =>
+                                <LabeledText
+                                    key={el}
+                                    label={el.length > 2 ? el.replace('_', ' ') : el.toUpperCase()}
+                                    value={selected[el]}
+                                />
+                            )}
+                    </div>
+                    {/* <div className="Photos">
+                        <Button label="Edit" onClick={() => history.push(
+                            url.split('/').slice(0, -1).join('/') + "/edit"
+                        )} />
+                    </div> */}
                 </div>
-                {/* <div className="Photos">
-                    <Button label="Edit" onClick={() => history.push(
-                        url.split('/').slice(0, -1).join('/') + "/edit"
-                    )} />
-                </div> */}
             </div>
-            <div style={{
-                display: 'flex',
-                marginTop: 16,
+            <div className="col-12 col-md" style={{
+                display: 'flex'
             }}>
                 {unit.items.length > 0 && <div className="Container" style={{
                     flexDirection: 'column',
