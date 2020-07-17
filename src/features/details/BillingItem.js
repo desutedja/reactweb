@@ -40,8 +40,8 @@ function Component() {
                         <Button label="Edit" onClick={() => history.push(
                             url.split('/').slice(0, -1).join('/') + "/edit"
                         )} />
-                        <Button label="Add Charge" onClick={() => { }} />
-                        {unit.selected.payment === "unpaid" && <Button label="Set Paid" onClick={() => {
+                        <Button label="Add Additional Charge" onClick={() => { }} />
+                        {unit.selected.payment === "unpaid" && <Button label="Set as Paid" onClick={() => {
                             dispatch(payByCash( {
                                 "id": unit.selected.id,
                                 "total": unit.selected.total,
