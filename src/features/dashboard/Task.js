@@ -16,12 +16,12 @@ const colors = ['#2ad170', '#007bff', '#f7b733', '#ed4057'];
 
 function Component() {
     // task
+    const { sosData } = useSelector(state => state.dashboard);
+
     const [range, setRange] = useState('dtd');
     const [pieData, setPieData] = useState([]);
     const [taskData, setTaskData] = useState({});
-
-    
-    const { sosData } = useSelector(state => state.dashboard);
+    const [sosDataFormatted, setSosDataFormatted] = useState()
 
     let dispatch = useDispatch();
 
@@ -31,25 +31,22 @@ function Component() {
 
     useEffect(() => {
         dispatch(get(endpointTask + '/admin/sa/statistics',  res => {
-            const pieDatas = res.data.data.ticket_by_category
-            console.log(pieDatas)
-            setPieData(pieDatas);
+            setPieData(res.data.data.ticket_by_category);
             setTaskData(res.data.data);
         }));
     }, [dispatch]);
 
     useEffect(() => {
-        // console.log(pieData)
-    }, [pieData])
-
-    const sosDataFormatted = sosData.map((data, i) => (
-        {
-            SOS: data.num_of_sos,
-            Time: dateFormatter(data.time),
-            index: i
-        }
-    ))
-    sosDataFormatted.sort((a, b) => b.index - a.index)
+        const sosDataFormatted = sosData.map((data, i) => (
+            {
+                SOS: data.num_of_sos,
+                Time: dateFormatter(data.time),
+                index: i
+            }
+        ))
+        sosDataFormatted.sort((a, b) => b.index - a.index)
+        setSosDataFormatted(sosDataFormatted)
+    }, [sosData]);
 
     return (
         <div style={{
