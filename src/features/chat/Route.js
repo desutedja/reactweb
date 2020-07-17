@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
+import moment from 'moment'
 import Input from '../../components/Input';
 import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
@@ -150,7 +151,7 @@ function Component() {
                                                 "Message-own" : "Message"}>{el.message}
                                         </div>
                                         <div className="MessageTime">
-                                            {timeFormatter(el.timestamp, '-', 7)}
+                                            {moment.unix(el.unix_timestamp).fromNow()}
                                         </div>
                                     </div>
                                     {messages[index + 1]?.username !== el.username &&
@@ -177,7 +178,7 @@ function Component() {
                         <IconButton onClick={() => {
                             sendMessage()
                         }}>
-                            <FiSend />
+                            <FiSend style={{ marginLeft: '10' }} size="30"/>
                         </IconButton>
                     </Loading>
                 </form>
@@ -208,7 +209,8 @@ function Component() {
                                             + ': ' +
                                             (el.last_comment_message.length > 20 ?
                                                 el.last_comment_message.slice(0, 20) + '...'
-                                                : el.last_comment_message)}</p>
+                                                : el.last_comment_message)} 
+                                                {" (" + moment.unix(el.last_comment.unix_timestamp).fromNow() + ")"} </p>
                                     </div>
                                     <div className="Room-right">
                                         {!!el.count_notif &&
