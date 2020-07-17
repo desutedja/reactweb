@@ -4,7 +4,7 @@ import NoSsr from '@material-ui/core/NoSsr';
 import { FiX, FiCheck } from 'react-icons/fi';
 
 function MultiSelectInput({
-    placeholder, options, hint, defaultValue = [], onBlur = () => { }, onInputChange = () => { },
+    placeholder, options, defaultValue = [], onBlur = () => { }, onInputChange = () => { },
     onChange = () => { }, ...props
 }) {
     const { setFieldValue, name, fixedName } = props;
@@ -48,7 +48,6 @@ function MultiSelectInput({
         <NoSsr>
             <div>
                 <div {...getRootProps()}>
-                    {hint && <div><i>{hint}</i></div>}
                     <div className="Input-container">
                         <input {...getInputProps()} placeholder={placeholder} />
                     </div>

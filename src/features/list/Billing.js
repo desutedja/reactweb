@@ -12,6 +12,7 @@ import { toSentenceCase, toMoney } from '../../utils';
 import { get } from '../slice';
 
 import Template from './components/Template';
+import { setSelected } from '../slices/resident';
 
 function Component() {
 
@@ -50,6 +51,7 @@ function Component() {
         { Header: 'Action', accessor: row => (
             <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
                 onClick={() => {
+                    dispatch(setSelected(row))
                     dispatch(getBillingUnitDetails(row, history, url))
                     history.push(url + '/item/add');
                 }}
