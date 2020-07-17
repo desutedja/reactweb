@@ -66,7 +66,7 @@ function Component() {
     return (
         <div>
             <div className="Container">
-                <div className="Details" style={{
+                <div className="Details ml-0" style={{
 
                 }}>
                     {Object.keys(selected).filter(el => !exception.includes(el))

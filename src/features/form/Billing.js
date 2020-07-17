@@ -6,7 +6,7 @@ import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { months, yearsOnRange } from '../../utils';
-import { endpointAdmin, endpointBilling } from '../../settings';
+import { endpointAdmin } from '../../settings';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
 import { get } from '../slice';
 
@@ -45,7 +45,7 @@ const columnsService = [
 
 function Component() {
     const [modal, setModal] = useState(false);
-    const [previous, setPrevious] = useState('');
+    // const [previous, setPrevious] = useState('');
 
     const [service, setService] = useState({});
     const [services, setServices] = useState([]);
