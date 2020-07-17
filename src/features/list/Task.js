@@ -14,7 +14,7 @@ import Resident from '../../components/cells/Resident';
 import Staff from '../../components/cells/Staff';
 
 import { useSelector } from 'react-redux';
-import { toSentenceCase, dateTimeFormatter, toEllipsis } from '../../utils';
+import { toSentenceCase, dateTimeFormatter } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import { getTask, resolveTask, reassignTask, setSelected } from '../slices/task';
 import { get } from '../slice';

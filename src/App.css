@@ -192,6 +192,7 @@
 }
 
 .SubmenuItem:hover {
+  color: white;
   background-color: var(--accent-color);
 }
 
