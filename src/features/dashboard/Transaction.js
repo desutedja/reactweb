@@ -19,8 +19,8 @@ function Component() {
     const [trxData, setTrxData] = useState([]);
     const [
         range,
-        // setRange
-    ] = useState('ytd');
+        setRange
+    ] = useState('mtd');
     const [
         scale,
         // setScale
@@ -51,8 +51,7 @@ function Component() {
     let dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(get(endpointMerchant + '/admin/statistic/transactiongraph?type=' + range + '&scale='
-            + scale,
+        dispatch(get(endpointMerchant + '/admin/statistic/transactiongraph?range=' + range,
              res => {
                 setTrxData(res.data.data.graph);
             }))
@@ -101,7 +100,32 @@ function Component() {
                     flex: 3,
                     flexDirection: 'column',
                 }}>
-                    <h5 className="mb-4">Transaction Statistics</h5>
+                    <div className="row no-gutters">
+                        <div className="col">
+                            <h5 className="mb-4">Transaction Statistics</h5>
+                        </div>
+                        <div className="col-auto d-flex">
+                            <div
+                                className={range === 'dtd' ? "GroupActive" : "Group"}
+                                onClick={() => setRange('dtd') }
+                            >
+                                DTD
+                            </div>
+                            <div
+                                className={range === 'mtd' ? "GroupActive" : "Group"}
+                                onClick={() => setRange('mtd')}
+                            >
+                                MTD
+                            </div>
+                            <div
+                                className={range === 'ytd' ? "GroupActive" : "Group"}
+                                onClick={() => setRange('ytd')}
+                            >
+                                YTD
+                            </div>
+                        </div>
+                    </div>
+                    
                     {/* {JSON.stringify(trxData)} */}
                     <ResponsiveContainer width='100%'>
                         <ComposedChart

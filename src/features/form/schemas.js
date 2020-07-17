@@ -5,8 +5,7 @@ const defaultRequiredError = 'This field is required.';
 const Text = Yup.string().required(defaultRequiredError);
 const TextOptional = Yup.string();
 
-const Number = Yup.number("This value shoud be number.")
-    .positive("This value should be positive.").required(defaultRequiredError);
+const Number = Yup.number("This value shoud be number.").required(defaultRequiredError);
 
 const Phone = Yup.string()
     .matches(/^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, "Phone number should not contain unnecesarry characters.")
