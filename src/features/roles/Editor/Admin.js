@@ -1,9 +1,9 @@
 import React, {  } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
-import List from '../list/Admin';
-import AdminForm from '../form/Admin';
-import AdminDetails from '../details/Admin';
+import List from '../../list/Admin';
+import AdminForm from '../../form/Admin';
+import AdminDetails from '../../details/Admin';
 
 function Component() {
     let { path } = useRouteMatch();

@@ -8,7 +8,7 @@ import { Redirect, Route } from 'react-router-dom';
 import Template from '../components/Template';
 import { useSelector } from 'react-redux';
 
-import Dashboard from '../../dashboard/Route';
+import Dashboard from './Dashboard';
 import Ads from './Ads';
 import Announcement from './Announcement';
 import Billing from './Billing';
@@ -18,7 +18,7 @@ import Resident from './Resident';
 import Staff from './Staff';
 import Task from './Task';
 import Settings from '../../settings';
-import Chat from '../../chat/Route';
+import Chat from '../../chat';
 
 const modules = [
     {

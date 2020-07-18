@@ -15,7 +15,7 @@ import {
 } from "react-icons/ri";
 import { FaIdBadge } from 'react-icons/fa';
 
-import Dashboard from '../../dashboard/Route';
+import Dashboard from './Dashboard';
 import Ads from './Ads';
 import Announcement from './Announcement';
 import Billing from './Billing';
@@ -27,9 +27,10 @@ import Resident from './Resident';
 import Staff from './Staff';
 import Task from './Task';
 import Transaction from './Transaction';
-import Admin from '../../admin';
+import Admin from './Admin';
+
 import Settings from '../../settings';
-import Chat from '../../chat/Route';
+import Chat from '../../chat';
 
 import Template from '../components/Template';
 import { Route, Redirect } from 'react-router-dom';

@@ -1,12 +1,9 @@
 import React, { } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 
-import Task from './Task';
-import Transaction from './Transaction';
-import Billing from './Billing';
-import Advertisement from './Advertisement';
-
-import './style.css';
+import Task from '../../dashboard/Task';
+import Billing from '../../dashboard/Billing';
+import Advertisement from '../../dashboard/Advertisement';
 
 function Component() {
     let { path } = useRouteMatch();
@@ -22,9 +19,6 @@ function Component() {
             </Route>
             <Route path={`${path}/building`}>
                 <Billing />
-            </Route>
-            <Route path={`${path}/transaction`}>
-                <Transaction />
             </Route>
         </Switch>
     )
