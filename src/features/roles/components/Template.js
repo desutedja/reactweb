@@ -57,34 +57,34 @@ function Component({ role, children }) {
                     // On comment has been read by user
                     console.log('read', data)
                 },
+                loginSuccessCallback: function () {
+                    // On success
+                    console.log('Qiscus login: ' + Qiscus.isLogin);
+
+                    dispatch(setQiscus(Qiscus));
+
+                    Axios.post('https://api.qiscus.com/api/v2.1/rest/add_room_participants', {
+                        "room_id": "19278255",
+                        "user_ids": [userID],
+                    }, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "QISCUS-SDK-APP-ID": "fastel-sa-hkxoyooktyv",
+                            "QISCUS-SDK-SECRET": "20b6212e9782708f9260032856be6fcb",
+                        }
+                    })
+                        .then(res => console.log('RESULT Qiscuss: ', res))
+                        .catch(err => console.log('ERROR Qiscuss: ', err))
+                },
             },
         }).then(() => {
             console.log('init success');
             console.log(Qiscus);
 
-            !Qiscus.isLogin && 
-            // console.log('run because:', Qiscus.isLogin)
+            !Qiscus.isLogin &&
+                // console.log('run because:', Qiscus.isLogin)
                 Qiscus.setUser(userID, 'kucing', user.firstname + ' ' + user.lastname,
                     'https://avatars.dicebear.com/api/male/' + user.email + '.svg', user)
-                    .then(function () {
-                        // On success
-                        console.log('Qiscus login: ' + Qiscus.isLogin);
-
-                        dispatch(setQiscus(Qiscus));
-
-                        Axios.post('https://api.qiscus.com/api/v2.1/rest/add_room_participants', {
-                            "room_id": "19278255",
-                            "user_ids": [userID],
-                        }, {
-                            headers: {
-                                "Content-Type": "application/json",
-                                "QISCUS-SDK-APP-ID": "fastel-sa-hkxoyooktyv",
-                                "QISCUS-SDK-SECRET": "20b6212e9782708f9260032856be6fcb",
-                            }
-                        })
-                            .then(res => console.log('RESULT Qiscuss: ', res))
-                            .catch(err => console.log('ERROR Qiscuss: ', err))
-                    })
         }).catch(err => console.log(err))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
@@ -256,7 +256,7 @@ function Component({ role, children }) {
                                         }} /> : <FiChevronDown style={{
                                             marginRight: 16,
                                             width: '2rem'
-                                        }} /> : null} 
+                                        }} /> : null}
                                 </div>
                                 {menuWide && expanded === label && <div className="Submenu">
                                     {subpaths.map(sub => <div
