@@ -3,29 +3,29 @@ import {
     FiHome, FiUsers, FiZap, FiRss, FiVolume2, FiBarChart2
 } from "react-icons/fi";
 import { RiStore2Line, RiTaskLine, RiCustomerService2Line } from 'react-icons/ri';
+import { Redirect, Route } from 'react-router-dom';
 
 import Template from '../components/Template';
 import { useSelector } from 'react-redux';
 
-import Dashboard from '../../features/dashboard/Route';
-import Ads from '../../features/routes/Ads';
-import Announcement from '../../features/routes/Announcement';
-import Billing from '../../features/routes/Billing';
-import Building from '../../features/routes/Building';
-import Resident from '../../features/routes/Resident';
-import Staff from '../../features/routes/Staff';
-import Task from '../../features/routes/Task';
-import Merchant from '../../features/routes/Merchant';
-
-// eslint-disable-next-line no-unused-vars
-import { MdSettingsInputSvideo } from 'react-icons/md';
+import Dashboard from '../../dashboard/Route';
+import Ads from './Ads';
+import Announcement from './Announcement';
+import Billing from './Billing';
+import Building from './Building';
+import Merchant from './Merchant';
+import Resident from './Resident';
+import Staff from './Staff';
+import Task from './Task';
+import Settings from '../../settings';
+import Chat from '../../chat/Route';
 
 const modules = [
     {
         icon: <FiBarChart2 className="MenuItem-icon" />,
         label: "Dashboard",
-        route: "/dashboard",
-        subroutes: [
+        path: "/dashboard",
+        subpaths: [
             '/building',
             '/task',
             '/advertisement',
@@ -35,20 +35,20 @@ const modules = [
     {
         icon: <FiHome className="MenuItem-icon" />,
         label: "Building",
-        route: "/building",
+        path: "/building",
         component: <Building />,
     },
     {
         icon: <FiUsers className="MenuItem-icon" />,
         label: "Resident",
-        route: "/resident",
+        path: "/resident",
         component: <Resident />,
     },
     {
         icon: <FiZap className="MenuItem-icon" />,
         label: "Billing",
-        route: "/billing",
-        subroutes: [
+        path: "/billing",
+        subpaths: [
             '/unit',
             '/settlement',
             '/disbursement',
@@ -58,31 +58,31 @@ const modules = [
     {
         icon: <RiCustomerService2Line className="MenuItem-icon" />,
         label: "Staff",
-        route: "/staff",
+        path: "/staff",
         component: <Staff />,
     },
     {
         icon: <RiTaskLine className="MenuItem-icon" />,
         label: "Task",
-        route: "/task",
+        path: "/task",
         component: <Task />,
     },
     {
         icon: <RiStore2Line className="MenuItem-icon" />,
         label: "Merchant",
-        route: "/merchant",
+        path: "/merchant",
         component: <Merchant />,
     },
     {
         icon: <FiRss className="MenuItem-icon" />,
         label: "Advertisement",
-        route: "/advertisement",
+        path: "/advertisement",
         component: <Ads />,
     },
     {
         icon: <FiVolume2 className="MenuItem-icon" />,
         label: "Announcement",
-        route: "/announcement",
+        path: "/announcement",
         component: <Announcement />,
     },
 ];
@@ -90,7 +90,6 @@ const modules = [
 function Component() {
 
     const { blacklist_modules } = useSelector(state => state.auth.user);
-    // eslint-disable-next-line no-unused-vars
     const [menus, setMenus] = useState(modules || [])
 
     useEffect(() => {
@@ -104,7 +103,24 @@ function Component() {
     }, [blacklist_modules])
 
     return (
-        <Template role="bm" menu={menus} />
+        <Template role="bm">
+            <Redirect exact from={"/bm"} to={"/bm" + menus[0].path} />
+            {menus.map(el => <Route
+                key={el.label}
+                label={el.label}
+                icon={el.icon}
+                path={"/bm" + el.path}
+                subpaths={el.subpaths}
+            >
+                {el.component}
+            </Route>)}
+            <Route path={"/bm/chat"}>
+                <Chat />
+            </Route>
+            <Route path={"/bm/settings"}>
+                <Settings />
+            </Route>
+        </Template>
     )
 }
 

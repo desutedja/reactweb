@@ -79,6 +79,7 @@ function Component() {
             schema={billingSchema}
             formatValues={values => ({
                 ...values,
+                previous_usage: parseFloat(values.previous_usage),
                 recent_usage: parseFloat(values.recent_usage),
                 year: parseInt(values.year, 10),
                 resident_building: selected.building_id,

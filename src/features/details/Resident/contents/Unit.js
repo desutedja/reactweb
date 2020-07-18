@@ -45,7 +45,7 @@ function Component({ id }) {
     const [subAccount, setSubAccount] = useState({});
     const [ownershipStatus, setOwnershipStatus] = useState('');
 
-    const [mainOwner, setMainOwner] = useState({});
+    const [mainOwner, setMainOwner] = useState();
 
     const [search, setSearch] = useState('');
 
@@ -74,24 +74,28 @@ function Component({ id }) {
     }, [dispatch, refreshToggle, id])
 
     useEffect(() => {
-        addUnitStep === 3 && selectedUnit !== '' && dispatch(get(endpointResident + '/management/resident/get_main_owner/' + selectedUnit.value.id, 
-                   res => {
-                       if (res.data.data.resident && res.data.data.resident.id !== 0) {
-                           setMainOwner(res.data.data.resident);
-                       }
-                   }))
+        addUnitStep === 3 && selectedUnit !== '' && dispatch(get(endpointResident + '/management/resident/get_main_owner/' + selectedUnit.value.id,
+            res => {
+                if (res.data.data.resident && res.data.data.resident.id !== 0) {
+                    setMainOwner(res.data.data.resident);
+                }
+            }))
     }, [addUnitStep, selectedUnit, dispatch]);
 
     useEffect(() => {
-        addSubAccount  && addSubAccountStep === 1 && (search.length >= 1) && 
-            dispatch(get(endpointResident + '/management/resident/read' +
-            '?page=1' +
-            '&limit=5' +
-            '&search=' + search,
+        console.log('mainowner' + mainOwner);
+    }, [mainOwner])
 
-            res => {
-                setResidents(res.data.data.items);
-            }))
+    useEffect(() => {
+        addSubAccount && addSubAccountStep === 1 && (search.length >= 1) &&
+            dispatch(get(endpointResident + '/management/resident/read' +
+                '?page=1' +
+                '&limit=5' +
+                '&search=' + search,
+
+                res => {
+                    setResidents(res.data.data.items);
+                }))
     }, [addSubAccount, addSubAccountStep, dispatch, search]);
 
     useEffect(() => {
@@ -159,44 +163,44 @@ function Component({ id }) {
         return (
             <>
                 <div >
-                        <div style={{ marginBottom: '1vw'  }} ><b>{subs.length} sub accounts in this unit: </b></div>
-                        <div style={{ display: 'flex', flexWrap: 'wrap' }} >
-                        { subs.map(el => 
-                            <div style={{ display: 'flex', marginLeft: '50px' }} onClick={ () => dispatch(refresh()) } >
-                                <Resident id={el.id} data={el} onClickPath={ removeLastFromPath(path) }/>
-                                <FiX size={15} style={{ marginTop: '10px', cursor: 'pointer'}} 
-                                    onClick={ () => {setConfirmDelete(true); setSelectedUnit(item); setSubAccount(el)} } />
+                    <div style={{ marginBottom: '1vw' }} ><b>{subs.length} sub accounts in this unit: </b></div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap' }} >
+                        {subs.map(el =>
+                            <div style={{ display: 'flex', marginLeft: '50px' }} onClick={() => dispatch(refresh())} >
+                                <Resident id={el.id} data={el} onClickPath={removeLastFromPath(path)} />
+                                <FiX size={15} style={{ marginTop: '10px', cursor: 'pointer' }}
+                                    onClick={() => { setConfirmDelete(true); setSelectedUnit(item); setSubAccount(el) }} />
                             </div>
-                          )}
-                          { subs.length < 5 && 
+                        )}
+                        {subs.length < 5 &&
                             <div style={{ padding: '10px', marginLeft: '50px' }} >
                                 <span className="Link"
                                     onClick={() => {
-                                        setAddSubAccount(true); 
-                                        setAddSubAccountStep(1); 
+                                        setAddSubAccount(true);
+                                        setAddSubAccountStep(1);
                                         setSelectedUnit(item);
-                                    } }> 
-                                    <FiPlus/> Add Subaccount </span>
-                            </div> }
-                        </div>
+                                    }}>
+                                    <FiPlus /> Add Subaccount </span>
+                            </div>}
+                    </div>
                 </div>
             </>
         )
     }
 
-    function SubAccountItemList(resident, itemOnClick) { 
-        return <Resident id={resident.value.id} data={resident.value} onClick={itemOnClick}/>
+    function SubAccountItemList(resident, itemOnClick) {
+        return <Resident id={resident.value.id} data={resident.value} onClick={itemOnClick} />
     }
 
     function AddSubAccountNotFound() {
         return (<div style={{ margin: "20px 0" }} ><p align="center">No resident with specified name or email is found. </p>
-               <span onClick={() => history.push({pathname: removeLastFromPath(path) + '/add'})}
-                    className="Link">Please register here.</span></div>)
+            <span onClick={() => history.push({ pathname: removeLastFromPath(path) + '/add' })}
+                className="Link">Please register here.</span></div>)
     }
 
     return (
         <>
-            <Modal 
+            <Modal
                 isOpen={confirmDelete}
                 disableHeader={true}
                 onClick={deleteSub}
@@ -206,7 +210,7 @@ function Component({ id }) {
             >
                 Are you sure you want to remove <b>{subAccount.firstname + ' ' + subAccount.lastname}</b> from this unit?
             </Modal>
-            <Modal 
+            <Modal
                 isOpen={confirmDeleteUnit}
                 disableHeader={true}
                 onClick={() => {
@@ -231,7 +235,7 @@ function Component({ id }) {
                 onClickSecondary={addSubBackFunction}
                 disablePrimary={addSubAccountStep !== 3}
                 toggle={() => setAddSubAccount(false)}
-                >
+            >
                 {addSubAccountStep === 1 && <>
                     <Input label="Search Resident Email or Name"
                         compact
@@ -252,11 +256,11 @@ function Component({ id }) {
                     />
                 </>}
                 {addSubAccountStep === 2 && <>
-                    <Resident id={subAccount.id} data={subAccount} onClick={()=>{}}/>
-                    <hr/>
+                    <Resident id={subAccount.id} data={subAccount} onClick={() => { }} />
+                    <hr />
                     <p>Ownership status: </p>
                     <Filter
-                        data={[{label: "Rent", value: "rent"}, {label: "Own", value: "own"}]}
+                        data={[{ label: "Rent", value: "rent" }, { label: "Own", value: "own" }]}
                         onClick={(el) => {
                             setOwnershipStatus(el);
                             setAddSubAccountStep(3);
@@ -264,7 +268,7 @@ function Component({ id }) {
                     />
                 </>}
                 {addSubAccountStep === 3 && <>
-                    <Resident id={subAccount.id} data={subAccount} onClick={()=>{}}/>
+                    <Resident id={subAccount.id} data={subAccount} onClick={() => { }} />
                     <Input fullwidth type="button" label={"Sub Account Ownership Status"} inputValue={ownershipStatus.label} onClick={() => { }} />
                 </>}
             </Modal>
@@ -310,8 +314,8 @@ function Component({ id }) {
                     <Filter
                         data={units.map((el) => {
                             return {
-                                label: "Room " + el.number + " - " + 
-                                        toSentenceCase(el.section_type) + " " + el.section_name,
+                                label: "Room " + el.number + " - " +
+                                    toSentenceCase(el.section_type) + " " + el.section_name,
                                 value: el
                             };
                         })}
@@ -333,25 +337,25 @@ function Component({ id }) {
                             toSentenceCase(selectedUnit.value.section_type) + " " +
                             selectedUnit.value.section_name + " "
                         } onClick={() => {
-                            
+
                         }} />
                         <SectionSeparator />
                         {!mainOwner ?
-                        <Input fullwidth label="Status" type="select"
-                            inputValue={status}
-                            setInputValue={setStatus}
-                            options={[
-                                { value: 'own', label: 'Own' },
-                                { value: 'rent', label: 'Rent' },
-                            ]}
-                        /> : mainOwner.id === id ?
-                        <p>This resident is already the owner of this unit.</p> :
-                        <>
-                        <p>This unit already has main owner, click below to get to the main owner page : </p>
-                        <div onClick={() => {setAddUnitStep(1); setAddUnit(false)} } style={{ display: 'flex', justifyContent: 'space-between' }} >
-                            <Resident id={mainOwner.id} data={mainOwner} onClickPath={removeLastFromPath(path)} />
-                        </div>
-                        </>}
+                            <Input fullwidth label="Status" type="select"
+                                inputValue={status}
+                                setInputValue={setStatus}
+                                options={[
+                                    { value: 'own', label: 'Own' },
+                                    { value: 'rent', label: 'Rent' },
+                                ]}
+                            /> : mainOwner.id === id ?
+                                <p>This resident is already the owner of this unit.</p> :
+                                <>
+                                    <p>This unit already has main owner, click below to get to the main owner page : </p>
+                                    <div onClick={() => { setAddUnitStep(1); setAddUnit(false) }} style={{ display: 'flex', justifyContent: 'space-between' }} >
+                                        <Resident id={mainOwner.id} data={mainOwner} onClickPath={removeLastFromPath(path)} />
+                                    </div>
+                                </>}
                     </form>
                 </>}
             </Modal>
@@ -359,10 +363,10 @@ function Component({ id }) {
                 totalItems={unit.items.length}
                 noContainer={true}
                 columns={columnsUnit}
-                data={unit.items.map( el =>
-                    el.level === 'main' ? ({ 
-                        expandable: true, 
-                        subComponent: SubAccountList, 
+                data={unit.items.map(el =>
+                    el.level === 'main' ? ({
+                        expandable: true,
+                        subComponent: SubAccountList,
                         ...el
                     }) : el
                 )}

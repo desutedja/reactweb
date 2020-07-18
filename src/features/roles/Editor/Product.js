@@ -1,8 +1,8 @@
 import React, { } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
-import List from '../list/Product';
-import Details from '../details/Product';
+import List from '../../list/Product';
+import Details from '../../details/Product';
 
 function Component() {
     let { path } = useRouteMatch();

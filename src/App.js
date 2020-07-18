@@ -16,8 +16,8 @@ import "./components/table.css";
 
 import Login from "./features/auth/Login";
 import OTP from "./features/auth/OTP";
-import SARoutes from "./routes/SA";
-import BMRoutes from "./routes/BM";
+import Editor from "./features/roles/Editor";
+import BM from "./features/roles/BM";
 import { store, persistor } from "./store";
 
 function SAMain({ children, ...other }) {
@@ -80,7 +80,7 @@ function App() {
                 <OTP role="sa" />
               </Route>
               <SAMain path="/sa">
-                <SARoutes />
+                <Editor />
               </SAMain>
               {/* bm routes */}
               <Route path="/bm/login">
@@ -90,7 +90,7 @@ function App() {
                 <OTP role="bm" />
               </Route>
               <BMMain path="/bm">
-                <BMRoutes />
+                <BM />
               </BMMain>
             </Switch>
           </div>

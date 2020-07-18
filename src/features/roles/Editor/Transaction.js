@@ -2,10 +2,10 @@ import React, {  } from 'react';
 
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 
-import List from '../list/Transaction';
-import Details from '../details/Transaction';
-import Settlement from '../settlement/Transaction';
-import Disbursement from '../disbursement/Transaction';
+import List from '../../list/Transaction';
+import Details from '../../details/Transaction';
+import Settlement from '../../settlement/Transaction';
+import Disbursement from '../../disbursement/Transaction';
 
 function Component() {
     

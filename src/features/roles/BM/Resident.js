@@ -1,13 +1,11 @@
 import React, { } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
-import Add from '../form/Task';
-import List from '../list/Task';
-import Details from '../details/Task';
+import List from '../../list/Resident';
+import Add from '../../form/Resident';
+import Details from '../../details/Resident';
 
 function Component() {
-    const { role } = useSelector(state => state.auth);
     let { path } = useRouteMatch();
 
     return (
@@ -15,9 +13,12 @@ function Component() {
             <Route exact path={path}>
                 <List />
             </Route>
-            {role === 'bm' && <Route path={`${path}/add`}>
+            <Route path={`${path}/add`}>
                 <Add />
-            </Route>}
+            </Route>
+            <Route path={`${path}/edit`}>
+                <Add />
+            </Route>
             <Route path={`${path}/:id`}>
                 <Details />
             </Route>

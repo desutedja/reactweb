@@ -1,47 +1,45 @@
-import React, {  } from 'react';
-import { 
+import React, { } from 'react';
+import {
     FiUsers,
-    // FiHome,
     FiBarChart2,
     FiShoppingCart,
     FiZap,
     FiVolume2,
     FiRss,
-    // FiTarget,
     FiBriefcase,
-    // FiAward,
     FiShoppingBag,
-    // FiDollarSign
 } from "react-icons/fi";
 import {
     RiStore2Line, RiTaskLine,
-    // RiAdvertisementLine,
     RiBuilding2Line, RiCustomerService2Line,
 } from "react-icons/ri";
+import { FaIdBadge } from 'react-icons/fa';
 
-import Dashboard from '../../features/dashboard/Route';
-import Ads from '../../features/routes/Ads';
-import Announcement from '../../features/routes/Announcement';
-import Billing from '../../features/routes/Billing';
-import Building from '../../features/routes/Building';
-import Management from '../../features/routes/Management';
-import Merchant from '../../features/routes/Merchant';
-import Product from '../../features/routes/Product';
-import Resident from '../../features/routes/Resident';
-import Staff from '../../features/routes/Staff';
-import Task from '../../features/routes/Task';
-import Transaction from '../../features/routes/Transaction';
-import Admin from '../../features/admin';
+import Dashboard from '../../dashboard/Route';
+import Ads from './Ads';
+import Announcement from './Announcement';
+import Billing from './Billing';
+import Building from './Building';
+import Management from './Management';
+import Merchant from './Merchant';
+import Product from './Product';
+import Resident from './Resident';
+import Staff from './Staff';
+import Task from './Task';
+import Transaction from './Transaction';
+import Admin from '../../admin';
+import Settings from '../../settings';
+import Chat from '../../chat/Route';
 
 import Template from '../components/Template';
-import { FaIdBadge } from 'react-icons/fa';
+import { Route, Redirect } from 'react-router-dom';
 
 const menu = [
     {
         icon: <FiBarChart2 className="MenuItem-icon" />,
         label: "Dashboard",
-        route: "/dashboard",
-        subroutes: [
+        path: "/dashboard",
+        subpaths: [
             '/building',
             '/transaction',
             '/task',
@@ -52,26 +50,26 @@ const menu = [
     {
         icon: <FiBriefcase className="MenuItem-icon" />,
         label: "Management",
-        route: "/management",
+        path: "/management",
         component: <Management />,
     },
     {
         icon: <RiBuilding2Line className="MenuItem-icon" />,
         label: "Building",
-        route: "/building",
+        path: "/building",
         component: <Building />,
     },
     {
         icon: <FiUsers className="MenuItem-icon" />,
         label: "Resident",
-        route: "/resident",
+        path: "/resident",
         component: <Resident />,
     },
     {
         icon: <FiZap className="MenuItem-icon" />,
         label: "Billing",
-        route: "/billing",
-        subroutes: [
+        path: "/billing",
+        subpaths: [
             '/unit',
             '/settlement',
             '/disbursement',
@@ -81,32 +79,32 @@ const menu = [
     {
         icon: <RiCustomerService2Line className="MenuItem-icon" />,
         label: "Staff",
-        route: "/staff",
+        path: "/staff",
         component: <Staff />,
     },
     {
         icon: <RiTaskLine className="MenuItem-icon" />,
         label: "Task",
-        route: "/task",
+        path: "/task",
         component: <Task />,
     },
     {
         icon: <RiStore2Line className="MenuItem-icon" />,
         label: "Merchant",
-        route: "/merchant",
+        path: "/merchant",
         component: <Merchant />,
     },
     {
         icon: <FiShoppingBag className="MenuItem-icon" />,
         label: "Product",
-        route: "/product",
+        path: "/product",
         component: <Product />,
     },
     {
         icon: <FiShoppingCart className="MenuItem-icon" />,
         label: "Transaction",
-        route: "/transaction",
-        subroutes: [
+        path: "/transaction",
+        subpaths: [
             '/list',
             '/settlement',
             '/disbursement',
@@ -116,26 +114,43 @@ const menu = [
     {
         icon: <FiRss className="MenuItem-icon" />,
         label: "Advertisement",
-        route: "/advertisement",
+        path: "/advertisement",
         component: <Ads />,
     },
     {
         icon: <FiVolume2 className="MenuItem-icon" />,
         label: "Announcement",
-        route: "/announcement",
+        path: "/announcement",
         component: <Announcement />,
     },
     {
         icon: <FaIdBadge className="MenuItem-icon" />,
         label: "Admin",
-        route: "/admin",
+        path: "/admin",
         component: <Admin />,
     },
 ]
 
 function Component() {
     return (
-        <Template role="sa" menu={menu} />
+        <Template role="sa">
+            <Redirect exact from={"/sa"} to={"/sa" + menu[0].path} />
+            {menu.map(el => <Route
+                key={el.label}
+                label={el.label}
+                icon={el.icon}
+                path={"/sa" + el.path}
+                subpaths={el.subpaths}
+            >
+                {el.component}
+            </Route>)}
+            <Route path={"/sa/chat"}>
+                <Chat />
+            </Route>
+            <Route path={"/sa/settings"}>
+                <Settings />
+            </Route>
+        </Template>
     )
 }
 

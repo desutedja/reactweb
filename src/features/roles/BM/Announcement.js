@@ -1,9 +1,10 @@
-import React, { } from 'react';
+import React, {  } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
-import List from '../list/Resident';
-import Add from '../form/Resident';
-import Details from '../details/Resident';
+import Add from '../../form/Announcement';
+import Details from '../../details/Announcement';
+
+import List from '../../list/Announcement';
 
 function Component() {
     let { path } = useRouteMatch();
@@ -19,7 +20,7 @@ function Component() {
             <Route path={`${path}/edit`}>
                 <Add />
             </Route>
-            <Route path={`${path}/:id`}>
+            <Route path={`${path}/details`}>
                 <Details />
             </Route>
         </Switch>

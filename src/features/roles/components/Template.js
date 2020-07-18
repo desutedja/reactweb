@@ -1,33 +1,31 @@
-import React, { useState, Fragment, useEffect } from 'react';
+import React, { useState, Fragment, useEffect, Children } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { logout } from '../../features/auth/slice';
 import {
     FiMenu, FiLogOut, FiChevronDown, FiChevronUp,
 } from "react-icons/fi";
 import { MdChatBubble, MdNotifications, MdSettings } from "react-icons/md";
-import { Switch, Route, useHistory, Redirect, useRouteMatch } from 'react-router-dom';
+import { Switch, useHistory, useRouteMatch } from 'react-router-dom';
 import QiscusSDKCore from 'qiscus-sdk-core';
-
-import Row from '../../components/Row';
-import CustomAlert from '../../components/CustomAlert';
-import IconButton from '../../components/IconButton';
-import Info from '../../components/Info';
-import Modal from '../../components/Modal';
-import Chat from '../../features/chat/Route';
-
-import { toSentenceCase } from '../../utils';
-import { closeAlert, setConfirmDelete, setNotif } from '../../features/slice';
-import { setQiscus, updateMessages, setUnread } from '../../features/chat/slice';
 import { Toast, ToastHeader, ToastBody } from 'reactstrap';
+
+import Row from '../../../components/Row';
+import CustomAlert from '../../../components/CustomAlert';
+import IconButton from '../../../components/IconButton';
+import Info from '../../../components/Info';
+import Modal from '../../../components/Modal';
+
+import { toSentenceCase } from '../../../utils';
+import { closeAlert, setConfirmDelete, setNotif } from '../../slice';
+import { setQiscus, updateMessages, setUnread } from '../../chat/slice';
+import { logout } from '../../auth/slice';
 import Axios from 'axios';
-import Settings from '../../features/settings';
 
 const Qiscus = new QiscusSDKCore();
 
-const clinkLogo = require("../../assets/clink_logo.png");
-const clinkLogoSmall = require("../../assets/clink_logo_small.png");
+const clinkLogo = require("../../../assets/clink_logo.png");
+const clinkLogoSmall = require("../../../assets/clink_logo_small.png");
 
-function Component({ role, menu }) {
+function Component({ role, children }) {
     const [menuWide, setMenuWide] = useState(false);
     const [expanded, setExpanded] = useState("");
     const [profile, setProfile] = useState(false);
@@ -39,7 +37,7 @@ function Component({ role, menu }) {
 
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path, url } = useRouteMatch();
+    let { url } = useRouteMatch();
 
     useEffect(() => {
         const userID = "centratama-clink-" + user.id;
@@ -62,8 +60,10 @@ function Component({ role, menu }) {
             },
         }).then(() => {
             console.log('init success');
+            console.log(Qiscus);
 
-            !Qiscus.isLogin &&
+            !Qiscus.isLogin && 
+            // console.log('run because:', Qiscus.isLogin)
                 Qiscus.setUser(userID, 'kucing', user.firstname + ' ' + user.lastname,
                     'https://avatars.dicebear.com/api/male/' + user.email + '.svg', user)
                     .then(function () {
@@ -100,8 +100,8 @@ function Component({ role, menu }) {
             })
     }, [dispatch, qiscus, url, messages]);
 
-    function isSelected(menu) {
-        return ('/' + history.location.pathname.split('/')[2]) === menu.route;
+    function isSelected(path) {
+        return ('/' + history.location.pathname.split('/')[2]) === path;
     }
 
     return (
@@ -225,61 +225,57 @@ function Component({ role, menu }) {
                             : <img className="Logo-main-small"
                                 src={clinkLogoSmall} alt="logo" />}
                     </div>
-                    {menu.map(el =>
-                        <Fragment
-                            key={el.label}
-                        >
-                            <div
-                                onClick={expanded === el.label ? () => setExpanded("")
-                                    : el.subroutes ? () => {
-                                        setExpanded(el.label);
-                                        setMenuWide(true);
-                                    } :
-                                        () => {
-                                            history.push(path + el.route);
-                                            setExpanded("");
-                                        }}
-                                className={(isSelected(el) ? "MenuItem-active" : "MenuItem") +
-                                    (menuWide ? "" : " compact")}>
-                                <div className="MenuItem-icon">{el.icon}</div>
-                                {menuWide && <div className={menuWide ? "MenuItem-label" : "MenuItem-label-hidden"}>
-                                    {el.label}
-                                </div>}
-                                {menuWide && el.subroutes ? expanded === el.label ?
-                                    <FiChevronUp style={{
-                                        marginRight: 16,
-                                        width: '2rem'
-                                    }} /> : <FiChevronDown style={{
-                                        marginRight: 16,
-                                        width: '2rem'
-                                    }} /> : null}
-                            </div>
-                            {menuWide && expanded === el.label && <div className="Submenu">
-                                {el.subroutes.map(sub => <div
-                                    key={sub}
-                                    onClick={() => history.push(path + el.route + sub)}
-                                    className={('/' + history.location.pathname.split('/')[3]) === sub
-                                        ? "SubmenuItem-active" : "SubmenuItem"}
+                    {Children.map(children, child => {
+                        const { icon, label, path, subpaths } = child.props;
+
+                        return label ? (
+                            <Fragment
+                                key={path}
+                            >
+                                <div
+                                    onClick={expanded === label ? () => setExpanded("")
+                                        : subpaths ? () => {
+                                            setExpanded(label);
+                                            setMenuWide(true);
+                                        } :
+                                            () => {
+                                                history.push(path);
+                                                setExpanded("");
+                                            }}
+                                    className={(isSelected(path) ? "MenuItem-active" : "MenuItem") +
+                                        (menuWide ? "" : " compact")}
                                 >
-                                    {toSentenceCase(sub.slice(1))}
-                                </div>)}
-                            </div>}
-                        </Fragment>
-                    )}
+                                    <div className="MenuItem-icon">{icon}</div>
+                                    {menuWide && <div className={menuWide ? "MenuItem-label" : "MenuItem-label-hidden"}>
+                                        {label}
+                                    </div>}
+                                    {menuWide && subpaths ? expanded === label ?
+                                        <FiChevronUp style={{
+                                            marginRight: 16,
+                                            width: '2rem'
+                                        }} /> : <FiChevronDown style={{
+                                            marginRight: 16,
+                                            width: '2rem'
+                                        }} /> : null} 
+                                </div>
+                                {menuWide && expanded === label && <div className="Submenu">
+                                    {subpaths.map(sub => <div
+                                        key={sub}
+                                        onClick={() => history.push(path + sub)}
+                                        className={('/' + history.location.pathname.split('/')[3]) === sub
+                                            ? "SubmenuItem-active" : "SubmenuItem"}
+                                    >
+                                        {toSentenceCase(sub.slice(1))}
+                                    </div>)}
+                                </div>}
+                            </Fragment>
+                        ) : null
+                    })}
                 </div>
                 <div className={(menuWide ? "Content" : "Content-wide")}>
                     <Info />
                     <Switch>
-                        <Redirect exact from={"/" + role} to={"/" + role + menu[0].route} />
-                        {menu.map(el => <Route key={el.label} path={"/" + role + el.route}>
-                            {el.component}
-                        </Route>)}
-                        <Route path={"/" + role + "/chat"}>
-                            <Chat />
-                        </Route>
-                        <Route path={"/" + role + "/settings"}>
-                            <Settings />
-                        </Route>
+                        {children}
                     </Switch>
                 </div>
             </Row>

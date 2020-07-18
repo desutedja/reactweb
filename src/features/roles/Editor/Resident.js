@@ -1,9 +1,9 @@
-import React, {  } from 'react';
+import React, { } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
-import Details from '../details/Ads';
-import Add from '../form/Ads';
-import List from '../list/Ads';
+import List from '../../list/Resident';
+import Add from '../../form/Resident';
+import Details from '../../details/Resident';
 
 function Component() {
     let { path } = useRouteMatch();

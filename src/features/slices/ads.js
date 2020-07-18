@@ -52,6 +52,9 @@ export const slice = createSlice({
       state.schedule.total_items = data.filtered_item;
       state.schedule.total_pages = data.filtered_page;
     },
+    publish: (state) => {
+      state.selected.published = 1;
+    }
   },
 });
 
@@ -62,6 +65,7 @@ export const {
   setSelected,
   refresh,
   setScheduleData,
+  publish
 } = slice.actions;
 
 export const getAds = (pageIndex, pageSize, search = '', age_from = '', age_to = '', os = '', gender = '', media = '', appear_as = '') => dispatch => {
@@ -199,6 +203,25 @@ export const deleteAdsSchedule = (row,) => dispatch => {
 
       dispatch(refresh());
       dispatch(stopAsync())
+    }))
+}
+
+export const publishAds = ( data) => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(post(adsEndpoint + '/change_status', { advertisement_id: data.id, status: 'publish', }, 
+    res => {
+      dispatch(publish());
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Advertisement published.'
+      }));
+
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 

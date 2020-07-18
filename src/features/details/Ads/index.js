@@ -13,7 +13,7 @@ import Content from './contents/Content';
 import Schedule from './contents/Schedule';
 import { get } from '../../slice';
 import { endpointAds } from '../../../settings';
-import { deleteAds, setSelected } from '../../slices/ads';
+import { deleteAds, setSelected, publishAds } from '../../slices/ads';
 
 const details = {
     "Information": [
@@ -81,7 +81,7 @@ function Component() {
                         <Button
                             disabled={!!data.published}
                             label={data.published ? "Published" : "Publish"}
-                            onClick={() => { }}
+                            onClick={() => dispatch(publishAds(data))}
                         />
                     ]}
                 />,
