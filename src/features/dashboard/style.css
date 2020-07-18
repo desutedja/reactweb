@@ -8,16 +8,44 @@
 
 .BigNumber.in-dashboard {
     color: #007bff;
-    font-size: 3.5rem;
+    font-size: 3rem;
     font-weight: 600;
     line-height: 1.3;
 }
 
+.BigIcon {
+    font-size: 5rem;
+}
+
 .color-1 {
-    background: linear-gradient( 90deg, var(--primary-color) 0%, var(--accent-color) 170% );
+    background: linear-gradient( 90deg, var(--primary-color) -30%, var(--accent-color) 130% );
+    color: white;
+}
+
+.color-2 {
+    background: linear-gradient(45deg, #fc4a1a -30%, #f7b733 130%);
+    color: white;
+}
+
+.color-3 {
+    background: linear-gradient(45deg, #ee0979 -30%, #ff6a00 130%);
+    color: white;   
+}
+
+.color-4 {
+    background: linear-gradient(45deg, #00b09b -30%, #96c93d 130%);
+    color: white;
+}
+
+.color-5 {
+    background: linear-gradient(45deg, #000428 -30%, #004e92 130%);
     color: white;
 }
 
 .white {
     color: white;
+}
+
+.color-primary {
+    color: var(--primary-color)
 }

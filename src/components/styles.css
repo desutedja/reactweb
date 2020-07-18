@@ -440,3 +440,7 @@ input[type="button"]:disabled {
   background-color: #c0c0c0;
   color: white;
 }
+
+.border-right-light {
+  border-right: .9px solid rgba(255, 255, 255, 0.486);
+}
