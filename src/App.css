@@ -185,6 +185,7 @@
   padding: 8px;
   padding-left: 72px;
   color: #afafcf;
+  cursor: pointer;
 }
 
 .SubmenuItem-active {
