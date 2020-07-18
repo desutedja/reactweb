@@ -26,11 +26,11 @@ const announcementPayload = {
 
 const roles = [
     { value: 'centratama', label: 'Centratama' },
-    { value: 'management', label: 'Building Management' },
-    { value: 'staff', label: 'Staff' },
-    { value: 'staff_courier', label: 'Staff Courier' },
-    { value: 'staff_security', label: 'Staff Security' },
-    { value: 'staff_technician', label: 'Staff Technician' },
+    { value: 'management', label: 'Building Management PIC & GM' },
+    { value: 'staff', label: 'Building Staff (Courier, Security, Technician)' },
+    { value: 'staff_courier', label: 'Staff Courier Only' },
+    { value: 'staff_security', label: 'Staff Security Only' },
+    { value: 'staff_technician', label: 'Staff Technician Only' },
     { value: 'resident', label: 'Resident' },
     { value: 'merchant', label: 'Merchant' },
 ]
