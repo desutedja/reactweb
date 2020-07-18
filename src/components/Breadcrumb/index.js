@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import { FiChevronRight } from 'react-icons/fi';
-import { toSentenceCase } from '../utils';
+import { toSentenceCase } from '../../utils';
 
 function Breadcrumb({ title }) {
     let history = useHistory();
