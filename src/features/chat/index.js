@@ -40,7 +40,8 @@ function Component() {
 
     const { user, role } = useSelector(state => state.auth);
     const { qiscus, rooms, roomID, roomUniqueID, messages, loading } = useSelector(state => state.chat);
-    const userID = "centratama-clink-" + user.id;
+    const adminID = (role === "sa" ? user.id : user.building_management_id);
+    const userID = (role === "sa" ? "centratama" : "management") + "-clink-" + adminID;
 
     let dispatch = useDispatch();
     let messageBottom = useRef();
@@ -87,11 +88,10 @@ function Component() {
     }, [qiscus, room, roomID]);
 
     useEffect(() => {
-        if (role === "sa") {
+        if (role === "sa") 
             dispatch(getAdminChat(listTopic,listPageIndex, listPageSize, listSearch));
-        } else {
+        else
             dispatch(getPICBMChat(listTopic,listPageIndex, listPageSize, listSearch));
-        }
     },[listPageIndex, listPageSize, listSearch])
 
     /*

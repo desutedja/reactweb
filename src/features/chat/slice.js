@@ -75,7 +75,7 @@ export const getAdminChat = (
     
     res => {
       dispatch(setRooms(res.data.data.items));
-      console.log(res.data.data.items)
+        //console.log(res.data.data.items)
 
       dispatch(stopAsync());
     },
@@ -98,8 +98,8 @@ export const getPICBMChat = (
     '&search=' + search,
     
     res => {
-      dispatch(setRooms(res.data.data));
-      console.log(res.data.data)
+      dispatch(setRooms(res.data.data.items));
+      console.log(res.data.data.items)
 
       dispatch(stopAsync());
     },
