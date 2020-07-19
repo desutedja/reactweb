@@ -36,6 +36,7 @@ function Component() {
     const [selected, setSelected] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
     const [dataPages, setDataPages] = useState('');
+    const [totalItems, setTotalItems] = useState('');
 
     const { disbursement, refreshToggle } = useSelector(state => state.billing);
 
@@ -213,6 +214,7 @@ function Component() {
                                     noContainer={true}
                                     columns={columns}
                                     data={data}
+                                    totalItems={totalItems}
                                     loading={dataLoading}
                                     pageCount={dataPages}
                                     fetchData={useCallback((pageIndex, pageSize, search) => {
@@ -226,6 +228,7 @@ function Component() {
                                             res => {
                                                 setData(res.data.data.items);
                                                 setDataPages(res.data.data.total_pages);
+                                                setTotalItems(res.data.data.total_items);
                                                 setDataLoading(false);
                                             }))
                                         // eslint-disable-next-line react-hooks/exhaustive-deps
