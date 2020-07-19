@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { get } from '../slice';
 import Detail from './components/Detail';
@@ -13,7 +13,6 @@ const details =
 };
 
 function AdminDetails() {
-    let { state } = useLocation();
     const { selected } = useSelector(state => state.admin);
     const [data, setData] = useState();
 
