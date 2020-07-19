@@ -6,6 +6,7 @@ export const slice = createSlice({
   initialState: {
     alert: false,
     title: '',
+    subtitle: '',
     content: '',
     info: {
       color: 'primary',
@@ -25,6 +26,7 @@ export const slice = createSlice({
     openAlert: (state, action) => {
       state.alert = true;
       state.title = action.payload.title;
+      state.subtitle = action.payload.subtitle;
       state.content = action.payload.content;
     },
     closeAlert: (state) => {
@@ -77,15 +79,18 @@ export const setInfo = data => dispatch => {
   })), 5000);
 }
 
-const responseAlert = response => async dispatch => {
-  if (response && response.status === 401) {
+const responseAlert = (err, link) => async dispatch => {
+    const response = err.response
+    /* if (response && response.status === 401) {
     dispatch(openAlert({
       title: 'Token Expired',
       content: "Your authentication token has expired. For your safety, please relogin.",
     }));
-  } else if (response && response.data.error_message) {
+  } else */ if (response && response.data.error_message) {
     dispatch(openAlert({
-      title: 'API Error',
+      title: 'Server Error',
+      subtitle: link ,
+        //subtitle: err,
       content: response?.data.error_message,
     }));
   } else return null
@@ -107,7 +112,7 @@ export const get = (
     .catch(err => {
       // console.log(err);
 
-      dispatch(responseAlert(err.response));
+      dispatch(responseAlert(err, link));
 
       ifError(err);
     })
@@ -132,7 +137,7 @@ export const post = (
     .catch(err => {
       // console.log(err);
 
-      dispatch(responseAlert(err.response));
+      dispatch(responseAlert(err, link));
 
       ifError(err);
     })
@@ -157,7 +162,7 @@ export const put = (
     .catch(err => {
       // console.log(err);
 
-      dispatch(responseAlert(err.response));
+      dispatch(responseAlert(err, link));
 
 
       ifError(err);
@@ -183,8 +188,7 @@ export const patch = (
     .catch(err => {
       // console.log(err);
 
-      dispatch(responseAlert(err.response));
-
+      dispatch(responseAlert(err, link));
 
       ifError(err);
     })
@@ -209,7 +213,7 @@ export const del = (
     .catch(err => {
       // console.log(err);
 
-      dispatch(responseAlert(err.response));
+      dispatch(responseAlert(err, link));
 
 
       ifError(err);
