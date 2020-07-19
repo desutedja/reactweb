@@ -18,7 +18,6 @@ import { toSentenceCase } from '../../../utils';
 import { closeAlert, setConfirmDelete, setNotif } from '../../slice';
 import { setQiscus, updateMessages, setUnread } from '../../chat/slice';
 import { logout } from '../../auth/slice';
-import Axios from 'axios';
 
 const Qiscus = new QiscusSDKCore();
 
@@ -31,7 +30,7 @@ function Component({ role, children }) {
     const [profile, setProfile] = useState(false);
     const [notifModal, setNotifModal] = useState(false);
 
-    const { alert, title, content, confirmDelete, notif } = useSelector(state => state.main);
+    const { alert, title, subtitle, content, confirmDelete, notif } = useSelector(state => state.main);
     const { user } = useSelector(state => state.auth);
     const { qiscus, unread, messages } = useSelector(state => state.chat);
 
@@ -40,7 +39,12 @@ function Component({ role, children }) {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        const userID = "centratama-clink-" + user.id;
+        console.log("initializing qiscus...")
+        const adminID = role === "sa" ? user.id : user.building_management_id;
+        const prefix = (role === "sa" ? "centratama" : "management") + "-clink-";
+        const userKey = prefix + "key-" + adminID;
+        const userID = prefix + adminID;
+        const userDisplayName = role === "sa" ? "Centratama Admin" : "Admin (TODO: buildingname)";
 
         Qiscus.init({
             AppId: 'fastel-sa-hkxoyooktyv',
@@ -57,12 +61,15 @@ function Component({ role, children }) {
                     // On comment has been read by user
                     console.log('read', data)
                 },
+                loginErrorCallback: function (err) {
+                    console.log(err); 
+                },
                 loginSuccessCallback: function () {
                     // On success
                     console.log('Qiscus login: ' + Qiscus.isLogin);
-
                     dispatch(setQiscus(Qiscus));
 
+                    /*
                     Axios.post('https://api.qiscus.com/api/v2.1/rest/add_room_participants', {
                         "room_id": "19278255",
                         "user_ids": [userID],
@@ -75,17 +82,23 @@ function Component({ role, children }) {
                     })
                         .then(res => console.log('RESULT Qiscuss: ', res))
                         .catch(err => console.log('ERROR Qiscuss: ', err))
+                   */
                 },
             },
         }).then(() => {
             console.log('init success');
             console.log(Qiscus);
 
-            !Qiscus.isLogin &&
-                // console.log('run because:', Qiscus.isLogin)
-                Qiscus.setUser(userID, 'kucing', user.firstname + ' ' + user.lastname,
+            if (!Qiscus.isLogin) {
+                //    console.log('run because is login = ', Qiscus.isLogin) 
+                console.log("setting user to " + userID + " with password " + userKey)
+                Qiscus.setUser(userID, userKey, userDisplayName,
                     'https://avatars.dicebear.com/api/male/' + user.email + '.svg', user)
-        }).catch(err => console.log(err))
+            }
+        }).catch(err => {
+            console.log("Qiscus init failed");     
+            console.log(err)
+        })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
@@ -137,7 +150,7 @@ function Component({ role, children }) {
                 <p className="NotificationModal-title">Notifications</p>
                 <div className="NotificationModal-empty">No notifications.</div>
             </Modal>
-            <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
+            <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title} subtitle={subtitle}
                 content={content}
             />
             <div className={menuWide ? "TopBar shadow" : "TopBar-wide shadow"}>

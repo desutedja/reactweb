@@ -6,27 +6,42 @@ import Input from '../../components/Input';
 import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
-import { setMessages, setRoomID, setRoomUniqueID } from './slice';
+import { getPICBMChat, getAdminChat, setMessages, setRoomID, setRoomUniqueID } from './slice';
 import { FiSend } from 'react-icons/fi';
 
 import './style.css';
+
+const topics = [
+    {label: "All", value:"merchant_trx,service,security,billing,personal"},
+    {label: "Transaction", value:"merchant_trx"},
+    {label: "Service", value:"service"},
+    {label: "Security", value:"security"},
+    {label: "Billing", value:"billing"},
+    {label: "Direct", value:"personal"},
+];
 
 function Component() {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
     const [loadingParticipants, setLoadingParticipants] = useState(false);
-    const [loadingRooms, setLoadingRooms] = useState(false);
+    //const [loadingRooms, setLoadingRooms] = useState(false);
 
     const [refresh, setRefresh] = useState(false);
     const [message, setMessage] = useState('');
 
     const [participants, setParticipants] = useState([]);
-    const [rooms, setRooms] = useState([]);
+    //const [rooms, setRooms] = useState([]);
     const [room, setRoom] = useState({});
 
-    const { user } = useSelector(state => state.auth);
-    const { qiscus, roomID, roomUniqueID, messages } = useSelector(state => state.chat);
-    const userID = "centratama-clink-" + user.id;
+    const [listTopic, /*setListTopic */] = useState(topics[0].value);
+    const [listPageIndex, /* setListPageIndex */] = useState(0);
+    const [listPageSize, /* setListPageSize */] = useState(10);
+    const [listSearch, /* setListSearch */] = useState('');
+
+    const { user, role } = useSelector(state => state.auth);
+    const { qiscus, rooms, roomID, roomUniqueID, messages, loading } = useSelector(state => state.chat);
+    const adminID = (role === "sa" ? user.id : user.building_management_id);
+    const userID = (role === "sa" ? "centratama" : "management") + "-clink-" + adminID;
 
     let dispatch = useDispatch();
     let messageBottom = useRef();
@@ -62,6 +77,7 @@ function Component() {
                 // On success
                 dispatch(setMessages(comments.reverse()));
                 setLoadingMessages(false);
+                messageBottom.current.scrollIntoView();
 
                 qiscus.readComment(roomID, room.last_comment_id);
             })
@@ -71,6 +87,14 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [qiscus, room, roomID]);
 
+    useEffect(() => {
+        if (role === "sa") 
+            dispatch(getAdminChat(listTopic,listPageIndex, listPageSize, listSearch));
+        else
+            dispatch(getPICBMChat(listTopic,listPageIndex, listPageSize, listSearch));
+    },[listPageIndex, listPageSize, listSearch, listTopic, dispatch, role])
+
+    /*
     useEffect(() => {
         var params = {
             page: 1,
@@ -95,8 +119,10 @@ function Component() {
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, messages, qiscus]);
+    */
 
     const sendMessage = () => {
+        if (message.length === 0) return;
         setLoadingSend(true);
         qiscus.sendComment(roomID, message)
             .then(function (comment) {
@@ -189,27 +215,27 @@ function Component() {
                 <Tab
                     labels={['Room List', 'Room Info']}
                     contents={[
-                        <Loading loading={loadingRooms}>
+                        <Loading loading={loading}>
                             {rooms.map((el, index) =>
                                 <div
-                                    className={"Room" + (el.id === roomID ? " selected" : "")}
-                                    onClick={el.id === roomID ? null : () => {
+                                    className={"Room" + (el.room_id === roomID ? " selected" : "")}
+                                    onClick={el.room_id === roomID ? null : () => {
                                         setRoom(el);
-                                        dispatch(setRoomID(el.id));
-                                        dispatch(setRoomUniqueID(el.unique_id));
+                                        dispatch(setRoomID(el.room_id));
+                                        dispatch(setRoomUniqueID(el.room_id));
                                     }}
                                 >
                                     <div className="Room-left">
                                         <div className="Room-title">
-                                            <p className="Room-name">{el.name}</p>
-                                            <p className="Room-subtitle">{"ID: " + el.id}</p>
+                                            <p className="Room-name">{el.room_name}</p>
+                                            <p className="Room-subtitle">{"ID: " + el.room_id}</p>
                                         </div>
-                                        <p className="Room-message">{el.last_comment.username
+                                        <p className="Room-message">{el.last_message_user
                                             + ': ' +
-                                            (el.last_comment_message.length > 20 ?
-                                                el.last_comment_message.slice(0, 20) + '...'
-                                                : el.last_comment_message)} 
-                                                {" (" + moment.unix(el.last_comment.unix_timestamp).fromNow() + ")"} </p>
+                                            (el.last_message.length > 20 ?
+                                                el.last_message.slice(0, 20) + '...'
+                                                : el.last_message)} 
+                                                {" (" + moment.unix(el.last_message_timestamp).fromNow() + ")"} </p>
                                     </div>
                                     <div className="Room-right">
                                         {!!el.count_notif &&

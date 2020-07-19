@@ -1,6 +1,6 @@
 import React, { } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import parse from 'html-react-parser';
 import { Badge } from 'reactstrap';
 import { FiPlus } from 'react-icons/fi';
@@ -18,6 +18,8 @@ function Component() {
     let history = useHistory();
     let { url } = useRouteMatch();
 
+    const { auth } = useSelector(state => state)
+
     const columns = [
         { Header: 'ID', accessor: 'id' },
         { Header: 'Title', accessor: row => <div className={"Link"}
@@ -28,7 +30,10 @@ function Component() {
             Header: 'Description', accessor: row => row.description.length > 50 ?
                 parse(row.description).slice(0, 50) + '...' : parse(row.description)
         },
-        { Header: 'Publisher', accessor: 'publisher_name' },
+        { Header: 'Publisher', accessor: row => <><a href={
+            "/" + auth.role + "/" + (row.publisher_role === 'sa' ? "admin" : "staff") + "/" + row.publisher
+        }>{row.publisher_name}</a></> },
+        { Header: 'Publisher Role', accessor: row => row.publisher_role === 'sa' ? 'Super Admin' : 'PIC Admin' },
         {
             Header: 'Status', accessor: row => row.publish ?
                 <h5><Badge pill color="success">Published</Badge></h5>

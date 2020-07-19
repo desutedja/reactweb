@@ -1,8 +1,11 @@
-import React, { } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useLocation, useParams } from 'react-router-dom';
 
+import { get } from '../slice';
 import Detail from './components/Detail';
 import Template from './components/Template';
+import { endpointAdmin } from '../../settings';
 
 const details =
 {
@@ -10,15 +13,26 @@ const details =
 };
 
 function AdminDetails() {
+    let { state } = useLocation();
     const { selected } = useSelector(state => state.admin);
+    const [data, setData] = useState();
+
+    const dispatch = useDispatch();
+    const { id } = useParams();
+
+    useEffect(() => {
+        dispatch(get(endpointAdmin + '/centratama/details/' + id, res => {
+            setData(res.data.data);
+        }))
+    }, [dispatch, id])
 
     return (
         <Template
-            title={selected.firstname + ' ' + selected.lastname}
-            phone={selected.phone}
+            title={data ? data.firstname + ' ' + data.lastname : selected.firstname + ' ' + selected.lastname}
+            phone={data ? data.phone : selected.phone}
             labels={["Details"]}
             contents={[
-                <Detail type="Admin" data={selected} labels={details} />,
+                <Detail type="Admin" data={data ? data : selected} labels={details} />,
             ]}
         />
     )

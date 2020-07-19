@@ -18,6 +18,8 @@ function Component() {
 
     const [ confirmDelete, setConfirmDelete ] = useState(false);
 
+    //const { auth } = useSelector(state => state)
+
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
@@ -34,7 +36,9 @@ function Component() {
             { label: 'building', 
                 disabled: (selected.consumer_role === 'merchant' && selected.consumer_role === 'centratama'),
                 lfmt: () => "Target Building", 
-                vfmt: (v) => v && v.length > 0 ? v.map( el => el.building_name ).join(', ') : "All" },
+                vfmt: (v) => v && v.length > 0 ? v.map( el => 
+                    el.building_name
+                ).join(', ') : "All" },
             { label: 'building_unit', 
                 disabled: selected.consumer_role !== 'resident',
                 lfmt: () => "Target Unit", 
