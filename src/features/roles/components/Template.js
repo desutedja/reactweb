@@ -18,7 +18,6 @@ import { toSentenceCase } from '../../../utils';
 import { closeAlert, setConfirmDelete, setNotif } from '../../slice';
 import { setQiscus, updateMessages, setUnread } from '../../chat/slice';
 import { logout } from '../../auth/slice';
-import Axios from 'axios';
 
 const Qiscus = new QiscusSDKCore();
 

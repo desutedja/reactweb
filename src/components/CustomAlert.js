@@ -25,10 +25,10 @@ function Component({ isOpen, toggle, title, subtitle='', content }) {
             <ModalHeader toggle={toggle} close={closeBtn}>
             {title}
             </ModalHeader>
-            <ModalBody>
-                {subtitle && <p style={{ color: 'red', size: '11', fontWeight: 'bold', overflowWrap: 'break-word', textAlign: 'left'  }} >{subtitle}</p>} 
+            <ModalBody style={{ color: 'red', size: '11', fontWeight: 'bold', overflowWrap: 'break-word' }} >
+                {subtitle && <p style={{ textAlign: 'left' }} >{subtitle}</p>} 
                 <hr/>
-                <p style={{ color: 'red' }}>Error Message : {content}</p>
+                <p style={{ color: 'red', textAlign: 'left' }}>Error Message : {content}</p>
             </ModalBody>
         </Modal>
     )

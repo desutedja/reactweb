@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import moment from 'moment'
@@ -6,7 +6,7 @@ import Input from '../../components/Input';
 import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
-import { getPICBMChat, setListOfRooms, getAdminChat, setMessages, setRoomID, setRoomUniqueID } from './slice';
+import { getPICBMChat, getAdminChat, setMessages, setRoomID, setRoomUniqueID } from './slice';
 import { FiSend } from 'react-icons/fi';
 
 import './style.css';
@@ -24,7 +24,7 @@ function Component() {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
     const [loadingParticipants, setLoadingParticipants] = useState(false);
-    const [loadingRooms, setLoadingRooms] = useState(false);
+    //const [loadingRooms, setLoadingRooms] = useState(false);
 
     const [refresh, setRefresh] = useState(false);
     const [message, setMessage] = useState('');
@@ -33,10 +33,10 @@ function Component() {
     //const [rooms, setRooms] = useState([]);
     const [room, setRoom] = useState({});
 
-    const [listTopic, setListTopic] = useState(topics[0].value);
-    const [listPageIndex, setListPageIndex] = useState(0);
-    const [listPageSize, setListPageSize] = useState(10);
-    const [listSearch, setListSearch] = useState('');
+    const [listTopic, /*setListTopic */] = useState(topics[0].value);
+    const [listPageIndex, /* setListPageIndex */] = useState(0);
+    const [listPageSize, /* setListPageSize */] = useState(10);
+    const [listSearch, /* setListSearch */] = useState('');
 
     const { user, role } = useSelector(state => state.auth);
     const { qiscus, rooms, roomID, roomUniqueID, messages, loading } = useSelector(state => state.chat);
@@ -92,7 +92,7 @@ function Component() {
             dispatch(getAdminChat(listTopic,listPageIndex, listPageSize, listSearch));
         else
             dispatch(getPICBMChat(listTopic,listPageIndex, listPageSize, listSearch));
-    },[listPageIndex, listPageSize, listSearch])
+    },[listPageIndex, listPageSize, listSearch, listTopic, dispatch, role])
 
     /*
     useEffect(() => {
