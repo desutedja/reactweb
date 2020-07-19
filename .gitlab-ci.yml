@@ -10,5 +10,6 @@ cache:
 
 deploy:
   script:
+    - export CI=false
     - yarn install
     - yarn deploy
