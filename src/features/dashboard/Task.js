@@ -217,16 +217,16 @@ function Component() {
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col pl-0 pr-5" style={{
+                            <div className="col px-4" style={{
                                 height: '390px'
                             }}>
                                 <ResponsiveContainer width='100%'>
                                     <BarChart data={sosDataFormatted}>
-                                        <XAxis dataKey="Time" />
-                                        <YAxis dataKey="SOS" />
+                                        <XAxis height={30} dy={10} dataKey="Time" />
+                                        <YAxis axisLine={false} tickLine={false} width={40} dx={-10} dataKey="SOS" />
                                         <Tooltip />
-                                        <CartesianGrid stroke="#ccc" dataKey="Time" strokeDasharray="5 8" />
-                                        <Bar dataKey="SOS" fill="rgb(237, 64, 87)" barSize={50} />
+                                        <CartesianGrid vertical={false} stroke="#ddd" dataKey="Time" />
+                                        <Bar radius={4} dataKey="SOS" fill="rgb(237, 64, 87)" barSize={50} />
                                     </BarChart>
                                     {/* <AreaChart
                                         data={sosDataFormatted}
