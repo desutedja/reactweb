@@ -45,7 +45,7 @@ function Component({ role, children }) {
         const prefix = (role === "sa" ? "centratama" : "management") + "-clink-";
         const userKey = prefix + "key-" + adminID;
         const userID = prefix + adminID;
-        const userDisplayName = role === "sa" ? "Centratama Admin" : "Admin (TODO: buildingname)";
+        const userDisplayName = role === "sa" ? "Centratama Admin" : "Admin";
 
         Qiscus.init({
             AppId: 'fastel-sa-hkxoyooktyv',

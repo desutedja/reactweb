@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import { TiAttachment } from 'react-icons/ti';
 
@@ -27,6 +28,8 @@ function Component() {
     const [loadingSend, setLoadingSend] = useState(false);
     const [loadingParticipants, setLoadingParticipants] = useState(false);
     const [loadingRooms, setLoadingRooms] = useState(false);
+
+    const history = useHistory();
 
     const [refresh, setRefresh] = useState(false);
     const [message, setMessage] = useState('');
@@ -185,7 +188,13 @@ function Component() {
                                 }}>
                                     {index > 0 && messages[index - 1].username === el.username ?
                                         null :
-                                        <div className="MessageUsername">{el.username}</div>}
+                                        <div className="MessageUsername" style={{ cursor: 'pointer' }} onClick={() => {
+                                                if (el.email.split("-")[0] === 'resident') {
+                                                    history.push("/" + role + "/resident/" + el.email.split("-")[2])
+                                                }
+                                        }}>
+                                            {el.username} ({el.email.split("-")[0]})
+                                        </div>}
                                     <div style={{
                                         display: 'flex',
                                         flexDirection: el.email === userID ?
@@ -258,7 +267,7 @@ function Component() {
                                     onClick={el.id === roomID ? null : () => {
                                         setRoom(el);
                                         dispatch(setRoomID(el.id));
-                                        dispatch(setRoomUniqueID(el.id));
+                                        dispatch(setRoomUniqueID(el.unique_id));
                                     }}
                                 >
                                     <div className="Room-left">
