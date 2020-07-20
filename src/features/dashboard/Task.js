@@ -100,7 +100,6 @@ function Component() {
             const monthsRange = getDatesRange(new Date(aYearBefore), new Date(), 'months');
             const sosDatas = monthsRange.map(date => {
                 const data = sosData.filter(data => data.time.split('T')[0].split('-')[0] + data.time.split('T')[0].split('-')[1] === date.split(' ')[0].split('-')[0] + date.split(' ')[0].split('-')[1]);
-                console.log(data)
                 return ({
                     time: data[0] ? data[0].time.split('T')[0] : date,
                     num_of_sos: data.reduce((total, data) => {
