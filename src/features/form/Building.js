@@ -155,7 +155,7 @@ function Component() {
                         <Input {...props} label="Max Floors" placeholder="Input max floors"
                             hint="Maximum floor that can be registered on each section"/>
                         <Input {...props} label="Max Sections" 
-                            hint="Maximum section (Tower/Wing) that can be register on this Building"/>
+                            hint="Maximum section (Tower/Wing) that can be registered on this Building"/>
                         <Input {...props} label="Website" />
                         <Input {...props} label="Logo" type="file" />
                         <SectionSeparator />

@@ -22,12 +22,14 @@ export const storageRef = storage.ref();
 
 // cloud messaging
 const messaging = firebase.messaging();
-messaging.usePublicVapidKey("BCwXtbSgh9u875sQyD-_IKYttX8iCQLi_FICbJNgIdAE8P5F6gZJBzHzdIZR3Y_3kbmjn9kTHPaAu5BG9WB95qc");
+messaging.usePublicVapidKey("BN1Y76p50tWwgq45KSIFWgSOvdUCm0XF1eW6B9W17QLceZrdBBssy2PSBh074cGDjf2JKFRuq1Vr7sL4leya0EQ");
 
 // Get Instance ID token. Initially this makes a network call, once retrieved
 // subsequent calls to getToken will return from cache.
 messaging.getToken().then((currentToken) => {
     if (currentToken) {
+        console.log('Current token: ', currentToken);
+
         // sendTokenToServer(currentToken);
         // updateUIForPushEnabled(currentToken);
     } else {
@@ -47,6 +49,8 @@ messaging.getToken().then((currentToken) => {
 messaging.onTokenRefresh(() => {
     messaging.getToken().then((refreshedToken) => {
         console.log('Token refreshed.');
+        console.log('Current token: ', refreshedToken);
+
         // Indicate that the new Instance ID token has not yet been sent to the
         // app server.
         // setTokenSentToServer(false);
@@ -57,4 +61,10 @@ messaging.onTokenRefresh(() => {
         console.log('Unable to retrieve refreshed token ', err);
         // showToken('Unable to retrieve refreshed token ', err);
     });
+});
+
+messaging.onMessage((payload) => {
+    console.log('Message received. ', payload);
+    alert('Message received. ' + payload);
+    // ...
 });
