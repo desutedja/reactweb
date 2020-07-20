@@ -26,7 +26,7 @@ function Component() {
                     <div className="Container flex-column pb-5 pr-4">
                         <div className="row mb-4">
                             <div className="col-12">
-                                <h5>Views Statistics</h5>
+                                <h5>View Statistics</h5>
                             </div>
                         </div>
                         <div className="row">

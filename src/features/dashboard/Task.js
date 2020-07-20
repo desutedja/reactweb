@@ -5,7 +5,13 @@ import AnimatedNumber from "animated-number-react";
 import { RiTaskLine, RiFileExcelLine, RiFileChartLine } from 'react-icons/ri'
 
 import { getSOS } from './slice';
-import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, ResponsiveContainer, Cell } from 'recharts';
+import { 
+    Bar,
+    Line,
+    // Area,
+    XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, ResponsiveContainer, Cell, ComposedChart, 
+    // AreaChart
+} from 'recharts';
 import { getDatesRange, months } from '../../utils';
 import { endpointTask } from '../../settings';
 
@@ -21,7 +27,7 @@ const colors = ['#2ad170', '#007bff', '#f7b733', '#ed4057'];
 function Component() {
     // task
     const { sosData } = useSelector(state => state.dashboard);
-    const [range, setRange] = useState('dtd');
+    const [range, setRange] = useState('ytd');
     const [pieData, setPieData] = useState([]);
     const [taskData, setTaskData] = useState({});
     const [sosDataFormatted, setSosDataFormatted] = useState()
@@ -40,11 +46,12 @@ function Component() {
     }, [dispatch]);
 
     useEffect(() => {
-        const fiveDaysBefore  = new Date().setHours(new Date().getHours() - 24 * 5);
         if (range === 'dtd') {
-            const hoursRange = getDatesRange(new Date(fiveDaysBefore), new Date(), 'hours');
+            const aDaysBefore  = new Date().setHours(new Date().getHours() - 24);
+            const hoursRange = getDatesRange(new Date(aDaysBefore), new Date(), 'hours');
             const sosDatas = hoursRange.map(date => {
                 const data = sosData.filter(data => data.time.split('T')[0] + data.time.split('T')[1].split(':')[0] === date.split(' ')[0] + date.split(' ')[1].split(':')[0]);
+                console.log(data)
                 return ({
                     time: date,
                     num_of_sos: data.reduce((total, data) => {
@@ -53,12 +60,12 @@ function Component() {
                 })
             })
             const sosDataFormatted = sosDatas.map((data, i) => {
-                let month = moment(data.time).format('dddd');
+                let day = moment(data.time).format('dddd');
                 const hour = moment(data.time).format('HH:00');
                 return (
                     {
                         SOS: data.num_of_sos,
-                        Time: `${month.substring(0, 3)} ${hour}`,
+                        Time: `${day.substring(0, 3)} ${hour}`,
                         index: i
                     }
                 )
@@ -124,7 +131,7 @@ function Component() {
     }, [sosData]);
 
     return (
-        <div>
+        <>
             <div className="row no-gutters">
                 <div className="col">
                     <div className="Container color-4 d-flex flex-column">
@@ -221,35 +228,14 @@ function Component() {
                                 height: '390px'
                             }}>
                                 <ResponsiveContainer width='100%'>
-                                    <BarChart data={sosDataFormatted}>
+                                    <ComposedChart data={sosDataFormatted}>
                                         <XAxis height={30} dy={10} dataKey="Time" />
                                         <YAxis axisLine={false} tickLine={false} width={40} dx={-10} dataKey="SOS" />
                                         <Tooltip />
                                         <CartesianGrid vertical={false} stroke="#ddd" dataKey="Time" />
-                                        <Bar radius={4} dataKey="SOS" fill="rgb(237, 64, 87)" barSize={50} />
-                                    </BarChart>
-                                    {/* <AreaChart
-                                        data={sosDataFormatted}
-                                        margin={{
-                                            top: 10,
-                                            right: 30,
-                                            left: 0,
-                                            bottom: 0
-                                        }}
-                                    >
-                                        <defs>
-                                            <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="crimson" stopOpacity={0.8} />
-                                                <stop offset="95%" stopColor="crimson" stopOpacity={0} />
-                                            </linearGradient>
-                                        </defs>
-                                        <XAxis dataKey="Time" dy={8}/>
-                                        <YAxis dataKey="SOS" dx={-8}/>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <Tooltip />
-                                        <Area type="monotone" dataKey="Time" stroke="crimson" fillOpacity={1} fill="url(#colorUv)" />
-                                        <Area type="monotone" dataKey="SOS" stroke="crimson" fillOpacity={1} fill="url(#colorPv)" />
-                                    </AreaChart> */}
+                                        <Bar radius={4} dataKey="SOS" fill="rgb(237, 64, 87)" maxBarSize={80} />
+                                        <Line type="monotone" dataKey="SOS" stroke="#ff7300" />
+                                    </ComposedChart>
                                 </ResponsiveContainer>
                             </div>
                         </div>
@@ -304,7 +290,7 @@ function Component() {
                     </div>
                 </div>
             </div>
-        </div>
+        </>
     )
 }
 
