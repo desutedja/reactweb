@@ -6,8 +6,10 @@ import { RiTaskLine, RiFileExcelLine, RiFileChartLine } from 'react-icons/ri'
 
 import { getSOS } from './slice';
 import { Bar, BarChart, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, ResponsiveContainer, Cell } from 'recharts';
-import { dateFormatter } from '../../utils';
+import { getDatesRange, months } from '../../utils';
 import { endpointTask } from '../../settings';
+
+import moment from 'moment';
 
 import './style.css';
 import { get } from '../slice';
@@ -19,7 +21,6 @@ const colors = ['#2ad170', '#007bff', '#f7b733', '#ed4057'];
 function Component() {
     // task
     const { sosData } = useSelector(state => state.dashboard);
-
     const [range, setRange] = useState('dtd');
     const [pieData, setPieData] = useState([]);
     const [taskData, setTaskData] = useState({});
@@ -39,15 +40,88 @@ function Component() {
     }, [dispatch]);
 
     useEffect(() => {
-        const sosDataFormatted = sosData.map((data, i) => (
-            {
-                SOS: data.num_of_sos,
-                Time: dateFormatter(data.time),
-                index: i
-            }
-        ))
-        sosDataFormatted.sort((a, b) => b.index - a.index)
-        setSosDataFormatted(sosDataFormatted)
+        const fiveDaysBefore  = new Date().setHours(new Date().getHours() - 24 * 5);
+        if (range === 'dtd') {
+            const hoursRange = getDatesRange(new Date(fiveDaysBefore), new Date(), 'hours');
+            const sosDatas = hoursRange.map(date => {
+                const data = sosData.filter(data => data.time.split('T')[0] + data.time.split('T')[1].split(':')[0] === date.split(' ')[0] + date.split(' ')[1].split(':')[0]);
+                return ({
+                    time: date,
+                    num_of_sos: data.reduce((total, data) => {
+                        return total + data.num_of_sos
+                    }, 0)
+                })
+            })
+            const sosDataFormatted = sosDatas.map((data, i) => {
+                let month = moment(data.time).format('dddd');
+                const hour = moment(data.time).format('HH:00');
+                return (
+                    {
+                        SOS: data.num_of_sos,
+                        Time: `${month.substring(0, 3)} ${hour}`,
+                        index: i
+                    }
+                )
+            })
+            setSosDataFormatted(sosDataFormatted)
+        }
+
+        if (range === 'mtd') {
+            const aMonthBefore  = new Date().setDate(new Date().getDate() - 30);
+            const datesRange = getDatesRange(new Date(aMonthBefore), new Date(), 'days')
+            const sosDatas = datesRange.map(date => {
+                const data = sosData.filter(data => data.time.split('T')[0] === date.split(' ')[0])
+                return ({
+                    time: data[0] ? data[0].time.split('T')[0] : date.split(' ')[0],
+                    num_of_sos: data.reduce((total, data) => {
+                        return total + data.num_of_sos
+                    }, 0)
+                })
+            })
+            const sosDataFormatted = sosDatas.map((data, i) => {
+                let month = months[data.time.split('-')[1] - 1].label;
+                // console.log(sosDatas[i].time)
+                // console.log(sosDatas[i - 1] ? sosDatas[i - 1].time : sosDatas[i - 1])
+                if (!(sosDatas[i].time.split('-')[1] !== (sosDatas[i - 1] ? sosDatas[i - 1].time.split('-')[1] : sosDatas[i - 1]))) month = '';
+                const date = data.time.split('-')[2];
+                return (
+                    {
+                        SOS: data.num_of_sos,
+                        Time: `${month.substring(0, 3)} ${date}`,
+                        index: i
+                    }
+                )
+            })
+            setSosDataFormatted(sosDataFormatted)
+        }
+
+        if (range === 'ytd') {
+            const aYearBefore  = new Date().setFullYear(new Date().getFullYear() - 1);
+            const monthsRange = getDatesRange(new Date(aYearBefore), new Date(), 'months');
+            const sosDatas = monthsRange.map(date => {
+                const data = sosData.filter(data => data.time.split('T')[0].split('-')[0] + data.time.split('T')[0].split('-')[1] === date.split(' ')[0].split('-')[0] + date.split(' ')[0].split('-')[1]);
+                console.log(data)
+                return ({
+                    time: data[0] ? data[0].time.split('T')[0] : date,
+                    num_of_sos: data.reduce((total, data) => {
+                        return total + data.num_of_sos
+                    }, 0)
+                })
+            })
+            const sosDataFormatted = sosDatas.map((data, i) => {
+                let month = months[data.time.split('-')[1] - 1].label;
+                return (
+                    {
+                        SOS: data.num_of_sos,
+                        Time: `${month.substring(0, 3)} ${data.time.split('-')[0]}`,
+                        index: i
+                    }
+                )
+            })
+            setSosDataFormatted(sosDataFormatted)
+        }
+        
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [sosData]);
 
     return (

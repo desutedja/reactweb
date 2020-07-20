@@ -2,6 +2,7 @@ import React from 'react';
 import countries from './countries';
 import { banks } from './settings';
 import { FiCalendar, FiClock } from 'react-icons/fi';
+import moment from 'moment';
 
 export const osType = [
     { label: 'Android', value: 'Android' },
@@ -87,8 +88,7 @@ export function dateTimeFormatterCell(serverDateTime, whenzero = '-') {
 }
 
 export function dateTimeFormatter(serverDateTime, whenzero = '-') {
-    if (serverDateTime === "0001-01-01T00:00:00Z")
-        return whenzero;
+    if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
 
     let date = serverDateTime.split('T')[0];
     let time = serverDateTime.split('T')[1].split('Z')[0];
@@ -118,12 +118,23 @@ export function dateFormatter(serverDateTime, whenzero = '-') {
         return whenzero;
 
     let date = serverDateTime.split('T')[0];
-
+    
     let year = date.split('-')[0];
     let month = parseInt(date.split('-')[1], 10);
     let day = date.split('-')[2];
 
     return day + ' ' + months[month - 1].label + ' ' + year;
+}
+
+export function getDatesRange(startDate, stopDate, range = 'days') {
+    const dateArray = [];
+    let currentDate = moment(startDate);
+    stopDate = moment(stopDate);
+    while (currentDate <= stopDate) {
+        dateArray.push( moment(currentDate).format('YYYY-MM-DD HH:mm:ss') )
+        currentDate = moment(currentDate).add(1, range);
+    }
+    return dateArray;
 }
 
 export function toSentenceCase(sentence) {
