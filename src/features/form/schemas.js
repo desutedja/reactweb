@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 const defaultRequiredError = 'This field is required.';
 
 const Text = Yup.string().required(defaultRequiredError);
-const TextOptional = Yup.string();
+const TextOptional = Yup.string().nullable();
 
 const Number = Yup.number("This value shoud be number.").required(defaultRequiredError);
 

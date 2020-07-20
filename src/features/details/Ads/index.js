@@ -11,7 +11,7 @@ import Template from '../components/Template';
 
 import Content from './contents/Content';
 import Schedule from './contents/Schedule';
-import { get } from '../../slice';
+import { get, setConfirmDelete } from '../../slice';
 import { endpointAds } from '../../../settings';
 import { deleteAds, setSelected, publishAds } from '../../slices/ads';
 
@@ -66,15 +66,20 @@ function Component() {
             labels={["Details", "Content", "Schedules"]}
             contents={[
                 <Detail type="Advertisement" data={data} labels={details}
-                    onDelete={() => !data.published ? dispatch(deleteAds(data, history)) : null}
+                    onDelete={() => !data.published ?
+                        dispatch(setConfirmDelete("Are you sure to delete this item?",
+                            () => dispatch(deleteAds(data, history))
+                        ))
+                        : null}
                     renderButtons={() => [
                         <Button
                             label="Duplicate"
                             onClick={() => {
-                                dispatch(setSelected({...data, id: null}));
+                                dispatch(setSelected({ ...data, id: null }));
                                 history.push(
                                     url.split('/').slice(0, -1).join('/') + "/add"
-                                )}
+                                )
+                            }
                             }
                         />,
                         <Button label="Preview" onClick={() => { }} />,
