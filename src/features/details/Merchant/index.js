@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
-import { useLocation, useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { get } from '../../slice';
 import { endpointMerchant } from '../../../settings';
 import { setSelected, deleteMerchant } from '../../slices/merchant';
@@ -48,18 +48,17 @@ const account = {
 };
 
 function Component() {
-    let { state } = useLocation();
-    const [data, setData] = useState(state ? state : {});
+    const [data, setData] = useState({});
     
     let dispatch = useDispatch();
     let history = useHistory();
     let { id } = useParams();
     useEffect(() => {
-        !state && dispatch(get(endpointMerchant + '/admin?id=' + id, res => {
+        dispatch(get(endpointMerchant + '/admin?id=' + id, res => {
             setData(res.data.data);
             setSelected(res.data.data);
         }))
-    }, [id, state, dispatch])
+    }, [id, dispatch])
 
     return (
         <Template

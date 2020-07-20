@@ -10,7 +10,7 @@ import AnimatedNumber from "animated-number-react";
 import Tab from '../../components/Tab';
 
 import Table from '../../components/Table';
-import { getTransactionDisbursement, refresh } from '../slices/transaction';
+import { getTransactionDisbursement, refresh, downloadTransactionDisbursement } from '../slices/transaction';
 import {
     toMoney
 } from '../../utils';
@@ -402,7 +402,9 @@ function Component() {
                                 }}
                             />
                             <Button label="Download .csv" icon={<FiDownload />}
-                                onClick={() => {}}
+                                onClick={() => {
+                                    dispatch(downloadTransactionDisbursement(type, merchant, courier))
+                                }}
                             />
                         </div>
                     </div>

@@ -9,7 +9,6 @@ import SectionSeparator from "../../components/SectionSeparator";
 import {
   endpointAdmin,
   endpointMerchant,
-  banks,
   endpointResident,
 } from "../../settings";
 import { createMerchant, editMerchant } from "../slices/merchant";
@@ -65,6 +64,7 @@ function Component() {
   const [province, setProvince] = useState("");
   const [provinces, setProvinces] = useState([]);
 
+  const { banks } = useSelector((state) => state.main);
   const { loading, selected } = useSelector((state) => state.merchant);
 
   let dispatch = useDispatch();

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import defaultImg from '../../../assets/fallback.jpg';
 
@@ -11,12 +11,14 @@ import Button from '../../../components/Button';
 
 import { toSentenceCase, dateFormatter, getCountryFromCode, getBank } from '../../../utils';
 import { FiTrash, FiEdit } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
 
 function Component({ imgPreview = false, data, labels, type = "",
     editable = true, onDelete, renderButtons = () => { } }) {
 
+    const { banks } = useSelector(state => state.main);
+
     let history = useHistory();
-    let { url } = useRouteMatch();
 
     function formatLabel(label) {
         if (label.label)
@@ -39,7 +41,7 @@ function Component({ imgPreview = false, data, labels, type = "",
                         label === "address" ? toSentenceCase(value) :
                             label === "created_on" ? dateFormatter(value, '-') :
                                 label === "nationality" ? getCountryFromCode(value) :
-                                    label === "account_bank" ? getBank(value) :
+                                    label === "account_bank" ? getBank(value, banks) :
                                         label === "gender" ?
                                             (value === "L" ? "Male" :
                                                 value === "P" ? "Female" : "Undefined") :
@@ -86,14 +88,14 @@ function Component({ imgPreview = false, data, labels, type = "",
                         }}>
                             {group}
                         </div>
-                        {labels[group].map(el => {
+                        {labels[group].map((el, i) => {
                             return !el.disabled ?
-                                <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={el} >
+                                <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
                                     <Column flex={3} style={{ fontWeight: 'bold', fontSize: '1em', textAlign: 'left' }}>
-                                        {el.lfmt ? el.lfmt(el) : formatLabel(el)}
+                                        {el.labelFormatter ? el.labelFormatter(el) : formatLabel(el)}
                                     </Column>
                                     <Column flex={9} style={{ fontWeight: 'normal', fontSize: '1em', }}>
-                                        {el.vfmt ? el.vfmt(data[el.label]) : formatValue(el, data[el])}
+                                        {el.valueFormatter ? el.valueFormatter(data[el.label]) : formatValue(el, data[el])}
                                     </Column>
                                 </Row> : null;
                         })}
@@ -105,7 +107,7 @@ function Component({ imgPreview = false, data, labels, type = "",
                 flexDirection: 'column',
             }}>
                 {editable && <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
-                    pathname: url.split('/').slice(0, -1).join('/') + "/edit",
+                    pathname: "edit",
                     state: data,
                 })} />}
                 {onDelete && <Button icon={<FiTrash />} color="danger" label="Delete" onClick={onDelete} />}

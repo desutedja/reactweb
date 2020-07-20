@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import Detail from '../components/Detail';
 import Template from '../components/Template';
 
-import { useLocation, useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { get } from '../../slice';
 import { endpointManagement } from '../../../settings';
 import { deleteStaff } from '../../slices/staff';
@@ -17,18 +17,17 @@ const details = {
 };
 
 function Component() {
-    let { state } = useLocation();
-    const [data, setData] = useState(state ? state : {});
+    const [data, setData] = useState({});
 
     let dispatch = useDispatch();
     let { id } = useParams();
     let history = useHistory();
 
     useEffect(() => {
-        !state && dispatch(get(endpointManagement + '/admin/staff/' + id, res => {
+        dispatch(get(endpointManagement + '/admin/staff/' + id, res => {
             setData(res.data.data);
         }))
-    }, [dispatch, id, state])
+    }, [dispatch, id])
 
     return (
         <Template

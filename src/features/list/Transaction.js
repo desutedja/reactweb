@@ -3,7 +3,7 @@ import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import Filter from '../../components/Filter';
-import { getTransaction, getTransactionDetails } from '../slices/transaction';
+import { getTransaction, getTransactionDetails, downloadTransaction } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
 import { toMoney, toSentenceCase, dateTimeFormatterCell } from '../../utils';
 import Pill from '../../components/Pill';
@@ -117,7 +117,9 @@ function Component() {
             ]}
             actions={[
                 <MyButton label="Download .csv" icon={<FiDownload />}
-                    onClick={() => {}}
+                    onClick={() => {
+                        dispatch(downloadTransaction(status, statusPayment, type))
+                    }}
                 />
             ]}
             onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}

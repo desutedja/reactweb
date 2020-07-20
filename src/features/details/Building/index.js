@@ -11,7 +11,7 @@ import Service from './contents/Service';
 import Management from './contents/Management';
 import Module from './contents/Module';
 import { endpointAdmin } from '../../../settings';
-import { useLocation, useParams, useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { get } from '../../slice';
 import { setSelected, deleteBuilding } from '../../slices/building';
 
@@ -24,19 +24,19 @@ const labels = {
 const tabs = ["Details", "Section", "Unit Type", "Unit", "Service", "Management", "Module"];
 
 function Component() {
-    let { state } = useLocation();
-    const [data, setData] = useState(state ? state : {});
+    const [data, setData] = useState({});
     const {auth} = useSelector(state => state)
     
     let dispatch = useDispatch();
     let history = useHistory();
     let { id } = useParams();
+
     useEffect(() => {
-        !state && dispatch(get(endpointAdmin + '/building/details/' + id, res => {
+        dispatch(get(endpointAdmin + '/building/details/' + id, res => {
             setData(res.data.data);
             setSelected(res.data.data);
         }))
-    }, [id, state, dispatch])
+    }, [id, dispatch])
 
     return (
         <Template

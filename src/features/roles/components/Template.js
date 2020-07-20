@@ -15,9 +15,10 @@ import Info from '../../../components/Info';
 import Modal from '../../../components/Modal';
 
 import { toSentenceCase } from '../../../utils';
-import { closeAlert, setConfirmDelete, setNotif } from '../../slice';
+import { closeAlert, setConfirmDelete, setNotif, setBanks, get } from '../../slice';
 import { setQiscus, updateMessages, setUnread } from '../../chat/slice';
 import { logout } from '../../auth/slice';
+import { endpointResident } from '../../../settings';
 
 const Qiscus = new QiscusSDKCore();
 
@@ -62,7 +63,7 @@ function Component({ role, children }) {
                     console.log('read', data)
                 },
                 loginErrorCallback: function (err) {
-                    console.log(err); 
+                    console.log(err);
                 },
                 loginSuccessCallback: function () {
                     // On success
@@ -96,7 +97,7 @@ function Component({ role, children }) {
                     'https://avatars.dicebear.com/api/male/' + user.email + '.svg', user)
             }
         }).catch(err => {
-            console.log("Qiscus init failed");     
+            console.log("Qiscus init failed");
             console.log(err)
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -112,6 +113,19 @@ function Component({ role, children }) {
                 // On error
             })
     }, [dispatch, qiscus, url, messages]);
+
+    useEffect(() => {
+        dispatch(get(endpointResident + '/banks', res => {
+            const banks = res.data.data.map(el => ({
+                value: el.bank_code,
+                label: el.bank_name,
+            }))
+
+            // console.log(banks)
+
+            dispatch(setBanks(banks))
+        }))
+    }, [dispatch])
 
     function isSelected(path) {
         return ('/' + history.location.pathname.split('/')[2]) === path;
@@ -274,7 +288,10 @@ function Component({ role, children }) {
                                 {menuWide && expanded === label && <div className="Submenu">
                                     {subpaths.map(sub => <div
                                         key={sub}
-                                        onClick={() => history.push(path + sub)}
+                                        onClick={() => {
+                                            history.push(path + sub);
+                                            setMenuWide(false);
+                                        }}
                                         className={('/' + history.location.pathname.split('/')[3]) === sub
                                             ? "SubmenuItem-active" : "SubmenuItem"}
                                     >

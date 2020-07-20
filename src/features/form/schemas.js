@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 const defaultRequiredError = 'This field is required.';
 
 const Text = Yup.string().required(defaultRequiredError);
-const TextOptional = Yup.string();
+const TextOptional = Yup.string().nullable();
 
 const Number = Yup.number("This value shoud be number.").required(defaultRequiredError);
 
@@ -58,19 +58,20 @@ export const residentSchema = Yup.object().shape({
     firstname: Text,
     lastname: Text,
     phone: Phone,
-    birthplace: Text,
-    birth_date: Text,
-    nationality: Text,
-    gender: Text,
-    marital_status: Text,
-    occupation: Text,
-    address: Text,
-    province: Text,
-    city: Text,
-    district: Text,
-    account_bank: Text,
-    account_name: Text,
-    account_no: Text,
+
+    birthplace: TextOptional,
+    birth_date: TextOptional,
+    nationality: TextOptional,
+    gender: TextOptional,
+    marital_status: TextOptional,
+    occupation: TextOptional,
+    address: TextOptional,
+    province: TextOptional,
+    city: TextOptional,
+    district: TextOptional,
+    account_bank: TextOptional,
+    account_name: TextOptional,
+    account_no: TextOptional,
 })
 
 export const billingSchema = Yup.object().shape({

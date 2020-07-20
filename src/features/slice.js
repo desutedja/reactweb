@@ -20,7 +20,8 @@ export const slice = createSlice({
     notif: {
       title: '',
       message: '',
-    }
+    },
+    banks: [],
   },
   reducers: {
     openAlert: (state, action) => {
@@ -45,6 +46,9 @@ export const slice = createSlice({
       state.notif.title = action.payload.title;
       state.notif.message = action.payload.message;
     },
+    setBanks: (state, action) => {
+      state.banks = action.payload;
+    },
   },
 });
 
@@ -54,6 +58,7 @@ export const {
   setInfoData,
   toggleDelete,
   setNotifData,
+  setBanks,
 } = slice.actions;
 
 export const setConfirmDelete = (content, confirmed = () => {}) => dispatch => {
@@ -102,10 +107,42 @@ export const get = (
   const { auth } = getState();
 
   Axios.get(link, {
-    headers: auth.headers
+    headers: auth.headers,
   })
     .then(res => {
       // console.log(res);
+
+      ifSuccess(res);
+    })
+    .catch(err => {
+      // console.log(err);
+
+      dispatch(responseAlert(err, link));
+
+      ifError(err);
+    })
+    .finally(() => {
+      finallyDo();
+    })
+}
+
+export const getFile = (
+  link, filename, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) => (dispatch, getState) => {
+  const { auth } = getState();
+
+  Axios.get(link, {
+    headers: auth.headers,
+    responseType: 'blob',
+  })
+    .then(res => {
+      // console.log(res);
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename); //or any other extension
+      document.body.appendChild(link);
+      link.click();
 
       ifSuccess(res);
     })

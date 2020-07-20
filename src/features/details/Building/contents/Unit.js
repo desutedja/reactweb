@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiPlus } from 'react-icons/fi';
 
@@ -7,7 +7,7 @@ import Button from '../../../../components/Button';
 import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import { toSentenceCase } from '../../../../utils';
-import { deleteBuildingUnit, getBuildingUnit, editBuildingUnit, createBuildingUnit } from '../../../slices/building';
+import { deleteBuildingUnit, getBuildingUnit, editBuildingUnit, createBuildingUnit, getBuildingSection, getBuildingUnitType } from '../../../slices/building';
 
 const columnsUnit = [
     { Header: "ID", accessor: "id" },
@@ -36,6 +36,11 @@ function Component() {
     const { selected, loading, unit, section, unit_type, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getBuildingSection( 0, 100, '', selected));
+        dispatch(getBuildingUnitType( 0, 100, '', selected));
+    }, [dispatch, selected]);
 
     return (
         <>

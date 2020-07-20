@@ -58,37 +58,6 @@ export const trxStatusColor = {
     'completed': 'secondary',
 }
 
-export const payment_banks = [
-    {label: 'BRI', value: 'bri',},
-    {label: 'BNI', value: 'bni',},
-    {label: 'BNI Syariah', value: 'bni_sy',},
-    {label: 'Mandiri', value: 'mandiri',},
-    {label: 'BCA', value: 'bca',},
-    {label: 'BTN', value: 'btn',},
-    {label: 'CIMB Niaga', value: 'cimb',},
-    {label: 'BSM', value: 'bsm',},
-    {label: 'Bank Muamalat', value: 'muamalat',},
-    {label: 'Gopay', value: 'gopay',},
-    {label: 'OVO', value: 'ovo',},
-    {label: 'LinkAja', value: 'linkaja',},
-    {label: 'Dana', value: 'dana',},
-    {label: 'MasterCard', value: 'mastercard',},
-    {label: 'VISA', value: 'visa',},
-    {label: 'Other', value: 'other',},
-]
-
-export const banks = [
-    {label: 'BRI', value: 'bri',},
-    {label: 'BNI', value: 'bni',},
-    {label: 'BNI Syariah', value: 'bni_sy',},
-    {label: 'Mandiri', value: 'mandiri',},
-    {label: 'BCA', value: 'bca',},
-    {label: 'BTN', value: 'btn',},
-    {label: 'CIMB Niaga', value: 'cimb',},
-    {label: 'BSM', value: 'bsm',},
-    {label: 'Bank Muamalat', value: 'muamalat',},
-]
-
 export const merchant_types = [
     {label: 'Services', value: 'Services'},
     {label: 'Goods', value: 'Goods'},

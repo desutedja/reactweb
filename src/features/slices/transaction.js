@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointTransaction } from '../../settings';
-import { get } from '../slice';
+import { get, getFile } from '../slice';
 
 const transactionEndpoint = endpointTransaction + '/admin/transaction';
 
@@ -76,7 +76,7 @@ export const {
 export default slice.reducer;
 
 export const getTransaction = (
-   pageIndex, pageSize,
+  pageIndex, pageSize,
   search = '', status = '', statusPayment = '', type = ''
 ) => dispatch => {
   dispatch(startAsync());
@@ -90,7 +90,7 @@ export const getTransaction = (
     '&sort_field=created_on' +
     '&sort_type=DESC' +
     '&search=' + search,
-    
+
     res => {
       dispatch(setData(res.data.data));
 
@@ -98,13 +98,29 @@ export const getTransaction = (
     }))
 }
 
-export const getTransactionDetails = (row,  history, url) => dispatch => {
-  url = '/sa/transaction'
-  // console.log(url)
-  // if (url) return
+export const downloadTransaction = (status = '', statusPayment = '', type = ''
+) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(transactionEndpoint + '/' + row.trx_code, 
+  dispatch(getFile(transactionEndpoint + '/list' +
+    '?status=' + status +
+    '&payment_status=' + statusPayment +
+    '&trx_type=' + type +
+    '&sort_field=created_on' +
+    '&sort_type=DESC' +
+    '&export=true',
+    'transaction_list.csv',
+    res => {
+      dispatch(stopAsync());
+    }))
+}
+
+export const getTransactionDetails = (row, history, url) => dispatch => {
+  url = '/sa/transaction'
+
+  dispatch(startAsync());
+
+  dispatch(get(transactionEndpoint + '/' + row.trx_code,
     res => {
       dispatch(setSelected(res.data.data));
       history.push(url + '/details');
@@ -125,10 +141,23 @@ export const getTransactionSettlement = (
     '&settlement_status=' + settlementStatus +
     '&status=completed' +
     '&search=' + search,
-    
+
     res => {
       dispatch(setSettlement(res.data.data));
 
+      dispatch(stopAsync());
+    }))
+}
+
+export const downloadTransactionSettlement = (settlementStatus = '') => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(getFile(transactionEndpoint + '/list' +
+    '?settlement_status=' + settlementStatus +
+    '&status=completed' +
+    '&export=true',
+    'transaction_settlement.csv',
+    res => {
       dispatch(stopAsync());
     }))
 }
@@ -137,8 +166,6 @@ export const getTransactionDisbursement = (
   pageIndex, pageSize,
   search = '', type, merchant = '', courier = ''
 ) => dispatch => {
-  // console.log(merchant)
-  // if (merchant) return
 
   dispatch(startAsync());
 
@@ -149,10 +176,24 @@ export const getTransactionDisbursement = (
     '&courier_id=' + courier +
     '&limit=' + pageSize +
     '&search=' + search,
-    
+
     res => {
       dispatch(setDisbursement(res.data.data));
 
+      dispatch(stopAsync());
+    }))
+}
+
+export const downloadTransactionDisbursement = (type, merchant = '', courier = '') => dispatch => {
+
+  dispatch(startAsync());
+
+  dispatch(getFile(endpointTransaction + '/admin/disbursement/' + type +
+    '?merchant_id=' + merchant +
+    '&courier_id=' + courier +
+    '&export=true',
+    'transaction_disbursement.csv',
+    res => {
       dispatch(stopAsync());
     }))
 }

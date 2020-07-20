@@ -3,28 +3,29 @@ import {
     // useSelector,
     useDispatch
 } from 'react-redux';
-// import AnimatedNumber from "animated-number-react";
+import AnimatedNumber from "animated-number-react";
+import moment from 'moment';
 
-import { toMoney } from '../../utils';
+import { RiHomeSmile2Line, RiHomeLine, RiStore2Line } from 'react-icons/ri'
+import { toMoney, getDatesRange } from '../../utils';
 import { endpointMerchant, endpointTransaction } from '../../settings';
 
 import './style.css';
-import { XAxis, YAxis, CartesianGrid, Tooltip, Area, PieChart, Pie, ComposedChart, ResponsiveContainer } from 'recharts';
+import { Line, Legend, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, ComposedChart, ResponsiveContainer } from 'recharts';
 import { get } from '../slice';
 
 // const formatValue = (value) => value.toFixed(0);
 // const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
+const formatValue = (value) => value.toFixed(0);
 
 function Component() {
     const [trxData, setTrxData] = useState([]);
+    const [trxDataFormatted, setTrxDataFormatted] = useState([]);
+
     const [
         range,
         setRange
     ] = useState('mtd');
-    const [
-        scale,
-        // setScale
-    ] = useState('monthly');
 
     const [trxSumm, setTrxSumm] = useState({});
 
@@ -52,10 +53,10 @@ function Component() {
 
     useEffect(() => {
         dispatch(get(endpointMerchant + '/admin/statistic/transactiongraph?range=' + range,
-             res => {
+            res => {   
                 setTrxData(res.data.data.graph);
             }))
-    }, [dispatch, range, scale]);
+    }, [dispatch, range]);
 
     useEffect(() => {
         dispatch(get(endpointTransaction + '/admin/transaction/summary',
@@ -93,69 +94,201 @@ function Component() {
             }))
     }, [dispatch, orderType]);
 
+    useEffect(() => {
+        if (range === 'dtd') {
+            const aDaysBefore  = new Date().setHours(new Date().getHours() - 24);
+            const hoursRange = getDatesRange(new Date(aDaysBefore), new Date(), 'hours');
+            const trxDatas = hoursRange.map(date => {
+                const data = trxData ? trxData.filter(data => data.date.split(' ')[0] + data.date.split(' ')[1].split(':')[0] === date.split(' ')[0] + date.split(' ')[1].split(':')[0]) : [];
+                const day = moment(data.length > 0 ? data.date : date).format('dddd');
+                const hour = moment(data.length > 0 ? data.date : date).format('HH:00');
+                return ({
+                    'Date': `${day.substring(0, 3)} ${hour}`,
+                    'Amount Transaction': data.reduce((total, data) => {
+                        return total + data.value_1
+                    }, 0),
+                    'Total Transaction': data.reduce((total, data) => {
+                        return total + data.value_2
+                    }, 0)
+                })
+            });
+            setTrxDataFormatted(trxDatas)
+        }
+
+        if (range === 'mtd') {
+            const aMonthBefore  = new Date().setDate(new Date().getDate() - 30);
+            const datesRange = getDatesRange(new Date(aMonthBefore), new Date(), 'days')
+            const trxDatas = datesRange.map((date, i) => {
+                const data = trxData.filter(data => data.date.split(' ')[0] === date.split(' ')[0]);
+                let month = moment(data.length > 0 ? data.date : date).format('MMM') + ' ';
+                const d = moment(data.length > 0 ? data.date : date).format('DD');
+                if (trxData) {
+                    if (!(datesRange[i].split('-')[1] !== (datesRange[i - 1] ? datesRange[i - 1].split('-')[1] : datesRange[i - 1]))) month = '';
+                }
+                return ({
+                    'Date': month + d,
+                    'Amount Transaction': data.reduce((total, data) => {
+                        return total + data.value_1
+                    }, 0),
+                    'Total Transaction': data.reduce((total, data) => {
+                        return total + data.value_2
+                    }, 0)
+                })
+            });
+            setTrxDataFormatted(trxDatas)
+        }
+
+        if (range === 'ytd') {
+            const aYearBefore  = new Date().setFullYear(new Date().getFullYear() - 1);
+            const monthsRange = getDatesRange(new Date(aYearBefore), new Date(), 'months');
+            const trxDatas = monthsRange.map(date => {
+                const data = trxData ? trxData.filter(data => data.date.split(' ')[0].split('-')[0] + data.date.split(' ')[0].split('-')[1] === date.split(' ')[0].split('-')[0] + date.split(' ')[0].split('-')[1]) : [];
+                const month = moment(data.length > 0 ? data.date : date).format('MMMM') + ' ';
+                const year = moment(data.length > 0 ? data.date: date).format('YYYY')
+                return ({
+                    'Date': month + year,
+                    'Amount Transaction': data.reduce((total, data) => {
+                        return total + data.value_1
+                    }, 0),
+                    'Total Transaction': data.reduce((total, data) => {
+                        return total + data.value_2
+                    }, 0)
+                })
+            })
+            setTrxDataFormatted(trxDatas)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [trxData])
+
     return (
         <>
-            <div className="Row">
-                <div className="Container" style={{
-                    flex: 3,
-                    flexDirection: 'column',
-                }}>
-                    <div className="row no-gutters">
-                        <div className="col">
-                            <h5 className="mb-4">Transaction Statistics</h5>
-                        </div>
-                        <div className="col-auto d-flex">
-                            <div
-                                className={range === 'dtd' ? "GroupActive" : "Group"}
-                                onClick={() => setRange('dtd') }
-                            >
-                                DTD
+            <div className="row no-gutters">
+                <div className="col">
+                    <div className="Container color-4 d-flex flex-column">
+                        <div className="row no-gutters align-items-center">
+                            <div className="col">
+                                <AnimatedNumber
+                                    className="h2 font-weight-bold white"
+                                    value={merchantInfo.active_merchant}
+                                    formatValue={formatValue}
+                                />
+                                <div className="text-nowrap">Active Merchant</div>
                             </div>
-                            <div
-                                className={range === 'mtd' ? "GroupActive" : "Group"}
-                                onClick={() => setRange('mtd')}
-                            >
-                                MTD
-                            </div>
-                            <div
-                                className={range === 'ytd' ? "GroupActive" : "Group"}
-                                onClick={() => setRange('ytd')}
-                            >
-                                YTD
+                            <div className="col-auto">
+                                <div className="w-auto">
+                                    <RiHomeSmile2Line className="BigIcon white my-0" />
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
-                    {/* {JSON.stringify(trxData)} */}
-                    <ResponsiveContainer width='100%'>
-                        <ComposedChart
-                        // width={730}
-                        // height={250}
-                        data={trxData}
-                            margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                            <defs>
-                                <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-                                </linearGradient>
-                                <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                                    <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-                                </linearGradient>
-                            </defs>
-                            <XAxis dataKey="date" />
-                            <YAxis yAxisId="left" dataKey="value_1"
-                                tickFormatter={el => el && toMoney((el + '').slice(0, -3)).slice(3) + 'k'} />
-                            <YAxis yAxisId="right" dataKey="value_2" orientation="right" />
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <Tooltip />
-                            <Area type="monotone" dataKey="value_1" stroke="#8884d8"
-                                fillOpacity={1} fill="url(#colorUv)" yAxisId="left" />
-                            <Area type="monotone" dataKey="value_2" stroke="#82ca9d"
-                                fillOpacity={1} fill="url(#colorPv)" yAxisId="right" />
-                        </ComposedChart>
-                    </ResponsiveContainer>
                 </div>
+                <div className="col">
+                    <div className="Container color-3 d-flex flex-column">
+                        <div className="row no-gutters align-items-center">
+                            <div className="col">
+                                <AnimatedNumber
+                                    className="h2 font-weight-bold white"
+                                    value={merchantInfo.inactive_merchant}
+                                    formatValue={formatValue}
+                                />
+                                <div className="text-nowrap">Inactive Merchant</div>
+                            </div>
+                            <div className="col-auto">
+                                <div className="w-auto">
+                                    <RiHomeLine className="BigIcon white my-0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col">
+                    <div className="Container color-5 d-flex flex-column">
+                        <div className="row no-gutters align-items-center">
+                            <div className="col">
+                                <AnimatedNumber
+                                    className="h2 font-weight-bold white"
+                                    value={merchantInfo.total_merchant}
+                                    formatValue={formatValue}
+                                />
+                                <div className="text-nowrap">Total Merchant</div>
+                            </div>
+                            <div className="col-auto">
+                                <div className="w-auto">
+                                    <RiStore2Line className="BigIcon white my-0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="row no-gutters">
+                <div className="col-12">
+                    <div className="Container flex-column pb-5 pr-4">
+                        <div className="row mb-5 justify-content-between">
+                            <div className="col">
+                                <h5>Transaction Statistics</h5>
+                            </div>
+                            <div className="col-auto">
+                                <div style={{
+                                    display: 'flex',
+                                }}>
+                                    <div
+                                        className={range === 'dtd' ? "GroupActive color-5" : "Group"}
+                                        onClick={() => setRange('dtd') }
+                                    >
+                                        DTD
+                                    </div>
+                                    <div
+                                        className={range === 'mtd' ? "GroupActive color-5" : "Group"}
+                                        onClick={() => setRange('mtd')}
+                                    >
+                                        MTD
+                                    </div>
+                                    <div
+                                        className={range === 'ytd' ? "GroupActive color-5" : "Group"}
+                                        onClick={() => setRange('ytd')}
+                                    >
+                                        YTD
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col px-4" style={{
+                                height: '360px'
+                            }}>
+                                <ResponsiveContainer width='100%'>
+                                    <ComposedChart data={trxDataFormatted}>
+                                        <XAxis height={50} dy={10} dataKey="Date" />
+                                        <YAxis axisLine={false} tickLine={false} width={50} dx={-10} dataKey="Total Transaction" />
+                                        <YAxis axisLine={false} yAxisId="right" width={60} dx={-10} dataKey="Amount Transaction"
+                                        tickFormatter={el => el && toMoney((el + '').slice(0, -3)).slice(3) + 'k'}/>
+                                        <Tooltip />
+                                        <Legend />
+                                        <CartesianGrid vertical={false} stroke="#ddd" dataKey="Date" />
+                                        <Bar radius={4} dataKey="Amount Transaction" fill="#004e92" 
+                                        yAxisId="right" maxBarSize={70}
+                                        />
+                                        <Line type="monotone" dataKey="Total Transaction" stroke="#ff7300"/>
+                                    </ComposedChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                
+                            </div>
+                            <div className="col">
+
+                            </div>
+                            <div className="col">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="Row">
                 <div className="Container" style={{
                     marginRight: 0,
                     flexDirection: 'column',
@@ -195,26 +328,6 @@ function Component() {
             </div>
             <div className="Row">
                 <div className="d-flex flex-column">
-                    <div className="Row">
-                        <div className="Container" style={{
-                            flexDirection: 'column',
-                        }}>
-                            <h5>Total Merchant</h5>
-                            {merchantInfo.total_merchant}
-                        </div>
-                        <div className="Container" style={{
-                            flexDirection: 'column',
-                        }}>
-                            <h5>Active Merchant</h5>
-                            {merchantInfo.active_merchant}
-                        </div>
-                        <div className="Container" style={{
-                            flexDirection: 'column',
-                        }}>
-                            <h5>Inactive Merchant</h5>
-                            {merchantInfo.inactive_merchant}
-                        </div>
-                    </div>
                     <div className="Container" style={{
                         justifyContent: 'space-between',
                     }}>

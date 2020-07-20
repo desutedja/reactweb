@@ -8,7 +8,7 @@ import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
-import { getTransactionDetails, getTransactionSettlement, refresh } from '../slices/transaction';
+import { getTransactionDetails, getTransactionSettlement, refresh, downloadTransactionSettlement } from '../slices/transaction';
 import { trxStatusColor } from '../../settings';
 import { toMoney, dateTimeFormatterCell, toSentenceCase } from '../../utils';
 import { endpointTransaction } from '../../settings';
@@ -270,7 +270,9 @@ function Component() {
                                 label="Settle Selection"
                             />,
                             <MyButton label="Download .csv" icon={<FiDownload />}
-                                onClick={() => { }}
+                                onClick={() => {
+                                    dispatch(downloadTransactionSettlement(statusSettlement))
+                                }}
                             />
                         ])
                     }}

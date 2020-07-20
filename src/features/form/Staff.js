@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import SectionSeparator from '../../components/SectionSeparator';
 import { editStaff, createStaff } from '../slices/staff';
-import { endpointResident, endpointAdmin, banks } from '../../settings';
+import { endpointResident, endpointAdmin } from '../../settings';
 import { get } from '../slice';
 import Template from './components/TemplateWithFormik';
 import countries from '../../countries';
@@ -48,6 +48,7 @@ const staffPayload = {
 }
 
 function Component() {
+    const { banks } = useSelector(state => state.main);
     const { loading, selected } = useSelector(state => state.staff);
     const [bManagements, setBManagements] = useState([]);
 

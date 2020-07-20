@@ -132,7 +132,7 @@ function Component() {
                         dispatch(setSelected({}));
                         history.push(url + "/add");
                     }}
-                />
+                />,
             ]}
         />
     )
