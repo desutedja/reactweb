@@ -98,8 +98,7 @@ export const getTransaction = (
     }))
 }
 
-export const downloadTransaction = (
-  search = '', status = '', statusPayment = '', type = ''
+export const downloadTransaction = (status = '', statusPayment = '', type = ''
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -109,7 +108,6 @@ export const downloadTransaction = (
     '&trx_type=' + type +
     '&sort_field=created_on' +
     '&sort_type=DESC' +
-    '&search=' + search +
     '&export=true',
     'transaction_list.csv',
     res => {
@@ -151,12 +149,23 @@ export const getTransactionSettlement = (
     }))
 }
 
+export const downloadTransactionSettlement = (settlementStatus = '') => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(getFile(transactionEndpoint + '/list' +
+    '?settlement_status=' + settlementStatus +
+    '&status=completed' +
+    '&export=true',
+    'transaction_settlement.csv',
+    res => {
+      dispatch(stopAsync());
+    }))
+}
+
 export const getTransactionDisbursement = (
   pageIndex, pageSize,
   search = '', type, merchant = '', courier = ''
 ) => dispatch => {
-  // console.log(merchant)
-  // if (merchant) return
 
   dispatch(startAsync());
 
@@ -171,6 +180,20 @@ export const getTransactionDisbursement = (
     res => {
       dispatch(setDisbursement(res.data.data));
 
+      dispatch(stopAsync());
+    }))
+}
+
+export const downloadTransactionDisbursement = (type, merchant = '', courier = '') => dispatch => {
+
+  dispatch(startAsync());
+
+  dispatch(getFile(endpointTransaction + '/admin/disbursement/' + type +
+    '?merchant_id=' + merchant +
+    '&courier_id=' + courier +
+    '&export=true',
+    'transaction_disbursement.csv',
+    res => {
       dispatch(stopAsync());
     }))
 }
