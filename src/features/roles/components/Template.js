@@ -62,7 +62,7 @@ function Component({ role, children }) {
                     console.log('read', data)
                 },
                 loginErrorCallback: function (err) {
-                    console.log(err); 
+                    console.log(err);
                 },
                 loginSuccessCallback: function () {
                     // On success
@@ -96,7 +96,7 @@ function Component({ role, children }) {
                     'https://avatars.dicebear.com/api/male/' + user.email + '.svg', user)
             }
         }).catch(err => {
-            console.log("Qiscus init failed");     
+            console.log("Qiscus init failed");
             console.log(err)
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -274,7 +274,10 @@ function Component({ role, children }) {
                                 {menuWide && expanded === label && <div className="Submenu">
                                     {subpaths.map(sub => <div
                                         key={sub}
-                                        onClick={() => history.push(path + sub)}
+                                        onClick={() => {
+                                            history.push(path + sub);
+                                            setMenuWide(false);
+                                        }}
                                         className={('/' + history.location.pathname.split('/')[3]) === sub
                                             ? "SubmenuItem-active" : "SubmenuItem"}
                                     >

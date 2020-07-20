@@ -102,10 +102,42 @@ export const get = (
   const { auth } = getState();
 
   Axios.get(link, {
-    headers: auth.headers
+    headers: auth.headers,
   })
     .then(res => {
       // console.log(res);
+
+      ifSuccess(res);
+    })
+    .catch(err => {
+      // console.log(err);
+
+      dispatch(responseAlert(err, link));
+
+      ifError(err);
+    })
+    .finally(() => {
+      finallyDo();
+    })
+}
+
+export const getFile = (
+  link, filename, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) => (dispatch, getState) => {
+  const { auth } = getState();
+
+  Axios.get(link, {
+    headers: auth.headers,
+    responseType: 'blob',
+  })
+    .then(res => {
+      // console.log(res);
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename); //or any other extension
+      document.body.appendChild(link);
+      link.click();
 
       ifSuccess(res);
     })
