@@ -161,24 +161,24 @@ function Component() {
                             <Input {...props} label="Phone" prefix="+62" />
                             <SectionSeparator />
 
-                            <Input {...props} label="Nationality" options={countries}
+                            <Input {...props} optional label="Nationality" options={countries}
                             />
-                            <Input {...props} label="Birth Place" name="birthplace" options={bcities}
+                            <Input {...props} optional label="Birth Place" name="birthplace" options={bcities}
                                 loading={bcloading}
                             />
-                            <Input {...props} label="Birth Date" name="birth_date" type="date" />
-                            <Input {...props} hidden name="nationality" />
-                            <Input {...props} label="Gender" type="radio" options={[
+                            <Input {...props} optional label="Birth Date" name="birth_date" type="date" />
+                            <Input {...props} optional hidden name="nationality" />
+                            <Input {...props} optional label="Gender" type="radio" options={[
                                 { value: 'P', label: 'Female' },
                                 { value: 'L', label: 'Male' },
                             ]} />
-                            <Input {...props} label="Marital Status" options={[
+                            <Input {...props} optional label="Marital Status" options={[
                                 { value: 'single', label: 'Single' },
                                 { value: 'married', label: 'Married' },
                                 { value: 'divorce', label: 'Divorced' },
                                 { value: 'other', label: 'Other' },
                             ]} />
-                            <Input {...props} label="Occupation" options={[
+                            <Input {...props} optional label="Occupation" options={[
                                 { value: 'unemployed', label: 'Unemployed' },
                                 { value: 'student', label: 'Student' },
                                 { value: 'university_student', label: 'University Student' },
@@ -187,20 +187,20 @@ function Component() {
                             ]} />
                             <SectionSeparator />
 
-                            <Input {...props} label="Address" type="textarea" />
-                            <Input {...props} label="Province" options={provinces}
+                            <Input {...props} optional label="Address" type="textarea" />
+                            <Input {...props} optional label="Province" options={provinces}
                                 onChange={el => setProvince(el.value)}
                             />
-                            {values.province && <Input {...props} label="City" options={cities}
+                            {values.province && <Input {...props} optional label="City" options={cities}
                                 onChange={el => setCity(el.value)}
                             />}
-                            {values.city && <Input {...props} label="District"
+                            {values.city && <Input {...props} optional label="District"
                                 options={districts} />}
                             <SectionSeparator />
 
-                            <Input {...props} label="Account Bank" options={banks} />
-                            <Input {...props} label="Account Number" name="account_no" />
-                            <Input {...props} label="Account Name" />
+                            <Input {...props} optional label="Account Bank" options={banks} />
+                            <Input {...props} optional label="Account Number" name="account_no" />
+                            <Input {...props} optional label="Account Name" />
                             <SubmitButton loading={loading} errors={errors} />
                         </>}
                     </Form>
