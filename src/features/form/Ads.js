@@ -31,6 +31,7 @@ const adsPayload = {
     content_video: "",
     content_description: "",
 
+    default_priority_score: 0,
     total_priority_score: 0,
 
     schedules: [
@@ -74,6 +75,7 @@ const adsPayload = {
 
 function Component() {
     const [score, setScore] = useState(0);
+    const [scoreDef, setScoreDef] = useState(0);
 
     const [gender, setGender] = useState('A');
     const [agef, setAgef] = useState('10');
@@ -95,6 +97,7 @@ function Component() {
         os !== 'all' && i++;
 
         setScore(i);
+        setScoreDef(i);
     }, [agef, aget, gender, job, os])
 
     return (
@@ -120,6 +123,7 @@ function Component() {
                         os: ads.os === 'all' ? null : ads.os,
                         start_date: ads.start_date + ' 00:00:00',
                         end_date: ads.end_date + ' 23:59:59',
+                        default_priority_score: scoreDef,
                     },
                     schedules: schedules,
                 }
@@ -181,7 +185,7 @@ function Component() {
                         />
                         <SectionSeparator />
 
-                        <Input {...props} label="Title" name="content_name" type="textarea" />
+                        <Input {...props} label="Title" name="content_name" />
                         <Input {...props} label="Media Type" name="content_type" type="radio" options={[
                             { value: 'image', label: 'Image' },
                             { value: 'video', label: 'Video' },

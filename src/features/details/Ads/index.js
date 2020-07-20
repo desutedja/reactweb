@@ -66,11 +66,9 @@ function Component() {
             labels={["Details", "Content", "Schedules"]}
             contents={[
                 <Detail type="Advertisement" data={data} labels={details}
-                    onDelete={() => !data.published ?
-                        dispatch(setConfirmDelete("Are you sure to delete this item?",
-                            () => dispatch(deleteAds(data, history))
-                        ))
-                        : null}
+                    onDelete={() => dispatch(setConfirmDelete("Are you sure to delete this item?",
+                        () => dispatch(deleteAds(data, history))
+                    ))}
                     renderButtons={() => [
                         <Button
                             label="Duplicate"

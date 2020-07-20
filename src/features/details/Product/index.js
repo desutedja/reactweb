@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import Modal from '../../../components/Modal';
 import Input from '../../../components/Input';
@@ -7,8 +7,11 @@ import Button from '../../../components/Button';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
-import { patchAdminFee } from '../../slices/product';
+import { patchAdminFee, setSelected } from '../../slices/product';
 import { toMoney } from '../../../utils.js';
+import { useParams } from 'react-router-dom';
+import { get } from '../../slice';
+import { endpointMerchant } from '../../../settings';
 
 const labels = {
     'Information': [
@@ -39,6 +42,8 @@ const labels = {
 };
 
 function Component() {
+    const [data, setData] = useState({});
+
     const [modal, setModal] = useState(false);
     const [image, setImage] = useState('');
 
@@ -48,13 +53,22 @@ function Component() {
 
     const [calculatedPrice, setCalculatedPrice] = useState(0);
 
-    const { selected } = useSelector(state => state.product);
-
     let dispatch = useDispatch();
+    let { id } = useParams();
+
+    useEffect(() => {
+        dispatch(get(endpointMerchant + '/admin/items?id=' + id, res => {
+            setData(res.data.data);
+            setSelected(res.data.data);
+        }))
+    }, [id, dispatch])
 
     useEffect(() => {
         (discFee !== "" || adminFee !== "") && (setCalculatedPrice(
-            <span style={{ color: "red" }}>{toMoney(selected.selling_price + Math.ceil(selected.selling_price * (adminFee) / 100) - Math.ceil(selected.selling_price * (discFee / 100)))}</span>
+            <span style={{ color: "red" }}>{toMoney(data.selling_price +
+                Math.ceil(data.selling_price * (adminFee) / 100) -
+                Math.ceil(data.selling_price * (discFee / 100)))}
+            </span>
         ));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [discFee, adminFee]);
@@ -77,13 +91,13 @@ function Component() {
                 }}
                 onClick={() => {
                     dispatch(patchAdminFee({
-                        item_id: selected.id,
-                        merchant_id: selected.merchant_id,
+                        item_id: data.id,
+                        merchant_id: data.merchant_id,
                         admin_fee: parseInt(adminFee),
-                        pg_fee: selected.pg_fee,
+                        pg_fee: data.pg_fee,
                         discount_fee: parseInt(discFee),
-                        delivery_fee: selected.delivery_fee,
-                    }, [selected]));
+                        delivery_fee: data.delivery_fee,
+                    }, [data]));
                     setModalFee(false);
                 }}
             >
@@ -107,23 +121,23 @@ function Component() {
                         marginTop: 16,
                     }}>
                         <hr />
-                        <h5>Selling Price: {toMoney(selected.selling_price)}</h5>
+                        <h5>Selling Price: {toMoney(data.selling_price)}</h5>
                         <h5>Display Price: {calculatedPrice}</h5>
                     </div>
                 </form>
             </Modal>
             <Template
-                image={selected.thumbnails}
-                title={selected.name}
-                merchant={selected.merchant_name}
+                image={data.thumbnails}
+                title={data.name}
+                merchant={data.merchant_name}
                 labels={["Details", "Images"]}
                 contents={[
-                    <Detail data={selected} labels={labels} editable={false}
+                    <Detail data={data} labels={labels} editable={false}
                         renderButtons={() => [
                             <Button label="Adjust Fees & Discount" onClick={() => {
                                 setModalFee(true);
-                                setAdminFee(selected.admin_fee);
-                                setDiscFee(selected.discount_fee);
+                                setAdminFee(data.admin_fee);
+                                setDiscFee(data.discount_fee);
                             }} />,
                             <Button label="Take Down Product" onClick={() => { }} />,
                         ]}
@@ -132,7 +146,7 @@ function Component() {
                         display: 'flex',
                         marginTop: 16,
                     }}>
-                        {selected.images?.map((el, id) =>
+                        {data.images?.map((el, id) =>
                             <img src={el} alt="product images"
                                 key={id}
                                 height={100}
