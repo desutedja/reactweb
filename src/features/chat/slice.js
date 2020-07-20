@@ -16,6 +16,7 @@ export const slice = createSlice({
     participants: [],
     messages: [],
     rooms: [],
+    lastMessageOnRoom: '',
   },
   reducers: {
     startAsync: (state) => {
@@ -45,6 +46,9 @@ export const slice = createSlice({
     setRooms: (state, action) => {
       state.rooms = action.payload;
     },
+    setLastMessageOnRoom: (state, action) => {
+      state.lastMessageOnRoom = action.payload;
+    },
   },
 });
 
@@ -57,6 +61,7 @@ export const {
   setMessages,
   setRooms,
   updateMessages,
+  setLastMessageOnRoom,
   setUnread
 } = slice.actions;
 

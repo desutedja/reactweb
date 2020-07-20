@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
+import { TiAttachment } from 'react-icons/ti';
+
 import moment from 'moment'
 import Input from '../../components/Input';
 import Loading from '../../components/Loading';
@@ -24,13 +26,14 @@ function Component() {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
     const [loadingParticipants, setLoadingParticipants] = useState(false);
-    //const [loadingRooms, setLoadingRooms] = useState(false);
+    const [loadingRooms, setLoadingRooms] = useState(false);
 
     const [refresh, setRefresh] = useState(false);
     const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState('');
 
     const [participants, setParticipants] = useState([]);
-    //const [rooms, setRooms] = useState([]);
+    const [rooms, setRooms] = useState([]);
     const [room, setRoom] = useState({});
 
     const [listTopic, /*setListTopic */] = useState(topics[0].value);
@@ -39,7 +42,7 @@ function Component() {
     const [listSearch, /* setListSearch */] = useState('');
 
     const { user, role } = useSelector(state => state.auth);
-    const { qiscus, rooms, roomID, roomUniqueID, messages, loading } = useSelector(state => state.chat);
+    const { qiscus, roomID, roomUniqueID, messages, lastMessageOnRoom, loading } = useSelector(state => state.chat);
     const adminID = (role === "sa" ? user.id : user.building_management_id);
     const userID = (role === "sa" ? "centratama" : "management") + "-clink-" + adminID;
 
@@ -88,19 +91,19 @@ function Component() {
     }, [qiscus, room, roomID]);
 
     useEffect(() => {
+        /*
+         * If get list room from server (not directly from qiscus)
         if (role === "sa") 
             dispatch(getAdminChat(listTopic,listPageIndex, listPageSize, listSearch));
         else
             dispatch(getPICBMChat(listTopic,listPageIndex, listPageSize, listSearch));
-    },[listPageIndex, listPageSize, listSearch, listTopic, dispatch, role])
+        */
 
-    /*
-    useEffect(() => {
         var params = {
             page: 1,
-            limit: 100,
+            limit: 20,
             show_participants: false,
-            show_empty: true
+            show_empty: false
         }
 
         setLoadingRooms(true);
@@ -109,7 +112,7 @@ function Component() {
                 // On success
                 console.log("rooms", rooms);
 
-                setRooms(rooms);
+                dispatch(setRooms(rooms));
                 !roomID && dispatch(setRoomID(rooms[0].id));
                 !roomUniqueID && dispatch(setRoomUniqueID(rooms[0].unique_id));
                 setLoadingRooms(false);
@@ -119,18 +122,35 @@ function Component() {
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, messages, qiscus]);
-    */
+
+    useEffect(() => {
+        console.log("Last Message coming on room: ", lastMessageOnRoom)
+    },[lastMessageOnRoom]);
 
     const sendMessage = () => {
         if (message.length === 0) return;
         setLoadingSend(true);
-        qiscus.sendComment(roomID, message)
-            .then(function (comment) {
+        qiscus.sendComment(
+            roomID, message, null, messageType, null, {
+                // extra data
+                name: user.firstname + ' ' + user.lastname,
+                role: role === 'sa' ? 'centratama' : 'staff_pic_bm',
+                merchant: null,
+                building: user.building_name,
+                management: user.management_name,
+            }).then(function (comment) {
                 // On success
                 setRefresh(!refresh);
                 setMessage('');
                 setLoadingSend(false);
             })
+    }
+
+    function isImage(file) {
+        const f = file.split(".")
+        const ext = f[f.length - 1].toUpperCase()
+        return  ext === 'JPG' || ext === 'PNG' || ext === 'GIF' || ext === 'JPEG' || ext === 'TIFF' ||
+                ext === 'EPS';
     }
 
     return (
@@ -171,10 +191,26 @@ function Component() {
                                         flexDirection: el.email === userID ?
                                             'row-reverse' : 'row',
                                     }}>
+                                        {/* if type is text */ }
+
+                                        { el.type === 'text' &&
                                         <div className={
                                             el.email === userID ?
-                                                "Message-own" : "Message"}>{el.message}
+                                            "Message-own" : "Message"}>
+                                            {el.message}
+                                        </div>}
+
+                                        {el.type === 'file_attachment' &&
+                                        <div>
+                                            {
+                                                isImage(el.message.split(" ")[1]) ? 
+                                                <img al ="Attachment" src={el.message.split(" ")[1]} width="150" style={{ padding: '10px' }}/> :
+                                                <div className={el.email === userID ? "Message-own" : "Message"}>
+                                                    <TiAttachment /> <a href={el.message.split(" ")[1]}>Download Attachment</a>
+                                                </div>
+                                            }
                                         </div>
+                                        }
                                         <div className="MessageTime">
                                             {moment.unix(el.unix_timestamp).fromNow()}
                                         </div>
@@ -218,28 +254,30 @@ function Component() {
                         <Loading loading={loading}>
                             {rooms.map((el, index) =>
                                 <div
-                                    className={"Room" + (el.room_id === roomID ? " selected" : "")}
-                                    onClick={el.room_id === roomID ? null : () => {
+                                    className={"Room" + (el.id === roomID ? " selected" : "")}
+                                    onClick={el.id === roomID ? null : () => {
                                         setRoom(el);
-                                        dispatch(setRoomID(el.room_id));
-                                        dispatch(setRoomUniqueID(el.room_id));
+                                        dispatch(setRoomID(el.id));
+                                        dispatch(setRoomUniqueID(el.id));
                                     }}
                                 >
                                     <div className="Room-left">
                                         <div className="Room-title">
-                                            <p className="Room-name">{el.room_name}</p>
-                                            <p className="Room-subtitle">{"ID: " + el.room_id}</p>
+                                            <p className="Room-name">{el.last_comment.room_name}</p>
+                                            <p className="Room-subtitle">{"ID: " + el.id}</p>
                                         </div>
-                                        <p className="Room-message">{el.last_message_user
+                                        { /* TODO: get information about user in last_comment.extras */ }
+                                        <p className="Room-message">{el.last_comment.username
                                             + ': ' +
-                                            (el.last_message.length > 20 ?
-                                                el.last_message.slice(0, 20) + '...'
-                                                : el.last_message)} 
-                                                {" (" + moment.unix(el.last_message_timestamp).fromNow() + ")"} </p>
+                                            (el.last_comment.length > 20 ?
+                                                el.last_comment.slice(0, 20) + '...'
+                                                : el.last_comment_message)} 
+                                                {" (" + moment.unix(el.last_comment.unix_timestamp).fromNow() + ")"} </p>
                                     </div>
                                     <div className="Room-right">
                                         {!!el.count_notif &&
-                                            <p className="Room-unread">{el.count_notif}</p>}
+                                            <p className="Room-unread">{el.count_notif}</p>
+                                        }
                                     </div>
                                 </div>
                             )}
