@@ -65,6 +65,5 @@ messaging.onTokenRefresh(() => {
 
 messaging.onMessage((payload) => {
     console.log('Message received. ', payload);
-    alert('Message received. ' + payload);
     // ...
 });

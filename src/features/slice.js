@@ -20,7 +20,8 @@ export const slice = createSlice({
     notif: {
       title: '',
       message: '',
-    }
+    },
+    banks: [],
   },
   reducers: {
     openAlert: (state, action) => {
@@ -45,6 +46,9 @@ export const slice = createSlice({
       state.notif.title = action.payload.title;
       state.notif.message = action.payload.message;
     },
+    setBanks: (state, action) => {
+      state.banks = action.payload;
+    },
   },
 });
 
@@ -54,6 +58,7 @@ export const {
   setInfoData,
   toggleDelete,
   setNotifData,
+  setBanks,
 } = slice.actions;
 
 export const setConfirmDelete = (content, confirmed = () => {}) => dispatch => {

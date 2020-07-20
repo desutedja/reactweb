@@ -15,9 +15,10 @@ import Info from '../../../components/Info';
 import Modal from '../../../components/Modal';
 
 import { toSentenceCase } from '../../../utils';
-import { closeAlert, setConfirmDelete, setNotif } from '../../slice';
+import { closeAlert, setConfirmDelete, setNotif, setBanks, get } from '../../slice';
 import { setQiscus, updateMessages, setUnread } from '../../chat/slice';
 import { logout } from '../../auth/slice';
+import { endpointResident } from '../../../settings';
 
 const Qiscus = new QiscusSDKCore();
 
@@ -112,6 +113,19 @@ function Component({ role, children }) {
                 // On error
             })
     }, [dispatch, qiscus, url, messages]);
+
+    useEffect(() => {
+        dispatch(get(endpointResident + '/banks', res => {
+            const banks = res.data.data.map(el => ({
+                value: el.bank_code,
+                label: el.bank_name,
+            }))
+
+            // console.log(banks)
+
+            dispatch(setBanks(banks))
+        }))
+    }, [dispatch])
 
     function isSelected(path) {
         return ('/' + history.location.pathname.split('/')[2]) === path;

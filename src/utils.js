@@ -1,6 +1,5 @@
 import React from 'react';
 import countries from './countries';
-import { banks } from './settings';
 import { FiCalendar, FiClock } from 'react-icons/fi';
 import moment from 'moment';
 
@@ -174,11 +173,10 @@ export function getCountryFromCode(value) {
     return c === undefined ? "Undefined Country" : c.label
 }
 
-export function getBank(value) {
+export function getBank(value, banks) {
     const c = banks.find((el) => el.value === value)
     return c === undefined ? "Undefined Bank" : c.label
 }
-
 export function toEllipsis(value, limit) {
     return value.slice(0, limit - 1) + '...'
 }

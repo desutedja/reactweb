@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FiChevronDown, FiX } from 'react-icons/fi';
 import MoonLoader from "react-spinners/MoonLoader";
-import ComboBox from './ComboBox';
+// import ComboBox from './ComboBox';
 import { rangeNumber } from '../utils'
 
 import { storageRef } from '../firebase';
@@ -76,26 +76,26 @@ function Component({
             />;
 
             case 'select':
-                if (options.length > 10) {
-                    return (
-                        <>
-                            <ComboBox
-                                options={options}
-                                label={label}
-                                // comboName={}
-                                comboValue={value}
-                                setComboValue={e => {
-                                    setValue(e.target.value);
-                                    setInputValue && setInputValue(e.target.value);
-                                }}
-                            />
-                            <input name={name ? name : label.toLowerCase().replace(/ /g, '_')}
-                                className="hidden"
-                                value={value}
-                            />
-                        </>
-                    )
-                }
+                // if (options.length > 10) {
+                //     return (
+                //         <>
+                //             <ComboBox
+                //                 options={options}
+                //                 label={label}
+                //                 // comboName={}
+                //                 comboValue={value}
+                //                 setComboValue={e => {
+                //                     setValue(e.target.value);
+                //                     setInputValue && setInputValue(e.target.value);
+                //                 }}
+                //             />
+                //             <input name={name ? name : label.toLowerCase().replace(/ /g, '_')}
+                //                 className="hidden"
+                //                 value={value}
+                //             />
+                //         </>
+                //     )
+                // }
                 return (
                     <div className="Input-container w-100">
                         <select

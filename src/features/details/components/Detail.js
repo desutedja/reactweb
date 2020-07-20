@@ -11,9 +11,12 @@ import Button from '../../../components/Button';
 
 import { toSentenceCase, dateFormatter, getCountryFromCode, getBank } from '../../../utils';
 import { FiTrash, FiEdit } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
 
 function Component({ imgPreview = false, data, labels, type = "",
     editable = true, onDelete, renderButtons = () => { } }) {
+
+    const { banks } = useSelector(state => state.main);
 
     let history = useHistory();
     let { url } = useRouteMatch();
@@ -39,7 +42,7 @@ function Component({ imgPreview = false, data, labels, type = "",
                         label === "address" ? toSentenceCase(value) :
                             label === "created_on" ? dateFormatter(value, '-') :
                                 label === "nationality" ? getCountryFromCode(value) :
-                                    label === "account_bank" ? getBank(value) :
+                                    label === "account_bank" ? getBank(value, banks) :
                                         label === "gender" ?
                                             (value === "L" ? "Male" :
                                                 value === "P" ? "Female" : "Undefined") :

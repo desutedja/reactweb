@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import SectionSeparator from '../../components/SectionSeparator';
 import { createResident, editResident } from '../slices/resident';
-import { endpointResident, banks } from '../../settings';
+import { endpointResident } from '../../settings';
 import countries from '../../countries';
 import { get, post } from '../slice';
 
@@ -45,6 +45,7 @@ const residentPayload = {
 }
 
 function Component() {
+    const { banks } = useSelector(state => state.main);
     const { selected, loading } = useSelector(state => state.resident);
 
     const [emailRegistered, setEmailRegistered] = useState(false);

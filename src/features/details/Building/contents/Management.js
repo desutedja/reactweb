@@ -10,10 +10,18 @@ import Input from '../../../../components/Input';
 import Filter from '../../../../components/Filter';
 import Form from '../../../../components/Form';
 import { editBuildingManagement, createBuildingManagement, getBuildingManagement, deleteBuildingManagement, changeBuildingManagement } from '../../../slices/building';
-import { banks, endpointAdmin } from '../../../../settings';
+import { endpointAdmin } from '../../../../settings';
 import { toMoney } from '../../../../utils';
 import { get } from '../../../slice';
 
+const dateArray = (() => {
+    const array = Array(31).fill({});
+
+    return array.map((el, index) => ({
+        label: index + 1 + '',
+        value: index + 1 + '',
+    }))
+})()
 
 function Component() {
     const {auth} = useSelector(state => state)
@@ -31,6 +39,7 @@ function Component() {
     const [confirmChange, handleConfirm] = useState(false);
     const [managementChose, setManagementChose] = useState({});
 
+    const { banks } = useSelector(state => state.main);
     const { selected, management, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
@@ -92,11 +101,6 @@ function Component() {
         }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, search, loadDefault]);
-
-    // useEffect(() => {
-    //     console.log(managements)
-    // }, [managements])
-
 
     return (
         <>
@@ -184,10 +188,12 @@ function Component() {
                     <Input label="Settlement Account No" inputValue={selectedRow.settlement_account_no} />
                     <Input label="Settlement Account Name"
                         inputValue={selectedRow.settlement_account_name} />
-                    <Input label="Billing Published (Date)" name="billing_published" type="number"
+                    <Input label="Billing Published (Date)" name="billing_published" type="select"
+                        options={dateArray}
                         inputValue={selectedRow.billing_published}
                     />
-                    <Input label="Billing Due (Date)" name="billing_duedate" type="number"
+                    <Input label="Billing Due (Date)" name="billing_duedate" type="select"
+                        options={dateArray}
                         inputValue={selectedRow.billing_duedate} />
                     <Input label="Penalty Fee" type="number" addons="%"
                         inputValue={selectedRow.penalty_fee} />
