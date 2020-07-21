@@ -27,6 +27,8 @@ const colors = ['#2ad170', '#007bff', '#f7b733', '#ed4057'];
 function Component() {
     // task
     const { sosData } = useSelector(state => state.dashboard);
+    const { auth } = useSelector(state => state);
+
     const [range, setRange] = useState('ytd');
     const [pieData, setPieData] = useState([]);
     const [taskData, setTaskData] = useState({});
@@ -39,11 +41,19 @@ function Component() {
     }, [dispatch, range]);
 
     useEffect(() => {
-        dispatch(get(endpointTask + '/admin/sa/statistics',  res => {
-            setPieData(res.data.data.ticket_by_category);
-            setTaskData(res.data.data);
-        }));
-    }, [dispatch]);
+        if (auth.role === 'sa') {
+            dispatch(get(endpointTask + '/admin/sa/statistics',  res => {
+                setPieData(res.data.data.ticket_by_category);
+                setTaskData(res.data.data);
+            }));
+        }
+        if (auth.role === 'bm') {
+            dispatch(get(endpointTask + '/admin/pic_bm/statistics',  res => {
+                setPieData(res.data.data.ticket_by_category);
+                setTaskData(res.data.data);
+            }));
+        }
+    }, [auth.role, dispatch]);
 
     useEffect(() => {
         if (range === 'dtd') {
@@ -51,7 +61,6 @@ function Component() {
             const hoursRange = getDatesRange(new Date(aDaysBefore), new Date(), 'hours');
             const sosDatas = hoursRange.map(date => {
                 const data = sosData.filter(data => data.time.split('T')[0] + data.time.split('T')[1].split(':')[0] === date.split(' ')[0] + date.split(' ')[1].split(':')[0]);
-                console.log(data)
                 return ({
                     time: date,
                     num_of_sos: data.reduce((total, data) => {
@@ -87,8 +96,6 @@ function Component() {
             })
             const sosDataFormatted = sosDatas.map((data, i) => {
                 let month = months[data.time.split('-')[1] - 1].label;
-                // console.log(sosDatas[i].time)
-                // console.log(sosDatas[i - 1] ? sosDatas[i - 1].time : sosDatas[i - 1])
                 if (!(sosDatas[i].time.split('-')[1] !== (sosDatas[i - 1] ? sosDatas[i - 1].time.split('-')[1] : sosDatas[i - 1]))) month = '';
                 const date = data.time.split('-')[2];
                 return (
