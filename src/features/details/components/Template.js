@@ -8,16 +8,17 @@ import {
     RiStore2Line,
 } from "react-icons/ri";
 
+import Loading from '../../../components/Loading';
 import Tab from '../../../components/Tab';
 import Breadcrumb from '../../../components/Breadcrumb';
 
 function Component({ image, title, website, phone, merchant,
-    email, labels, contents, activeTab, imageTitle = '' }) {
+    email, labels, contents, activeTab, imageTitle = '', loading = true }) {
 
     const [imgLoading, setImgLoading] = useState(true);
 
     return (
-        <>
+        <Loading loading={loading}>
             <Breadcrumb title={title} />
             <div style={{
                 display: 'flex',
@@ -87,7 +88,7 @@ function Component({ image, title, website, phone, merchant,
                     />
                 </div>
             </div>
-        </>
+        </Loading>
     )
 }
 

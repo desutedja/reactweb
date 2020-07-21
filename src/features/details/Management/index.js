@@ -34,6 +34,7 @@ function Component() {
             title={data.name}
             website={data.website}
             phone={data.phone}
+            loading={!data.id}
             labels={["Details"]}
             contents={[
                 <Detail type="Management" data={data} labels={details}

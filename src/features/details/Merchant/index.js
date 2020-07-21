@@ -65,6 +65,7 @@ function Component() {
             image={data.logo}
             title={data.name}
             phone={data.phone}
+            loading={!data.id}
             labels={["Details", "Contact Person", "Bank Account"]}
             contents={[
                 <Detail data={data} labels={info}

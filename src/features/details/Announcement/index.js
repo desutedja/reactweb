@@ -88,6 +88,7 @@ function Component() {
             image={data.image}
             title={data.title}
             imageTitle=''
+            loading={!data.id}
             labels={["Details", "Contents"]}
             contents={[
             <Detail type="Announcement" data={data} labels={details} editable={data.publish === 0}

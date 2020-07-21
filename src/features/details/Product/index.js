@@ -129,6 +129,7 @@ function Component() {
                 image={data.thumbnails}
                 title={data.name}
                 merchant={data.merchant_name}
+                loading={!data.id}
                 labels={["Details", "Images"]}
                 contents={[
                     <Detail data={data} labels={labels} editable={false}

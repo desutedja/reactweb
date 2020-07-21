@@ -105,7 +105,7 @@ function Component({ imgPreview = false, data, labels, type = "",
             </div>
             <div className="col-auto d-flex flex-column">
                 {editable && <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
-                    pathname: `/${role}/building/edit`,
+                    pathname: `edit`,
                     state: data,
                 })} />}
                 {onDelete && <Button icon={<FiTrash />} color="danger" label="Delete" onClick={onDelete} />}

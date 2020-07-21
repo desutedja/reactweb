@@ -35,6 +35,7 @@ function Component() {
             title={data.firstname + ' ' + data.lastname}
             email={data.email}
             phone={data.phone}
+            loading={!data.id}
             labels={["Details"]}
             contents={[
                 <Detail data={ data} labels={details}

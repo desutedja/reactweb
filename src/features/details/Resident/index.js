@@ -38,6 +38,7 @@ function Component() {
             title={data.firstname + ' ' + data.lastname}
             email={data.email}
             phone={data.phone}
+            loading={!data.id}
             labels={["Details", "Unit"]}
             activeTab={0}
             contents={[

@@ -94,6 +94,7 @@ function Component() {
 
     return (
         <Template
+            loading={!data.id}
             labels={["Details", "Resident", "Merchant", "Courier", "Payment", "Orders"]}
             contents={[
                 <Detail data={data} labels={details} editable={false} />,

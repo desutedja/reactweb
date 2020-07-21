@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Details from '../components/Detail';
 import Modal from '../../../components/Modal';
 import Template from '../components/Template';
 
 import Reports from './contents/Reports';
+import { useParams, useHistory } from 'react-router-dom';
+import { get } from '../../slice';
+import { endpointTask } from '../../../settings';
 
 const detail = {
     "Information": [
@@ -50,8 +53,16 @@ const requester = {
 function Component() {
     const [modal, setModal] = useState(false);
     const [image, setImage] = useState('');
+    const [data, setData] = useState({});
 
-    const { selected } = useSelector(state => state.task);
+    let dispatch = useDispatch();
+    let { id } = useParams();
+
+    useEffect(() => {
+        dispatch(get(endpointTask + '/admin/' + id, res => {
+            setData(res.data.data);
+        }))
+    }, [dispatch, id])
 
     return (
         <>
@@ -62,15 +73,16 @@ function Component() {
                 }} />
             </Modal>
             <Template
+                loading={!data.task_id}
                 labels={["Details", "Assignee", "Requester", "Reports"]}
                 contents={[
                     <>
-                        <Details data={selected} labels={detail} editable={false} />
-                        {selected.attachment_1 ?
-                            attachments.map(el => selected[el] && <img src={selected[el]} alt='attachment'
+                        <Details data={data} labels={detail} editable={false} />
+                        {data.attachment_1 ?
+                            attachments.map(el => data[el] && <img src={data[el]} alt='attachment'
                                 onClick={() => {
                                     setModal(true);
-                                    setImage(selected[el]);
+                                    setImage(data[el]);
                                 }}
                                 style={{
                                     height: 80,
@@ -83,8 +95,8 @@ function Component() {
                             }}>None</div>
                         }
                     </>,
-                    <Details imgPreview={true} data={selected} labels={assignee} editable={false} />,
-                    <Details data={selected} labels={requester} editable={false} />,
+                    <Details imgPreview={true} data={data} labels={assignee} editable={false} />,
+                    <Details data={data} labels={requester} editable={false} />,
                     <Reports />,
                 ]}
             />

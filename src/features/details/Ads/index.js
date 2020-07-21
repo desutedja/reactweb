@@ -91,6 +91,7 @@ function Component() {
                 </div>
             </Modal>
             <Template
+                loading={!data.id}
                 labels={["Details", "Content", "Schedules"]}
                 contents={[
                     <Detail type="Advertisement" data={data} labels={details}

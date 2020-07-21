@@ -28,6 +28,7 @@ function AdminDetails() {
         <Template
             title={data ? data.firstname + ' ' + data.lastname : data.firstname + ' ' + data.lastname}
             phone={data ? data.phone : data.phone}
+            loading={!data.id}
             labels={["Details"]}
             contents={[
                 <Detail type="Admin" data={data} labels={details} />,
