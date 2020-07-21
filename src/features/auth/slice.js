@@ -7,6 +7,7 @@ export const slice = createSlice({
   initialState: {
     isAuthenticated: false,
     role: '',
+    group: '',
     loading: false,
     email: '',
     user: {},
@@ -62,6 +63,7 @@ export const login = (role, email, history) => dispatch => {
     email: email,
   }, res => {
     dispatch(loginSuccess(email));
+    dispatch(setRole(role));
 
     history && history.push("/" + role + "/otp");
   }, () => {

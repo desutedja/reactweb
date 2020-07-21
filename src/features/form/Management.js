@@ -34,14 +34,14 @@ function Component() {
             slice="management"
             payload={selected.id ? {
                 ...managementPayload, ...selected,
-                phone: selected.phone.slice(3),
-                pic_phone: selected.pic_phone.slice(3),
+                phone: selected.phone.slice(2),
+                pic_phone: selected.pic_phone.slice(2),
             } : managementPayload}
             schema={managementSchema}
             formatValues={values => ({
                 ...values,
-                phone: '628' + values.phone,
-                pic_phone: '628' + values.pic_phone,
+                phone: '62' + values.phone,
+                pic_phone: '62' + values.pic_phone,
             })}
             edit={data => dispatch(editManagement(data, history, selected.id))}
             add={data => dispatch(createManagement(data, history))}

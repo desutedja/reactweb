@@ -112,7 +112,7 @@ function Component() {
         <Template
             slice="staff"
             payload={selected.id ? {...staffPayload, ...selected,
-                phone: selected.phone.slice(3),
+                phone: selected.phone.slice(2),
                 on_centratama: selected.on_centratama ? selected.on_centratama : '',
                 staff_specialization: selected.staff_specialization ? selected.staff_specialization : '',
             } : staffPayload}
@@ -120,7 +120,7 @@ function Component() {
             formatValues={values => ({
                 ...values,
                 on_centratama: parseInt(values.on_centratama, 10),
-                phone: '628' + values.phone,
+                phone: '62' + values.phone,
                 province: parseInt(values.province, 10),
                 city: parseInt(values.city, 10),
                 district: parseInt(values.district, 10),

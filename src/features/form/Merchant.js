@@ -131,14 +131,14 @@ function Component() {
       slice="merchant"
       payload={selected.id ? {
         ...merchantPayload, ...selected,
-        phone: selected.phone.slice(3),
-        pic_phone: selected.pic_phone.slice(3),
+        phone: selected.phone.slice(2),
+        pic_phone: selected.pic_phone.slice(2),
       } : merchantPayload}
       schema={merchantSchema}
       formatValues={values => ({
         ...values,
-        phone: '628' + values.phone,
-        pic_phone: '628' + values.pic_phone,
+        phone: '62' + values.phone,
+        pic_phone: '62' + values.pic_phone,
       })}
       edit={data => dispatch(editMerchant(data, history, selected.id))}
       add={data => dispatch(createMerchant(data, history))}

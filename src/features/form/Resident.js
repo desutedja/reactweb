@@ -115,13 +115,13 @@ function Component() {
             slice="resident"
             payload={selected.id ? {
                 ...residentPayload, ...selected,
-                phone: selected.phone.slice(3),
+                phone: selected.phone.slice(2),
                 birth_date: selected.birth_date.split('T')[0],
             } : residentPayload}
             schema={residentSchema}
             formatValues={values => ({
                 ...values,
-                phone: '628' + values.phone,
+                phone: '62' + values.phone,
                 birth_date: values.birth_date + ' 00:00:00',
             })}
             edit={data => dispatch(editResident(data, history, selected.id))}

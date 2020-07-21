@@ -32,12 +32,12 @@ function AdminForm() {
             slice="admin"
             payload={selected.id ? {
                 ...adminPayload, ...selected,
-                phone: selected.phone.slice(3),
+                phone: selected.phone.slice(2),
             } : adminPayload}
             schema={adminSchema}
             formatValues={values => ({
                 ...values,
-                phone: '628' + values.phone,
+                phone: '62' + values.phone,
             })}
             edit={data => dispatch(editAdmin(data, history, selected.id))}
             add={data => dispatch(createAdmin(data, history))}
