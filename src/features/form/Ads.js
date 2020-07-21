@@ -131,7 +131,7 @@ function Component() {
             edit={data => dispatch(editAds(data, history, selected.id))}
             add={data => dispatch(createAds(data, history))}
             renderChild={props => {
-                const { values, errors } = props;
+                const { values, errors, setFieldValue } = props;
 
                 return (
                     <Form className="Form">
@@ -206,7 +206,7 @@ function Component() {
                                 name="schedules"
                                 render={arrayHelpers => (
                                     <div className="Input" style={{
-
+                                        maxWidth: 720,
                                     }}>
                                         {values.schedules.map((friend, index) => (
                                             <div key={index} style={{
@@ -225,6 +225,30 @@ function Component() {
                                                     textAlign: 'center',
                                                 }}>-</p>
                                                 <Field name={`schedules.${index}.hour_to`} type="time" step="1" />
+                                                <button
+                                                    type="button"
+                                                    style={{
+                                                        marginLeft: 16
+                                                    }}
+                                                    onClick={() => {
+                                                        setFieldValue(`schedules.${index}.hour_from`, '00:00:00')
+                                                        setFieldValue(`schedules.${index}.hour_to`, '23:59:59')
+                                                    }}
+                                                >
+                                                    Set All Day
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    style={{
+                                                        marginLeft: 16
+                                                    }}
+                                                    onClick={() => {
+                                                        setFieldValue(`schedules.${index}.hour_from`, '00:00:00')
+                                                        setFieldValue(`schedules.${index}.hour_to`, '00:00:00')
+                                                    }}
+                                                >
+                                                    Set None
+                                                </button>
                                             </div>
                                         ))}
                                     </div>
