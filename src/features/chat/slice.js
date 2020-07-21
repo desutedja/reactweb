@@ -10,12 +10,14 @@ export const slice = createSlice({
     qiscus: null,
     loading: false,
     source: 'Task',
+    room: '',
     roomID: '',
     roomUniqueID: '',
     unread: '',
     participants: [],
     messages: [],
     rooms: [],
+    reloadList: false,
     lastMessageOnRoom: '',
   },
   reducers: {
@@ -46,6 +48,12 @@ export const slice = createSlice({
     setRooms: (state, action) => {
       state.rooms = action.payload;
     },
+    setRoom: (state, action) => {
+      state.room = action.payload;
+    },
+    setReloadList: (state, action) => {
+      state.reloadList = action.payload;
+    },
     setLastMessageOnRoom: (state, action) => {
       state.lastMessageOnRoom = action.payload;
     },
@@ -59,7 +67,9 @@ export const {
   setRoomUniqueID,
   setQiscus,
   setMessages,
+  setReloadList,
   setRooms,
+  setRoom,
   updateMessages,
   setLastMessageOnRoom,
   setUnread

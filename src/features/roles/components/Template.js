@@ -16,7 +16,7 @@ import Modal from '../../../components/Modal';
 
 import { toSentenceCase } from '../../../utils';
 import { closeAlert, setConfirmDelete, setNotif, setBanks, get } from '../../slice';
-import { setQiscus, updateMessages, setUnread } from '../../chat/slice';
+import { setQiscus, setUnread, setReloadList } from '../../chat/slice';
 import { logout } from '../../auth/slice';
 import { endpointResident } from '../../../settings';
 
@@ -47,12 +47,11 @@ function Component({ role, children }) {
         const userID = prefix + adminID;
         const userDisplayName = role === "sa" ? "Centratama Admin" : "Admin";
 
-        Qiscus.init({
-            AppId: 'fastel-sa-hkxoyooktyv',
+        Qiscus.init({ AppId: 'fastel-sa-hkxoyooktyv',
             options: {
                 newMessagesCallback: message => {
                     console.log('received', message);
-                    dispatch(updateMessages(message));
+                    dispatch(setReloadList(true));
                     dispatch(setNotif({
                         title: "New Message",
                         message: message[0].username + ': ' + message[0].message,

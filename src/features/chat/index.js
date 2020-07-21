@@ -9,7 +9,10 @@ import Input from '../../components/Input';
 import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
-import { setMessages, setRoomID, setRoomUniqueID } from './slice';
+import { 
+    updateMessages, getPICBMChat, getAdminChat, setMessages, 
+    setRoom, setRoomID, setRoomUniqueID, setRooms, setReloadList 
+} from './slice';
 import { FiSend } from 'react-icons/fi';
 
 import './style.css';
@@ -38,16 +41,19 @@ function Component() {
     const [messageType] = useState('');
 
     const [participants, setParticipants] = useState([]);
-    const [rooms, setRooms] = useState([]);
-    const [room, setRoom] = useState({});
+    //const [rooms, setRooms] = useState([]);
+    //const [room, setRoom] = useState({});
 
-    // const [listTopic, /*setListTopic */] = useState(topics[0].value);
-    // const [listPageIndex, /* setListPageIndex */] = useState(0);
-    // const [listPageSize, /* setListPageSize */] = useState(10);
-    // const [listSearch, /* setListSearch */] = useState('');
+     const [listTopic, setListTopic] = useState(topics[0].value);
+     const [listPageIndex,  setListPageIndex ] = useState(0);
+     const [listPageSize,  setListPageSize ] = useState(10);
+     const [listSearch, setListSearch ] = useState('');
 
     const { user, role } = useSelector(state => state.auth);
-    const { qiscus, roomID, roomUniqueID, messages, lastMessageOnRoom, loading } = useSelector(state => state.chat);
+    const { qiscus, room, rooms, 
+        roomID, roomUniqueID, messages, 
+        reloadList, lastMessageOnRoom, loading 
+    } = useSelector(state => state.chat);
     const adminID = (role === "sa" ? user.id : user.building_management_id);
     const userID = (role === "sa" ? "centratama" : "management") + "-clink-" + adminID;
 
@@ -79,6 +85,8 @@ function Component() {
             limit: 50
         }
 
+        console.log("again and again" + room.id + " " + roomID);
+
         setLoadingMessages(true);
         roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
             .then(function (comments) {
@@ -97,16 +105,15 @@ function Component() {
 
     useEffect(() => {
         /*
-         * If get list room from server (not directly from qiscus)
         if (role === "sa") 
             dispatch(getAdminChat(listTopic,listPageIndex, listPageSize, listSearch));
         else
             dispatch(getPICBMChat(listTopic,listPageIndex, listPageSize, listSearch));
-        */
+            */
 
         var params = {
             page: 1,
-            limit: 20,
+            limit: 100,
             show_participants: false,
             show_empty: false
         }
@@ -115,18 +122,18 @@ function Component() {
         qiscus.loadRoomList && qiscus.loadRoomList(params)
             .then(function (rooms) {
                 // On success
-                console.log("rooms", rooms);
-
                 dispatch(setRooms(rooms));
                 !roomID && dispatch(setRoomID(rooms[0].id));
                 !roomUniqueID && dispatch(setRoomUniqueID(rooms[0].unique_id));
+                dispatch(setReloadList(false));
                 setLoadingRooms(false);
             })
             .catch(function (error) {
                 // On error
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, messages, qiscus]);
+    }, [dispatch, reloadList, qiscus]);
+    //}, [listTopic, listPageIndex, listPageSize, listSearch, dispatch]);
 
     useEffect(() => {
         console.log("Last Message coming on room: ", lastMessageOnRoom)
@@ -145,6 +152,7 @@ function Component() {
                 management: user.management_name,
             }).then(function (comment) {
                 // On success
+                dispatch(updateMessages([comment]));
                 setRefresh(!refresh);
                 setMessage('');
                 setLoadingSend(false);
@@ -191,8 +199,17 @@ function Component() {
                                     {index > 0 && messages[index - 1].username === el.username ?
                                         null :
                                         <div className="MessageUsername" style={{ cursor: 'pointer' }} onClick={() => {
-                                                if (el.email.split("-")[0] === 'resident') {
-                                                    history.push("/" + role + "/resident/" + el.email.split("-")[2])
+                                                const userrole = el.email.split("-")[0]
+                                                const userid = el.email.split("-")[2]
+
+                                                if (userrole === 'resident') {
+                                                    history.push("/" + role + "/resident/" + userid)
+                                                }
+                                                if (userrole === 'staff') {
+                                                    history.push("/" + role + "/staff/" + userid)
+                                                }
+                                                if (userrole === 'centratama') {
+                                                    history.push("/" + role + "/admin/" + userid)
                                                 }
                                         }}>
                                             {el.username} ({el.email.split("-")[0]})
@@ -263,11 +280,14 @@ function Component() {
                     labels={['Room List', 'Room Info']}
                     contents={[
                         <Loading loading={loading}>
-                            {rooms.map((el, index) =>
-                                <div
+                            {rooms.map((el, index) => {
+                                const opt = JSON.parse(el.options);
+
+                                //console.log(opt)
+                                return (<div
                                     className={"Room" + (el.id === roomID ? " selected" : "")}
                                     onClick={el.id === roomID ? null : () => {
-                                        setRoom(el);
+                                        dispatch(setRoom(el));
                                         dispatch(setRoomID(el.id));
                                         dispatch(setRoomUniqueID(el.unique_id));
                                     }}
@@ -275,7 +295,11 @@ function Component() {
                                     <div className="Room-left">
                                         <div className="Room-title">
                                             <p className="Room-name">{el.last_comment.room_name}</p>
-                                            <p className="Room-subtitle">{"ID: " + el.id}</p>
+                                            {opt && opt.ref_code &&
+                                               <p className="Room-subtitle">
+                                                Task Code: <a href={"/" + role + "/task/" + opt.task_id }>{opt.ref_code}</a>
+                                               </p>
+                                            }
                                         </div>
                                         { /* TODO: get information about user in last_comment.extras */ }
                                         <p className="Room-message">{el.last_comment.username
@@ -290,8 +314,8 @@ function Component() {
                                             <p className="Room-unread">{el.count_notif}</p>
                                         }
                                     </div>
-                                </div>
-                            )}
+                                </div>)
+                            })}
                         </Loading>,
                         <>
                             <p style={{
@@ -300,7 +324,7 @@ function Component() {
                             }}>Room</p>
                             <p style={{
                                 marginBottom: 24,
-                            }}>{messages[0]?.room_name + ' (ID: ' + roomID + ')'}</p>
+                            }}> QiscusID: {roomID}</p>
                             <p style={{
                                 fontWeight: 'bold',
                                 marginBottom: 8,
