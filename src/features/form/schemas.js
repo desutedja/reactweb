@@ -17,6 +17,7 @@ const Email = Yup.string().email('Invalid email').required(defaultRequiredError)
 const EmailOptional = Yup.string().email('Invalid email');
 
 const URL = Yup.string().matches(/\./, 'Invalid URL').required(defaultRequiredError);
+const URLOptional = Yup.string().matches(/\./, 'Invalid URL');
 const URLStrict = Yup.string().url('Invalid URL').required(defaultRequiredError);
 const URLStrictOptional = Yup.string().url('Invalid URL');
 
@@ -141,7 +142,7 @@ export const announcementSchema = Yup.object().shape({
 export const adsSchema = Yup.object().shape({
     appear_as: Text,
     media: Text,
-    media_url: URL,
+    media_url: URLOptional,
     start_date: Text,
     end_date: Text,
     gender: Text,
