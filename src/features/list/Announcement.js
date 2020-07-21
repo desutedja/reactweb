@@ -24,7 +24,6 @@ function Component() {
         { Header: 'ID', accessor: 'id' },
         { Header: 'Title', accessor: row => <div className={"Link"}
             onClick={() => dispatch(getAnnouncementDetails(row, history, url))}>{row.title}</div>},
-        // { Header: 'Topic', accessor: row => toSentenceCase(row.topic) },
         { Header: 'Consumer', accessor: row => toSentenceCase(row.consumer_role.replace(/_/g, ' ')) },
         {
             Header: 'Description', accessor: row => row.description.length > 50 ?
@@ -56,7 +55,6 @@ function Component() {
                     }}
                 />,
             ]}
-            onClickDetails={row => dispatch(getAnnouncementDetails(row, history, url))}
         />
     )
 }

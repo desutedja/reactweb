@@ -123,7 +123,7 @@ export const getTransactionDetails = (row, history, url) => dispatch => {
   dispatch(get(transactionEndpoint + '/' + row.trx_code,
     res => {
       dispatch(setSelected(res.data.data));
-      history.push(url + '/details');
+      history.push(url + '/' + row.trx_code);
 
       dispatch(stopAsync())
     }))

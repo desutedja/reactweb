@@ -20,7 +20,7 @@ function Component() {
             <Route path={`${path}/edit`}>
                 <Add />
             </Route>
-            <Route path={`${path}/details`}>
+            <Route path={`${path}/:id`}>
                 <Details />
             </Route>
         </Switch>

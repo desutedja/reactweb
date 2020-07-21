@@ -36,7 +36,6 @@ const labels = {
         { label: "selling_price", labelFormatter: () => "Selling Price", valueFormatter: (val) => toMoney(val) },
         { label: "total_selling_price", labelFormatter: (el) => "Display Price", valueFormatter: (val) => toMoney(val) },
         { label: "admin_fee", labelFormatter: (el) => "Admin Fee", valueFormatter: (val) => val + "%" },
-        { label: "pg_fee", labelFormatter: (el) => "PG Markup", valueFormatter: (val) => val + "%" },
         { label: "discount_fee", labelFormatter: (el) => "Discount", valueFormatter: (val) => val + "%" },
     ],
 };

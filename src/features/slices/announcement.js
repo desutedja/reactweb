@@ -71,13 +71,13 @@ export const getAnnoucement = (
     }))
 }
 
-export const getAnnouncementDetails = (row,  history, url) => dispatch => {
+export const getAnnouncementDetails = (row, history, url) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(announcementEndpoint + '/preview/' + row.id, 
     res => {
       dispatch(setSelected(res.data.data));
-      history.push(url + '/details');
+      history.push(url + '/' + row.id);
 
       dispatch(stopAsync())
     }))

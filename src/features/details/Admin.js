@@ -13,8 +13,7 @@ const details =
 };
 
 function AdminDetails() {
-    const { selected } = useSelector(state => state.admin);
-    const [data, setData] = useState();
+    const [data, setData] = useState({});
 
     const dispatch = useDispatch();
     const { id } = useParams();
@@ -27,11 +26,11 @@ function AdminDetails() {
 
     return (
         <Template
-            title={data ? data.firstname + ' ' + data.lastname : selected.firstname + ' ' + selected.lastname}
-            phone={data ? data.phone : selected.phone}
+            title={data ? data.firstname + ' ' + data.lastname : data.firstname + ' ' + data.lastname}
+            phone={data ? data.phone : data.phone}
             labels={["Details"]}
             contents={[
-                <Detail type="Admin" data={data ? data : selected} labels={details} />,
+                <Detail type="Admin" data={data} labels={details} />,
             ]}
         />
     )

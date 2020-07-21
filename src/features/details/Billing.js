@@ -18,13 +18,6 @@ const columns = [
     { Header: 'ID', accessor: 'id' },
     { Header: 'Name', accessor: 'name' },
     { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
-    // { Header: 'Remarks', accessor: 'remarks' },
-    // { Header: 'Subtotal', accessor: 'subtotal' },
-    // {
-    //     Header: 'Tax', accessor: row => row.tax === 'percentage' ?
-    //         (row.tax_value + '%') : row.tax_amount
-    // },
-    // { Header: 'Additional Charges', accessor: row => 0 },
     { Header: 'Total', accessor: 'total' },
     { Header: 'Month', accessor: row => months.find(el => el.value === row.month).label },
     { Header: 'Year', accessor: 'year' },

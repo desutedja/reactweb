@@ -1,6 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch, useParams } from 'react-router-dom';
 import { dateTimeFormatter, toSentenceCase } from '../../../utils'
 
 import { FiTrash } from 'react-icons/fi';
@@ -12,17 +12,26 @@ import Template from '../components/Template';
 import { deleteAnnouncement, publishAnnouncement, setSelected } from '../../slices/announcement';
 
 import Content from './contents/Content';
+import { get } from '../../slice';
+import { endpointAdmin } from '../../../settings';
 
 function Component() {
-    const { selected } = useSelector(state => state.announcement);
+    // const { selected } = useSelector(state => state.announcement);
+    const [data, setData] = useState({});
 
     const [ confirmDelete, setConfirmDelete ] = useState(false);
-
-    //const { auth } = useSelector(state => state)
 
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
+    let { id } = useParams();
+
+    useEffect(() => {
+        dispatch(get(endpointAdmin + '/announcement/preview/' + id, res => {
+            setData(res.data.data);
+            setSelected(res.data.data);
+        }))
+    }, [dispatch, id])
 
     const details =
         useMemo(() => ({
@@ -34,17 +43,17 @@ function Component() {
         'Consumer': [
             { label: 'consumer_role', vfmt: (val) => toSentenceCase(val) },
             { label: 'building', 
-                disabled: (selected.consumer_role === 'merchant' && selected.consumer_role === 'centratama'),
+                disabled: (data.consumer_role === 'merchant' && data.consumer_role === 'centratama'),
                 lfmt: () => "Target Building", 
                 vfmt: (v) => v && v.length > 0 ? v.map( el => 
                     el.building_name
                 ).join(', ') : "All" },
             { label: 'building_unit', 
-                disabled: selected.consumer_role !== 'resident',
+                disabled: data.consumer_role !== 'resident',
                 lfmt: () => "Target Unit", 
                 vfmt: (v) => v && v.length > 0 ? v.map( el => el.number + " " + el.section_name ).join(', ') : "All" },
             { label: 'merchant',
-                disabled: selected.consumer_role !== 'merchant',
+                disabled: data.consumer_role !== 'merchant',
                 lfmt: () => "Target Merchant",
                 vfmt: (v) => v && v.length > 0 ? v.map( el => el.merchant_name ).join(', ') : "All" },
         ],
@@ -59,7 +68,7 @@ function Component() {
                 else return v;
             }},
         ],
-    }),[selected]);
+    }),[data]);
 
     return (
         <>
@@ -67,7 +76,7 @@ function Component() {
             isOpen={confirmDelete}
             disableHeader={true}
             onClick={
-               () => dispatch(deleteAnnouncement(selected, history))
+               () => dispatch(deleteAnnouncement(data, history))
             }
             toggle={() => setConfirmDelete(false)}
             okLabel={"Delete"}
@@ -76,21 +85,21 @@ function Component() {
             Are you sure you want to delete this announcement?
         </Modal>
         <Template
-            image={selected.image}
-            title={selected.title}
+            image={data.image}
+            title={data.title}
             imageTitle=''
             labels={["Details", "Contents"]}
             contents={[
-            <Detail type="Announcement" data={selected} labels={details} editable={selected.publish === 0}
+            <Detail type="Announcement" data={data} labels={details} editable={data.publish === 0}
                 renderButtons={() => [
-                <Button label="Publish" disabled={selected.publish === 1} 
-                    onClick={() => { dispatch(publishAnnouncement(selected)) }} />,
+                <Button label="Publish" disabled={data.publish === 1} 
+                    onClick={() => { dispatch(publishAnnouncement(data)) }} />,
                 <Button label="Duplicate" 
                     onClick={() => { 
                         history.push({
                             pathname: url.split("/").slice(0, -1).join("/") + "/add",
                         });
-                        dispatch(setSelected({ ...selected, duplicate: true}));
+                        dispatch(setSelected({ ...data, duplicate: true}));
                     }} />,
                 <Button color="danger" icon={<FiTrash/>} label="Delete" 
                     onClick={() => setConfirmDelete(true) } />,

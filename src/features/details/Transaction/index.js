@@ -1,10 +1,13 @@
-import React, { } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
 
 import Orders from './contents/Orders';
+import { useParams, useHistory } from 'react-router-dom';
+import { get } from '../../slice';
+import { endpointTransaction } from '../../../settings';
 
 const details = {
     'Information': [
@@ -78,17 +81,26 @@ const payment = {
 };
 
 function Component() {
-    const { selected } = useSelector(state => state.transaction);
+    const [data, setData] = useState({});
+
+    let dispatch = useDispatch();
+    let { id } = useParams();
+
+    useEffect(() => {
+        dispatch(get(endpointTransaction + '/admin/transaction/' + id, res => {
+            setData(res.data.data);
+        }))
+    }, [dispatch, id])
 
     return (
         <Template
             labels={["Details", "Resident", "Merchant", "Courier", "Payment", "Orders"]}
             contents={[
-                <Detail data={selected} labels={details} editable={false} />,
-                <Detail data={selected} labels={resident} editable={false} />,
-                <Detail data={selected} labels={merchant} editable={false} />,
-                <Detail data={selected} labels={courier} editable={false} />,
-                <Detail data={selected} labels={payment} editable={false} />,
+                <Detail data={data} labels={details} editable={false} />,
+                <Detail data={data} labels={resident} editable={false} />,
+                <Detail data={data} labels={merchant} editable={false} />,
+                <Detail data={data} labels={courier} editable={false} />,
+                <Detail data={data} labels={payment} editable={false} />,
                 <Orders />,
             ]}
         />
