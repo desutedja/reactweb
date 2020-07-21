@@ -6,9 +6,10 @@ import AnimatedNumber from "animated-number-react";
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
+import Pill from '../../components/Pill';
 import Input from '../../components/Input';
 import { getBillingDisbursement, downloadBillingDisbursement, refresh } from '../slices/billing';
-import { toMoney, dateTimeFormatter } from '../../utils';
+import { toMoney, dateTimeFormatterCell } from '../../utils';
 import { endpointBilling } from '../../settings';
 import { get, post } from '../slice';
 import MyButton from '../../components/Button';
@@ -20,9 +21,12 @@ const columns = [
     { Header: 'Billing Refcode', accessor: 'trx_code' },
     // { Header: 'Unit', accessor: 'number' },
     { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
+    { Header: 'Status', accessor: row => 
+        row.disbursement_date ? <Pill color="success">Disbursed</Pill> : 
+        <Pill color="secondary">Undisbursed</Pill> },
     {
         Header: 'Disbursed at', accessor: row => row.disbursement_date ?
-            dateTimeFormatter(row.disbursement_date) : '-'
+            dateTimeFormatterCell(row.disbursement_date) : '-'
     },
 ]
 
@@ -81,13 +85,6 @@ function Component() {
                     }))
                 }}
             >
-                <div style={{
-                    display: 'flex',
-                    marginBottom: 16,
-                }}>
-                    <Input compact label="Search" icon={<FiSearch />} />
-                    <Button label="Add" />
-                </div>
                 <div style={{
                     minHeight: 300,
                 }}>
@@ -209,7 +206,7 @@ function Component() {
                             <div className="Container">
                                 <Table
                                     onSelection={(selectedRows) => {
-                                        setSelected(selectedRows);
+                                        setSelected(selectedRows.filter(el => !el.disbursement_date));
                                     }}
                                     noContainer={true}
                                     columns={columns}
