@@ -47,8 +47,6 @@ function Component() {
         setCourier
     ] = useState('');
     const [couriers, setCouriers] = useState([]);
-
-
     const { loading, refreshToggle, disbursement } = useSelector(state => state.transaction);
 
     let dispatch = useDispatch();
@@ -155,7 +153,9 @@ function Component() {
     return (
         <>
             <Modal
-                isOpen={disburseModal} toggle={() => setDisburseModal(!disburseModal)}
+                isOpen={disburseModal} toggle={() => 
+                    setDisburseModal(!disburseModal)
+                }
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
                 onClick={() => {
@@ -301,8 +301,8 @@ function Component() {
                     }}>
                         <div style={{
                             marginRight: 16,
-                        }}>Disbursed Amount</div>
-                        <AnimatedNumber className="BigNumber" value={info.total_disbursed_transaction_amount}
+                        }}>Merchant Disbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_merchant_disbursed_transaction_amount}
                             formatValue={formatValue}
                         />
                     </div>
@@ -312,8 +312,36 @@ function Component() {
                     }}>
                         <div style={{
                             marginRight: 16,
-                        }}>Undisbursed Amount</div>
-                        <AnimatedNumber className="BigNumber" value={info.total_undisbursed_transaction_amount}
+                        }}>Merchant Undisbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_merchant_undisbursed_transaction_amount}
+                            formatValue={formatValue}
+                        />
+                    </div>
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <div style={{
+                            marginRight: 16,
+                        }}>Courier Disbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_courier_disbursed_transaction_amount}
+                            formatValue={formatValue}
+                        />
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <div style={{
+                            marginRight: 16,
+                        }}>Courier Undisbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_courier_undisbursed_transaction_amount}
                             formatValue={formatValue}
                         />
                     </div>
@@ -412,7 +440,8 @@ function Component() {
                                 fontSize: '1.2rem',
                                 marginRight: 16,
                             }}>
-                                Rp {info.total_undisbursed_transaction_amount}
+                                {toMoney((info.total_courier_undisbursed_transaction_amount +
+                                    info.total_merchant_undisbursed_transaction_amount) || 0)}
                             </b>
                             <MyButton label="Disburse All"
                                 disabled={disbursement.items.some(item => item.disbursement_date)}
@@ -434,7 +463,7 @@ function Component() {
                 }}>
                     <Table
                         onSelection={(selectedRows) => {
-                            setSelected(selectedRows);
+                            setSelected(selectedRows.filter(el => !el.disbursement_date));
                         }}
                         noContainer={true}
                         totalItems={disbursement.total_items}
