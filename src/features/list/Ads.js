@@ -63,9 +63,9 @@ function Component() {
                 />
             ]}
             filterVars={[
-                ageFrom.toLowerCase(),
                 os.toLowerCase(),
                 gender[0],
+                ageFrom.toLowerCase(),
             ]}
             filters={[
                 {
@@ -120,7 +120,6 @@ function Component() {
                             }}
                         />
                     )
-
                 }
             ]}
         />
