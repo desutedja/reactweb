@@ -6,7 +6,7 @@ import { endpointAdmin } from '../../settings';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 
-function PGFee({id, toggleRefresh, modal, toggleModal}) {
+function PGFee({id, title, toggleRefresh, modal, toggleModal}) {
     const [fee, setFee] = useState('0');
     const [percentage, setPercentage] = useState('0');
     const [markup, setMarkup] = useState('0');
@@ -26,9 +26,9 @@ function PGFee({id, toggleRefresh, modal, toggleModal}) {
 
     return (
             <Modal
+                title={title}
                 isOpen={modal}
                 toggle={() => toggleModal()}
-                disableHeader
                 okLabel="Confirm"
                 onClick={() => {
                     submit();

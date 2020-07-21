@@ -174,7 +174,7 @@ function Component() {
                                 />}
                             {values.target_merchant === "specificmerchant" && values.consumer_role === 'merchant' &&
                                 <Input {...props} type="multiselect"
-                                    label="Select Building(s)" name="merchant"
+                                    label="Select Merchant(s)" name="merchant"
                                     defaultValue={values.merchant}
                                     placeholder="Start typing merchant name to add" options={merchants}
                                     onInputChange={(e, value) => value === '' ? setMerchants([]) : setSearchmerchant(value)}

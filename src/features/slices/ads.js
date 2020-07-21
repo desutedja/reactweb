@@ -80,6 +80,7 @@ export const getAds = (pageIndex, pageSize, search = '', age_from = '', age_to =
     '&gender=' + gender +
     '&appear_as=' + appear_as +
     '&media=' + media +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {

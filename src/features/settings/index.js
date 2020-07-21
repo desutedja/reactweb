@@ -8,26 +8,10 @@ import Loading from '../../components/Loading';
 import PGFee from './PGFee';
 import AdminFee from './AdminFee';
 
-// additional: "phone"
-// by: "midtrans"
-// category: "E-Wallet"
-// created_on: "2020-05-02T04:08:55Z"
-// deleted: 0
-// fee: 0
-// fee_type: "percentage"
-// icon: "https://centratama.okbabe.technology/clink-assets/asset-storage/img/2e2ad8b73325a0b2c87c5dcd7e29daad-1593000511.png"
-// id: 1
-// markup_fee: 0
-// modified_on: "2020-06-24T12:57:06Z"
-// name: "GoPay"
-// percentage: 2
-// provider: "gopay"
-// sequence: 2
-// type: "e_wallet"
-
 function Settings() {
     const [data, setData] = useState({});
     const [id, setID] = useState({});
+    const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
 
@@ -97,6 +81,7 @@ function Settings() {
             </div>
             <button onClick={() => {
                 setID(data.id);
+                setTitle(data.name);
                 setPG(true);
             }}>Change</button>
         </div>
@@ -104,42 +89,50 @@ function Settings() {
 
     return (
         <>
-            <PGFee id={id} toggleRefresh={toggle} modal={pg} toggleModal={() => setPG(false)} />
-            <AdminFee toggleRefresh={toggle} modal={admin} toggleModal={() => setAdmin(false)} />
+            <PGFee id={id} title={title} toggleRefresh={toggle} modal={pg} toggleModal={() => setPG(false)} />
+            <AdminFee title={title} toggleRefresh={toggle} modal={admin} toggleModal={() => setAdmin(false)} />
             <Breadcrumb />
             <Loading loading={loading}>
                 <div className="Container" style={{
                     flexDirection: 'column'
                 }}>
-                    <div className="Settings-item" style={{
-                        marginBottom: 16,
+                    <div style={{
+                        display: 'flex',
+                        flex: 1,
+                        flexDirection: 'column',
+                        overflow: 'auto',
                     }}>
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
+                        <div className="Settings-item" style={{
+                            marginBottom: 16,
                         }}>
-                            <p style={{
-                                fontWeight: 'bold',
-                                marginRight: 8,
-                            }}>Admin Fee</p>
-                            <p style={{
-                                marginRight: 16,
-                            }}>{data.admin_fee} %</p>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}>
+                                <p style={{
+                                    fontWeight: 'bold',
+                                    marginRight: 8,
+                                }}>Admin Fee</p>
+                                <p style={{
+                                    marginRight: 16,
+                                }}>{data.admin_fee} %</p>
+                            </div>
+                            <button onClick={() => {
+                                setAdmin(true);
+                                setTitle('Admin Fee');
+                            }}>Change</button>
                         </div>
-                        <button onClick={() => {
-                            setAdmin(true);
-                        }}>Change</button>
+                        <p style={{
+                            fontWeight: 'bold',
+                            marginRight: 8,
+                            marginBottom: 8,
+                            paddingLeft: 8,
+                            fontSize: '1.2rem',
+                        }}>PG Fee</p>
+                        {data.id && data.payment_gateway_methods.map(el => {
+                            return <Item key={el.id} data={el} />
+                        })}
                     </div>
-                    <p style={{
-                        fontWeight: 'bold',
-                        marginRight: 8,
-                        marginBottom: 8,
-                        paddingLeft: 8,
-                        fontSize: '1.2rem',
-                    }}>PG Fee</p>
-                    {data.id && data.payment_gateway_methods.map(el => {
-                        return <Item key={el.id} data={el} />
-                    })}
                 </div>
             </Loading>
         </>

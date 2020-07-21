@@ -6,7 +6,7 @@ import { endpointAdmin } from '../../settings';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 
-function AdminFee({toggleRefresh, modal, toggleModal}) {
+function AdminFee({toggleRefresh, modal, toggleModal, title}) {
     const [fee, setFee] = useState('0');
 
     let dispatch = useDispatch();
@@ -20,9 +20,9 @@ function AdminFee({toggleRefresh, modal, toggleModal}) {
 
     return (
             <Modal
+                title={title}
                 isOpen={modal}
                 toggle={() => toggleModal()}
-                disableHeader
                 okLabel="Confirm"
                 onClick={() => {
                     submit();

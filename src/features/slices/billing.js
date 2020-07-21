@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointBilling } from '../../settings';
-import { get, post, put, del } from '../slice';
+import { get, post, put, del, getFile } from '../slice';
 import { setInfo } from '../slice';
 
 const billingEndpoint = endpointBilling + '/management/billing';
@@ -119,11 +119,11 @@ export const getBillingUnit = (pageIndex, pageSize, search = '', building, unit)
 export const downloadBillingUnit = (search = '', building) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(billingEndpoint + '/unit' +
+  dispatch(getFile(billingEndpoint + '/unit' +
     '?search=' + search +
     '&resident_building=' + building +
     '&export=true',
-
+    'billing_unit.csv',
     res => {
       dispatch(stopAsync());
     }))
@@ -148,11 +148,11 @@ export const getBillingSettlement = (pageIndex, pageSize, search = '', building,
 export const downloadBillingSettlement = (search = '', building) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(billingEndpoint + '/settlement' +
+  dispatch(getFile(billingEndpoint + '/settlement' +
     '?building_id=' + building +
     '&search=' + search +
     '&export=true',
-
+    'billing_settlement.csv',
     res => {
       dispatch(stopAsync());
     }))
@@ -176,9 +176,9 @@ export const getBillingDisbursement = (pageIndex, pageSize, search = '', buildin
 export const downloadBillingDisbursement = () => dispatch => {
   dispatch(startAsync());
 
-  dispatch(get(billingEndpoint + '/disbursement/list/management' +
-    '&export=true',
-
+  dispatch(getFile(billingEndpoint + '/disbursement/list/management' +
+    '?export=true',
+    'billing_disbursement.csv',
     res => {
       dispatch(stopAsync());
     }))
