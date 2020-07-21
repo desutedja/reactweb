@@ -2,7 +2,6 @@ import React, { } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
 import List from '../../list/Resident';
-import Add from '../../form/Resident';
 import Details from '../../details/Resident';
 
 function Component() {
