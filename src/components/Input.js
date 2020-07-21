@@ -218,14 +218,17 @@ function Component({
                                 setTimePick(e.target.value);
                                 setInputValue && setInputValue(e.target.value);
                             }}
-                            onClick={e => {
-                                setModalTime(!modalTime);
+                            onFocus={e => {
+                                setModalTime(!modalTime)
                             }}
                             onBlur={e => {
                                 !e.target.value || !e.target.value.match(/:/g) ? setTimePick('00:00') : setTimePick(e.target.value)
+                                setTimeout(() => {
+                                    setModalTime(false)
+                                }, 100)
                             }}
                         />
-                        <div className={(modalTime ? 'd-flex' : 'd-none') + ' time-pick'}>
+                        <div className={'time-pick' + (modalTime ? ' time-show' : '')}>
                             <div className="time-wrap w-50 text-center">
                                 {rangeNumber(0, 23).map(n => (
                                         <p className={(n === hours ? 'active' : '') + ' text-center py-2'}

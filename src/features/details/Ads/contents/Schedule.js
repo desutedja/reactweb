@@ -8,7 +8,7 @@ import Modal from '../../../../components/Modal';
 import Form from '../../../../components/Form';
 import Input from '../../../../components/Input';
 import { getAdsSchedule, deleteAdsSchedule, createAdsSchedule } from '../../../slices/ads';
-import { days } from '../../../../utils';
+import { daysLabel, days } from '../../../../utils';
 
 const columns = [
     { Header: "Day", accessor: row => days[row.day - 1] },
@@ -29,6 +29,7 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, refreshToggle]);
 
+
     return (
         <div>
             <Modal isOpen={addSchedule} disableFooter={true} toggle={() => setAddSchedule(false)}>
@@ -40,7 +41,7 @@ function Component() {
                         setAddSchedule(false);
                     }}
                 >
-                    <Input label="Day" type="select" options={days} />
+                    <Input label="Day" type="select" options={daysLabel} />
                     <Input label="Hour From" type="time" />
                     <Input label="Hour To" type="time" />
                 </Form>
