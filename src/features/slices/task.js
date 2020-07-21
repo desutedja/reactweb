@@ -63,6 +63,7 @@ export const getTask = (
     '&type=' + type +
     '&priority=' + prio +
     '&requester_building_id=' + building +
+    '&sort_field=created_on&sort_type=DESC' +
     '&status=' + status,
 
     res => {

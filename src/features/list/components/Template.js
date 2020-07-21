@@ -31,7 +31,9 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [], a
                     loading={loading}
                     pageCount={total_pages}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
+                        // fetchData={useCallback((pageIndex, pageSize, search, sortField, sortType) => {
                         dispatch(getAction(pageIndex, pageSize, search, ...filterVars));
+                        // dispatch(getAction(pageIndex, pageSize, search, sortField, sortType, ...filterVars));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, ...filterVars])}
                     filters={filters}

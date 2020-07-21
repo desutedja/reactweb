@@ -130,6 +130,7 @@ export const getBuilding = ( pageIndex, pageSize, search = '', province, city, d
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search +
+    '&sort_field=created_on&sort_type=DESC' +
     '&province=' + province +
     '&city=' + city +
     '&district=' + district,
@@ -221,6 +222,7 @@ export const getBuildingUnit = ( pageIndex, pageSize, search, row) => dispatch =
     '?page=' + (pageIndex + 1) +
     '&building_id=' + row.id +
     '&search=' + search +
+    '&sort_field=created_on&sort_type=DESC' +
     '&limit=' + pageSize,
     
     res => {
@@ -238,6 +240,7 @@ export const getBuildingUnitType = ( pageIndex, pageSize, search, row, unit_type
     '&building_id=' + row.id +
     '&search=' + search +
     '&unit_type=' + unit_type +
+    '&sort_field=created_on&sort_type=DESC' +
     '&limit=' + pageSize,
     
     res => {
@@ -255,6 +258,7 @@ export const getBuildingSection = ( pageIndex, pageSize, search, row, section_ty
     '&building_id=' + row.id +
     '&section_type=' + section_type +
     '&search=' + search +
+    '&sort_field=created_on&sort_type=DESC' +
     '&limit=' + pageSize,
     
     res => {
@@ -272,6 +276,7 @@ export const getBuildingService = ( pageIndex, pageSize, search, row, group = ""
     '&building_id=' + row.id +
     '&group=' + group +
     '&search=' + search +
+    '&sort_field=created_on&sort_type=DESC' +
     '&limit=' + pageSize,
     
     res => {
@@ -288,8 +293,7 @@ export const getBuildingManagement = ( pageIndex, pageSize, search, row) => disp
     '?page=' + (pageIndex + 1) +
     '&building_id=' + row.id +
     '&search=' + search +
-    '&sort_type=desc' +
-    '&sort_field=created_on' +
+    '&sort_field=created_on&sort_type=DESC' +
     '&limit=' + pageSize,
     
     res => {

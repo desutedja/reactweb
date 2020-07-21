@@ -56,6 +56,7 @@ export const getAdmin = (
   dispatch(get(adminEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
     
     res => {
