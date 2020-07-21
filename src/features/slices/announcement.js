@@ -96,6 +96,7 @@ export const createAnnouncement = ( data, history) => dispatch => {
       }));
 
       dispatch(stopAsync());
+      dispatch(refresh());
     },
     err => {
       dispatch(stopAsync());

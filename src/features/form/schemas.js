@@ -141,6 +141,7 @@ export const announcementSchema = Yup.object().shape({
 export const adsSchema = Yup.object().shape({
     appear_as: Text,
     media: Text,
+    media_url: URL,
     start_date: Text,
     end_date: Text,
     gender: Text,

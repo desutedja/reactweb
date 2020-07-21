@@ -87,6 +87,7 @@ export const getResident = (
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search +
+    '&sort_field=created_on&sort_type=DESC' +
     '&status=',
 
     res => {

@@ -16,6 +16,7 @@ import SubmitButton from './components/SubmitButton';
 const adsPayload = {
     appear_as: "banner",
     media: "apps",
+    media_url: "",
     start_date: moment().format('YYYY-MM-DD'),
     end_date: moment().format('YYYY-MM-DD'),
 
@@ -139,10 +140,13 @@ function Component() {
                             { value: "popup", label: "Popup" },
                             { value: "banner", label: "Banner" },
                         ]} />
-                        <Input {...props} optional label="Media" type="radio" options={[
+                        <Input {...props} label="Media" type="radio" options={[
                             { value: "apps", label: "Apps" },
                             { value: "url", label: "URL" },
                         ]} />
+                        {values.media === 'url' &&
+                            <Input {...props} label="Media URL" />
+                        }
                         <Input {...props} label="Start Date" type="date" />
                         <Input {...props} label="End Date" type="date" />
                         <SectionSeparator />
