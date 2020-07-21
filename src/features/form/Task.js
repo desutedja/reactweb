@@ -60,7 +60,7 @@ export default function Component() {
                 <div className="row justify-content-center w-100 no-gutters mt-5">
                     <div className="col-12 col-md-6">
                         <form
-                            className=""
+                            className="text-left"
                             onSubmit={e => {
                                 e.preventDefault();
                                 const url = endpointTask + '/admin/create';
@@ -196,12 +196,12 @@ const SelectOption = ({
             <div className={"form-group " + (className && className)}>
                 <label
                     htmlFor={label.toLowerCase()}
-                    className="font-weight-bold"
+                    className="font-weight-bold cursor-pointer"
                 >{label}</label>
                 <div className="p-relative">
                     <input
                         id={label.toLowerCase()}
-                        className="form-control py-4 pr-5"
+                        className="form-control py-4 pr-5 cursor-pointer"
                         onFocus={() => setDropDown(true)}
                         onBlur={() => {
                             setTimeout(() => setDropDown(false), 10)
@@ -263,7 +263,7 @@ const Radio = ({
                         onClick={() => optionClick && optionClick(el)}
                         />
                         <label
-                        className="form-check-label mt-0 ml-4"
+                        className="form-check-label mt-0 ml-4 cursor-pointer"
                         htmlFor={el.label.toLowerCase()}>
                             {el.label}
                         </label>
@@ -317,7 +317,7 @@ const OtherInput = ({
             <div className={"form-group " + className && className}>
                 <label
                     htmlFor={label.toLowerCase()}
-                    className="font-weight-bold"
+                    className="font-weight-bold cursor-pointer"
                 >{label}</label>
                 {type === 'text' ? <input
                     className="form-control py-4"
