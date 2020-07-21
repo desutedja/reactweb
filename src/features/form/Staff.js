@@ -126,8 +126,7 @@ function Component() {
         if (isTechnician) delete staff_roles[2];
         if (isInternalCourier) delete staff_roles[3];
         if (isSecurity) delete staff_roles[4];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [auth, dispatch])
+    })
 
     return (
         <Template

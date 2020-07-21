@@ -108,8 +108,7 @@ function Component() {
         if (isTechnician) delete roles[2];
         if (isInternalCourier) delete roles[3];
         if (isSecurity) delete roles[4];
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [auth, dispatch])
+    })
     return (
         <Template
             columns={columns}
