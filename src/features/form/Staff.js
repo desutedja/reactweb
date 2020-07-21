@@ -47,9 +47,18 @@ const staffPayload = {
     account_bank_label: "",
 }
 
+let staff_roles = [
+    { value: 'gm_bm', label: 'GM BM' },
+    { value: 'pic_bm', label: 'PIC BM' },
+    { value: 'technician', label: 'Technician' },
+    { value: 'courier', label: 'Courier' },
+    { value: 'security', label: 'Security' },
+];
+
 function Component() {
     const { banks } = useSelector(state => state.main);
     const { loading, selected } = useSelector(state => state.staff);
+    const { auth } = useSelector(state => state)
     const [bManagements, setBManagements] = useState([]);
 
     const [districts, setDistricts] = useState([]);
@@ -108,6 +117,19 @@ function Component() {
         ))
     }, [city, dispatch, selected.city]);
 
+    useEffect(() => {
+        if (auth.role === 'bm') {
+            const blacklist_modules = auth.user.blacklist_modules;
+            const isSecurity = blacklist_modules.find(item => item.module === 'security') ? true : false;
+            const isInternalCourier = blacklist_modules.find(item => item.module === 'internal_courier') ? true : false;
+            const isTechnician = blacklist_modules.find(item => item.module === 'technician') ? true : false;
+    
+            if (isTechnician) delete staff_roles[2];
+            if (isInternalCourier) delete staff_roles[3];
+            if (isSecurity) delete staff_roles[4];
+        }
+    }, [auth])
+
     return (
         <Template
             slice="staff"
@@ -132,13 +154,7 @@ function Component() {
 
                 return (<Form className="Form">
                             {!selected.id && <Input {...props} label="Staff Role"
-                                options={[
-                                    { value: 'gm_bm', label: 'GM BM' },
-                                    { value: 'pic_bm', label: 'PIC BM' },
-                                    { value: 'technician', label: 'Technician' },
-                                    { value: 'courier', label: 'Courier' },
-                                    { value: 'security', label: 'Security' },
-                                ]}
+                                options={staff_roles}
                             />}
                             {values['staff_role'] === "courier" && <Input {...props} label="On Centratama?"
                                 name="on_centratama"

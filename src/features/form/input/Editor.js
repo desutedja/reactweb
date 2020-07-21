@@ -32,7 +32,7 @@ function Component({
                         onContentStateChange={setContentState}
                         editorState={editorState}
                         onEditorStateChange={setEditorState}
-                        wrapperClassName='EditorWrapper'
+                        // wrapperClassName='EditorWrapper'
                     />
                 </div>
     )
