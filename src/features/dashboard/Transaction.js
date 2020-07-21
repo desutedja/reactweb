@@ -100,8 +100,8 @@ function Component() {
             const hoursRange = getDatesRange(new Date(aDaysBefore), new Date(), 'hours');
             const trxDatas = hoursRange.map(date => {
                 const data = trxData ? trxData.filter(data => data.date.split(' ')[0] + data.date.split(' ')[1].split(':')[0] === date.split(' ')[0] + date.split(' ')[1].split(':')[0]) : [];
-                const day = moment(data.length > 0 ? data.date : date).format('dddd');
-                const hour = moment(data.length > 0 ? data.date : date).format('HH:00');
+                const day = moment(date).format('dddd');
+                const hour = moment(date).format('HH:00');
                 return ({
                     'Date': `${day.substring(0, 3)} ${hour}`,
                     'Amount Transaction': data.reduce((total, data) => {
@@ -120,8 +120,8 @@ function Component() {
             const datesRange = getDatesRange(new Date(aMonthBefore), new Date(), 'days')
             const trxDatas = datesRange.map((date, i) => {
                 const data = trxData.filter(data => data.date.split(' ')[0] === date.split(' ')[0]);
-                let month = moment(data.length > 0 ? data.date : date).format('MMM') + ' ';
-                const d = moment(data.length > 0 ? data.date : date).format('DD');
+                let month = moment(date).format('MMM') + ' ';
+                const d = moment(date).format('D');
                 if (trxData) {
                     if (!(datesRange[i].split('-')[1] !== (datesRange[i - 1] ? datesRange[i - 1].split('-')[1] : datesRange[i - 1]))) month = '';
                 }
@@ -143,8 +143,8 @@ function Component() {
             const monthsRange = getDatesRange(new Date(aYearBefore), new Date(), 'months');
             const trxDatas = monthsRange.map(date => {
                 const data = trxData ? trxData.filter(data => data.date.split(' ')[0].split('-')[0] + data.date.split(' ')[0].split('-')[1] === date.split(' ')[0].split('-')[0] + date.split(' ')[0].split('-')[1]) : [];
-                const month = moment(data.length > 0 ? data.date : date).format('MMMM') + ' ';
-                const year = moment(data.length > 0 ? data.date: date).format('YYYY')
+                const month = moment(date).format('MMM') + ' ';
+                const year = moment(date).format('YYYY')
                 return ({
                     'Date': month + year,
                     'Amount Transaction': data.reduce((total, data) => {
