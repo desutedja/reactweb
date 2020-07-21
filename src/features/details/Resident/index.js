@@ -11,7 +11,7 @@ import Unit from './contents/Unit';
 import { useParams, useHistory } from 'react-router-dom';
 import { get } from '../../slice';
 import { endpointResident } from '../../../settings';
-import { deleteResident } from '../../slices/resident';
+import { deleteResident, setSelected } from '../../slices/resident';
 
 const details = {
     'Profile': ['created_on', 'gender', 'birthplace', 'birth_date', 'nationality', 'marital_status', 'status_kyc'],
@@ -29,6 +29,7 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointResident + '/management/resident/detail/' + id, res => {
             setData(res.data.data);
+            dispatch(setSelected(res.data.data));
         }))
     }, [dispatch, id])
 

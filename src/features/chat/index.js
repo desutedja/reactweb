@@ -10,7 +10,7 @@ import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
 import { 
-    updateMessages, getPICBMChat, getAdminChat, setMessages, 
+    updateMessages, setMessages, 
     setRoom, setRoomID, setRoomUniqueID, setRooms, setReloadList 
 } from './slice';
 import { FiSend } from 'react-icons/fi';
@@ -41,13 +41,6 @@ function Component() {
     const [messageType] = useState('');
 
     const [participants, setParticipants] = useState([]);
-    //const [rooms, setRooms] = useState([]);
-    //const [room, setRoom] = useState({});
-
-     const [listTopic, setListTopic] = useState(topics[0].value);
-     const [listPageIndex,  setListPageIndex ] = useState(0);
-     const [listPageSize,  setListPageSize ] = useState(10);
-     const [listSearch, setListSearch ] = useState('');
 
     const { user, role } = useSelector(state => state.auth);
     const { qiscus, room, rooms, 
