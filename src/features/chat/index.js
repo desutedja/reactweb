@@ -9,11 +9,12 @@ import Input from '../../components/Input';
 import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
-import { getPICBMChat, getAdminChat, setMessages, setRoomID, setRoomUniqueID } from './slice';
+import { setMessages, setRoomID, setRoomUniqueID } from './slice';
 import { FiSend } from 'react-icons/fi';
 
 import './style.css';
 
+// eslint-disable-next-line no-unused-vars
 const topics = [
     {label: "All", value:"merchant_trx,service,security,billing,personal"},
     {label: "Transaction", value:"merchant_trx"},
@@ -27,22 +28,23 @@ function Component() {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
     const [loadingParticipants, setLoadingParticipants] = useState(false);
+    // eslint-disable-next-line no-unused-vars
     const [loadingRooms, setLoadingRooms] = useState(false);
 
     const history = useHistory();
 
     const [refresh, setRefresh] = useState(false);
     const [message, setMessage] = useState('');
-    const [messageType, setMessageType] = useState('');
+    const [messageType] = useState('');
 
     const [participants, setParticipants] = useState([]);
     const [rooms, setRooms] = useState([]);
     const [room, setRoom] = useState({});
 
-    const [listTopic, /*setListTopic */] = useState(topics[0].value);
-    const [listPageIndex, /* setListPageIndex */] = useState(0);
-    const [listPageSize, /* setListPageSize */] = useState(10);
-    const [listSearch, /* setListSearch */] = useState('');
+    // const [listTopic, /*setListTopic */] = useState(topics[0].value);
+    // const [listPageIndex, /* setListPageIndex */] = useState(0);
+    // const [listPageSize, /* setListPageSize */] = useState(10);
+    // const [listSearch, /* setListSearch */] = useState('');
 
     const { user, role } = useSelector(state => state.auth);
     const { qiscus, roomID, roomUniqueID, messages, lastMessageOnRoom, loading } = useSelector(state => state.chat);
@@ -213,7 +215,7 @@ function Component() {
                                         <div>
                                             {
                                                 isImage(el.message.split(" ")[1]) ? 
-                                                <img al ="Attachment" src={el.message.split(" ")[1]} width="150" style={{ padding: '10px' }}/> :
+                                                <img alt="Attachment" src={el.message.split(" ")[1]} width="150" style={{ padding: '10px' }}/> :
                                                 <div className={el.email === userID ? "Message-own" : "Message"}>
                                                     <TiAttachment /> <a href={el.message.split(" ")[1]}>Download Attachment</a>
                                                 </div>

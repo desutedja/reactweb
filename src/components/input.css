@@ -264,3 +264,46 @@
   padding: 12px 0px 10px 0px;
   flex-wrap: wrap;
 }
+
+.time-pick {
+  display: flex;
+  position: absolute;
+  top: 100%;
+  max-height: 0;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+  overflow: hidden;
+  z-index: 1;
+  transition: .2s;
+}
+
+.time-pick.time-show {
+  max-height: 400px;
+}
+
+.time-wrap {
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.time-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.time-wrap p {
+  cursor: pointer;
+}
+
+.time-wrap p:hover {
+  background-color: #377de654;
+}
+
+.time-wrap p.active {
+  background-color: #2f78e9;
+  color: white;
+}
+
+
