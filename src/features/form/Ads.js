@@ -196,7 +196,7 @@ function Component() {
                         {values.content_type === 'video' &&
                             <Input {...props} label="Video" name="content_video" type="file" accept="video/*" />
                         }
-                        <Input {...props} label="Content" name="content_description" type="textarea" />
+                        <Input {...props} label="Content" name="content_description" type="editor" />
 
                         {!selected.id && <>
                             <p className="Input-label" style={{

@@ -4,6 +4,7 @@ import TextInput from './Text';
 import MultiSelectInput from './MultiSelect';
 import RadioInput from './Radio';
 import FileInput from './File';
+import Editor from './Editor';
 
 function Input({ optional = false, ...props }) {
     const {
@@ -21,6 +22,7 @@ function Input({ optional = false, ...props }) {
 
     const renderInput = type => {
         switch (type) {
+            case 'editor': return <Editor name={fixedName} {...inputProps} />;
             case 'multiselect': return <MultiSelectInput name={fixedName} {...inputProps} />;
             case 'radio': return <RadioInput name={fixedName} {...inputProps} />;
             case 'file': return <FileInput name={fixedName} {...inputProps} />;

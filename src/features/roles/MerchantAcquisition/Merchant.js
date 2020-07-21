@@ -1,8 +1,9 @@
-import React, { } from 'react';
+import React, {  } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
-import List from '../../list/Task';
-import Details from '../../details/Task';
+import List from '../../list/Merchant';
+import Add from '../../form/Merchant';
+import Details from '../../details/Merchant';
 
 function Component() {
     let { path } = useRouteMatch();
@@ -11,6 +12,12 @@ function Component() {
         <Switch>
             <Route exact path={path}>
                 <List />
+            </Route>
+            <Route path={`${path}/add`}>
+                <Add />
+            </Route>
+            <Route path={`${path}/edit`}>
+                <Add />
             </Route>
             <Route path={`${path}/:id`}>
                 <Details />

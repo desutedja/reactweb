@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FiPlus } from 'react-icons/fi';
 
 import Button from '../../components/Button';
@@ -40,6 +40,8 @@ const columns = [
 ]
 
 function Component() {
+    const { role } = useSelector(state => state.auth);
+
     const [loading, setLoading] = useState(false);
     const [bulk, setBulk] = useState(false);
     const [file, setFile] = useState();
@@ -136,7 +138,7 @@ function Component() {
                         }}
                     />,
                 ]}
-                deleteAction={deleteResident}
+                deleteAction={role === 'sa' && deleteResident}
             />
         </>
     )

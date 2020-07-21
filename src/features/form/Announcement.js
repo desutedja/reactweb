@@ -189,7 +189,7 @@ function Component() {
                                     options={units}
                                 />}
                             <Input {...props} type="file" label="Image (optional)" name="image" placeholder="Image URL" />
-                            <Input {...props} type="textarea" label="Description" placeholder="Insert Announcement Description" />
+                            <Input {...props} type="editor" label="Description" placeholder="Insert Announcement Description" />
                             <SubmitButton loading={loading} errors={errors} />
                         </Form>
                     )
