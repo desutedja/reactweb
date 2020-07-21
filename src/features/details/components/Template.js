@@ -19,7 +19,7 @@ function Component({ image, title, website, phone, merchant,
 
     return (
         <Loading loading={loading}>
-            <Breadcrumb title={title} />
+            <Breadcrumb title={title ? title : 'Details'} />
             <div style={{
                 display: 'flex',
                 flex: 1,

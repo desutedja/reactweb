@@ -62,12 +62,8 @@ function Component() {
 
     return (
         <Template
-            image={selected.logo}
-            title={selected.name}
-            website={selected.website}
-            phone={selected.phone}
             loading={false}
-            labels={["Details", "Billing List"]}
+            labels={["Unit Information", "Billing List"]}
             contents={[
                 <Detail type="Billing" data={selected} labels={details} editable={false} />,
                 <div style={{
@@ -76,7 +72,6 @@ function Component() {
                 }}>
                     {unit.items.length > 0 && <div className="Container" style={{
                         flexDirection: 'column',
-                        marginRight: 16,
                     }}>
                         {unit.items.map((el, index) => <div
                             className={index === active ? "GroupActive" : "Group"}
@@ -88,6 +83,7 @@ function Component() {
                     <div className="Container" style={{
                         flex: 3,
                         flexDirection: 'column',
+                        marginRight: 16,
                     }}>
                         <Table
                             columns={columns}
