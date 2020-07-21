@@ -118,15 +118,17 @@ function Component() {
     }, [city, dispatch, selected.city]);
 
     useEffect(() => {
-        const blacklist_modules = auth.user.blacklist_modules;
-        const isSecurity = blacklist_modules.find(item => item.module === 'security') ? true : false;
-        const isInternalCourier = blacklist_modules.find(item => item.module === 'internal_courier') ? true : false;
-        const isTechnician = blacklist_modules.find(item => item.module === 'technician') ? true : false;
-
-        if (isTechnician) delete staff_roles[2];
-        if (isInternalCourier) delete staff_roles[3];
-        if (isSecurity) delete staff_roles[4];
-    })
+        if (auth.role === 'bm') {
+            const blacklist_modules = auth.user.blacklist_modules;
+            const isSecurity = blacklist_modules.find(item => item.module === 'security') ? true : false;
+            const isInternalCourier = blacklist_modules.find(item => item.module === 'internal_courier') ? true : false;
+            const isTechnician = blacklist_modules.find(item => item.module === 'technician') ? true : false;
+    
+            if (isTechnician) delete staff_roles[2];
+            if (isInternalCourier) delete staff_roles[3];
+            if (isSecurity) delete staff_roles[4];
+        }
+    }, [auth])
 
     return (
         <Template
