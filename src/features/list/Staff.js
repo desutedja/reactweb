@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FiSearch, FiPlus } from 'react-icons/fi';
 
 import { toSentenceCase } from '../../utils';
@@ -55,6 +55,7 @@ const shifts = [
 ]
 
 function Component() {
+    const { auth } = useSelector(state => state)
     const [shift, setShift] = useState('');
     const [shiftLabel, setShiftLabel] = useState('');
 
@@ -98,6 +99,16 @@ function Component() {
             }))
     }, [dispatch, search]);
 
+    useEffect(() => {
+        const blacklist_modules = auth.user.blacklist_modules;
+        const isSecurity = blacklist_modules.find(item => item.module === 'security') ? true : false;
+        const isInternalCourier = blacklist_modules.find(item => item.module === 'internal_courier') ? true : false;
+        const isTechnician = blacklist_modules.find(item => item.module === 'technician') ? true : false;
+
+        if (isTechnician) delete roles[2];
+        if (isInternalCourier) delete roles[3];
+        if (isSecurity) delete roles[4];
+    })
     return (
         <Template
             columns={columns}
