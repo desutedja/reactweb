@@ -22,6 +22,7 @@ const labels = {
 }
 
 const tabs = ["Details", "Section", "Unit Type", "Unit", "Service", "Management", "Module"];
+const tabsBM = ["Section", "Unit Type", "Unit", "Service", "Management"];
 
 function Component() {
     const [data, setData] = useState({});
@@ -30,11 +31,29 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
     let { id } = useParams();
-
+    
+    const contents = [
+        <Detail data={data} labels={labels}
+            onDelete={() => dispatch(deleteBuilding(data, history))}
+        />,
+        <Section />,
+        <UnitType />,
+        <Unit />,
+        <Service />,
+        <Management />,
+        <Module />
+    ];
+    const contentsBM = [
+        <Section />,
+        <UnitType />,
+        <Unit />,
+        <Service />,
+        <Management />
+    ];
     useEffect(() => {
         dispatch(get(endpointAdmin + '/building/details/' + id, res => {
             setData(res.data.data);
-            setSelected(res.data.data);
+            dispatch(setSelected(res.data.data));
         }))
     }, [id, dispatch])
 
@@ -44,18 +63,8 @@ function Component() {
             title={data.name}
             website={data.website}
             phone={data.phone}
-            labels={auth.role !== 'sa' ? tabs.filter(tab => tab !== 'Module') : tabs}
-            contents={[
-                <Detail data={data} labels={labels}
-                    onDelete={() => dispatch(deleteBuilding(data, history))}
-                />,
-                <Section />,
-                <UnitType />,
-                <Unit />,
-                <Service />,
-                <Management />,
-                auth.role === 'sa' && <Module />
-            ]}
+            labels={auth.role === 'sa' ? tabs : tabsBM}
+            contents={auth.role === 'sa' ? contents : contentsBM}
         />
     )
 }

@@ -17,6 +17,7 @@ function Component({ imgPreview = false, data, labels, type = "",
     editable = true, onDelete, renderButtons = () => { } }) {
 
     const { banks } = useSelector(state => state.main);
+    const { role } = useSelector(state => state.auth);
 
     let history = useHistory();
 
@@ -49,7 +50,7 @@ function Component({ imgPreview = false, data, labels, type = "",
     }
 
     return (
-        <div className="row no-gutters">
+        <div className="row no-gutters w-100">
             {imgPreview && <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
                 <div className="row no-gutters h-100">
                     <div className="col-12">
@@ -102,12 +103,9 @@ function Component({ imgPreview = false, data, labels, type = "",
                     </div>
                 )}
             </div>
-            <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-            }}>
+            <div className="col-auto d-flex flex-column">
                 {editable && <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
-                    pathname: "edit",
+                    pathname: `/${role}/building/edit`,
                     state: data,
                 })} />}
                 {onDelete && <Button icon={<FiTrash />} color="danger" label="Delete" onClick={onDelete} />}
