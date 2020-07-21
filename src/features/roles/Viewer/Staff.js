@@ -3,7 +3,6 @@ import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
 
-import Add from '../../form/Staff';
 import List from '../../list/Staff';
 import Details from '../../details/Staff';
 

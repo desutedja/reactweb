@@ -141,7 +141,7 @@ function Component() {
             </Route>
             <Route path={"/bm/settings"}>
                 <div className="Container">
-                    <Settings labels={labels} data={data} />
+                    <Settings editPath="building/edit" labels={labels} data={data} />
                 </div>
             </Route>
         </Template>

@@ -15,6 +15,7 @@ import Input from './input';
 import { Form } from 'formik';
 import { buildingSchema } from './schemas';
 import SubmitButton from './components/SubmitButton';
+// import { auth } from 'firebase';
 
 const buildingPayload = {
     name: "",
@@ -51,6 +52,7 @@ function Component() {
     const [provinces, setProvinces] = useState([]);
 
     const { selected, loading } = useSelector(state => state.building);
+    const { role } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -147,9 +149,9 @@ function Component() {
                             </div>
                         </Modal>
 
-                        <Input {...props} label="Building Name" name="name" />
-                        <Input {...props} label="Legal Name" />
-                        <Input {...props} label="Site ID" name="code_name" />
+                        <Input {...props} label="Building Name" name="name" disabled={role === 'bm'} />
+                        <Input {...props} label="Legal Name" disabled={role === 'bm'} />
+                        <Input {...props} label="Site ID" name="code_name" disabled={role === 'bm'} />
                         <Input {...props} label="Max Units" placeholder="Input max units" 
                             hint="Maximum unit that can be registered on this Building" />
                         <Input {...props} label="Max Floors" placeholder="Input max floors"

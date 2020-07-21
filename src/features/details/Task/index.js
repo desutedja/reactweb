@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import Details from '../components/Detail';
 import Modal from '../../../components/Modal';
 import Template from '../components/Template';
 
 import Reports from './contents/Reports';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { get } from '../../slice';
 import { endpointTask } from '../../../settings';
 

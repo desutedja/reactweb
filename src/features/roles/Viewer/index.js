@@ -13,7 +13,6 @@ import {
     RiStore2Line, RiTaskLine,
     RiBuilding2Line, RiCustomerService2Line,
 } from "react-icons/ri";
-import { FaIdBadge } from 'react-icons/fa';
 
 import Dashboard from './Dashboard';
 import Ads from './Ads';
@@ -27,7 +26,6 @@ import Resident from './Resident';
 import Staff from './Staff';
 import Task from './Task';
 import Transaction from './Transaction';
-import Admin from './Admin';
 
 import Settings from '../../settings';
 import Chat from '../../chat';
