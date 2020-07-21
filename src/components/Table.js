@@ -99,8 +99,6 @@ function Component({
         }
     );
 
-    // console.log('LOG', page)
-
     const [search, setSearch] = useState("");
     const [searchToggle, toggleSearch] = useState("");
 

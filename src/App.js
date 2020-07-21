@@ -112,6 +112,9 @@ function App() {
               <MainRoute path="/bm">
                 <BM />
               </MainRoute>
+              <Route path="*">
+                <div>404</div>
+              </Route>
             </Switch>
           </div>
         </Router>
