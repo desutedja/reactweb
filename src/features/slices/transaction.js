@@ -115,15 +115,15 @@ export const downloadTransaction = (status = '', statusPayment = '', type = ''
     }))
 }
 
-export const getTransactionDetails = (row, history, url) => dispatch => {
+export const getTransactionDetails = (trx_code, history, url) => dispatch => {
   url = '/sa/transaction'
 
   dispatch(startAsync());
 
-  dispatch(get(transactionEndpoint + '/' + row.trx_code,
+  dispatch(get(transactionEndpoint + '/' + trx_code,
     res => {
       dispatch(setSelected(res.data.data));
-      history.push(url + '/' + row.trx_code);
+      history.push(url + '/' + trx_code);
 
       dispatch(stopAsync())
     }))

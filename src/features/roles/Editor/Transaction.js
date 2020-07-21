@@ -17,14 +17,14 @@ function Component() {
                 <Route path={`${path}/list`}>
                     <List />
                 </Route>
-                <Route path={`${path}/:id`}>
-                    <Details />
-                </Route>
                 <Route path={`${path}/settlement`}>
                     <Settlement />
                 </Route>
                 <Route path={`${path}/disbursement`}>
                     <Disbursement />
+                </Route>
+                <Route path={`${path}/:id`}>
+                    <Details />
                 </Route>
             </Switch>
     )

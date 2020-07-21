@@ -3,10 +3,11 @@ import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import Filter from '../../components/Filter';
-import { getTransaction, getTransactionDetails, downloadTransaction } from '../slices/transaction';
+import { getTransaction, downloadTransaction } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
 import { toMoney, toSentenceCase, dateTimeFormatterCell } from '../../utils';
 import Pill from '../../components/Pill';
+import Transaction from '../../components/cells/Transaction';
 
 import Template from './components/Template';
 import MyButton from '../../components/Button';
@@ -20,8 +21,9 @@ const payment_status = [
 const trx_type = merchant_types;
 
 const columns = [
-    // { Header: 'ID', accessor: 'id' },
-    { Header: 'Trx Code', accessor: 'trx_code' },
+    {
+        Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} id={row.trx_code} />
+    },
     { Header: 'Type', accessor: row => toSentenceCase(row.type) },
     { Header: 'Merchant', accessor: 'merchant_name' },
     { Header: 'Resident', accessor: 'resident_name' },
@@ -43,8 +45,6 @@ const columns = [
 
 function Component() {
     let dispatch = useDispatch();
-    let history = useHistory();
-    let { url } = useRouteMatch();
 
     const [statusPayment, setStatusPayment] = useState('');
     const [status, setStatus] = useState('');
@@ -122,7 +122,6 @@ function Component() {
                     }}
                 />
             ]}
-            onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}
         />
     )
 }
