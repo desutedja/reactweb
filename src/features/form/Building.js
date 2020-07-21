@@ -15,7 +15,7 @@ import Input from './input';
 import { Form } from 'formik';
 import { buildingSchema } from './schemas';
 import SubmitButton from './components/SubmitButton';
-import { auth } from 'firebase';
+// import { auth } from 'firebase';
 
 const buildingPayload = {
     name: "",

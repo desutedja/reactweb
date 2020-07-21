@@ -62,6 +62,8 @@ function Component({ id }) {
     const [status, setStatus] = useState('own');
 
     const { unit, loading, refreshToggle } = useSelector(state => state.resident);
+    const { selected } = useSelector(state => state.building);
+    const { role } = useSelector(state => state.auth);
 
 
     let dispatch = useDispatch();
@@ -72,6 +74,13 @@ function Component({ id }) {
         dispatch(getResidentUnit(pageIndex, pageSize, search, id));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, refreshToggle, id])
+
+    useEffect(() => {
+        if (role === 'bm') {
+            setSelectedBuilding({label: selected.name, value: selected});
+            setAddUnitStep(2);
+        }
+    }, [role, selected])
 
     useEffect(() => {
         addUnitStep === 3 && selectedUnit !== '' && dispatch(get(endpointResident + '/management/resident/get_main_owner/' + selectedUnit.value.id,
@@ -276,7 +285,7 @@ function Component({ id }) {
                 isOpen={addUnit}
                 title={"Add Unit"}
                 subtitle={"Register unit as a main resident"}
-                disableFooter={addUnitStep === 1}
+                disableFooter={role === 'bm' ? addUnitStep === 1 || 2 : addUnitStep === 1}
                 okLabel={addUnitStep !== 3 ? "Back" : "Add Unit"}
                 cancelLabel={"Back"}
                 onClick={addUnitStep === 3 ? submitFunction : addUnitBackFunction}
