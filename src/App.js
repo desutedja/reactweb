@@ -16,15 +16,21 @@ import "./components/table.css";
 
 import Login from "./features/auth/Login";
 import OTP from "./features/auth/OTP";
+
 import Editor from "./features/roles/Editor";
+import MerchantAcquisition from "./features/roles/MerchantAcquisition";
+import Viewer from "./features/roles/Viewer";
 import Finance from "./features/roles/Finance";
 import BM from "./features/roles/BM";
+
 import { store, persistor } from "./store";
 
 function SA({ children, ...other }) {
   const { user } = useSelector((state) => state.auth);
 
   switch (user.group) {
+    case 'merchant_acquisition': return <MerchantAcquisition />
+    case 'viewer': return <Viewer />
     case 'finance': return <Finance />
     default: return <Editor />
   }
