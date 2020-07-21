@@ -27,6 +27,7 @@ function Component() {
     const [info, setInfo] = useState({});
     const [active, setActive] = useState(0);
     const [selected, setSelected] = useState([]);
+    const [limit, setLimit] = useState(5);
     const [loadingMerchant, setLoadingMerchant] = useState(false)
     const [loadingCourier, setLoadingCourier] = useState(false)
     const [transferCode, setTransferCode] = useState('');
@@ -118,33 +119,38 @@ function Component() {
     }, [dispatch]);
 
     useEffect(() => {
-        setLoadingMerchant(true);
-        setLoadingCourier(true);
-        type === 'merchant' && dispatch(get(endpointMerchant + '/admin/list?filter=', res => {
-            setMerchants(res.data.data.items);
-            setMerchant(res.data.data.items[active].id);
-            setLoadingMerchant(false);
-        }, err => {
-            console.log('FAILED GET LIST DISBURSEMENT MERCHANT:', err)
-            setLoadingMerchant(false);
-        }
-        ))
-        type === 'courier' && dispatch(get(endpointManagement + '/admin/staff/list?staff_role=courier', res => {
-            setCouriers(res.data.data.items);
-            setCourier(res.data.data.items[active].id);
-            setLoadingCourier(false);
-        }, err => {
-            console.log('FAILED GET LIST DISBURSEMENT COURIER:', err)
-            setLoadingMerchant(false);
-        }
-        ))
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, type]);
+        setLimit(5);
+    }, [type])
 
     useEffect(() => {
-        console.log(selected)
+        setTimeout(() => {
+
+            setLoadingMerchant(true);
+            setLoadingCourier(true);
+
+            type === 'merchant' && dispatch(get(endpointMerchant + '/admin/list?filter=&limit='
+            + limit + '&search=' + searchValue, res => {
+                setMerchants(res.data.data.items);
+                setMerchant(res.data.data.items[active].id);
+                setLoadingMerchant(false);
+            }, err => {
+                console.log('FAILED GET LIST DISBURSEMENT MERCHANT:', err)
+                setLoadingMerchant(false);
+            }));
+
+            type === 'courier' && dispatch(get(endpointManagement + '/admin/staff/list?filter=&staff_role=courier&limit=' + limit + '&search=' + searchValue, res => {
+                setCouriers(res.data.data.items);
+                setCourier(res.data.data.items[active].id);
+                setLoadingCourier(false);
+            }, err => {
+                console.log('FAILED GET LIST DISBURSEMENT COURIER:', err)
+                setLoadingCourier(false);
+            }));
+            
+        }, searchValue ? 1000 : 0)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [merchant, selected])
+    }, [type, searchValue, limit]);
+
 
     return (
         <>
@@ -335,7 +341,6 @@ function Component() {
                                     <ClinkLoader />
                                 </div>}
                                 {!loadingMerchant && merchants
-                                    .filter(el => el.name.toLowerCase().includes(searchValue.toLowerCase()))
                                     .map((el, index) => <div
                                         key={index}
                                         className={index === active ? "GroupActive" : "Group"}
@@ -347,6 +352,14 @@ function Component() {
                                     >
                                         {el.name}
                                     </div>)}
+                                {!loadingMerchant && merchants.length === 0 && (
+                                    <div className="w-100 text-center">No Merchant found</div>
+                                )}
+                                {!loadingMerchant && merchants.length !== 0 && merchants.length >= limit && (
+                                    <div className="btn w-100 text-primary"
+                                        onClick={() => setLimit(limit + 10)}
+                                    >load 10 more</div>
+                                )}
                             </>,
                             <>
                                 <h5 style={{
@@ -357,7 +370,6 @@ function Component() {
                                     <ClinkLoader />
                                 </div>}
                                 {!loadingCourier && couriers
-                                    .filter(el => (el.firstname + ' ' + el.lastname).toLowerCase().includes(searchValue.toLowerCase()))
                                     .map((el, index) => <div
                                         key={index}
                                         className={index === active ? "GroupActive" : "Group"}
@@ -369,6 +381,14 @@ function Component() {
                                     >
                                         {el.firstname} {el.lastname}
                                     </div>)}
+                                {!loadingCourier && couriers.length === 0 && (
+                                    <div className="w-100 text-center">No Courier found</div>
+                                )}
+                                {!loadingMerchant && couriers.length !== 0 && couriers.length >= limit && (
+                                    <div className="btn w-100 text-primary"
+                                        onClick={() => setLimit(limit + 10)}
+                                    >load 10 more</div>
+                                )}
                             </>,
                         ]}
                         activeTab={0}
