@@ -19,6 +19,7 @@ function Component({ id, data }) {
                 state: data
             });
             dispatch(setSelected(data));
+            console.log(data)
         }}>
             <Avatar className="Item-avatar" size="40" round={8} src={data.logo}
                 name={data.name}

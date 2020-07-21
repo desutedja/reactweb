@@ -6,7 +6,11 @@ import { RiStore2Line, RiTaskLine, RiCustomerService2Line } from 'react-icons/ri
 import { Redirect, Route } from 'react-router-dom';
 
 import Template from '../components/Template';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+
+import { endpointAdmin } from '../../../settings';
+import { get } from '../../slice';
+import { setSelected } from '../../slices/building';
 
 import Dashboard from './Dashboard';
 import Ads from './Ads';
@@ -17,8 +21,9 @@ import Merchant from './Merchant';
 import Resident from './Resident';
 import Staff from './Staff';
 import Task from './Task';
-import Settings from '../../settings';
+import Settings from '../../details/components/Detail';
 import Chat from '../../chat';
+
 
 const modules = [
     {
@@ -87,10 +92,19 @@ const modules = [
     },
 ];
 
-function Component() {
+const labels = {
+    'Information': ['id', 'created_on', 'legal_name', 'owner_name', 'code_name', 'email'],
+    'Address': ['address', 'district_name', 'city_name', 'province_name', 'zipcode'],
+    'Others': ['max_units', 'max_floors', 'max_sections'],
+}
 
+function Component() {
+    const dispatch = useDispatch();
+    const { auth } = useSelector(state => state);
+    const id = auth.user.building_management_id;
     const { blacklist_modules } = useSelector(state => state.auth.user);
-    const [menus, setMenus] = useState(modules || [])
+    const [data, setData] = useState({})
+    const [menus, setMenus] = useState(modules || []);
 
     useEffect(() => {
         const modulesLabel = blacklist_modules.map(module => module.module);
@@ -101,6 +115,14 @@ function Component() {
         setMenus(modulesFilter)
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [blacklist_modules])
+
+    useEffect(() => {
+        dispatch(get(endpointAdmin + '/building/details/' + id, res => {
+            setData(res.data.data);
+            dispatch(setSelected(res.data.data));
+        }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <Template role="bm">
@@ -118,7 +140,9 @@ function Component() {
                 <Chat />
             </Route>
             <Route path={"/bm/settings"}>
-                <Settings />
+                <div className="Container">
+                    <Settings labels={labels} data={data} />
+                </div>
             </Route>
         </Template>
     )

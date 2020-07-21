@@ -91,7 +91,7 @@ function Component() {
                 fetchData={useCallback((pageIndex, pageSize, search) => {
                     dispatch(getBuildingSection( pageIndex, pageSize, search, selected, sTypeFilter.value));
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle,  sTypeFilter])}
+                }, [dispatch, refreshToggle, sTypeFilter, selected])}
                 filters={[
                     {
                         hidex: !sTypeFilter.label,

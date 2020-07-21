@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import {  useDispatch } from 'react-redux';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
 
 import Orders from './contents/Orders';
-import { useParams, useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { get } from '../../slice';
 import { endpointTransaction } from '../../../settings';
 
