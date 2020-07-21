@@ -14,10 +14,9 @@ import { FiTrash, FiEdit } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 
 function Component({ imgPreview = false, data, labels, type = "",
-    editable = true, onDelete, renderButtons = () => { } }) {
+    editable = true, editPath = 'edit', onDelete, renderButtons = () => { } }) {
 
     const { banks } = useSelector(state => state.main);
-    const { role } = useSelector(state => state.auth);
 
     let history = useHistory();
 
@@ -105,7 +104,7 @@ function Component({ imgPreview = false, data, labels, type = "",
             </div>
             <div className="col-auto d-flex flex-column">
                 {editable && <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
-                    pathname: `edit`,
+                    pathname: editPath,
                     state: data,
                 })} />}
                 {onDelete && <Button icon={<FiTrash />} color="danger" label="Delete" onClick={onDelete} />}
