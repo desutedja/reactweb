@@ -61,6 +61,7 @@ export const getMerchant = (
     '&limit=' + pageSize +
     '&type=' + type +
     '&category=' + category +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
     
     res => {

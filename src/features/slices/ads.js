@@ -165,6 +165,7 @@ export const getAdsSchedule = (pageIndex, pageSize, search, row) => dispatch => 
   dispatch(get(adsEndpoint + '/schedule/' + row.id +
     '?page=' + (pageIndex + 1) +
     '&search=' + search +
+    '&sort_field=created_on&sort_type=DESC' +
     '&limit=' + pageSize,
 
     res => {

@@ -48,15 +48,16 @@ function Component({
         pageCount,
         gotoPage,
         setPageSize,
-        state: { pageIndex, pageSize, selectedRowIds }
+        state: { pageIndex, pageSize, selectedRowIds, sortBy }
     } = useTable({
         columns,
         data,
         initialState: { pageIndex: 0 },
         manualPagination: true,
+        manualSorting: true,
         pageCount: controlledPageCount,
-        autoResetSortBy: false,
         autoResetPage: false,
+        autoResetSortBy: false,
         autoResetSelectedRows: true,
     },
         useSortBy,
@@ -85,13 +86,13 @@ function Component({
                     {
                         id: 'expander',
                         Header: () => null,
-                        Cell: ({ row }) => 
+                        Cell: ({ row }) =>
                             row.original.expandable === true &&
-                        (
-                            <span {...row.getToggleRowExpandedProps()}>
-                                {row.isExpanded ? <FaCaretDown /> : <FaCaretRight />}
-                            </span> 
-                        ),
+                            (
+                                <span {...row.getToggleRowExpandedProps()}>
+                                    {row.isExpanded ? <FaCaretDown /> : <FaCaretRight />}
+                                </span>
+                            ),
                     },
                     ...columns,
                 ]
@@ -105,9 +106,33 @@ function Component({
     const [activeFilter, setFilter] = useState(0);
     const [modalOpen, toggleModal] = useState(false);
 
+    const [sortField, setSortField] = useState("");
+    const [sortType, setSortType] = useState("");
+
     useEffect(() => {
+        const { id, desc } = sortBy[0] ? sortBy[0] : {};
+
+        console.log('sortBy: ', id, desc);
+
+        const field = columns.find(el => el.Header === id)?.sorting;
+        const type = desc ? 'DESC' : 'ASC';
+
+        field ? setSortField(field) : setSortField('created_on');
+        field ? setSortType(type) : setSortType('DESC');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sortBy])
+
+
+    // sorting tapi gajadi, BE belum siap
+    useEffect(() => {
+        console.log('sortField: ', sortField);
+        console.log('sortType: ', sortType);
+
         fetchData && fetchData(pageIndex, pageSize, searchToggle);
+        // fetchData && fetchData(pageIndex, pageSize, searchToggle, sortField, sortType);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchData, pageIndex, pageSize, searchToggle]);
+    // }, [fetchData, pageIndex, pageSize, searchToggle, sortField, sortType]);
 
     useEffect(() => {
         gotoPage(0);
@@ -263,48 +288,48 @@ function Component({
 
                                 return (
                                     <>
-                                    <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
+                                        <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
 
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                            );
-                                        })}
+                                            {row.cells.map(cell => {
+                                                return (
+                                                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                                );
+                                            })}
 
-                                        {(MenuActions.length > 0) &&
-                                            <td key={i}>
-                                                <div style={{
-                                                    display: 'flex',
-                                                }}>
-                                                    {/* <Dropdown label="Actions" items={MenuActions} /> */}
-                                                    <UncontrolledDropdown>
-                                                        <DropdownToggle tag="span" className="More">
-                                                            <FiMoreHorizontal style={{
-                                                                color: 'grey',
-                                                                fontSize: '1.2rem',
-                                                            }} />
-                                                        </DropdownToggle>
-                                                        <DropdownMenu>
-                                                            {MenuActions.map((item, key) =>
-                                                                item.disabled ?
-                                                                    null :
-                                                                    <DropdownItem key={key} onClick={item.onClick}>
-                                                                        {item.icon} {item.name}
-                                                                    </DropdownItem>
-                                                            )}
-                                                        </DropdownMenu>
-                                                    </UncontrolledDropdown>
-                                                </div>
-                                            </td>
+                                            {(MenuActions.length > 0) &&
+                                                <td key={i}>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                    }}>
+                                                        {/* <Dropdown label="Actions" items={MenuActions} /> */}
+                                                        <UncontrolledDropdown>
+                                                            <DropdownToggle tag="span" className="More">
+                                                                <FiMoreHorizontal style={{
+                                                                    color: 'grey',
+                                                                    fontSize: '1.2rem',
+                                                                }} />
+                                                            </DropdownToggle>
+                                                            <DropdownMenu>
+                                                                {MenuActions.map((item, key) =>
+                                                                    item.disabled ?
+                                                                        null :
+                                                                        <DropdownItem key={key} onClick={item.onClick}>
+                                                                            {item.icon} {item.name}
+                                                                        </DropdownItem>
+                                                                )}
+                                                            </DropdownMenu>
+                                                        </UncontrolledDropdown>
+                                                    </div>
+                                                </td>
+                                            }
+                                        </tr>
+                                        {
+                                            row.isExpanded ? <tr>
+                                                <td className="SubRowComponent" colSpan={visibleColumns.length}>
+                                                    {row.original.subComponent && row.original.subComponent(row.original)}
+                                                </td>
+                                            </tr> : null
                                         }
-                                    </tr>
-                                    {
-                                        row.isExpanded ? <tr>
-                                            <td className="SubRowComponent" colSpan={visibleColumns.length}> 
-                                                {row.original.subComponent && row.original.subComponent(row.original)}
-                                            </td>
-                                        </tr> : null
-                                    }
                                     </>
                                 );
                             })}

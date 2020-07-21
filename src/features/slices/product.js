@@ -69,6 +69,7 @@ export const getProduct = (
     '&merchant_id=' + merchant +
     '&category_id=' + category +
     '&merchant_type=' + type +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {

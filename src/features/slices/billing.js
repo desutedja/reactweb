@@ -106,6 +106,7 @@ export const getBillingUnit = (pageIndex, pageSize, search = '', building, unit)
   dispatch(get(billingEndpoint + '/unit' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
+    '&sort_field=created_on&sort_type=DESC' +
     '&resident_building=' + building +
     '&search=' + search,
 
@@ -136,6 +137,7 @@ export const getBillingSettlement = (pageIndex, pageSize, search = '', building,
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&building_id=' + building +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {
@@ -164,6 +166,7 @@ export const getBillingDisbursement = (pageIndex, pageSize, search = '', buildin
   dispatch(get(billingEndpoint + '/disbursement/list/management' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {
@@ -197,6 +200,7 @@ export const getBillingUnitItem = (pageIndex, pageSize, search = '', selected, s
     '&limit=' + pageSize +
     '&unit_id=' + selected.id +
     '&building_id=' + selected.building_id +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {

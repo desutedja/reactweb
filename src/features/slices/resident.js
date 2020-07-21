@@ -80,7 +80,11 @@ export const {
 export const getResident = (
   pageIndex, pageSize,
   search = '',
+  // sort_field = 'created_on',
+  // sort_type = 'DESC',
 ) => dispatch => {
+  // console.log(sort_field, sort_type)
+
   dispatch(startAsync());
 
   dispatch(get(residentEndpoint + '/read' +
@@ -88,6 +92,7 @@ export const getResident = (
     '&limit=' + pageSize +
     '&search=' + search +
     '&sort_field=created_on&sort_type=DESC' +
+    // '&sort_field=' + sort_field + '&sort_type=' + sort_type +
     '&status=',
 
     res => {
@@ -172,6 +177,7 @@ export const getSubaccount = (pageIndex, pageSize, search, id) => dispatch => {
     '?page=' + (pageIndex + 1) +
     '&id=' + id +
     '&limit=' + pageSize +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {
@@ -190,6 +196,7 @@ export const getResidentUnit = (pageIndex, pageSize, search, id) => dispatch => 
     '?page=' + (pageIndex + 1) +
     '&id=' + id +
     '&limit=' + pageSize +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {

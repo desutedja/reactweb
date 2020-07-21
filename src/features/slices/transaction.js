@@ -87,8 +87,7 @@ export const getTransaction = (
     '&status=' + status +
     '&payment_status=' + statusPayment +
     '&trx_type=' + type +
-    '&sort_field=created_on' +
-    '&sort_type=DESC' +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {
@@ -140,6 +139,7 @@ export const getTransactionSettlement = (
     '&limit=' + pageSize +
     '&settlement_status=' + settlementStatus +
     '&status=completed' +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {
@@ -175,6 +175,7 @@ export const getTransactionDisbursement = (
     '&merchant_id=' + merchant +
     '&courier_id=' + courier +
     '&limit=' + pageSize +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {

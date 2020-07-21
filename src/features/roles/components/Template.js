@@ -116,7 +116,7 @@ function Component({ role, children }) {
     useEffect(() => {
         dispatch(get(endpointResident + '/banks', res => {
             const banks = res.data.data.map(el => ({
-                value: el.bank_code,
+                value: el.bank_name,
                 label: el.bank_name,
             }))
 

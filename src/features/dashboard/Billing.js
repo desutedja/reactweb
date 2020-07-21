@@ -23,13 +23,13 @@ function Component() {
     let dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(get(endpointBilling + '/management/billing/statistic',  res => {
+        dispatch(get(endpointBilling + '/management/billing/statistic', res => {
             setBillingData(res.data.data);
         }))
     }, [dispatch]);
 
     useEffect(() => {
-        dispatch(get(endpointManagement + '/admin/staff/statistics',  res => {
+        dispatch(get(endpointManagement + '/admin/staff/statistics', res => {
             setStaffData(res.data.data);
         }))
     }, [dispatch]);
@@ -75,8 +75,8 @@ function Component() {
                     <div className="Container color-5 d-flex flex-column">
                         <div className="row no-gutters align-items-center">
                             <div className="col">
-                                <AnimatedNumber className="h2 font-weight-bold white" value={staffData.num_of_unit
-                                    / staffData.num_of_building}
+                                <AnimatedNumber className="h2 font-weight-bold white"
+                                    value={staffData.num_of_unit / staffData.num_of_building + ''}
                                     formatValue={formatValue}
                                 />
                                 <div className="text-nowrap">Average Unit</div>
@@ -189,7 +189,7 @@ function Component() {
                                 <p>Resident</p>
                             </div>
                         </div>
-                        </div>
+                    </div>
                     <div className="col-6 col-md-4 col-lg">
                         <div className="Container align-items-center color-1">
                             <div style={{
@@ -209,7 +209,7 @@ function Component() {
                                 <p>Technician</p>
                             </div>
                         </div>
-                        </div>
+                    </div>
                     <div className="col-6 col-md-4 col-lg">
                         <div className="Container align-items-center color-1">
                             <div style={{
@@ -228,7 +228,7 @@ function Component() {
                                 <p>Security</p>
                             </div>
                         </div>
-                        </div>
+                    </div>
                     <div className="col-6 col-md-4 col-lg">
                         <div className="Container align-items-center color-1">
                             <div style={{
@@ -273,7 +273,7 @@ function Component() {
                                 width: 'auto'
                             }}>
                                 <FiBriefcase className="h1 mr-4 my-0" />
-                            </div>                            
+                            </div>
                             <div style={{
                                 flex: 1,
                                 // padding: 16,
@@ -286,7 +286,7 @@ function Component() {
                                 <p className="text-nowrap">General Manager</p>
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </div>
         </>

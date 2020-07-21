@@ -20,22 +20,27 @@ const columns = [
     {
         Header: "Resident",
         accessor: row => <Resident id={row.id} data={row} />,
+        sorting: 'firstname',
     },
     {
         Header: "Onboarded",
         accessor: row => <Pill color={row.onboarding === "yes" ? "success" : "secondary"}>
             {toSentenceCase(row.onboarding)}</Pill>,
+        sorting: 'onboarding',
     },
     {
-        Header: "Email", accessor: row => <a target="_blank" rel="noopener noreferrer"
-            href={'mailto:' + row.email}>{row.email}</a>
+        Header: "Email",
+        accessor: row => <a target="_blank" rel="noopener noreferrer"
+            href={'mailto:' + row.email}>{row.email}</a>,
+        sorting: 'email',
     },
-    { Header: "Phone", accessor: "phone" },
+    { Header: "Phone", accessor: "phone", sorting: 'phone' },
     {
         Header: "KYC Status", accessor: row => row.status_kyc ?
             <Pill color="primary">{toSentenceCase(row.status_kyc)}</Pill>
             :
-            <Pill color="secondary">None</Pill>
+            <Pill color="secondary">None</Pill>,
+        sorting: 'status_kyc',
     },
 ]
 

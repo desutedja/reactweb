@@ -13,7 +13,7 @@ const details = {
     'Profile': ['created_on', 'gender', 'nationality', 'marital_status', 'status_kyc'],
     'Address': ['address', 'district_name', 'city_name', 'province_name'],
     'Management': ['building_management_id', 'staff_id', 'staff_role'],
-    'Bank Account': ['account_name', 'account_no', 'account_bank'],
+    'Bank Account': ['account_name', 'account_number', 'account_bank'],
 };
 
 function Component() {

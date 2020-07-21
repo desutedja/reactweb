@@ -62,6 +62,7 @@ export const getAnnoucement = (
   dispatch(get(announcementEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
+    '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
     
     res => {
