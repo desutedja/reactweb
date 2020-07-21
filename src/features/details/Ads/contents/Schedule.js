@@ -18,7 +18,7 @@ const columns = [
 
 function Component() {
     const [addSchedule, setAddSchedule] = useState(false);
-
+    const [allDay, setAllDay] = useState(false);
 
     const { selected, loading, schedule, refreshToggle } = useSelector(state => state.ads);
 
@@ -37,13 +37,21 @@ function Component() {
                 <Form
                     noContainer={true}
                     onSubmit={data => {
+                        if (allDay) {
+                            data.hour_from = '00:00:00';
+                            data.hour_to = '23:59:59';
+                        }
                         dispatch(createAdsSchedule({ ...data, adv_id: selected.id }))
                         setAddSchedule(false);
                     }}
                 >
                     <Input label="Day" type="select" options={daysLabel} />
-                    <Input label="Hour From" type="time" />
-                    <Input label="Hour To" type="time" />
+                    <div class="form-check mt-4">
+                        <input type="checkbox" class="form-check-input" id="all-day" value={allDay} onChange={e => setAllDay(e.target.checked)}/>
+                        <label class="form-check-label m-0 cursor-pointer" for="all-day"><strong>All Day</strong></label>
+                    </div>
+                    <Input disabled={allDay} label="Hour From" type="time" />
+                    <Input disabled={allDay} label="Hour To" type="time" />
                 </Form>
             </Modal>
             <Table

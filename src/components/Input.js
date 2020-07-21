@@ -213,6 +213,7 @@ function Component({
                             type="text"
                             id={label}
                             value={timePick}
+                            disabled={disabled}
                             name={name ? name : label.toLowerCase().replace(/ /g, '_')}
                             onChange={e => {
                                 setTimePick(e.target.value);
