@@ -5,7 +5,7 @@ import { toSentenceCase } from '../../../utils';
 import { Formik } from 'formik';
 import { useSelector } from 'react-redux';
 
-function Template({ slice, payload, schema, renderChild = () => { }, formatValues = () => { },
+function FormTemplate({ slice, payload, schema, renderChild = () => { }, formatValues = () => { },
     edit = () => { }, add = () => { } }) {
 
     let { path } = useRouteMatch();
@@ -38,4 +38,4 @@ function Template({ slice, payload, schema, renderChild = () => { }, formatValue
     )
 }
 
-export default Template;
+export default FormTemplate;
