@@ -92,10 +92,6 @@ function Component({ id }) {
     }, [addUnitStep, selectedUnit, dispatch]);
 
     useEffect(() => {
-        console.log('mainowner' + mainOwner);
-    }, [mainOwner])
-
-    useEffect(() => {
         addSubAccount && addSubAccountStep === 1 && (search.length >= 1) &&
             dispatch(get(endpointResident + '/management/resident/read' +
                 '?page=1' +
@@ -129,10 +125,6 @@ function Component({ id }) {
                 setUnits(res.data.data.items);
             }))
     }, [addUnit, search, addUnitStep, selectedBuilding, dispatch]);
-
-    useEffect(() => {
-        console.log(delUnit)
-    }, [delUnit])
 
     const addUnitBackFunction = useCallback(() => setAddUnitStep(addUnitStep - 1), [addUnitStep]);
     const addSubBackFunction = useCallback(() => setAddSubAccountStep(addSubAccountStep - 1), [addSubAccountStep]);
