@@ -48,7 +48,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "react-scripts build",
+    "predeploy2": "react-scripts build",
     "deploy": "firebase deploy --token 1//0gcXB85ScBphaCgYIARAAGBASNwF-L9Ire_0cz4RfSz0kkI0rUpCVojr_AESXmQOwAl9Saw2JpoAXnw23YKp0H1GD6e7w7BVww4M",
+    "deploy2": "firebase deploy --token 1//0g_os-VSaumWyCgYIARAAGBASNwF-L9IrOJwubBLjt7fj3iCdCQ-gp3cEaPC6myi3g3rBbfOFLAt4AJ7tJgmILPuqkjUz6CDtpdk",
     "deploy-surge": "cd build && surge --domain clink-admin.surge.sh"
   },
   "eslintConfig": {
