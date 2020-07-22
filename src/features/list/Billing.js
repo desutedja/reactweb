@@ -43,23 +43,25 @@ function Component() {
         { Header: 'ID', accessor: 'id' },
         {
             Header: 'Unit', accessor: row => <span className="Link"
-                onClick={ () => dispatch(getBillingUnitDetails(row, history, url))} 
-              >{toSentenceCase(row.section_type) + ' '
+                onClick={() => dispatch(getBillingUnitDetails(row, history, url))}
+            >{toSentenceCase(row.section_type) + ' '
                 + row.section_name + ' ' + row.number}</span>
         },
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
         { Header: 'Unpaid Amount', accessor: row => <b>{toMoney(row.unpaid_amount)}</b> },
-        { Header: 'Action', accessor: row => (
-            <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
-                onClick={() => {
-                    dispatch(setSelected(row));
-                    dispatch(setSelectedUnit({}));
-                    dispatch(getBillingUnitDetails(row, history, url))
-                    history.push(url + '/item/add');
-                }}
-            />
-        ) },
+        {
+            Header: 'Action', accessor: row => (
+                <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
+                    onClick={() => {
+                        dispatch(setSelected(row));
+                        dispatch(setSelectedUnit({}));
+                        dispatch(getBillingUnitDetails(row, history, url))
+                        history.push(url + '/item/add');
+                    }}
+                />
+            )
+        },
     ]
 
     return (

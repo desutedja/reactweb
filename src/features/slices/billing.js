@@ -200,7 +200,7 @@ export const getBillingUnitItem = (pageIndex, pageSize, search = '', selected, s
     '&limit=' + pageSize +
     '&unit_id=' + selected.id +
     '&building_id=' + selected.building_id +
-    '&sort_field=created_on&sort_type=DESC' +
+    // '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {
@@ -228,6 +228,7 @@ export const createBillingUnitItem = (data, selected, history) => dispatch => {
         message: 'Billing has been created.'
       }));
 
+      dispatch(refresh());
       dispatch(stopAsync());
     },
     err => {
@@ -248,6 +249,7 @@ export const editBillingUnitItem = (data, selected, history, id) => dispatch => 
         message: 'Billing has been updated.'
       }));
 
+      dispatch(refresh());
       dispatch(stopAsync());
     },
     err => {
