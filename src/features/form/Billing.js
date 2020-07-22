@@ -88,10 +88,7 @@ function Component() {
                 resident_name: selected.resident_name,
             })}
             edit={data => dispatch(editBillingUnitItem(data, unit.selected, history, selectedUnit.id))}
-            add={data => {
-                console.log(data)
-                // dispatch(createBillingUnitItem(data, unit.selected, history))
-            }}
+            add={data => dispatch(createBillingUnitItem(data, unit.selected, history))}
             renderChild={props => {
                 const { errors } = props;
 
