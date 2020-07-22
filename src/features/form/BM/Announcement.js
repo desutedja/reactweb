@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
-import { endpointAdmin, endpointMerchant } from '../../../settings';
+import { endpointAdmin } from '../../../settings';
 import { createAnnouncement, editAnnouncement } from '../../slices/announcement';
 import { get } from '../../slice';
 
@@ -34,16 +34,6 @@ const roles = [
     { value: 'staff_technician', label: 'Staff Technician Only' },
 ]
 
-const target_buildings = [
-    { label: "All Building", value: "allbuilding" },
-    { label: "Specific Building(s)", value: "specificbuilding" },
-]
-
-const target_merchants = [
-    { label: "All Merchant", value: "allmerchant" },
-    { label: "Specific Merchant(s)", value: "specificmerchant" },
-]
-
 const target_units = [
     { label: "All Unit", value: "allunit" },
     { label: "Specific Unit(s)", value: "specificunit" },
@@ -51,15 +41,9 @@ const target_units = [
 
 function Component() {
     const { selected, loading } = useSelector(state => state.announcement);
-
-    const [buildings, setBuildings] = useState([]);
-    const [selectedBuildings, setSelectedBuildings] = useState(selected.building ? selected.building : []);
+    const { user } = useSelector(state => state.auth);
 
     const [units, setUnits] = useState([]);
-
-    const { user, role } = useSelector(state => state.auth);
-
-    const [searchbuilding, setSearchbuilding] = useState('');
     const [searchUnit, setSearchUnit] = useState('');
 
     let dispatch = useDispatch();
@@ -76,7 +60,7 @@ function Component() {
 
                     setUnits(formatted);
                 }));
-    }, [dispatch, searchUnit]);
+    }, [dispatch, searchUnit, user.building_id]);
 
     const payload = selected.id ? {
         ...announcementPayload, ...selected,

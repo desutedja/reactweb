@@ -6,7 +6,7 @@ import { Badge } from 'reactstrap';
 import { FiPlus } from 'react-icons/fi';
 
 import Button from '../../components/Button';
-import { getAnnoucement, getAnnouncementDetails, setSelected, deleteAnnouncement }
+import { getAnnoucement, setSelected, deleteAnnouncement }
     from '../slices/announcement';
 import { toSentenceCase } from '../../utils';
 
@@ -18,7 +18,7 @@ function Component() {
     let history = useHistory();
     let { url } = useRouteMatch();
 
-    const { role, user } = useSelector(state => state.auth)
+    const { role } = useSelector(state => state.auth)
 
     const columns = [
         { Header: 'ID', accessor: 'id' },
