@@ -18,19 +18,18 @@ function Component() {
     let history = useHistory();
     let { url } = useRouteMatch();
 
-    const { auth } = useSelector(state => state)
+    const { role, user } = useSelector(state => state.auth)
 
     const columns = [
         { Header: 'ID', accessor: 'id' },
-        { Header: 'Title', accessor: row => <div className={"Link"}
-            onClick={() => dispatch(getAnnouncementDetails(row, history, url))}>{row.title}</div>},
+        { Header: 'Title', accessor: row => <a href={"/" + role + "/announcement/" + row.id}><b>{row.title}</b></a>},
         { Header: 'Consumer', accessor: row => toSentenceCase(row.consumer_role.replace(/_/g, ' ')) },
         {
             Header: 'Description', accessor: row => row.description.length > 50 ?
                 parse(row.description).slice(0, 50) + '...' : parse(row.description)
         },
         { Header: 'Publisher', accessor: row => <><a href={
-            "/" + auth.role + "/" + (row.publisher_role === 'sa' ? "admin" : "staff") + "/" + row.publisher
+            "/" + role + "/" + (row.publisher_role === 'sa' ? "admin" : "staff") + "/" + row.publisher
         }>{row.publisher_name}</a></> },
         { Header: 'Publisher Role', accessor: row => row.publisher_role === 'sa' ? 'Super Admin' : 'PIC Admin' },
         {
