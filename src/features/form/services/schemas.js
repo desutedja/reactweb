@@ -126,9 +126,9 @@ export const staffSchema = Yup.object().shape({
     province: Text,
     city: Text,
     district: Text,
-    account_bank: Text,
-    account_number: Text,
-    account_name: Text,
+    account_bank: TextOptional,
+    account_number: TextOptional,
+    account_name: TextOptional,
 });
 
 export const announcementSchema = Yup.object().shape({
