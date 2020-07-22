@@ -25,7 +25,6 @@ function Component({ data, onClick, onClickAll, customComponent=null,  altDataCo
                 })}
                 {altDataComponent && altDataComponent()}
             </div>
-            And many more...
         </div>
     )
 }

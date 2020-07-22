@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { login } from './slice';
+import { login, stopAsync } from './slice';
 import Button from '../../components/Button';
 import CustomAlert from '../../components/CustomAlert';
 import Template from './template';
@@ -16,6 +16,10 @@ function Page({ role }) {
 
     let dispatch = useDispatch();
     let history = useHistory();
+
+    useEffect(() => {
+        dispatch(stopAsync());
+    }, [dispatch])
 
     return (
         <>

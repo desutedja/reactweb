@@ -107,7 +107,7 @@ export const getBillingUnit = (pageIndex, pageSize, search = '', building, unit)
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&sort_field=created_on&sort_type=DESC' +
-    '&resident_building=' + building +
+    '&building_id=' + building +
     '&search=' + search,
 
     res => {
