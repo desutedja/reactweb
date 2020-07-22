@@ -13,6 +13,7 @@ import "./features/auth/styles.css";
 import "./components/styles.css";
 import "./components/input.css";
 import "./components/table.css";
+import NotFound from "./components/NotFound";
 
 import Login from "./features/auth/Login";
 import OTP from "./features/auth/OTP";
@@ -113,7 +114,7 @@ function App() {
                 <BM />
               </MainRoute>
               <Route path="*">
-                <div>404</div>
+                <NotFound />
               </Route>
             </Switch>
           </div>
