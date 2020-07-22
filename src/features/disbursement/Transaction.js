@@ -28,6 +28,7 @@ function Component() {
     const [active, setActive] = useState(0);
     const [selected, setSelected] = useState([]);
     const [limit, setLimit] = useState(5);
+    const [filter, setFilter] = useState('');
     const [loadingMerchant, setLoadingMerchant] = useState(false)
     const [loadingCourier, setLoadingCourier] = useState(false)
     const [transferCode, setTransferCode] = useState('');
@@ -56,6 +57,11 @@ function Component() {
             return type === 'merchant' ? sum + el.total_selling_price : sum + el.assignee_fee;
         }, 0)
     }
+
+    const filtersDisbursement = [
+        {label: 'Disbursed Only', value: 'disbursed'},
+        {label: 'Undisbursed Only', value: 'undisbursed'}
+    ]
 
     const columns = useMemo(() => {
         if (type === 'merchant') return [
@@ -126,28 +132,37 @@ function Component() {
             setLoadingMerchant(true);
             setLoadingCourier(true);
 
-            type === 'merchant' && dispatch(get(endpointMerchant + '/admin/list?filter=&limit='
-            + limit + '&search=' + searchValue, res => {
+            type === 'merchant' && dispatch(get(endpointMerchant +
+            '/admin/list?filter=' + filter + 
+            '&limit=' + limit +
+            '&search=' + searchValue,
+            res => {
                 setMerchants(res.data.data.items);
                 setMerchant(res.data.data.items[active].id);
                 setLoadingMerchant(false);
-            }, err => {
+            },
+            err => {
                 console.log('FAILED GET LIST DISBURSEMENT MERCHANT:', err)
                 setLoadingMerchant(false);
             }));
 
-            type === 'courier' && dispatch(get(endpointManagement + '/admin/staff/list?filter=&staff_role=courier&limit=' + limit + '&search=' + searchValue, res => {
+            type === 'courier' && dispatch(get(endpointManagement +
+            '/admin/staff/list?filter=' + filter + 
+            '&limit=' + limit +
+            '&search=' + searchValue,
+            res => {
                 setCouriers(res.data.data.items);
                 setCourier(res.data.data.items[active].id);
                 setLoadingCourier(false);
-            }, err => {
+            },
+            err => {
                 console.log('FAILED GET LIST DISBURSEMENT COURIER:', err)
                 setLoadingCourier(false);
             }));
             
         }, searchValue ? 1000 : 0)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [type, searchValue, limit]);
+    }, [type, searchValue, limit, filter]);
 
 
     return (
@@ -178,11 +193,17 @@ function Component() {
                             disbursed_code: transferCode
                     }
 
-                    if (type === 'merchant') dispatch(post(endpointTransaction + '/admin/disbursement/merchant/create', dataDisburse, res => {
+                    if (type === 'merchant') dispatch(post(endpointTransaction +
+                    '/admin/disbursement/merchant/create',
+                    dataDisburse,
+                    res => {
                         setDisburseModal(false);
                         dispatch(refresh());
                     }))
-                    if (type === 'courier') dispatch(post(endpointTransaction + '/admin/disbursement/courier/create', dataDisburse, res => {
+                    if (type === 'courier') dispatch(post(endpointTransaction +
+                    '/admin/disbursement/courier/create',
+                    dataDisburse,
+                    res => {
                         setDisburseModal(false);
                         dispatch(refresh());
                     }));
@@ -363,9 +384,29 @@ function Component() {
                         tabActive={setActive}
                         contents={[
                             <>
-                                <h5 style={{
-                                    marginBottom: 16,
-                                }}>Select Merchant</h5>
+                                <div className="row no-gutters align-items-center mb-4">
+                                    <div className="col">
+                                        <h5 style={{
+                                            marginBottom: 0,
+                                        }}>Select Merchant</h5>
+                                    </div>
+                                    <div className="col-auto">
+                                        <select style={{
+                                            borderRadius: '4px',
+                                            border: '1px solid silver',
+                                            padding: '6px 4px'
+                                        }}
+                                        onChange={e => {
+                                            setFilter(e.target.value)
+                                        }}
+                                        >
+                                            <option selected={true}>All</option>
+                                            {filtersDisbursement.map(filter => (
+                                            <option value={filter.value}>{filter.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
                                 <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
                                 {loadingMerchant && <div className="w-100 py-5 d-flex justify-content-center">
                                     <ClinkLoader />
@@ -392,9 +433,29 @@ function Component() {
                                 )}
                             </>,
                             <>
-                                <h5 style={{
-                                    marginBottom: 16,
-                                }}>Select Courier</h5>
+                                <div className="row no-gutters align-items-center mb-4">
+                                    <div className="col">
+                                        <h5 style={{
+                                            marginBottom: 0,
+                                        }}>Select Courier</h5>
+                                    </div>
+                                    <div className="col-auto">
+                                        <select style={{
+                                            borderRadius: '4px',
+                                            border: '1px solid silver',
+                                            padding: '6px 4px'
+                                        }}
+                                        onChange={e => {
+                                            setFilter(e.target.value)
+                                        }}
+                                        >
+                                            <option selected={true}>All</option>
+                                            {filtersDisbursement.map(filter => (
+                                            <option value={filter.value}>{filter.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
                                 <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
                                 {loadingCourier && <div className="w-100 py-5 d-flex justify-content-center">
                                     <ClinkLoader />
