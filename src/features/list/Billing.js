@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FiSearch, FiDownload, FiPlus } from 'react-icons/fi';
 
 import Input from '../../components/Input';
@@ -17,6 +17,8 @@ import { setSelected } from '../slices/resident';
 function Component() {
 
     const [search, setSearch] = useState('');
+
+    const { auth } = useSelector(state => state);
 
     const [building, setBuilding] = useState('');
     const [buildingName, setBuildingName] = useState('');
@@ -70,7 +72,7 @@ function Component() {
             slice='billing'
             getAction={getBillingUnit}
             filterVars={[building]}
-            filters={[
+            filters={auth.role === 'sa' ? [
                 {
                     hidex: building === "",
                     label: <p>Building: {building ? buildingName : "All"}</p>,
@@ -101,7 +103,7 @@ function Component() {
                             />
                         </>
                 },
-            ]}
+            ] : []}
             actions={[
                 <Button label="Download .csv" icon={<FiDownload />}
                     onClick={() => dispatch(downloadBillingUnit(search, building))}
