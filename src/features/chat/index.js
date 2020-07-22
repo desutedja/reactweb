@@ -180,7 +180,7 @@ function Component() {
                             <div key={el.id} className={
                                 el.email === userID ?
                                     "MessageContainer-own" : "MessageContainer"}>
-                                {index > 0 && messages[index - 1].username === el.username ?
+                                {index > 0 && messages[index - 1].email === el.email ?
                                     <div className="MessageAvatar" /> :
                                     <img alt="avatar" className="MessageAvatar" src={el.user_avatar_url} />}
                                 <div style={{
@@ -189,7 +189,7 @@ function Component() {
                                     alignItems: el.email === userID ?
                                         'flex-end' : 'flex-start',
                                 }}>
-                                    {index > 0 && messages[index - 1].username === el.username ?
+                                    {index > 0 && messages[index - 1].email === el.email ?
                                         null :
                                         <div className="MessageUsername" style={{ cursor: 'pointer' }} onClick={() => {
                                                 const userrole = el.email.split("-")[0]
@@ -205,7 +205,8 @@ function Component() {
                                                     history.push("/" + role + "/admin/" + userid)
                                                 }
                                         }}>
-                                            {el.username} ({el.email.split("-")[0]})
+                                            {el.username} 
+                                            ({el.email.split("-")[0]})
                                         </div>}
                                     <div style={{
                                         display: 'flex',

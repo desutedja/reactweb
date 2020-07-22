@@ -90,13 +90,6 @@ function Component() {
                 }}
             >
                 <div style={{
-                    display: 'flex',
-                    marginBottom: 16,
-                }}>
-                    <Input compact label="Search" icon={<FiSearch />} />
-                    <Button label="Add" />
-                </div>
-                <div style={{
                     minHeight: 300,
                 }}>
                     {selected.map(el => <div key={el.id} style={{
