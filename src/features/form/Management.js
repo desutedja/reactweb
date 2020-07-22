@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import Template from "./components/TemplateWithFormik";
 import { Form } from 'formik';
 import Input from './input';
-import { managementSchema } from './schemas';
+import { managementSchema } from './services/schemas';
 import SubmitButton from './components/SubmitButton';
 
 const managementPayload = {

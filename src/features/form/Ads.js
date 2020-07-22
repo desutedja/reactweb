@@ -8,7 +8,7 @@ import { editAds, createAds } from '../slices/ads';
 
 import Template from "./components/TemplateWithFormik";
 import { Form, FieldArray, Field } from 'formik';
-import { adsSchema } from "./schemas";
+import { adsSchema } from "./services/schemas";
 import Input from './input';
 import { days } from '../../utils';
 import SubmitButton from './components/SubmitButton';

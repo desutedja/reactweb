@@ -10,7 +10,7 @@ import { get, post } from '../slice';
 
 import Template from "./components/TemplateWithFormik";
 import { Form } from 'formik';
-import { residentSchema } from "./schemas";
+import { residentSchema } from "./services/schemas";
 import Input from './input';
 import SubmitButton from './components/SubmitButton';
 

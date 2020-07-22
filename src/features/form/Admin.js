@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import Template from "./components/TemplateWithFormik";
 import { Form } from 'formik';
 import Input from './input';
-import { adminSchema } from './schemas';
+import { adminSchema } from './services/schemas';
 import { createAdmin, editAdmin } from '../slices/admin';
 import SubmitButton from './components/SubmitButton';
 
