@@ -10,7 +10,7 @@ import Loading from '../../../components/Loading';
 import Button from '../../../components/Button';
 import Pill from '../../../components/Pill';
 import Template from '../components/Template';
-import { deleteAnnouncement, publishAnnouncement, setSelected, refresh } from '../../slices/announcement';
+import { deleteAnnouncement, publishAnnouncement, setSelected } from '../../slices/announcement';
 
 import Content from './contents/Content';
 import { get } from '../../slice';
@@ -33,7 +33,7 @@ function Component() {
     const publishCb = useCallback(() => { 
           setPublishing(true);
           dispatch(publishAnnouncement(data, history, role)) 
-    }, [data, history, role])
+    }, [data, history, role, dispatch])
 
     useEffect(() => {
         dispatch(get(endpointAdmin + '/announcement/preview/' + id, res => {
