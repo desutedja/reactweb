@@ -133,9 +133,6 @@ function Component() {
                     <Form className="Form">
                         <Input {...props} onFocus={() => setEmailRegistered(false)} label="Email"
                             placeholder={"Input Resident Email"} type="email" compact disabled={!exist} />
-                        {emailRegistered && <span style={{
-                            marginBottom: 12
-                        }} className="validation-error">Email is already registered</span>}
                         {exist && <button
                             type="button"
                             onClick={() => {
@@ -145,7 +142,7 @@ function Component() {
                                     res => {
                                         res.data.data.id
                                             ?
-                                            setEmailRegistered(true)
+                                            setEmailRegistered(res.data.data.id)
                                             :
                                             setExist(false)
                                     },
@@ -155,9 +152,24 @@ function Component() {
                         >
                             Check
                             </button>}
-                        <SectionSeparator />
-
+                        {emailRegistered &&
+                            <>
+                                <span style={{
+                                    marginTop: 24,
+                                    marginBottom: 12,
+                                }}>Email is already registered. Go to Resident details to add unit to this
+                                    Resident?
+                        </span>
+                                <button type="button" style={{
+                                    marginBottom: 16,
+                                }} onClick={() => {
+                                    console.log(emailRegistered);
+                                    history.push(emailRegistered + '');
+                                }}>Yes</button>
+                            </>
+                        }
                         {(!exist) && <>
+                            <SectionSeparator />
                             <Input {...props} label="First Name" name="firstname" />
                             <Input {...props} label="Last Name" name="lastname" />
                             <Input {...props} label="Phone" prefix="+62" />

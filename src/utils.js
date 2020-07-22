@@ -175,17 +175,17 @@ export function removeLastFromPath(path, lastn = 1) {
 
 export function getCountryCode(country) {
     const c = countries.find((el) => el.label === country)
-    return c === undefined ? "Undefined Country Code" : c.value
+    return c === undefined ? "-" : c.value
 }
 
 export function getCountryFromCode(value) {
     const c = countries.find((el) => el.value === value)
-    return c === undefined ? "Undefined Country" : c.label
+    return c === undefined ? "-" : c.label
 }
 
 export function getBank(value, banks) {
     const c = banks.find((el) => el.value === value)
-    return c === undefined ? "Undefined Bank" : c.label
+    return c === undefined ? "-" : c.label
 }
 export function toEllipsis(value, limit) {
     return value.slice(0, limit - 1) + '...'

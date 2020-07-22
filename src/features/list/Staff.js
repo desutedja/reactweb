@@ -52,6 +52,10 @@ const shifts = [
 ]
 
 function Component() {
+    let dispatch = useDispatch();
+    let history = useHistory();
+    let { url } = useRouteMatch();
+
     const { auth } = useSelector(state => state)
     const [shift, setShift] = useState('');
     const [shiftLabel, setShiftLabel] = useState('');
@@ -64,12 +68,8 @@ function Component() {
         // setManagement
     ] = useState('');
 
-    const [role, setRole] = useState('');
-    const [roleLabel, setRoleLabel] = useState('');
-
-    let dispatch = useDispatch();
-    let history = useHistory();
-    let { url } = useRouteMatch();
+    const [role, setRole] = useState(history.location.state ? history.location.state.role : '');
+    const [roleLabel, setRoleLabel] = useState(history.location.state ? history.location.state.roleLabel : '');
 
 
     useEffect(() => {

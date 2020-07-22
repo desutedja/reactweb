@@ -220,9 +220,9 @@ function Component() {
 
                             <SectionSeparator />
 
-                            <Input {...props} label="Account Bank" options={banks} />
-                            <Input {...props} label="Account Number" />
-                            <Input {...props} label="Account Name" />
+                            <Input {...props} label="Account Bank" optional options={banks} />
+                            <Input {...props} label="Account Number" optional />
+                            <Input {...props} label="Account Name" optional />
                             <SubmitButton loading={loading} errors={errors} />
                         </Form>
                 )

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { 
-    // useSelector,
+    useSelector,
     useDispatch
 } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 import moment from 'moment';
+import { useHistory } from 'react-router-dom';
 
 import { RiHomeSmile2Line, RiHomeLine, RiStore2Line } from 'react-icons/ri'
 import { toMoney, getDatesRange } from '../../utils';
@@ -19,6 +20,10 @@ import { get } from '../slice';
 const formatValue = (value) => value.toFixed(0);
 
 function Component() {
+    const history = useHistory();
+    let dispatch = useDispatch();
+
+    const { auth } = useSelector(state => state);
     const [trxData, setTrxData] = useState([]);
     const [trxDataFormatted, setTrxDataFormatted] = useState([]);
 
@@ -48,8 +53,6 @@ function Component() {
         orderType,
         // setOrderType
     ] = useState('year');
-
-    let dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(get(endpointMerchant + '/admin/statistic/transactiongraph?range=' + range,
@@ -164,7 +167,11 @@ function Component() {
         <>
             <div className="row no-gutters">
                 <div className="col">
-                    <div className="Container color-4 d-flex flex-column">
+                    <div className="Container color-4 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/merchant')
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber
@@ -183,7 +190,11 @@ function Component() {
                     </div>
                 </div>
                 <div className="col">
-                    <div className="Container color-3 d-flex flex-column">
+                    <div className="Container color-3 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/merchant')
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber
@@ -202,7 +213,11 @@ function Component() {
                     </div>
                 </div>
                 <div className="col">
-                    <div className="Container color-5 d-flex flex-column">
+                    <div className="Container color-5 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/merchant')
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber
