@@ -7,10 +7,10 @@ import Button from '../../../components/Button';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
-import { patchAdminFee, setSelected } from '../../slices/product';
+import { patchAdminFee, setSelected, refresh } from '../../slices/product';
 import { toMoney } from '../../../utils.js';
 import { useParams } from 'react-router-dom';
-import { get, patch } from '../../slice';
+import { get, patch, setInfo } from '../../slice';
 import { endpointMerchant } from '../../../settings';
 
 const labels = {
@@ -139,7 +139,7 @@ function Component() {
                                 setAdminFee(data.admin_fee);
                                 setDiscFee(data.discount_fee);
                             }} />,
-                            <Button label="Take Down Product" onClick={() => {
+                            <Button disabled={data.status === 'blocked'} label="Take Down Product" onClick={() => {
                                 const dataInput = {
                                     merchant_id: data.merchant_id,
                                     item_id: data.id,
@@ -147,7 +147,15 @@ function Component() {
                                 }
                                 dispatch(patch(endpointMerchant + '/admin/items/status', dataInput,
                                     res => {
-                                        console.log(res)
+                                        dispatch(refresh());
+                                        dispatch(setInfo({
+                                            color: 'success',
+                                            message: 'Product has been taken down.'
+                                        }));
+                                        setData({
+                                            ...data,
+                                            status: 'blocked'
+                                        })
                                     }
                                 ))
                             }} />,
