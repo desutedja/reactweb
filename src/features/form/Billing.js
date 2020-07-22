@@ -88,7 +88,10 @@ function Component() {
                 resident_name: selected.resident_name,
             })}
             edit={data => dispatch(editBillingUnitItem(data, unit.selected, history, selectedUnit.id))}
-            add={data => dispatch(createBillingUnitItem(data, unit.selected, history))}
+            add={data => {
+                console.log(data)
+                // dispatch(createBillingUnitItem(data, unit.selected, history))
+            }}
             renderChild={props => {
                 const { errors } = props;
 
@@ -99,7 +102,7 @@ function Component() {
                             setService(el);
                         }} />
                         <Input {...props} label="Month" options={months} />
-                        <Input {...props} label="Year" options={yearsOnRange(10)} />
+                        <Input {...props} label="Year" options={yearsOnRange(10)} placeholder={new Date().getFullYear().toString()} />
                         <Input {...props} label="Name" placeholder="Billing description e.g. Electricity for July 2020" />
                         <Input {...props} label="Previous Usage" externalValue={previous} suffix={service.unit} />
                         <Input {...props} label="Recent Usage" suffix={service.unit} />
