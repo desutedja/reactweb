@@ -23,6 +23,7 @@ function Component() {
 
     const [search, setSearch] = useState('');
 
+    const [settled, setSettled] = useState('');
     const [building, setBuilding] = useState('');
     const [buildingName, setBuildingName] = useState('');
     const [buildings, setBuildings] = useState('');
@@ -177,10 +178,30 @@ function Component() {
                             pageCount={settlement.total_pages}
                             fetchData={useCallback((pageIndex, pageSize, search) => {
                                 dispatch(getBillingSettlement(pageIndex, pageSize, search,
-                                    building));
+                                    building, settled));
                                 // eslint-disable-next-line react-hooks/exhaustive-deps
-                            }, [dispatch, refreshToggle, building])}
+                            }, [dispatch, refreshToggle, building, settled])}
                             filters={[
+                                {
+                                    hidex: settled === "",
+                                    label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
+                                    delete: () => setSettled(''),
+                                    component: (toggleModal) =>
+                                            <Filter
+                                                data={[
+                                                    {value: '0', label: 'Unsettled'},
+                                                    {value: '1', label: 'Settled'},
+                                                ]}
+                                                onClick={(el) => {
+                                                    setSettled(el.value);
+                                                    toggleModal(false);
+                                                }}
+                                                onClickAll={() => {
+                                                    setSettled("");
+                                                    toggleModal(false);
+                                                }}
+                                            />
+                                },
                                 {
                                     hidex: building === "",
                                     label: <p>Building: {building ? buildingName : "All"}</p>,

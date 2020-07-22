@@ -198,7 +198,7 @@ function Component() {
                             <Input {...props} label="Image" name="content_image" type="file" accept="image/*" />
                         }
                         {values.content_type === 'video' &&
-                            <Input {...props} label="Video" name="content_video" type="file" accept="video/*" />
+                            <Input {...props} label="Video" name="content_video" hint="Only use Youtube links." />
                         }
                         <Input {...props} label="Content" name="content_description" type="editor" />
 

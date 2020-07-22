@@ -27,7 +27,7 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        (!search || search.length >= 1) && get(endpointAdmin + '/building' +
+        dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
@@ -35,8 +35,8 @@ function Component() {
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setBuildings(formatted);
-            })
-    }, [search]);
+            }))
+    }, [dispatch, search]);
 
     const columns = [
         // { Header: 'ID', accessor: 'code' },

@@ -61,6 +61,7 @@
 .Filter {
   overflow: hidden;
   width: 100%;
+  text-align: center;
 }
 
 .List {

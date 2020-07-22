@@ -68,18 +68,20 @@ export const {
   publish
 } = slice.actions;
 
-export const getAds = (pageIndex, pageSize, search = '', age_from = '', age_to = '', os = '', gender = '', media = '', appear_as = '') => dispatch => {
+export const getAds = (pageIndex, pageSize, search = '',
+os = '', gender = '', age_from = '', day = '') => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(adsEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&age_from=' + age_from +
-    '&age_to=' + age_to +
+    // '&age_to=' + age_to +
     '&os=' + os +
     '&gender=' + gender +
-    '&appear_as=' + appear_as +
-    '&media=' + media +
+    // '&appear_as=' + appear_as +
+    // '&media=' + media +
+    '&day=' + day +
     '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
