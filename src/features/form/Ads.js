@@ -151,6 +151,18 @@ function Component() {
 
                 return (
                     <Form className="Form">
+                        <Input {...props} label="Title" name="content_name" />
+                        <Input {...props} label="Media Type" name="content_type" type="radio" options={[
+                            { value: 'image', label: 'Image' },
+                            { value: 'video', label: 'Video' },
+                        ]} />
+                        {values.content_type === 'image' &&
+                            <Input {...props} label="Image" name="content_image" type="file" accept="image/*" />
+                        }
+                        {values.content_type === 'video' &&
+                            <Input {...props} label="Video" name="content_video" hint="Only use Youtube links." />
+                        }
+                        <Input {...props} label="Content" name="content_description" type="editor" />
                         {auth.role === 'sa' && <Input {...props} label="Appear as" type="radio" options={[
                             { value: "popup", label: "Popup" },
                             { value: "banner", label: "Banner" },
@@ -164,8 +176,8 @@ function Component() {
                         }
                         <Input {...props} label="Start Date" type="date" />
                         <Input {...props} label="End Date" type="date" />
-                        <SectionSeparator />
 
+                        <SectionSeparator title="Targetting" />
                         <Input {...props} optional label="Gender" type="radio" options={[
                             { value: "A", label: "All" },
                             { value: "M", label: "Male" },
@@ -202,35 +214,20 @@ function Component() {
                             type="number"
                             externalValue={score}
                         />
-                        <SectionSeparator />
 
-                        <Input {...props} label="Title" name="content_name" />
-                        <Input {...props} label="Media Type" name="content_type" type="radio" options={[
-                            { value: 'image', label: 'Image' },
-                            { value: 'video', label: 'Video' },
-                        ]} />
-                        {values.content_type === 'image' &&
-                            <Input {...props} label="Image" name="content_image" type="file" accept="image/*" />
-                        }
-                        {values.content_type === 'video' &&
-                            <Input {...props} label="Video" name="content_video" hint="Only use Youtube links." />
-                        }
-                        <Input {...props} label="Content" name="content_description" type="editor" />
-
+                        <SectionSeparator title="Scheduling" />
                         {!selected.id && <>
-                            <p className="Input-label" style={{
-                                marginBottom: 16,
-                            }}>Schedules</p>
                             <FieldArray
                                 name="schedules"
                                 render={arrayHelpers => (
                                     <div className="Input" style={{
-                                        maxWidth: 720,
+                                        maxWidth: 600,
                                     }}>
                                         {values.schedules.map((friend, index) => (
                                             <div key={index} style={{
                                                 display: 'flex',
                                                 alignItems: 'center',
+                                                marginBottom: 8,
                                             }}>
                                                 <p style={{
                                                     marginRight: 16,
@@ -240,7 +237,6 @@ function Component() {
                                                 <p style={{
                                                     marginLeft: 16,
                                                     marginRight: 16,
-                                                    flex: 1,
                                                     textAlign: 'center',
                                                 }}>-</p>
                                                 <Field name={`schedules.${index}.hour_to`} type="time" step="1" />

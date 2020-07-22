@@ -6,6 +6,7 @@ import { FiPlus } from 'react-icons/fi';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
+import Loading from '../../components/Loading';
 
 import Resident from '../../components/cells/Resident';
 
@@ -112,18 +113,25 @@ function Component() {
                             color: 'seagreen'
                         }}>{res.data ? res.data.length : 0} rows added succesfully.</p>
                         <p style={{
-                            color: 'crimson'
+                            color: 'crimson',
+                            marginBottom: 16,
                         }}>{res.error ? res.error.length : 0} rows failed to add.</p>
+                        {res.error.map(el => <p style={{
+                            color: 'crimson',
+                            marginBottom: 4,
+                        }}>{el}</p>)}
                     </div>
                     :
-                    <input
-                        ref={fileInput}
-                        type="file"
-                        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                        onChange={e => {
-                            setFile(fileInput.current.files[0]);
-                        }}
-                    />
+                    <Loading loading={loading}>
+                        <input
+                            ref={fileInput}
+                            type="file"
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            onChange={e => {
+                                setFile(fileInput.current.files[0]);
+                            }}
+                        />
+                    </Loading>
                 }
             </Modal>
             <Template

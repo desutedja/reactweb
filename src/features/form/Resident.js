@@ -116,7 +116,7 @@ function Component() {
             payload={selected.id ? {
                 ...residentPayload, ...selected,
                 phone: selected.phone.slice(2),
-                birth_date: selected.birth_date.split('T')[0],
+                birth_date: selected.birth_date?.split('T')[0],
             } : residentPayload}
             schema={residentSchema}
             formatValues={values => ({
