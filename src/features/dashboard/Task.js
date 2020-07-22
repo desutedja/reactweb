@@ -309,8 +309,15 @@ function Component() {
                         <div className="row">
                             <div className="col">
                                 <ul className="list-stats">
-                                {taskData.task_resolver_last_month && taskData.task_resolver_this_month.map(resolver => (
+                                {taskData.task_resolver_last_month && taskData.task_resolver_this_month.map((resolver, i) => (
                                     <li className="row no-gutters align-items-center">
+                                        <div className="col-auto">
+                                            <div style={{
+                                                width: '40px',
+                                                fontSize: '1.3rem',
+                                                fontWeight: 'bold'
+                                            }}>#{i + 1}</div>
+                                        </div>
                                         <div className="col">
                                             <div><b>{resolver.firstname + ' ' + resolver.lastname}</b></div>
                                             <div className="text-capitalize">{resolver.staff_role.replace('_', ' ')}</div>
@@ -335,8 +342,15 @@ function Component() {
                         <div className="row">
                             <div className="col">
                                 <ul className="list-stats">
-                                {taskData.task_resolver_this_month && taskData.task_resolver_last_month.map(resolver => (
+                                {taskData.task_resolver_this_month && taskData.task_resolver_last_month.map((resolver, i) => (
                                     <li className="row no-gutters">
+                                        <div className="col-auto">
+                                            <div style={{
+                                                width: '40px',
+                                                fontSize: '1.3rem',
+                                                fontWeight: 'bold'
+                                            }}>#{i + 1}</div>
+                                        </div>
                                         <div className="col">
                                             <div><b>{resolver.firstname + ' ' + resolver.lastname}</b></div>
                                             <div className="text-capitalize">{resolver.staff_role.replace('_', ' ')}</div>
