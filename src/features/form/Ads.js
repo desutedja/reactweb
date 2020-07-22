@@ -75,6 +75,8 @@ const adsPayload = {
 }
 
 function Component() {
+    const { auth } = useSelector(state => state);
+
     const [score, setScore] = useState(0);
     const [scoreDef, setScoreDef] = useState(0);
 
@@ -130,16 +132,29 @@ function Component() {
                 }
             }}
             edit={data => dispatch(editAds(data, history, selected.id))}
-            add={data => dispatch(createAds(data, history))}
+            add={data => {
+                if (auth.role === 'bm') {
+                    const dataBM = {
+                        ...data,
+                        ads: {
+                            ...data.ads,
+                            appear_as: 'banner'
+                        }
+                    }
+                    dispatch(createAds(dataBM, history))
+                    return;
+                }
+                dispatch(createAds(data, history))
+            }}
             renderChild={props => {
                 const { values, errors, setFieldValue } = props;
 
                 return (
                     <Form className="Form">
-                        <Input {...props} label="Appear as" type="radio" options={[
+                        {auth.role === 'sa' && <Input {...props} label="Appear as" type="radio" options={[
                             { value: "popup", label: "Popup" },
                             { value: "banner", label: "Banner" },
-                        ]} />
+                        ]} />}
                         <Input {...props} label="Media" type="radio" options={[
                             { value: "apps", label: "Apps" },
                             { value: "url", label: "URL" },

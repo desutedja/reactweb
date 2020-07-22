@@ -61,6 +61,7 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointTask + '/admin/' + id, res => {
             setData(res.data.data);
+            console.log(res.data.data)
         }))
     }, [dispatch, id])
 
