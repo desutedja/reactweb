@@ -89,11 +89,12 @@ function Component() {
                 labels={["Details", "Additional Charges"]}
                 contents={[
                     <Detail type="Billing" data={unit.selected} labels={details}
+                        editable={unit.selected.payment !== 'paid'}
                         renderButtons={() => ([
-                            <Button label="Add Additional Charge" onClick={() => {
+                            unit.selected.payment !== 'paid' && <Button label="Add Additional Charge" onClick={() => {
                                 setModal(true);
                             }} />,
-                            unit.selected.payment === "unpaid" && <Button label="Set as Paid" onClick={() => {
+                            unit.selected.payment !== "paid" && <Button label="Set as Paid" onClick={() => {
                                 dispatch(payByCash({
                                     "id": unit.selected.id,
                                     "total": unit.selected.total,

@@ -262,7 +262,8 @@ function Component() {
                                         <XAxis height={50} dy={10} dataKey="Date" />
                                         <YAxis axisLine={false} tickLine={false} width={50} dx={-10} dataKey="Total Transaction" />
                                         <YAxis axisLine={false} yAxisId="right" width={60} dx={-10} dataKey="Amount Transaction"
-                                        tickFormatter={el => el && toMoney((el + '').slice(0, -3)).slice(3) + 'k'}/>
+                                        tickFormatter={el => el && el.toString().length > 3 ? toMoney((el + '').slice(0, -3)).slice(3) + 'k' : el}
+                                        />
                                         <Tooltip />
                                         <Legend />
                                         <CartesianGrid vertical={false} stroke="#ddd" dataKey="Date" />

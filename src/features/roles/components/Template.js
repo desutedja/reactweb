@@ -4,11 +4,12 @@ import {
     FiMenu, FiLogOut, FiChevronDown, FiChevronUp,
 } from "react-icons/fi";
 import { MdChatBubble, MdNotifications, MdSettings } from "react-icons/md";
-import { Switch, useHistory, useRouteMatch } from 'react-router-dom';
+import { Switch, useHistory, useRouteMatch, Route } from 'react-router-dom';
 import QiscusSDKCore from 'qiscus-sdk-core';
 import { Toast, ToastHeader, ToastBody } from 'reactstrap';
 
 import Row from '../../../components/Row';
+import NotFound from '../../../components/NotFound';
 import CustomAlert from '../../../components/CustomAlert';
 import IconButton from '../../../components/IconButton';
 import Info from '../../../components/Info';
@@ -47,7 +48,8 @@ function Component({ role, children }) {
         const userID = prefix + adminID;
         const userDisplayName = role === "sa" ? "Centratama Admin" : "Admin";
 
-        Qiscus.init({ AppId: 'fastel-sa-hkxoyooktyv',
+        Qiscus.init({
+            AppId: 'fastel-sa-hkxoyooktyv',
             options: {
                 newMessagesCallback: message => {
                     console.log('received', message);
@@ -289,7 +291,7 @@ function Component({ role, children }) {
                                         key={sub}
                                         onClick={() => {
                                             history.push(path + sub);
-                                            setMenuWide(false);
+                                            // setMenuWide(false);
                                         }}
                                         className={('/' + history.location.pathname.split('/')[3]) === sub
                                             ? "SubmenuItem-active" : "SubmenuItem"}
@@ -305,6 +307,9 @@ function Component({ role, children }) {
                     <Info />
                     <Switch>
                         {children}
+                        <Route path="*">
+                            <NotFound />
+                        </Route>
                     </Switch>
                 </div>
             </Row>

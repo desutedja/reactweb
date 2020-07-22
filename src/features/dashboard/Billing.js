@@ -10,15 +10,21 @@ import { toMoney } from '../../utils';
 import { endpointBilling, endpointManagement } from '../../settings';
 
 import './style.css';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { get } from '../slice';
 
 const formatValue = (value) => value.toFixed(0);
 const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
 
 function Component() {
+    const { auth } = useSelector(state => state);
+
     const [billingData, setBillingData] = useState({});
     const [staffData, setStaffData] = useState({});
+
+    const [isTechnician, setIsTechnician] = useState(false);
+    const [isCourier, setIsCourier] = useState(false);
+    const [isSecurity, setIsSecurity] = useState(false);
 
     let dispatch = useDispatch();
 
@@ -31,13 +37,26 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointManagement + '/admin/staff/statistics', res => {
             setStaffData(res.data.data);
+            console.log(res.data.data)
         }))
     }, [dispatch]);
+
+    useEffect(() => {
+        if (auth.role === 'bm') {
+            const blacklist_modules = auth.user.blacklist_modules;
+            const isSecurity = blacklist_modules.find(item => item.module === 'security') ? true : false;
+            const isInternalCourier = blacklist_modules.find(item => item.module === 'internal_courier') ? true : false;
+            const isTechnician = blacklist_modules.find(item => item.module === 'technician') ? true : false;
+            setIsSecurity(isSecurity);
+            setIsCourier(isInternalCourier);
+            setIsTechnician(isTechnician);
+        }
+    }, [auth])
 
     return (
         <>
             <div className="row no-gutters">
-                <div className="col">
+                {auth.role === 'sa' && <div className="col">
                     <div className="Container color-2 d-flex flex-column">
                         <div className="row no-gutters align-items-center">
                             <div className="col">
@@ -53,7 +72,7 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>}
                 <div className="col">
                     <div className="Container color-4 d-flex flex-column">
                         <div className="row no-gutters align-items-center">
@@ -91,7 +110,6 @@ function Component() {
                 </div>
             </div>
 
-
             <div className="Row">
                 <div className="Container" style={{
                     // marginLeft: 16,
@@ -119,7 +137,7 @@ function Component() {
                                 formatValue={formatValuetoMoney}
                             />
                         </div>
-                        <div style={{
+                        {auth.role === 'sa' && <div style={{
                             flex: 1,
                             padding: 16,
                         }}>
@@ -127,7 +145,7 @@ function Component() {
                             <AnimatedNumber className="BigNumber" value={billingData.total_disburse_amount}
                                 formatValue={formatValuetoMoney}
                             />
-                        </div>
+                        </div>}
                     </div>
                     <div style={{
                         flex: 1,
@@ -150,7 +168,7 @@ function Component() {
                                 formatValue={formatValuetoMoney}
                             />
                         </div>
-                        <div style={{
+                        {auth.role === 'sa' && <div style={{
                             flex: 1,
                             padding: 16,
                         }}>
@@ -158,7 +176,7 @@ function Component() {
                             <AnimatedNumber className="BigNumber" value={billingData.total_undisburse_amount}
                                 formatValue={formatValuetoMoney}
                             />
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </div>
@@ -190,7 +208,7 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                    <div className="col-6 col-md-4 col-lg">
+                    {!isTechnician && <div className="col-6 col-md-4 col-lg">
                         <div className="Container align-items-center color-1">
                             <div style={{
                                 width: 'auto'
@@ -209,8 +227,8 @@ function Component() {
                                 <p>Technician</p>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-6 col-md-4 col-lg">
+                    </div>}
+                    {!isSecurity && <div className="col-6 col-md-4 col-lg">
                         <div className="Container align-items-center color-1">
                             <div style={{
                                 width: 'auto'
@@ -228,8 +246,8 @@ function Component() {
                                 <p>Security</p>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-6 col-md-4 col-lg">
+                    </div>}
+                    {!isCourier && <div className="col-6 col-md-4 col-lg">
                         <div className="Container align-items-center color-1">
                             <div style={{
                                 width: 'auto'
@@ -248,7 +266,7 @@ function Component() {
                                 <p>Courier</p>
                             </div>
                         </div>
-                    </div>
+                    </div>}
                     <div className="col-6 col-md-4 col-lg">
                         <div className="Container align-items-center color-1">
                             <div className="w-auto">

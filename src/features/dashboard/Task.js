@@ -51,6 +51,7 @@ function Component() {
             dispatch(get(endpointTask + '/admin/pic_bm/statistics',  res => {
                 setPieData(res.data.data.ticket_by_category);
                 setTaskData(res.data.data);
+                console.log(res.data.data);
             }));
         }
     }, [auth.role, dispatch]);
@@ -297,6 +298,74 @@ function Component() {
                     </div>
                 </div>
             </div>
+            {auth.role === 'bm' && <div className="row no-gutters">
+                <div className="col">
+                    <div className="Container flex-column">
+                        <div className="row mb-2">
+                            <div className="col">
+                                <h5>Most Resolver This Month</h5>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <ul className="list-stats">
+                                {taskData.task_resolver_last_month && taskData.task_resolver_this_month.map((resolver, i) => (
+                                    <li className="row no-gutters align-items-center">
+                                        <div className="col-auto">
+                                            <div style={{
+                                                width: '40px',
+                                                fontSize: '1.3rem',
+                                                fontWeight: 'bold'
+                                            }}>#{i + 1}</div>
+                                        </div>
+                                        <div className="col">
+                                            <div><b>{resolver.firstname + ' ' + resolver.lastname}</b></div>
+                                            <div className="text-capitalize">{resolver.staff_role.replace('_', ' ')}</div>
+                                        </div>
+                                        <div className="col-auto BigNumber">
+                                            {resolver.resolved_task}
+                                        </div>
+                                    </li>
+                                ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="col">
+                    <div className="Container flex-column">
+                        <div className="row mb-2">
+                            <div className="col">
+                                <h5>Most Resolver Last Month</h5>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col">
+                                <ul className="list-stats">
+                                {taskData.task_resolver_this_month && taskData.task_resolver_last_month.map((resolver, i) => (
+                                    <li className="row no-gutters">
+                                        <div className="col-auto">
+                                            <div style={{
+                                                width: '40px',
+                                                fontSize: '1.3rem',
+                                                fontWeight: 'bold'
+                                            }}>#{i + 1}</div>
+                                        </div>
+                                        <div className="col">
+                                            <div><b>{resolver.firstname + ' ' + resolver.lastname}</b></div>
+                                            <div className="text-capitalize">{resolver.staff_role.replace('_', ' ')}</div>
+                                        </div>
+                                        <div className="col-auto BigNumber">
+                                            {resolver.resolved_task}
+                                        </div>
+                                    </li>
+                                ))}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>}
         </>
     )
 }

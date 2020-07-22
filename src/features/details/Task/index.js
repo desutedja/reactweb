@@ -36,6 +36,7 @@ const attachments = [
 const assignee = {
     "Profile": [
         "assignee_name",
+        "assignee_role",
         "assigned_by",
         "assigned_on",
         "assignee",
@@ -61,6 +62,7 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointTask + '/admin/' + id, res => {
             setData(res.data.data);
+            console.log(res.data.data)
         }))
     }, [dispatch, id])
 

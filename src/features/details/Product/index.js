@@ -10,7 +10,7 @@ import Template from '../components/Template';
 import { patchAdminFee, setSelected } from '../../slices/product';
 import { toMoney } from '../../../utils.js';
 import { useParams } from 'react-router-dom';
-import { get } from '../../slice';
+import { get, patch } from '../../slice';
 import { endpointMerchant } from '../../../settings';
 
 const labels = {
@@ -58,7 +58,7 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointMerchant + '/admin/items?id=' + id, res => {
             setData(res.data.data);
-            setSelected(res.data.data);
+            dispatch(setSelected(res.data.data));
         }))
     }, [id, dispatch])
 
@@ -139,7 +139,18 @@ function Component() {
                                 setAdminFee(data.admin_fee);
                                 setDiscFee(data.discount_fee);
                             }} />,
-                            <Button label="Take Down Product" onClick={() => { }} />,
+                            <Button label="Take Down Product" onClick={() => {
+                                const dataInput = {
+                                    merchant_id: data.merchant_id,
+                                    item_id: data.id,
+                                    status: 'blocked'
+                                }
+                                dispatch(patch(endpointMerchant + '/admin/items/status', dataInput,
+                                    res => {
+                                        console.log(res)
+                                    }
+                                ))
+                            }} />,
                         ]}
                     />,
                     <div style={{

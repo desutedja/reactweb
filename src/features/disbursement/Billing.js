@@ -13,7 +13,7 @@ import { toMoney, dateTimeFormatterCell } from '../../utils';
 import { endpointBilling } from '../../settings';
 import { get, post } from '../slice';
 import MyButton from '../../components/Button';
-import { FiDownload, FiSearch, FiCheck } from 'react-icons/fi';
+import { FiDownload, FiCheck } from 'react-icons/fi';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
@@ -35,6 +35,7 @@ function Component() {
     const [info, setInfo] = useState({});
     const [amount, setAmount] = useState('');
     const [modal, setModal] = useState(false);
+    const [transferCode, setTransferCode] = useState('');
 
     const [data, setData] = useState([]);
     const [selected, setSelected] = useState([]);
@@ -76,15 +77,31 @@ function Component() {
             <Modal isOpen={modal} toggle={() => setModal(!modal)}
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
+                disabledOk={transferCode.length === 0}
                 onClick={() => {
+                    if (!transferCode) return;
                     dispatch(post(endpointBilling + '/management/billing/disbursement/flag', {
-                        trx_code: selected.map(el => el.trx_code)
+                        trx_code: selected.map(el => el.trx_code),
+                        disbursement_transfer_code: transferCode
                     }, res => {
                         dispatch(refresh());
                         setModal(false);
                     }))
                 }}
             >
+                <div style={{
+                    display: 'flex',
+                    marginBottom: 32,
+                    position: 'relative'
+                }}>
+                    <Input compact
+                        type="text"
+                        label="Transfer Code"
+                        inputValue={transferCode}
+                        setInputValue={setTransferCode}
+                        noMargin={true}
+                    />
+                </div>
                 <div style={{
                     minHeight: 300,
                 }}>

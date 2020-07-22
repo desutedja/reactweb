@@ -107,7 +107,7 @@ export const getBillingUnit = (pageIndex, pageSize, search = '', building, unit)
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&sort_field=created_on&sort_type=DESC' +
-    '&resident_building=' + building +
+    '&building_id=' + building +
     '&search=' + search,
 
     res => {
@@ -130,13 +130,14 @@ export const downloadBillingUnit = (search = '', building) => dispatch => {
     }))
 }
 
-export const getBillingSettlement = (pageIndex, pageSize, search = '', building, unit) => dispatch => {
+export const getBillingSettlement = (pageIndex, pageSize, search = '', building, settled) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(billingEndpoint + '/settlement' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&building_id=' + building +
+    '&payment_settled=' + settled +
     '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
@@ -200,7 +201,7 @@ export const getBillingUnitItem = (pageIndex, pageSize, search = '', selected, s
     '&limit=' + pageSize +
     '&unit_id=' + selected.id +
     '&building_id=' + selected.building_id +
-    '&sort_field=created_on&sort_type=DESC' +
+    // '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search,
 
     res => {
@@ -228,6 +229,7 @@ export const createBillingUnitItem = (data, selected, history) => dispatch => {
         message: 'Billing has been created.'
       }));
 
+      dispatch(refresh());
       dispatch(stopAsync());
     },
     err => {
@@ -248,6 +250,7 @@ export const editBillingUnitItem = (data, selected, history, id) => dispatch => 
         message: 'Billing has been updated.'
       }));
 
+      dispatch(refresh());
       dispatch(stopAsync());
     },
     err => {

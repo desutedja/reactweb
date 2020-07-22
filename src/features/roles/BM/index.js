@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {
     FiHome, FiUsers, FiZap, FiRss, FiVolume2, FiBarChart2
 } from "react-icons/fi";
-import { RiStore2Line, RiTaskLine, RiCustomerService2Line } from 'react-icons/ri';
+import { RiTaskLine, RiCustomerService2Line } from 'react-icons/ri';
 import { Redirect, Route } from 'react-router-dom';
 
 import Template from '../components/Template';
@@ -17,7 +17,6 @@ import Ads from './Ads';
 import Announcement from './Announcement';
 import Billing from './Billing';
 import Building from './Building';
-import Merchant from './Merchant';
 import Resident from './Resident';
 import Staff from './Staff';
 import Task from './Task';
@@ -71,12 +70,6 @@ const modules = [
         label: "Task",
         path: "/task",
         component: <Task />,
-    },
-    {
-        icon: <RiStore2Line className="MenuItem-icon" />,
-        label: "Merchant",
-        path: "/merchant",
-        component: <Merchant />,
     },
     {
         icon: <FiRss className="MenuItem-icon" />,

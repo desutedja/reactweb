@@ -11,6 +11,7 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import { months, dateFormatter, toSentenceCase } from '../../utils';
 import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
 import { FiPlus } from 'react-icons/fi';
+import BillingItem from '../../components/cells/BillingItem';
 
 const details =
 {
@@ -20,7 +21,7 @@ const details =
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
-    { Header: 'Name', accessor: 'name' },
+    { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name]} />},
     { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
     { Header: 'Total', accessor: 'total' },
     { Header: 'Month', accessor: row => months.find(el => el.value === row.month).label },

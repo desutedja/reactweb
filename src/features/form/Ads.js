@@ -8,7 +8,7 @@ import { editAds, createAds } from '../slices/ads';
 
 import Template from "./components/TemplateWithFormik";
 import { Form, FieldArray, Field } from 'formik';
-import { adsSchema } from "./schemas";
+import { adsSchema } from "./services/schemas";
 import Input from './input';
 import { days } from '../../utils';
 import SubmitButton from './components/SubmitButton';
@@ -75,6 +75,8 @@ const adsPayload = {
 }
 
 function Component() {
+    const { auth } = useSelector(state => state);
+
     const [score, setScore] = useState(0);
     const [scoreDef, setScoreDef] = useState(0);
 
@@ -130,16 +132,29 @@ function Component() {
                 }
             }}
             edit={data => dispatch(editAds(data, history, selected.id))}
-            add={data => dispatch(createAds(data, history))}
+            add={data => {
+                if (auth.role === 'bm') {
+                    const dataBM = {
+                        ...data,
+                        ads: {
+                            ...data.ads,
+                            appear_as: 'banner'
+                        }
+                    }
+                    dispatch(createAds(dataBM, history))
+                    return;
+                }
+                dispatch(createAds(data, history))
+            }}
             renderChild={props => {
                 const { values, errors, setFieldValue } = props;
 
                 return (
                     <Form className="Form">
-                        <Input {...props} label="Appear as" type="radio" options={[
+                        {auth.role === 'sa' && <Input {...props} label="Appear as" type="radio" options={[
                             { value: "popup", label: "Popup" },
                             { value: "banner", label: "Banner" },
-                        ]} />
+                        ]} />}
                         <Input {...props} label="Media" type="radio" options={[
                             { value: "apps", label: "Apps" },
                             { value: "url", label: "URL" },
@@ -198,7 +213,7 @@ function Component() {
                             <Input {...props} label="Image" name="content_image" type="file" accept="image/*" />
                         }
                         {values.content_type === 'video' &&
-                            <Input {...props} label="Video" name="content_video" type="file" accept="video/*" />
+                            <Input {...props} label="Video" name="content_video" hint="Only use Youtube links." />
                         }
                         <Input {...props} label="Content" name="content_description" type="editor" />
 

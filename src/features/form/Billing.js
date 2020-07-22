@@ -10,7 +10,7 @@ import { get } from '../slice';
 
 import Template from "./components/TemplateWithFormik";
 import { Form } from 'formik';
-import { billingSchema } from "./schemas";
+import { billingSchema } from "./services/schemas";
 import Input from './input';
 import SubmitButton from './components/SubmitButton';
 
@@ -99,7 +99,7 @@ function Component() {
                             setService(el);
                         }} />
                         <Input {...props} label="Month" options={months} />
-                        <Input {...props} label="Year" options={yearsOnRange(10)} />
+                        <Input {...props} label="Year" options={yearsOnRange(10)} placeholder={new Date().getFullYear().toString()} />
                         <Input {...props} label="Name" placeholder="Billing description e.g. Electricity for July 2020" />
                         <Input {...props} label="Previous Usage" externalValue={previous} suffix={service.unit} />
                         <Input {...props} label="Recent Usage" suffix={service.unit} />

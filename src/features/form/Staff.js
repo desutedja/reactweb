@@ -11,7 +11,7 @@ import countries from '../../countries';
 
 import { Form } from 'formik';
 import Input from './input';
-import { staffSchema } from "./schemas";
+import { staffSchema } from "./services/schemas";
 import SubmitButton from './components/SubmitButton';
 
 const staffPayload = {

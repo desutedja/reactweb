@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FiSearch, FiDownload, FiPlus } from 'react-icons/fi';
 
 import Input from '../../components/Input';
@@ -18,6 +18,8 @@ function Component() {
 
     const [search, setSearch] = useState('');
 
+    const { auth } = useSelector(state => state);
+
     const [building, setBuilding] = useState('');
     const [buildingName, setBuildingName] = useState('');
     const [buildings, setBuildings] = useState('');
@@ -27,7 +29,7 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        (!search || search.length >= 1) && get(endpointAdmin + '/building' +
+        dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
@@ -35,31 +37,33 @@ function Component() {
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
                 setBuildings(formatted);
-            })
-    }, [search]);
+            }))
+    }, [dispatch, search]);
 
     const columns = [
         // { Header: 'ID', accessor: 'code' },
         { Header: 'ID', accessor: 'id' },
         {
             Header: 'Unit', accessor: row => <span className="Link"
-                onClick={ () => dispatch(getBillingUnitDetails(row, history, url))} 
-              >{toSentenceCase(row.section_type) + ' '
+                onClick={() => dispatch(getBillingUnitDetails(row, history, url))}
+            >{toSentenceCase(row.section_type) + ' '
                 + row.section_name + ' ' + row.number}</span>
         },
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
         { Header: 'Unpaid Amount', accessor: row => <b>{toMoney(row.unpaid_amount)}</b> },
-        { Header: 'Action', accessor: row => (
-            <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
-                onClick={() => {
-                    dispatch(setSelected(row));
-                    dispatch(setSelectedUnit({}));
-                    dispatch(getBillingUnitDetails(row, history, url))
-                    history.push(url + '/item/add');
-                }}
-            />
-        ) },
+        {
+            Header: 'Action', accessor: row => (
+                <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
+                    onClick={() => {
+                        dispatch(setSelected(row));
+                        dispatch(setSelectedUnit({}));
+                        dispatch(getBillingUnitDetails(row, history, url))
+                        history.push(url + '/item/add');
+                    }}
+                />
+            )
+        },
     ]
 
     return (
@@ -68,7 +72,7 @@ function Component() {
             slice='billing'
             getAction={getBillingUnit}
             filterVars={[building]}
-            filters={[
+            filters={auth.role === 'sa' ? [
                 {
                     hidex: building === "",
                     label: <p>Building: {building ? buildingName : "All"}</p>,
@@ -99,7 +103,7 @@ function Component() {
                             />
                         </>
                 },
-            ]}
+            ] : []}
             actions={[
                 <Button label="Download .csv" icon={<FiDownload />}
                     onClick={() => dispatch(downloadBillingUnit(search, building))}

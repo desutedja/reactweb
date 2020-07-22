@@ -158,7 +158,9 @@ function Component() {
                 }
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
+                disabledOk={transferCode.length === 0}
                 onClick={() => {
+                    if (!transferCode) return;
                     const currentDate = new Date().toISOString()
                     const trx_codes = selected.map(el => el.trx_code)
                     const ref_codes = selected.map(el => el.ref_code)
@@ -174,7 +176,7 @@ function Component() {
                             amount: getSum(selected),
                             disbursed_on: currentDate,
                             disbursed_code: transferCode
-                        }
+                    }
 
                     if (type === 'merchant') dispatch(post(endpointTransaction + '/admin/disbursement/merchant/create', dataDisburse, res => {
                         setDisburseModal(false);

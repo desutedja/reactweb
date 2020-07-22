@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import Filter from '../../components/Filter';
 import RangeInput from '../../components/RangeInput';
 import { FiPlus } from 'react-icons/fi';
-import { osType, genders, toSentenceCase } from '../../utils';
+import { osType, genders, toSentenceCase, days, daysLabel } from '../../utils';
 
 import Pill from '../../components/Pill';
 import Button from '../../components/Button';
@@ -43,6 +43,7 @@ function Component() {
     const [os, setOs] = useState('');
     const [ageFrom, setAgeFrom] = useState('');
     const [gender, setGender] = useState('');
+    const [day, setDay] = useState('');
 
     useEffect(() => {
         console.log(os, gender, ageFrom);
@@ -66,8 +67,27 @@ function Component() {
                 os.toLowerCase(),
                 gender[0],
                 ageFrom.toLowerCase(),
+                day
             ]}
             filters={[
+                {
+                    hidex: day === "",
+                    label: <p>{day ? "Day: " + days[day - 1] : "Day: All"}</p>,
+                    delete: () => setDay(''),
+                    component: toggleModal => (
+                        <Filter
+                            data={daysLabel}
+                            onClick={el => {
+                                setDay(el.value);
+                                toggleModal(false);
+                            }}
+                            onClickAll={() => {
+                                setDay('');
+                                toggleModal(false);
+                            }}
+                        />
+                    )
+                },
                 {
                     hidex: os === "",
                     label: <p>{os ? "OS: " + os : "OS: All"}</p>,

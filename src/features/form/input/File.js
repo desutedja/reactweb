@@ -1,9 +1,12 @@
 import React, { useState, useRef } from 'react';
 import MoonLoader from "react-spinners/MoonLoader";
 
-import { storageRef } from '../../../firebase';
+// import { storageRef } from '../../../firebase';
 import { Field } from 'formik';
 import { FiAlertCircle } from 'react-icons/fi';
+import { useDispatch } from 'react-redux';
+import { post } from '../../slice';
+import { endpointAsset } from '../../../settings';
 
 function FileInput(props) {
     const {
@@ -13,6 +16,7 @@ function FileInput(props) {
 
     const [uploading, setUploading] = useState(false);
     let uploader = useRef();
+    const dispatch = useDispatch();
 
     const fixedName = name ? name : label.toLowerCase().replace(/ /g, '_')
 
@@ -60,16 +64,23 @@ function FileInput(props) {
                 setFieldValue(fixedName, 'Uploading file...');
                 setUploading(true);
 
-                let ref = storageRef.child('building_logo/' + Date.now() + '-' + file.name);
-                await ref.put(file).then(function (snapshot) {
-                    console.log(snapshot, 'File uploaded!');
+                // let ref = storageRef.child('building_logo/' + Date.now() + '-' + file.name);
+                // await ref.put(file).then(function (snapshot) {
+                //     console.log(snapshot, 'File uploaded!');
 
-                    snapshot.ref.getDownloadURL().then(url => {
-                        setFieldValue(fixedName, url);
-                    });
+                //     snapshot.ref.getDownloadURL().then(url => {
+                //         setFieldValue(fixedName, url);
+                //     });
 
-                    setUploading(false);
-                })
+                //     setUploading(false);
+                // })
+
+                let formData = new FormData();
+                formData.append('file', file);
+
+                dispatch(post(endpointAsset + '/file/upload', formData, res => {
+                    setFieldValue(fixedName, res.data.data.url);
+                }))
             }}
             onClick={onClick}
         />

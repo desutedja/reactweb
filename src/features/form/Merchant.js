@@ -16,7 +16,7 @@ import { get } from "../slice";
 
 import Template from "./components/TemplateWithFormik";
 import { Form } from 'formik';
-import { merchantSchema } from "./schemas";
+import { merchantSchema } from "./services/schemas";
 import Input from './input';
 import SubmitButton from "./components/SubmitButton";
 
