@@ -1,12 +1,12 @@
 import React from 'react';
 import MoonLoader from "react-spinners/MoonLoader";
 
-function Loading({ loading, children }) {
+function Loading({ loading, size=null, children }) {
     return (
         loading ? (
             <div className="Spinner">
                 <MoonLoader
-                    size={24}
+                    size={size ? size : 24}
                     color={"grey"}
                     loading={loading}
                 />
