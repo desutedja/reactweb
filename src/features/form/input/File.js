@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import MoonLoader from "react-spinners/MoonLoader";
 
-import { storageRef } from '../../../firebase';
+// import { storageRef } from '../../../firebase';
 import { Field } from 'formik';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useDispatch } from 'react-redux';

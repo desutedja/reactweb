@@ -7,6 +7,7 @@ import Column from '../../components/Column';
 import CustomAlert from '../../components/CustomAlert';
 import Template from './template';
 import { closeAlert } from '../slice';
+import ClinkLoader from '../../components/ClinkLoader';
 
 const time = 5;
 
@@ -15,6 +16,8 @@ function Page({ role }) {
     const [tick, setTick] = useState(time);
 
     const { alert, title, content } = useSelector(state => state.main);
+    const { auth } = useSelector(state => state);
+
     const email = useSelector(state => state.auth.email);
 
     let dispatch = useDispatch();
@@ -31,6 +34,19 @@ function Page({ role }) {
 
     return (
         <>
+            {auth.loading && <div style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                backgroundColor: 'rgba(255, 255, 255, .8)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <ClinkLoader />
+            </div>}
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
                 content={content}
             />
