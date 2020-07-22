@@ -74,6 +74,7 @@ function Component() {
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
                 onClick={() => {
+                    if (!transferCode) return;
                     dispatch(post(endpointBilling + '/management/billing/disbursement/flag', {
                         trx_code: selected.map(el => el.trx_code),
                         disbursement_transfer_code: transferCode

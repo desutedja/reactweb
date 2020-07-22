@@ -159,6 +159,7 @@ function Component() {
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
                 onClick={() => {
+                    if (!transferCode) return;
                     const currentDate = new Date().toISOString()
                     const trx_codes = selected.map(el => el.trx_code)
                     const ref_codes = selected.map(el => el.ref_code)
