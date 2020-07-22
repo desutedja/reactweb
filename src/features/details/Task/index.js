@@ -36,6 +36,7 @@ const attachments = [
 const assignee = {
     "Profile": [
         "assignee_name",
+        "assignee_role",
         "assigned_by",
         "assigned_on",
         "assignee",
