@@ -78,7 +78,7 @@
   },
   "jest": {
     "transformIgnorePatterns": [
-      "node_modules/(?!(redux-persist)/)"
+      "node_modules/(?!(redux-persist|react-draft-wysiwyg)/)"
     ]
   }
 }
