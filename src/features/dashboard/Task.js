@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import AnimatedNumber from "animated-number-react";
 
-import { RiTaskLine, RiFileExcelLine, RiFileChartLine } from 'react-icons/ri'
+import { RiTaskLine, RiFileExcelLine, RiFileChartLine } from 'react-icons/ri';
 
 import { getSOS } from './slice';
 import { 
@@ -25,7 +26,7 @@ const formatValue = (value) => value.toFixed(0);
 const colors = ['#2ad170', '#007bff', '#f7b733', '#ed4057'];
 
 function Component() {
-    // task
+    const history = useHistory();
     const { sosData } = useSelector(state => state.dashboard);
     const { auth } = useSelector(state => state);
 
@@ -142,7 +143,11 @@ function Component() {
         <>
             <div className="row no-gutters">
                 <div className="col">
-                    <div className="Container color-4 d-flex flex-column">
+                    <div className="Container color-4 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/task', {status: 'completed', statusLabel: 'Completed'})
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber
@@ -161,7 +166,11 @@ function Component() {
                     </div>
                 </div>
                 <div className="col">
-                    <div className="Container color-3 d-flex flex-column">
+                    <div className="Container color-3 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/task')
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber
@@ -180,7 +189,11 @@ function Component() {
                     </div>
                 </div>
                 <div className="col">
-                    <div className="Container color-5 d-flex flex-column">
+                    <div className="Container color-5 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/task')
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber

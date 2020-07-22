@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AnimatedNumber from "animated-number-react";
+import { useHistory } from 'react-router-dom';
 
 import { FiUsers, FiBriefcase } from 'react-icons/fi';
 import { FaTools, FaBoxOpen } from 'react-icons/fa';
@@ -17,6 +18,9 @@ const formatValue = (value) => value.toFixed(0);
 const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
 
 function Component() {
+    let dispatch = useDispatch();
+    const history = useHistory();
+
     const { auth } = useSelector(state => state);
 
     const [billingData, setBillingData] = useState({});
@@ -26,7 +30,6 @@ function Component() {
     const [isCourier, setIsCourier] = useState(false);
     const [isSecurity, setIsSecurity] = useState(false);
 
-    let dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/statistic', res => {
@@ -57,7 +60,11 @@ function Component() {
         <>
             <div className="row no-gutters">
                 {auth.role === 'sa' && <div className="col">
-                    <div className="Container color-2 d-flex flex-column">
+                    <div className="Container color-2 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/building')
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber className="h2 font-weight-bold white" value={staffData.num_of_building}
@@ -189,7 +196,11 @@ function Component() {
             }}>
                 <div className="row no-gutters">
                     <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/resident')
+                        }}
+                        >
                             <div style={{
                                 width: 'auto'
                             }}>
@@ -209,7 +220,11 @@ function Component() {
                         </div>
                     </div>
                     {!isTechnician && <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/staff', {role: 'technician', roleLabel: 'Technician'})
+                        }}
+                        >
                             <div style={{
                                 width: 'auto'
                             }}>
@@ -229,7 +244,11 @@ function Component() {
                         </div>
                     </div>}
                     {!isSecurity && <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/staff', {role: 'security', roleLabel: 'Security'})
+                        }}
+                        >
                             <div style={{
                                 width: 'auto'
                             }}>
@@ -248,7 +267,11 @@ function Component() {
                         </div>
                     </div>}
                     {!isCourier && <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/staff', {role: 'courier', roleLabel: 'Courier'})
+                        }}
+                        >
                             <div style={{
                                 width: 'auto'
                             }}>
@@ -268,7 +291,11 @@ function Component() {
                         </div>
                     </div>}
                     <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/staff', {role: 'pic_bm', roleLabel: 'PIC BM'})
+                        }}
+                        >
                             <div className="w-auto">
                                 <RiBuilding2Line className="h1 mr-4 my-0" />
                             </div>
@@ -286,7 +313,11 @@ function Component() {
                         </div>
                     </div>
                     <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/staff', {role: 'gm_bm', roleLabel: 'GM BM'})
+                        }}
+                        >
                             <div style={{
                                 width: 'auto'
                             }}>

@@ -89,6 +89,11 @@ const prios = [
 ]
 
 function Component() {
+    let dispatch = useDispatch();
+    let history = useHistory();
+    let { url } = useRouteMatch();
+
+
     const [selectedRow, setRow] = useState({});
     const [resolve, setResolve] = useState(false);
     const [assign, setAssign] = useState(false);
@@ -103,17 +108,14 @@ function Component() {
     const [type, setType] = useState('');
     const [typeLabel, setTypeLabel] = useState('');
 
-    const [status, setStatus] = useState('');
-    const [statusLabel, setStatusLabel] = useState('');
+    const [status, setStatus] = useState(history.location.state ? history.location.state.status : '');
+    const [statusLabel, setStatusLabel] = useState(history.location.state ? history.location.state.statusLabel : '');
 
     const [prio, setPrio] = useState('');
     const [prioLabel, setPrioLabel] = useState('');
 
     const { role } = useSelector(state => state.auth)
 
-    let dispatch = useDispatch();
-    let history = useHistory();
-    let { url } = useRouteMatch();
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
@@ -148,6 +150,12 @@ function Component() {
             }))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, search, selectedRow]);
+
+    useEffect(() => {
+        console.log(history)
+        console.log('LOG', status, statusLabel)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [status])
     return (
         <>
             <Modal isOpen={resolve} toggle={() => setResolve(false)} disableHeader
