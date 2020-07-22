@@ -9,7 +9,7 @@ import { get } from '../../slice';
 import Template from '../components/TemplateWithFormik';
 import Input from '../input';
 import { Form } from 'formik';
-import { announcementSchema } from '../schemas';
+import { announcementSchema } from '../services/schemas';
 import SubmitButton from '../components/SubmitButton';
 
 const announcementPayload = {
