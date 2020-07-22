@@ -158,6 +158,7 @@ function Component() {
                 isOpen={disburseModal} toggle={() => setDisburseModal(!disburseModal)}
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
+                disabledOk={transferCode.length === 0}
                 onClick={() => {
                     if (!transferCode) return;
                     const currentDate = new Date().toISOString()

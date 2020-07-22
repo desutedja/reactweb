@@ -73,6 +73,7 @@ function Component() {
             <Modal isOpen={modal} toggle={() => setModal(!modal)}
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
+                disabledOk={transferCode.length === 0}
                 onClick={() => {
                     if (!transferCode) return;
                     dispatch(post(endpointBilling + '/management/billing/disbursement/flag', {
