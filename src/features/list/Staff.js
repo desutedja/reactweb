@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { FiSearch, FiPlus } from 'react-icons/fi';
+import {  FiPlus } from 'react-icons/fi';
 
 import { toSentenceCase } from '../../utils';
-import { endpointAdmin } from '../../settings';
 
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
-import Input from '../../components/Input';
 import Pill from '../../components/Pill';
 import Staff from '../../components/cells/Staff';
-import { get } from '../slice';
 import { getStaff, setSelected, deleteStaff } from '../slices/staff';
 
 import Template from './components/Template';
@@ -59,14 +56,13 @@ function Component() {
     const [shift, setShift] = useState('');
     const [shiftLabel, setShiftLabel] = useState('');
 
-    const [search, setSearch] = useState('');
-    const [building, setBuilding] = useState('');
-    const [buildingName, setBuildingName] = useState('');
-    const [buildings, setBuildings] = useState('');
+    const [building,
+        // setBuilding
+    ] = useState('');
 
-    const [management, setManagement] = useState('');
-    const [managementName, setManagementName] = useState('');
-    const [managements, setManagements] = useState('');
+    const [management,
+        // setManagement
+    ] = useState('');
 
     const [role, setRole] = useState('');
     const [roleLabel, setRoleLabel] = useState('');
@@ -75,29 +71,6 @@ function Component() {
     let history = useHistory();
     let { url } = useRouteMatch();
 
-    useEffect(() => {
-        search.length >= 1 && dispatch(get(endpointAdmin + '/building' +
-            '?limit=5&page=1' +
-            '&search=' + search, res => {
-                let data = res.data.data.items;
-
-                let formatted = data.map(el => ({ label: el.name, value: el.id }));
-
-                setBuildings(formatted);
-            }))
-    }, [dispatch, search]);
-
-    useEffect(() => {
-        search.length >= 1 && dispatch(get(endpointAdmin + '/management' +
-            '?limit=5&page=1' +
-            '&search=' + search, res => {
-                let data = res.data.data.items;
-
-                let formatted = data.map(el => ({ label: el.name, value: el.id }));
-
-                setManagements(formatted);
-            }))
-    }, [dispatch, search]);
 
     useEffect(() => {
         if (auth.role === 'bm') {
@@ -119,35 +92,6 @@ function Component() {
             filterVars={[role, building, shift, management]}
             filters={[
                 {
-                    hidex: building === "",
-                    label: <p>{building ? "Building: " + buildingName : "Building: All"}</p>,
-                    delete: () => { setBuilding(""); setBuildingName(""); },
-                    component: (toggleModal) =>
-                        <>
-                            <Input
-                                placeholder="Search Building Name"
-                                compact
-                                fullwidth={true}
-                                icon={<FiSearch />}
-                                inputValue={search}
-                                setInputValue={setSearch}
-                            />
-                            <Filter
-                                data={buildings}
-                                onClick={(el) => {
-                                    setBuilding(el.value);
-                                    setBuildingName(el.label);
-                                    toggleModal(false);
-                                }}
-                                onClickAll={() => {
-                                    setBuilding("");
-                                    setBuildingName("");
-                                    toggleModal(false);
-                                }}
-                            />
-                        </>
-                },
-                {
                     hidex: shift === "",
                     label: <p>{shiftLabel ? "Availability: " + shiftLabel : "Availability: All"}</p>,
                     delete: () => { setShift(""); setShiftLabel(""); },
@@ -165,35 +109,6 @@ function Component() {
                                 toggleModal(false);
                             }}
                         />
-                },
-                {
-                    hidex: management === "",
-                    label: <p>{management ? "Management: " + managementName : "Management: All"}</p>,
-                    delete: () => { setManagement(""); setManagementName(""); },
-                    component: (toggleModal) =>
-                    <>
-                        <Input
-                            placeholder="Search Management Name"
-                            compact
-                            fullwidth={true}
-                            icon={<FiSearch />}
-                            inputValue={search}
-                            setInputValue={setSearch}
-                        />
-                        <Filter
-                            data={managements}
-                            onClick={(el) => {
-                                setManagement(el.value);
-                                setManagementName(el.label);
-                                toggleModal(false);
-                            }}
-                            onClickAll={() => {
-                                setManagement("");
-                                setManagementName("");
-                                toggleModal(false);
-                            }}
-                        />
-                    </>
                 },
                 {
                     hidex: role === "",
