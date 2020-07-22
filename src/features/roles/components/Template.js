@@ -291,7 +291,7 @@ function Component({ role, children }) {
                                         key={sub}
                                         onClick={() => {
                                             history.push(path + sub);
-                                            setMenuWide(false);
+                                            // setMenuWide(false);
                                         }}
                                         className={('/' + history.location.pathname.split('/')[3]) === sub
                                             ? "SubmenuItem-active" : "SubmenuItem"}
