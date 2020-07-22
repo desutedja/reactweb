@@ -174,7 +174,7 @@ function Component() {
                             amount: getSum(selected),
                             disbursed_on: currentDate,
                             disbursed_code: transferCode
-                        }
+                    }
 
                     if (type === 'merchant') dispatch(post(endpointTransaction + '/admin/disbursement/merchant/create', dataDisburse, res => {
                         setDisburseModal(false);
