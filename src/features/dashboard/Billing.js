@@ -22,6 +22,10 @@ function Component() {
     const [billingData, setBillingData] = useState({});
     const [staffData, setStaffData] = useState({});
 
+    const [isTechnician, setIsTechnician] = useState(false);
+    const [isCourier, setIsCourier] = useState(false);
+    const [isSecurity, setIsSecurity] = useState(false);
+
     let dispatch = useDispatch();
 
     useEffect(() => {
@@ -36,6 +40,18 @@ function Component() {
             console.log(res.data.data)
         }))
     }, [dispatch]);
+
+    useEffect(() => {
+        if (auth.role === 'bm') {
+            const blacklist_modules = auth.user.blacklist_modules;
+            const isSecurity = blacklist_modules.find(item => item.module === 'security') ? true : false;
+            const isInternalCourier = blacklist_modules.find(item => item.module === 'internal_courier') ? true : false;
+            const isTechnician = blacklist_modules.find(item => item.module === 'technician') ? true : false;
+            setIsSecurity(isSecurity);
+            setIsCourier(isInternalCourier);
+            setIsTechnician(isTechnician);
+        }
+    }, [auth])
 
     return (
         <>
@@ -93,7 +109,6 @@ function Component() {
                     </div>
                 </div>
             </div>
-
 
             <div className="Row">
                 <div className="Container" style={{
@@ -193,7 +208,7 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                    <div className="col-6 col-md-4 col-lg">
+                    {!isTechnician && <div className="col-6 col-md-4 col-lg">
                         <div className="Container align-items-center color-1">
                             <div style={{
                                 width: 'auto'
@@ -212,8 +227,8 @@ function Component() {
                                 <p>Technician</p>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-6 col-md-4 col-lg">
+                    </div>}
+                    {!isSecurity && <div className="col-6 col-md-4 col-lg">
                         <div className="Container align-items-center color-1">
                             <div style={{
                                 width: 'auto'
@@ -231,8 +246,8 @@ function Component() {
                                 <p>Security</p>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-6 col-md-4 col-lg">
+                    </div>}
+                    {!isCourier && <div className="col-6 col-md-4 col-lg">
                         <div className="Container align-items-center color-1">
                             <div style={{
                                 width: 'auto'
@@ -251,7 +266,7 @@ function Component() {
                                 <p>Courier</p>
                             </div>
                         </div>
-                    </div>
+                    </div>}
                     <div className="col-6 col-md-4 col-lg">
                         <div className="Container align-items-center color-1">
                             <div className="w-auto">
