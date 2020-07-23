@@ -44,7 +44,6 @@ const reducers = combineReducers({
   product,
   transaction,
   announcement,
-  notification,
   ads,
   chat,
   admin,

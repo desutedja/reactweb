@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { endpointManagement } from '../../settings';
-import { get, post, put, del } from '../slice';
+import { get } from '../slice';
 
 const notifEndpoint = endpointManagement + '/admin/notification';
 

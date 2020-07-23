@@ -59,30 +59,6 @@ const courier = {
     ]
 };
 
-const payment = {
-    'Information': [
-        "total_base_price",
-        "total_selling_price",
-        "courier_internal_charges",
-        "courier_external_charges",
-        "discount_price",
-        "discount_code",
-        "tax_type",
-        "tax_price",
-        "profit_from_sales",
-        "profit_from_pg",
-        "profit_from_delivery",
-        "total_price",
-        "payment",
-        "payment_date",
-        "payment_method",
-        "payment_bank",
-        "payment_ref_code",
-        "payment_charge",
-        "payment_amount",
-    ]
-};
-
 const TextField = ({ label, value }) => {
     return (
         <Row style={{ padding: '4px', alignItems: 'flex-start' }}>
@@ -143,7 +119,7 @@ function Component() {
                         <TextField label={"Payment Bank"} value={data.payment_bank} />
                         <TextField label={"Payment Refcode"} value={data.payment_ref_code} />
 
-                        <TextField label={"Payment Charge"} value={toMoney(data.payment_charge)} />
+                        <TextField label={"Convenience Fee"} value={toMoney(data.payment_charge)} />
                         <TextField label={"Payment Amount"} value={toMoney(data.payment_amount)} />
                     </>}
                 </>,

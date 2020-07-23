@@ -154,8 +154,8 @@ function Component() {
                 <GoogleMapReact
                   bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
                   defaultCenter={{
-                    lat: -6.2107863,
-                    lng: 106.8137977,
+                    lat: values.lat,
+                    lng: values.long,
                   }}
                   zoom={12}
                   onClick={({ x, y, lat, lng, event }) => {
@@ -219,8 +219,6 @@ function Component() {
               options={inBuildings}
               onChange={el => {
                 console.log(el);
-                setFieldValue('lat', el.lat);
-                setFieldValue('long', el.long);
               }}
             />
             <button type="button" onClick={() => setModal(true)}>

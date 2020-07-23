@@ -36,7 +36,7 @@ function Component({ role, children }) {
     const [loadingNotif, setLoadingNotif] = useState(false);
 
     const { alert, title, subtitle, content, confirmDelete, notif } = useSelector(state => state.main);
-    const { items, selected, unreadCount } = useSelector(state => state.notification);
+    const { items } = useSelector(state => state.notification);
     const { user } = useSelector(state => state.auth);
     const { qiscus, unread, messages } = useSelector(state => state.chat);
 
