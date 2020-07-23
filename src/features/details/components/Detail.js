@@ -107,8 +107,8 @@ function Component({ imgPreview = false, data, labels, type = "",
                     pathname: editPath,
                     state: data,
                 })} />}
-                {onDelete && <Button icon={<FiTrash />} color="danger" label="Delete" onClick={onDelete} />}
                 {renderButtons()}
+                {onDelete && <Button icon={<FiTrash />} color="danger" label="Delete" onClick={onDelete} />}
             </div>
         </div>
     )

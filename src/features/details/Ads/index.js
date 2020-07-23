@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useHistory, useRouteMatch, useParams } from 'react-router-dom';
 import {
     useDispatch
@@ -6,7 +6,8 @@ import {
 
 import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';
-import { FiBell, FiMessageSquare } from 'react-icons/fi';
+import Pill from '../../../components/Pill';
+import { FiSearch, FiCopy, FiArrowUpCircle, FiBell, FiMessageSquare } from 'react-icons/fi';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
@@ -15,34 +16,9 @@ import Content from './contents/Content';
 import Schedule from './contents/Schedule';
 import { get, setConfirmDelete } from '../../slice';
 import { endpointAds } from '../../../settings';
+import { dateTimeFormatter, toSentenceCase } from '../../../utils';
 import { deleteAds, setSelected, publishAds } from '../../slices/ads';
 
-const details = {
-    "Information": [
-        'age_from',
-        'age_to',
-        'appear_as',
-        'created_on',
-        'default_priority_score',
-        'deleted',
-        'end_date',
-        'gender',
-        'id',
-        'media',
-        'media_index',
-        'media_type',
-        'media_url',
-        'modified_on',
-        'os',
-        'published',
-        'start_date',
-        'total_actual_click',
-        'total_actual_view',
-        'total_priority_score',
-        'total_repeated_click',
-        'total_repeated_view',
-    ]
-}
 
 function Component() {
     const [modal, setModal] = useState(false);
@@ -52,6 +28,40 @@ function Component() {
     let history = useHistory();
     let { url } = useRouteMatch();
     let { id } = useParams();
+
+    const details = useMemo(() => { return {
+        "Information": [
+            'id',
+            { label: 'appear_as', vfmt: (v) => <Pill color="success">{v}</Pill> },
+            { label: 'created_on', lfmt: () => "Created On" , vfmt: (v) => dateTimeFormatter(v) },
+            { label: 'modified_on', lfmt: () => 'Last Modified', vfmt: (v) => dateTimeFormatter(v) },
+            { label: 'start_date', vfmt: (v) => dateTimeFormatter(v) },
+            { label: 'end_date', vfmt: (v) => dateTimeFormatter(v) },
+            { label: 'media', vfmt: (v) => toSentenceCase(v) + (v === 'apps' ? 
+                " (Would appear in advertisement details page inside Apps when advertisement is clicked) " : 
+                " (Would redirect to URL in a webview screen when advertisement is clicked)") },
+            'content_type',
+            //{ disabled: data.content_type === 'video',
+            //    label: 'content_image', vfmt: (v) => <a href={v}>{v}</a> },
+            //{ disabled: data.content_type === 'image', 
+            //    label: 'content_video', vfmt: (v) => <a href={v}>{v}</a> },
+            'published',
+        ],
+        "Target Parameters": [
+            { label: 'age_from', lfmt: () => "Target Age Range", vfmt: (v) => v + " years old - " + data.age_to + " years old" },
+            { label: 'os', vfmt: (v) => !v ? 'Not Specified' : v, lfmt: () => "Target OS" },
+            { label: 'gender', lfmt: () => "Target Gender", vfmt: (v) => !v ? "Not Specified" : (v === "M" ? "Male" : "Female") },
+            { label: 'occupation', lfmt: () => "Target Occupation", vfmt: (v) => !v ? "Not Specified" : toSentenceCase(v) },
+            'default_priority_score',
+        ],
+        "Statistics": [
+            'total_actual_click',
+            'total_actual_view',
+            'total_priority_score',
+            'total_repeated_click',
+            'total_repeated_view',
+        ],
+    }}, [data])
 
     useEffect(() => {
         dispatch(get(endpointAds + '/management/ads/' + id, res => {
@@ -111,6 +121,7 @@ function Component() {
                         ))}
                         renderButtons={() => [
                             <Button
+                                icon={<FiCopy/>}
                                 label="Duplicate"
                                 onClick={() => {
                                     dispatch(setSelected({ ...data, id: null }));
@@ -120,10 +131,15 @@ function Component() {
                                 }
                                 }
                             />,
-                            <Button label="Preview" onClick={() => {
+                            <Button 
+                                icon={<FiSearch/>} 
+                                label="Preview Banner" 
+                                disabled={data.appear_as === 'popup'}
+                                onClick={() => {
                                 setModal(true);
                             }} />,
                             <Button
+                                icon={<FiArrowUpCircle/>}
                                 disabled={!!data.published}
                                 label={data.published ? "Published" : "Publish"}
                                 onClick={() => dispatch(publishAds(data))}
