@@ -8,14 +8,13 @@ import ClinkLoader from '../../components/ClinkLoader';
 import { FiCheck, FiSearch, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import Tab from '../../components/Tab';
+import Breadcrumb from '../../components/Breadcrumb';
+import { ListGroup, ListGroupItem, Card } from 'reactstrap';
 
 import Table from '../../components/TableWithSelection';
 import { getTransactionDisbursement, refresh, downloadTransactionDisbursement } from '../slices/transaction';
-import {
-    toMoney
-} from '../../utils';
 import { trxStatusColor, endpointManagement } from '../../settings';
-import { toSentenceCase, dateTimeFormatterCell } from '../../utils';
+import { toMoney, toSentenceCase, dateTimeFormatterCell } from '../../utils';
 import Pill from '../../components/Pill';
 import { endpointTransaction, endpointMerchant } from '../../settings';
 import { get, post } from '../slice';
@@ -23,6 +22,10 @@ import MyButton from '../../components/Button';
 import Transaction from '../../components/cells/Transaction';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
+
+const tabs = [
+    "Merchant", "Courier"
+]
 
 function Component() {
     const [info, setInfo] = useState({});
@@ -174,6 +177,7 @@ function Component() {
 
     return (
         <>
+            <Breadcrumb title='Disbursement' />
             <Modal
                 isOpen={disburseModal} toggle={() => 
                     setDisburseModal(!disburseModal)
@@ -300,6 +304,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -311,6 +316,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -328,6 +334,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -339,6 +346,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -356,6 +364,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -367,6 +376,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -381,14 +391,16 @@ function Component() {
                 display: 'flex',
                 marginTop: 16,
             }}>
-                <div className="Container" style={{
+                <Card className="Container" style={{
                     flexDirection: 'column',
                     marginRight: 16,
+                    boxShadow: 'none',
                 }}>
                     <Tab
-                        labels={["Merchant", "Courier"]}
+                        labels={tabs}
                         setTab={setType}
                         tabActive={setActive}
+                        activeTab={0}
                         contents={[
                             <>
                                 <div className="row no-gutters align-items-center mb-4">
@@ -418,10 +430,13 @@ function Component() {
                                 {loadingMerchant && <div className="w-100 py-5 d-flex justify-content-center">
                                     <ClinkLoader />
                                 </div>}
+                                <ListGroup>
                                 {!loadingMerchant && merchants
-                                    .map((el, index) => <div
+                                    .map((el, index) => <ListGroupItem
                                         key={index}
-                                        className={index === active ? "GroupActive" : "Group"}
+                                        tag="a"
+                                        href="#"
+                                        active={index === active}
                                         onClick={() => {
                                             setMerchant(el.id.toString());
                                             setCourier('');
@@ -429,7 +444,8 @@ function Component() {
                                         }}
                                     >
                                         {el.name}
-                                    </div>)}
+                                    </ListGroupItem>)}
+                                </ListGroup>
                                 {!loadingMerchant && merchants.length === 0 && (
                                     <div className="w-100 text-center">No Merchant found</div>
                                 )}
@@ -467,10 +483,13 @@ function Component() {
                                 {loadingCourier && <div className="w-100 py-5 d-flex justify-content-center">
                                     <ClinkLoader />
                                 </div>}
+                                <ListGroup>
                                 {!loadingCourier && couriers
-                                    .map((el, index) => <div
+                                    .map((el, index) => <ListGroupItem
                                         key={index}
-                                        className={index === active ? "GroupActive" : "Group"}
+                                        tag="a"
+                                        href="#"
+                                        active={index === active}
                                         onClick={() => {
                                             setCourier(el.id.toString());
                                             setMerchant('');
@@ -478,7 +497,8 @@ function Component() {
                                         }}
                                     >
                                         {el.firstname} {el.lastname}
-                                    </div>)}
+                                    </ListGroupItem>)}
+                                </ListGroup>
                                 {!loadingCourier && couriers.length === 0 && (
                                     <div className="w-100 text-center">No Courier found</div>
                                 )}
@@ -489,18 +509,21 @@ function Component() {
                                 )}
                             </>,
                         ]}
-                        activeTab={0}
                     />
-                </div>
+                </Card>
                 <div style={{
-                    flex: 2,
+                    flex: 4,
                 }}>
-                    <div className="Container" style={{
+                    <Card className="Container" style={{
                         alignItems: 'center',
                         justifyContent: 'space-between',
+                        boxShadow: 'none',
+                        flexDirection: 'row',
                     }}>
                         <div>
-                            Undisbursed Amount
+                            Undisbursed Amount For {toSentenceCase(type)} {type === "merchant" ? 
+                            <b>{(merchants.length > 0 ? merchants[active].name : '')}</b>
+                        : <b>{(couriers.length > 0 ? couriers[active].name : '')}</b>}
                         </div>
                         <div style={{
                             display: 'flex',
@@ -525,10 +548,12 @@ function Component() {
                                 }}
                             />
                         </div>
-                    </div>
-                    <div className="Container" style={{
+                    </Card>
+
+               <Card className="Container" style={{
                     flex: 3,
                     flexDirection: 'column',
+                    boxShadow: 'none',
                 }}>
                     <Table
                         onSelection={(selectedRows) => {
@@ -537,7 +562,7 @@ function Component() {
                         noContainer={true}
                         totalItems={disbursement.total_items}
                         columns={columns}
-                        data={disbursement.items.data}
+                        data={disbursement.items.data || []}
                         loading={loading}
                         pageCount={disbursement.total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
@@ -560,7 +585,7 @@ function Component() {
                             ])
                         }}
                     />
-                    </div>
+                    </Card>
                 </div>
             </div>
         </>
