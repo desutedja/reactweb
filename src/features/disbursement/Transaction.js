@@ -92,6 +92,7 @@ function Component() {
                     :
                     row.disbursement_date ? dateTimeFormatterCell(row.disbursement_date) : '-'
             },
+            { Header: 'Payment Channel', accessor: row => toSentenceCase(row.payment_bank) },
         ]
         else return [
             { Header: 'ID', accessor: 'id' },
@@ -118,6 +119,7 @@ function Component() {
                     :
                     row.disbursement_date ? dateTimeFormatterCell(row.disbursement_date) : '-'
             },
+            { Header: 'Payment Channel', accessor: row => toSentenceCase(row.disbursement_bank).toUpperCase() },
         ]
     }, [type]);
 

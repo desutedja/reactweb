@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { FiSearch, FiPlus } from 'react-icons/fi';
+import moment from 'moment';
 
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
@@ -92,7 +93,7 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
-
+    const { role } = useSelector(state => state.auth)
 
     const [selectedRow, setRow] = useState({});
     const [resolve, setResolve] = useState(false);
@@ -114,8 +115,10 @@ function Component() {
     const [prio, setPrio] = useState('');
     const [prioLabel, setPrioLabel] = useState('');
 
-    const { role } = useSelector(state => state.auth)
-
+    const [createdStart, setCreatedStart] = useState(moment().format('yyyy-MM-DD'));
+    const [createdEnd, setCreatedEnd] = useState(moment().format('yyyy-MM-DD'));
+    const [resolvedStart, setResolvedStart] = useState(moment().format('yyyy-MM-DD'));
+    const [resolvedEnd, setResolvedEnd] = useState(moment().format('yyyy-MM-DD'));
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
@@ -154,7 +157,7 @@ function Component() {
     useEffect(() => {
         console.log(history)
         console.log('LOG', status, statusLabel)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status])
     return (
         <>
@@ -202,6 +205,40 @@ function Component() {
                 getAction={getTask}
                 filterVars={[type, prio, status, building]}
                 filters={[
+                    {
+                        hidex: true,
+                        label: <p>{"Created Date: "
+                            + moment(createdStart).format('DD-MM-yyyy') + ' - '
+                            + moment(createdEnd).format('DD-MM-yyyy')
+                        }</p>,
+                        component: (toggleModal) =>
+                            <div>
+                                <h3>Created Date</h3>
+                                <Input label="Start Date" type="date" inputValue={createdStart}
+                                    setInputValue={setCreatedStart}
+                                />
+                                <Input label="End Date" type="date" inputValue={createdEnd}
+                                    setInputValue={setCreatedEnd}
+                                />
+                            </div>
+                    },
+                    {
+                        hidex: true,
+                        label: <p>{"Resolved Date: "
+                            + moment(resolvedStart).format('DD-MM-yyyy') + ' - '
+                            + moment(resolvedEnd).format('DD-MM-yyyy')
+                        }</p>,
+                        component: (toggleModal) =>
+                            <div>
+                                <h3>Resolved Date</h3>
+                                <Input label="Start Date" type="date" inputValue={resolvedStart}
+                                    setInputValue={setResolvedStart}
+                                />
+                                <Input label="End Date" type="date" inputValue={resolvedEnd}
+                                    setInputValue={setResolvedEnd}
+                                />
+                            </div>
+                    },
                     {
                         hidex: building === "",
                         label: <p>{building ? "Building: " + buildingName : "Building: All"}</p>,

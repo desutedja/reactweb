@@ -198,3 +198,9 @@
 .More:hover {
   background-color: #f0f0f3;
 }
+
+.FilterContainer {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 16px;
+}

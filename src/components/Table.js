@@ -86,6 +86,7 @@ function Component({
 
     const [activeFilter, setFilter] = useState(0);
     const [modalOpen, toggleModal] = useState(false);
+    const [filter, toggleFilter] = useState(false);
 
     const [sortField, setSortField] = useState("");
     const [sortType, setSortType] = useState("");
@@ -146,20 +147,18 @@ function Component({
                     {renderActions != null ? renderActions(selectedRowIds, page) : []}
                 </div>
                 <div className="TableAction-right d-flex align-items-center">
-                    {
-                        filters.map((el, index) => !el.hidden &&
-                            <FilterButton
-                                key={index}
-                                label={el.label}
-                                hideX={el.hidex}
-                                onClick={() => {
-                                    el.onClick && el.onClick();
-                                    el.component && toggleModal(true);
-                                    setFilter(index);
-                                }}
-                                onClickDelete={el.delete} />
-                        )
-                    }
+                    {filters.length > 0 && <div className="Button" style={{
+                        cursor: 'pointer',
+                        color: 'white',
+                        marginRight: 8,
+                    }} onClick={() => {
+                        toggleFilter(!filter);
+                    }}>
+                        <b style={{
+                            marginRight: 8,
+                        }}>Filter</b>
+                        {filter ? <FiChevronUp /> : <FiChevronDown />}
+                    </div>}
                     <div className="TableSearch d-flex align-items-center">
                         <Input
                             label="Search"
@@ -172,6 +171,20 @@ function Component({
                     </div>
                 </div>
             </div>
+            {filter && <div className="FilterContainer">
+                {filters.map((el, index) => !el.hidden &&
+                    <FilterButton
+                        key={index}
+                        label={el.label}
+                        hideX={el.hidex}
+                        onClick={() => {
+                            el.onClick && el.onClick();
+                            el.component && toggleModal(true);
+                            setFilter(index);
+                        }}
+                        onClickDelete={el.delete} />
+                )}
+            </div>}
             <div className="Table-content scroller">
                 <table {...getTableProps()}>
                     {loading &&

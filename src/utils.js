@@ -147,11 +147,7 @@ export function getDatesRange(startDate, stopDate, range = 'days') {
 }
 
 export function toSentenceCase(sentence) {
-    if (sentence === null) return null;
-    if (sentence.length < 3) {
-        return sentence.toUpperCase();
-    }
-
+    if (!sentence) return '-';
     let words = sentence.replace(/_/g, ' ').split(' ');
 
     return words.reduce((result, el) => {
@@ -161,7 +157,7 @@ export function toSentenceCase(sentence) {
 }
 
 export function toMoney(money) {
-    return money === null || money === undefined ? "-" : "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.") + ',00';
+    return "Rp " + (!money ? "0" : money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")) + ',00';
 }
 
 export function removeLastFromPath(path, lastn = 1) {
