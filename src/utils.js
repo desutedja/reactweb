@@ -147,11 +147,7 @@ export function getDatesRange(startDate, stopDate, range = 'days') {
 }
 
 export function toSentenceCase(sentence) {
-    if (sentence === null) return null;
-    if (sentence.length < 3) {
-        return sentence.toUpperCase();
-    }
-
+    if (!sentence) return '-';
     let words = sentence.replace(/_/g, ' ').split(' ');
 
     return words.reduce((result, el) => {

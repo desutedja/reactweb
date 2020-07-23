@@ -9,7 +9,7 @@ import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
 import Input from '../../components/Input';
 import { getBillingDisbursement, downloadBillingDisbursement, refresh } from '../slices/billing';
-import { toMoney, dateTimeFormatterCell } from '../../utils';
+import { toMoney, dateTimeFormatterCell, toSentenceCase } from '../../utils';
 import { endpointBilling } from '../../settings';
 import { get, post } from '../slice';
 import MyButton from '../../components/Button';
@@ -28,6 +28,7 @@ const columns = [
         Header: 'Disbursed at', accessor: row => row.disbursement_date ?
             dateTimeFormatterCell(row.disbursement_date) : '-'
     },
+    { Header: 'Payment Channel', accessor: row => toSentenceCase(row.payment_bank) },
 ]
 
 function Component() {
