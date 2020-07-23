@@ -21,8 +21,7 @@ const columns = [
     { Header: "Email", accessor: row => <a href={"mailto:" + row.email}>{row.email}</a> },
     { Header: "Building", accessor: "building_name" },
     {
-        Header: "Management", accessor: row => row.staff_role === "courier" ?
-            (row.on_centratama ? "Centratama Courier" : row.management_name) : row.management_name
+        Header: "Management", accessor: "management_name" 
     },
     {
         Header: "Available", accessor: row =>

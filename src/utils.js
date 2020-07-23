@@ -187,6 +187,13 @@ export function getBank(value, banks) {
     const c = banks.find((el) => el.value === value)
     return c === undefined ? "-" : c.label
 }
+
 export function toEllipsis(value, limit) {
     return value.slice(0, limit - 1) + '...'
+}
+
+export function staffRoleFormatter(role) {
+    return role === "pic_bm" ? "BM PIC" :
+           role === "gm_bm" ? "BM GM" :
+           toSentenceCase(role);
 }
