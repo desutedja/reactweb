@@ -34,7 +34,7 @@ function Component() {
 
     return (
         <Template
-            image={data.photo}
+            image={data.photo || "placeholder"}
             title={data.firstname + ' ' + data.lastname}
             email={data.email}
             phone={data.phone}
