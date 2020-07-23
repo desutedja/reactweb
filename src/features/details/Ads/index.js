@@ -6,6 +6,7 @@ import {
 
 import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';
+import { FiBell, FiMessageSquare } from 'react-icons/fi';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
@@ -61,17 +62,17 @@ function Component() {
 
     return (
         <>
-            <Modal isOpen={modal} disableFooter={true} toggle={() => setModal(false)}
-                title="Preview"
+            <Modal width={"850px"} isOpen={modal} disableFooter={true} toggle={() => setModal(false)}
+                title="Preview" subtitle="How the advertisement would look on resident's home screen"
             >
                 <div style={{
                     width: '100%',
-                    height: 'calc(614 / 1080 * 450px)',
+                    height: 'calc(614 / 1080 * 850px)',
                     overflow: 'hidden',
                     position: 'relative',
                 }}>
                     <div style={{
-                        height: 'calc(164 / 1080 * 450px)',
+                        height: 'calc(164 / 1080 * 850px)',
                         flex: 1,
                         position: 'absolute',
                         right: 0,
@@ -80,20 +81,30 @@ function Component() {
                         backgroundColor: '#fafafaaa',
                         fontWeight: 'bold',
                         display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
                     }}>
-                        Topbar Area
+                        <img style={{ height:"35px", top: "45px", left: "30px", position: "absolute" }} 
+                            src={require('../../../assets/clink_logo.png')} alt="clinklogo" />
+                        <FiMessageSquare size="45"  style={{ top: "45px", position: "absolute", right: "140px" }} 
+                        />
+                        <FiBell size="45" style={{ top: "45px", position: "absolute", right: "45px" }} 
+                        />
                     </div>
                     <img style={{
-                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        marginRight: '-50%',
                     }} src={data.content_image} alt="content_image" />
                 </div>
             </Modal>
             <Template
                 loading={!data.id}
-                labels={["Details", "Content", "Schedules"]}
+                labels={["Details", "Schedules"]}
                 contents={[
+                    <div style={{ display:"flex" }}>
+                    <div style={{ marginRight: "20px" }}><Content /></div>
                     <Detail type="Advertisement" data={data} labels={details}
                         onDelete={() => dispatch(setConfirmDelete("Are you sure to delete this item?",
                             () => dispatch(deleteAds(data, history))
@@ -118,8 +129,7 @@ function Component() {
                                 onClick={() => dispatch(publishAds(data))}
                             />
                         ]}
-                    />,
-                    <Content />,
+                    /></div>,
                     <Schedule />,
                 ]}
             />

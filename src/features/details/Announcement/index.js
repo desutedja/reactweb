@@ -95,11 +95,12 @@ function Component() {
             Are you sure you want to delete this announcement?
         </Modal>
         <Template
-            image={data.image}
             title={data.title}
             loading={!data.id}
-            labels={["Details", "Contents"]}
+            labels={["Details"]}
             contents={[
+            <div style={{ display: 'flex' }}>
+            <div style={{ marginRight: '20px' }}><Content /></div>
             <Detail type="Announcement" data={data} labels={details} 
                 editable={data.publish === 0}
                 renderButtons={() => [
@@ -117,8 +118,7 @@ function Component() {
                 <Button color="danger" icon={<FiTrash/>} label="Delete" 
                     onClick={() => setConfirmDelete(true) } />,
                 ]}
-                />,
-                <Content />,
+            /></div>
             ]}
         />
         </>

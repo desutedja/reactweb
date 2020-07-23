@@ -71,7 +71,7 @@ function Component() {
                     // console.log(selectedRowIds, page);
                     return ([
                         <Button color="danger"
-                            disabled={Object.keys(selectedRowIds).length === 0}
+                            disabled={!selectedRowIds || Object.keys(selectedRowIds).length === 0}
                             onClick={() => {
                                 Object.keys(selectedRowIds).map(el => dispatch(deleteAdsSchedule(
                                     page[el].original)));
