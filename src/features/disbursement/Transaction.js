@@ -533,7 +533,7 @@ function Component() {
                 }}>
                     <Table
                         onSelection={(selectedRows) => {
-                            setSelected(selectedRows.filter(el => !el.disbursement_date));
+                            setSelected(selectedRows.filter(el => el && !el.disbursement_date));
                         }}
                         noContainer={true}
                         totalItems={disbursement.total_items}

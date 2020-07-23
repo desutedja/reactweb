@@ -75,7 +75,10 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={modal} toggle={() => setModal(!modal)}
+            <Modal isOpen={modal} toggle={() => {
+                setSelected([]);
+                setModal(!modal)
+            }}
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
                 disabledOk={transferCode.length === 0}
@@ -213,7 +216,7 @@ function Component() {
                                         {toMoney(amount)}
                                     </b>
                                     <MyButton label="Disburse All" onClick={() => {
-                                        setSelected(data.filter(el => !el.disbursement_date));
+                                        setSelected(data.filter(el => el && !el.disbursement_date));
                                         setModal(true);
                                     }} />
                                     <Button label="Download .csv" icon={<FiDownload />}
