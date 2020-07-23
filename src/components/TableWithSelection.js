@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { useTable, usePagination, useSortBy,
-    // useRowSelect
-} from 'react-table'
-import MoonLoader from "react-spinners/MoonLoader";
+import React, { useEffect, useState, forwardRef, useRef } from 'react'
+import { useTable, useExpanded, usePagination, useSortBy, useRowSelect, } from 'react-table'
+import ClinkLoader from './ClinkLoader';
 import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
     FiEdit, FiCheck, FiUserPlus, FiMessageSquare,
 } from 'react-icons/fi'
+import {
+    FaCaretRight, FaCaretDown,
+} from 'react-icons/fa'
 import IconButton from './IconButton';
 import Input from './Input';
 import Modal from './Modal';
@@ -30,7 +31,6 @@ function Component({
     onClickDelete,
     onClickDetails,
     onClickEdit,
-    onClickRow,
     renderActions,
     deleteSelection,
     onSelection,
@@ -40,28 +40,64 @@ function Component({
         getTableBodyProps,
         headerGroups,
         prepareRow,
+        visibleColumns,
         page,
         canPreviousPage,
         canNextPage,
         pageCount,
         gotoPage,
         setPageSize,
-        state: { pageIndex, pageSize, selectedRowIds }
+        state: { pageIndex, pageSize, selectedRowIds, sortBy }
     } = useTable({
         columns,
         data,
         initialState: { pageIndex: 0 },
         manualPagination: true,
+        manualSorting: true,
         pageCount: controlledPageCount,
-        autoResetSortBy: false,
         autoResetPage: false,
+        autoResetSortBy: false,
         autoResetSelectedRows: true,
     },
         useSortBy,
-        usePagination
+        useExpanded,
+        usePagination,
+        useRowSelect,
+        hooks => {
+            hooks.visibleColumns.push(columns => {
+                return [
+                    {
+                        id: 'selection',
+                        Header: ({ getToggleAllRowsSelectedProps }) => (
+                            <div>
+                                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                            </div>
+                        ),
+                        Cell: ({ row }) => {
+                            // console.log(row.getToggleRowSelectedProps())
+                            return (
+                                <div >
+                                    <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                                </div>
+                            )
+                        }
+                    },
+                    {
+                        id: 'expander',
+                        Header: () => null,
+                        Cell: ({ row }) =>
+                            row.original.expandable === true &&
+                            (
+                                <span {...row.getToggleRowExpandedProps()}>
+                                    {row.isExpanded ? <FaCaretDown /> : <FaCaretRight />}
+                                </span>
+                            ),
+                    },
+                    ...columns,
+                ]
+            })
+        }
     );
-    
-    // console.log(selectedRowIds)
 
     const [search, setSearch] = useState("");
     const [searchToggle, toggleSearch] = useState("");
@@ -69,9 +105,33 @@ function Component({
     const [activeFilter, setFilter] = useState(0);
     const [modalOpen, toggleModal] = useState(false);
 
+    const [sortField, setSortField] = useState("");
+    const [sortType, setSortType] = useState("");
+
     useEffect(() => {
+        const { id, desc } = sortBy[0] ? sortBy[0] : {};
+
+        console.log('sortBy: ', id, desc);
+
+        const field = columns.find(el => el.Header === id)?.sorting;
+        const type = desc ? 'DESC' : 'ASC';
+
+        field ? setSortField(field) : setSortField('created_on');
+        field ? setSortType(type) : setSortType('DESC');
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [sortBy])
+
+
+    // sorting tapi gajadi, BE belum siap
+    useEffect(() => {
+        console.log('sortField: ', sortField);
+        console.log('sortType: ', sortType);
+
         fetchData && fetchData(pageIndex, pageSize, searchToggle);
+        // fetchData && fetchData(pageIndex, pageSize, searchToggle, sortField, sortType);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchData, pageIndex, pageSize, searchToggle]);
+    // }, [fetchData, pageIndex, pageSize, searchToggle, sortField, sortType]);
 
     useEffect(() => {
         gotoPage(0);
@@ -87,10 +147,9 @@ function Component({
 
     useEffect(() => {
         const selectedRows = selectedRowIds ?
-            Object.keys(selectedRowIds).map(el => page[el].original) : [];
-
-        console.log(selectedRows);
+            Object.keys(selectedRowIds).map(el => page[el] && page[el].original) : [];
         onSelection && onSelection(selectedRows);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, selectedRowIds]);
 
@@ -112,7 +171,7 @@ function Component({
                     {actions}
                     {renderActions != null ? renderActions(selectedRowIds, page) : []}
                 </div>
-                <div className="TableAction-right">
+                <div className="TableAction-right d-flex align-items-center">
                     {
                         filters.map((el, index) => !el.hidden &&
                             <FilterButton
@@ -127,10 +186,11 @@ function Component({
                                 onClickDelete={el.delete} />
                         )
                     }
-                    <div className="TableSearch">
+                    <div className="TableSearch d-flex align-items-center">
                         <Input
                             label="Search"
                             compact
+                            fullwidth={true}
                             icon={<FiSearch />}
                             inputValue={search}
                             setInputValue={setSearch}
@@ -143,11 +203,14 @@ function Component({
                     {loading &&
                         <tbody className="TableLoading">
                             <tr className="Spinner">
-                                <td><MoonLoader
+                                <td>
+                                    <ClinkLoader
+                                    />
+                                    {/* <MoonLoader
                                     size={34}
                                     color={"grey"}
                                     loading={loading}
-                                />
+                                    /> */}
                                 </td>
                             </tr>
                         </tbody>
@@ -183,6 +246,7 @@ function Component({
                         </tbody> :
                         <tbody {...getTableBodyProps()}>
                             {page.map((row, i) => {
+                                //row.isExpanded = row.original.expand;
                                 prepareRow(row);
 
                                 const MenuActions = [
@@ -222,43 +286,50 @@ function Component({
                                 ].filter(x => x !== "")
 
                                 return (
-                                    <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : onClickRow && 'selectable'}
-                                        onClick={() => onClickRow ? onClickRow(row.original) : null}
-                                    >
+                                    <>
+                                        <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
 
-                                        {row.cells.map(cell => {
-                                            return (
-                                                <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
-                                            );
-                                        })}
+                                            {row.cells.map(cell => {
+                                                return (
+                                                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                                );
+                                            })}
 
-                                        {(MenuActions.length > 0) &&
-                                            <td key={i}>
-                                                <div style={{
-                                                    display: 'flex',
-                                                }}>
-                                                    {/* <Dropdown label="Actions" items={MenuActions} /> */}
-                                                    <UncontrolledDropdown>
-                                                        <DropdownToggle tag="span" className="More">
-                                                            <FiMoreHorizontal style={{
-                                                                color: 'grey',
-                                                                fontSize: '1.2rem',
-                                                            }} />
-                                                        </DropdownToggle>
-                                                        <DropdownMenu>
-                                                            {MenuActions.map((item, key) =>
-                                                                item.disabled ?
-                                                                    null :
-                                                                    <DropdownItem key={key} onClick={item.onClick}>
-                                                                        {item.icon} {item.name}
-                                                                    </DropdownItem>
-                                                            )}
-                                                        </DropdownMenu>
-                                                    </UncontrolledDropdown>
-                                                </div>
-                                            </td>
+                                            {(MenuActions.length > 0) &&
+                                                <td key={i}>
+                                                    <div style={{
+                                                        display: 'flex',
+                                                    }}>
+                                                        {/* <Dropdown label="Actions" items={MenuActions} /> */}
+                                                        <UncontrolledDropdown>
+                                                            <DropdownToggle tag="span" className="More">
+                                                                <FiMoreHorizontal style={{
+                                                                    color: 'grey',
+                                                                    fontSize: '1.2rem',
+                                                                }} />
+                                                            </DropdownToggle>
+                                                            <DropdownMenu>
+                                                                {MenuActions.map((item, key) =>
+                                                                    item.disabled ?
+                                                                        null :
+                                                                        <DropdownItem key={key} onClick={item.onClick}>
+                                                                            {item.icon} {item.name}
+                                                                        </DropdownItem>
+                                                                )}
+                                                            </DropdownMenu>
+                                                        </UncontrolledDropdown>
+                                                    </div>
+                                                </td>
+                                            }
+                                        </tr>
+                                        {
+                                            row.isExpanded ? <tr>
+                                                <td className="SubRowComponent" colSpan={visibleColumns.length}>
+                                                    {row.original.subComponent && row.original.subComponent(row.original)}
+                                                </td>
+                                            </tr> : null
                                         }
-                                    </tr>
+                                    </>
                                 );
                             })}
                         </tbody>
@@ -324,5 +395,23 @@ function Component({
         </div>
     )
 }
+
+const IndeterminateCheckbox = forwardRef(
+    ({ indeterminate, ...rest }, ref) => {
+        const defaultRef = useRef()
+        const resolvedRef = ref || defaultRef
+
+        // console.log('LOG', resolvedRef)
+
+
+        useEffect(() => {
+            resolvedRef.current.indeterminate = indeterminate
+        }, [resolvedRef, indeterminate])
+
+        return (
+            <input type="checkbox" ref={resolvedRef} {...rest} />
+        )
+    }
+);
 
 export default Component;

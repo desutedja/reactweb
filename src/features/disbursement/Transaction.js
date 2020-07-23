@@ -9,7 +9,7 @@ import { FiCheck, FiSearch, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import Tab from '../../components/Tab';
 
-import Table from '../../components/Table';
+import Table from '../../components/TableWithSelection';
 import { getTransactionDisbursement, refresh, downloadTransactionDisbursement } from '../slices/transaction';
 import {
     toMoney

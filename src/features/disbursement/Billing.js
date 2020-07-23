@@ -3,7 +3,7 @@ import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
-import Table from '../../components/Table';
+import Table from '../../components/TableWithSelection';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';

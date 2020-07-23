@@ -1,5 +1,5 @@
-import React, { useEffect, useState, forwardRef, useRef } from 'react'
-import { useTable, useExpanded, usePagination, useSortBy, useRowSelect, } from 'react-table'
+import React, { useEffect, useState } from 'react'
+import { useTable, useExpanded, usePagination, useSortBy } from 'react-table'
 import ClinkLoader from './ClinkLoader';
 import {
     FiChevronsLeft, FiChevronLeft,
@@ -33,7 +33,6 @@ function Component({
     onClickEdit,
     renderActions,
     deleteSelection,
-    onSelection,
 }) {
     const {
         getTableProps,
@@ -62,26 +61,9 @@ function Component({
         useSortBy,
         useExpanded,
         usePagination,
-        useRowSelect,
         hooks => {
             hooks.visibleColumns.push(columns => {
                 return [
-                    {
-                        id: 'selection',
-                        Header: ({ getToggleAllRowsSelectedProps }) => (
-                            <div>
-                                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-                            </div>
-                        ),
-                        Cell: ({ row }) => {
-                            // console.log(row.getToggleRowSelectedProps())
-                            return (
-                                <div >
-                                    <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-                                </div>
-                            )
-                        }
-                    },
                     {
                         id: 'expander',
                         Header: () => null,
@@ -144,14 +126,6 @@ function Component({
             clearTimeout(searchTimeout);
         }
     }, [search])
-
-    useEffect(() => {
-        const selectedRows = selectedRowIds ?
-            Object.keys(selectedRowIds).map(el => page[el] && page[el].original) : [];
-        onSelection && onSelection(selectedRows);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, selectedRowIds]);
 
     return (
         <div className="Table">
@@ -395,23 +369,5 @@ function Component({
         </div>
     )
 }
-
-const IndeterminateCheckbox = forwardRef(
-    ({ indeterminate, ...rest }, ref) => {
-        const defaultRef = useRef()
-        const resolvedRef = ref || defaultRef
-
-        // console.log('LOG', resolvedRef)
-
-
-        useEffect(() => {
-            resolvedRef.current.indeterminate = indeterminate
-        }, [resolvedRef, indeterminate])
-
-        return (
-            <input type="checkbox" ref={resolvedRef} {...rest} />
-        )
-    }
-);
 
 export default Component;

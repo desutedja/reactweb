@@ -6,7 +6,7 @@ import AnimatedNumber from "animated-number-react";
 
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
-import Table from '../../components/Table';
+import Table from '../../components/TableWithSelection';
 import Button from '../../components/Button';
 import { getTransactionDetails, getTransactionSettlement, refresh, downloadTransactionSettlement } from '../slices/transaction';
 import { trxStatusColor } from '../../settings';

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import Table from '../../../../components/TableNoSelection';
+import Table from '../../../../components/Table';
 import Modal from '../../../../components/Modal';
 
 function Component() {
