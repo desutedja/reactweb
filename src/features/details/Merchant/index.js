@@ -62,7 +62,7 @@ function Component() {
 
     return (
         <Template
-            image={data.logo}
+            image={data.logo || "placeholder"}
             title={data.name}
             phone={data.phone}
             loading={!data.id}
