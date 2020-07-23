@@ -60,7 +60,8 @@ function Component() {
             { label: 'building_unit', 
                 disabled: data.consumer_role !== 'resident',
                 lfmt: () => "Target Unit", 
-                vfmt: (v) => v && v.length > 0 ? v.map( el => el.number + " " + el.section_name ).join(', ') : "All" },
+                vfmt: (v) => v && v.length > 0 ? v.map( el => toSentenceCase(el.section_type) + " " + 
+                    toSentenceCase(el.section_name) + " " + el.number).join(', ') : "All" },
             { label: 'merchant',
                 disabled: data.consumer_role !== 'merchant',
                 lfmt: () => "Target Merchant",
@@ -96,7 +97,6 @@ function Component() {
         <Template
             image={data.image}
             title={data.title}
-            imageTitle=''
             loading={!data.id}
             labels={["Details", "Contents"]}
             contents={[

@@ -39,7 +39,7 @@ function Component({ image, title, website, phone, merchant,
                     }
                     <img
                         alt="Avatar"
-                        src={image ? image :
+                        src={image && image !== "placeholder" ? image :
                             require('../../../assets/fallback.jpg')}
                         style={{
                             height: imgLoading ? 0 : 400,
@@ -50,7 +50,7 @@ function Component({ image, title, website, phone, merchant,
                         onLoad={() => setImgLoading(false)}
                         onError={() => setImgLoading(false)}
                     />
-                    {imageTitle && title && <h3 style={{
+                    {title && <h3 style={{
                         marginBottom: 16,
                     }}>{title}</h3>}
                     {website && <div className="row">

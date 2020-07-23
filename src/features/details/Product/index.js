@@ -32,11 +32,11 @@ const labels = {
         "measurement_unit",
     ],
     "Pricing": [
-        { label: "base_price", labelFormatter: () => "Base Price", valueFormatter: (val) => toMoney(val) },
-        { label: "selling_price", labelFormatter: () => "Selling Price", valueFormatter: (val) => toMoney(val) },
-        { label: "total_selling_price", labelFormatter: (el) => "Display Price", valueFormatter: (val) => toMoney(val) },
-        { label: "admin_fee", labelFormatter: (el) => "Admin Fee", valueFormatter: (val) => val + "%" },
-        { label: "discount_fee", labelFormatter: (el) => "Discount", valueFormatter: (val) => val + "%" },
+        { label: "base_price", lfmt: () => "Base Price", vfmt: (val) => toMoney(val) },
+        { label: "selling_price", lfmt: () => "Selling Price", vfmt: (val) => toMoney(val) },
+        { label: "total_selling_price", lfmt: (el) => "Display Price", vfmt: (val) => toMoney(val) },
+        { label: "admin_fee", lfmt: (el) => "Admin Fee", vfmt: (val) => val + "%" },
+        { label: "discount_fee", lfmt: (el) => "Discount", vfmt: (val) => val + "%" },
     ],
 };
 
