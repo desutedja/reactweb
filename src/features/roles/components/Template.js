@@ -165,6 +165,7 @@ function Component({ role, children }) {
                     {items.length === 0 && <div className="NotificationModal-empty">
                         No notifications.
                     </div>}
+                    <div style={{ height: '1000px', overflow: 'scroll' }} >
                     {items.length > 0 && items.map(el => 
                     <div class="Container" style={{ margin:'10px 0px', padding: '14px', display: 'flex', cursor: 'pointer'}} onClick={
                         () => { history.push("/" + role + "/task/" + el.topic_ref_id); setNotifModal(false); }}>
@@ -182,6 +183,7 @@ function Component({ role, children }) {
                         </div>
                         )
                     }
+                    </div>
                 </Loading>
             </Modal>
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title} subtitle={subtitle}

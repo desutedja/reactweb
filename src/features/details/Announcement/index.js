@@ -46,32 +46,32 @@ function Component() {
         useMemo(() => ({
         'Information': [
             'id',
-            { label: 'created_on', labelFormatter: () => "Created On" , valueFormatter: (val) => val ? dateTimeFormatter(val, "-") : "-" },
-            { label: 'modified_on', labelFormatter: () => "Last Modified", valueFormatter: (val) => val ? dateTimeFormatter(val, "-") : "-" },
+            { label: 'created_on', lfmt: () => "Created On" , vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
+            { label: 'modified_on', lfmt: () => "Last Modified", vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
         ],
         'Consumer': [
-            { label: 'consumer_role', valueFormatter: (val) => toSentenceCase(val) },
+            { label: 'consumer_role', vfmt: (val) => toSentenceCase(val) },
             { label: 'building', 
                 disabled: (data.consumer_role === 'merchant' && data.consumer_role === 'centratama'),
-                labelFormatter: () => "Target Building", 
-                valueFormatter: (v) => v && v.length > 0 ? v.map( el => 
+                lfmt: () => "Target Building", 
+                vfmt: (v) => v && v.length > 0 ? v.map( el => 
                     el.building_name
                 ).join(', ') : "All" },
             { label: 'building_unit', 
                 disabled: data.consumer_role !== 'resident',
-                labelFormatter: () => "Target Unit", 
-                valueFormatter: (v) => v && v.length > 0 ? v.map( el => el.number + " " + el.section_name ).join(', ') : "All" },
+                lfmt: () => "Target Unit", 
+                vfmt: (v) => v && v.length > 0 ? v.map( el => el.number + " " + el.section_name ).join(', ') : "All" },
             { label: 'merchant',
                 disabled: data.consumer_role !== 'merchant',
-                labelFormatter: () => "Target Merchant",
-                valueFormatter: (v) => v && v.length > 0 ? v.map( el => el.merchant_name ).join(', ') : "All" },
+                lfmt: () => "Target Merchant",
+                vfmt: (v) => v && v.length > 0 ? v.map( el => el.merchant_name ).join(', ') : "All" },
         ],
         'Publisher': [
-            { label: 'publish', labelFormatter: () => "Status", valueFormatter: (val) => val === 0 ? <Pill color="secondary">Draft</Pill> : 
+            { label: 'publish', lfmt: () => "Status", vfmt: (val) => val === 0 ? <Pill color="secondary">Draft</Pill> : 
             <Pill color="success">Published</Pill> },
-            { label: 'publisher', labelFormatter: () => "Publisher ID" },
+            { label: 'publisher', lfmt: () => "Publisher ID" },
             'publisher_name',
-            { label: 'publisher_role', valueFormatter: (v) => { 
+            { label: 'publisher_role', vfmt: (v) => { 
                 if (v === "sa") return "Super Admin";
                 else if(v === "bm") return "Building Management Admin"
                 else return v;

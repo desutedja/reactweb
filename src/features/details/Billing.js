@@ -41,6 +41,8 @@ function Component() {
     const [items, setItems] = useState([]);
     const [active, setActive] = useState(0);
 
+    const { role } = useSelector(state => state.auth);
+
     const { selected, loading, unit, refreshToggle } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
@@ -65,7 +67,7 @@ function Component() {
 
     return (
         <Template
-            title={toSentenceCase(selected.building_name) + ", " +
+            title={(role === "sa" ? toSentenceCase(selected.building_name) + ", " : "" ) +
                    toSentenceCase(selected.section_type) + " " + 
                    toSentenceCase(selected.section_name) + " " + selected.number}
             loading={false}
@@ -78,6 +80,8 @@ function Component() {
                     {unit.items.length > 0 && <div className="Container" style={{
                         flexDirection: 'column',
                     }}>
+                        <h5> Billing Month </h5>
+                        <hr/>
                         {unit.items.map((el, index) => <div
                             className={index === active ? "GroupActive" : "Group"}
                             onClick={() => setActive(index)}

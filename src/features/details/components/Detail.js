@@ -92,10 +92,10 @@ function Component({ imgPreview = false, data, labels, type = "",
                             return !el.disabled ?
                                 <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
                                     <Column flex={3} style={{ fontWeight: 'bold', fontSize: '1em', textAlign: 'left' }}>
-                                        {el.labelFormatter ? el.labelFormatter(el) : formatLabel(el)}
+                                        {el.lfmt ? el.lfmt(el) : formatLabel(el)}
                                     </Column>
                                     <Column flex={9} style={{ fontWeight: 'normal', fontSize: '1em', }}>
-                                        {el.valueFormatter ? el.valueFormatter(data[el.label]) : formatValue(el, data[el])}
+                                        {el.vfmt ? el.vfmt(data[el.label]) : formatValue(el, data[el])}
                                     </Column>
                                 </Row> : null;
                         })}
