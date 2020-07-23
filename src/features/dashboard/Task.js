@@ -368,7 +368,7 @@ function Component() {
                                             <div><b>{resolver.firstname + ' ' + resolver.lastname}</b></div>
                                             <div className="text-capitalize">{resolver.staff_role.replace('_', ' ')}</div>
                                         </div>
-                                        <div className="col-auto BigNumber">
+                                        <div className="col-auto BigNumber black">
                                             {resolver.resolved_task}
                                         </div>
                                     </li>
