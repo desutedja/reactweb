@@ -12,9 +12,11 @@ import { toMoney, getDatesRange } from '../../utils';
 import { endpointMerchant, endpointTransaction } from '../../settings';
 
 import './style.css';
-import { Line, Legend, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, ComposedChart, ResponsiveContainer } from 'recharts';
+import { Line, Cell, Legend, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, ComposedChart, ResponsiveContainer } from 'recharts';
 import { get } from '../slice';
 
+const colorsSuccess = ['#577590', '#43aa8b', '#90be6d', '#f9c74f'];
+const colorsFailed = ['#9a031e', '#f3722c', '#f8961e', '#f9c74f'];
 // const formatValue = (value) => value.toFixed(0);
 // const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
 const formatValue = (value) => value.toFixed(0);
@@ -163,6 +165,13 @@ function Component() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [trxData])
 
+    const transactionsSummary = [
+        { header: 'Orders', accessor: trxSumm.total_transaction_count },
+        { header: 'Amount', accessor: toMoney(trxSumm.total_transaction_amount) },
+        { header: 'Settled', accessor: toMoney(trxSumm.total_settled_transaction_amount) },
+        { header: 'Unsettled', accessor: toMoney(trxSumm.total_unsettled_transaction_amount) },
+    ]
+
     return (
         <>
             <div className="row no-gutters">
@@ -238,7 +247,7 @@ function Component() {
             </div>
             <div className="row no-gutters">
                 <div className="col-12">
-                    <div className="Container flex-column pb-5 pr-4">
+                    <div className="Container flex-column pr-4">
                         <div className="row mb-5 justify-content-between">
                             <div className="col">
                                 <h5>Transaction Statistics</h5>
@@ -268,7 +277,7 @@ function Component() {
                                 </div>
                             </div>
                         </div>
-                        <div className="row">
+                        <div className="row pb-5">
                             <div className="col px-4" style={{
                                 height: '360px'
                             }}>
@@ -277,7 +286,7 @@ function Component() {
                                         <XAxis height={50} dy={10} dataKey="Date" />
                                         <YAxis axisLine={false} tickLine={false} width={50} dx={-10} dataKey="Total Transaction" />
                                         <YAxis axisLine={false} yAxisId="right" width={60} dx={-10} dataKey="Amount Transaction"
-                                        tickFormatter={el => el && el.toString().length > 3 ? toMoney((el + '').slice(0, -3)).slice(3) + 'k' : el}
+                                        tickFormatter={el => el && el.toString().length > 3 ? (el + '').slice(0, -3) + 'k' : el}
                                         />
                                         <Tooltip />
                                         <Legend />
@@ -290,77 +299,173 @@ function Component() {
                                 </ResponsiveContainer>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div className="row no-gutters">
+                <div className="col">
+                    <div className="Container flex-column">
                         <div className="row">
                             <div className="col">
-                                
+                                <h5>Most Successful Order Category</h5>
                             </div>
-                            <div className="col">
-
+                        </div>
+                        <div className="row">
+                            <div className="col" style={{
+                                height: '280px'
+                            }}>
+                                <ResponsiveContainer className="mt-5" width='100%'>
+                                    <PieChart>
+                                        <Pie data={successData} dataKey="qty" nameKey="task_type"
+                                        cx="50%" cy="50%" innerRadius={55} outerRadius={100}
+                                        fill="#8884d8" label>
+                                        {   
+                                            successData.map((entry, i) => <Cell fill={colorsSuccess[i]}/>)
+                                        }
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
                             </div>
+                        </div>
+                        <div className="border-bottom mt-5 pt-4 mx-auto"></div>
+                        <div className="row mt-5">
                             <div className="col">
-
+                                <ul className="row" style={{
+                                    listStyle: 'none',
+                                    padding: '0'
+                                }}>
+                                    {successData.map((data, i) => (
+                                        <>
+                                        <li className="text-capitalize py-1 col-6">
+                                            <svg height="14" width="14" >
+                                                <circle cx="7" cy="7" r="7" fill={colorsSuccess[i]} />
+                                            </svg>
+                                            <span className="ml-3 h6">{data.category}</span>
+                                        </li>
+                                        </>
+                                    ))}
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div className="Row">
-                <div className="Container" style={{
-                    marginRight: 0,
-                    flexDirection: 'column',
-                }}>
-                    <h5 className="mb-3">Transaction Summary</h5>
-                    {/* {JSON.stringify(trxSumm)} */}
-                    <div className="mb-2">Orders {trxSumm.total_transaction_count}</div>
-                    <div className="mb-2">Amount {toMoney(trxSumm.total_transaction_amount)}</div>
-                    <div className="mb-2">Settled {toMoney(trxSumm.total_settled_transaction_amount)}</div>
-                    <div>Unsettled {toMoney(trxSumm.total_unsettled_transaction_amount)}</div>
-                </div>
-            </div>
-            <div className="Row">
-                <div className="Container" style={{
-                    flexDirection: 'column',
-                }}>
-                    {/* {JSON.stringify(successData)} */}
-                    <h5>Most Successful Order Category</h5>
-                    <PieChart width={400} height={250}>
-                        <Tooltip />
-                        <Pie data={successData} dataKey="qty" nameKey="category"
-                            cx="50%" cy="50%" outerRadius={50} fill="#8884d8" label />
-                    </PieChart>
-                </div>
-                <div className="Container" style={{
-                    marginRight: 0,
-                    flexDirection: 'column',
-                }}>
-                    <h5>Most Failed Order Category</h5>
-                    {/* {JSON.stringify(failedData)} */}
-                    <PieChart width={400} height={250}>
-                        <Tooltip />
-                        <Pie data={failedData} dataKey="qty" nameKey="category"
-                            cx="50%" cy="50%" outerRadius={50} fill="#8884d8" label />
-                    </PieChart>
-                </div>
-            </div>
-            <div className="Row">
-                <div className="d-flex flex-column">
-                    <div className="Container" style={{
-                        justifyContent: 'space-between',
-                    }}>
-                        <h5>Outstanding Orders</h5>
-                        {merchantInfo.outstanding_orders}
-                        {/* {JSON.stringify(merchantInfo)} */}
+                <div className="col">
+
+                    <div className="Container flex-column">
+                        <div className="row">
+                            <div className="col">
+                                <h5>Most Failed Order Category</h5>
+                            </div>
+                        </div>
+                        <div className="row">
+                            <div className="col" style={{
+                                height: '280px'
+                            }}>
+                                <ResponsiveContainer className="mt-5" width='100%'>
+                                    <PieChart>
+                                        <Pie data={failedData} dataKey="qty" nameKey="task_type"
+                                        cx="50%" cy="50%" innerRadius={55} outerRadius={100}
+                                        fill="#8884d8" label>
+                                        {   
+                                            failedData.map((entry, i) => <Cell fill={colorsFailed[i]}/>)
+                                        }
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </div>
+                        </div>
+                        <div className="border-bottom mt-5 pt-4 mx-auto"></div>
+                        <div className="row mt-5">
+                            <div className="col">
+                                <ul className="row" style={{
+                                    listStyle: 'none',
+                                    padding: '0'
+                                }}>
+                                    {failedData.map((data, i) => (
+                                        <>
+                                        <li className="text-capitalize py-1 col-6">
+                                            <svg height="14" width="14" >
+                                                <circle cx="7" cy="7" r="7" fill={colorsFailed[i]} />
+                                            </svg>
+                                            <span className="ml-3 h6">{data.category}</span>
+                                        </li>
+                                        </>
+                                    ))}
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div className="Container" style={{
-                    marginRight: 0,
-                    flexDirection: 'column',
-                }}>
-                    <h5>Most Ordered Items</h5>
-                    {/* {JSON.stringify(orderData)} */}
-                    {orderData.map(el => <div key={el.id}>
-                        {el.name} {el.qty}
-                    </div>)}
+                <div className="col-3">
+                    <div className="row">
+                        <div className="col">
+                            <div className="Container" style={{
+                            marginRight: 0,
+                            flexDirection: 'column',
+                            }}>
+                                <div className="row">
+                                    <div className="col">
+                                        <h5 className="mb-4">Transaction Summary</h5>
+                                    </div>
+                                </div>
+                                {transactionsSummary.map((row, i) => (
+                                <div key={i} className="row py-2">
+                                    <div className="col">
+                                        <span>{row.header}</span>
+                                    </div>
+                                    <div className="col-auto BigNumber blue">
+                                        <span>{row.accessor}</span>
+                                    </div>
+                                </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <div className="Container" style={{
+                            justifyContent: 'space-between',
+                            }}>
+                                <h5>Outstanding Orders</h5>
+                                <span className="BigNumber blue">{merchantInfo.outstanding_orders}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col">
+                            <div className="Container" style={{
+                                marginRight: 0,
+                                flexDirection: 'column',
+                            }}>
+                                <div className="row">
+                                    <div className="col">
+                                        <h5 className="mb-4">Most Ordered Items</h5>
+                                    </div>
+                                </div>
+                                {orderData.map((el, i) => 
+                                <>
+                                    <div key={el.id} className="row">
+                                        <div className="col-auto">
+                                            <div style={{
+                                                width: '10px',
+                                                fontSize: '1.3rem',
+                                                fontWeight: 'bold'
+                                            }}>#{i + 1}</div>
+                                        </div>
+                                        <div className="col d-flex align-items-center">
+                                            <div>{el.name}</div>
+                                        </div>
+                                        <div className="col-auto BigNumber blue">
+                                            {el.qty}
+                                        </div>
+                                    </div>
+                                </>
+                                )}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </>

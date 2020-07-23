@@ -73,7 +73,7 @@ function Component({ role, children }) {
                 },
                 commentReadCallback: function (data) {
                     // On comment has been read by user
-                    console.log('read', data)
+                    console.log('read callback', data)
                 },
                 loginErrorCallback: function (err) {
                     console.log(err);

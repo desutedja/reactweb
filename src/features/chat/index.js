@@ -78,8 +78,6 @@ function Component() {
             limit: 50
         }
 
-        console.log("again and again" + room.id + " " + roomID);
-
         setLoadingMessages(true);
         roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
             .then(function (comments) {
@@ -89,6 +87,7 @@ function Component() {
                 messageBottom.current.scrollIntoView();
 
                 qiscus.readComment(roomID, room.last_comment_id);
+                qiscus.receiveComment(roomID, room.last_comment_id);
             })
             .catch(function (error) {
                 // On error
@@ -116,6 +115,7 @@ function Component() {
             .then(function (rooms) {
                 // On success
                 dispatch(setRooms(rooms));
+                dispatch(setRoom(rooms[0]));
                 !roomID && dispatch(setRoomID(rooms[0].id));
                 !roomUniqueID && dispatch(setRoomUniqueID(rooms[0].unique_id));
                 dispatch(setReloadList(false));

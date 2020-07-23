@@ -62,3 +62,11 @@
     border-left: none;
     border-right: none; */
 }
+
+.black {
+    color: #212529;
+}
+
+.blue {
+    color: rgb(0, 78, 146);
+}

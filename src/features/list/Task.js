@@ -368,7 +368,7 @@ function Component() {
                 }}
                 onClickChat={row => {
                     dispatch(setSelected(row));
-                    history.push("/chat");
+                    history.push("chat");
                 }}
             />
         </>

@@ -1,5 +1,4 @@
 import React, { useCallback, useState, useEffect, useMemo } from 'react';
-import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch, FiCheck, FiFile, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
@@ -34,7 +33,6 @@ function Component() {
     const [selected, setSelected] = useState([]);
 
     let dispatch = useDispatch();
-    let { path } = useRouteMatch();
 
     const getSum = items => {
         return items.reduce((sum, el) => {
@@ -80,7 +78,7 @@ function Component() {
             <Modal isOpen={settleModal} toggle={() => {
                 setSettleModal(!settleModal)
                 setSelected([]);
-                }}
+            }}
                 title="Settlement Selection"
                 okLabel="Settle"
                 onClick={() => {
@@ -121,139 +119,134 @@ function Component() {
                     <h5>Total {toMoney(getSum(selected))}</h5>
                 </div>
             </Modal>
-            <Switch>
-                {/* <Redirect exact from={path} to={`${path}`} /> */}
-                <Route path={`${path}`}>
-                    <div className="Container">
+            <div className="Container">
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
                         <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flex: 1,
+                            marginRight: 16,
                         }}>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <div style={{
-                                    marginRight: 16,
-                                }}>
-                                    Unsettled Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.unsettled_amount}
-                                    formatValue={formatValue}
-                                />
-                            </div>
-
-                        </div>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flex: 1,
-                        }}>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <div style={{
-                                    marginRight: 16,
-                                }}>
-                                    Settled Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.settled_amount}
-                                    formatValue={formatValue}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="Container">
-                        <Table
-                            totalItems={settlement.total_items}
-                            onSelection={(selectedRows) => {
-                                setSelected(selectedRows.filter(el => el && !el.payment_settled_date));
-                            }}
-                            columns={columns}
-                            data={settlement.items}
-                            loading={loading}
-                            pageCount={settlement.total_pages}
-                            fetchData={useCallback((pageIndex, pageSize, search) => {
-                                dispatch(getBillingSettlement(pageIndex, pageSize, search,
-                                    building, settled));
-                                // eslint-disable-next-line react-hooks/exhaustive-deps
-                            }, [dispatch, refreshToggle, building, settled])}
-                            filters={[
-                                {
-                                    hidex: settled === "",
-                                    label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
-                                    delete: () => setSettled(''),
-                                    component: (toggleModal) =>
-                                            <Filter
-                                                data={[
-                                                    {value: '0', label: 'Unsettled'},
-                                                    {value: '1', label: 'Settled'},
-                                                ]}
-                                                onClick={(el) => {
-                                                    setSettled(el.value);
-                                                    toggleModal(false);
-                                                }}
-                                                onClickAll={() => {
-                                                    setSettled("");
-                                                    toggleModal(false);
-                                                }}
-                                            />
-                                },
-                                {
-                                    hidex: building === "",
-                                    label: <p>Building: {building ? buildingName : "All"}</p>,
-                                    delete: () => setBuilding(''),
-                                    component: (toggleModal) =>
-                                        <>
-                                            <Input
-                                                label="Search"
-                                                compact
-                                                icon={<FiSearch />}
-                                                inputValue={search}
-                                                setInputValue={setSearch}
-                                            />
-                                            <Filter
-                                                data={buildings}
-                                                onClick={(el) => {
-                                                    setBuilding(el.value);
-                                                    setBuildingName(el.label);
-                                                    toggleModal(false);
-                                                    setSearch("");
-                                                }}
-                                                onClickAll={() => {
-                                                    setBuilding("");
-                                                    setBuildingName("");
-                                                    toggleModal(false);
-                                                    setSearch("");
-                                                }}
-                                            />
-                                        </>
-                                },
-                            ]}
-                            renderActions={(selectedRowIds, page) => {
-                                return ([
-                                    <Button
-                                        disabled={Object.keys(selectedRowIds).length === 0}
-                                        onClick={() => {
-                                            setSettleModal(true);
-                                        }}
-                                        icon={<FiCheck />}
-                                        label="Settle"
-                                    />,
-                                    <Button
-                                        onClick={() => { }}
-                                        icon={<FiFile />}
-                                        label="Upload Settlement"
-                                    />,
-                                    <Button label="Download .csv" icon={<FiDownload />}
-                                        onClick={() => dispatch(downloadBillingSettlement(search, building))}
-                                    />
-                                ])
-                            }}
+                            Unsettled Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.unsettled_amount}
+                            formatValue={formatValue}
                         />
                     </div>
-                </Route>
-            </Switch>
+
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <div style={{
+                            marginRight: 16,
+                        }}>
+                            Settled Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.settled_amount}
+                            formatValue={formatValue}
+                        />
+                    </div>
+                </div>
+            </div>
+            <div className="Container">
+                <Table
+                    totalItems={settlement.total_items}
+                    onSelection={(selectedRows) => {
+                        setSelected(selectedRows.filter(el => el && !el.payment_settled_date));
+                    }}
+                    columns={columns}
+                    data={settlement.items}
+                    loading={loading}
+                    pageCount={settlement.total_pages}
+                    fetchData={useCallback((pageIndex, pageSize, search) => {
+                        dispatch(getBillingSettlement(pageIndex, pageSize, search,
+                            building, settled));
+                        // eslint-disable-next-line react-hooks/exhaustive-deps
+                    }, [dispatch, refreshToggle, building, settled])}
+                    filters={[
+                        {
+                            hidex: settled === "",
+                            label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
+                            delete: () => setSettled(''),
+                            component: (toggleModal) =>
+                                <Filter
+                                    data={[
+                                        { value: '0', label: 'Unsettled' },
+                                        { value: '1', label: 'Settled' },
+                                    ]}
+                                    onClick={(el) => {
+                                        setSettled(el.value);
+                                        toggleModal(false);
+                                    }}
+                                    onClickAll={() => {
+                                        setSettled("");
+                                        toggleModal(false);
+                                    }}
+                                />
+                        },
+                        {
+                            hidex: building === "",
+                            label: <p>Building: {building ? buildingName : "All"}</p>,
+                            delete: () => setBuilding(''),
+                            component: (toggleModal) =>
+                                <>
+                                    <Input
+                                        label="Search"
+                                        compact
+                                        icon={<FiSearch />}
+                                        inputValue={search}
+                                        setInputValue={setSearch}
+                                    />
+                                    <Filter
+                                        data={buildings}
+                                        onClick={(el) => {
+                                            setBuilding(el.value);
+                                            setBuildingName(el.label);
+                                            toggleModal(false);
+                                            setSearch("");
+                                        }}
+                                        onClickAll={() => {
+                                            setBuilding("");
+                                            setBuildingName("");
+                                            toggleModal(false);
+                                            setSearch("");
+                                        }}
+                                    />
+                                </>
+                        },
+                    ]}
+                    renderActions={(selectedRowIds, page) => {
+                        return ([
+                            <Button
+                                disabled={Object.keys(selectedRowIds).length === 0}
+                                onClick={() => {
+                                    setSettleModal(true);
+                                }}
+                                icon={<FiCheck />}
+                                label="Settle"
+                            />,
+                            <Button
+                                onClick={() => { }}
+                                icon={<FiFile />}
+                                label="Upload Settlement"
+                            />,
+                            <Button label="Download .csv" icon={<FiDownload />}
+                                onClick={() => dispatch(downloadBillingSettlement(search, building))}
+                            />
+                        ])
+                    }}
+                />
+            </div>
         </div>
     )
 }
