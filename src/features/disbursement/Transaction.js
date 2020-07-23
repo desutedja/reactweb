@@ -456,7 +456,7 @@ function Component() {
                                             setFilter(e.target.value)
                                         }}
                                         >
-                                            <option selected={true}>All</option>
+                                            <option selected={true} value="">All</option>
                                             {filtersDisbursement.map(filter => (
                                             <option value={filter.value}>{filter.label}</option>
                                             ))}
@@ -500,7 +500,7 @@ function Component() {
                         justifyContent: 'space-between',
                     }}>
                         <div>
-                            Total Undisbursed Amount
+                            Undisbursed Amount
                         </div>
                         <div style={{
                             display: 'flex',
@@ -510,13 +510,12 @@ function Component() {
                                 fontSize: '1.2rem',
                                 marginRight: 16,
                             }}>
-                                {toMoney((info.total_courier_undisbursed_transaction_amount +
-                                    info.total_merchant_undisbursed_transaction_amount) || 0)}
+                                {toMoney(disbursement.items.undisbursed_amount)}
                             </b>
                             <MyButton label="Disburse All"
-                                disabled={disbursement.items.some(item => item.disbursement_date)}
+                                disabled={disbursement.items.data.some(item => item.disbursement_date)}
                                 onClick={() => {
-                                    setSelected(disbursement.items);
+                                    setSelected(disbursement.items.data);
                                     setDisburseModal(true);
                                 }}
                             />
@@ -538,7 +537,7 @@ function Component() {
                         noContainer={true}
                         totalItems={disbursement.total_items}
                         columns={columns}
-                        data={disbursement.items}
+                        data={disbursement.items.data}
                         loading={loading}
                         pageCount={disbursement.total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
