@@ -7,7 +7,7 @@ import Breadcrumb from '../../../components/Breadcrumb';
 
 import { setConfirmDelete } from '../../slice';
 
-function Component({ columns, slice, getAction, filterVars = [], filters = [], actions = [], deleteAction, ...props }) {
+function Component({ columns, slice, title='', getAction, filterVars = [], filters = [], actions = [], deleteAction, ...props }) {
 
     const {
         loading,
@@ -22,7 +22,7 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [], a
 
     return (
         <>
-            <Breadcrumb />
+            <Breadcrumb title={title}/>
             <div className="Container">
                 <Table
                     totalItems={total_items}

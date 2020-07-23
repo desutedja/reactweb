@@ -4,6 +4,7 @@ import { FiSearch, FiCheck, FiFile, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/TableWithSelection';
+import Breadcrumb from '../../components/Breadcrumb';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
@@ -75,6 +76,7 @@ function Component() {
 
     return (
         <div>
+            <Breadcrumb title="Settlement"/>
             <Modal isOpen={settleModal} toggle={() => {
                 setSettleModal(!settleModal)
                 setSelected([]);

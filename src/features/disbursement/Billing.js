@@ -2,8 +2,10 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
+import { Card, ListGroup, ListGroupItem } from 'reactstrap';
 import Table from '../../components/TableWithSelection';
 import Button from '../../components/Button';
+import Breadcrumb  from '../../components/Breadcrumb';
 import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
 import Input from '../../components/Input';
@@ -73,6 +75,7 @@ function Component() {
 
     return (
         <div>
+            <Breadcrumb title="Disbursement"/>
             <Modal isOpen={modal} toggle={() => {
                 setSelected([]);
                 setModal(!modal)
@@ -138,6 +141,7 @@ function Component() {
                             display: 'flex',
                             flexDirection: 'column',
                             flex: 1,
+                            padding: '15px',
                         }}>
                             <div style={{
                                 display: 'flex',
@@ -156,6 +160,7 @@ function Component() {
                             display: 'flex',
                             flexDirection: 'column',
                             flex: 1,
+                            padding: '15px',
                         }}>
                             <div style={{
                                 display: 'flex',
@@ -176,30 +181,37 @@ function Component() {
                         flexWrap: 'wrap',
                         marginTop: 16,
                     }}>
-                        {disbursement.items.length > 0 && <div className="Container" style={{
-                            flexDirection: 'column',
-                        }}>
-                            <h5 style={{
-                                marginBottom: 16,
-                            }}>Select Management</h5>
-                            {disbursement.items.map((el, index) => <div
+                    
+                    <div className="Container">
+                        {disbursement.items.length > 0 && <Card className="Container" style={{ boxShadow: 'none' }} >
+                            <ListGroup>
+                            <h5 style={{ marginBottom: 16 }}>Select Management</h5> 
+                            {disbursement.items.map((el, index) => <ListGroupItem
                                 key={index}
-                                className={index === active ? "GroupActive" : "Group"}
                                 onClick={() => setActive(index)}
+                                active={index === active}
+                                action
+                                tag="a"
+                                href="#"
                             >
-                                {el.management_name + ' - ' + el.building_name}
-                            </div>)}
-                        </div>}
+                                <div style={{ display: 'block' }}>
+                                    <div><b>{el.management_name}</b></div>
+                                    <div>{el.building_name}</div>
+                                </div>
+                            </ListGroupItem>)}
+                        </ListGroup></Card>}
+
                         <div style={{
-                            flex: 2,
+                            flex: 4,
                             flexDirection: 'column',
                         }}>
-                            <div className="Container" style={{
-                                alignItems: 'center',
+                            <Card  className="Container" style={{
+                                boxShadow: 'none',
                                 justifyContent: 'space-between',
+                                flexDirection: 'row',
                             }}>
                                 <div>
-                                    Total Undisbursed Amount
+                                    Undisbursed Amount For <b>{disbursement.items[active].management_name}</b>
                                 </div>
                                 <div style={{
                                     display: 'flex',
@@ -219,8 +231,8 @@ function Component() {
                                         onClick={() => dispatch(downloadBillingDisbursement())}
                                     />
                                 </div>
-                            </div>
-                            <div className="Container">
+                            </Card>
+                            <Card className="Container" style={{ boxShadow: 'none' }}>
                                 <Table
                                     onSelection={(selectedRows) => {
                                         setSelected(selectedRows.filter(el => !el.disbursement_date));
@@ -260,9 +272,10 @@ function Component() {
                                         ])
                                     }}
                                 />
-                            </div>
+                            </Card>
                         </div>
                     </div>
+              </div>
         </div>
     )
 }

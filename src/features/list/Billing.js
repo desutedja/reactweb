@@ -68,6 +68,7 @@ function Component() {
 
     return (
         <Template
+            title='Unit'
             columns={columns}
             slice='billing'
             getAction={getBillingUnit}

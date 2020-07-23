@@ -62,6 +62,7 @@ function Component() {
             { label: 'gender', lfmt: () => "Target Gender", vfmt: (v) => !v ? "Not Specified" : (v === "M" ? "Male" : "Female") },
             { label: 'occupation', lfmt: () => "Target Occupation", vfmt: (v) => !v ? "Not Specified" : toSentenceCase(v) },
             { label: 'default_priority_score', lfmt: () => "Weight" , vfmt: (v) => v},
+            { label: 'total_priority_score', lfmt: () => "Total Weight" , vfmt: (v) => v},
         ],
         "Statistics": [
             'total_actual_click',
