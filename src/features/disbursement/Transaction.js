@@ -538,7 +538,7 @@ function Component() {
                             dispatch(getTransactionDisbursement(pageIndex, pageSize, search,
                                 type, merchant, courier, filter));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, merchant, courier])}
+                        }, [dispatch, refreshToggle, merchant, courier, filter])}
                         filters={[]}
                         actions={[]}
                         renderActions={(selectedRowIds, page) => {
