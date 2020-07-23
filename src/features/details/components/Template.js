@@ -25,7 +25,7 @@ function Component({ image, title, website, phone, merchant,
                 flex: 1,
                 overflow: 'hidden',
             }}>
-                {(image || title) && <div className="Container" style={{
+                {(image) && <div className="Container" style={{
                     flexDirection: 'column',
                     maxWidth: 360,
                 }}>

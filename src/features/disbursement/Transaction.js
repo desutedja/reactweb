@@ -20,6 +20,7 @@ import Pill from '../../components/Pill';
 import { endpointTransaction, endpointMerchant } from '../../settings';
 import { get, post } from '../slice';
 import MyButton from '../../components/Button';
+import Transaction from '../../components/cells/Transaction';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
@@ -66,7 +67,9 @@ function Component() {
     const columns = useMemo(() => {
         if (type === 'merchant') return [
             { Header: 'ID', accessor: 'id' },
-            { Header: 'Trx Code', accessor: 'trx_code' },
+            {
+                Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} id={row.trx_code} />
+            },
             {
                 Header: 'Amount', accessor: row => type === 'merchant' ?
                     toMoney(row.total_selling_price) : toMoney(row.assignee_fee)
@@ -92,7 +95,9 @@ function Component() {
         ]
         else return [
             { Header: 'ID', accessor: 'id' },
-            { Header: 'Ref Code', accessor: 'ref_code' },
+            {
+                Header: 'Ref Code', accessor: row => <Transaction items={[row.ref_code]} id={row.ref_code} />
+            },
             {
                 Header: 'Assignee Fee', accessor: row => toMoney(row.assignee_fee)
             },

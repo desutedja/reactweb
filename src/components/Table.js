@@ -17,7 +17,6 @@ import FilterButton from './FilterButton';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 function Component({
-    noContainer,
     columns,
     data,
     totalItems,
