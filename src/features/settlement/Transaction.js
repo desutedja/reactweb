@@ -81,7 +81,7 @@ function Component() {
 
     return (
         <>
-            <Modal isOpen={settleModal} toggle={() => setSettleModal(!settleModal)}
+            <Modal isOpen={settleModal} toggle={() => {setSettleModal(!settleModal); setSelected([]);}}
                 title="Settlement Selection"
                 okLabel="Flag as Settled"
                 onClick={() => {
@@ -225,7 +225,7 @@ function Component() {
                 <Table
                     totalItems={settlement.total_items}
                     onSelection={(selectedRows) => {
-                        setSelected(selectedRows);
+                        setSelected(selectedRows.filter(el => el && !el.payment_settled_date));
                     }}
                     columns={columns}
                     data={settlement.items}

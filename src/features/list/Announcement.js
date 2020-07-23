@@ -24,10 +24,10 @@ function Component() {
         { Header: 'ID', accessor: 'id' },
         { Header: 'Title', accessor: row => <a href={"/" + role + "/announcement/" + row.id}><b>{row.title}</b></a>},
         { Header: 'Consumer', accessor: row => toSentenceCase(row.consumer_role.replace(/_/g, ' ')) },
-        {
-            Header: 'Description', accessor: row => row.description.length > 50 ?
-                parse(row.description).slice(0, 50) + '...' : parse(row.description)
-        },
+        // {
+        //    Header: 'Description', accessor: row => parse(row.description) /*.length > 50 ?
+        //        parse(row.description).slice(0, 50) + '...' : parse(row.description) */
+        //},
         { Header: 'Publisher', accessor: row => <><a href={
             "/" + role + "/" + (row.publisher_role === 'sa' ? "admin" : "staff") + "/" + row.publisher
         }>{row.publisher_name}</a></> },

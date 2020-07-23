@@ -8,6 +8,7 @@ import { Switch, useHistory, useRouteMatch, Route } from 'react-router-dom';
 import QiscusSDKCore from 'qiscus-sdk-core';
 import { Toast, ToastHeader, ToastBody } from 'reactstrap';
 
+import Loading from '../../../components/Loading';
 import Row from '../../../components/Row';
 import NotFound from '../../../components/NotFound';
 import CustomAlert from '../../../components/CustomAlert';
@@ -15,11 +16,12 @@ import IconButton from '../../../components/IconButton';
 import Info from '../../../components/Info';
 import Modal from '../../../components/Modal';
 
-import { toSentenceCase } from '../../../utils';
+import { toSentenceCase, dateTimeFormatter } from '../../../utils';
 import { closeAlert, setConfirmDelete, setNotif, setBanks, get } from '../../slice';
+import { setNotificationData } from '../../../features/slices/notification';
 import { setQiscus, setUnread, setReloadList } from '../../chat/slice';
 import { logout } from '../../auth/slice';
-import { endpointResident } from '../../../settings';
+import { endpointResident, endpointManagement } from '../../../settings';
 
 const Qiscus = new QiscusSDKCore();
 
@@ -31,14 +33,24 @@ function Component({ role, children }) {
     const [expanded, setExpanded] = useState("");
     const [profile, setProfile] = useState(false);
     const [notifModal, setNotifModal] = useState(false);
+    const [loadingNotif, setLoadingNotif] = useState(false);
 
     const { alert, title, subtitle, content, confirmDelete, notif } = useSelector(state => state.main);
+    const { items, selected, unreadCount } = useSelector(state => state.notification);
     const { user } = useSelector(state => state.auth);
     const { qiscus, unread, messages } = useSelector(state => state.chat);
 
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
+
+    useEffect(() => {
+        notifModal && dispatch(get(endpointManagement + '/admin/notification', res => {
+            dispatch(setNotificationData(res.data.data));
+            //setNotifications(res.data.data);
+            setLoadingNotif(false);
+        }));
+    }, [dispatch, notifModal])
 
     useEffect(() => {
         console.log("initializing qiscus...")
@@ -70,21 +82,6 @@ function Component({ role, children }) {
                     // On success
                     console.log('Qiscus login: ' + Qiscus.isLogin);
                     dispatch(setQiscus(Qiscus));
-
-                    /*
-                    Axios.post('https://api.qiscus.com/api/v2.1/rest/add_room_participants', {
-                        "room_id": "19278255",
-                        "user_ids": [userID],
-                    }, {
-                        headers: {
-                            "Content-Type": "application/json",
-                            "QISCUS-SDK-APP-ID": "fastel-sa-hkxoyooktyv",
-                            "QISCUS-SDK-SECRET": "20b6212e9782708f9260032856be6fcb",
-                        }
-                    })
-                        .then(res => console.log('RESULT Qiscuss: ', res))
-                        .catch(err => console.log('ERROR Qiscuss: ', err))
-                   */
                 },
             },
         }).then(() => {
@@ -159,11 +156,33 @@ function Component({ role, children }) {
                 className="NotificationModal"
                 isOpen={notifModal}
                 toggle={() => setNotifModal(false)}
+                maxHeight={100}
                 disableHeader
                 disableFooter
             >
                 <p className="NotificationModal-title">Notifications</p>
-                <div className="NotificationModal-empty">No notifications.</div>
+                <Loading loading={loadingNotif}>
+                    {items.length === 0 && <div className="NotificationModal-empty">
+                        No notifications.
+                    </div>}
+                    {items.length > 0 && items.map(el => 
+                    <div class="Container" style={{ margin:'10px 0px', padding: '14px', display: 'flex', cursor: 'pointer'}} onClick={
+                        () => { history.push("/" + role + "/task/" + el.topic_ref_id); setNotifModal(false); }}>
+                            {el.image && <div style={{ backgroundColor: 'grey', padding:'10px', maxWidth:'100px', marginRight:'15px', color: 'white'  }}>
+                                {el.image}
+                            </div>}
+                            <div style={{ textAlign: 'left' }} >
+                                <b>{el.title}</b>
+                                <p style={{ margin: '8px 0px' }}>
+                                    <span style={{ padding: '2px 4px', backgroundColor: 'lightgrey'  }} >
+                                        Task</span> {dateTimeFormatter(el.created_on)}
+                                </p>
+                                <p>{el.description}</p>
+                            </div>
+                        </div>
+                        )
+                    }
+                </Loading>
             </Modal>
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title} subtitle={subtitle}
                 content={content}
@@ -205,7 +224,10 @@ function Component({ role, children }) {
                         alignItems: 'center'
                     }}>
                         <IconButton
-                            onClick={() => setNotifModal(true)}
+                            onClick={() => {
+                                setNotifModal(true);
+                                setLoadingNotif(true);
+                            }}
                         >
                             <MdNotifications />
                         </IconButton>

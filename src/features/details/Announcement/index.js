@@ -1,11 +1,12 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useCallback, useState, useMemo, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useRouteMatch, useParams } from 'react-router-dom';
 import { dateTimeFormatter, toSentenceCase } from '../../../utils'
 
-import { FiTrash } from 'react-icons/fi';
+import { FiCopy, FiArrowUpCircle, FiTrash } from 'react-icons/fi';
 import Detail from '../components/Detail';
 import Modal from '../../../components/Modal';
+import Loading from '../../../components/Loading';
 import Button from '../../../components/Button';
 import Pill from '../../../components/Pill';
 import Template from '../components/Template';
@@ -16,22 +17,30 @@ import { get } from '../../slice';
 import { endpointAdmin } from '../../../settings';
 
 function Component() {
-    // const { selected } = useSelector(state => state.announcement);
     const [data, setData] = useState({});
 
     const [ confirmDelete, setConfirmDelete ] = useState(false);
+    const [ publishing, setPublishing ] = useState(false);
 
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
     let { id } = useParams();
 
+    const { role } = useSelector(state => state.auth);
+    const { refreshToggle } = useSelector(state => state.announcement);
+
+    const publishCb = useCallback(() => { 
+          setPublishing(true);
+          dispatch(publishAnnouncement(data, history, role)) 
+    }, [data, history, role, dispatch])
+
     useEffect(() => {
         dispatch(get(endpointAdmin + '/announcement/preview/' + id, res => {
             setData(res.data.data);
-            setSelected(res.data.data);
+            dispatch(setSelected(res.data.data));
         }))
-    }, [dispatch, id])
+    }, [dispatch, refreshToggle, id])
 
     const details =
         useMemo(() => ({
@@ -76,7 +85,7 @@ function Component() {
             isOpen={confirmDelete}
             disableHeader={true}
             onClick={
-               () => dispatch(deleteAnnouncement(data, history))
+               () => dispatch(deleteAnnouncement(data, history, role))
             }
             toggle={() => setConfirmDelete(false)}
             okLabel={"Delete"}
@@ -91,11 +100,14 @@ function Component() {
             loading={!data.id}
             labels={["Details", "Contents"]}
             contents={[
-            <Detail type="Announcement" data={data} labels={details} editable={data.publish === 0}
+            <Detail type="Announcement" data={data} labels={details} 
+                editable={data.publish === 0}
                 renderButtons={() => [
-                <Button label="Publish" disabled={data.publish === 1} 
-                    onClick={() => { dispatch(publishAnnouncement(data)) }} />,
-                <Button label="Duplicate" 
+                <Loading size={10} loading={publishing && data.publish === 0}> 
+                    <Button label="Publish" icon={<FiArrowUpCircle/>} disabled={data.publish === 1} 
+                    onClick={publishCb} />
+                </Loading>,
+                <Button label="Duplicate" icon={<FiCopy/>}
                     onClick={() => { 
                         history.push({
                             pathname: url.split("/").slice(0, -1).join("/") + "/add",

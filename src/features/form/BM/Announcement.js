@@ -95,11 +95,11 @@ function Component() {
                 })}
                 edit={data => {
                     //console.log(data);
-                    dispatch(editAnnouncement(data, history, selected.id))
+                    dispatch(editAnnouncement(data, history, selected.id, "bm"))
                 }}
                 add={data => {
                     //console.log(data);
-                    dispatch(createAnnouncement(data, history))
+                    dispatch(createAnnouncement(data, history, "bm"))
                 }}
                 renderChild={props => {
                     const { setFieldValue, values, errors } = props;

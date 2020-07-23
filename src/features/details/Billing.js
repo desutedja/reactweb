@@ -8,8 +8,9 @@ import Table from '../../components/Table';
 import Filter from '../../components/Filter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { months, dateFormatter, toSentenceCase } from '../../utils';
+import { months, dateTimeFormatterCell, toSentenceCase, dateFormatter } from '../../utils';
 import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
+import Pill from '../../components/Pill';
 import { FiPlus } from 'react-icons/fi';
 import BillingItem from '../../components/cells/BillingItem';
 
@@ -27,9 +28,9 @@ const columns = [
     { Header: 'Month', accessor: row => months.find(el => el.value === row.month).label },
     { Header: 'Year', accessor: 'year' },
     { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
-    { Header: 'Payment', accessor: row => toSentenceCase(row.payment) },
+    { Header: 'Payment', accessor: row => <Pill color={row.payment === "paid" ? "success": "secondary"}>{toSentenceCase(row.payment)}</Pill> },
     {
-        Header: 'Payment Date', accessor: row => row.payment_date ? dateFormatter(row.payment_date)
+        Header: 'Payment Date', accessor: row => row.payment_date ? dateTimeFormatterCell(row.payment_date)
             : '-'
     },
 ]
@@ -64,9 +65,8 @@ function Component() {
     return (
         <Template
             loading={false}
-            labels={["Unit Information", "Billing List"]}
+            labels={["Billing List", "Unit Information"]}
             contents={[
-                <Detail type="Billing" data={selected} labels={details} editable={false} />,
                 <div style={{
                     display: 'flex',
                     marginTop: 16,
@@ -132,7 +132,8 @@ function Component() {
                             }}
                         />
                     </div>
-                </div>
+                </div>,
+                <Detail type="Billing" data={selected} labels={details} editable={false} />,
             ]}
         />
     )
