@@ -164,7 +164,8 @@ export const downloadTransactionSettlement = (settlementStatus = '') => dispatch
 
 export const getTransactionDisbursement = (
   pageIndex, pageSize,
-  search = '', type, merchant = '', courier = ''
+  search = '', type, merchant = '', courier = '',
+  disbursementStatus = ''
 ) => dispatch => {
 
   dispatch(startAsync());
@@ -176,7 +177,8 @@ export const getTransactionDisbursement = (
     '&courier_id=' + courier +
     '&limit=' + pageSize +
     '&sort_field=created_on&sort_type=DESC' +
-    '&search=' + search,
+    '&search=' + search +
+    '&disbursement_status=' + disbursementStatus,
 
     res => {
       dispatch(setDisbursement(res.data.data));
