@@ -148,7 +148,7 @@ function Component({
 
     useEffect(() => {
         const selectedRows = selectedRowIds ?
-            Object.keys(selectedRowIds).map(el => page[el].original) : [];
+            Object.keys(selectedRowIds).map(el => page[el] && page[el].original) : [];
         onSelection && onSelection(selectedRows);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
