@@ -7,7 +7,7 @@ import { toMoney, toSentenceCase } from '../../../../utils';
 const columnsProduct = [
     { Header: 'Name', accessor: 'item_name' },
     { Header: 'Type', accessor: row => toSentenceCase(row.item_type) },
-    { Header: 'Base Price', accessor: 'base_price' },
+    { Header: 'Base Price', accessor: row => toMoney(row.base_price) },
     { Header: 'Quantity', accessor: 'qty' },
     { Header: 'Admin Fee', accessor: row => toMoney(row.admin_fee) },
     { Header: 'Discount Code', accessor: row => row.discount_code ? row.discount_code : '-' },
