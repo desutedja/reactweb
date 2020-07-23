@@ -23,9 +23,11 @@ function Component() {
     'Address': ['address', 'district_name', 'city_name', 'province_name'],
     'Availability Status': [
         { disabled: data.staff_role === "courier",
-            label: 'on_shift', vfmt: (v) => <Pill color={v === "no" ? "secondary" : "success"}>{toSentenceCase(v)}</Pill> },
+            label: 'on_shift', vfmt: (v) => <Pill color={data.current_shift_status ? "success" : "secondary"}>
+                {data.current_shift_status ? "Yes" : "No"}
+            </Pill> },
         { disabled: data.staff_role === "courier", 
-            label: 'on_shift_until', lfmt: () => data.on_shift === "no" ? "Last Shift Ended At" : "On Shift Until", 
+            label: 'on_shift_until', lfmt: () => !data.current_shift_status ? "Last Shift Ended At" : "On Shift Until", 
             vfmt: (v) => v ? dateTimeFormatter(v) : "-"},
         { disabled: data.staff_role !== "courier",
             label: 'is_available', lfmt: () => "Accepting Order", vfmt: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Yes" : "No"}</Pill>},
