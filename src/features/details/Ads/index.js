@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useHistory, useRouteMatch, useParams } from 'react-router-dom';
+import moment from 'moment';
 import {
     useDispatch
 } from 'react-redux';
@@ -35,8 +36,6 @@ function Component() {
             { label: 'appear_as', vfmt: (v) => <Pill color="success">{v}</Pill> },
             { label: 'created_on', lfmt: () => "Created On" , vfmt: (v) => dateTimeFormatter(v, "-") },
             { label: 'modified_on', lfmt: () => 'Last Modified', vfmt: (v) => dateTimeFormatter(v, "-") },
-            { label: 'start_date', vfmt: (v) => dateTimeFormatter(v) },
-            { label: 'end_date', vfmt: (v) => dateTimeFormatter(v) },
             { label: 'media', vfmt: (v) => toSentenceCase(v) + (v === 'apps' ? 
                 " (Would appear in advertisement details page inside Apps when advertisement is clicked) " : 
                 " (Would redirect to URL in a webview screen when advertisement is clicked)") },
@@ -45,19 +44,28 @@ function Component() {
             //    label: 'content_image', vfmt: (v) => <a href={v}>{v}</a> },
             //{ disabled: data.content_type === 'image', 
             //    label: 'content_video', vfmt: (v) => <a href={v}>{v}</a> },
-            'published',
+        ],
+        "Publish Information" : [
+            { label: 'published', lfmt: () => "Status", 
+                vfmt: (v) => v ? (moment().isBefore(moment(data.end_date.slice(0, -1))) ? 
+                    <Pill color="success">Published</Pill> : <Pill color="danger">Ended</Pill>) : <Pill color="secondary">Draft</Pill> },
+            { label: 'start_date', vfmt: (v) => dateTimeFormatter(v) },
+            { label: 'end_date', vfmt: (v) => dateTimeFormatter(v) + " (" + moment(v.slice(0, -1)).fromNow() + ") " },
         ],
         "Target Parameters": [
-            { label: 'age_from', lfmt: () => "Target Age Range", vfmt: (v) => v + " years old - " + data.age_to + " years old" },
+            { label: 'age_from', lfmt: () => "Target Age Range", 
+                vfmt: (v) => { 
+                    return ((v + " years old - " + data.age_to + " years old") + ((v === 10 && data.age_to === 85) ? " (Default)" : ""))
+                }
+            },
             { label: 'os', vfmt: (v) => !v ? 'Not Specified' : v, lfmt: () => "Target OS" },
             { label: 'gender', lfmt: () => "Target Gender", vfmt: (v) => !v ? "Not Specified" : (v === "M" ? "Male" : "Female") },
             { label: 'occupation', lfmt: () => "Target Occupation", vfmt: (v) => !v ? "Not Specified" : toSentenceCase(v) },
-            'default_priority_score',
+            { label: 'default_priority_score', lfmt: () => "Weight" , vfmt: (v) => v},
         ],
         "Statistics": [
             'total_actual_click',
             'total_actual_view',
-            'total_priority_score',
             'total_repeated_click',
             'total_repeated_view',
         ],

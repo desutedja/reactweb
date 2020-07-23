@@ -77,7 +77,7 @@ export const months = [
 ];
 
 export function dateTimeFormatterCell(serverDateTime, whenzero = '-') {
-    if (!serverDateTime) return;
+    if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
@@ -97,6 +97,7 @@ export function dateTimeFormatterCell(serverDateTime, whenzero = '-') {
 }
 
 export function dateTimeFormatter(serverDateTime, whenzero = '-') {
+    if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
 
     let date = serverDateTime.split('T')[0];
@@ -111,6 +112,7 @@ export function dateTimeFormatter(serverDateTime, whenzero = '-') {
 }
 
 export function timeFormatter(serverDateTime, whenzero = '-', plusHour = 0) {
+    if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
@@ -123,6 +125,7 @@ export function timeFormatter(serverDateTime, whenzero = '-', plusHour = 0) {
 }
 
 export function dateFormatter(serverDateTime, whenzero = '-') {
+    if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
@@ -189,7 +192,7 @@ export function toEllipsis(value, limit) {
 }
 
 export function staffRoleFormatter(role) {
-    return role === "pic_bm" ? "BM PIC" :
-           role === "gm_bm" ? "BM GM" :
+    return role === "pic_bm" ? "PIC BM " :
+           role === "gm_bm" ? "GM BM " :
            toSentenceCase(role);
 }
