@@ -89,6 +89,33 @@ const prios = [
     { label: 'Low', value: 'low', },
 ]
 
+const DateRangeFilter = ({ startDate, endDate, onApply }) => {
+    const [start, setStart] = useState(startDate);
+    const [end, setEnd] = useState(endDate);
+
+    return (
+        <div style={{
+            textAlign: 'center'
+        }}>
+            <h3>Created Date</h3>
+            <Input label="Start Date" type="date" inputValue={start}
+                setInputValue={setStart}
+            />
+            <Input label="End Date" type="date" inputValue={end}
+                setInputValue={setEnd}
+            />
+            <button
+                style={{
+                    marginTop: 16
+                }}
+                onClick={() => {
+                    onApply(start, end);
+                }}
+            >Apply</button>
+        </div>
+    )
+}
+
 function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
@@ -212,15 +239,14 @@ function Component() {
                             + moment(createdEnd).format('DD-MM-yyyy')
                         }</p>,
                         component: (toggleModal) =>
-                            <div>
-                                <h3>Created Date</h3>
-                                <Input label="Start Date" type="date" inputValue={createdStart}
-                                    setInputValue={setCreatedStart}
-                                />
-                                <Input label="End Date" type="date" inputValue={createdEnd}
-                                    setInputValue={setCreatedEnd}
-                                />
-                            </div>
+                            <DateRangeFilter
+                                startDate={createdStart}
+                                endDate={createdEnd}
+                                onApply={(start, end) => {
+                                    setCreatedStart(start);
+                                    setCreatedEnd(end);
+                                    toggleModal();
+                                }} />
                     },
                     {
                         hidex: true,
@@ -229,15 +255,14 @@ function Component() {
                             + moment(resolvedEnd).format('DD-MM-yyyy')
                         }</p>,
                         component: (toggleModal) =>
-                            <div>
-                                <h3>Resolved Date</h3>
-                                <Input label="Start Date" type="date" inputValue={resolvedStart}
-                                    setInputValue={setResolvedStart}
-                                />
-                                <Input label="End Date" type="date" inputValue={resolvedEnd}
-                                    setInputValue={setResolvedEnd}
-                                />
-                            </div>
+                            <DateRangeFilter
+                                startDate={resolvedStart}
+                                endDate={resolvedEnd}
+                                onApply={(start, end) => {
+                                    setResolvedStart(start);
+                                    setResolvedEnd(end);
+                                    toggleModal();
+                                }} />
                     },
                     {
                         hidex: building === "",
