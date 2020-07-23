@@ -64,9 +64,8 @@ function Component() {
     return (
         <Template
             loading={false}
-            labels={["Unit Information", "Billing List"]}
+            labels={["Billing List", "Unit Information"]}
             contents={[
-                <Detail type="Billing" data={selected} labels={details} editable={false} />,
                 <div style={{
                     display: 'flex',
                     marginTop: 16,
@@ -132,7 +131,8 @@ function Component() {
                             }}
                         />
                     </div>
-                </div>
+                </div>,
+                <Detail type="Billing" data={selected} labels={details} editable={false} />,
             ]}
         />
     )
