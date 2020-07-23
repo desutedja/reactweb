@@ -177,9 +177,8 @@ h5 {
 
 table {
   width: 100%;
-  /* background-color: white; */
   border-spacing: 0;
-  /* border-radius: 4px; */
+  border-collapse: separate;
 }
 
 th {
@@ -189,6 +188,9 @@ th {
   padding-left: 16px;
   text-align: left;
   border-bottom: 1px solid #f3f3fa;
+  position: sticky;
+  top: 0;
+  background-color: white;
 }
 
 td {

@@ -23,6 +23,7 @@ import transaction from './features/slices/transaction';
 import ads from './features/slices/ads';
 import announcement from './features/slices/announcement';
 import admin from './features/slices/admin';
+import notification from './features/slices/notification';
 
 const logger = createLogger({
   predicate: (getState, action) => 
@@ -48,6 +49,7 @@ const reducers = combineReducers({
   ads,
   chat,
   admin,
+  notification,
 });
 
 const persistConfig = {
