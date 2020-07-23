@@ -28,6 +28,7 @@ const columns = [
     { Header: 'Month', accessor: row => months.find(el => el.value === row.month).label },
     { Header: 'Year', accessor: 'year' },
     { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
+    { Header: 'Ref Code', accessor: row => row.ref_code ? row.ref_code : '-' },
     { Header: 'Payment', accessor: row => <Pill color={row.payment === "paid" ? "success": "secondary"}>{toSentenceCase(row.payment)}</Pill> },
     {
         Header: 'Payment Date', accessor: row => row.payment_date ? dateTimeFormatterCell(row.payment_date)
