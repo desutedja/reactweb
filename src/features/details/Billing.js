@@ -64,6 +64,9 @@ function Component() {
 
     return (
         <Template
+            title={toSentenceCase(selected.building_name) + ", " +
+                   toSentenceCase(selected.section_type) + " " + 
+                   toSentenceCase(selected.section_name) + " " + selected.number}
             loading={false}
             labels={["Billing List", "Unit Information"]}
             contents={[

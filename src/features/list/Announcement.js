@@ -1,7 +1,6 @@
 import React, { } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import parse from 'html-react-parser';
 import { Badge } from 'reactstrap';
 import { FiPlus } from 'react-icons/fi';
 
