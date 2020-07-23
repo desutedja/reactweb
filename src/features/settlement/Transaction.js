@@ -144,6 +144,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -155,6 +156,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -172,6 +174,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -183,6 +186,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -200,6 +204,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -211,6 +216,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
