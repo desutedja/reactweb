@@ -400,7 +400,7 @@ function Component() {
                                             setFilter(e.target.value)
                                         }}
                                         >
-                                            <option selected={true}>All</option>
+                                            <option selected={true} value="">All</option>
                                             {filtersDisbursement.map(filter => (
                                             <option value={filter.value}>{filter.label}</option>
                                             ))}
@@ -536,7 +536,7 @@ function Component() {
                         pageCount={disbursement.total_pages}
                         fetchData={useCallback((pageIndex, pageSize, search) => {
                             dispatch(getTransactionDisbursement(pageIndex, pageSize, search,
-                                type, merchant, courier));
+                                type, merchant, courier, filter));
                             // eslint-disable-next-line react-hooks/exhaustive-deps
                         }, [dispatch, refreshToggle, merchant, courier])}
                         filters={[]}
