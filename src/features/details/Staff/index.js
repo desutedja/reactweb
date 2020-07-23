@@ -19,7 +19,7 @@ function Component() {
     let history = useHistory();
 
     const details = useMemo(() => { return {
-    'Profile': ['created_on', 'gender', 'nationality', 'marital_status', 'status_kyc'],
+    'Profile': ['created_on', 'gender', 'nationality', 'marital_status'],
     'Address': ['address', 'district_name', 'city_name', 'province_name'],
     'Availability Status': [
         { disabled: data.staff_role === "courier",
@@ -36,7 +36,8 @@ function Component() {
         'building_management_id', 
         { label: 'staff_id', lfmt: () => "Staff ID" },
         { label: 'staff_role', lfmt: () => "Staff Role", vfmt: (v) => staffRoleFormatter(v)},
-        { label: 'staff_specialization', lfmt: () => "Specialization", vfmt: (v) => v ? toSentenceCase(v) : "-" },
+        { disabled: data.staff_role !== "Technician",
+            label: 'staff_specialization', lfmt: () => "Specialization", vfmt: (v) => v ? toSentenceCase(v) : "-" },
     ],
     'Bank Account': ['account_name', 'account_number', 'account_bank'],
 }}, [data]);
