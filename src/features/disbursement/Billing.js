@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import AnimatedNumber from "animated-number-react";
 
@@ -47,7 +46,6 @@ function Component() {
     const { disbursement, refreshToggle } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
-    let { path } = useRouteMatch();
 
     useEffect(() => {
         dispatch(getBillingDisbursement(0, 1000, ''));
@@ -135,8 +133,6 @@ function Component() {
                     <h5>Total {toMoney(getSum(selected))}</h5>
                 </div>
             </Modal>
-            <Switch>
-                <Route exact path={path}>
                     <div className="Container">
                         <div style={{
                             display: 'flex',
@@ -177,11 +173,11 @@ function Component() {
                     </div>
                     <div style={{
                         display: 'flex',
+                        flexWrap: 'wrap',
                         marginTop: 16,
                     }}>
                         {disbursement.items.length > 0 && <div className="Container" style={{
                             flexDirection: 'column',
-                            marginRight: 16,
                         }}>
                             <h5 style={{
                                 marginBottom: 16,
@@ -267,8 +263,6 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                </Route>
-            </Switch>
         </div>
     )
 }

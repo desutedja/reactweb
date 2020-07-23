@@ -37,6 +37,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px;
+  flex-wrap: wrap;
 }
 
 .Container .Pagination,
@@ -76,6 +77,7 @@
 .TableAction {
   padding: 8px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 }
@@ -88,7 +90,7 @@
 
 .TableAction-right {
   display: flex;
-  /* align-items: center; */
+  flex-wrap: wrap;
 }
 
 .TableAction-right button {
