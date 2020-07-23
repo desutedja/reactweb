@@ -33,8 +33,8 @@ function Component() {
         "Information": [
             'id',
             { label: 'appear_as', vfmt: (v) => <Pill color="success">{v}</Pill> },
-            { label: 'created_on', lfmt: () => "Created On" , vfmt: (v) => dateTimeFormatter(v) },
-            { label: 'modified_on', lfmt: () => 'Last Modified', vfmt: (v) => dateTimeFormatter(v) },
+            { label: 'created_on', lfmt: () => "Created On" , vfmt: (v) => dateTimeFormatter(v, "-") },
+            { label: 'modified_on', lfmt: () => 'Last Modified', vfmt: (v) => dateTimeFormatter(v, "-") },
             { label: 'start_date', vfmt: (v) => dateTimeFormatter(v) },
             { label: 'end_date', vfmt: (v) => dateTimeFormatter(v) },
             { label: 'media', vfmt: (v) => toSentenceCase(v) + (v === 'apps' ? 

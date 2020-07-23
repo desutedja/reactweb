@@ -16,7 +16,7 @@ function Component() {
                     <CardSubtitle></CardSubtitle>
                     <CardText style={{
                         paddingTop: 8,
-                    }}>{parse(selected.description)}</CardText>
+                    }}>{parse(selected.description || "Loading..")}</CardText>
                 </CardBody>
             </Card>
         </div>
