@@ -64,7 +64,6 @@ function Component({ role, children }) {
             AppId: 'fastel-sa-hkxoyooktyv',
             options: {
                 newMessagesCallback: message => {
-                    console.log('received', message);
                     dispatch(setReloadList(true));
                     dispatch(setNotif({
                         title: "New Message",

@@ -101,7 +101,7 @@ function Component() {
             dispatch(getAdminChat(listTopic,listPageIndex, listPageSize, listSearch));
         else
             dispatch(getPICBMChat(listTopic,listPageIndex, listPageSize, listSearch));
-            */
+        */
 
         var params = {
             page: 1,
@@ -115,8 +115,10 @@ function Component() {
             .then(function (rooms) {
                 // On success
                 dispatch(setRooms(rooms));
-                dispatch(setRoom(rooms[0]));
-                !roomID && dispatch(setRoomID(rooms[0].id));
+                // Isa: To prevent reloading comments twice when room is set, don't set room after load list,
+                //      usually, rooms are already chosen, but when not, just let the user pick which room
+                //dispatch(setRoom(rooms[0]));
+                //!roomID && dispatch(setRoomID(rooms[0].id));
                 !roomUniqueID && dispatch(setRoomUniqueID(rooms[0].unique_id));
                 dispatch(setReloadList(false));
                 setLoadingRooms(false);
