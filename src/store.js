@@ -11,6 +11,7 @@ import dashboard from './features/dashboard/slice';
 import chat from './features/chat/slice';
 
 import management from './features/slices/management';
+import notification from './features/slices/notification';
 import building from './features/slices/building';
 import resident from './features/slices/resident';
 import billing from './features/slices/billing';
@@ -43,6 +44,7 @@ const reducers = combineReducers({
   product,
   transaction,
   announcement,
+  notification,
   ads,
   chat,
   admin,
