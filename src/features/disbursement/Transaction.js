@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useMemo } from 'react';
+    import React, { useCallback, useEffect, useState, useMemo } from 'react';
 // import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Button from '../../components/Button';
@@ -231,9 +231,10 @@ function Component() {
                     marginBottom: 32,
                     position: 'relative'
                 }}>
-                    <Input compact
+                    <Input 
                         type="text"
                         label="Transfer Code"
+                        placeholder="Input transfer code as evidence for this disbursement"
                         inputValue={transferCode}
                         setInputValue={setTransferCode}
                         noMargin={true}
@@ -527,9 +528,10 @@ function Component() {
                         flexDirection: 'row',
                     }}>
                         <div>
-                            Undisbursed Amount For {toSentenceCase(type)} {type === "merchant" ?
-                                <b>{(merchants.length > 0 ? merchants[active].name : '')}</b>
-                                : <b>{(couriers.length > 0 ? couriers[active].firstname + " " + couriers[active].lastname : '')}</b>}
+                            Undisbursed Amount For {toSentenceCase(type)} {type === "merchant" ? 
+                            <b>{(merchants.length > 0 ? merchants[active] && merchants[active].name : '')}</b>
+                                    : <b>{(couriers.length > 0 ? couriers[active] && 
+                                        (couriers[active].firstname + " " + couriers[active].lastname) : '')}</b>}
                         </div>
                         <div style={{
                             display: 'flex',
