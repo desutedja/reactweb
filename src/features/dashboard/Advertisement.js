@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Legend, Bar } from 'recharts';
+import { ResponsiveContainer, XAxis, YAxis, Tooltip, BarChart, Bar } from 'recharts';
 import { endpointAds } from '../../settings';
 
 import './style.css';
