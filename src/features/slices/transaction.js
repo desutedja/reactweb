@@ -132,7 +132,7 @@ export const getTransactionDetails = (trx_code, history, url) => dispatch => {
 
 export const getTransactionSettlement = (
   pageIndex, pageSize,
-  search = '', settlementStatus = ''
+  search = '', settlementStatus = '', start, end
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -142,6 +142,8 @@ export const getTransactionSettlement = (
     '&settlement_status=' + settlementStatus +
     '&status=completed' +
     '&sort_field=created_on&sort_type=DESC' +
+    '&settlement_start_date=' + start + 'T00:00:00' +
+    '&settlement_end_date=' + end + 'T23:59:59' +
     '&search=' + search,
 
     res => {

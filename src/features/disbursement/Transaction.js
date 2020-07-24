@@ -389,11 +389,11 @@ function Component() {
             </div>
             <div style={{
                 display: 'flex',
-                marginTop: 16,
+                // marginTop: 16,
             }}>
                 <Card className="Container" style={{
                     flexDirection: 'column',
-                    marginRight: 16,
+                    // marginRight: 16,
                     boxShadow: 'none',
                 }}>
                     <Tab
@@ -549,7 +549,6 @@ function Component() {
                             />
                         </div>
                     </Card>
-
                <Card className="Container" style={{
                     flex: 3,
                     flexDirection: 'column',

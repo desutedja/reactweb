@@ -3,6 +3,7 @@ import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiCheck, FiDownload, FiUpload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
+import moment from 'moment';
 
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
@@ -17,6 +18,8 @@ import { endpointTransaction } from '../../settings';
 import Pill from '../../components/Pill';
 import { get, post } from '../slice';
 import MyButton from '../../components/Button';
+import Transaction from '../../components/cells/Transaction';
+import DateRangeFilter from '../../components/DateRangeFilter';
 
 const status_settlement = [
     { label: "Settled", value: "settled" },
@@ -25,7 +28,9 @@ const status_settlement = [
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
-    { Header: 'Trx Code', accessor: 'trx_code' },
+    {
+        Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} id={row.trx_code} />
+    },
     { Header: 'Amount', accessor: row => toMoney(row.payment_amount - row.payment_charge) },
     {
         Header: 'Settlement Status', accessor: row => {
@@ -65,6 +70,9 @@ function Component() {
     const [fileUpload, setFileUpload] = useState('');
     const [loadingUpload, setLoadingUpload] = useState(false);
     // console.log(selected)
+
+    const [settlementStart, setSettlementStart] = useState(moment().format('yyyy-MM-DD'));
+    const [settlementEnd, setSettlementEnd] = useState(moment().format('yyyy-MM-DD'));
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -342,14 +350,32 @@ function Component() {
                     loading={loading}
                     pageCount={settlement.total_pages}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
-                        dispatch(getTransactionSettlement(pageIndex, pageSize, search, statusSettlement.value));
+                        dispatch(getTransactionSettlement(pageIndex, pageSize, search, 
+                            statusSettlement.value, settlementStart, settlementEnd));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [dispatch, refreshToggle, statusSettlement])}
+                    }, [dispatch, refreshToggle, statusSettlement, settlementStart, settlementEnd])}
                     onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}
                     filters={[
                         {
+                            hidex: true,
+                            label: "Settlement Date: ",
+                            value: settlementStart === settlementEnd ? 'Today' :
+                            moment(settlementStart).format('DD-MM-yyyy') + ' - '
+                            + moment(settlementEnd).format('DD-MM-yyyy'),
+                            component: (toggleModal) =>
+                                <DateRangeFilter
+                                    startDate={settlementStart}
+                                    endDate={settlementEnd}
+                                    onApply={(start, end) => {
+                                        setSettlementStart(start);
+                                        setSettlementEnd(end);
+                                        toggleModal();
+                                    }} />
+                        },
+                        {
                             hidex: statusSettlement === "",
-                            label: <p>{statusSettlement ? "Status: " + statusSettlement.label : "Status: All"}</p>,
+                            label: "Status: ",
+                            value: statusSettlement ? statusSettlement.label : 'All',
                             delete: () => { setStatusSettlement(""); },
                             component: (toggleModal) =>
                                 <>
