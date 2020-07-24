@@ -59,6 +59,7 @@ function Component() {
 
     return (
         <Template
+            activeTab={history.location.state ? history.location.state.tab : 0}
             image={data.logo}
             title={data.name}
             website={data.website}
