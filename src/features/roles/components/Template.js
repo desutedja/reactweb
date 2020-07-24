@@ -267,7 +267,7 @@ function Component({ role, children }) {
             <Row style={{
                 height: '100vh'
             }}>
-                <div className="Menu shadow scroller-y">
+                <div className="Menu shadow">
                     <div className={menuWide ? "Logo-container" : "Logo-container-small"}
                         onClick={() => history.push('/' + role)}
                     >
@@ -276,63 +276,68 @@ function Component({ role, children }) {
                             : <img className="Logo-main-small"
                                 src={clinkLogoSmall} alt="logo" />}
                     </div>
-                    {Children.map(children, child => {
-                        const { icon, label, path, subpaths } = child.props;
+                    <div style={{
+                        height: 'auto',
+                        overflowY: 'auto'
+                    }}>
+                        {Children.map(children, child => {
+                            const { icon, label, path, subpaths } = child.props;
 
-                        return label ? (
-                            <Fragment
-                                key={path}
-                            >
-                                <div
-                                    onClick={expanded === label ? () => setExpanded("")
-                                        : subpaths ? () => {
-                                            setExpanded(label);
-                                            setMenuWide(true);
-                                        } :
-                                            () => {
-                                                history.push(path);
-                                                setExpanded("");
-                                            }}
-                                    className={(isSelected(path) ? "MenuItem-active" : "MenuItem") +
-                                        (menuWide ? "" : " compact")}
+                            return label ? (
+                                <Fragment
+                                    key={path}
                                 >
-                                    <div className="MenuItem-icon">{icon}</div>
-                                    {menuWide && <div className={menuWide ? "MenuItem-label" : "MenuItem-label-hidden"}>
-                                        {label}
-                                    </div>}
-                                    {menuWide && subpaths ? expanded === label ?
-                                        <FiChevronUp style={{
-                                            marginRight: 16,
-                                            width: '2rem'
-                                        }} /> : <FiChevronDown style={{
-                                            marginRight: 16,
-                                            width: '2rem'
-                                        }} /> : null}
-                                </div>
-                                <div className="Submenu"
-                                    style={menuWide && expanded === label ? ({
-                                        height: subpaths.length * 36 + 'px',
-                                        visibility: 'visible'
-                                    }) : ({
-                                        height: 0,
-                                        visibility: 'hidden'
-                                    })}
-                                >
-                                    {menuWide && expanded === label ? subpaths.map(sub => <div
-                                        key={sub}
-                                        onClick={() => {
-                                            history.push(path + sub);
-                                            // setMenuWide(false);
-                                        }}
-                                        className={('/' + history.location.pathname.split('/')[3]) === sub
-                                            ? "SubmenuItem-active" : "SubmenuItem"}
+                                    <div
+                                        onClick={expanded === label ? () => setExpanded("")
+                                            : subpaths ? () => {
+                                                setExpanded(label);
+                                                setMenuWide(true);
+                                            } :
+                                                () => {
+                                                    history.push(path);
+                                                    setExpanded("");
+                                                }}
+                                        className={(isSelected(path) ? "MenuItem-active" : "MenuItem") +
+                                            (menuWide ? "" : " compact")}
                                     >
-                                        {toSentenceCase(sub.slice(1))}
-                                    </div>) : null}
-                                </div>
-                            </Fragment>
-                        ) : null
-                    })}
+                                        <div className="MenuItem-icon">{icon}</div>
+                                        {menuWide && <div className={menuWide ? "MenuItem-label" : "MenuItem-label-hidden"}>
+                                            {label}
+                                        </div>}
+                                        {menuWide && subpaths ? expanded === label ?
+                                            <FiChevronUp style={{
+                                                marginRight: 16,
+                                                width: '2rem'
+                                            }} /> : <FiChevronDown style={{
+                                                marginRight: 16,
+                                                width: '2rem'
+                                            }} /> : null}
+                                    </div>
+                                    <div className="Submenu"
+                                        style={menuWide && expanded === label ? ({
+                                            height: subpaths.length * 36 + 'px',
+                                            // visibility: 'visible'
+                                        }) : ({
+                                            height: 0,
+                                            // visibility: 'hidden'
+                                        })}
+                                    >
+                                        {menuWide && expanded === label ? subpaths.map(sub => <div
+                                            key={sub}
+                                            onClick={() => {
+                                                history.push(path + sub);
+                                                // setMenuWide(false);
+                                            }}
+                                            className={('/' + history.location.pathname.split('/')[3]) === sub
+                                                ? "SubmenuItem-active" : "SubmenuItem"}
+                                        >
+                                            {toSentenceCase(sub.slice(1))}
+                                        </div>) : null}
+                                    </div>
+                                </Fragment>
+                            ) : null
+                        })}
+                    </div>
                 </div>
                 <div className={(menuWide ? "Content" : "Content-wide")}>
                     <Info />
