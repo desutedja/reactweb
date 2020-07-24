@@ -204,7 +204,8 @@ function Component() {
                 columns={columns}
                 slice='task'
                 getAction={getTask}
-                filterVars={[type, prio, status, building]}
+                filterVars={[type, prio, status, building, createdStart, createdEnd, 
+                    resolvedStart, resolvedEnd]}
                 filters={[
                     {
                         hidex: true,
