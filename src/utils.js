@@ -196,3 +196,12 @@ export function staffRoleFormatter(role) {
            role === "gm_bm" ? "GM BM " :
            toSentenceCase(role);
 }
+
+export function isToday(momentDate) {
+    const a = moment()
+    return a.isSame(moment(momentDate).format('yyyy-MM-DD'), 'day');
+}
+
+export function isRangeToday(start, end) {
+    return (start === end) && isToday(start);
+}

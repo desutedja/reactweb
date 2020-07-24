@@ -15,7 +15,7 @@ import Resident from '../../components/cells/Resident';
 import Staff from '../../components/cells/Staff';
 
 import { useSelector } from 'react-redux';
-import { toSentenceCase, dateTimeFormatter } from '../../utils';
+import { toSentenceCase, dateTimeFormatter, isRangeToday  } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import { getTask, resolveTask, reassignTask, setSelected } from '../slices/task';
 import { get } from '../slice';
@@ -94,6 +94,9 @@ function Component() {
     let history = useHistory();
     let { url } = useRouteMatch();
     const { role } = useSelector(state => state.auth)
+
+    const todayStart = moment().format('yyyy-MM-DD');
+    const todayEnd = moment().format('yyyy-MM-DD');
 
     const [selectedRow, setRow] = useState({});
     const [resolve, setResolve] = useState(false);
@@ -207,9 +210,10 @@ function Component() {
                     ...status === 'completed' ? [resolvedStart, resolvedEnd] : []]}
                 filters={[
                     {
-                        hidex: true,
+                        hidex: isRangeToday(createdStart, createdEnd),
                         label: "Created Date: ",
-                        value: createdStart === createdEnd ? 'Today' :
+                        delete: () => { setCreatedStart(todayStart); setCreatedEnd(todayEnd) },
+                        value: isRangeToday(createdStart, createdEnd) ? 'Today' :
                         moment(createdStart).format('DD-MM-yyyy') + ' - '
                         + moment(createdEnd).format('DD-MM-yyyy'),
                         component: (toggleModal) =>
@@ -223,9 +227,10 @@ function Component() {
                                 }} />
                     },
                     ...status === 'completed' ? [{
-                        hidex: true,
+                        hidex: isRangeToday(resolvedStart, resolvedEnd),
                         label: "Resolved Date: ",
-                        value: resolvedStart === resolvedEnd ? 'Today' :
+                        delete: () => { setResolvedStart(todayStart); setResolvedEnd(todayEnd) },
+                        value: isRangeToday(resolvedStart, resolvedEnd) ? 'Today' :
                         moment(resolvedStart).format('DD-MM-yyyy') + ' - '
                             + moment(resolvedEnd).format('DD-MM-yyyy')
                         ,
