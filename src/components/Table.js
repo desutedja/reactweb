@@ -5,7 +5,7 @@ import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
-    FiEdit, FiCheck, FiUserPlus, FiMessageSquare,
+    FiEdit, FiCheck, FiUserPlus, FiMessageSquare, FiFilter,
 } from 'react-icons/fi'
 import {
     FaCaretRight, FaCaretDown,
@@ -154,8 +154,10 @@ function Component({
                     }} onClick={() => {
                         toggleFilter(!filter);
                     }}>
+                        <FiFilter />
                         <b style={{
                             marginRight: 8,
+                            marginLeft: 8,
                         }}>Filter</b>
                         {filter ? <FiChevronUp /> : <FiChevronDown />}
                     </div>}
@@ -176,6 +178,7 @@ function Component({
                     <FilterButton
                         key={index}
                         label={el.label}
+                        value={el.value}
                         hideX={el.hidex}
                         onClick={() => {
                             el.onClick && el.onClick();

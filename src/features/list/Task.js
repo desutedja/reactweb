@@ -21,6 +21,7 @@ import { getTask, resolveTask, reassignTask, setSelected } from '../slices/task'
 import { get } from '../slice';
 
 import Template from './components/Template';
+import DateRangeFilter from '../../components/DateRangeFilter';
 
 const columns = [
     {
@@ -88,33 +89,6 @@ const prios = [
     { label: 'Normal', value: 'normal', },
     { label: 'Low', value: 'low', },
 ]
-
-const DateRangeFilter = ({ startDate, endDate, onApply }) => {
-    const [start, setStart] = useState(startDate);
-    const [end, setEnd] = useState(endDate);
-
-    return (
-        <div style={{
-            textAlign: 'center'
-        }}>
-            <h3>Created Date</h3>
-            <Input label="Start Date" type="date" inputValue={start}
-                setInputValue={setStart}
-            />
-            <Input label="End Date" type="date" inputValue={end}
-                setInputValue={setEnd}
-            />
-            <button
-                style={{
-                    marginTop: 16
-                }}
-                onClick={() => {
-                    onApply(start, end);
-                }}
-            >Apply</button>
-        </div>
-    )
-}
 
 function Component() {
     let dispatch = useDispatch();
@@ -234,10 +208,10 @@ function Component() {
                 filters={[
                     {
                         hidex: true,
-                        label: <p>{"Created Date: "
-                            + moment(createdStart).format('DD-MM-yyyy') + ' - '
-                            + moment(createdEnd).format('DD-MM-yyyy')
-                        }</p>,
+                        label: "Created Date: ",
+                        value: createdStart === createdEnd ? 'Today' :
+                        moment(createdStart).format('DD-MM-yyyy') + ' - '
+                        + moment(createdEnd).format('DD-MM-yyyy'),
                         component: (toggleModal) =>
                             <DateRangeFilter
                                 startDate={createdStart}
@@ -250,10 +224,11 @@ function Component() {
                     },
                     {
                         hidex: true,
-                        label: <p>{"Resolved Date: "
-                            + moment(resolvedStart).format('DD-MM-yyyy') + ' - '
+                        label: "Resolved Date: ",
+                        value: resolvedStart === resolvedEnd ? 'Today' :
+                        moment(resolvedStart).format('DD-MM-yyyy') + ' - '
                             + moment(resolvedEnd).format('DD-MM-yyyy')
-                        }</p>,
+                        ,
                         component: (toggleModal) =>
                             <DateRangeFilter
                                 startDate={resolvedStart}
@@ -266,7 +241,8 @@ function Component() {
                     },
                     {
                         hidex: building === "",
-                        label: <p>{building ? "Building: " + buildingName : "Building: All"}</p>,
+                        label: "Building: ",
+                        value: building ? buildingName : "All",
                         delete: () => { setBuilding(""); },
                         component: (toggleModal) =>
                             <>
@@ -294,7 +270,8 @@ function Component() {
                     },
                     {
                         hidex: type === "",
-                        label: <p>{type ? "Type: " + typeLabel : "Type: All"}</p>,
+                        label: "Type: ",
+                        value: type ? typeLabel : 'All',
                         delete: () => { setType(""); },
                         component: (toggleModal) =>
                             <Filter
@@ -313,7 +290,8 @@ function Component() {
                     },
                     {
                         hidex: prio === "",
-                        label: <p>{prio ? "Priority: " + prioLabel : "Priority: All"}</p>,
+                        label: "Priority: " ,
+                        value: prio ? prioLabel : "All",
                         delete: () => { setPrio(""); },
                         component: (toggleModal) =>
                             <Filter
@@ -332,7 +310,8 @@ function Component() {
                     },
                     {
                         hidex: status === "",
-                        label: <p>{status ? "Status: " + statusLabel : "Status: All"}</p>,
+                        label: "Status: ",
+                        value: status ? statusLabel : 'All',
                         delete: () => { setStatus(""); },
                         component: (toggleModal) =>
                             <Filter
