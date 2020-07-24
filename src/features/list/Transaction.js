@@ -5,7 +5,7 @@ import moment from 'moment';
 import Filter from '../../components/Filter';
 import { getTransaction, downloadTransaction } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
-import { toMoney, toSentenceCase, dateTimeFormatterCell } from '../../utils';
+import { toMoney, toSentenceCase, dateTimeFormatterCell, isRangeToday } from '../../utils';
 import Pill from '../../components/Pill';
 import Transaction from '../../components/cells/Transaction';
 
@@ -47,6 +47,8 @@ const columns = [
 function Component() {
     let dispatch = useDispatch();
 
+    const today = moment().format('yyyy-MM-DD');
+
     const [statusPayment, setStatusPayment] = useState('');
     const [status, setStatus] = useState('');
     const [type, setType] = useState('');
@@ -62,9 +64,10 @@ function Component() {
             filterVars={[status, statusPayment, type, trxStart, trxEnd]}
             filters={[
                 {
-                    hidex: true,
+                    hidex: isRangeToday(trxStart, trxEnd),
                     label: "Transaction Date: ",
-                    value: trxStart === trxEnd ? 'Today' :
+                    delete: () => { setTrxStart(today); setTrxEnd(today) },
+                    value: isRangeToday(trxStart, trxEnd) ? 'Today' :
                     moment(trxStart).format('DD-MM-yyyy') + ' - '
                     + moment(trxEnd).format('DD-MM-yyyy'),
                     component: (toggleModal) =>

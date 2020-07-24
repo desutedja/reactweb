@@ -95,8 +95,7 @@ function Component() {
     let { url } = useRouteMatch();
     const { role } = useSelector(state => state.auth)
 
-    const todayStart = moment().format('yyyy-MM-DD');
-    const todayEnd = moment().format('yyyy-MM-DD');
+    const today = moment().format('yyyy-MM-DD');
 
     const [selectedRow, setRow] = useState({});
     const [resolve, setResolve] = useState(false);
@@ -212,7 +211,7 @@ function Component() {
                     {
                         hidex: isRangeToday(createdStart, createdEnd),
                         label: "Created Date: ",
-                        delete: () => { setCreatedStart(todayStart); setCreatedEnd(todayEnd) },
+                        delete: () => { setCreatedStart(today); setCreatedEnd(today) },
                         value: isRangeToday(createdStart, createdEnd) ? 'Today' :
                         moment(createdStart).format('DD-MM-yyyy') + ' - '
                         + moment(createdEnd).format('DD-MM-yyyy'),
@@ -229,7 +228,7 @@ function Component() {
                     ...status === 'completed' ? [{
                         hidex: isRangeToday(resolvedStart, resolvedEnd),
                         label: "Resolved Date: ",
-                        delete: () => { setResolvedStart(todayStart); setResolvedEnd(todayEnd) },
+                        delete: () => { setResolvedStart(today); setResolvedEnd(today) },
                         value: isRangeToday(resolvedStart, resolvedEnd) ? 'Today' :
                         moment(resolvedStart).format('DD-MM-yyyy') + ' - '
                             + moment(resolvedEnd).format('DD-MM-yyyy')
