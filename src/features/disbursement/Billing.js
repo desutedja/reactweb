@@ -247,7 +247,7 @@ function Component() {
                                         setDataLoading(true);
                                         dispatch(get(endpointBilling + '/management/billing/disbursement' +
                                             '/list/transaction?limit=1000&page=1&search='
-                                            + '&building_id=' +
+                                            + search + '&building_id=' +
                                             disbursement.items[active]?.building_id
                                             + '&management_id=' +
                                             disbursement.items[active]?.id,
