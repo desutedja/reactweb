@@ -210,8 +210,8 @@ function Component() {
                                 justifyContent: 'space-between',
                                 flexDirection: 'row',
                             }}>
-                                <div>
-                                    Undisbursed Amount For <b>{disbursement.items[active].management_name}</b>
+                                <div className="d-flex align-items-center">
+                                    Undisbursed Amount For&nbsp;<b>{disbursement.items.length > 0 && disbursement.items[active].management_name}</b>
                                 </div>
                                 <div style={{
                                     display: 'flex',

@@ -281,7 +281,6 @@ function Component({ role, children }) {
                         overflowY: 'auto'
                     }}>
                         {Children.map(children, child => {
-                            console.log(child)
                             const { icon, label, path, subpaths } = child.props;
 
                             return label ? (
