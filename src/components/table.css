@@ -204,14 +204,25 @@
 .FilterContainer {
   display: flex;
   flex-wrap: wrap;
-  padding-bottom: 4px;
-  padding-top: 12px;
+  align-items: center;
+  /* padding-bottom: 4px;
+  padding-top: 12px; */
   border-top: 1px solid #f3f3fa;
+  height: 0px;
+  overflow: hidden;
+  visibility: hidden;
+  transition: .2s;
+}
+
+.FilterContainer.down {
+  height: 50px;
+  visibility: visible;
 }
 
 .FilterButton {
   background-color: #f0f0f3;
-  margin: 0 0 8px 8px;
+  height: 28px;
+  margin-left: 8px;
   padding: 4px 16px;
   border-radius: 16px;
   display: flex;
