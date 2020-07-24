@@ -5,7 +5,6 @@ import Add from '../../form/Billing';
 import Details from '../../details/Billing';
 import DetailsItem from '../../details/BillingItem';
 import Settlement from '../../settlement/Billing';
-import Disbursement from '../../disbursement/Billing';
 
 import List from '../../list/Billing';
 
@@ -35,9 +34,6 @@ function Component() {
             </Route>
             <Route path={`${path}/settlement`}>
                 <Settlement />
-            </Route>
-            <Route path={`${path}/disbursement`}>
-                <Disbursement />
             </Route>
         </Switch>
     )

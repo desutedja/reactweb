@@ -54,8 +54,7 @@ const modules = [
         path: "/billing",
         subpaths: [
             '/unit',
-            '/settlement',
-            '/disbursement',
+            '/settlement'
         ],
         component: <Billing />,
     },

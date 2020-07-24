@@ -19,6 +19,7 @@ const formatValue = (value) => toMoney(value.toFixed(0));
 
 function Component() {
 
+    const { auth } = useSelector(state => state);
     const { loading, settlement, refreshToggle } = useSelector(state => state.billing);
 
     const [search, setSearch] = useState('');
@@ -176,6 +177,7 @@ function Component() {
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, building, settled])}
                     filters={[
+                        auth.role === 'sa' ? (
                         {
                             hidex: settled === "",
                             label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
@@ -225,11 +227,31 @@ function Component() {
                                         }}
                                     />
                                 </>
-                        },
+                        }) :
+                        ({
+                            hidex: settled === "",
+                            label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
+                            delete: () => setSettled(''),
+                            component: (toggleModal) =>
+                                <Filter
+                                    data={[
+                                        { value: '0', label: 'Unsettled' },
+                                        { value: '1', label: 'Settled' },
+                                    ]}
+                                    onClick={(el) => {
+                                        setSettled(el.value);
+                                        toggleModal(false);
+                                    }}
+                                    onClickAll={() => {
+                                        setSettled("");
+                                        toggleModal(false);
+                                    }}
+                            />
+                        })
                     ]}
                     renderActions={(selectedRowIds, page) => {
                         return ([
-                            <Button
+                            auth.role === 'sa' && <Button
                                 disabled={Object.keys(selectedRowIds).length === 0}
                                 onClick={() => {
                                     setSettleModal(true);
@@ -237,7 +259,7 @@ function Component() {
                                 icon={<FiCheck />}
                                 label="Settle"
                             />,
-                            <Button
+                            auth.role === 'sa' && <Button
                                 onClick={() => { }}
                                 icon={<FiFile />}
                                 label="Upload Settlement"
