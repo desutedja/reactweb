@@ -199,7 +199,7 @@ function Component({
                     </div>
                 </div>
             </div>
-            <div className={"FilterContainer" + (filter ? ' down' : '')}>
+            {filters.length > 0 && <div className={"FilterContainer" + (filter ? ' down' : '')}>
                 {filters.map((el, index) => !el.hidden &&
                     <FilterButton
                         key={index}
@@ -213,7 +213,7 @@ function Component({
                         }}
                         onClickDelete={el.delete} />
                 )}
-            </div>
+            </div>}
             <div className="Table-content scroller">
                 <table {...getTableProps()}>
                     {loading &&
