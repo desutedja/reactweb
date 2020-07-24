@@ -328,7 +328,7 @@ function Component({ role, children }) {
                                             ? "SubmenuItem-active" : "SubmenuItem"}
                                     >
                                         {toSentenceCase(sub.slice(1))}
-                                    </div>) : (<div></div>)}
+                                    </div>) : null}
                                 </div>
                             </Fragment>
                         ) : null
