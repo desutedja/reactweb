@@ -523,7 +523,7 @@ function Component() {
                         <div>
                             Undisbursed Amount For {toSentenceCase(type)} {type === "merchant" ? 
                             <b>{(merchants.length > 0 ? merchants[active].name : '')}</b>
-                        : <b>{(couriers.length > 0 ? couriers[active].name : '')}</b>}
+                        : <b>{(couriers.length > 0 ? couriers[active].firstname + " " + couriers[active].lastname : '')}</b>}
                         </div>
                         <div style={{
                             display: 'flex',
