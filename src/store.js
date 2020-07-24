@@ -65,7 +65,7 @@ const rootReducer = (state, action) => {
   return reducers(state, action);
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+export const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,

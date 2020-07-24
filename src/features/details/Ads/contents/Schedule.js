@@ -3,12 +3,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FiPlus, FiTrash } from 'react-icons/fi';
 
 import Button from '../../../../components/Button';
-import Table from '../../../../components/Table';
+import Table from '../../../../components/TableWithSelection';
 import Modal from '../../../../components/Modal';
 import Form from '../../../../components/Form';
 import Input from '../../../../components/Input';
 import { getAdsSchedule, deleteAdsSchedule, createAdsSchedule } from '../../../slices/ads';
 import { daysLabel, days } from '../../../../utils';
+import { setConfirmDelete } from '../../../slice';
 
 const columns = [
     { Header: "Day", accessor: row => days[row.day - 1] },
@@ -25,7 +26,7 @@ function Component() {
     let dispatch = useDispatch();
 
     const fetchData = useCallback((pageIndex, pageSize, search) => {
-       dispatch(getAdsSchedule(pageIndex, pageSize, search, selected));
+        dispatch(getAdsSchedule(pageIndex, pageSize, search, selected));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, refreshToggle]);
 
@@ -47,7 +48,7 @@ function Component() {
                 >
                     <Input label="Day" type="select" options={daysLabel} />
                     <div class="form-check mt-4">
-                        <input type="checkbox" class="form-check-input" id="all-day" value={allDay} onChange={e => setAllDay(e.target.checked)}/>
+                        <input type="checkbox" class="form-check-input" id="all-day" value={allDay} onChange={e => setAllDay(e.target.checked)} />
                         <label class="form-check-label m-0 cursor-pointer" for="all-day"><strong>All Day</strong></label>
                     </div>
                     <Input disabled={allDay} label="Hour From" type="time" />
@@ -73,15 +74,21 @@ function Component() {
                         <Button color="danger"
                             disabled={!selectedRowIds || Object.keys(selectedRowIds).length === 0}
                             onClick={() => {
-                                Object.keys(selectedRowIds).map(el => dispatch(deleteAdsSchedule(
-                                    page[el].original)));
+                                Object.keys(selectedRowIds).map(el =>
+                                    dispatch(setConfirmDelete("Are you sure to delete this item?",
+                                        () => dispatch(deleteAdsSchedule(page[el].original)))
+                                    ))
                             }}
                             icon={<FiTrash />}
                             label="Delete"
                         />,
                     ])
                 }}
-                onClickDelete={row => dispatch(deleteAdsSchedule(row,))}
+                onClickDelete={row =>
+                    dispatch(setConfirmDelete("Are you sure to delete this item?",
+                        () => dispatch(deleteAdsSchedule(row))
+                    ))
+                }
             />
         </div>
     )
