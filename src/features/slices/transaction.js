@@ -79,7 +79,8 @@ export default slice.reducer;
 
 export const getTransaction = (
   pageIndex, pageSize,
-  search = '', status = '', statusPayment = '', type = ''
+  search = '', status = '', statusPayment = '', type = '',
+  start, end
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -90,6 +91,8 @@ export const getTransaction = (
     '&payment_status=' + statusPayment +
     '&trx_type=' + type +
     '&sort_field=created_on&sort_type=DESC' +
+    '&start_date=' + start + 'T00:00:00' +
+    '&end_date=' + end + 'T23:59:59' +
     '&search=' + search,
 
     res => {
@@ -169,7 +172,7 @@ export const downloadTransactionSettlement = (settlementStatus = '') => dispatch
 export const getTransactionDisbursement = (
   pageIndex, pageSize,
   search = '', type, merchant = '', courier = '',
-  disbursementStatus = ''
+  disbursementStatus = '', start, end
 ) => dispatch => {
 
   dispatch(startAsync());
@@ -182,6 +185,8 @@ export const getTransactionDisbursement = (
     '&limit=' + pageSize +
     '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search +
+    '&disbursed_start_date=' + start + 'T00:00:00' +
+    '&disbursed_end_date=' + end + 'T23:59:59' +
     '&disbursement_status=' + disbursementStatus,
 
     res => {

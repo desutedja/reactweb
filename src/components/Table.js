@@ -86,7 +86,7 @@ function Component({
 
     const [activeFilter, setFilter] = useState(0);
     const [modalOpen, toggleModal] = useState(false);
-    const [filter, toggleFilter] = useState(false);
+    const [filter, toggleFilter] = useState(true);
 
     const [sortField, setSortField] = useState("");
     const [sortType, setSortType] = useState("");

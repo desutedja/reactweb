@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-// import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+import moment from 'moment';
 
 import Filter from '../../components/Filter';
 import { getTransaction, downloadTransaction } from '../slices/transaction';
@@ -12,6 +12,7 @@ import Transaction from '../../components/cells/Transaction';
 import Template from './components/Template';
 import MyButton from '../../components/Button';
 import { FiDownload } from 'react-icons/fi';
+import DateRangeFilter from '../../components/DateRangeFilter';
 
 const payment_status = [
     { label: "Paid", value: "paid" },
@@ -50,13 +51,32 @@ function Component() {
     const [status, setStatus] = useState('');
     const [type, setType] = useState('');
 
+    const [trxStart, setTrxStart] = useState(moment().format('yyyy-MM-DD'));
+    const [trxEnd, setTrxEnd] = useState(moment().format('yyyy-MM-DD'));
+
     return (
         <Template
             columns={columns}
             slice="transaction"
             getAction={getTransaction}
-            filterVars={[status, statusPayment, type]}
+            filterVars={[status, statusPayment, type, trxStart, trxEnd]}
             filters={[
+                {
+                    hidex: true,
+                    label: "Transaction Date: ",
+                    value: trxStart === trxEnd ? 'Today' :
+                    moment(trxStart).format('DD-MM-yyyy') + ' - '
+                    + moment(trxEnd).format('DD-MM-yyyy'),
+                    component: (toggleModal) =>
+                        <DateRangeFilter
+                            startDate={trxStart}
+                            endDate={trxEnd}
+                            onApply={(start, end) => {
+                                setTrxStart(start);
+                                setTrxEnd(end);
+                                toggleModal();
+                            }} />
+                },
                 {
                     hidex: statusPayment === "",
                     label: <p>{statusPayment ? "Payment: " + statusPayment.label : "Payment: All"}</p>,
