@@ -20,7 +20,9 @@ export const slice = createSlice({
       total_pages: 1,
     },
     disbursement: {
-      items: [],
+      items: {
+        data: []
+      },
       selected: {},
       total_items: 0,
       total_pages: 1,
