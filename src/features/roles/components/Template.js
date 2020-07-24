@@ -317,10 +317,10 @@ function Component({ role, children }) {
                                     {subpaths && <div className="Submenu"
                                         style={menuWide && expanded === label ? ({
                                             height: subpaths.length * 36 + 'px',
-                                            // visibility: 'visible'
+                                            visibility: 'visible'
                                         }) : ({
                                             height: 0,
-                                            // visibility: 'hidden'
+                                            visibility: 'hidden'
                                         })}
                                     >
                                         {menuWide && expanded === label ? subpaths.map(sub => <div
