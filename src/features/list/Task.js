@@ -80,7 +80,6 @@ const statuses = [
     { label: 'Approved', value: 'approved', },
     { label: 'Completed', value: 'completed', },
     { label: 'Timeout', value: 'timeout', },
-
 ]
 
 const prios = [
@@ -205,7 +204,7 @@ function Component() {
                 slice='task'
                 getAction={getTask}
                 filterVars={[type, prio, status, building, createdStart, createdEnd, 
-                    resolvedStart, resolvedEnd]}
+                    ...status === 'completed' ? [resolvedStart, resolvedEnd] : []]}
                 filters={[
                     {
                         hidex: true,
@@ -223,7 +222,7 @@ function Component() {
                                     toggleModal();
                                 }} />
                     },
-                    {
+                    ...status === 'completed' ? [{
                         hidex: true,
                         label: "Resolved Date: ",
                         value: resolvedStart === resolvedEnd ? 'Today' :
@@ -239,7 +238,7 @@ function Component() {
                                     setResolvedEnd(end);
                                     toggleModal();
                                 }} />
-                    },
+                    }] : [],
                     {
                         hidex: building === "",
                         label: "Building: ",
