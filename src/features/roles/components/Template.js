@@ -309,8 +309,16 @@ function Component({ role, children }) {
                                             width: '2rem'
                                         }} /> : null}
                                 </div>
-                                {menuWide && expanded === label && <div className="Submenu">
-                                    {subpaths.map(sub => <div
+                                <div className="Submenu"
+                                    style={menuWide && expanded === label ? ({
+                                        height: subpaths.length * 36 + 'px',
+                                        visibility: 'visible'
+                                    }) : ({
+                                        height: 0,
+                                        visibility: 'hidden'
+                                    })}
+                                >
+                                    {menuWide && expanded === label ? subpaths.map(sub => <div
                                         key={sub}
                                         onClick={() => {
                                             history.push(path + sub);
@@ -320,8 +328,8 @@ function Component({ role, children }) {
                                             ? "SubmenuItem-active" : "SubmenuItem"}
                                     >
                                         {toSentenceCase(sub.slice(1))}
-                                    </div>)}
-                                </div>}
+                                    </div>) : (<div></div>)}
+                                </div>
                             </Fragment>
                         ) : null
                     })}
