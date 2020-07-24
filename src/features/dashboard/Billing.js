@@ -81,7 +81,11 @@ function Component() {
                     </div>
                 </div>}
                 <div className="col">
-                    <div className="Container color-4 d-flex flex-column">
+                    <div className={"Container color-4 d-flex flex-column" + (auth.role === 'bm' ? ' cursor-pointer' : '')}
+                    onClick={() => {
+                        auth.role === 'bm' && history.push('/' + auth.role + '/building/' + auth.user.building_id, {tab: 2})
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber className="h2 font-weight-bold white" value={staffData.num_of_unit}
@@ -97,7 +101,7 @@ function Component() {
                         </div>
                     </div>
                 </div>
-                <div className="col">
+                {auth.role === 'sa' && <div className="col">
                     <div className="Container color-5 d-flex flex-column">
                         <div className="row no-gutters align-items-center">
                             <div className="col">
@@ -114,7 +118,7 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>}
             </div>
 
             <div className="Row">
