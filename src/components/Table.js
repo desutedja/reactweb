@@ -86,7 +86,7 @@ function Component({
 
     const [activeFilter, setFilter] = useState(0);
     const [modalOpen, toggleModal] = useState(false);
-    const [filter, toggleFilter] = useState(true);
+    const [filter, toggleFilter] = useState(false);
 
     const [sortField, setSortField] = useState("");
     const [sortType, setSortType] = useState("");
@@ -128,6 +128,8 @@ function Component({
         }
     }, [search])
 
+    const countactivefilter = filters.filter(el => !el.hidex).length
+
     return (
         <div className="Table">
             <Modal
@@ -147,6 +149,9 @@ function Component({
                     {renderActions != null ? renderActions(selectedRowIds, page) : []}
                 </div>
                 <div className="TableAction-right d-flex align-items-center">
+                    {countactivefilter > 0 && <span style={{ paddingRight: '10px' }}> 
+                        {countactivefilter} filter{countactivefilter > 1 ? 's' : ''} applied
+                    </span>}
                     {filters.length > 0 && <div className="Button" style={{
                         cursor: 'pointer',
                         color: 'white',
