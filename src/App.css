@@ -178,11 +178,15 @@
 .Submenu {
   width: 100%;
   box-sizing: border-box;
+  transition: .2s;
+  overflow: hidden;
 }
 
 .SubmenuItem,
 .SubmenuItem-active {
-  padding: 8px;
+  display: flex;
+  align-items: center;
+  height: 36px;
   padding-left: 72px;
   color: #afafcf;
   cursor: pointer;
