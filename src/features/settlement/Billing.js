@@ -176,8 +176,7 @@ function Component() {
                             building, settled));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, building, settled])}
-                    filters={[
-                        auth.role === 'sa' ? (
+                    filters={auth.role === 'sa' ? [
                         {
                             hidex: settled === "",
                             label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
@@ -227,8 +226,9 @@ function Component() {
                                         }}
                                     />
                                 </>
-                        }) :
-                        ({
+                        }
+                    ] : [
+                        {
                             hidex: settled === "",
                             label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
                             delete: () => setSettled(''),
@@ -246,8 +246,8 @@ function Component() {
                                         setSettled("");
                                         toggleModal(false);
                                     }}
-                            />
-                        })
+                                />
+                        }
                     ]}
                     renderActions={(selectedRowIds, page) => {
                         return ([
