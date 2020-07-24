@@ -281,6 +281,7 @@ function Component({ role, children }) {
                         overflowY: 'auto'
                     }}>
                         {Children.map(children, child => {
+                            console.log(child)
                             const { icon, label, path, subpaths } = child.props;
 
                             return label ? (
@@ -313,7 +314,7 @@ function Component({ role, children }) {
                                                 width: '2rem'
                                             }} /> : null}
                                     </div>
-                                    <div className="Submenu"
+                                    {subpaths && <div className="Submenu"
                                         style={menuWide && expanded === label ? ({
                                             height: subpaths.length * 36 + 'px',
                                             // visibility: 'visible'
@@ -333,7 +334,7 @@ function Component({ role, children }) {
                                         >
                                             {toSentenceCase(sub.slice(1))}
                                         </div>) : null}
-                                    </div>
+                                    </div>}
                                 </Fragment>
                             ) : null
                         })}
