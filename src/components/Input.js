@@ -20,7 +20,7 @@ function Component({
     label = "", actionlabels = {}, placeholder = null, compact, name, optional = true,
     type = "text", rows = 2, options = [], fullwidth = false, inputClassName='',
     inputValue, setInputValue, icon, onClick, onFocus, onBlur, cancelValue,
-    hidden, max, min, disabled=false, isValidate = false, validationMsg, accept = "image/*",
+    hidden, max, min, disabled=false, isValidate = false, validationMsg, accept = "image/*", hint='',
     addons,
 }) {
     const ch = new Date().getHours().toString().length < 2 ?
@@ -340,6 +340,9 @@ function Component({
                                         href="#" onClick={actionlabels[action]} >{action}</a>
                                 )}
                             </div>
+                            {hint && <div style={{ fontStyle: 'italic', marginBottom: '8px' }} >
+                                *{hint}
+                            </div>}
                         </>}
                     </div>
                 </div>

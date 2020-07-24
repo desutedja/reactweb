@@ -182,7 +182,6 @@ function Component() {
                         marginTop: 16,
                     }}>
                     
-                    <div className="Container">
                         {disbursement.items.length > 0 && <Card className="Container" style={{ boxShadow: 'none' }} >
                             <ListGroup>
                             <h5 style={{ marginBottom: 16 }}>Select Management</h5> 
@@ -274,7 +273,6 @@ function Component() {
                                 />
                             </Card>
                         </div>
-                    </div>
               </div>
         </div>
     )

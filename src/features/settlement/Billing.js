@@ -1,9 +1,10 @@
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
+import React, { useCallback, useRef, useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch, FiCheck, FiFile, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 
 import Table from '../../components/TableWithSelection';
+import Loading from '../../components/Loading';
 import Breadcrumb from '../../components/Breadcrumb';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -33,6 +34,13 @@ function Component() {
 
     const [settleModal, setSettleModal] = useState(false);
     const [selected, setSelected] = useState([]);
+
+    const fileInput = useRef();
+    const [uploadModal, setUploadModal] = useState(false);
+    const [uploadData, setUploadData] = useState('');
+    const [uploadResult, setUploadResult] = useState(false);
+    const [fileUpload, setFileUpload] = useState('');
+    const [loadingUpload, setLoadingUpload] = useState(false);
 
     let dispatch = useDispatch();
 
@@ -78,6 +86,57 @@ function Component() {
     return (
         <div>
             <Breadcrumb title="Settlement"/>
+            <Modal
+                isOpen={uploadModal}
+                toggle={() => {
+                    setUploadModal(false);
+                }}
+                title="Upload Settlement"
+                subtitle="Upload csv from Xendit dashboard"
+                okLabel={uploadResult ? "OK" : "Submit"}
+                disablePrimary={loading}
+                disableSecondary={loading}
+                onClick={uploadResult ?
+                    () => {
+                        setUploadModal(false);
+                        setUploadResult();
+                    }
+                    :
+                    () => {
+                        setLoadingUpload(true);
+                            
+                        let formData = new FormData();
+                        formData.append('file', fileUpload);
+
+                        dispatch(post(endpointBilling + 'TODO',
+                            formData,
+                            res => {
+                                setLoadingUpload(false);
+
+                                setUploadResult(res.data.data);
+                            },
+                            err => {
+                                setLoadingUpload(false);
+                            }
+                        ));
+                    }}
+            >
+                {uploadResult ?
+                    <div>
+                        {JSON.stringify(uploadResult)}
+                    </div>
+                    :
+                    <Loading loading={loading}>
+                        <input
+                            ref={fileInput}
+                            type="file"
+                            onChange={e => {
+                                setFileUpload(fileInput.current.files[0]);
+                            }}
+                        />
+                    </Loading>
+                }
+            </Modal>
             <Modal isOpen={settleModal} toggle={() => {
                 setSettleModal(!settleModal)
                 setSelected([]);
@@ -260,7 +319,9 @@ function Component() {
                                 label="Settle"
                             />,
                             auth.role === 'sa' && <Button
-                                onClick={() => { }}
+                                onClick={() => { 
+                                    setUploadModal(true); 
+                                }}
                                 icon={<FiFile />}
                                 label="Upload Settlement"
                             />,
