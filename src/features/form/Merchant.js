@@ -28,7 +28,7 @@ const merchantPayload = {
   "phone": "",
   "status": "inactive",
   "description": "",
-  "in_building": 0,
+  in_buildings: [],
   "address": "",
   province: "",
   city: "",
@@ -133,12 +133,14 @@ function Component() {
         ...merchantPayload, ...selected,
         phone: selected.phone.slice(2),
         pic_phone: selected.pic_phone.slice(2),
+        in_buildings: selected.building_list && selected.building_list.map(el => ({ value: el.id, label: el.name })),
       } : merchantPayload}
       schema={merchantSchema}
       formatValues={values => ({
         ...values,
         phone: '62' + values.phone,
         pic_phone: '62' + values.pic_phone,
+        in_buildings: values.in_buildings.map(b => b.value),
       })}
       edit={data => dispatch(editMerchant(data, history, selected.id))}
       add={data => dispatch(createMerchant(data, history))}
@@ -213,10 +215,11 @@ function Component() {
               {...props}
               optional
               label="Building"
-              name="in_building"
+              name="in_buildings"
               type="multiselect"
               placeholder="Select building(s)"
               options={inBuildings}
+              defaultValue={values.in_buildings}
               onChange={el => {
                 console.log(el);
               }}
