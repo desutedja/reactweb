@@ -75,7 +75,7 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointAds + '/management/ads/' + id, res => {
             setData(res.data.data);
-            setSelected(res.data.data);
+            dispatch(setSelected(res.data.data));
         }))
     }, [dispatch, id])
 

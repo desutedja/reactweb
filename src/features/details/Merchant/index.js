@@ -53,10 +53,11 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
     let { id } = useParams();
+
     useEffect(() => {
         dispatch(get(endpointMerchant + '/admin?id=' + id, res => {
             setData(res.data.data);
-            setSelected(res.data.data);
+            dispatch(setSelected(res.data.data));
         }))
     }, [id, dispatch])
 

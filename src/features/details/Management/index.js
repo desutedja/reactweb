@@ -24,7 +24,7 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointAdmin + '/management/details/' + id, res => {
             setData(res.data.data);
-            setSelected(res.data.data);
+            dispatch(setSelected(res.data.data));
         }))
     }, [id, dispatch])
 
