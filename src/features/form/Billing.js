@@ -9,6 +9,7 @@ import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
 import { get } from '../slice';
 
 import Template from "./components/TemplateWithFormik";
+import moment from 'moment';
 import { Form } from 'formik';
 import { billingSchema } from "./services/schemas";
 import Input from './input';
@@ -22,7 +23,6 @@ const billingPayload = {
     month: "",
     year: "",
     remarks: "",
-
     service_label: "",
     month_label: "",
     year_label: "",
@@ -75,7 +75,10 @@ function Component() {
             slice="billing"
             payload={unit.selected.id ? {
                 ...billingPayload, ...unit.selected,
-            } : billingPayload}
+            } : {
+                ...billingPayload,
+                year: moment().format("yyyy", "year") //default value to 2020 
+            }}
             schema={billingSchema}
             formatValues={values => ({
                 ...values,
@@ -99,7 +102,7 @@ function Component() {
                             setService(el);
                         }} />
                         <Input {...props} label="Month" options={months} />
-                        <Input {...props} label="Year" options={yearsOnRange(10)} placeholder={new Date().getFullYear().toString()} />
+                        <Input {...props} label="Year" options={yearsOnRange(10)} />
                         <Input {...props} label="Name" placeholder="Billing description e.g. Electricity for July 2020" />
                         <Input {...props} label="Previous Usage" externalValue={previous} suffix={service.unit} />
                         <Input {...props} label="Recent Usage" suffix={service.unit} />

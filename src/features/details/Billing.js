@@ -8,8 +8,9 @@ import Table from '../../components/Table';
 import Filter from '../../components/Filter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { months, dateTimeFormatterCell, toSentenceCase, dateFormatter } from '../../utils';
+import { months, dateTimeFormatterCell, toMoney, toSentenceCase, dateFormatter } from '../../utils';
 import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
+import { ListGroupItem, ListGroup } from 'reactstrap';
 import Pill from '../../components/Pill';
 import { FiPlus } from 'react-icons/fi';
 import BillingItem from '../../components/cells/BillingItem';
@@ -24,7 +25,7 @@ const columns = [
     { Header: 'ID', accessor: 'id' },
     { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name]} />},
     { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
-    { Header: 'Total', accessor: 'total' },
+    { Header: 'Total', accessor: row => toMoney(row.total) },
     { Header: 'Month', accessor: row => months.find(el => el.value === row.month).label },
     { Header: 'Year', accessor: 'year' },
     { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
@@ -77,20 +78,30 @@ function Component() {
                     display: 'flex',
                     marginTop: 16,
                 }}>
-                    {unit.items.length > 0 && <div className="Container" style={{
+                    <div className="Container" style={{
                         flexDirection: 'column',
                     }}>
                         <h5> Billing Month </h5>
                         <hr/>
-                        {unit.items.map((el, index) => <div
-                            className={index === active ? "GroupActive" : "Group"}
-                            onClick={() => setActive(index)}
-                        >
-                            {el.billing_month}
-                        </div>)}
-                    </div>}
+                        <ListGroup>
+                            {unit.items.length > 0 ? 
+                            unit.items.map((el, index) => <ListGroupItem 
+                                style={{ cursor: "pointer" }}
+                                active={index === active} 
+                                tag="b"
+                                onClick={() => setActive(index)}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <div>{el.billing_month}</div> 
+                                    <div>{el.billing_item.some(it => it.payment === "unpaid") ? 
+                                        <Pill color="light">Unpaid</Pill> : <Pill color="success">Paid</Pill>
+                                    }</div>
+                            </div>
+                            </ListGroupItem>) : <>No Billing Yet</>}
+                        </ListGroup>
+                    </div>
                     <div className="Container" style={{
-                        flex: 3,
+                        flex: 4,
                         flexDirection: 'column',
                         marginRight: 16,
                     }}>
