@@ -1,4 +1,4 @@
-    import React, { useCallback, useEffect, useState, useMemo } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 // import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import Button from '../../components/Button';
@@ -15,8 +15,9 @@ import moment from 'moment';
 import Table from '../../components/TableWithSelection';
 import { getTransactionDisbursement, refresh, downloadTransactionDisbursement } from '../slices/transaction';
 import { trxStatusColor, endpointManagement } from '../../settings';
-import { toMoney, toSentenceCase, dateTimeFormatterCell } from '../../utils';
+import { toMoney, toSentenceCase, dateTimeFormatterCell, isRangeToday } from '../../utils';
 import Pill from '../../components/Pill';
+import Filter from '../../components/Filter';
 import { endpointTransaction, endpointMerchant } from '../../settings';
 import { get, post } from '../slice';
 import MyButton from '../../components/Button';
@@ -34,11 +35,15 @@ function Component() {
     const [active, setActive] = useState(0);
     const [selected, setSelected] = useState([]);
     const [limit, setLimit] = useState(5);
+    const [status, setStatus] = useState('');
     const [filter, setFilter] = useState('');
     const [loadingMerchant, setLoadingMerchant] = useState(false)
     const [loadingCourier, setLoadingCourier] = useState(false)
     const [transferCode, setTransferCode] = useState('');
     const [searchValue, setSearchValue] = useState('');
+
+    const today = moment().format("yyyy-MM-DD", 'day');
+
     const [
         type,
         setType
@@ -71,6 +76,11 @@ function Component() {
     const filtersDisbursement = [
         { label: 'Disbursed Only', value: 'disbursed' },
         { label: 'Undisbursed Only', value: 'undisbursed' }
+    ]
+
+    const filterStatus = [
+        { label: 'Disbursed Transaction', value: 'disbursed' },
+        { label: 'Undisbursed Transaction', value: 'undisbursed' }
     ]
 
     const columns = useMemo(() => {
@@ -151,7 +161,8 @@ function Component() {
             type === 'merchant' && dispatch(get(endpointMerchant +
                 '/admin/list?filter=' + filter +
                 '&limit=' + limit +
-                '&search=' + searchValue,
+                '&search=' + searchValue +
+                '&extra=disbursement',
                 res => {
                     setMerchants(res.data.data.items);
                     setMerchant(res.data.data.items[active].id);
@@ -193,7 +204,7 @@ function Component() {
                 disabledOk={transferCode.length === 0}
                 onClick={() => {
                     if (!transferCode) return;
-                    const currentDate = new Date().toISOString()
+                    const currentDate = moment().format('yyyy-MM-DDTHH:mm:ss')
                     const trx_codes = selected.map(el => el.trx_code)
                     const ref_codes = selected.map(el => el.ref_code)
                     const dataDisburse = type === 'merchant' ? {
@@ -439,10 +450,9 @@ function Component() {
                                 </div>}
                                 <ListGroup>
                                     {!loadingMerchant && merchants
-                                        .map((el, index) => <ListGroupItem
+                                        .map((el, index) => <ListGroupItem style={{ cursor: 'pointer' }}
                                             key={index}
-                                            tag="a"
-                                            href="#"
+                                            tag="b"
                                             active={index === active}
                                             onClick={() => {
                                                 setMerchant(el.id.toString());
@@ -450,7 +460,15 @@ function Component() {
                                                 setActive(index)
                                             }}
                                         >
-                                            {el.name}
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <div>{el.name}</div>
+                                                <div style={{ display: 'flex' }}>
+                                                    { /* <Pill color="success">{el.disbursed_count}</Pill> */}
+                                                    <Pill color={el.undisbursed_count > 0 ? "warning": "light"}>
+                                                        {el.undisbursed_count} 
+                                                    </Pill>
+                                                </div>
+                                            </div>
                                         </ListGroupItem>)}
                                 </ListGroup>
                                 {!loadingMerchant && merchants.length === 0 && (
@@ -492,10 +510,9 @@ function Component() {
                                 </div>}
                                 <ListGroup>
                                     {!loadingCourier && couriers
-                                        .map((el, index) => <ListGroupItem
+                                        .map((el, index) => <ListGroupItem style={{ cursor: 'pointer' }}
                                             key={index}
-                                            tag="a"
-                                            href="#"
+                                            tag="b"
                                             active={index === active}
                                             onClick={() => {
                                                 setCourier(el.id.toString());
@@ -503,7 +520,10 @@ function Component() {
                                                 setActive(index)
                                             }}
                                         >
-                                            {el.firstname} {el.lastname}
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <div>{el.firstname} {el.lastname}</div>
+                                                <div>{}</div>
+                                            </div>
                                         </ListGroupItem>)}
                                 </ListGroup>
                                 {!loadingCourier && couriers.length === 0 && (
@@ -574,23 +594,25 @@ function Component() {
                             pageCount={disbursement.total_pages}
                             fetchData={useCallback((pageIndex, pageSize, search) => {
                                 dispatch(getTransactionDisbursement(pageIndex, pageSize, search,
-                                    type, merchant, courier, filter,
-                                    ...filter === 'undisbursed' ? [disbursedStart, disbursedEnd] : []
+                                    type, merchant, courier, status.value,
+                                    ...(filter === 'undisbursed' ? [disbursedStart, disbursedEnd] : [today, today]),
                                 ));
                                 // eslint-disable-next-line react-hooks/exhaustive-deps
-                            }, [dispatch, refreshToggle, merchant, courier, filter, type,
-                                disbursedStart, disbursedEnd
+                            }, [dispatch, refreshToggle, merchant, courier, type,
+                                disbursedStart, disbursedEnd, status
                             ])}
                             filters={[
-                                ...filter === 'undisbursed' ? [{
-                                    hidex: true,
+                               {
+                                    hidex: isRangeToday(disbursedStart, disbursedEnd),
                                     label: "Disbursed Date: ",
-                                    value: disbursedStart === disbursedEnd ? 'Today' :
+                                    delete: () => { setDisbursedStart(today); setDisbursedEnd(today) },
+                                    value: isRangeToday(disbursedStart, disbursedEnd) ? 'Today' :
                                         moment(disbursedStart).format('DD-MM-yyyy') + ' - '
                                         + moment(disbursedEnd).format('DD-MM-yyyy')
                                     ,
                                     component: (toggleModal) =>
                                         <DateRangeFilter
+                                            title='Disbursed Date'
                                             startDate={disbursedStart}
                                             endDate={disbursedEnd}
                                             onApply={(start, end) => {
@@ -598,7 +620,25 @@ function Component() {
                                                 setDisbursedEnd(end);
                                                 toggleModal();
                                             }} />
-                                }] : [],
+                                },
+                               {
+                                    hidex: status === '',
+                                    label: "Status: ",
+                                    delete: () => { setStatus('') },
+                                    value: status ? status.label : 'All',
+                                    component: (toggleModal) =>
+                                        <Filter
+                                            data={filterStatus}
+                                            onClickAll={() => {
+                                                setStatus('');
+                                                toggleModal();
+                                            }}
+                                            onClick={el => {
+                                                setStatus(el);
+                                                toggleModal(false);
+                                            }}
+                                        />
+                                },
                             ]}
                             actions={[]}
                             renderActions={(selectedRowIds, page) => {
