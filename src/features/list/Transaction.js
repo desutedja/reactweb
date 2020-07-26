@@ -61,7 +61,7 @@ function Component() {
             columns={columns}
             slice="transaction"
             getAction={getTransaction}
-            filterVars={[status, statusPayment, type, trxStart, trxEnd]}
+            filterVars={[status.value, statusPayment.value, type.value, trxStart, trxEnd]}
             filters={[
                 {
                     hidex: isRangeToday(trxStart, trxEnd),
