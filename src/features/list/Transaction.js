@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import moment from 'moment';
 
 import Filter from '../../components/Filter';
@@ -23,7 +24,7 @@ const trx_type = merchant_types;
 
 const columns = [
     {
-        Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} id={row.trx_code} />
+        Header: 'Trx Code', accessor: row => <Link to={"/sa/transaction/" + row.trx_code} ><b>{row.trx_code}</b></Link>
     },
     { Header: 'Type', accessor: row => toSentenceCase(row.type) },
     { Header: 'Merchant', accessor: 'merchant_name' },
