@@ -564,7 +564,8 @@ function Component() {
                                 {toMoney(disbursement.items.undisbursed_amount)}
                             </b>
                             <MyButton label="Disburse All"
-                                disabled={disbursement.items.data.some(item => item.disbursement_date)}
+                                disabled={disbursement.items && disbursement.items.data && 
+                                    disbursement.items.data.some(item => item.disbursement_date)}
                                 onClick={() => {
                                     setSelected(disbursement.items.data);
                                     setDisburseModal(true);
