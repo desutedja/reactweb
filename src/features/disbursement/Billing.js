@@ -99,9 +99,10 @@ function Component() {
                     marginBottom: 32,
                     position: 'relative'
                 }}>
-                    <Input compact
+                    <Input 
                         type="text"
                         label="Transfer Code"
+                        placeholder="Input bank transfer code as evidence"
                         inputValue={transferCode}
                         setInputValue={setTransferCode}
                         noMargin={true}
@@ -234,7 +235,7 @@ function Component() {
                             <Card className="Container" style={{ boxShadow: 'none' }}>
                                 <Table
                                     onSelection={(selectedRows) => {
-                                        setSelected(selectedRows.filter(el => !el.disbursement_date));
+                                        setSelected(selectedRows.filter(el => el && !el.disbursement_date));
                                     }}
                                     noContainer={true}
                                     columns={columns}
