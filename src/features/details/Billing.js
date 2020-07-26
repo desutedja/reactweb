@@ -5,6 +5,7 @@ import Template from './components/Template';
 
 import Button from '../../components/Button';
 import Table from '../../components/Table';
+import { Card } from 'reactstrap';
 import Filter from '../../components/Filter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
@@ -78,7 +79,8 @@ function Component() {
                     display: 'flex',
                     marginTop: 16,
                 }}>
-                    <div className="Container" style={{
+                    <Card className="Container" style={{
+                        boxShadow: 'none',
                         flexDirection: 'column',
                     }}>
                         <h5> Billing Month </h5>
@@ -99,11 +101,12 @@ function Component() {
                             </div>
                             </ListGroupItem>) : <>No Billing Yet</>}
                         </ListGroup>
-                    </div>
-                    <div className="Container" style={{
+                    </Card>
+                    <Card className="Container" style={{
                         flex: 4,
                         flexDirection: 'column',
                         marginRight: 16,
+                        boxShadow: 'none',
                     }}>
                         <Table
                             columns={columns}
@@ -150,7 +153,7 @@ function Component() {
                                     rows[el].original.id)));
                             }}
                         />
-                    </div>
+                    </Card>
                 </div>,
                 <Detail type="Billing" data={selected} labels={details} editable={false} />,
             ]}

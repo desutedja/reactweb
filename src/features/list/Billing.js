@@ -42,12 +42,12 @@ function Component() {
 
     const columns = [
         // { Header: 'ID', accessor: 'code' },
-        { Header: 'ID', accessor: 'id' },
+        { Header: 'Unit ID', accessor: 'id' },
         {
             Header: 'Unit', accessor: row => <span className="Link"
                 onClick={() => dispatch(getBillingUnitDetails(row, history, url))}
-            >{toSentenceCase(row.section_type) + ' '
-                + row.section_name + ' ' + row.number}</span>
+            ><b>{toSentenceCase(row.section_type) + ' '
+                + row.section_name + ' ' + row.number}</b></span>
         },
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
