@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@material-ui/lab';
 
 import Detail from '../components/Detail';
+import Modal from '../../../components/Modal';
+import Resident from '../../../components/cells/Resident';
+import Staff from '../../../components/cells/Staff';
 import Row from '../../../components/Row';
 import Column from '../../../components/Column';
 import Template from '../components/Template';
@@ -106,6 +111,8 @@ function Component() {
     let dispatch = useDispatch();
     let { id } = useParams();
 
+    const [history, setHistory] = useState(false);
+
     useEffect(() => {
         dispatch(get(endpointTransaction + '/admin/transaction/' + id, res => {
             setData(res.data.data);
@@ -114,9 +121,35 @@ function Component() {
     }, [dispatch, id])
 
     return (
+        <>
+        <Modal
+            width="750px"
+            title="Transaction History"
+            disableFooter={true}
+            isOpen={history}
+            toggle={() => setHistory(false) }
+            >
+                <Timeline align="alternate">
+                  {data.transaction_logs && data.transaction_logs.map((el, index) => 
+                      <TimelineItem>
+                         <TimelineSeparator> 
+                             <TimelineDot/>
+                         {index === (data.transaction_logs.length - 1) ||
+                             <TimelineConnector/> }
+                         </TimelineSeparator>
+                         <TimelineContent>
+                             <b>{el.status}</b>
+                             <div>{dateTimeFormatter(el.created_on)}</div>
+                             <div>{el.description}</div>
+                         </TimelineContent>
+                      </TimelineItem>
+                    )}
+                </Timeline>
+        </Modal>
         <Template
+            title={data.trx_code}
             loading={!data.id}
-            labels={["Details", "Resident", "Merchant", "Courier", "Payment", "Orders"]}
+            labels={["Details", ""]}
             contents={[
                 <>
                     <Row>
@@ -140,10 +173,10 @@ function Component() {
                                             third={toMoney(el.total_price)} />
                                             <div>
                                             {el.remarks_resident && <div style={{ padding: '0px 10px' }} >
-                                                <small>Resident Note: Lorem ipsum dolor sit amet mangana dasdf afdfd dfdfasf a fasdf sdfdsfdsf {el.remarks_resident}</small>
+                                                <small>Resident note: {el.remarks_resident}</small>
                                             </div>}
                                             {el.remarks_merchant && <div style={{ padding: '0px 10px' }} >
-                                                <small>Merchant Note:  Lorem ipsum dolor sit amet mangana dasdf afdfd dfdfasf a fasdf sdfdsfdsf {el.remarks_merchant}</small>
+                                                <small>Merchant note: {el.remarks_merchant}</small>
                                             </div>}
                                             </div>
                                             </>
@@ -165,7 +198,8 @@ function Component() {
                                 <CardFooter>
                                     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                         <h5>Merchant</h5>
-                                        <div>{data.merchant_id} Warkop Mekdun </div>
+                                        <div><a style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }} 
+                                                href={"/sa/merchant/"+ data.merchant_id}>{data.merchant_name}</a></div>
                                     </div>
                                 </CardFooter>
                             </Card>
@@ -177,11 +211,10 @@ function Component() {
                                         <CardTitle><h5>Resident</h5></CardTitle>
                                         <Row>
                                             <div style={{  width: '40%', borderRight: '1px solid rgba(0,0,0,0.125)' }}>
-                                                <b>{data.resident_name}</b>
-                                                <div>{data.resident_phone}</div>
-                                                <div><a href={"mailto:" + data.resident_email}>{data.resident_email}</a></div>
+                                                <Resident id={data.resident_id} data={{photo: data.resident_photo, firstname: data.resident_name,
+                                                    lastname: '', email: data.resident_email}} />
                                             </div>
-                                            <div style={{  width: '70%', padding: '10px' }}>
+                                            <div style={{  width: '70%', paddingLeft: '10px' }}>
                                                 <b>Address</b>
                                                 <div>{data.resident_address}</div>
                                                 <div>{data.resident_building_unit_id}</div>
@@ -194,7 +227,41 @@ function Component() {
                             <Row>
                                 <Card style={{ width: '100%', marginBottom: '20px' }}>
                                     <CardBody>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <CardTitle><h5>Status</h5></CardTitle>
+                                            <div class="Link" onClick={() => setHistory(true)}>See History</div>
+                                        </div>
+                                        <Pill>{toSentenceCase(data.status)}</Pill> 
+                                    </CardBody>
+                                </Card>
+                            </Row>
+                            <Row>
+                                <Card style={{ width: '100%' }}>
+                                    <CardBody>
                                         <CardTitle><h5>Delivery Information</h5></CardTitle>
+                                        <Row>
+                                            <div style={{  width: '30%', borderRight: '1px solid rgba(0,0,0,0.125)' }}>
+                                                <b>Method</b>
+                                                <div>{data.courier_provider}</div>
+                                            </div>
+                                            <div style={{  width: '30%', borderRight: '1px solid rgba(0,0,0,0.125)', paddingLeft: '10px' }}>
+                                                <b>External Courier</b>
+                                                <div>Type : {data.delivery_type !== "internal" ? data.delivery_type : "-"}</div>
+                                                <div>Tracking Code : {data.courier_tracking_code || "-"}</div>
+                                                <div>Courier Name : {data.courier_external_name || "-"}</div>
+                                                <div>Courier Phone : {data.courier_external_phone || "-"}</div>
+                                                <div>Courier Status : {data.courier_external_status || "-"}</div>
+                                            </div>
+                                            <div style={{  width: '30%', paddingLeft: '10px' }}>
+                                                <b>Internal Courier</b>
+                                                {data.courier_internal_id ? <Staff id={data.courier_internal_id} data={{firstname: data.courier_internal_name, 
+                                                    lastname: '', email: data.courier_internal_email, phone: data.courier_internal_phone,
+                                                    staff_role: 'courier' }} /> : <div>-</div>}
+                                                {/*<div>Courier Name : {data.courier_internal_name || "-"}</div>
+                                                <div>Courier Email : {data.courier_internal_phone || "-"}</div>
+                                                <div>Courier Phone : {data.courier_internal_phone || "-"}</div> */}
+                                            </div>
+                                        </Row>
                                         
                                     </CardBody>
                                 </Card>
@@ -204,42 +271,9 @@ function Component() {
                     </Row>
                 </> 
                     ,
-                <Detail data={data} labels={resident} editable={false} />,
-                <Detail data={data} labels={merchant} editable={false} />,
-                <Detail data={data} labels={courier} editable={false} />,
-                <>
-                    <TextField label={"Base Price"} value={toMoney(data.total_base_price)} />
-                    <TextField label={"Selling Price"} value={toMoney(data.total_selling_price)} />
-
-                    <TextField label={"Internal Courier Charge"} value={toMoney(data.courier_internal_charges)} />
-                    <TextField label={"External Courier Charge"} value={toMoney(data.courier_external_charges)} />
-
-                    <TextField label={"Discount"} value={toMoney(data.discount_price)} />
-                    <TextField label={"Discount Code"} value={data.discount_code} />
-
-                    <TextField label={"Tax Type"} value={data.tax_type} />
-                    <TextField label={"Tax"} value={toMoney(data.tax_price)} />
-
-                    <TextField label={"Profit from Sale"} value={toMoney(data.profit_from_sales)} />
-                    <TextField label={"Profit from PG"} value={toMoney(data.profit_from_pg)} />
-                    <TextField label={"Profit from Delivery"} value={toMoney(data.profit_from_delivery)} />
-
-                    <TextField label={"Total Price"} value={toMoney(data.total_price)} />
-
-                    <TextField label={"Payment Status"} value={data.payment} />
-                    {data.payment === 'paid' && <>
-                        <TextField label={"Payment Date"} value={data.payment_date} />
-                        <TextField label={"Payment Method"} value={data.payment_method} />
-                        <TextField label={"Payment Bank"} value={data.payment_bank} />
-                        <TextField label={"Payment Refcode"} value={data.payment_ref_code} />
-
-                        <TextField label={"Convenience Fee"} value={toMoney(data.payment_charge)} />
-                        <TextField label={"Payment Amount"} value={toMoney(data.payment_amount)} />
-                    </>}
-                </>,
-                <Orders />,
             ]}
         />
+        </>
     )
 }
 

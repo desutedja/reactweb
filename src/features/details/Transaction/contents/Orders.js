@@ -6,14 +6,15 @@ import { toMoney, toSentenceCase } from '../../../../utils';
 
 const columnsProduct = [
     { Header: 'Name', accessor: 'item_name' },
-    { Header: 'Type', accessor: row => toSentenceCase(row.item_type) },
-    { Header: 'Base Price', accessor: row => toMoney(row.base_price) },
+    /*   { Header: 'Type', accessor: row => toSentenceCase(row.item_type) }, */
+    /* { Header: 'Base Price', accessor: row => toMoney(row.base_price) }, */
     { Header: 'Quantity', accessor: 'qty' },
-    { Header: 'Admin Fee', accessor: row => toMoney(row.admin_fee) },
-    { Header: 'Discount Code', accessor: row => row.discount_code ? row.discount_code : '-' },
-    { Header: 'Discount Fee', accessor: row => row.discount_price + '%' },
-    { Header: 'PG Fee', accessor: row => row.pg_fee + '%' },
-    { Header: 'Selling Price', accessor: row => toMoney(row.selling_price) },
+    /* { Header: 'Admin Fee', accessor: row => toMoney(row.admin_fee) }, */
+    /* { Header: 'Discount Code', accessor: row => row.discount_code ? row.discount_code : '-' }, */
+    /* { Header: 'Discount Fee', accessor: row => row.discount_price + '%' }, */
+    /* { Header: 'PG Fee', accessor: row => row.pg_fee + '%' }, */
+    /* { Header: 'Selling Price', accessor: row => toMoney(row.selling_price) }, */
+    { Header: 'Total Price', accessor: row => toMoney(row.total_price) },
 ]
 
 function Component() {
@@ -21,6 +22,8 @@ function Component() {
 
     return (
         <Table
+            noaction
+            nopaging
             columns={columnsProduct}
             data={selected.items}
             loading={loading}
