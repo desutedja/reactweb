@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Input from './Input';
 
-const DateRangeFilter = ({ startDate, endDate, onApply }) => {
+const DateRangeFilter = ({ startDate, endDate, onApply, title='Created Date'}) => {
     const [start, setStart] = useState(startDate);
     const [end, setEnd] = useState(endDate);
 
@@ -9,7 +9,7 @@ const DateRangeFilter = ({ startDate, endDate, onApply }) => {
         <div style={{
             textAlign: 'center'
         }}>
-            <h3>Created Date</h3>
+            <h3>{title}</h3>
             <Input label="Start Date" type="date" inputValue={start}
                 setInputValue={setStart}
             />
