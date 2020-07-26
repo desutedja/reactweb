@@ -3,8 +3,8 @@ import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiCheck, FiDownload, FiUpload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
-import moment from 'moment';
 
+import moment from 'moment';
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import Loading from '../../components/Loading';
@@ -13,7 +13,7 @@ import Button from '../../components/Button';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 import { getTransactionDetails, getTransactionSettlement, refresh, downloadTransactionSettlement } from '../slices/transaction';
 import { trxStatusColor } from '../../settings';
-import { toMoney, dateTimeFormatterCell, toSentenceCase } from '../../utils';
+import { isRangeToday, toMoney, dateTimeFormatterCell, toSentenceCase } from '../../utils';
 import { endpointTransaction } from '../../settings';
 import Pill from '../../components/Pill';
 import { get, post } from '../slice';
@@ -59,6 +59,8 @@ function Component() {
     const { loading, settlement, refreshToggle } = useSelector(state => state.transaction);
 
     const [statusSettlement, setStatusSettlement] = useState('')
+
+    const today = moment().format('yyyy-MM-DD', 'day');
 
     const [settleModal, setSettleModal] = useState(false);
     const [selected, setSelected] = useState([]);
@@ -357,9 +359,10 @@ function Component() {
                     onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}
                     filters={[
                         {
-                            hidex: true,
+                            hidex: isRangeToday(settlementStart, settlementEnd),
                             label: "Settlement Date: ",
-                            value: settlementStart === settlementEnd ? 'Today' :
+                            delete: () => { setSettlementStart(today); setSettlementEnd(today); },
+                            value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
                             moment(settlementStart).format('DD-MM-yyyy') + ' - '
                             + moment(settlementEnd).format('DD-MM-yyyy'),
                             component: (toggleModal) =>
