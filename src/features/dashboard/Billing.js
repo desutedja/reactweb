@@ -27,7 +27,7 @@ function Component() {
     const { auth, notification } = useSelector(state => state);
 
     const announcementLists = notification.items
-        // .filter(item => item.topic === 'announcement');
+        .filter(item => item.topic === 'announcement');
 
     const [billingData, setBillingData] = useState({});
     const [staffData, setStaffData] = useState({});
