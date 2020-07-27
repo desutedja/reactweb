@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@material-ui/lab';
 import { Rating } from '@material-ui/lab';
 
-import Detail from '../components/Detail';
+// import Detail from '../components/Detail';
 import Modal from '../../../components/Modal';
 import Resident from '../../../components/cells/Resident';
 import Staff from '../../../components/cells/Staff';
@@ -12,11 +12,11 @@ import Row from '../../../components/Row';
 import Column from '../../../components/Column';
 import Template from '../components/Template';
 
-import { Card, CardHeader, CardFooter, CardTitle, CardBody, CardLink } from 'reactstrap';
+import { Card, CardFooter, CardTitle, CardBody } from 'reactstrap';
 
 import Product from '../../../components/cells/Product';
 import Pill from '../../../components/Pill';
-import Orders from './contents/Orders';
+// import Orders from './contents/Orders';
 import { useParams } from 'react-router-dom';
 import { get } from '../../slice';
 import { setSelected } from '../../slices/transaction';

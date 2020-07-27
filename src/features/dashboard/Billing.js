@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AnimatedNumber from "animated-number-react";
 import { useHistory } from 'react-router-dom';
+import moment from 'moment';
 
 import { FiUsers, FiBriefcase } from 'react-icons/fi';
 import { FaTools, FaBoxOpen } from 'react-icons/fa';
@@ -14,6 +15,8 @@ import './style.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { get } from '../slice';
 
+import CardList from '../../components/CardList';
+
 const formatValue = (value) => value.toFixed(0);
 const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
 
@@ -21,7 +24,10 @@ function Component() {
     let dispatch = useDispatch();
     const history = useHistory();
 
-    const { auth } = useSelector(state => state);
+    const { auth, notification } = useSelector(state => state);
+
+    const announcementLists = notification.items
+        // .filter(item => item.topic === 'announcement');
 
     const [billingData, setBillingData] = useState({});
     const [staffData, setStaffData] = useState({});
@@ -342,6 +348,43 @@ function Component() {
                     </div>
                 </div>
             </div>
+
+            {auth.role === 'bm' && <div className="row">
+                <div className="col-12">
+                    <div className="Container flex-column">
+                        <div className="mb-4">
+                            <h5>List of Announcements</h5>
+                        </div>
+                        {announcementLists.length === 0 && <div className="text-center pb-3">
+                            No announcements
+                        </div>}
+                        <div
+                        style={{
+                            maxHeight: '544px',
+                            overflow: 'auto'
+                        }}
+                        >
+                            {announcementLists.map(({title, description, image, id, created_on}, i) => {
+                                return (
+                                    <div className="row no-gutters">
+                                        <div className="col-12">
+                                            <CardList
+                                            className="mb-4"
+                                            key={id}
+                                            title={title}
+                                            description={description}
+                                            imgSrc={image}
+                                            createdOn={moment(created_on).format('DD MMM YYYY')}
+                                            />
+                                        </div>
+                                    </div>
+                                )
+                            }
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </div>}
         </>
     )
 }

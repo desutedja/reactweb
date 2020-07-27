@@ -4,12 +4,12 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
-import { Field } from 'formik';
+// import { Field } from 'formik';
 
 function Component({
     label, name, ...props
 }) {
-    const { values, setFieldValue, errors, touched } = props;
+    const { values, setFieldValue } = props;
 
     // console.log(values[name])
     const blocksFromHtml = htmlToDraft(values[name]);

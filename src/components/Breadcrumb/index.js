@@ -9,6 +9,7 @@ function Breadcrumb({ title }) {
 
     useEffect(() => {
         console.log(location.pathname)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

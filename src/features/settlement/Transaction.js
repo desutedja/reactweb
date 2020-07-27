@@ -75,10 +75,12 @@ function Component() {
 
     const fileInput = useRef();
     const [uploadModal, setUploadModal] = useState(false);
-    const [uploadData, setUploadData] = useState('');
+    // const [uploadData, setUploadData] = useState('');
     const [uploadResult, setUploadResult] = useState(false);
     const [fileUpload, setFileUpload] = useState('');
-    const [loadingUpload, setLoadingUpload] = useState(false);
+    const [
+        // loadingUpload, 
+        setLoadingUpload] = useState(false);
     // console.log(selected)
 
     const [settlementStart, setSettlementStart] = useState(moment().format('yyyy-MM-DD'));
@@ -117,7 +119,7 @@ function Component() {
                 title="Upload Settlement"
                 subtitle="Upload csv from Xendit dashboard"
                 okLabel={uploadResult && uploadResult.valid_transactions.length > 0 ? "Flag As Settled" : "Submit"}
-                disablePrimary={loading || uploadResult && uploadResult.valid_transactions.length === 0}
+                disablePrimary={uploadResult && uploadResult.valid_transactions.length === 0}
                 disableSecondary={loading}
                 onClick={uploadResult ?
                     () => {

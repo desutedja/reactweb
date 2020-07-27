@@ -2,7 +2,9 @@ import React from 'react';
 
 import Table from '../../../../components/Table';
 import { useSelector } from 'react-redux';
-import { toMoney, toSentenceCase } from '../../../../utils';
+import { toMoney, 
+    // toSentenceCase 
+} from '../../../../utils';
 
 const columnsProduct = [
     { Header: 'Name', accessor: 'item_name' },
