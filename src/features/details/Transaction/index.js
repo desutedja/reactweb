@@ -23,15 +23,16 @@ import { setSelected } from '../../slices/transaction';
 import { endpointTransaction } from '../../../settings';
 import { toMoney, dateTimeFormatter, toSentenceCase } from '../../../utils';
 
-const ThreeColumn = ({ first, second, third, noborder=false }) => {
+const ThreeColumn = ({ first, second, third, noborder=false, two=false }) => {
+    // when two = true, use only first and third
     return (
         <Row style={{ padding: '4px', alignItems: 'center'}}>
             <Column flex={6} style={{ textAlign: 'left' }}>
                 {first || " "}
             </Column>
-            <Column flex={6} style={{ textAlign: 'right' }}>
+            {two || <Column flex={6} style={{ textAlign: 'right' }}>
                 {second}
-            </Column>
+            </Column>}
             <Column flex={6} style={{ textAlign: 'right' }}>
                 {third ? third : '-'}
             </Column>
@@ -92,10 +93,13 @@ function Component() {
                                 <CardBody>
                                     <Row style={{ justifyContent: 'space-between', alignItems: 'bottom' }} >
                                         <CardTitle><h5>Summary</h5> Transaction Code : {data.trx_code}</CardTitle>
-                                        <div style={{ display: 'flex' }}>
+                                        <div style={{ display: 'block', textAlign: 'right',  }}>
                                             <Pill color={data.payment === "paid" ? "success": "secondary"}>
                                                 {toSentenceCase(data.payment)}
                                             </Pill>
+                                            {data.payment === "paid" && <div style={{ paddingTop: '5px' }}>
+                                                via {toSentenceCase(data.payment_method)} ({data.payment_bank})
+                                            </div>}
                                         </div>
                                     </Row>
                                     <div style={{ borderBottom: '1px solid rgba(0, 0, 0, 0.125)', padding: '10px 0px'}} >
@@ -180,7 +184,7 @@ function Component() {
                                 </Card>
                             </Row>
                             <Row>
-                                <Card style={{ width: '100%' }}>
+                                <Card style={{ marginBottom: '20px', width: '100%' }}>
                                     <CardBody>
                                         <CardTitle><h5>Delivery Information</h5></CardTitle>
                                         <Row>
@@ -203,10 +207,43 @@ function Component() {
                                                     staff_role: 'courier' }} /> : <div>-</div>}
                                             </div>
                                         </Row>
-                                        
                                     </CardBody>
                                 </Card>
                             </Row>
+                            {data.payment === 'paid' && data.status === 'completed' && <Row style={{ justifyContent:'space-between' }}>
+                                <Card style={{ marginBottom: '20px', width: '50%', marginRight: '20px' }}>
+                                    <CardBody>
+                                        <CardTitle><h5>Settlement</h5></CardTitle>
+                                        <Row>
+                                            <ThreeColumn two
+                                                first="Status :"
+                                                third={<Pill color={data.payment_settled ? "success" : "secondary"}>
+                                                    {data.payment_settled === 1 ? "Settled" : "Unsettled" }</Pill>} />
+                                        </Row>
+                                        <Row>
+                                            <ThreeColumn two
+                                                first=" "
+                                                third={dateTimeFormatter(data.payment_settled_date)}/>
+                                        </Row>
+                                    </CardBody>
+                                </Card>
+                                <Card style={{ marginBottom: '20px', width: '50%' }}>
+                                    <CardBody>
+                                        <CardTitle><h5>Disbursement</h5></CardTitle>
+                                        <Row>
+                                            <ThreeColumn two
+                                                first="Status :"
+                                                third={<Pill color={data.disbursement_date ? "success" : "secondary"}>
+                                                    {data.disbursement_date ? "Disbursed" : "Undisbursed" }</Pill>} />
+                                        </Row>
+                                        <Row>
+                                            <ThreeColumn two
+                                                first=" "
+                                                third={dateTimeFormatter(data.disbursement_date)}/>
+                                        </Row>
+                                    </CardBody>
+                                </Card>
+                            </Row>}
                         </Column>
                     </Row>
                 </> 

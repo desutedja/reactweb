@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
+import Modal from '../../../components/Modal';
 import { useHistory, useParams } from 'react-router-dom';
 import { get } from '../../slice';
 import { endpointMerchant } from '../../../settings';
@@ -49,6 +50,7 @@ const account = {
 
 function Component() {
     const [data, setData] = useState({});
+    const [confirmDelete, setConfirmDelete] = useState(false);
     
     let dispatch = useDispatch();
     let history = useHistory();
@@ -62,6 +64,19 @@ function Component() {
     }, [id, dispatch])
 
     return (
+        <>
+        <Modal 
+            isOpen={confirmDelete}
+            disableHeader={true}
+            onClick={
+              () => dispatch(deleteMerchant(data, history))
+            }
+            toggle={() => setConfirmDelete(false)}
+            okLabel={"Delete"}
+            cancelLabel={"Cancel"}
+        >
+            Are you sure you want to delete merchant <b>{data.name}</b>?
+        </Modal>
         <Template
             image={data.logo || "placeholder"}
             title={data.name}
@@ -70,12 +85,13 @@ function Component() {
             labels={["Details", "Contact Person", "Bank Account"]}
             contents={[
                 <Detail data={data} labels={info}
-                    onDelete={() => dispatch(deleteMerchant(data, history))}
+                    onDelete={() => setConfirmDelete(true)}
                 />,
                 <Detail data={data} labels={pic} />,
                 <Detail data={data} labels={account} />,
             ]}
         />
+        </>
     )
 }
 

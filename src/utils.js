@@ -76,39 +76,44 @@ export const months = [
     { value: 12, label: 'December' },
 ];
 
+// all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function dateTimeFormatterCell(serverDateTime, whenzero = '-') {
     if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
     return <>
         <div style={{ display: 'block' }}>
-            <div><FiCalendar /> {moment(serverDateTime).format('DD MMMM yyyy')} </div>
-            <div><FiClock /> {moment(serverDateTime).format('HH:mm') + ' WIB'} </div>
+            <div><FiCalendar /> {moment.utc(serverDateTime).format('DD MMMM yyyy')} </div>
+            <div><FiClock /> {moment.utc(serverDateTime).format('HH:mm') + ' WIB'} </div>
         </div>
     </>;
 }
 
+// all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function dateTimeFormatter(serverDateTime, whenzero = '-') {
     if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
 
-    return moment(serverDateTime).format('DD MMMM yyyy HH:mm')  + ' WIB';
+    return moment.utc(serverDateTime).format('DD MMMM yyyy') + " " +
+        moment.utc(serverDateTime).format('HH:mm') + ' WIB';
 }
 
+// all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function timeFormatter(serverDateTime, whenzero = '-', plusHour = 0) {
     if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
-    return moment(serverDateTime).format('HH:mm')  + ' WIB';
+    return moment.utc(serverDateTime).format('HH:mm')  + ' WIB';
 }
 
+// all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function dateFormatter(serverDateTime, whenzero = '-') {
     if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
-    return moment(serverDateTime).format('DD MMMM yyyy');
+    return moment.utc(serverDateTime).format('DD MMMM yyyy');
 }
 
 export function getDatesRange(startDate, stopDate, range = 'days') {
