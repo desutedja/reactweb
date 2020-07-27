@@ -10,13 +10,12 @@ import { setSelected } from '../../features/slices/product';
 function Component({ id, data }) {
     let dispatch = useDispatch();
     let history = useHistory();
-    let { path } = useRouteMatch();
 
     return (
         <div className="Item" onClick={() => {
             history.push({
-                pathname: path + '/' + id,
-                state: data
+                pathname: '/sa/product/' + id,
+                state: data,
             });
             dispatch(setSelected(data));
         }}>
