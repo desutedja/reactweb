@@ -244,6 +244,16 @@
   /* margin-top: 16px; */
 }
 
+.Container-transparent {
+  padding: 16px;
+  border-radius: 4px;
+  display: flex;
+  flex: 1;
+  margin: 0 0 16px 16px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
+}
+
 .Details {
   flex: 1;
   margin: 0 16px;
@@ -356,4 +366,20 @@
 
 .Settings-item:hover {
   background-color: #f3f3fa;
+}
+
+
+.CardList {
+  display: flex;
+  margin: 30px 0px;
+}
+
+.CardList-item {
+  width: 280px;
+  margin-right: 30px;
+  cursor: pointer;
+}
+
+.CardList-item:hover {
+  box-shadow: 0px 0px 42px 0px rgba(32, 91, 146, 0.12);
 }

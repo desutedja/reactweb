@@ -80,7 +80,7 @@ function Component() {
                     )}
                 </Timeline>
         </Modal>
-        <Template
+        <Template transparent
             title={data.trx_code}
             loading={!data.id}
             labels={["Details", ""]}

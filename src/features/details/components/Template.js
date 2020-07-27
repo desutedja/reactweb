@@ -12,7 +12,7 @@ import Loading from '../../../components/Loading';
 import Tab from '../../../components/Tab';
 import Breadcrumb from '../../../components/Breadcrumb';
 
-function Component({ image, title, website, phone, merchant,
+function Component({ image, title, website, phone, merchant, transparent=false,
     email, labels, contents, activeTab, imageTitle = '', loading = true }) {
 
     const [imgLoading, setImgLoading] = useState(true);
@@ -78,7 +78,7 @@ function Component({ image, title, website, phone, merchant,
                         </div>
                     </div>}
                 </div>}
-                <div className="Container" style={{
+                <div className={ transparent ? "Container-transparent" : "Container" } style={{
                     flex: 2,
                 }}>
                     <Tab
