@@ -366,7 +366,7 @@ function Component() {
                     }, [dispatch, refreshToggle, statusSettlement, settlementStart, settlementEnd])}
                     onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}
                     filters={[
-                        {
+                        ...statusSettlement.value === 'settled' ? [{
                             hidex: isRangeToday(settlementStart, settlementEnd),
                             label: "Settlement Date: ",
                             delete: () => { setSettlementStart(today); setSettlementEnd(today); },
@@ -382,7 +382,7 @@ function Component() {
                                         setSettlementEnd(end);
                                         toggleModal();
                                     }} />
-                        },
+                        }] : [],
                         {
                             hidex: statusSettlement === "",
                             label: "Status: ",
