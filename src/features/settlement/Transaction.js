@@ -30,7 +30,7 @@ const status_settlement = [
 const columns = [
     { Header: 'ID', accessor: 'id' },
     {
-        Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} id={row.trx_code} />
+        Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} trxcode={row.trx_code} />
     },
     {
         Header: 'Merchant Name', accessor: row => <Merchant id={row.merchant_id}

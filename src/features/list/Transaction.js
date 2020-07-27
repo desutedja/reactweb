@@ -8,8 +8,8 @@ import { getTransaction, downloadTransaction } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
 import { toMoney, toSentenceCase, dateTimeFormatterCell, isRangeToday } from '../../utils';
 import Pill from '../../components/Pill';
-import Transaction from '../../components/cells/Transaction';
 
+import Transaction from '../../components/cells/Transaction';
 import Template from './components/Template';
 import MyButton from '../../components/Button';
 import { FiDownload } from 'react-icons/fi';
@@ -24,7 +24,7 @@ const trx_type = merchant_types;
 
 const columns = [
     {
-        Header: 'Trx Code', accessor: row => <Link to={"/sa/transaction/" + row.trx_code} ><b>{row.trx_code}</b></Link>
+        Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} trxcode={row.trx_code} />
     },
     { Header: 'Type', accessor: row => toSentenceCase(row.type) },
     { Header: 'Merchant', accessor: 'merchant_name' },
