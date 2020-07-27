@@ -38,6 +38,8 @@ function Component() {
     const [amount, setAmount] = useState('');
     const [modal, setModal] = useState(false);
     const [transferCode, setTransferCode] = useState('');
+    const [destinationBank, setDestinationBank] = useState('');
+    const [destinationAccount, setDestinationAccount] = useState('');
 
     const [data, setData] = useState([]);
     const [selected, setSelected] = useState([]);
@@ -46,6 +48,7 @@ function Component() {
     const [totalItems, setTotalItems] = useState('');
 
     const { disbursement, refreshToggle } = useSelector(state => state.billing);
+    const { banks } = useSelector(state => state.main);
 
     let dispatch = useDispatch();
 
@@ -67,6 +70,10 @@ function Component() {
             }))
     }, [active, disbursement.items, dispatch]);
 
+    // useEffect(() => {
+    //     console.log(selected)
+    // }, [selected])
+
     const getSum = items => {
         return items.reduce((sum, el) => {
             return sum + el.selling_price
@@ -82,29 +89,57 @@ function Component() {
             }}
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
-                disabledOk={transferCode.length === 0}
+                disabledOk={transferCode.length === 0 || destinationBank.length === 0 || destinationAccount.length === 0}
                 onClick={() => {
-                    if (!transferCode) return;
-                    dispatch(post(endpointBilling + '/management/billing/disbursement/flag', {
+                    if (!transferCode || !destinationBank || !destinationAccount) return;
+                    const dataDisbursement = {
                         trx_code: selected.map(el => el.trx_code),
-                        disbursement_transfer_code: transferCode
-                    }, res => {
+                        disbursement_transfer_code: transferCode,
+                        disbursement_destination_bank: destinationBank.replace('BANK ', '').replace(' ', '_').toLowerCase(),
+                        disbursement_destination_account: destinationAccount,
+                    }
+                    dispatch(post(endpointBilling + '/management/billing/disbursement/flag',
+                    dataDisbursement,
+                    res => {
                         dispatch(refresh());
                         setModal(false);
+                        // console.log(res)
+                    },
+                    err => {
+                        // console.log(err.response)
                     }))
                 }}
             >
-                <div style={{
-                    display: 'flex',
-                    marginBottom: 32,
-                    position: 'relative'
-                }}>
+                <div>
                     <Input 
                         type="text"
                         label="Transfer Code"
                         placeholder="Input bank transfer code as evidence"
                         inputValue={transferCode}
                         setInputValue={setTransferCode}
+                        noMargin={true}
+                    />
+                </div>
+                <div> 
+                    <Input 
+                        type="select"
+                        label="Bank Name"
+                        placeholder="Input bank name"
+                        options={banks}
+                        inputValue={destinationBank}
+                        setInputValue={setDestinationBank}
+                        noMargin={true}
+                    />
+                </div>
+                <div style={{
+                    marginBottom: 32,
+                }}> 
+                    <Input 
+                        type="text"
+                        label="Bank Account"
+                        placeholder="Input bank account"
+                        inputValue={destinationAccount}
+                        setInputValue={setDestinationAccount}
                         noMargin={true}
                     />
                 </div>
