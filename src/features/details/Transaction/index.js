@@ -144,7 +144,7 @@ function Component() {
                                         <CardTitle><h5>Transaction Rating</h5></CardTitle>
                                     </div>
                                     <Rating name="rating_transaction" value={data.rating} readOnly/>
-                                    <div> {data.rating_comment}</div>
+                                    <div>{data.rating_comment ? data.rating_comment : <i>No rating comment</i>}</div>
                                 </CardBody>
                             </Card>}
                         </Column>
