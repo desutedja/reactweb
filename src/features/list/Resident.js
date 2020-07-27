@@ -16,7 +16,7 @@ import { toSentenceCase } from '../../utils';
 
 import Template from './components/Template';
 import { post } from '../slice';
-import { endpointResident, resident_statuses, resident_statuses_kyc } from '../../settings';
+import { endpointResident, resident_statuses, resident_kyc_statuses } from '../../settings';
 
 const columns = [
     {
@@ -63,8 +63,8 @@ function Component() {
 
     const [status, setStatus] = useState('');
     const [statusLabel, setStatusLabel] = useState('');
-    const [statusKYC, setStatusKYC] = useState('');
-    const [statusKYCLabel, setStatusKYCLabel] = useState('');
+    const [KYCStatus, setKYCStatus] = useState('');
+    const [KYCStatusLabel, setKYCStatusLabel] = useState('');
 
     let fileInput = useRef();
 
@@ -164,7 +164,7 @@ function Component() {
                     />,
                 ]}
                 deleteAction={role === 'sa' && deleteResident}
-                filterVars={[status, statusKYC]}
+                filterVars={[status, KYCStatus]}
                 filters={[
                     {
                         hidex: status === "",
@@ -186,20 +186,20 @@ function Component() {
                             />
                     },
                     {
-                        hidex: statusKYC === "",
-                        label: <p>{statusKYC ? "Status KYC: " + statusKYCLabel : "Status KYC: All"}</p>,
-                        delete: () => { setStatusKYC(""); },
+                        hidex: KYCStatus === "",
+                        label: <p>{KYCStatus ? "KYC Status: " + KYCStatusLabel : "KYC Status: All"}</p>,
+                        delete: () => { setKYCStatus(""); },
                         component: toggleModal =>
                             <Filter
-                                data={resident_statuses_kyc}
+                                data={resident_kyc_statuses}
                                 onClickAll={() => {
-                                    setStatusKYC("");
-                                    setStatusKYCLabel("");
+                                    setKYCStatus("");
+                                    setKYCStatusLabel("");
                                     toggleModal(false);
                                 }}
                                 onClick={el => {
-                                    setStatusKYC(el.value);
-                                    setStatusKYCLabel(el.label);
+                                    setKYCStatus(el.value);
+                                    setKYCStatusLabel(el.label);
                                     toggleModal(false);
                                 }}
                             />

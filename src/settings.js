@@ -69,7 +69,7 @@ export const resident_statuses = [
     {label: 'Inactive', value: 'inactive'}
 ]
 
-export const resident_statuses_kyc = [
+export const resident_kyc_statuses = [
     {label: 'Submitted', value: 'submitted'},
     {label: 'Unsubmitted', value: 'none'}
 ]
