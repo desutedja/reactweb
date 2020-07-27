@@ -22,7 +22,7 @@ export const taskStatusColor = {
     'reported': 'info',
     'rejected': 'danger',
     'approved': 'success',
-    'completed': 'secondary'
+    'completed': 'success'
 }
 
 export const trx_status = [
