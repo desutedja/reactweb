@@ -19,6 +19,7 @@ import Pill from '../../components/Pill';
 import { get, post } from '../slice';
 import MyButton from '../../components/Button';
 import Transaction from '../../components/cells/Transaction';
+import Merchant from '../../components/cells/Merchant';
 import DateRangeFilter from '../../components/DateRangeFilter';
 
 const status_settlement = [
@@ -30,6 +31,13 @@ const columns = [
     { Header: 'ID', accessor: 'id' },
     {
         Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} id={row.trx_code} />
+    },
+    {
+        Header: 'Merchant Name', accessor: row => <Merchant id={row.merchant_id}
+            items={[
+                '',
+                <p>{row.merchant_name}</p>,
+            ]} />
     },
     { Header: 'Amount', accessor: row => toMoney(row.payment_amount - row.payment_charge) },
     {
@@ -123,7 +131,7 @@ function Component() {
                         dispatch(post(endpointTransaction + '/admin/transaction/settlement/create', dataSettle, res => {
                             setSettleModal(false);
                             dispatch(refresh());
-                            dispatch(setInfo({ 
+                            dispatch(setInfo({
                                 message: trx_codes.length + ' transaction' + (trx_codes.length > 0 ? 's' : '') + ' was marked as settled',
                             }))
                         }))
@@ -154,33 +162,33 @@ function Component() {
                     <div style={{ maxHeight: '600px', overflow: 'scroll' }} >
                         <ListGroup style={{ marginBottom: '15px' }}>
                             <div style={{ padding: '5px' }}><b>
-                                    Valid Transaction Codes: <span style={{ color: "green" }} >
-                                        {uploadResult.valid_transactions.length + ' '}
+                                Valid Transaction Codes: <span style={{ color: "green" }} >
+                                    {uploadResult.valid_transactions.length + ' '}
                                     result{uploadResult.valid_transactions.length > 1 ? 's' : ''}</span>
                             </b></div>
-                        {uploadResult.valid_transactions.map((el) => 
-                            <ListGroupItem color={el.payment_amount - el.payment_charge !== el.xendit_amount ? "warning": "success"}>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <div>Trx Code</div> <b>Value: {toMoney(el.payment_amount - el.payment_charge)}</b>
-                                </div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <div>{el.trx_code}</div> <b>From Xendit: {toMoney(el.xendit_amount)}</b>
-                                </div>
-                                {el.payment_amount - el.payment_charge !== el.xendit_amount && <div style={{ color: "red" }}>
-                                    There's difference between value of transaction and xendit amount. 
+                            {uploadResult.valid_transactions.map((el) =>
+                                <ListGroupItem color={el.payment_amount - el.payment_charge !== el.xendit_amount ? "warning" : "success"}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <div>Trx Code</div> <b>Value: {toMoney(el.payment_amount - el.payment_charge)}</b>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <div>{el.trx_code}</div> <b>From Xendit: {toMoney(el.xendit_amount)}</b>
+                                    </div>
+                                    {el.payment_amount - el.payment_charge !== el.xendit_amount && <div style={{ color: "red" }}>
+                                        There's difference between value of transaction and xendit amount.
                                     </div>}
-                            </ListGroupItem>
-                        )}
+                                </ListGroupItem>
+                            )}
                         </ListGroup>
                         <ListGroup>
                             <div style={{ padding: '5px' }}><b>
-                                    Invalid Transaction Codes: <span style={{ color: "red" }}>
-                                           {uploadResult.invalid_transactions.length + ' '}
+                                Invalid Transaction Codes: <span style={{ color: "red" }}>
+                                    {uploadResult.invalid_transactions.length + ' '}
                                     result{uploadResult.invalid_transactions.length > 1 ? 's' : ''}</span>
                             </b></div>
-                        {uploadResult.invalid_transactions.map((el) => 
-                            <ListGroupItem color="danger">{el.trx_code} ({el.reason})</ListGroupItem>
-                        )}
+                            {uploadResult.invalid_transactions.map((el) =>
+                                <ListGroupItem color="danger">{el.trx_code} ({el.reason})</ListGroupItem>
+                            )}
                         </ListGroup>
                     </div>
                     :
@@ -195,7 +203,7 @@ function Component() {
                     </Loading>
                 }
             </Modal>
-            <Modal isOpen={settleModal} toggle={() => {setSettleModal(!settleModal); setSelected([]);}}
+            <Modal isOpen={settleModal} toggle={() => { setSettleModal(!settleModal); setSelected([]); }}
                 title="Settlement Selection"
                 okLabel="Flag as Settled"
                 onClick={() => {
@@ -352,7 +360,7 @@ function Component() {
                     loading={loading}
                     pageCount={settlement.total_pages}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
-                        dispatch(getTransactionSettlement(pageIndex, pageSize, search, 
+                        dispatch(getTransactionSettlement(pageIndex, pageSize, search,
                             statusSettlement.value, settlementStart, settlementEnd));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, statusSettlement, settlementStart, settlementEnd])}
@@ -363,8 +371,8 @@ function Component() {
                             label: "Settlement Date: ",
                             delete: () => { setSettlementStart(today); setSettlementEnd(today); },
                             value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
-                            moment(settlementStart).format('DD-MM-yyyy') + ' - '
-                            + moment(settlementEnd).format('DD-MM-yyyy'),
+                                moment(settlementStart).format('DD-MM-yyyy') + ' - '
+                                + moment(settlementEnd).format('DD-MM-yyyy'),
                             component: (toggleModal) =>
                                 <DateRangeFilter
                                     startDate={settlementStart}

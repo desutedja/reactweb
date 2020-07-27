@@ -9,7 +9,7 @@ import { get } from '../../slice';
 import Pill from '../../../components/Pill'
 import { dateTimeFormatter, toSentenceCase, staffRoleFormatter } from '../../../utils';
 import { endpointManagement } from '../../../settings';
-import { deleteStaff } from '../../slices/staff';
+import { deleteStaff, setSelected } from '../../slices/staff';
 
 function Component() {
     const [data, setData] = useState({});
@@ -46,6 +46,7 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointManagement + '/admin/staff/' + id, res => {
             setData(res.data.data);
+            dispatch(setSelected(res.data.data));
         }))
     }, [dispatch, id])
 
@@ -58,7 +59,7 @@ function Component() {
             loading={!data.id}
             labels={["Details"]}
             contents={[
-                <Detail data={ data} labels={details}
+                <Detail data={data} labels={details}
                     onDelete={() => dispatch(deleteStaff(data, history))}
                 />,
             ]}

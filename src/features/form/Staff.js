@@ -135,7 +135,7 @@ function Component() {
             slice="staff"
             payload={selected.id ? {...staffPayload, ...selected,
                 phone: selected.phone.slice(2),
-                on_centratama: selected.on_centratama ? selected.on_centratama : '',
+                on_centratama: parseInt(selected.on_centratama) ? selected.on_centratama + '' : '0',
                 staff_specialization: selected.staff_specialization ? selected.staff_specialization : '',
             } : staffPayload}
             schema={staffSchema}

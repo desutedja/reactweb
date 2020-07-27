@@ -95,7 +95,8 @@ function Component({ imgPreview = false, data, labels, type = "",
                                         {el.lfmt ? el.lfmt(el) : formatLabel(el)}
                                     </Column>
                                     <Column flex={9} style={{ fontWeight: 'normal', fontSize: '1em', }}>
-                                        {el.vfmt ? el.vfmt(data[el.label]) : formatValue(el, data[el])}
+                                        {el.vfmt ? el.vfmt(data[el.label]) : el.label ? formatValue(el.label, data[el.label])
+                                            : formatValue(el, data[el])}
                                     </Column>
                                 </Row> : null;
                         })}
