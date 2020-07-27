@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-function Component({ items, id, data }) {
+function Merchant({ items, id, data }) {
 
     const { role } = useSelector(state => state.auth);
 
@@ -16,4 +16,4 @@ function Component({ items, id, data }) {
             </Link>
 }
 
-export default Component;
+export default Merchant;

@@ -72,7 +72,7 @@ function Component() {
                              <TimelineConnector/> }
                          </TimelineSeparator>
                          <TimelineContent>
-                             <b>{el.status}</b>
+                             <b>{toSentenceCase(el.status)}</b>
                              <div>{dateTimeFormatter(el.created_on)}</div>
                              <div>{el.description}</div>
                          </TimelineContent>
@@ -119,7 +119,7 @@ function Component() {
                                     {data.items && <ThreeColumn second="Subtotal" third={toMoney(data.items.reduce((sum, el) => sum + el.total_price, 0))} />}
                                     <ThreeColumn second="Total Selling Price" third={toMoney(data.total_selling_price)} />
                                     {data.discount_code && <ThreeColumn second="Discount Code" third={toMoney(data.discount_code)} />}
-                                    <ThreeColumn second={"Tax"  + " (" + data.tax_type + ")"}  third={toMoney(data.tax_price)} />
+                                    <ThreeColumn second={"Tax (" + data.tax_type + ")"}  third={toMoney(data.tax_price)} />
                                     <ThreeColumn second="Profit From Product" third={toMoney(data.profit_from_sales)} />
                                     <ThreeColumn second="Discount" third={<span style={{ color: "red" }}>{"-" + toMoney(data.discount_price)}</span>} />
                                     <ThreeColumn second="Profit From PG" third={toMoney(data.profit_from_pg)} />

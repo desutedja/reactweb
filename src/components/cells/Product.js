@@ -1,7 +1,7 @@
 import React, { } from 'react';
 import Avatar from 'react-avatar';
-import { useDispatch } from 'react-redux';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import './style.css';
 import { setSelected } from '../../features/slices/product';
@@ -10,12 +10,13 @@ import { setSelected } from '../../features/slices/product';
 function Component({ id, data }) {
     let dispatch = useDispatch();
     let history = useHistory();
+    const { role } = useSelector(state => state.auth);
 
     return (
         <div className="Item" onClick={() => {
             history.push({
-                pathname: '/sa/product/' + id,
-                state: data,
+                pathname: '/' + role + '/product/' + id,
+                state: data
             });
             dispatch(setSelected(data));
         }}>

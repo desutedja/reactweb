@@ -91,7 +91,7 @@ export const editStaff = ( data, history, id) => dispatch => {
 
   dispatch(put(staffEndpoint + '/update', { ...data, id: id }, 
     res => {
-      dispatch(setSelected(res.data.data));
+      // dispatch(setSelected(res.data.data));
       history.push(`${id}`);
 
       dispatch(setInfo({
