@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@material-ui/lab';
 import GoogleMapReact from 'google-map-react';
 
@@ -13,33 +13,19 @@ import TwoColumn from '../../../components/TwoColumn';
 import Pill from '../../../components/Pill';
 import { dateTimeFormatter, toSentenceCase, task } from '../../../utils';
 import { MdChatBubble, MdLocationOn } from 'react-icons/md';
-import { FiMapPin } from 'react-icons/fi';
+import { FiCheck, FiMapPin, FiUserPlus } from 'react-icons/fi';
 
+import Button from '../../../components/Button';
 import Details from '../components/Detail';
 import Modal from '../../../components/Modal';
 import Template from '../components/Template';
 
 import { Card, CardHeader, CardFooter, CardTitle, CardBody, CardLink } from 'reactstrap';
 
-import Reports from './contents/Reports';
 import { useParams } from 'react-router-dom';
 import { get } from '../../slice';
+import { setSelected } from '../../slices/task';
 import { endpointTask, taskPriorityColor, taskStatusColor } from '../../../settings';
-
-const detail = {
-    "Information": [
-        "ref_code",
-        "title",
-        "description",
-        "task_type",
-        "priority",
-        "r_lat",
-        "r_long",
-        "status",
-        "completed_on",
-    ],
-    "Attachments": []
-};
 
 const attachments = [
     "attachment_1",
@@ -49,24 +35,6 @@ const attachments = [
     "attachment_5",
 ]
 
-const assignee = {
-    "Profile": [
-        "assignee_name",
-        "assignee_role",
-        "assigned_by",
-        "assigned_on",
-        "assignee",
-        "assignee_fee",
-    ]
-};
-
-const requester = {
-    "Profile": [
-        "requester",
-        "requester_name",
-    ]
-};
-
 function Component() {
     const [modal, setModal] = useState(false);
     const [mapModal, setMapModal] = useState(false);
@@ -75,6 +43,8 @@ function Component() {
     const [data, setData] = useState({});
     const [lat, setLat] = useState(0.000);
     const [long, setLong] = useState(0.000);
+
+    const history = useHistory();
 
     let dispatch = useDispatch();
     let { id } = useParams();
@@ -149,8 +119,9 @@ function Component() {
                 labels={["Details"]}
                 contents={[
                     <>
+                        <Column style={{ width: '70%' }}>
                         <Row>
-                            <Column style={{ flex: '4', display: 'block' }}>
+                            <Column style={{ flex: '6', display: 'block' }}>
                                 <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                     <CardHeader>
                                         <TwoColumn first={data.ref_code} second={
@@ -179,14 +150,18 @@ function Component() {
                                         </div>
                                     </CardBody>
                                     <CardFooter>
-                                        <div style={{ textAlign: 'center', padding: '5px' }}>
-                                            <Link to="#"><MdChatBubble size="17"/> Go to chatroom</Link>
+                                        <div style={{ textAlign: 'right', padding: '5px' }}>
+                                            <Link to="#" onClick={() => {
+                                                dispatch(setSelected(data));
+                                                history.push("chat");
+                                            }}><MdChatBubble size="17"/> Go to chatroom</Link>
                                         </div>
                                     </CardFooter>
                                 </Card>
                                 <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                     <CardBody>
                                         <h5>Attachment</h5>
+                                        <hr/>
                                         {data.attachment_1 ?
                                             attachments.map(el => data[el] && <img src={data[el]} alt='attachment'
                                                 onClick={() => {
@@ -207,24 +182,63 @@ function Component() {
                                 <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                     <CardBody>
                                         <h5>Reports</h5>
-                                        <Row>
-                                            {data.reports ? <></>
+                                        <hr/>
+                                        <Column style={{ lineHeight: "1.5em" }}>
+                                            {data.task_reports?.length > 0 ? <>
+                                                    {data.task_reports.map((el, index) => 
+                                                    <>
+                                                        <Row>
+                                                            <div>
+                                                                <div><b> Report {index + 1} by {el.assignee_name} </b></div>
+                                                                <small>
+                                                                    Created At: {dateTimeFormatter(el.created_on)}
+                                                                </small>
+                                                            </div>
+                                                        </Row>
+                                                        <Row>
+                                                            {el.description}
+                                                        </Row>
+                                                        <hr/>
+                                                        <Row>
+                                                            {el.attachments > 0 &&
+                                                                [1, 2, 3, 4, 5].map(at => {
+                                                                    const key = "attachment_" + at;
+                                                                    return (
+                                                                        !el[key] && <img src={el[key]} alt='attachment'
+                                                                        onClick={() => {
+                                                                            setModal(true);
+                                                                            setImage(el[key]);
+                                                                        }}
+                                                                        style={{
+                                                                            height: 80,
+                                                                            aspectRatio: 1 
+                                                                        }}
+                                                                   />)
+                                                            })}
+                                                        </Row>
+                                                    </>
+                                                    )}
+                                                 </>
                                                 : <div style={{ color: 'rgba(0, 0, 0, 0.345)' }} >
                                             <i>No Report Submitted Yet</i></div>}
-                                        </Row>
+                                        </Column>
                                     </CardBody>
                                 </Card>
                             </Column>
-                            <Column style={{ flex: '6', display: 'block', maxWidth: '700px' }}>
+                            <Column style={{ flex: '4', display: 'block', maxWidth: '700px' }}>
                                 <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                     <CardBody>
                                         <TwoColumn first={<h5>Status</h5>} second={
                                             <div><Link to="#" onClick={() => {
                                                 setHistoryModal(true);
                                             }}>See History</Link></div>
-                                            }/>
-                                            <div><Pill color={taskStatusColor[data.status]}>{toSentenceCase(data.status)}</Pill></div> 
+                                        }/>
+                                        <div><Pill color={taskStatusColor[data.status]}>{toSentenceCase(data.status)}</Pill></div>
                                     </CardBody>
+                                    {(data.status != 'completed' && data.status != 'canceled') &&
+                                    <CardFooter style={{ textAlign: "right" }}>
+                                        <Button icon={<FiCheck/>} label="Set As Resolved" />
+                                    </CardFooter>}
                                 </Card>
                                 <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                     <CardBody>
@@ -236,12 +250,12 @@ function Component() {
                                             }}><MdLocationOn size="15"/> Last Location</Link></div>
                                             }/>
                                         <Row>
-                                            <div style={{  width: '40%', borderRight: '1px solid rgba(0,0,0,0.125)' }}>
+                                            <div style={{  width: '50%', borderRight: '1px solid rgba(0,0,0,0.125)' }}>
                                                 <Resident id={data.resident_id} 
                                                     data={{photo: data.resident_photo, firstname: data.requester_name,
                                                     lastname: '', email: data.requester_phone}} />
                                             </div>
-                                            <div style={{  width: '70%', paddingLeft: '10px' }}>
+                                            <div style={{  width: '50%', paddingLeft: '10px' }}>
                                                 <b>Location</b>
                                                 <div>{data.requester_section_type + " " +
                                                          data.requester_section_name + " " +
@@ -255,7 +269,7 @@ function Component() {
                                 </Card>
                                 <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                     <CardBody>
-                                        <h5>Last Assignee</h5>
+                                        <h5>Assignee</h5>
                                         <Row>
                                             {data.assignee ? <>
                                             <div style={{  width: '40%', borderRight: '1px solid rgba(0,0,0,0.125)' }}>
@@ -271,9 +285,13 @@ function Component() {
                                             <i>No Assigned Staff Yet</i></div>}
                                         </Row>
                                     </CardBody>
+                                    {(data.status === "rejected" || data.status === "created") && <CardFooter style={{ textAlign: "right" }}>
+                                        <Button icon={<FiUserPlus />} label="Assign Staff" />
+                                    </CardFooter>}
                                 </Card>
                             </Column>
                         </Row>
+                    </Column>
                     </>,
                 ]}
             />
