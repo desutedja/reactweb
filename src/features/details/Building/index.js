@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Detail from '../components/Detail';
 import Template from '../components/Template';
 
+import Modal from '../../../components/Modal';
 import Unit from './contents/Unit';
 import UnitType from './contents/UnitType';
 import Section from './contents/Section';
@@ -22,11 +23,13 @@ const labels = {
 }
 
 const tabs = ["Details", "Section", "Unit Type", "Unit", "Service", "Management", "Module"];
-const tabsBM = ["Section", "Unit Type", "Unit", "Service", "Management"];
+const tabsBM = ["Section", "Unit Type", "Unit", "Billing Service"];
 
 function Component() {
     const [data, setData] = useState({});
     const {auth} = useSelector(state => state)
+
+    const [confirmDelete, setConfirmDelete] = useState(false);
     
     let dispatch = useDispatch();
     let history = useHistory();
@@ -34,7 +37,9 @@ function Component() {
     
     const contents = [
         <Detail data={data} labels={labels}
-            onDelete={() => dispatch(deleteBuilding(data, history))}
+            onDelete={
+                () => setConfirmDelete(true)
+            }
         />,
         <Section />,
         <UnitType />,
@@ -48,8 +53,8 @@ function Component() {
         <UnitType />,
         <Unit />,
         <Service />,
-        <Management />
     ];
+
     useEffect(() => {
         dispatch(get(endpointAdmin + '/building/details/' + id, res => {
             setData(res.data.data);
@@ -58,9 +63,22 @@ function Component() {
     }, [id, dispatch])
 
     return (
+        <>
+        <Modal 
+            isOpen={confirmDelete}
+            disableHeader={true}
+            onClick={
+              () =>  dispatch(deleteBuilding(data, history))
+            }
+            toggle={() => setConfirmDelete(false)}
+            okLabel={"Delete"}
+            cancelLabel={"Cancel"}
+        >
+            Are you sure you want to delete building <b>{data.name}</b>?
+        </Modal>
         <Template
             activeTab={history.location.state ? history.location.state.tab : 0}
-            image={data.logo}
+            image={auth.role === "sa" && data.logo}
             title={data.name}
             website={data.website}
             phone={data.phone}
@@ -68,6 +86,7 @@ function Component() {
             labels={auth.role === 'sa' ? tabs : tabsBM}
             contents={auth.role === 'sa' ? contents : contentsBM}
         />
+        </>
     )
 }
 

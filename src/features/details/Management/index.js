@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
+import Modal from '../../../components/Modal';
 import Detail from '../components/Detail';
 import Template from '../components/Template';
 import { useHistory, useParams } from 'react-router-dom';
@@ -16,6 +17,8 @@ const details =
 
 function Component() {
     const [data, setData] = useState({});
+
+    const [confirmDelete, setConfirmDelete] = useState(false);
     
     let dispatch = useDispatch();
     let history = useHistory();
@@ -29,6 +32,19 @@ function Component() {
     }, [id, dispatch])
 
     return (
+        <>
+        <Modal 
+            isOpen={confirmDelete}
+            disableHeader={true}
+            onClick={
+              () =>  dispatch(deleteManagement(data, history))
+            }
+            toggle={() => setConfirmDelete(false)}
+            okLabel={"Delete"}
+            cancelLabel={"Cancel"}
+        >
+            Are you sure you want to delete management <b>{data.name}</b> ?
+        </Modal>
         <Template
             image={data.logo}
             title={data.name}
@@ -38,10 +54,13 @@ function Component() {
             labels={["Details"]}
             contents={[
                 <Detail type="Management" data={data} labels={details}
-                    onDelete={() => dispatch(deleteManagement(data, history))}
+                    onDelete={
+                        () => setConfirmDelete(true)
+                    }
                 />,
             ]}
         />
+        </>
     )
 }
 
