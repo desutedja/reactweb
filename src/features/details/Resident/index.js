@@ -6,6 +6,8 @@ import {
 import Detail from '../components/Detail';
 import Template from '../components/Template';
 
+import Modal from '../../../components/Modal';
+
 import Unit from './contents/Unit';
 import { useParams, useHistory } from 'react-router-dom';
 import { get } from '../../slice';
@@ -20,6 +22,7 @@ const details = {
 
 function Component() {
     const [data, setData] = useState({});
+    const [confirmDelete, setConfirmDelete] = useState(false);
 
     let dispatch = useDispatch();
     let { id } = useParams();
@@ -33,6 +36,19 @@ function Component() {
     }, [dispatch, id])
 
     return (
+        <>
+        <Modal 
+            isOpen={confirmDelete}
+            disableHeader={true}
+            onClick={
+              () =>  dispatch(deleteResident(data, history))
+            }
+            toggle={() => setConfirmDelete(false)}
+            okLabel={"Delete"}
+            cancelLabel={"Cancel"}
+        >
+            Are you sure you want to delete resident <b>{data.firstname + " " + data.lastname}</b>?
+        </Modal>
         <Template
             image={data.photo || "placeholder"}
             title={data.firstname + ' ' + data.lastname}
@@ -43,11 +59,12 @@ function Component() {
             activeTab={0}
             contents={[
                 <Detail data={data} labels={details}
-                    onDelete={() => dispatch(deleteResident(data, history))}
+                    onDelete={() => setConfirmDelete(true) }
                 />,
                 <Unit id={id} />,
             ]}
         />
+        </>
     )
 }
 
