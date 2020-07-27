@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@material-ui/lab';
 import { Rating } from '@material-ui/lab';
@@ -11,6 +11,9 @@ import Staff from '../../../components/cells/Staff';
 import Row from '../../../components/Row';
 import Column from '../../../components/Column';
 import Template from '../components/Template';
+import ThreeColumn from '../../../components/ThreeColumn';
+import TwoColumn from '../../../components/TwoColumn';
+import { FiArrowUpRight } from 'react-icons/fi';
 
 import { Card, CardHeader, CardFooter, CardTitle, CardBody, CardLink } from 'reactstrap';
 
@@ -23,23 +26,6 @@ import { setSelected } from '../../slices/transaction';
 import { endpointTransaction } from '../../../settings';
 import { toMoney, dateTimeFormatter, toSentenceCase } from '../../../utils';
 
-const ThreeColumn = ({ first, second, third, noborder=false, two=false }) => {
-    // when two = true, use only first and third
-    return (
-        <Row style={{ padding: '4px', alignItems: 'center'}}>
-            <Column flex={6} style={{ textAlign: 'left' }}>
-                {first || " "}
-            </Column>
-            {two || <Column flex={6} style={{ textAlign: 'right' }}>
-                {second}
-            </Column>}
-            <Column flex={6} style={{ textAlign: 'right' }}>
-                {third ? third : '-'}
-            </Column>
-        </Row>
-    )
-}
-
 function Component() {
     const [data, setData] = useState({});
 
@@ -47,6 +33,7 @@ function Component() {
     let { id } = useParams();
 
     const [history, setHistory] = useState(false);
+    const { role } = useSelector(state => state.auth);
 
     useEffect(() => {
         dispatch(get(endpointTransaction + '/admin/transaction/' + id, res => {
@@ -202,9 +189,15 @@ function Component() {
                                             </div>
                                             <div style={{  width: '30%', paddingLeft: '10px' }}>
                                                 <b>Internal Courier</b>
-                                                {data.courier_internal_id ? <Staff id={data.courier_internal_id} data={{firstname: data.courier_internal_name, 
+                                                {data.courier_internal_id ? <>
+                                                <div> Task ID : 
+                                                    <a class="Link" href={"/" + role + "/task/" + data.task_id}> {data.task_id}<FiArrowUpRight size="17"/> </a>
+                                                </div>
+                                                <div> Assignee : </div>
+                                                <Staff id={data.courier_internal_id} data={{firstname: data.courier_internal_name, 
                                                     lastname: '', email: data.courier_internal_email, phone: data.courier_internal_phone,
-                                                    staff_role: 'courier' }} /> : <div>-</div>}
+                                                    staff_role: 'courier' }} />
+                                                </>: <div>-</div>}
                                             </div>
                                         </Row>
                                     </CardBody>
@@ -215,15 +208,15 @@ function Component() {
                                     <CardBody>
                                         <CardTitle><h5>Settlement</h5></CardTitle>
                                         <Row>
-                                            <ThreeColumn two
+                                            <TwoColumn 
                                                 first="Status :"
-                                                third={<Pill color={data.payment_settled ? "success" : "secondary"}>
+                                                second={<Pill color={data.payment_settled ? "success" : "secondary"}>
                                                     {data.payment_settled === 1 ? "Settled" : "Unsettled" }</Pill>} />
                                         </Row>
                                         <Row>
-                                            <ThreeColumn two
+                                            <TwoColumn 
                                                 first=" "
-                                                third={dateTimeFormatter(data.payment_settled_date)}/>
+                                                second={dateTimeFormatter(data.payment_settled_date)}/>
                                         </Row>
                                     </CardBody>
                                 </Card>
@@ -231,15 +224,15 @@ function Component() {
                                     <CardBody>
                                         <CardTitle><h5>Disbursement</h5></CardTitle>
                                         <Row>
-                                            <ThreeColumn two
+                                            <TwoColumn 
                                                 first="Status :"
-                                                third={<Pill color={data.disbursement_date ? "success" : "secondary"}>
+                                                second={<Pill color={data.disbursement_date ? "success" : "secondary"}>
                                                     {data.disbursement_date ? "Disbursed" : "Undisbursed" }</Pill>} />
                                         </Row>
                                         <Row>
-                                            <ThreeColumn two
+                                            <TwoColumn 
                                                 first=" "
-                                                third={dateTimeFormatter(data.disbursement_date)}/>
+                                                second={dateTimeFormatter(data.disbursement_date)}/>
                                         </Row>
                                     </CardBody>
                                 </Card>
