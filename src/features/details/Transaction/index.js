@@ -83,7 +83,7 @@ function Component() {
         <Template transparent
             title={data.trx_code}
             loading={!data.id}
-            labels={["Details", ""]}
+            labels={["Details"]}
             contents={[
                 <>
                     <Row>
