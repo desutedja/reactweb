@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@material-ui/lab';
+import { Rating } from '@material-ui/lab';
 
 import Detail from '../components/Detail';
 import Modal from '../../../components/Modal';
@@ -22,73 +23,6 @@ import { setSelected } from '../../slices/transaction';
 import { endpointTransaction } from '../../../settings';
 import { toMoney, dateTimeFormatter, toSentenceCase } from '../../../utils';
 
-const details = {
-    'Information': [
-        { label: 'trx_code', lfmt: () => "Transaction Code", vfmt: (v) => v},
-        { label: 'created_on', lfmt: () => "Created On", vfmt: (v) => dateTimeFormatter(v)}, 
-        /*   'total_qty', */
-    ],
-    'Status': [
-        "status",
-    ],
-    'Rating': [
-        "rating",
-        "rating_comment",
-    ],
-    'Settlement': [
-        "payment_settled",
-        "payment_settled_date",
-        "disbursement_date",
-        "disbursement_destination_bank",
-        "disbursement_transfer_code",
-    ],
-    'Delivery': [
-        "delivery_option",
-    ],
-};
-
-const resident = {
-    'Profile': [
-        'building_id', 'building_unit_id', 'resident_id', 'resident_name', 'resident_phone',
-        'resident_email', 'resident_address',
-    ]
-};
-
-const merchant = {
-    'Profile': [
-        'merchant_id',
-        "type",
-    ]
-};
-
-const courier = {
-    'Information': [
-        "courier_provider",
-        "courier_internal_id",
-        "courier_internal_name",
-        "courier_internal_phone",
-        "courier_external_id",
-        "courier_external_name",
-        "courier_external_phone",
-        "courier_external_photo",
-        "courier_tracking_code",
-        "courier_tracking_url",
-        "courier_external_status",
-    ]
-};
-
-const TextField = ({ label, value, align }) => {
-    return (
-        <Row style={{ padding: '4px', alignItems: 'flex-start' }}>
-            <Column flex={3} style={{ textAlign: 'right'}}>
-                {label}
-            </Column>
-            <Column flex={9} style={{ fontWeight: 'normal', textAlign: 'right' }}>
-                {value ? value : '-'}
-            </Column>
-        </Row>
-    )
-}
 const ThreeColumn = ({ first, second, third, noborder=false }) => {
     return (
         <Row style={{ padding: '4px', alignItems: 'center'}}>
@@ -154,7 +88,7 @@ function Component() {
                 <>
                     <Row>
                         <Column style={{ width: '80%' }}>
-                            <Card style={{ marginRight: '20px' }}>
+                            <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                 <CardBody>
                                     <Row style={{ justifyContent: 'space-between', alignItems: 'bottom' }} >
                                         <CardTitle><h5>Summary</h5> Transaction Code : {data.trx_code}</CardTitle>
@@ -182,6 +116,7 @@ function Component() {
                                             </>
                                         )}
                                     </div>
+                                    {data.items && <ThreeColumn second="Subtotal" third={toMoney(data.items.reduce((sum, el) => sum + el.total_price, 0))} />}
                                     <ThreeColumn second="Total Selling Price" third={toMoney(data.total_selling_price)} />
                                     {data.discount_code && <ThreeColumn second="Discount Code" third={toMoney(data.discount_code)} />}
                                     <ThreeColumn second={"Tax"  + " (" + data.tax_type + ")"}  third={toMoney(data.tax_price)} />
@@ -203,8 +138,17 @@ function Component() {
                                     </div>
                                 </CardFooter>
                             </Card>
+                            {data.status === 'completed' && <Card style={{ marginRight: '20px' }}>
+                                <CardBody>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <CardTitle><h5>Transaction Rating</h5></CardTitle>
+                                    </div>
+                                    <Rating name="rating_transaction" value={data.rating} readOnly/>
+                                    <div> {data.rating_comment}</div>
+                                </CardBody>
+                            </Card>}
                         </Column>
-                        <Column style={{ width: '20%' }}>
+                        <Column style={{ width: '20%', display: 'block' }}>
                             <Row>
                                 <Card style={{ width: '100%', marginBottom: '20px'}}>
                                     <CardBody>
@@ -225,7 +169,7 @@ function Component() {
                                 </Card>
                             </Row>
                             <Row>
-                                <Card style={{ width: '100%', marginBottom: '20px' }}>
+                                <Card style={{ marginBottom: '20px', width: "100%" }}>
                                     <CardBody>
                                         <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                             <CardTitle><h5>Status</h5></CardTitle>
@@ -257,9 +201,6 @@ function Component() {
                                                 {data.courier_internal_id ? <Staff id={data.courier_internal_id} data={{firstname: data.courier_internal_name, 
                                                     lastname: '', email: data.courier_internal_email, phone: data.courier_internal_phone,
                                                     staff_role: 'courier' }} /> : <div>-</div>}
-                                                {/*<div>Courier Name : {data.courier_internal_name || "-"}</div>
-                                                <div>Courier Email : {data.courier_internal_phone || "-"}</div>
-                                                <div>Courier Phone : {data.courier_internal_phone || "-"}</div> */}
                                             </div>
                                         </Row>
                                         
@@ -267,7 +208,6 @@ function Component() {
                                 </Card>
                             </Row>
                         </Column>
-                        {/* <Detail data={data} labels={details} editable={false} /> */}
                     </Row>
                 </> 
                     ,
