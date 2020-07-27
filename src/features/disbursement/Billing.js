@@ -89,7 +89,11 @@ function Component() {
             }}
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
-                disabledOk={transferCode.length === 0 || destinationBank.length === 0 || destinationAccount.length === 0}
+                disabledOk={transferCode.length === 0 ||
+                    destinationBank.length === 0 ||
+                    destinationAccount.length === 0 ||
+                    selected.length === 0
+                }
                 onClick={() => {
                     if (!transferCode || !destinationBank || !destinationAccount) return;
                     const dataDisbursement = {
