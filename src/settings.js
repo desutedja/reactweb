@@ -22,7 +22,7 @@ export const taskStatusColor = {
     'reported': 'info',
     'rejected': 'danger',
     'approved': 'success',
-    'completed': 'success'
+    'completed': 'success',
 }
 
 export const trx_status = [
@@ -56,7 +56,7 @@ export const trxStatusColor = {
     'ready_for_pickup': 'info',
     'on_delivery': 'success',
     'delivered': 'info',
-    'completed': 'secondary',
+    'completed': 'success',
 }
 
 export const merchant_types = [
