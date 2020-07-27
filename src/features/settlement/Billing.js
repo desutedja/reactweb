@@ -37,10 +37,12 @@ function Component() {
 
     const fileInput = useRef();
     const [uploadModal, setUploadModal] = useState(false);
-    const [uploadData, setUploadData] = useState('');
+    // const [uploadData, setUploadData] = useState('');
     const [uploadResult, setUploadResult] = useState(false);
     const [fileUpload, setFileUpload] = useState('');
-    const [loadingUpload, setLoadingUpload] = useState(false);
+    const [
+        // loadingUpload,
+         setLoadingUpload] = useState(false);
 
     let dispatch = useDispatch();
 

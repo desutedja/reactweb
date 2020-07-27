@@ -72,6 +72,16 @@ export const merchant_types = [
     {label: 'Goods', value: 'Goods'},
 ]
 
+export const resident_statuses = [
+    {label: 'Active', value: 'active'},
+    {label: 'Inactive', value: 'inactive'}
+]
+
+export const resident_kyc_statuses = [
+    {label: 'Submitted', value: 'submitted'},
+    {label: 'Unsubmitted', value: 'none'}
+]
+
 export const task_types = [
     {label: 'Service', value: 'service'},
     {label: 'Security', value: 'security'}

@@ -215,8 +215,8 @@
 }
 
 .FilterContainer.down {
-  /* height: 50px; */
-  height: auto;
+  height: 48px;
+  /* height: auto; */
   padding-top: 8px;
   visibility: visible;
 }

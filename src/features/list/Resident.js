@@ -7,6 +7,7 @@ import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
 import Loading from '../../components/Loading';
+import Filter from '../../components/Filter';
 
 import Resident from '../../components/cells/Resident';
 
@@ -15,13 +16,19 @@ import { toSentenceCase } from '../../utils';
 
 import Template from './components/Template';
 import { post } from '../slice';
-import { endpointResident } from '../../settings';
+import { endpointResident, resident_statuses, resident_kyc_statuses } from '../../settings';
 
 const columns = [
     {
         Header: "Resident",
         accessor: row => <Resident id={row.id} data={row} />,
         sorting: 'firstname',
+    },
+    {
+        Header: "Status",
+        accessor: row => <Pill color={row.status === "active" ? "success" : "secondary"}>
+            {toSentenceCase(row.status)}</Pill>,
+        sorting: 'onboarding',
     },
     {
         Header: "Onboarded",
@@ -53,6 +60,11 @@ function Component() {
     const [file, setFile] = useState();
     const [data, setData] = useState();
     const [res, setRes] = useState();
+
+    const [status, setStatus] = useState('');
+    const [statusLabel, setStatusLabel] = useState('');
+    const [KYCStatus, setKYCStatus] = useState('');
+    const [KYCStatusLabel, setKYCStatusLabel] = useState('');
 
     let fileInput = useRef();
 
@@ -152,6 +164,47 @@ function Component() {
                     />,
                 ]}
                 deleteAction={role === 'sa' && deleteResident}
+                filterVars={[status, KYCStatus]}
+                filters={[
+                    {
+                        hidex: status === "",
+                        label: <p>{status ? "Status: " + statusLabel : "Status: All"}</p>,
+                        delete: () => { setStatus(""); },
+                        component: toggleModal =>
+                            <Filter
+                                data={resident_statuses}
+                                onClickAll={() => {
+                                    setStatus("");
+                                    setStatusLabel("");
+                                    toggleModal(false);
+                                }}
+                                onClick={el => {
+                                    setStatus(el.value);
+                                    setStatusLabel(el.label);
+                                    toggleModal(false);
+                                }}
+                            />
+                    },
+                    {
+                        hidex: KYCStatus === "",
+                        label: <p>{KYCStatus ? "KYC Status: " + KYCStatusLabel : "KYC Status: All"}</p>,
+                        delete: () => { setKYCStatus(""); },
+                        component: toggleModal =>
+                            <Filter
+                                data={resident_kyc_statuses}
+                                onClickAll={() => {
+                                    setKYCStatus("");
+                                    setKYCStatusLabel("");
+                                    toggleModal(false);
+                                }}
+                                onClick={el => {
+                                    setKYCStatus(el.value);
+                                    setKYCStatusLabel(el.label);
+                                    toggleModal(false);
+                                }}
+                            />
+                    },
+                ]}
             />
         </>
     )
