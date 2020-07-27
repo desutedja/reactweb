@@ -79,7 +79,7 @@ export const {
 
 export const getResident = (
   pageIndex, pageSize,
-  search = '',
+  search = '', status = '', kyc = ''
   // sort_field = 'created_on',
   // sort_type = 'DESC',
 ) => dispatch => {
@@ -91,6 +91,8 @@ export const getResident = (
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search +
+    '&kyc=' + kyc +
+    '&status=' + status +
     '&sort_field=created_on&sort_type=DESC' +
     // '&sort_field=' + sort_field + '&sort_type=' + sort_type +
     '&status=',
