@@ -59,6 +59,14 @@ export const trxStatusColor = {
     'completed': 'success',
 }
 
+export const taskPriorityColor = {
+    'low' : 'light',
+    'normal' : 'primary',
+    'high' : 'warning',
+    'emergency': 'danger',
+
+}
+
 export const merchant_types = [
     {label: 'Services', value: 'Services'},
     {label: 'Goods', value: 'Goods'},
