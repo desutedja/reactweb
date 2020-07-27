@@ -80,19 +80,11 @@ export function dateTimeFormatterCell(serverDateTime, whenzero = '-') {
     if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
-
-    let date = serverDateTime.split('T')[0];
-    let time = serverDateTime.split('T')[1].split('Z')[0];
-    time = time.split(':').slice(0, 2).join(':');
-
-    let year = date.split('-')[0];
-    let month = parseInt(date.split('-')[1], 10);
-    let day = date.split('-')[2];
-
-    return <><div style={{ display: 'block' }}>
-        <div><FiCalendar /> {day + ' ' + months[month - 1].label + ' ' + year}</div>
-        <div><FiClock /> {time + ' WIB'}</div>
-    </div>
+    return <>
+        <div style={{ display: 'block' }}>
+            <div><FiCalendar /> {moment(serverDateTime).format('DD MMMM yyyy')} </div>
+            <div><FiClock /> {moment(serverDateTime).format('HH:mm') + ' WIB'} </div>
+        </div>
     </>;
 }
 
@@ -100,15 +92,7 @@ export function dateTimeFormatter(serverDateTime, whenzero = '-') {
     if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
 
-    let date = serverDateTime.split('T')[0];
-    let time = serverDateTime.split('T')[1].split('Z')[0];
-    time = time.split(':').slice(0, 2).join(':');
-
-    let year = date.split('-')[0];
-    let month = parseInt(date.split('-')[1], 10);
-    let day = date.split('-')[2];
-
-    return day + ' ' + months[month - 1].label + ' ' + year + ' ' + time + ' WIB';
+    return moment(serverDateTime).format('DD MMMM yyyy HH:mm')  + ' WIB';
 }
 
 export function timeFormatter(serverDateTime, whenzero = '-', plusHour = 0) {
@@ -116,12 +100,7 @@ export function timeFormatter(serverDateTime, whenzero = '-', plusHour = 0) {
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
-    let time = serverDateTime.split('T')[1].split('Z')[0];
-    let hour = parseInt(time.split(':')[0], 10) + plusHour;
-    let minute = time.split(':')[1];
-    // let second = time.split(':')[2];
-
-    return hour + ':' + minute + ' WIB';
+    return moment(serverDateTime).format('HH:mm')  + ' WIB';
 }
 
 export function dateFormatter(serverDateTime, whenzero = '-') {
@@ -129,13 +108,7 @@ export function dateFormatter(serverDateTime, whenzero = '-') {
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
-    let date = serverDateTime.split('T')[0];
-    
-    let year = date.split('-')[0];
-    let month = parseInt(date.split('-')[1], 10);
-    let day = date.split('-')[2];
-
-    return day + ' ' + months[month - 1].label + ' ' + year;
+    return moment(serverDateTime).format('DD MMMM yyyy');
 }
 
 export function getDatesRange(startDate, stopDate, range = 'days') {
