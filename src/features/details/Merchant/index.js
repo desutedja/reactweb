@@ -18,11 +18,13 @@ const info = {
         "type",
         "legal",
         "category",
-        "in_building",
+        {label: "building_list", vfmt: v => {
+            return v.map((el, i) => el.name + (i === v.length - 1 ? '' : ', '))
+        }},
         "address",
-        "district",
-        "city",
-        "province",
+        "district_name",
+        "city_name",
+        "province_name",
         "lat",
         "long",
         "open_at",
