@@ -211,7 +211,8 @@ function Component() {
                                 flexDirection: 'row',
                             }}>
                                 <div className="d-flex align-items-center">
-                                    Undisbursed Amount For&nbsp;<b>{disbursement.items.length > 0 && disbursement.items[active].management_name}</b>
+                                    Undisbursed Amount For&nbsp;<b>{disbursement.items.length > 0 && 
+                                        disbursement.items[active].management_name}</b>
                                 </div>
                                 <div style={{
                                     display: 'flex',
@@ -223,7 +224,9 @@ function Component() {
                                     }}>
                                         {toMoney(amount)}
                                     </b>
-                                    <MyButton label="Disburse All" onClick={() => {
+                                    <MyButton label="Disburse All" 
+                                        disabled={amount && amount === 0}
+                                        onClick={() => {
                                         setSelected(data.filter(el => el && !el.disbursement_date));
                                         setModal(true);
                                     }} />
