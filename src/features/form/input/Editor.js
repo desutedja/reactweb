@@ -4,11 +4,12 @@ import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import draftToHtml from 'draftjs-to-html';
 import htmlToDraft from 'html-to-draftjs';
+import { Field } from 'formik';
 
 function Component({
     label, name, ...props
 }) {
-    const { values, setFieldValue } = props;
+    const { values, setFieldValue, errors, touched } = props;
 
     // console.log(values[name])
     const blocksFromHtml = htmlToDraft(values[name]);
@@ -22,19 +23,34 @@ function Component({
     );
 
     useEffect(() => {
-        setFieldValue(name, draftToHtml(contentState));
-    }, [contentState, name, setFieldValue])
+        console.log('content', values[name], draftToHtml(contentState))
+        draftToHtml(contentState) ? setFieldValue(name, draftToHtml(contentState))
+            : setFieldValue(name, values[name]);
+    }, [contentState, name, setFieldValue, values])
 
     return (
-                <div className="Editor">
-                    <Editor
-                        initialContentState={contentState}
-                        onContentStateChange={setContentState}
-                        editorState={editorState}
-                        onEditorStateChange={setEditorState}
-                        // wrapperClassName='EditorWrapper'
-                    />
-                </div>
+        <div className="Editor">
+            {/* <Field
+                id={label}
+                name={name}
+                placeholder={label}
+                className={errors[name] && touched[name] && "error"}
+                onChange={(e) => {
+                    setFieldValue(name, e.target.value);
+                }}
+                style={{
+                    display: 'none'
+                }}
+                {...props}
+            /> */}
+            <Editor
+                initialContentState={contentState}
+                onContentStateChange={setContentState}
+                editorState={editorState}
+                onEditorStateChange={setEditorState}
+            // wrapperClassName='EditorWrapper'
+            />
+        </div>
     )
 }
 

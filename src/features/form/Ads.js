@@ -215,8 +215,8 @@ function Component() {
                             externalValue={score}
                         />
 
-                        <SectionSeparator title="Scheduling" />
                         {!selected.id && <>
+                            <SectionSeparator title="Scheduling" />
                             <FieldArray
                                 name="schedules"
                                 render={arrayHelpers => (

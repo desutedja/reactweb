@@ -316,7 +316,7 @@ export const changeBuildingManagement = ( data ) => dispatch => {
         message: 'Management status has been changed.'
       }));
 
-      dispatch(stopAsync());
+      // dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());

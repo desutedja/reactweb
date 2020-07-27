@@ -98,7 +98,7 @@ a {
 
 a {
   text-decoration: none;
-  color: dodgerblue;
+  color: #212529;
 }
 
 button {
@@ -283,16 +283,16 @@ form {
 }
 
 .NoDecorationLink div {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .Link {
-    color: dodgerblue;
-    cursor: pointer;
+  color: dodgerblue;
+  cursor: pointer;
 }
 
 .Link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .p-relative {

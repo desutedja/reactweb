@@ -117,7 +117,7 @@ export const editAds = (data, history, id) => dispatch => {
 
   dispatch(put(adsEndpoint, { ...rest.ads, id: id },
     res => {
-      dispatch(setSelected(res.data.data));
+      // dispatch(setSelected(res.data.data));
       history.push("/sa/advertisement/" + id);
 
       dispatch(setInfo({
