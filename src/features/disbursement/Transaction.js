@@ -87,7 +87,7 @@ function Component() {
         if (type === 'merchant') return [
             { Header: 'ID', accessor: 'id' },
             {
-                Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} id={row.trx_code} />
+                Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} trxcode={row.trx_code} />
             },
             {
                 Header: 'Amount', accessor: row => type === 'merchant' ?
@@ -204,7 +204,7 @@ function Component() {
                 disabledOk={transferCode.length === 0}
                 onClick={() => {
                     if (!transferCode) return;
-                    const currentDate = moment().format('yyyy-MM-DDTHH:mm:ss')
+                    const currentDate = moment().format() // already ISO format
                     const trx_codes = selected.map(el => el.trx_code)
                     const ref_codes = selected.map(el => el.ref_code)
                     const dataDisburse = type === 'merchant' ? {
