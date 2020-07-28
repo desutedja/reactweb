@@ -52,18 +52,9 @@ function Component() {
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
         { Header: 'Unpaid Amount', accessor: row => <b>{toMoney(row.unpaid_amount)}</b> },
-        {
-            Header: 'Action', accessor: row => (
-                <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
-                    onClick={() => {
-                        dispatch(setSelected(row));
-                        dispatch(setSelectedUnit({}));
-                        dispatch(getBillingUnitDetails(row, history, url))
-                        history.push(url + '/item/add');
-                    }}
-                />
-            )
-        },
+        { Header: 'Additional Charges', accessor: row => <b>{toMoney(row.additional_charge)}</b> },
+        { Header: 'Penalty', accessor: row => <b>{toMoney(row.billing_penalty)}</b> },
+        { Header: 'Total', accessor: row => <b>{toMoney(row.total)}</b> },
     ]
 
     return (
@@ -110,6 +101,12 @@ function Component() {
                     onClick={() => dispatch(downloadBillingUnit(search, building))}
                 />
             ]}
+            onClickAddBilling={row => {
+                dispatch(setSelected(row));
+                dispatch(setSelectedUnit({}));
+                dispatch(getBillingUnitDetails(row, history, url))
+                history.push(url + '/item/add');
+            }}
         />
     )
 }

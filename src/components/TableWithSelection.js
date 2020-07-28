@@ -5,7 +5,7 @@ import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
-    FiEdit, FiCheck, FiUserPlus, FiMessageSquare, FiFilter, FiList, FiArrowDown, FiArrowUp,
+    FiEdit, FiCheck, FiUserPlus, FiMessageSquare, FiFilter, FiList, FiArrowDown, FiArrowUp, FiPlus,
 } from 'react-icons/fi'
 import {
     FaCaretRight, FaCaretDown,
@@ -32,6 +32,7 @@ function Component({
     onClickDelete,
     onClickDetails,
     onClickEdit,
+    onClickAddBilling,
     renderActions,
     deleteSelection,
     onSelection,
@@ -276,10 +277,14 @@ function Component({
                         </tbody> :
                         <tbody {...getTableBodyProps()}>
                             {page.map((row, i) => {
-                                //row.isExpanded = row.original.expand;
                                 prepareRow(row);
 
                                 const MenuActions = [
+                                    (onClickAddBilling ? {
+                                        onClick: () => onClickAddBilling(row.original),
+                                        name: "Add Billing",
+                                        icon: <FiPlus />,
+                                    } : ""),
                                     (onClickChat ? {
                                         onClick: () => onClickChat(row.original),
                                         name: "Chat",

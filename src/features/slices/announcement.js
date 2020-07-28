@@ -59,6 +59,7 @@ export const getAnnoucement = (
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&sort_field=created_on&sort_type=DESC' +
+    '&topic=announcement' +
     '&consumer_role=' + consumer +
     '&search=' + search,
     
