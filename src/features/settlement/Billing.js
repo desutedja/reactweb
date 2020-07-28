@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch, FiCheck, FiFile, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import { ListGroup, ListGroupItem } from 'reactstrap';
+import moment from 'moment';
 
 import Table from '../../components/TableWithSelection';
 import Loading from '../../components/Loading';
@@ -14,8 +15,9 @@ import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
 import { getBillingSettlement, downloadBillingSettlement, refresh } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
-import { toMoney, dateTimeFormatterCell } from '../../utils';
+import { toMoney, dateTimeFormatterCell, isRangeToday } from '../../utils';
 import { get, post } from '../slice';
+import DateRangeFilter from '../../components/DateRangeFilter';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
@@ -40,7 +42,11 @@ function Component() {
     const [uploadModal, setUploadModal] = useState(false);
     const [uploadResult, setUploadResult] = useState(false);
     const [fileUpload, setFileUpload] = useState('');
-    const [loadingUpload,setLoadingUpload] = useState(false);
+    const [loadingUpload, setLoadingUpload] = useState(false);
+
+    const today = moment().format('yyyy-MM-DD', 'day');
+    const [settlementStart, setSettlementStart] = useState(today);
+    const [settlementEnd, setSettlementEnd] = useState(today);
 
     let dispatch = useDispatch();
 
@@ -85,7 +91,7 @@ function Component() {
 
     return (
         <div>
-            <Breadcrumb title="Settlement"/>
+            <Breadcrumb title="Settlement" />
             <Modal
                 isOpen={uploadModal}
                 toggle={() => {
@@ -99,7 +105,6 @@ function Component() {
                 disableSecondary={loading}
                 onClick={uploadResult ?
                     () => {
-                        const currentDate = new Date().toISOString();
                         const trx_codes = uploadResult.valid_transactions.map(el => el.trx_code)
                         const dataSettle = {
                             trx_codes,
@@ -117,7 +122,7 @@ function Component() {
                     :
                     () => {
                         setLoadingUpload(true);
-                            
+
                         let formData = new FormData();
                         formData.append('file', fileUpload);
 
@@ -274,10 +279,29 @@ function Component() {
                     pageCount={settlement.total_pages}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
                         dispatch(getBillingSettlement(pageIndex, pageSize, search,
-                            building, settled));
+                            building, settled,
+                            ...(settled === '1' ? [settlementStart, settlementEnd] : [today, today])
+                        ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [dispatch, refreshToggle, building, settled])}
+                    }, [dispatch, refreshToggle, building, settled, settlementStart, settlementEnd])}
                     filters={auth.role === 'sa' ? [
+                        ...settled === '1' ? [{
+                            hidex: isRangeToday(settlementStart, settlementEnd),
+                            label: "Settlement Date: ",
+                            delete: () => { setSettlementStart(today); setSettlementEnd(today); },
+                            value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
+                                moment(settlementStart).format('DD-MM-yyyy') + ' - '
+                                + moment(settlementEnd).format('DD-MM-yyyy'),
+                            component: (toggleModal) =>
+                                <DateRangeFilter
+                                    startDate={settlementStart}
+                                    endDate={settlementEnd}
+                                    onApply={(start, end) => {
+                                        setSettlementStart(start);
+                                        setSettlementEnd(end);
+                                        toggleModal();
+                                    }} />
+                        }] : [],
                         {
                             hidex: settled === "",
                             label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
@@ -329,27 +353,27 @@ function Component() {
                                 </>
                         }
                     ] : [
-                        {
-                            hidex: settled === "",
-                            label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
-                            delete: () => setSettled(''),
-                            component: (toggleModal) =>
-                                <Filter
-                                    data={[
-                                        { value: '0', label: 'Unsettled' },
-                                        { value: '1', label: 'Settled' },
-                                    ]}
-                                    onClick={(el) => {
-                                        setSettled(el.value);
-                                        toggleModal(false);
-                                    }}
-                                    onClickAll={() => {
-                                        setSettled("");
-                                        toggleModal(false);
-                                    }}
-                                />
-                        }
-                    ]}
+                            {
+                                hidex: settled === "",
+                                label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
+                                delete: () => setSettled(''),
+                                component: (toggleModal) =>
+                                    <Filter
+                                        data={[
+                                            { value: '0', label: 'Unsettled' },
+                                            { value: '1', label: 'Settled' },
+                                        ]}
+                                        onClick={(el) => {
+                                            setSettled(el.value);
+                                            toggleModal(false);
+                                        }}
+                                        onClickAll={() => {
+                                            setSettled("");
+                                            toggleModal(false);
+                                        }}
+                                    />
+                            }
+                        ]}
                     renderActions={(selectedRowIds, page) => {
                         return ([
                             auth.role === 'sa' && <Button
@@ -361,8 +385,8 @@ function Component() {
                                 label="Settle"
                             />,
                             auth.role === 'sa' && <Button
-                                onClick={() => { 
-                                    setUploadModal(true); 
+                                onClick={() => {
+                                    setUploadModal(true);
                                 }}
                                 icon={<FiFile />}
                                 label="Upload Settlement"
