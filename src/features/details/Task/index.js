@@ -55,6 +55,7 @@ function Component() {
     const history = useHistory();
 
     const { refreshToggle } = useSelector(state => state.task);
+    const { role } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
     let { id } = useParams();
@@ -222,7 +223,7 @@ function Component() {
                                         <div style={{ textAlign: 'right', padding: '5px' }}>
                                             <Link to="#" onClick={() => {
                                                 dispatch(setSelected(data));
-                                                history.push("chat");
+                                                history.push("/" + role + "/chat");
                                             }}><MdChatBubble size="17"/> Go to chatroom</Link>
                                         </div>
                                     </CardFooter>
