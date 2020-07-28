@@ -315,7 +315,7 @@ function Component() {
                                     <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                         <CardBody>
                                             <TwoColumn first={<h5>Requester</h5>} second={
-                                                <div><Link to="#" onClick={() => {
+                                                data.priority === "emergency" && <div><Link to="#" onClick={() => {
                                                     setMapModal(true);
                                                     setLat(data.r_lat);
                                                     setLong(data.r_long);
