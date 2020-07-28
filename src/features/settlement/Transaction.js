@@ -3,8 +3,8 @@ import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiCheck, FiDownload, FiUpload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
-
 import moment from 'moment';
+
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import Loading from '../../components/Loading';
@@ -363,7 +363,9 @@ function Component() {
                     pageCount={settlement.total_pages}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
                         dispatch(getTransactionSettlement(pageIndex, pageSize, search,
-                            statusSettlement.value, settlementStart, settlementEnd));
+                            statusSettlement.value, ...(statusSettlement.value === 'undisbursed' ?
+                                [settlementStart, settlementEnd] : [today, today]),
+                        ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, statusSettlement, settlementStart, settlementEnd])}
                     onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}

@@ -56,11 +56,11 @@ export default function Component() {
     return (
         <>
             <Breadcrumb title={toSentenceCase(path.split('/').reverse()[0])} />
-            <div className="Container">
-                <div className="row justify-content-center w-100 no-gutters mt-5">
+            <div className="Container scroller">
+                <div className="row justify-content-center w-100 no-gutters">
                     <div className="col-12 col-md-6">
                         <form
-                            className="text-left"
+                            className="text-left py-5"
                             onSubmit={e => {
                                 e.preventDefault();
                                 const url = endpointTask + '/admin/create';
@@ -163,7 +163,7 @@ export default function Component() {
 
                             />
                             <div className="row no-gutters">
-                                <div className="col-12 col-sm-3 col-md-4 col-lg-2 offset-sm-9 offset-md-8 offset-lg-10 no-gutters">
+                                <div className="col-12 col-sm-3 col-md-4 col-lg-3 offset-sm-9 offset-md-8 offset-lg-9 no-gutters">
                                     <button className="btn btn-primary w-100">Add Task</button>
                                 </div>
                             </div>
@@ -204,7 +204,7 @@ const SelectOption = ({
                         className="form-control py-4 pr-5 cursor-pointer"
                         onFocus={() => setDropDown(true)}
                         onBlur={() => {
-                            setTimeout(() => setDropDown(false), 10)
+                            setTimeout(() => setDropDown(false), 100)
                         }}
                         {...rest}
                     />

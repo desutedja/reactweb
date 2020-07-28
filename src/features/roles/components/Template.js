@@ -8,6 +8,7 @@ import { Switch, useHistory, useRouteMatch, Route } from 'react-router-dom';
 import QiscusSDKCore from 'qiscus-sdk-core';
 import { Toast, ToastHeader, ToastBody } from 'reactstrap';
 
+import { messaging } from '../../../firebase';
 import Loading from '../../../components/Loading';
 import Row from '../../../components/Row';
 import NotFound from '../../../components/NotFound';
@@ -17,11 +18,11 @@ import Info from '../../../components/Info';
 import Modal from '../../../components/Modal';
 
 import { toSentenceCase, dateTimeFormatter } from '../../../utils';
-import { closeAlert, setConfirmDelete, setNotif, setBanks, get } from '../../slice';
+import { closeAlert, setConfirmDelete, setNotif, setBanks, get, post } from '../../slice';
 import { setNotificationData } from '../../../features/slices/notification';
 import { setQiscus, setUnread, setReloadList } from '../../chat/slice';
 import { logout } from '../../auth/slice';
-import { endpointResident, endpointManagement } from '../../../settings';
+import { endpointResident, endpointManagement, endpointAdmin } from '../../../settings';
 
 const Qiscus = new QiscusSDKCore();
 
@@ -45,9 +46,43 @@ function Component({ role, children }) {
     let { url } = useRouteMatch();
 
     useEffect(() => {
+        messaging.getToken().then((currentToken) => {
+            if (currentToken) {
+                console.log('Current token: ', currentToken);
+
+                dispatch(post(endpointAdmin + '/management/update_fcm', {
+                    "fcm_id": currentToken,
+                    "user_id": user.id
+                }))
+            } else {
+                console.log('No Instance ID token available. Request permission to generate one.');
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+        });
+
+        messaging.onTokenRefresh(() => {
+            messaging.getToken().then((refreshedToken) => {
+                console.log('Token refreshed.');
+                console.log('Current token: ', refreshedToken);
+
+                dispatch(post(endpointAdmin + '/management/update_fcm', {
+                    "fcm_id": refreshedToken,
+                    "user_id": user.id
+                }))
+            }).catch((err) => {
+                console.log('Unable to retrieve refreshed token ', err);
+            });
+        });
+
+        messaging.onMessage((payload) => {
+            console.log('Message received. ', payload);
+        });
+    }, [dispatch, user.id])
+
+    useEffect(() => {
         notifModal && dispatch(get(endpointManagement + '/admin/notification', res => {
             dispatch(setNotificationData(res.data.data));
-            //setNotifications(res.data.data);
             setLoadingNotif(false);
         }));
     }, [dispatch, notifModal])
@@ -165,23 +200,23 @@ function Component({ role, children }) {
                         No notifications.
                     </div>}
                     <div style={{ height: '1000px', overflow: 'scroll' }} >
-                    {items.length > 0 && items.map(el => 
-                    <div class="Container" style={{ margin:'10px 0px', padding: '14px', display: 'flex', cursor: 'pointer'}} onClick={
-                        () => { history.push("/" + role + "/task/" + el.topic_ref_id); setNotifModal(false); }}>
-                            {el.image && <div style={{ backgroundColor: 'grey', padding:'10px', maxWidth:'100px', marginRight:'15px', color: 'white'  }}>
-                                {el.image}
-                            </div>}
-                            <div style={{ textAlign: 'left' }} >
-                                <b>{el.title}</b>
-                                <p style={{ margin: '8px 0px' }}>
-                                    <span style={{ padding: '2px 4px', backgroundColor: 'lightgrey'  }} >
-                                        Task</span> {dateTimeFormatter(el.created_on)}
-                                </p>
-                                <p>{el.description}</p>
+                        {items.length > 0 && items.map(el =>
+                            <div class="Container" style={{ margin: '10px 0px', padding: '14px', display: 'flex', cursor: 'pointer' }} onClick={
+                                () => { history.push("/" + role + "/task/" + el.topic_ref_id); setNotifModal(false); }}>
+                                {el.image && <div style={{ backgroundColor: 'grey', padding: '10px', maxWidth: '100px', marginRight: '15px', color: 'white' }}>
+                                    {el.image}
+                                </div>}
+                                <div style={{ textAlign: 'left' }} >
+                                    <b>{el.title}</b>
+                                    <p style={{ margin: '8px 0px' }}>
+                                        <span style={{ padding: '2px 4px', backgroundColor: 'lightgrey' }} >
+                                            Task</span> {dateTimeFormatter(el.created_on)}
+                                    </p>
+                                    <p>{el.description}</p>
+                                </div>
                             </div>
-                        </div>
                         )
-                    }
+                        }
                     </div>
                 </Loading>
             </Modal>

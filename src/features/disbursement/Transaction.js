@@ -42,26 +42,16 @@ function Component() {
     const [transferCode, setTransferCode] = useState('');
     const [searchValue, setSearchValue] = useState('');
 
-    const today = moment().format("yyyy-MM-DD", 'day');
-
-    const [
-        type,
-        setType
-    ] = useState('merchant');
+    const [type, setType] = useState('merchant');
     const [disburseModal, setDisburseModal] = useState(false);
-    const [
-        merchant,
-        setMerchant
-    ] = useState('');
+    const [merchant, setMerchant] = useState('');
     const [merchants, setMerchants] = useState([]);
-    const [
-        courier,
-        setCourier
-    ] = useState('');
+    const [courier, setCourier] = useState('');
     const [couriers, setCouriers] = useState([]);
 
-    const [disbursedStart, setDisbursedStart] = useState(moment().format('yyyy-MM-DD'));
-    const [disbursedEnd, setDisbursedEnd] = useState(moment().format('yyyy-MM-DD'));
+    const today = moment().format("yyyy-MM-DD", 'day');
+    const [disbursedStart, setDisbursedStart] = useState(today);
+    const [disbursedEnd, setDisbursedEnd] = useState(today);
 
     const { loading, refreshToggle, disbursement } = useSelector(state => state.transaction);
 
@@ -242,7 +232,7 @@ function Component() {
                     marginBottom: 32,
                     position: 'relative'
                 }}>
-                    <Input 
+                    <Input
                         type="text"
                         label="Transfer Code"
                         placeholder="Input transfer code as evidence for this disbursement"
@@ -464,8 +454,8 @@ function Component() {
                                                 <div>{el.name}</div>
                                                 <div style={{ display: 'flex' }}>
                                                     { /* <Pill color="success">{el.disbursed_count}</Pill> */}
-                                                    <Pill color={el.undisbursed_count > 0 ? "warning": "light"}>
-                                                        {el.undisbursed_count} 
+                                                    <Pill color={el.undisbursed_count > 0 ? "warning" : "light"}>
+                                                        {el.undisbursed_count}
                                                     </Pill>
                                                 </div>
                                             </div>
@@ -548,10 +538,10 @@ function Component() {
                         flexDirection: 'row',
                     }}>
                         <div>
-                            Undisbursed Amount For {toSentenceCase(type)} {type === "merchant" ? 
-                            <b>{(merchants.length > 0 ? merchants[active] && merchants[active].name : '')}</b>
-                                    : <b>{(couriers.length > 0 ? couriers[active] && 
-                                        (couriers[active].firstname + " " + couriers[active].lastname) : '')}</b>}
+                            Undisbursed Amount For {toSentenceCase(type)} {type === "merchant" ?
+                                <b>{(merchants.length > 0 ? merchants[active] && merchants[active].name : '')}</b>
+                                : <b>{(couriers.length > 0 ? couriers[active] &&
+                                    (couriers[active].firstname + " " + couriers[active].lastname) : '')}</b>}
                         </div>
                         <div style={{
                             display: 'flex',
@@ -595,14 +585,14 @@ function Component() {
                             fetchData={useCallback((pageIndex, pageSize, search) => {
                                 dispatch(getTransactionDisbursement(pageIndex, pageSize, search,
                                     type, merchant, courier, status.value,
-                                    ...(filter === 'undisbursed' ? [disbursedStart, disbursedEnd] : [today, today]),
+                                    ...(status.value === 'disbursed' ? [disbursedStart, disbursedEnd] : [today, today]),
                                 ));
                                 // eslint-disable-next-line react-hooks/exhaustive-deps
                             }, [dispatch, refreshToggle, merchant, courier, type,
                                 disbursedStart, disbursedEnd, status
                             ])}
                             filters={[
-                               {
+                                ...status.value === 'disbursed' ? [{
                                     hidex: isRangeToday(disbursedStart, disbursedEnd),
                                     label: "Disbursed Date: ",
                                     delete: () => { setDisbursedStart(today); setDisbursedEnd(today) },
@@ -620,8 +610,8 @@ function Component() {
                                                 setDisbursedEnd(end);
                                                 toggleModal();
                                             }} />
-                                },
-                               {
+                                }] : [],
+                                {
                                     hidex: status === '',
                                     label: "Status: ",
                                     delete: () => { setStatus('') },
