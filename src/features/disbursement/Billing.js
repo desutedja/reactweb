@@ -70,10 +70,6 @@ function Component() {
             }))
     }, [active, disbursement.items, dispatch]);
 
-    // useEffect(() => {
-    //     console.log(selected)
-    // }, [selected])
-
     const getSum = items => {
         return items.reduce((sum, el) => {
             return sum + el.selling_price
@@ -176,147 +172,146 @@ function Component() {
                     <h5>Total {toMoney(getSum(selected))}</h5>
                 </div>
             </Modal>
-                    <div className="Container">
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flex: 1,
-                            padding: '15px',
-                        }}>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <div style={{
-                                    marginRight: 16,
-                                }}>
-                                    Undisbursed Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.undisbursed_amount}
-                                    formatValue={formatValue}
-                                />
-                            </div>
-                        </div>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flex: 1,
-                            padding: '15px',
-                        }}>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <div style={{
-                                    marginRight: 16,
-                                }}>
-                                    Disbursed Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.disbursed_amount}
-                                    formatValue={formatValue}
-                                />
-                            </div>
-                        </div>
-                    </div>
+            <div className="Container">
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                    padding: '15px',
+                }}>
                     <div style={{
                         display: 'flex',
-                        flexWrap: 'wrap',
-                        marginTop: 16,
+                        alignItems: 'center',
                     }}>
-                    
-                        {disbursement.items.length > 0 && <Card className="Container" style={{ boxShadow: 'none' }} >
-                            <ListGroup>
-                            <h5 style={{ marginBottom: 16 }}>Select Management</h5> 
-                            {disbursement.items.map((el, index) => <ListGroupItem
-                                key={index}
-                                onClick={() => setActive(index)}
-                                active={index === active}
-                                action
-                                tag="a"
-                                href="#"
-                            >
-                                <div style={{ display: 'block' }}>
-                                    <div><b>{el.management_name}</b></div>
-                                    <div>{el.building_name}</div>
-                                </div>
-                            </ListGroupItem>)}
-                        </ListGroup></Card>}
-
                         <div style={{
-                            flex: 4,
-                            flexDirection: 'column',
+                            marginRight: 16,
                         }}>
-                            <Card  className="Container" style={{
-                                boxShadow: 'none',
-                                justifyContent: 'space-between',
-                                flexDirection: 'row',
+                            Undisbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.undisbursed_amount}
+                            formatValue={formatValue}
+                        />
+                    </div>
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                    padding: '15px',
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <div style={{
+                            marginRight: 16,
+                        }}>
+                            Disbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.disbursed_amount}
+                            formatValue={formatValue}
+                        />
+                    </div>
+                </div>
+            </div>
+            <div className="row no-gutters">
+                <div className="col-12 col-md-5 col-lg-3">
+                    {disbursement.items.length > 0 && <Card className="Container" style={{ boxShadow: 'none' }} >
+                        <ListGroup>
+                        <h5 style={{ marginBottom: 16 }}>Select Management</h5> 
+                        {disbursement.items.map((el, index) => <ListGroupItem
+                            key={index}
+                            onClick={() => setActive(index)}
+                            active={index === active}
+                            action
+                            tag="a"
+                            href="#"
+                        >
+                            <div style={{ display: 'block' }}>
+                                <div><b>{el.management_name}</b></div>
+                                <div>{el.building_name}</div>
+                            </div>
+                        </ListGroupItem>)}
+                    </ListGroup></Card>}
+                </div>
+                <div className="col-12 col-md">
+                    <div style={{
+                        flex: 4,
+                        flexDirection: 'column',
+                    }}>
+                        <Card  className="Container" style={{
+                            boxShadow: 'none',
+                            justifyContent: 'space-between',
+                            flexDirection: 'row',
+                        }}>
+                            <div className="d-flex align-items-center">
+                                Undisbursed Amount For&nbsp;<b>{disbursement.items.length > 0 && 
+                                    disbursement.items[active].management_name}</b>
+                            </div>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
                             }}>
-                                <div className="d-flex align-items-center">
-                                    Undisbursed Amount For&nbsp;<b>{disbursement.items.length > 0 && 
-                                        disbursement.items[active].management_name}</b>
-                                </div>
-                                <div style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
+                                <b style={{
+                                    fontSize: '1.2rem',
+                                    marginRight: 16,
                                 }}>
-                                    <b style={{
-                                        fontSize: '1.2rem',
-                                        marginRight: 16,
-                                    }}>
-                                        {toMoney(amount)}
-                                    </b>
-                                    <MyButton label="Disburse All" 
-                                        disabled={amount && amount === 0}
-                                        onClick={() => {
-                                        setSelected(data.filter(el => el && !el.disbursement_date));
-                                        setModal(true);
-                                    }} />
-                                    <Button label="Download .csv" icon={<FiDownload />}
-                                        onClick={() => dispatch(downloadBillingDisbursement())}
-                                    />
-                                </div>
-                            </Card>
-                            <Card className="Container" style={{ boxShadow: 'none' }}>
-                                <Table
-                                    onSelection={(selectedRows) => {
-                                        setSelected(selectedRows.filter(el => el && !el.disbursement_date));
-                                    }}
-                                    noContainer={true}
-                                    columns={columns}
-                                    data={data}
-                                    totalItems={totalItems}
-                                    loading={dataLoading}
-                                    pageCount={dataPages}
-                                    fetchData={useCallback((pageIndex, pageSize, search) => {
-                                        setDataLoading(true);
-                                        dispatch(get(endpointBilling + '/management/billing/disbursement' +
-                                            '/list/transaction?limit=1000&page=1&search='
-                                            + search + '&building_id=' +
-                                            disbursement.items[active]?.building_id
-                                            + '&management_id=' +
-                                            disbursement.items[active]?.id,
-                                            res => {
-                                                setData(res.data.data.items);
-                                                setDataPages(res.data.data.total_pages);
-                                                setTotalItems(res.data.data.total_items);
-                                                setDataLoading(false);
-                                            }))
-                                        // eslint-disable-next-line react-hooks/exhaustive-deps
-                                    }, [dispatch, refreshToggle, active])}
-                                    renderActions={(selectedRowIds, page) => {
-                                        return ([
-                                            <Button
-                                                disabled={Object.keys(selectedRowIds).length === 0}
-                                                onClick={() => {
-                                                    setModal(true);
-                                                }}
-                                                icon={<FiCheck />}
-                                                label="Disburse Selection"
-                                            />
-                                        ])
-                                    }}
+                                    {toMoney(amount)}
+                                </b>
+                                <MyButton label="Disburse All" 
+                                    disabled={amount && amount === 0}
+                                    onClick={() => {
+                                    setSelected(data.filter(el => el && !el.disbursement_date));
+                                    setModal(true);
+                                }} />
+                                <Button label="Download .csv" icon={<FiDownload />}
+                                    onClick={() => dispatch(downloadBillingDisbursement())}
                                 />
-                            </Card>
-                        </div>
-              </div>
+                            </div>
+                        </Card>
+                        <Card className="Container" style={{ boxShadow: 'none' }}>
+                            <Table
+                                onSelection={(selectedRows) => {
+                                    setSelected(selectedRows.filter(el => el && !el.disbursement_date));
+                                }}
+                                noContainer={true}
+                                columns={columns}
+                                data={data}
+                                totalItems={totalItems}
+                                loading={dataLoading}
+                                pageCount={dataPages}
+                                fetchData={useCallback((pageIndex, pageSize, search) => {
+                                    setDataLoading(true);
+                                    dispatch(get(endpointBilling + '/management/billing/disbursement' +
+                                        '/list/transaction?limit=1000&page=1&search='
+                                        + search + '&building_id=' +
+                                        disbursement.items[active]?.building_id
+                                        + '&management_id=' +
+                                        disbursement.items[active]?.id,
+                                        res => {
+                                            setData(res.data.data.items);
+                                            setDataPages(res.data.data.total_pages);
+                                            setTotalItems(res.data.data.total_items);
+                                            setDataLoading(false);
+                                        }))
+                                    // eslint-disable-next-line react-hooks/exhaustive-deps
+                                }, [dispatch, refreshToggle, active])}
+                                renderActions={(selectedRowIds, page) => {
+                                    return ([
+                                        <Button
+                                            disabled={Object.keys(selectedRowIds).length === 0}
+                                            onClick={() => {
+                                                setModal(true);
+                                            }}
+                                            icon={<FiCheck />}
+                                            label="Disburse Selection"
+                                        />
+                                    ])
+                                }}
+                            />
+                        </Card>
+                    </div>
+                </div>
+
+            </div>
         </div>
     )
 }
