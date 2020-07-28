@@ -119,7 +119,7 @@ function Component() {
                 title="Upload Settlement"
                 subtitle="Upload csv from Xendit dashboard"
                 okLabel={uploadResult && uploadResult.valid_transactions.length > 0 ? "Flag As Settled" : "Submit"}
-                disablePrimary={uploadResult && uploadResult.valid_transactions.length === 0}
+                disablePrimary={loading || (uploadResult && uploadResult.valid_transactions.length === 0)}
                 disableSecondary={loading}
                 onClick={uploadResult ?
                     () => {

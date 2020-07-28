@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useState, useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch, FiCheck, FiFile, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
+import { ListGroup, ListGroupItem } from 'reactstrap';
 
 import Table from '../../components/TableWithSelection';
 import Loading from '../../components/Loading';
@@ -37,12 +38,9 @@ function Component() {
 
     const fileInput = useRef();
     const [uploadModal, setUploadModal] = useState(false);
-    // const [uploadData, setUploadData] = useState('');
     const [uploadResult, setUploadResult] = useState(false);
     const [fileUpload, setFileUpload] = useState('');
-    const [
-        // loadingUpload,
-         setLoadingUpload] = useState(false);
+    const [loadingUpload,setLoadingUpload] = useState(false);
 
     let dispatch = useDispatch();
 
@@ -91,17 +89,30 @@ function Component() {
             <Modal
                 isOpen={uploadModal}
                 toggle={() => {
+                    setUploadResult();
                     setUploadModal(false);
                 }}
                 title="Upload Settlement"
                 subtitle="Upload csv from Xendit dashboard"
-                okLabel={uploadResult ? "OK" : "Submit"}
-                disablePrimary={loading}
+                okLabel={uploadResult && uploadResult.valid_transactions.length > 0 ? "Flag As Settled" : "Submit"}
+                disablePrimary={loading || (uploadResult && uploadResult.valid_transactions.length === 0)}
                 disableSecondary={loading}
                 onClick={uploadResult ?
                     () => {
+                        const currentDate = new Date().toISOString();
+                        const trx_codes = uploadResult.valid_transactions.map(el => el.trx_code)
+                        const dataSettle = {
+                            trx_codes,
+                        }
+                        dispatch(post(endpointBilling + '/management/billing/settlement', dataSettle, res => {
+                            setSettleModal(false);
+                            dispatch(refresh());
+                            dispatch(setInfo({
+                                message: trx_codes.length + ' billing' + (trx_codes.length > 0 ? 's' : '') + ' was marked as settled',
+                            }))
+                        }))
+                        setUploadResult('');
                         setUploadModal(false);
-                        setUploadResult();
                     }
                     :
                     () => {
@@ -110,7 +121,7 @@ function Component() {
                         let formData = new FormData();
                         formData.append('file', fileUpload);
 
-                        dispatch(post(endpointBilling + 'TODO',
+                        dispatch(post(endpointBilling + '/management/billing/settlement/validate/bulk',
                             formData,
                             res => {
                                 setLoadingUpload(false);
@@ -124,11 +135,40 @@ function Component() {
                     }}
             >
                 {uploadResult ?
-                    <div>
-                        {JSON.stringify(uploadResult)}
+                    <div style={{ maxHeight: '600px', overflow: 'scroll' }} >
+                        <ListGroup style={{ marginBottom: '15px' }}>
+                            <div style={{ padding: '5px' }}><b>
+                                Valid Transaction Codes: <span style={{ color: "green" }} >
+                                    {uploadResult.valid_transactions.length + ' '}
+                                    result{uploadResult.valid_transactions.length > 1 ? 's' : ''}</span>
+                            </b></div>
+                            {uploadResult.valid_transactions.map((el) =>
+                                <ListGroupItem color={el.payment_amount - el.payment_charge !== el.xendit_amount ? "warning" : "success"}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <div>Trx Code</div> <b>Value: {toMoney(el.payment_amount - el.payment_charge)}</b>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <div>{el.trx_code}</div> <b>From Xendit: {toMoney(el.xendit_amount)}</b>
+                                    </div>
+                                    {el.payment_amount - el.payment_charge !== el.xendit_amount && <div style={{ color: "red" }}>
+                                        There's difference between value of transaction and xendit amount.
+                                    </div>}
+                                </ListGroupItem>
+                            )}
+                        </ListGroup>
+                        <ListGroup>
+                            <div style={{ padding: '5px' }}><b>
+                                Invalid Transaction Codes: <span style={{ color: "red" }}>
+                                    {uploadResult.invalid_transactions.length + ' '}
+                                    result{uploadResult.invalid_transactions.length > 1 ? 's' : ''}</span>
+                            </b></div>
+                            {uploadResult.invalid_transactions.map((el) =>
+                                <ListGroupItem color="danger">{el.trx_code} ({el.reason})</ListGroupItem>
+                            )}
+                        </ListGroup>
                     </div>
                     :
-                    <Loading loading={loading}>
+                    <Loading loading={loadingUpload}>
                         <input
                             ref={fileInput}
                             type="file"
