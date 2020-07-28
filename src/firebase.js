@@ -21,7 +21,7 @@ export const storage = firebase.storage();
 export const storageRef = storage.ref();
 
 // cloud messaging
-const messaging = firebase.messaging();
+export const messaging = firebase.messaging();
 messaging.usePublicVapidKey("BN1Y76p50tWwgq45KSIFWgSOvdUCm0XF1eW6B9W17QLceZrdBBssy2PSBh074cGDjf2JKFRuq1Vr7sL4leya0EQ");
 
 // Get Instance ID token. Initially this makes a network call, once retrieved
