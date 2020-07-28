@@ -6,6 +6,7 @@ import { endpointAds } from '../../settings';
 import './style.css';
 import { get } from '../slice';
 import { useDispatch } from 'react-redux';
+import { toSentenceCase } from '../../utils';
 
 function Component() {
     const [adsData, setAdsData] = useState([]);
@@ -41,7 +42,7 @@ function Component() {
                                         layout={'vertical'}
                                     >
                                         <XAxis height={40} hide type="number" dy={10} tickLine={false} axisLine={false}/>
-                                        <YAxis width={123} yAxisId="category" type='category' dx={-10} dataKey="content_name" tickLine={false} axisLine={false}/>
+                                        <YAxis width={123} tickFormatter={category => toSentenceCase(category)} yAxisId="category" type='category' dx={-10} dataKey="content_name" tickLine={false} axisLine={false}/>
                                         <Tooltip />
                                         <Bar label maxBarSize={30} yAxisId="category" radius={4} dataKey="total_actual_view" fill="#2ad170" />
                                     </BarChart>
@@ -69,7 +70,7 @@ function Component() {
                                         layout={'vertical'}
                                     >
                                         <XAxis height={40} hide type="number" dy={10} tickLine={false} axisLine={false}/>
-                                        <YAxis width={123} yAxisId="category" type='category' dx={-10} dataKey="content_name" tickLine={false} axisLine={false}/>
+                                        <YAxis width={123} tickFormatter={category => toSentenceCase(category)} yAxisId="category" type='category' dx={-10} dataKey="content_name" tickLine={false} axisLine={false}/>
                                         <Tooltip />
                                         <Bar label maxBarSize={30} yAxisId="category" radius={4} dataKey="total_actual_click" fill="#f7b733" />
                                     </BarChart>
