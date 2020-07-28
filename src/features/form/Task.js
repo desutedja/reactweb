@@ -204,7 +204,7 @@ const SelectOption = ({
                         className="form-control py-4 pr-5 cursor-pointer"
                         onFocus={() => setDropDown(true)}
                         onBlur={() => {
-                            setTimeout(() => setDropDown(false), 10)
+                            setTimeout(() => setDropDown(false), 100)
                         }}
                         {...rest}
                     />
