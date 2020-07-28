@@ -49,7 +49,7 @@ export const {
 
 export const getTask = (
   pageIndex, pageSize,
-  search = '', type, prio, status, building,
+  search = '', type, prio, status, building, unit,
   createdStart = '', createdEnd = '', resolvedStart = '', resolvedEnd = ''
 ) => dispatch => {
   dispatch(startAsync());
@@ -63,6 +63,7 @@ export const getTask = (
     '&type=' + type +
     '&priority=' + prio +
     '&requester_building_id=' + building +
+    '&requester_unit_id=' + unit +
     '&sort_field=created_on&sort_type=DESC' +
     '&created_start_date=' + createdStart + 'T00:00:00' +
     '&created_end_date=' + createdEnd + 'T23:59:59' +
