@@ -430,16 +430,20 @@ function Component() {
                                 </div>
                                 {orderData.map((el, i) => 
                                 <>
-                                    <div key={el.id} className="row">
+                                    <div key={el.item_id} className="row">
                                         <div className="col-auto">
                                             <div style={{
-                                                width: '10px',
+                                                width: '7px',
                                                 fontSize: '1.3rem',
                                                 fontWeight: 'bold'
                                             }}>#{i + 1}</div>
                                         </div>
                                         <div className="col d-flex align-items-center">
-                                            <div>{el.name}</div>
+                                            <div className="bread"
+                                            onClick={() => {
+                                                history.push('/' + auth.role + '/product/' + el.item_id)
+                                            }}
+                                            >{el.name}</div>
                                         </div>
                                         <div className="col-auto BigNumber blue">
                                             {el.qty}
