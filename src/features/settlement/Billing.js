@@ -54,7 +54,7 @@ function Component() {
 
     const columns = useMemo(() => [
         { Header: 'ID', accessor: 'id' },
-        { Header: 'Trx Code', accessor: 'trx_code' },
+        { Header: 'Ref Code', accessor: 'trx_code' },
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
         {

@@ -83,7 +83,7 @@ export function dateTimeFormatterCell(serverDateTime, whenzero = '-') {
         return whenzero;
     return <>
         <div style={{ display: 'block' }}>
-            <div><FiCalendar /> {moment.utc(serverDateTime).format('DD MMMM yyyy')} </div>
+            <div><FiCalendar /> {moment.utc(serverDateTime).format('D MMMM yyyy')} </div>
             <div><FiClock /> {moment.utc(serverDateTime).format('HH:mm') + ' WIB'} </div>
         </div>
     </>;
@@ -94,7 +94,7 @@ export function dateTimeFormatter(serverDateTime, whenzero = '-') {
     if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
 
-    return moment.utc(serverDateTime).format('DD MMMM yyyy') + " " +
+    return moment.utc(serverDateTime).format('D MMMM yyyy') + " " +
         moment.utc(serverDateTime).format('HH:mm') + ' WIB';
 }
 
@@ -113,7 +113,7 @@ export function dateFormatter(serverDateTime, whenzero = '-') {
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
-    return moment.utc(serverDateTime).format('DD MMMM yyyy');
+    return moment.utc(serverDateTime).format('D MMMM yyyy');
 }
 
 export function getDatesRange(startDate, stopDate, range = 'days') {

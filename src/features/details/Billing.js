@@ -9,7 +9,7 @@ import { Card } from 'reactstrap';
 import Filter from '../../components/Filter';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
-import { months, dateTimeFormatterCell, toMoney, toSentenceCase, dateFormatter } from '../../utils';
+import { months, dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dateFormatter } from '../../utils';
 import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
 import { ListGroupItem, ListGroup } from 'reactstrap';
 import Pill from '../../components/Pill';
@@ -27,11 +27,21 @@ const columns = [
     { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name]} />},
     { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
     { Header: 'Total', accessor: row => toMoney(row.total) },
-    { Header: 'Month', accessor: row => months.find(el => el.value === row.month).label },
-    { Header: 'Year', accessor: 'year' },
+    { Header: 'Month', accessor: row => <div style={{ display: 'block' }}>
+            <div>{months.find(el => el.value === row.month).label}</div>
+            <div>{row.year}</div>
+        </div>},
     { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
-    { Header: 'Ref Code', accessor: row => row.ref_code ? row.ref_code : '-' },
-    { Header: 'Payment', accessor: row => <Pill color={row.payment === "paid" ? "success": "secondary"}>{toSentenceCase(row.payment)}</Pill> },
+    { Header: 'Ref Code', accessor: row => 
+        <a class="Link" href="#">{toEllipsis(row.ref_code ? row.ref_code : '-', 7)}</a>
+    },
+    { Header: 'Payment', accessor: row => 
+        (
+            row.payment_method_by ? 
+                <Pill color="primary">Cash Paid</Pill> :
+            <Pill color={row.payment === "paid" ? "success": "secondary"}>{toSentenceCase(row.payment)}</Pill> 
+        )
+    },
     {
         Header: 'Payment Date', accessor: row => row.payment_date ? dateTimeFormatterCell(row.payment_date)
             : '-'
@@ -84,7 +94,6 @@ function Component() {
                         flexDirection: 'column',
                     }}>
                         <h5> Billing Month </h5>
-                        <hr/>
                         <ListGroup>
                             {unit.items.length > 0 ? 
                             unit.items.map((el, index) => <ListGroupItem 
@@ -99,7 +108,7 @@ function Component() {
                                         <Pill color="light">Unpaid</Pill> : <Pill color="success">Paid</Pill>
                                     }</div>
                             </div>
-                            </ListGroupItem>) : <>No Billing Yet</>}
+                            </ListGroupItem>) : <div style={{ padding: "10px 0px" }} >No Billing Yet</div>}
                         </ListGroup>
                     </Card>
                     <Card className="Container" style={{
