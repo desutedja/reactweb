@@ -9,7 +9,7 @@ import Breadcrumb  from '../../components/Breadcrumb';
 import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
 import Input from '../../components/Input';
-import { getBillingDisbursement, downloadBillingDisbursement, refresh } from '../slices/billing';
+import { downloadBillingDisbursement, getBillingDisbursement, refresh } from '../slices/billing';
 import { toMoney, dateTimeFormatterCell, toSentenceCase } from '../../utils';
 import { endpointBilling } from '../../settings';
 import { get, post } from '../slice';
@@ -61,14 +61,6 @@ function Component() {
             setInfo(res.data.data);
         }))
     }, [dispatch]);
-
-    useEffect(() => {
-        dispatch(get(endpointBilling + '/management/billing/disbursement/management/' +
-            'amount?management_id=' + disbursement.items[active]?.id,
-            res => {
-                setAmount(res.data.data.undisburse_amount);
-            }))
-    }, [active, disbursement.items, dispatch]);
 
     const getSum = items => {
         return items.reduce((sum, el) => {
@@ -280,8 +272,8 @@ function Component() {
                                 pageCount={dataPages}
                                 fetchData={useCallback((pageIndex, pageSize, search) => {
                                     setDataLoading(true);
-                                    dispatch(get(endpointBilling + '/management/billing/disbursement' +
-                                        '/list/transaction?limit=1000&page=1&search='
+                                    dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit='
+                                    + pageSize + '&page=' + (pageIndex + 1) + '&search='
                                         + search + '&building_id=' +
                                         disbursement.items[active]?.building_id
                                         + '&management_id=' +
@@ -289,9 +281,20 @@ function Component() {
                                         res => {
                                             setData(res.data.data.items);
                                             setDataPages(res.data.data.total_pages);
-                                            setTotalItems(res.data.data.total_items);
+                                            setTotalItems(res.data.data.filtered_item);
                                             setDataLoading(false);
                                         }))
+                                    dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit=9999&page=1&search='
+                                    + '&building_id=' + disbursement.items[active]?.building_id
+                                    + '&management_id=' + disbursement.items[active]?.id,
+                                    res => {
+                                        console.log(res.data.data)
+                                        const undisburseItems = res.data.data.items.filter(item => !item.disbursement_date);
+                                        const amount = undisburseItems.reduce((sum, el) => {
+                                            return sum + el.base_price;
+                                        }, 0)
+                                        setAmount(amount)
+                                    }))
                                     // eslint-disable-next-line react-hooks/exhaustive-deps
                                 }, [dispatch, refreshToggle, active])}
                                 renderActions={(selectedRowIds, page) => {

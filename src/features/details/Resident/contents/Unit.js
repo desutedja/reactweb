@@ -23,6 +23,7 @@ import { endpointAdmin, endpointResident } from '../../../../settings';
 import { get } from '../../../slice';
 
 const columnsUnit = [
+    { Header: "ID", accessor: "unit_id" },
     { Header: "Building", accessor: "building_name" },
     { Header: "Unit Number", accessor: "number" },
     { Header: "Level", accessor: "level" },

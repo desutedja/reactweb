@@ -1,17 +1,20 @@
-import React, { } from 'react';
+import React, { useState } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Badge } from 'reactstrap';
 import { FiPlus } from 'react-icons/fi';
 
 import Button from '../../components/Button';
+import Filter from '../../components/Filter';
 import { getAnnoucement, setSelected, deleteAnnouncement }
     from '../slices/announcement';
 import { toSentenceCase } from '../../utils';
-
 import Template from './components/Template';
 
+const cons = ['centratama','management','staff','staff_courier','staff_security','staff_technician','resident','merchant']
+
 function Component() {
+    const [con, setCon] = useState('');
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -21,15 +24,13 @@ function Component() {
 
     const columns = [
         { Header: 'ID', accessor: 'id' },
-        { Header: 'Title', accessor: row => <a href={"/" + role + "/announcement/" + row.id}><b>{row.title}</b></a>},
+        { Header: 'Title', accessor: row => <a href={"/" + role + "/announcement/" + row.id}><b>{row.title}</b></a> },
         { Header: 'Consumer', accessor: row => toSentenceCase(row.consumer_role.replace(/_/g, ' ')) },
-        // {
-        //    Header: 'Description', accessor: row => parse(row.description) /*.length > 50 ?
-        //        parse(row.description).slice(0, 50) + '...' : parse(row.description) */
-        //},
-        { Header: 'Publisher', accessor: row => <><a href={
-            "/" + role + "/" + (row.publisher_role === 'sa' ? "admin" : "staff") + "/" + row.publisher
-        }>{row.publisher_name}</a></> },
+        {
+            Header: 'Publisher', accessor: row => <><a href={
+                "/" + role + "/" + (row.publisher_role === 'sa' ? "admin" : "staff") + "/" + row.publisher
+            }>{row.publisher_name}</a></>
+        },
         { Header: 'Publisher Role', accessor: row => row.publisher_role === 'sa' ? 'Super Admin' : 'PIC Admin' },
         {
             Header: 'Status', accessor: row => row.publish ?
@@ -45,6 +46,27 @@ function Component() {
             slice='announcement'
             getAction={getAnnoucement}
             deleteAction={deleteAnnouncement}
+            filterVars={[con]}
+            filters={[
+                {
+                    hidex: con === "",
+                    label: "Consumer: ",
+                    value: con ? toSentenceCase(con) : "All",
+                    delete: () => { setCon(""); },
+                    component: (toggleModal) =>
+                        <Filter
+                            data={cons}
+                            onClick={(el) => {
+                                setCon(el);
+                                toggleModal(false);
+                            }}
+                            onClickAll={() => {
+                                setCon("");
+                                toggleModal(false);
+                            }}
+                        />
+                },
+            ]}
             actions={[
                 <Button key="Add Announcement" label="Add Announcement" icon={<FiPlus />}
                     onClick={() => {

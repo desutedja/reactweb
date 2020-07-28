@@ -15,13 +15,14 @@ import Resident from '../../components/cells/Resident';
 import Staff from '../../components/cells/Staff';
 
 import { useSelector } from 'react-redux';
-import { toSentenceCase, dateTimeFormatter, isRangeToday  } from '../../utils';
+import { toSentenceCase, dateTimeFormatter, isRangeToday } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import { getTask, resolveTask, reassignTask, setSelected } from '../slices/task';
 import { get } from '../slice';
 
 import Template from './components/Template';
 import DateRangeFilter from '../../components/DateRangeFilter';
+import { getBuildingUnit } from '../slices/building';
 
 const columns = [
     {
@@ -122,6 +123,11 @@ function Component() {
     const [resolvedStart, setResolvedStart] = useState(moment().format('yyyy-MM-DD'));
     const [resolvedEnd, setResolvedEnd] = useState(moment().format('yyyy-MM-DD'));
 
+    const [unit, setUnit] = useState('');
+    const [unitLabel, setUnitLabel] = useState('');
+    const [units, setUnits] = useState([]);
+    const [unitSearch, setUnitSearch] = useState('');
+
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
             '?limit=5&page=1' +
@@ -161,6 +167,22 @@ function Component() {
         console.log('LOG', status, statusLabel)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [status])
+
+
+    useEffect(() => {
+        building && dispatch(get(endpointAdmin + '/building/unit' +
+            '?page=1' +
+            '&building_id=' + building +
+            '&search=' + unitSearch +
+            '&sort_field=created_on&sort_type=DESC' +
+            '&limit=10', res => setUnits(
+                res.data.data.items.map(el => ({
+                    label: toSentenceCase(el.section_type) + " " + el.section_name + ' ' + el.number,
+                    value: el.id,
+                }))
+            )))
+    }, [building, dispatch, unitSearch])
+
     return (
         <>
             <Modal isOpen={resolve} toggle={() => setResolve(false)} disableHeader
@@ -205,7 +227,7 @@ function Component() {
                 columns={columns}
                 slice='task'
                 getAction={getTask}
-                filterVars={[type, prio, status, building, createdStart, createdEnd, 
+                filterVars={[type, prio, status, building, unit, createdStart, createdEnd,
                     ...status === 'completed' ? [resolvedStart, resolvedEnd] : []]}
                 filters={[
                     {
@@ -213,8 +235,8 @@ function Component() {
                         label: "Created Date: ",
                         delete: () => { setCreatedStart(today); setCreatedEnd(today) },
                         value: isRangeToday(createdStart, createdEnd) ? 'Today' :
-                        moment(createdStart).format('DD-MM-yyyy') + ' - '
-                        + moment(createdEnd).format('DD-MM-yyyy'),
+                            moment(createdStart).format('DD-MM-yyyy') + ' - '
+                            + moment(createdEnd).format('DD-MM-yyyy'),
                         component: (toggleModal) =>
                             <DateRangeFilter
                                 startDate={createdStart}
@@ -230,7 +252,7 @@ function Component() {
                         label: "Resolved Date: ",
                         delete: () => { setResolvedStart(today); setResolvedEnd(today) },
                         value: isRangeToday(resolvedStart, resolvedEnd) ? 'Today' :
-                        moment(resolvedStart).format('DD-MM-yyyy') + ' - '
+                            moment(resolvedStart).format('DD-MM-yyyy') + ' - '
                             + moment(resolvedEnd).format('DD-MM-yyyy')
                         ,
                         component: (toggleModal) =>
@@ -242,6 +264,36 @@ function Component() {
                                     setResolvedEnd(end);
                                     toggleModal();
                                 }} />
+                    }] : [],
+                    ...building ? [{
+                        hidex: unit === "",
+                        label: "Unit: ",
+                        value: unit ? unitLabel : "All",
+                        delete: () => { setUnit(""); },
+                        component: (toggleModal) =>
+                            <>
+                                <Input
+                                    label="Search Unit"
+                                    compact
+                                    icon={<FiSearch />}
+                                    inputValue={unitSearch}
+                                    setInputValue={setUnitSearch}
+                                />
+                                <Filter
+                                    data={units}
+                                    onClick={(el) => {
+                                        setUnit(el.value);
+                                        setUnitLabel(el.label);
+                                        toggleModal(false);
+                                    }}
+                                    onClickAll={() => {
+                                        setUnit("");
+                                        toggleModal(false);
+                                    }}
+                                />
+                                {unitSearch ? 'Showing at most 10 matching units' : 
+                                'Showing 10 most recent units'}
+                            </>
                     }] : [],
                     {
                         hidex: building === "",
@@ -294,7 +346,7 @@ function Component() {
                     },
                     {
                         hidex: prio === "",
-                        label: "Priority: " ,
+                        label: "Priority: ",
                         value: prio ? prioLabel : "All",
                         delete: () => { setPrio(""); },
                         component: (toggleModal) =>

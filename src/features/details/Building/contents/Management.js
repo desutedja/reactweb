@@ -50,6 +50,7 @@ function Component() {
             Header: "Management Name", accessor: row =>
                 <a class="Link" href={"/" + auth.role + "/management/" + row.management_id}>{row.management_name}</a>
         },
+        { Header: "In Range", accessor: row => row.in_range + ' km' },
         { Header: "Billing Published", accessor: row => "Day " + row.billing_published },
         { Header: "Billing Duedate", accessor: row => "Day " + row.billing_duedate },
         { Header: "Billing Penalty Fee", accessor: row => row.penalty_fee + ' %' },
@@ -187,6 +188,7 @@ function Component() {
                         disabled={edit}
                     />
                     <Input label="Status" hidden inputValue="inactive" />
+                    <Input label="In Range" type="number" inputValue={selectedRow.in_range} />
                     <Input label="Settlement Bank" type="select" options={banks} inputValue={selectedRow.settlement_bank} />
                     <Input label="Settlement Account No" inputValue={selectedRow.settlement_account_no} />
                     <Input label="Settlement Account Name"
