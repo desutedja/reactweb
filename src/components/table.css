@@ -205,9 +205,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  /* padding-bottom: 4px;
-  padding-top: 12px; */
   border-top: 1px solid #f3f3fa;
+  min-height: 0px;
   height: 0px;
   overflow: hidden;
   visibility: hidden;
@@ -215,8 +214,8 @@
 }
 
 .FilterContainer.down {
-  height: 48px;
-  /* height: auto; */
+  min-height: 48px;
+  height: auto;
   padding-top: 8px;
   visibility: visible;
 }
