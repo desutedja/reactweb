@@ -175,7 +175,66 @@ function Component() {
     return (
         <>
             <div className="row no-gutters">
+                <div className="col-10">
+                    <div className="Container color-2 d-flex flex-column cursor-pointer">
+                        <div className="row no-gutters align-items-center py-2">
+                            <div className="col">
+                                <AnimatedNumber
+                                    className="h2 font-weight-bold white"
+                                    value={merchantInfo.outstanding_orders}
+                                    formatValue={formatValue}
+                                />
+                                <div className="text-nowrap">Outstanding Orders</div>
+                            </div>
+                            <div className="col-auto">
+                                <div className="w-auto">
+                                    <RiHomeSmile2Line className="BigIcon white my-0" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className="col">
+                    <div className="Container d-flex flex-column">
+                        <div className="d-flex justify-content-between mb-2">
+                            <div>
+                                Active Merchant
+                            </div>
+                            <div>
+                                <AnimatedNumber
+                                    className=""
+                                    value={merchantInfo.active_merchant}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                        </div>
+                        <div className="d-flex justify-content-between mb-2">
+                            <div>
+                                Inactive Merchant
+                            </div>
+                            <div>
+                                <AnimatedNumber
+                                    className=""
+                                    value={merchantInfo.inactive_merchant}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                        </div>
+                        <div className="d-flex justify-content-between mb-2">
+                            <div>
+                                Total Merchant
+                            </div>
+                            <div>
+                                <AnimatedNumber
+                                    className=""
+                                    value={merchantInfo.total_merchant}
+                                    formatValue={formatValue}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* <div className="col">
                     <div className="Container color-4 d-flex flex-column cursor-pointer"
                     onClick={() => {
                         history.push('/' + auth.role + '/merchant')
@@ -243,7 +302,7 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
             </div>
             <div className="row no-gutters">
                 <div className="col-12">
@@ -420,16 +479,6 @@ function Component() {
                                     </div>
                                 </div>
                                 ))}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col">
-                            <div className="Container" style={{
-                            justifyContent: 'space-between',
-                            }}>
-                                <h5>Outstanding Orders</h5>
-                                <span className="BigNumber blue">{merchantInfo.outstanding_orders}</span>
                             </div>
                         </div>
                     </div>
