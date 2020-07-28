@@ -55,6 +55,7 @@ function Component() {
     const history = useHistory();
 
     const { refreshToggle } = useSelector(state => state.task);
+    const { role } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
     let { id } = useParams();
@@ -220,7 +221,7 @@ function Component() {
                                     </CardBody>
                                     <CardFooter>
                                         <div style={{ textAlign: 'right', padding: '5px' }}>
-                                            <Link to="#" onClick={() => {
+                                            <Link to={"/" + role + "/chat/" + data.ref_code}  onClick={() => {
                                                 dispatch(setSelected(data));
                                                 history.push("chat");
                                             }}><MdChatBubble size="17"/> Go to chatroom</Link>
@@ -314,11 +315,11 @@ function Component() {
                                 <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                     <CardBody>
                                         <TwoColumn first={<h5>Requester</h5>} second={
-                                            <div><Link to="#" onClick={() => {
+                                            data.priority === "emergency" && <div><div class="Link"  onClick={() => {
                                                 setMapModal(true);
                                                 setLat(data.r_lat);
                                                 setLong(data.r_long);
-                                            }}><MdLocationOn size="15"/> Last Location</Link></div>
+                                            }}><MdLocationOn size="15"/> Last Location</div></div>
                                             }/>
                                         <Row>
                                             <div style={{  width: '50%', borderRight: '1px solid rgba(0,0,0,0.125)' }}>
