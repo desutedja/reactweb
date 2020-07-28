@@ -149,6 +149,7 @@ function Component() {
                             </div>
                         </Modal>
 
+                        <input type="hidden" value="auk" />
                         <Input {...props} label="Building Name" name="name" disabled={role === 'bm'} />
                         <Input {...props} label="Legal Name" disabled={role === 'bm'} />
                         <Input {...props} label="Site ID" name="code_name" disabled={role === 'bm'} />

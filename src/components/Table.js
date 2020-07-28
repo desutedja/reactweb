@@ -106,7 +106,7 @@ function Component({
     }, [fetchData, gotoPage, searchToggle]);
 
     useEffect(() => {
-        let searchTimeout = setTimeout(() => toggleSearch(search), 500);
+        let searchTimeout = setTimeout(() => toggleSearch(search), 1000);
 
         return () => {
             clearTimeout(searchTimeout);
