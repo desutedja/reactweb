@@ -6,6 +6,7 @@ import {
 import AnimatedNumber from "animated-number-react";
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
+import ClinkLoader from '../../components/ClinkLoader';
 
 import { RiHomeSmile2Line, RiHomeLine, RiStore2Line } from 'react-icons/ri'
 import { toMoney, getDatesRange } from '../../utils';
@@ -28,6 +29,8 @@ function Component() {
     const { auth } = useSelector(state => state);
     const [trxData, setTrxData] = useState([]);
     const [trxDataFormatted, setTrxDataFormatted] = useState([]);
+
+    const [loading, setLoading] = useState(false);
 
     const [
         range,
@@ -57,8 +60,10 @@ function Component() {
     ] = useState('year');
 
     useEffect(() => {
+        setLoading(true);
         dispatch(get(endpointMerchant + '/admin/statistic/transactiongraph?range=' + range,
-            res => {   
+            res => {
+                setLoading(false);
                 setTrxData(res.data.data.graph);
             }))
     }, [dispatch, range]);
@@ -67,7 +72,6 @@ function Component() {
         dispatch(get(endpointTransaction + '/admin/transaction/summary',
              res => {
                 setTrxSumm(res.data.data);
-                console.log(res.data.data)
             }))
     }, [dispatch]);
 
@@ -164,7 +168,7 @@ function Component() {
             setTrxDataFormatted(trxDatas)
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [trxData])
+    }, [trxData]);
 
     const transactionsSummary = [
         { header: 'Orders', accessor: trxSumm.total_transaction_count },
@@ -274,8 +278,23 @@ function Component() {
                         </div>
                         <div className="row pb-5">
                             <div className="col px-4" style={{
-                                height: '360px'
+                                height: '360px',
+                                position: 'relative'
                             }}>
+                            {loading && <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                backgroundColor: 'rgba(255, 255, 255, .8)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                zIndex: '1'
+                            }}>
+                                <ClinkLoader />
+                            </div>}
                                 <ResponsiveContainer width='100%'>
                                     <ComposedChart data={trxDataFormatted}>
                                         <XAxis height={50} dy={10} dataKey="Date" />

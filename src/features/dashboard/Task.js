@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import AnimatedNumber from "animated-number-react";
+import ClinkLoader from '../../components/ClinkLoader';
 
 import { RiTaskLine, RiFileExcelLine, RiFileChartLine } from 'react-icons/ri';
 
@@ -28,8 +29,8 @@ const colors = ['#2ad170', '#007bff', '#f7b733', '#ed4057'];
 function Component() {
     const history = useHistory();
     const { sosData } = useSelector(state => state.dashboard);
-    const { auth } = useSelector(state => state);
-
+    const { auth, dashboard } = useSelector(state => state);
+    
     const [range, setRange] = useState('ytd');
     const [pieData, setPieData] = useState([]);
     const [taskData, setTaskData] = useState({});
@@ -246,8 +247,23 @@ function Component() {
                         </div>
                         <div className="row">
                             <div className="col px-4" style={{
-                                height: '390px'
+                                height: '390px',
+                                position: 'relative'
                             }}>
+                            {dashboard.loading && <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                backgroundColor: 'rgba(255, 255, 255, .8)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                zIndex: '1'
+                            }}>
+                                <ClinkLoader />
+                            </div>}
                                 <ResponsiveContainer width='100%'>
                                     <ComposedChart data={sosDataFormatted}>
                                         <XAxis height={30} dy={10} dataKey="Time" />
