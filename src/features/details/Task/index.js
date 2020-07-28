@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@material-ui/lab';
 import GoogleMapReact from 'google-map-react';
@@ -13,9 +13,11 @@ import TwoColumn from '../../../components/TwoColumn';
 import Pill from '../../../components/Pill';
 import { dateTimeFormatter, toSentenceCase, task } from '../../../utils';
 import { MdChatBubble, MdLocationOn } from 'react-icons/md';
-import { FiCheck, FiMapPin, FiUserPlus } from 'react-icons/fi';
+import { FiSearch, FiCheck, FiMapPin, FiUserPlus } from 'react-icons/fi';
 
 import Button from '../../../components/Button';
+import Input from '../../../components/Input';
+import Filter from '../../../components/Filter';
 import Details from '../components/Detail';
 import Modal from '../../../components/Modal';
 import Template from '../components/Template';
@@ -24,8 +26,8 @@ import { Card, CardHeader, CardFooter, CardTitle, CardBody, CardLink } from 'rea
 
 import { useParams } from 'react-router-dom';
 import { get } from '../../slice';
-import { setSelected } from '../../slices/task';
-import { endpointTask, taskPriorityColor, taskStatusColor } from '../../../settings';
+import { getTask, resolveTask, reassignTask, setSelected } from '../../slices/task';
+import { endpointTask, endpointManagement, taskPriorityColor, taskStatusColor } from '../../../settings';
 
 const attachments = [
     "attachment_1",
@@ -44,7 +46,15 @@ function Component() {
     const [lat, setLat] = useState(0.000);
     const [long, setLong] = useState(0.000);
 
+    const [assign, setAssign] = useState(false);
+    const [resolve, setResolve] = useState(false);
+    const [staff, setStaff] = useState({});
+    const [staffs, setStaffs] = useState([]);
+    const [search, setSearch] = useState('');
+
     const history = useHistory();
+
+    const { refreshToggle } = useSelector(state => state.task);
 
     let dispatch = useDispatch();
     let { id } = useParams();
@@ -52,9 +62,30 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointTask + '/admin/' + id, res => {
             setData(res.data.data);
-            console.log(res.data.data)
         }))
-    }, [dispatch, id])
+    }, [dispatch, id, refreshToggle])
+
+
+    useEffect(() => {
+        let staffRole = data.task_type === 'security' ? 'security' :
+            data.task_type === 'service' ? 'technician' : 'courier';
+
+        assign && (!search || search.length >= 1) && dispatch(get(endpointManagement + '/admin/staff/list' +
+            '?limit=5&page=1&max_ongoing_task=1' +
+            '&staff_role=' + staffRole + "&status=active" +
+            (data.priority === "emergency" ? '&is_ongoing_emergency=true' : '') +
+            '&search=' + search, res => {
+                let data = res.data.data.items;
+
+                let formatted = data.map(el => ({
+                    label: el.firstname + ' ' + el.lastname,
+                    value: el.id
+                }));
+
+                setStaffs(formatted);
+            }))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, search, data]);
 
     return (
         <>
@@ -112,6 +143,44 @@ function Component() {
                     </div>
                 </GoogleMapReact>
                 </div>
+            </Modal>
+            <Modal isOpen={resolve} toggle={() => setResolve(false)} disableHeader
+                okLabel="Yes"
+                onClick={() => {
+                    setResolve(false);
+                    dispatch(resolveTask({...data, id: data.task_id}));
+                }}
+                cancelLabel="No"
+                onClickSecondary={() => {
+                    setResolve(false);
+                }}
+            >
+                Are you sure you want to resolve this task?
+            </Modal>
+            <Modal isOpen={assign} toggle={() => setAssign(false)} disableHeader
+                disableFooter={staffs.length === 0}
+                okLabel="Yes"
+                onClick={() => {
+                    setStaff({});
+                    setAssign(false);
+                    dispatch(reassignTask({
+                        "task_id": data.id,
+                        "assignee_id": staff.value,
+                    }));
+                }}
+                cancelLabel="No"
+                onClickSecondary={() => {
+                    setStaff({});
+                    setAssign(false);
+                }}
+            >
+                Choose assignee:
+                {staffs.length !== 0 && !staff.value && <Input label="Search" icon={<FiSearch />}
+                    compact inputValue={search} setInputValue={setSearch} />}
+                <Filter data={staff.value ? [staff] : staffs} onClick={el => setStaff(el)} />
+                {staffs.length === 0 && <p style={{
+                    fontStyle: 'italic'
+                }}>No elligible staff found.</p>}
             </Modal>
             <Template
                 transparent
@@ -237,7 +306,9 @@ function Component() {
                                     </CardBody>
                                     {(data.status != 'completed' && data.status != 'canceled') &&
                                     <CardFooter style={{ textAlign: "right" }}>
-                                        <Button icon={<FiCheck/>} label="Set As Resolved" />
+                                        <Button onClick={ 
+                                                () => setResolve(true)
+                                            } icon={<FiCheck/>} label="Set As Resolved" />
                                     </CardFooter>}
                                 </Card>
                                 <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
@@ -286,7 +357,9 @@ function Component() {
                                         </Row>
                                     </CardBody>
                                     {(data.status === "rejected" || data.status === "created") && <CardFooter style={{ textAlign: "right" }}>
-                                        <Button icon={<FiUserPlus />} label="Assign Staff" />
+                                        <Button onClick={
+                                                () => setAssign(true)
+                                            } icon={<FiUserPlus />} label="Assign Staff" />
                                     </CardFooter>}
                                 </Card>
                             </Column>

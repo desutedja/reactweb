@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointTask } from '../../settings';
-import { get, post } from '../slice';
+import { get, post, setInfo } from '../slice';
 
 const taskEndpoint = endpointTask + '/admin';
 
@@ -84,6 +84,9 @@ export const resolveTask = (row) => dispatch => {
     res => {
       dispatch(stopAsync());
       dispatch(refresh());
+
+      dispatch(setInfo({message: "Task " + row.ref_code + " has been marked as resolved."}));
+      setTimeout(() => dispatch(setInfo({message: ''})), 3000);
     },
     err => {
       dispatch(stopAsync());
