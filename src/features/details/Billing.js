@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import Detail from './components/Detail';
 import Template from './components/Template';
@@ -7,8 +9,6 @@ import Button from '../../components/Button';
 import Table from '../../components/Table';
 import { Card } from 'reactstrap';
 import Filter from '../../components/Filter';
-import { useSelector, useDispatch } from 'react-redux';
-import { useHistory, useRouteMatch } from 'react-router-dom';
 import { months, dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dateFormatter } from '../../utils';
 import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
 import { ListGroupItem, ListGroup } from 'reactstrap';
@@ -22,31 +22,6 @@ const details =
     'Unit': ['building_name', 'code_name', 'section_type', 'section_name', 'number']
 };
 
-const columns = [
-    { Header: 'ID', accessor: 'id' },
-    { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name]} />},
-    { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
-    { Header: 'Total', accessor: row => toMoney(row.total) },
-    { Header: 'Month', accessor: row => <div style={{ display: 'block' }}>
-            <div>{months.find(el => el.value === row.month).label}</div>
-            <div>{row.year}</div>
-        </div>},
-    { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
-    { Header: 'Ref Code', accessor: row => 
-        <a class="Link" href="#">{toEllipsis(row.ref_code ? row.ref_code : '-', 7)}</a>
-    },
-    { Header: 'Payment', accessor: row => 
-        (
-            row.payment_method_by ? 
-                <Pill color="primary">Cash Paid</Pill> :
-            <Pill color={row.payment === "paid" ? "success": "secondary"}>{toSentenceCase(row.payment)}</Pill> 
-        )
-    },
-    {
-        Header: 'Payment Date', accessor: row => row.payment_date ? dateTimeFormatterCell(row.payment_date)
-            : '-'
-    },
-]
 
 function Component() {
     const [status, setStatus] = useState('');
@@ -60,6 +35,32 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
+
+    const columns = useMemo(() => ([
+        { Header: 'ID', accessor: 'id' },
+        { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name]} />},
+        { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
+        { Header: 'Total', accessor: row => toMoney(row.total) },
+        { Header: 'Month', accessor: row => <div style={{ display: 'block' }}>
+                <div>{months.find(el => el.value === row.month).label}</div>
+                <div>{row.year}</div>
+            </div>},
+        { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
+        { Header: 'Ref Code', accessor: row => 
+           <a class="Link" href={"/" + role + "/billing/details/" + row.ref_code}>{toEllipsis(row.ref_code ? row.ref_code : '-', 10)}</a>
+        },
+        { Header: 'Payment', accessor: row => 
+            (
+                row.payment_method_by ? 
+                    <Pill color="primary">Cash Paid</Pill> :
+                <Pill color={row.payment === "paid" ? "success": "secondary"}>{toSentenceCase(row.payment)}</Pill> 
+            )
+        },
+        {
+            Header: 'Payment Date', accessor: row => row.payment_date ? dateTimeFormatterCell(row.payment_date)
+                : '-'
+        },
+    ]), [ role ]);
 
     useEffect(() => {
         dispatch(getBillingUnitItem(0, 100, '',
@@ -93,7 +94,15 @@ function Component() {
                         boxShadow: 'none',
                         flexDirection: 'column',
                     }}>
-                        <h5> Billing Month </h5>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }} >
+                            <h5> Billing Month </h5>
+                            <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
+                                onClick={() => {
+                                    dispatch(setSelectedUnit({}));
+                                    history.push(url + "/add");
+                                }}
+                            />
+                        </div>
                         <ListGroup>
                             {unit.items.length > 0 ? 
                             unit.items.map((el, index) => <ListGroupItem 
@@ -147,12 +156,6 @@ function Component() {
                                 },
                             ]}
                             actions={[
-                                <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
-                                    onClick={() => {
-                                        dispatch(setSelectedUnit({}));
-                                        history.push(url + "/add");
-                                    }}
-                                />
                             ]}
                             onClickDetails={row => {
                                 dispatch(getBillingUnitItemDetails(row, history, url))
