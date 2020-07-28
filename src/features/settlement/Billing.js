@@ -280,7 +280,7 @@ function Component() {
                     fetchData={useCallback((pageIndex, pageSize, search) => {
                         dispatch(getBillingSettlement(pageIndex, pageSize, search,
                             building, settled,
-                            ...(settled === '1' ? [settlementStart, settlementEnd] : [today, today])
+                            ...(settled === '1' ? [settlementStart, settlementEnd] : [])
                         ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, building, settled, settlementStart, settlementEnd])}
