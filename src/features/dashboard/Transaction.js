@@ -67,6 +67,7 @@ function Component() {
         dispatch(get(endpointTransaction + '/admin/transaction/summary',
              res => {
                 setTrxSumm(res.data.data);
+                console.log(res.data.data)
             }))
     }, [dispatch]);
 
@@ -170,12 +171,16 @@ function Component() {
         { header: 'Amount', accessor: toMoney(trxSumm.total_transaction_amount) },
         { header: 'Settled', accessor: toMoney(trxSumm.total_settled_transaction_amount) },
         { header: 'Unsettled', accessor: toMoney(trxSumm.total_unsettled_transaction_amount) },
+        { header: 'Undisbursed', accessor: toMoney(
+            trxSumm.total_courier_undisbursed_transaction_amount +
+            trxSumm.total_merchant_undisbursed_transaction_amount
+        ) },
     ]
 
     return (
         <>
             <div className="row no-gutters">
-                <div className="col-10">
+                <div className="col-9">
                     <div className="Container color-2 d-flex flex-column cursor-pointer">
                         <div className="row no-gutters align-items-center py-2">
                             <div className="col">
@@ -202,7 +207,7 @@ function Component() {
                             </div>
                             <div>
                                 <AnimatedNumber
-                                    className=""
+                                    className="BigNumber blue"
                                     value={merchantInfo.active_merchant}
                                     formatValue={formatValue}
                                 />
@@ -214,19 +219,19 @@ function Component() {
                             </div>
                             <div>
                                 <AnimatedNumber
-                                    className=""
+                                    className="BigNumber blue"
                                     value={merchantInfo.inactive_merchant}
                                     formatValue={formatValue}
                                 />
                             </div>
                         </div>
-                        <div className="d-flex justify-content-between mb-2">
+                        <div className="d-flex justify-content-between">
                             <div>
                                 Total Merchant
                             </div>
                             <div>
                                 <AnimatedNumber
-                                    className=""
+                                    className="BigNumber blue"
                                     value={merchantInfo.total_merchant}
                                     formatValue={formatValue}
                                 />
@@ -234,75 +239,6 @@ function Component() {
                         </div>
                     </div>
                 </div>
-                {/* <div className="col">
-                    <div className="Container color-4 d-flex flex-column cursor-pointer"
-                    onClick={() => {
-                        history.push('/' + auth.role + '/merchant')
-                    }}
-                    >
-                        <div className="row no-gutters align-items-center">
-                            <div className="col">
-                                <AnimatedNumber
-                                    className="h2 font-weight-bold white"
-                                    value={merchantInfo.active_merchant}
-                                    formatValue={formatValue}
-                                />
-                                <div className="text-nowrap">Active Merchant</div>
-                            </div>
-                            <div className="col-auto">
-                                <div className="w-auto">
-                                    <RiHomeSmile2Line className="BigIcon white my-0" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="col">
-                    <div className="Container color-3 d-flex flex-column cursor-pointer"
-                    onClick={() => {
-                        history.push('/' + auth.role + '/merchant')
-                    }}
-                    >
-                        <div className="row no-gutters align-items-center">
-                            <div className="col">
-                                <AnimatedNumber
-                                    className="h2 font-weight-bold white"
-                                    value={merchantInfo.inactive_merchant}
-                                    formatValue={formatValue}
-                                />
-                                <div className="text-nowrap">Inactive Merchant</div>
-                            </div>
-                            <div className="col-auto">
-                                <div className="w-auto">
-                                    <RiHomeLine className="BigIcon white my-0" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="col">
-                    <div className="Container color-5 d-flex flex-column cursor-pointer"
-                    onClick={() => {
-                        history.push('/' + auth.role + '/merchant')
-                    }}
-                    >
-                        <div className="row no-gutters align-items-center">
-                            <div className="col">
-                                <AnimatedNumber
-                                    className="h2 font-weight-bold white"
-                                    value={merchantInfo.total_merchant}
-                                    formatValue={formatValue}
-                                />
-                                <div className="text-nowrap">Total Merchant</div>
-                            </div>
-                            <div className="col-auto">
-                                <div className="w-auto">
-                                    <RiStore2Line className="BigIcon white my-0" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
             </div>
             <div className="row no-gutters">
                 <div className="col-12">
@@ -410,7 +346,6 @@ function Component() {
                     </div>
                 </div>
                 <div className="col">
-
                     <div className="Container flex-column">
                         <div className="row">
                             <div className="col">
