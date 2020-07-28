@@ -11,8 +11,8 @@ import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
-import { downloadBillingDisbursement, refresh } from '../slices/billing';
 import { toMoney, dateTimeFormatterCell, toSentenceCase, isRangeToday } from '../../utils';
+import { downloadBillingDisbursement, getBillingDisbursement, refresh } from '../slices/billing';
 import { endpointBilling } from '../../settings';
 import { get, post } from '../slice';
 import MyButton from '../../components/Button';
@@ -61,6 +61,10 @@ function Component() {
     const { banks } = useSelector(state => state.main);
 
     let dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getBillingDisbursement(0, 1000, ''));
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
