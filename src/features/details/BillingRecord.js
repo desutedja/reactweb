@@ -46,7 +46,7 @@ function Component() {
             {label: 'payment_method', lfmt: () => "Via", vfmt: (v) => 
                 v === 'cash' ? <Pill color="warning">Payment by Cash</Pill> : <Pill color="success">Payment via apps</Pill>
             },
-            {disabled: data.payment_method === 'cash',
+            {disabled: data.info?.payment_method === 'cash',
                 label: 'payment_bank', lfmt: () => "Payment Method", vfmt: (v) => toSentenceCase(v) 
             },
         ],
