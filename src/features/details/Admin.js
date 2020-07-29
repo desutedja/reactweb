@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams, useHistory } from 'react-router-dom';
 
-import { get } from '../slice';
+import { get, setConfirmDelete } from '../slice';
 import Detail from './components/Detail';
 import Template from './components/Template';
 import { endpointAdmin } from '../../settings';
+import { deleteAdmin } from '../slices/admin';
 
 const details =
 {
@@ -15,6 +16,7 @@ const details =
 function AdminDetails() {
     const [data, setData] = useState({});
 
+    let history = useHistory();
     const dispatch = useDispatch();
     const { id } = useParams();
 
@@ -31,7 +33,11 @@ function AdminDetails() {
             loading={!data.id}
             labels={["Details"]}
             contents={[
-                <Detail type="Admin" data={data} labels={details} />,
+                <Detail type="Admin" data={data} labels={details}
+                onDelete={() => dispatch(setConfirmDelete("Are you sure to delete this item?",
+                            () => dispatch(deleteAdmin(data, history))
+                        ))}
+                />,
             ]}
         />
     )

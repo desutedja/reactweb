@@ -68,22 +68,20 @@ export const {
   publish
 } = slice.actions;
 
-export const getAds = (pageIndex, pageSize, search = '',
-os = '', gender = '', age_from = '', day = '') => dispatch => {
+export const getAds = (pageIndex, pageSize, search = '', sortField, sortType,
+os = '', gender = '', age_from = '', age_to = '', day = '') => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(adsEndpoint +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
+    '&search=' + search +
+    '&sort_field=' + sortField + '&sort_type=' + sortType +
     '&age_from=' + age_from +
-    // '&age_to=' + age_to +
+    '&age_to=' + age_to +
     '&os=' + os +
     '&gender=' + gender +
-    // '&appear_as=' + appear_as +
-    // '&media=' + media +
-    '&day=' + day +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&search=' + search,
+    '&day=' + day,
 
     res => {
       dispatch(setData(res.data.data));
@@ -117,7 +115,7 @@ export const editAds = (data, history, id) => dispatch => {
 
   dispatch(put(adsEndpoint, { ...rest.ads, id: id },
     res => {
-      dispatch(setSelected(res.data.data));
+      // dispatch(setSelected(res.data.data));
       history.push("/sa/advertisement/" + id);
 
       dispatch(setInfo({
@@ -131,12 +129,14 @@ export const editAds = (data, history, id) => dispatch => {
     }))
 }
 
-export const deleteAds = (row, history) => dispatch => {
+export const deleteAds = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(adsEndpoint + '/' + row.id,
     res => {
-      history && history.goBack();
+      history && history.push('/' + auth.role + '/ads');
 
       dispatch(setInfo({
         color: 'success',

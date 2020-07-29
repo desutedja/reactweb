@@ -2,16 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import Filter from '../../components/Filter';
-import RangeInput from '../../components/RangeInput';
+import AgeRangeInput from '../../components/AgeRangeInput';
 import { FiPlus } from 'react-icons/fi';
 import { osType, genders, toSentenceCase, days, daysLabel } from '../../utils';
 
+import moment from 'moment';
 import Pill from '../../components/Pill';
 import Button from '../../components/Button';
 
 import Template from './components/Template';
 import { getAds, deleteAds, setSelected } from '../slices/ads';
-import { dateFormatter } from '../../utils';
+import { dateTimeFormatterCell } from '../../utils';
 import AdsCell from '../../components/cells/Ads';
 
 const columns = [
@@ -23,15 +24,14 @@ const columns = [
     { Header: "Occupation", accessor: row => row.occupation ? toSentenceCase(row.occupation) : 'All' },
     { Header: "Weight", accessor: "total_priority_score" },
     {
-        Header: "Start Date", accessor: row => dateFormatter(row.start_date)
+        Header: "Start Date", accessor: row => dateTimeFormatterCell(row.start_date)
     },
     {
-        Header: "End Date", accessor: row => dateFormatter(row.end_date)
+        Header: "End Date", accessor: row => dateTimeFormatterCell(row.end_date)
     },
     {
-        Header: "Status", accessor: row => <Pill
-            color={row.published && 'success'}
-        >{row.published ? 'Published' : 'Draft'}</Pill>
+        Header: "Status", accessor: row => row.published ? (moment().isBefore(moment(row.end_date.slice(0, -1))) ?
+            <Pill color='success'>Published</Pill> : <Pill color='danger'>Ended</Pill>) : <Pill color='secondary'>Draft</Pill>
     },
 ]
 
@@ -41,7 +41,8 @@ function Component() {
     let { url } = useRouteMatch();
 
     const [os, setOs] = useState('');
-    const [ageFrom, setAgeFrom] = useState('');
+    const [ageFrom, setAgeFrom] = useState('10');
+    const [ageTo, setAgeTo] = useState('85');
     const [gender, setGender] = useState('');
     const [day, setDay] = useState('');
 
@@ -55,6 +56,7 @@ function Component() {
             slice={'ads'}
             getAction={getAds}
             deleteAction={deleteAds}
+            sortBy={['start_date', 'end_date']}
             actions={[
                 <Button key="Add Advertisement" label="Add Advertisement" icon={<FiPlus />}
                     onClick={() => {
@@ -67,6 +69,7 @@ function Component() {
                 os.toLowerCase(),
                 gender[0],
                 ageFrom.toLowerCase(),
+                ageTo.toLowerCase(),
                 day
             ]}
             filters={[
@@ -125,19 +128,20 @@ function Component() {
                     )
                 },
                 {
-                    hidex: ageFrom === "",
-                    label: <p>{ageFrom ? "Ages: " + ageFrom : "Ages: Any"}</p>,
-                    delete: () => setAgeFrom(''),
+                    hidex: ageFrom === "10" && ageTo === "85",
+                    label: <p>{ageFrom === "10" && ageTo === "85" ? "Ages: Any" :
+                        "Ages: " + ageFrom + " - " + ageTo}</p>,
+                    delete: () => {
+                        setAgeFrom('10');
+                        setAgeTo('85');
+                    },
                     component: toggleModal => (
-                        <RangeInput
-                            onClick={el => {
-                                setAgeFrom(el.value);
-                                toggleModal(false);
-                            }}
-                            onClickAll={() => {
-                                setAgeFrom('');
-                                toggleModal(false);
-                            }}
+                        <AgeRangeInput
+                            start={ageFrom}
+                            end={ageTo}
+                            setStart={setAgeFrom}
+                            setEnd={setAgeTo}
+                            toggle={toggleModal}
                         />
                     )
                 }

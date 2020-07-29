@@ -9,7 +9,7 @@ import Row from '../../../components/Row';
 import Column from '../../../components/Column';
 import Button from '../../../components/Button';
 
-import { toSentenceCase, dateFormatter, getCountryFromCode, getBank } from '../../../utils';
+import { toSentenceCase, dateFormatter, getCountryFromCode, getBank, dateTimeFormatter } from '../../../utils';
 import { FiTrash, FiEdit } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 
@@ -39,7 +39,7 @@ function Component({ imgPreview = false, data, labels, type = "",
                 label === "birthdate" ? dateFormatter(value, '-') :
                     label === "birthplace" ? value.toUpperCase() :
                         label === "address" ? toSentenceCase(value) :
-                            label === "created_on" ? dateFormatter(value, '-') :
+                            label === "created_on" ? dateTimeFormatter(value, '-') :
                                 label === "nationality" ? getCountryFromCode(value) :
                                     label === "account_bank" ? getBank(value, banks) :
                                         label === "gender" ?
@@ -92,10 +92,11 @@ function Component({ imgPreview = false, data, labels, type = "",
                             return !el.disabled ?
                                 <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
                                     <Column flex={3} style={{ fontWeight: 'bold', fontSize: '1em', textAlign: 'left' }}>
-                                        {el.labelFormatter ? el.labelFormatter(el) : formatLabel(el)}
+                                        {el.lfmt ? el.lfmt(el) : formatLabel(el)}
                                     </Column>
                                     <Column flex={9} style={{ fontWeight: 'normal', fontSize: '1em', }}>
-                                        {el.valueFormatter ? el.valueFormatter(data[el.label]) : formatValue(el, data[el])}
+                                        {el.vfmt ? el.vfmt(data[el.label]) : el.label ? formatValue(el.label, data[el.label])
+                                            : formatValue(el, data[el])}
                                     </Column>
                                 </Row> : null;
                         })}
@@ -107,8 +108,8 @@ function Component({ imgPreview = false, data, labels, type = "",
                     pathname: editPath,
                     state: data,
                 })} />}
-                {onDelete && <Button icon={<FiTrash />} color="danger" label="Delete" onClick={onDelete} />}
                 {renderButtons()}
+                {onDelete && <Button icon={<FiTrash />} color="danger" label="Delete" onClick={onDelete} />}
             </div>
         </div>
     )

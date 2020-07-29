@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
+import Modal from '../../../components/Modal';
 import { useHistory, useParams } from 'react-router-dom';
 import { get } from '../../slice';
 import { endpointMerchant } from '../../../settings';
@@ -17,11 +18,13 @@ const info = {
         "type",
         "legal",
         "category",
-        "in_building",
+        {label: "building_list", vfmt: v => {
+            return v.map((el, i) => el.name + (i === v.length - 1 ? '' : ', '))
+        }},
         "address",
-        "district",
-        "city",
-        "province",
+        "district_name",
+        "city_name",
+        "province_name",
         "lat",
         "long",
         "open_at",
@@ -49,32 +52,48 @@ const account = {
 
 function Component() {
     const [data, setData] = useState({});
+    const [confirmDelete, setConfirmDelete] = useState(false);
     
     let dispatch = useDispatch();
     let history = useHistory();
     let { id } = useParams();
+
     useEffect(() => {
         dispatch(get(endpointMerchant + '/admin?id=' + id, res => {
             setData(res.data.data);
-            setSelected(res.data.data);
+            dispatch(setSelected(res.data.data));
         }))
     }, [id, dispatch])
 
     return (
+        <>
+        <Modal 
+            isOpen={confirmDelete}
+            disableHeader={true}
+            onClick={
+              () => dispatch(deleteMerchant(data, history))
+            }
+            toggle={() => setConfirmDelete(false)}
+            okLabel={"Delete"}
+            cancelLabel={"Cancel"}
+        >
+            Are you sure you want to delete merchant <b>{data.name}</b>?
+        </Modal>
         <Template
-            image={data.logo}
+            image={data.logo || "placeholder"}
             title={data.name}
             phone={data.phone}
             loading={!data.id}
             labels={["Details", "Contact Person", "Bank Account"]}
             contents={[
                 <Detail data={data} labels={info}
-                    onDelete={() => dispatch(deleteMerchant(data, history))}
+                    onDelete={() => setConfirmDelete(true)}
                 />,
                 <Detail data={data} labels={pic} />,
                 <Detail data={data} labels={account} />,
             ]}
         />
+        </>
     )
 }
 

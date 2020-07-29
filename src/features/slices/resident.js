@@ -79,20 +79,17 @@ export const {
 
 export const getResident = (
   pageIndex, pageSize,
-  search = '',
-  // sort_field = 'created_on',
-  // sort_type = 'DESC',
+  search = '', status = '', kyc = ''
 ) => dispatch => {
-  // console.log(sort_field, sort_type)
-
   dispatch(startAsync());
 
   dispatch(get(residentEndpoint + '/read' +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search +
+    '&kyc=' + kyc +
+    '&status=' + status +
     '&sort_field=created_on&sort_type=DESC' +
-    // '&sort_field=' + sort_field + '&sort_type=' + sort_type +
     '&status=',
 
     res => {
@@ -141,12 +138,14 @@ export const editResident = (data, history, id) => dispatch => {
     }))
 }
 
-export const deleteResident = (row, history) => dispatch => {
+export const deleteResident = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(residentEndpoint + '/delete/' + row.id,
     res => {
-      history && history.goBack()
+      history && history.push('/' + auth.role + '/resident');
 
       dispatch(refresh());
 

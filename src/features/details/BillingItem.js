@@ -1,17 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Detail from './components/Detail';
 import Template from './components/Template';
 
 import Modal from '../../components/Modal';
+import Table from '../../components/Table';
 import Button from '../../components/Button';
 import { useSelector, useDispatch } from 'react-redux';
 import { payByCash } from '../slices/billing';
 import { Formik, Form } from 'formik';
 import Input from '../form/input';
 import SubmitButton from '../form/components/SubmitButton';
-import { post } from '../slice';
+import { post, get, setConfirmDelete } from '../slice';
 import { endpointBilling } from '../../settings';
+import { toMoney, dateTimeFormatter } from '../../utils';
 
 const details =
 {
@@ -39,12 +41,37 @@ const details =
     ],
 };
 
+const columns = [
+    { Header: 'ID', accessor: 'id' },
+    { Header: 'Created On', accessor: row => dateTimeFormatter(row.created_on) },
+    { Header: 'Charge Name', accessor: 'charge_name' },
+    { Header: 'Charge Description', accessor: 'charge_description' },
+    { Header: 'Charge Price', accessor: row => toMoney(row.charge_price) },
+]
+
 function Component() {
     const [modal, setModal] = useState(false);
+    const [toggle, setToggle] = useState(false);
+
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [totalItems, setTotalItems] = useState('');
+    const [pageCount, setPageCount] = useState('');
 
     const { unit } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
+
+    useEffect(() => {
+        setLoading(true);
+        dispatch(get(endpointBilling + '/management/billing/additional-charge?id=' +
+            unit.selected.id, res => {
+                setData(res.data.data);
+                setTotalItems(res.data.data.length);
+                setPageCount(1);
+                setLoading(false);
+            }))
+    }, [dispatch, unit.selected.id, toggle])
 
     return (
         <>
@@ -58,7 +85,8 @@ function Component() {
                         "charge_price": '',
                     }}
                     onSubmit={(values) => {
-                        const data = {...values, 
+                        const data = {
+                            ...values,
                             billing_id: unit.selected.id,
                             charge_price: parseInt(values.charge_price, 10),
                         }
@@ -67,6 +95,7 @@ function Component() {
 
                         dispatch(post(endpointBilling + '/management/billing/additional-charge', data, res => {
                             setModal(false);
+                            setToggle(!toggle);
                         }))
                     }}
                 >
@@ -105,6 +134,25 @@ function Component() {
                             }} />
                         ])}
                     />,
+                    <Table
+                        columns={columns}
+                        loading={loading}
+                        totalItems={totalItems}
+                        pageCount={pageCount}
+                        data={data}
+                        onClickDelete={row => {
+                            dispatch(setConfirmDelete("Are you sure to delete this item?",
+                                () => {
+                                    dispatch(post(endpointBilling
+                                        + '/management/billing/additional-charge/delete', {
+                                        deleted: [row.id],
+                                    }, res => {
+                                        setToggle(!toggle)
+                                    }))
+                                }
+                            ));
+                        }}
+                    />
                 ]}
             />
         </>

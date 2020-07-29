@@ -12,7 +12,7 @@ import Loading from '../../../components/Loading';
 import Tab from '../../../components/Tab';
 import Breadcrumb from '../../../components/Breadcrumb';
 
-function Component({ image, title, website, phone, merchant,
+function Component({ image, title, website, phone, merchant, transparent=false,
     email, labels, contents, activeTab, imageTitle = '', loading = true }) {
 
     const [imgLoading, setImgLoading] = useState(true);
@@ -25,7 +25,7 @@ function Component({ image, title, website, phone, merchant,
                 flex: 1,
                 overflow: 'hidden',
             }}>
-                {(image || title) && <div className="Container" style={{
+                {(image) && <div className="Container" style={{
                     flexDirection: 'column',
                     maxWidth: 360,
                 }}>
@@ -39,7 +39,7 @@ function Component({ image, title, website, phone, merchant,
                     }
                     <img
                         alt="Avatar"
-                        src={image ? image :
+                        src={image && image !== "placeholder" ? image :
                             require('../../../assets/fallback.jpg')}
                         style={{
                             height: imgLoading ? 0 : 400,
@@ -50,7 +50,7 @@ function Component({ image, title, website, phone, merchant,
                         onLoad={() => setImgLoading(false)}
                         onError={() => setImgLoading(false)}
                     />
-                    {imageTitle && title && <h3 style={{
+                    {title && <h3 style={{
                         marginBottom: 16,
                     }}>{title}</h3>}
                     {website && <div className="row">
@@ -78,7 +78,7 @@ function Component({ image, title, website, phone, merchant,
                         </div>
                     </div>}
                 </div>}
-                <div className="Container" style={{
+                <div className={ transparent ? "Container-transparent" : "Container" } style={{
                     flex: 2,
                 }}>
                     <Tab

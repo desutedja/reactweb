@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import AnimatedNumber from "animated-number-react";
+import { useHistory } from 'react-router-dom';
+import moment from 'moment';
 
 import { FiUsers, FiBriefcase } from 'react-icons/fi';
 import { FaTools, FaBoxOpen } from 'react-icons/fa';
@@ -13,16 +15,27 @@ import './style.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { get } from '../slice';
 
+import CardList from '../../components/CardList';
+
 const formatValue = (value) => value.toFixed(0);
 const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
 
 function Component() {
-    const { auth } = useSelector(state => state);
+    let dispatch = useDispatch();
+    const history = useHistory();
+
+    const { auth, notification } = useSelector(state => state);
+
+    const announcementLists = notification.items
+        .filter(item => item.topic === 'announcement');
 
     const [billingData, setBillingData] = useState({});
     const [staffData, setStaffData] = useState({});
 
-    let dispatch = useDispatch();
+    const [isTechnician, setIsTechnician] = useState(false);
+    const [isCourier, setIsCourier] = useState(false);
+    const [isSecurity, setIsSecurity] = useState(false);
+
 
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/statistic', res => {
@@ -37,11 +50,27 @@ function Component() {
         }))
     }, [dispatch]);
 
+    useEffect(() => {
+        if (auth.role === 'bm') {
+            const blacklist_modules = auth.user.blacklist_modules;
+            const isSecurity = blacklist_modules.find(item => item.module === 'security') ? true : false;
+            const isInternalCourier = blacklist_modules.find(item => item.module === 'internal_courier') ? true : false;
+            const isTechnician = blacklist_modules.find(item => item.module === 'technician') ? true : false;
+            setIsSecurity(isSecurity);
+            setIsCourier(isInternalCourier);
+            setIsTechnician(isTechnician);
+        }
+    }, [auth])
+
     return (
         <>
             <div className="row no-gutters">
                 {auth.role === 'sa' && <div className="col">
-                    <div className="Container color-2 d-flex flex-column">
+                    <div className="Container color-2 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/building')
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber className="h2 font-weight-bold white" value={staffData.num_of_building}
@@ -58,7 +87,11 @@ function Component() {
                     </div>
                 </div>}
                 <div className="col">
-                    <div className="Container color-4 d-flex flex-column">
+                    <div className={"Container color-4 d-flex flex-column" + (auth.role === 'bm' ? ' cursor-pointer' : '')}
+                    onClick={() => {
+                        auth.role === 'bm' && history.push('/' + auth.role + '/building/' + auth.user.building_id, {tab: 2})
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber className="h2 font-weight-bold white" value={staffData.num_of_unit}
@@ -74,7 +107,7 @@ function Component() {
                         </div>
                     </div>
                 </div>
-                <div className="col">
+                {auth.role === 'sa' && <div className="col">
                     <div className="Container color-5 d-flex flex-column">
                         <div className="row no-gutters align-items-center">
                             <div className="col">
@@ -91,9 +124,8 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>}
             </div>
-
 
             <div className="Row">
                 <div className="Container" style={{
@@ -174,7 +206,11 @@ function Component() {
             }}>
                 <div className="row no-gutters">
                     <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/resident')
+                        }}
+                        >
                             <div style={{
                                 width: 'auto'
                             }}>
@@ -193,8 +229,12 @@ function Component() {
                             </div>
                         </div>
                     </div>
-                    <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                    {!isTechnician && <div className="col-6 col-md-4 col-lg">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/staff', {role: 'technician', roleLabel: 'Technician'})
+                        }}
+                        >
                             <div style={{
                                 width: 'auto'
                             }}>
@@ -212,9 +252,13 @@ function Component() {
                                 <p>Technician</p>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                    </div>}
+                    {!isSecurity && <div className="col-6 col-md-4 col-lg">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/staff', {role: 'security', roleLabel: 'Security'})
+                        }}
+                        >
                             <div style={{
                                 width: 'auto'
                             }}>
@@ -231,9 +275,13 @@ function Component() {
                                 <p>Security</p>
                             </div>
                         </div>
-                    </div>
-                    <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                    </div>}
+                    {!isCourier && <div className="col-6 col-md-4 col-lg">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/staff', {role: 'courier', roleLabel: 'Courier'})
+                        }}
+                        >
                             <div style={{
                                 width: 'auto'
                             }}>
@@ -251,9 +299,13 @@ function Component() {
                                 <p>Courier</p>
                             </div>
                         </div>
-                    </div>
+                    </div>}
                     <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/staff', {role: 'pic_bm', roleLabel: 'PIC BM'})
+                        }}
+                        >
                             <div className="w-auto">
                                 <RiBuilding2Line className="h1 mr-4 my-0" />
                             </div>
@@ -271,7 +323,11 @@ function Component() {
                         </div>
                     </div>
                     <div className="col-6 col-md-4 col-lg">
-                        <div className="Container align-items-center color-1">
+                        <div className="Container align-items-center color-1 cursor-pointer"
+                        onClick={() => {
+                            history.push('/' + auth.role + '/staff', {role: 'gm_bm', roleLabel: 'GM BM'})
+                        }}
+                        >
                             <div style={{
                                 width: 'auto'
                             }}>
@@ -288,6 +344,43 @@ function Component() {
                                 />
                                 <p className="text-nowrap">General Manager</p>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="row">
+                <div className="col-12">
+                    <div className="Container flex-column">
+                        <div className="mb-4">
+                            <h5>List of Announcements</h5>
+                        </div>
+                        {announcementLists.length === 0 && <div className="text-center pb-3">
+                            No announcements
+                        </div>}
+                        <div
+                        style={{
+                            maxHeight: '544px',
+                            overflow: 'auto'
+                        }}
+                        >
+                            {announcementLists.map(({title, description, image, id, created_on}, i) => {
+                                return (
+                                    <div className="row no-gutters">
+                                        <div className="col-12">
+                                            <CardList
+                                            className="mb-4"
+                                            key={id}
+                                            title={title}
+                                            description={description}
+                                            imgSrc={image}
+                                            createdOn={moment(created_on).format('DD MMM YYYY')}
+                                            />
+                                        </div>
+                                    </div>
+                                )
+                            }
+                            )}
                         </div>
                     </div>
                 </div>

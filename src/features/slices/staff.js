@@ -91,7 +91,7 @@ export const editStaff = ( data, history, id) => dispatch => {
 
   dispatch(put(staffEndpoint + '/update', { ...data, id: id }, 
     res => {
-      dispatch(setSelected(res.data.data));
+      // dispatch(setSelected(res.data.data));
       history.push(`${id}`);
 
       dispatch(setInfo({
@@ -106,12 +106,14 @@ export const editStaff = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteStaff = (row, history) => dispatch => {
+export const deleteStaff = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(staffEndpoint + '/delete?id=' + row.id, 
     res => {
-      history && history.goBack()
+      history && history.push('/' + auth.role + '/staff');
 
       dispatch(refresh());
       

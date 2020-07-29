@@ -16,11 +16,14 @@ function Settings() {
     const [refresh, setRefresh] = useState(false);
 
     const [pg, setPG] = useState(false);
+    const [pgData, setPGData] = useState({});
     const [admin, setAdmin] = useState(false);
+    const [adminData, setAdminData] = useState('');
 
     let dispatch = useDispatch();
 
     useEffect(() => {
+        setLoading(true);
         dispatch(get(endpointAdmin + '/centratama/config', res => {
             setData(res.data.data);
             setLoading(false);
@@ -83,58 +86,70 @@ function Settings() {
                 setID(data.id);
                 setTitle(data.name);
                 setPG(true);
+                setPGData(data);
             }}>Change</button>
         </div>
     }
 
     return (
         <>
-            <PGFee id={id} title={title} toggleRefresh={toggle} modal={pg} toggleModal={() => setPG(false)} />
-            <AdminFee title={title} toggleRefresh={toggle} modal={admin} toggleModal={() => setAdmin(false)} />
+            <PGFee
+                id={id}
+                title={title}
+                toggleRefresh={toggle}
+                modal={pg}
+                toggleModal={() => setPG(false)}
+                data={pgData}
+            />
+            <AdminFee
+                title={title}
+                toggleRefresh={toggle}
+                modal={admin}
+                toggleModal={() => setAdmin(false)}
+                data={adminData}
+            />
             <Breadcrumb />
-            <Loading loading={loading}>
-                <div className="Container" style={{
-                    flexDirection: 'column'
+            <div className="Container">
+                <div style={{
+                    display: 'flex',
+                    flex: 1,
+                    flexDirection: 'column',
+                    overflow: 'auto',
                 }}>
-                    <div style={{
-                        display: 'flex',
-                        flex: 1,
-                        flexDirection: 'column',
-                        overflow: 'auto',
+                    <div className="Settings-item" style={{
+                        marginBottom: 16,
                     }}>
-                        <div className="Settings-item" style={{
-                            marginBottom: 16,
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
                         }}>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <p style={{
-                                    fontWeight: 'bold',
-                                    marginRight: 8,
-                                }}>Admin Fee</p>
-                                <p style={{
-                                    marginRight: 16,
-                                }}>{data.admin_fee} %</p>
-                            </div>
-                            <button onClick={() => {
-                                setAdmin(true);
-                                setTitle('Admin Fee');
-                            }}>Change</button>
+                            <p style={{
+                                fontWeight: 'bold',
+                                marginRight: 8,
+                            }}>Admin Fee</p>
+                            <p style={{
+                                marginRight: 16,
+                            }}>{data.admin_fee} %</p>
                         </div>
-                        <p style={{
-                            fontWeight: 'bold',
-                            marginRight: 8,
-                            marginBottom: 8,
-                            paddingLeft: 8,
-                            fontSize: '1.2rem',
-                        }}>PG Fee</p>
-                        {data.id && data.payment_gateway_methods.map(el => {
-                            return <Item key={el.id} data={el} />
-                        })}
+                        <button onClick={() => {
+                            setAdmin(true);
+                            setAdminData(data.admin_fee);
+                            setTitle('Admin Fee');
+                        }}>Change</button>
                     </div>
+                    <p style={{
+                        fontWeight: 'bold',
+                        marginRight: 8,
+                        marginBottom: 8,
+                        paddingLeft: 8,
+                        fontSize: '1.2rem',
+                    }}>PG Fee</p>
+                    {data.id && data.payment_gateway_methods.map(el => {
+                        return <Item key={el.id} data={el} />
+                    })}
                 </div>
-            </Loading>
+                <Loading loading={loading} />
+            </div>
         </>
     )
 }

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { endpointTask } from '../../settings';
-import { get, post } from '../slice';
+import { get, post, setInfo } from '../slice';
 
 const taskEndpoint = endpointTask + '/admin';
 
@@ -49,8 +49,8 @@ export const {
 
 export const getTask = (
   pageIndex, pageSize,
-  search = '', type, prio, status,
-  building
+  search = '', type, prio, status, building, unit,
+  createdStart = '', createdEnd = '', resolvedStart = '', resolvedEnd = ''
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -63,7 +63,12 @@ export const getTask = (
     '&type=' + type +
     '&priority=' + prio +
     '&requester_building_id=' + building +
+    '&requester_unit_id=' + unit +
     '&sort_field=created_on&sort_type=DESC' +
+    '&created_start_date=' + createdStart + 'T00:00:00' +
+    '&created_end_date=' + createdEnd + 'T23:59:59' +
+    '&resolved_start_date=' + (resolvedStart ? resolvedStart + 'T00:00:00' : '') +
+    '&resolved_end_date=' + (resolvedEnd ? resolvedEnd + 'T23:59:59' : '') +
     '&status=' + status,
 
     res => {
@@ -80,6 +85,9 @@ export const resolveTask = (row) => dispatch => {
     res => {
       dispatch(stopAsync());
       dispatch(refresh());
+
+      dispatch(setInfo({message: "Task " + row.ref_code + " has been marked as resolved."}));
+      setTimeout(() => dispatch(setInfo({message: ''})), 3000);
     },
     err => {
       dispatch(stopAsync());

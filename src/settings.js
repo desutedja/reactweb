@@ -1,6 +1,6 @@
 
 
-export const endpointBase = 'https://centratama2.okbabe.technology';
+export const endpointBase = 'https://centratama.okbabe.technology';
 
 export const endpointAsset = endpointBase + '/clink-assets';
 export const endpointAdmin = endpointBase + '/clink-admin';
@@ -22,7 +22,7 @@ export const taskStatusColor = {
     'reported': 'info',
     'rejected': 'danger',
     'approved': 'success',
-    'completed': 'secondary'
+    'completed': 'success',
 }
 
 export const trx_status = [
@@ -56,12 +56,30 @@ export const trxStatusColor = {
     'ready_for_pickup': 'info',
     'on_delivery': 'success',
     'delivered': 'info',
-    'completed': 'secondary',
+    'completed': 'success',
+}
+
+export const taskPriorityColor = {
+    'low' : 'light',
+    'normal' : 'primary',
+    'high' : 'warning',
+    'emergency': 'danger',
+
 }
 
 export const merchant_types = [
     {label: 'Services', value: 'Services'},
     {label: 'Goods', value: 'Goods'},
+]
+
+export const resident_statuses = [
+    {label: 'Active', value: 'active'},
+    {label: 'Inactive', value: 'inactive'}
+]
+
+export const resident_kyc_statuses = [
+    {label: 'Submitted', value: 'submitted'},
+    {label: 'Unsubmitted', value: 'none'}
 ]
 
 export const task_types = [

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { FiSearch, FiPlus } from 'react-icons/fi';
+import moment from 'moment';
 
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
@@ -14,12 +15,14 @@ import Resident from '../../components/cells/Resident';
 import Staff from '../../components/cells/Staff';
 
 import { useSelector } from 'react-redux';
-import { toSentenceCase, dateTimeFormatter } from '../../utils';
+import { toSentenceCase, dateTimeFormatter, isRangeToday } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import { getTask, resolveTask, reassignTask, setSelected } from '../slices/task';
 import { get } from '../slice';
 
 import Template from './components/Template';
+import DateRangeFilter from '../../components/DateRangeFilter';
+import { getBuildingUnit } from '../slices/building';
 
 const columns = [
     {
@@ -78,7 +81,6 @@ const statuses = [
     { label: 'Approved', value: 'approved', },
     { label: 'Completed', value: 'completed', },
     { label: 'Timeout', value: 'timeout', },
-
 ]
 
 const prios = [
@@ -89,6 +91,13 @@ const prios = [
 ]
 
 function Component() {
+    let dispatch = useDispatch();
+    let history = useHistory();
+    let { url } = useRouteMatch();
+    const { role } = useSelector(state => state.auth)
+
+    const today = moment().format('yyyy-MM-DD');
+
     const [selectedRow, setRow] = useState({});
     const [resolve, setResolve] = useState(false);
     const [assign, setAssign] = useState(false);
@@ -103,17 +112,21 @@ function Component() {
     const [type, setType] = useState('');
     const [typeLabel, setTypeLabel] = useState('');
 
-    const [status, setStatus] = useState('');
-    const [statusLabel, setStatusLabel] = useState('');
+    const [status, setStatus] = useState(history.location.state ? history.location.state.status : '');
+    const [statusLabel, setStatusLabel] = useState(history.location.state ? history.location.state.statusLabel : '');
 
     const [prio, setPrio] = useState('');
     const [prioLabel, setPrioLabel] = useState('');
 
-    const { role } = useSelector(state => state.auth)
+    const [createdStart, setCreatedStart] = useState(moment().format('yyyy-MM-DD'));
+    const [createdEnd, setCreatedEnd] = useState(moment().format('yyyy-MM-DD'));
+    const [resolvedStart, setResolvedStart] = useState(moment().format('yyyy-MM-DD'));
+    const [resolvedEnd, setResolvedEnd] = useState(moment().format('yyyy-MM-DD'));
 
-    let dispatch = useDispatch();
-    let history = useHistory();
-    let { url } = useRouteMatch();
+    const [unit, setUnit] = useState('');
+    const [unitLabel, setUnitLabel] = useState('');
+    const [units, setUnits] = useState([]);
+    const [unitSearch, setUnitSearch] = useState('');
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
@@ -148,6 +161,28 @@ function Component() {
             }))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, search, selectedRow]);
+
+    useEffect(() => {
+        console.log(history)
+        console.log('LOG', status, statusLabel)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [status])
+
+
+    useEffect(() => {
+        building && dispatch(get(endpointAdmin + '/building/unit' +
+            '?page=1' +
+            '&building_id=' + building +
+            '&search=' + unitSearch +
+            '&sort_field=created_on&sort_type=DESC' +
+            '&limit=10', res => setUnits(
+                res.data.data.items.map(el => ({
+                    label: toSentenceCase(el.section_type) + " " + el.section_name + ' ' + el.number,
+                    value: el.id,
+                }))
+            )))
+    }, [building, dispatch, unitSearch])
+
     return (
         <>
             <Modal isOpen={resolve} toggle={() => setResolve(false)} disableHeader
@@ -192,11 +227,78 @@ function Component() {
                 columns={columns}
                 slice='task'
                 getAction={getTask}
-                filterVars={[type, prio, status, building]}
+                filterVars={[type, prio, status, building, unit, createdStart, createdEnd,
+                    ...status === 'completed' ? [resolvedStart, resolvedEnd] : []]}
                 filters={[
                     {
+                        hidex: isRangeToday(createdStart, createdEnd),
+                        label: "Created Date: ",
+                        delete: () => { setCreatedStart(today); setCreatedEnd(today) },
+                        value: isRangeToday(createdStart, createdEnd) ? 'Today' :
+                            moment(createdStart).format('DD-MM-yyyy') + ' - '
+                            + moment(createdEnd).format('DD-MM-yyyy'),
+                        component: (toggleModal) =>
+                            <DateRangeFilter
+                                startDate={createdStart}
+                                endDate={createdEnd}
+                                onApply={(start, end) => {
+                                    setCreatedStart(start);
+                                    setCreatedEnd(end);
+                                    toggleModal();
+                                }} />
+                    },
+                    ...status === 'completed' ? [{
+                        hidex: isRangeToday(resolvedStart, resolvedEnd),
+                        label: "Resolved Date: ",
+                        delete: () => { setResolvedStart(today); setResolvedEnd(today) },
+                        value: isRangeToday(resolvedStart, resolvedEnd) ? 'Today' :
+                            moment(resolvedStart).format('DD-MM-yyyy') + ' - '
+                            + moment(resolvedEnd).format('DD-MM-yyyy')
+                        ,
+                        component: (toggleModal) =>
+                            <DateRangeFilter
+                                startDate={resolvedStart}
+                                endDate={resolvedEnd}
+                                onApply={(start, end) => {
+                                    setResolvedStart(start);
+                                    setResolvedEnd(end);
+                                    toggleModal();
+                                }} />
+                    }] : [],
+                    ...building ? [{
+                        hidex: unit === "",
+                        label: "Unit: ",
+                        value: unit ? unitLabel : "All",
+                        delete: () => { setUnit(""); },
+                        component: (toggleModal) =>
+                            <>
+                                <Input
+                                    label="Search Unit"
+                                    compact
+                                    icon={<FiSearch />}
+                                    inputValue={unitSearch}
+                                    setInputValue={setUnitSearch}
+                                />
+                                <Filter
+                                    data={units}
+                                    onClick={(el) => {
+                                        setUnit(el.value);
+                                        setUnitLabel(el.label);
+                                        toggleModal(false);
+                                    }}
+                                    onClickAll={() => {
+                                        setUnit("");
+                                        toggleModal(false);
+                                    }}
+                                />
+                                {unitSearch ? 'Showing at most 10 matching units' : 
+                                'Showing 10 most recent units'}
+                            </>
+                    }] : [],
+                    {
                         hidex: building === "",
-                        label: <p>{building ? "Building: " + buildingName : "Building: All"}</p>,
+                        label: "Building: ",
+                        value: building ? buildingName : "All",
                         delete: () => { setBuilding(""); },
                         component: (toggleModal) =>
                             <>
@@ -224,7 +326,8 @@ function Component() {
                     },
                     {
                         hidex: type === "",
-                        label: <p>{type ? "Type: " + typeLabel : "Type: All"}</p>,
+                        label: "Type: ",
+                        value: type ? typeLabel : 'All',
                         delete: () => { setType(""); },
                         component: (toggleModal) =>
                             <Filter
@@ -243,7 +346,8 @@ function Component() {
                     },
                     {
                         hidex: prio === "",
-                        label: <p>{prio ? "Priority: " + prioLabel : "Priority: All"}</p>,
+                        label: "Priority: ",
+                        value: prio ? prioLabel : "All",
                         delete: () => { setPrio(""); },
                         component: (toggleModal) =>
                             <Filter
@@ -262,7 +366,8 @@ function Component() {
                     },
                     {
                         hidex: status === "",
-                        label: <p>{status ? "Status: " + statusLabel : "Status: All"}</p>,
+                        label: "Status: ",
+                        value: status ? statusLabel : 'All',
                         delete: () => { setStatus(""); },
                         component: (toggleModal) =>
                             <Filter
@@ -298,7 +403,7 @@ function Component() {
                 }}
                 onClickChat={row => {
                     dispatch(setSelected(row));
-                    history.push("/chat");
+                    history.push("chat");
                 }}
             />
         </>

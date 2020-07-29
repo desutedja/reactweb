@@ -8,46 +8,50 @@ import ClinkLoader from '../../components/ClinkLoader';
 import { FiCheck, FiSearch, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import Tab from '../../components/Tab';
+import Breadcrumb from '../../components/Breadcrumb';
+import { ListGroup, ListGroupItem, Card } from 'reactstrap';
+import moment from 'moment';
 
-import Table from '../../components/Table';
+import Table from '../../components/TableWithSelection';
 import { getTransactionDisbursement, refresh, downloadTransactionDisbursement } from '../slices/transaction';
-import {
-    toMoney
-} from '../../utils';
 import { trxStatusColor, endpointManagement } from '../../settings';
-import { toSentenceCase, dateTimeFormatterCell } from '../../utils';
+import { toMoney, toSentenceCase, dateTimeFormatterCell, isRangeToday } from '../../utils';
 import Pill from '../../components/Pill';
+import Filter from '../../components/Filter';
 import { endpointTransaction, endpointMerchant } from '../../settings';
 import { get, post } from '../slice';
 import MyButton from '../../components/Button';
+import Transaction from '../../components/cells/Transaction';
+import DateRangeFilter from '../../components/DateRangeFilter';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
+
+const tabs = [
+    "Merchant", "Courier"
+]
 
 function Component() {
     const [info, setInfo] = useState({});
     const [active, setActive] = useState(0);
     const [selected, setSelected] = useState([]);
     const [limit, setLimit] = useState(5);
+    const [status, setStatus] = useState('');
+    const [filter, setFilter] = useState('');
     const [loadingMerchant, setLoadingMerchant] = useState(false)
     const [loadingCourier, setLoadingCourier] = useState(false)
     const [transferCode, setTransferCode] = useState('');
     const [searchValue, setSearchValue] = useState('');
-    const [
-        type,
-        setType
-    ] = useState('merchant');
+
+    const [type, setType] = useState('merchant');
     const [disburseModal, setDisburseModal] = useState(false);
-    const [
-        merchant,
-        setMerchant
-    ] = useState('');
+    const [merchant, setMerchant] = useState('');
     const [merchants, setMerchants] = useState([]);
-    const [
-        courier,
-        setCourier
-    ] = useState('');
+    const [courier, setCourier] = useState('');
     const [couriers, setCouriers] = useState([]);
 
+    const today = moment().format("yyyy-MM-DD", 'day');
+    const [disbursedStart, setDisbursedStart] = useState(today);
+    const [disbursedEnd, setDisbursedEnd] = useState(today);
 
     const { loading, refreshToggle, disbursement } = useSelector(state => state.transaction);
 
@@ -59,10 +63,22 @@ function Component() {
         }, 0)
     }
 
+    const filtersDisbursement = [
+        { label: 'Disbursed Only', value: 'disbursed' },
+        { label: 'Undisbursed Only', value: 'undisbursed' }
+    ]
+
+    const filterStatus = [
+        { label: 'Disbursed Transaction', value: 'disbursed' },
+        { label: 'Undisbursed Transaction', value: 'undisbursed' }
+    ]
+
     const columns = useMemo(() => {
         if (type === 'merchant') return [
             { Header: 'ID', accessor: 'id' },
-            { Header: 'Trx Code', accessor: 'trx_code' },
+            {
+                Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} trxcode={row.trx_code} />
+            },
             {
                 Header: 'Amount', accessor: row => type === 'merchant' ?
                     toMoney(row.total_selling_price) : toMoney(row.assignee_fee)
@@ -80,15 +96,18 @@ function Component() {
                 }
             },
             {
-                Header: 'Disbursement Date', accessor: row => type === 'merchant' ?
+                Header: 'Disbursed Date', accessor: row => type === 'merchant' ?
                     row.disbursement_date ? dateTimeFormatterCell(row.disbursement_date) : '-'
                     :
                     row.disbursement_date ? dateTimeFormatterCell(row.disbursement_date) : '-'
             },
+            { Header: 'Payment Channel', accessor: row => toSentenceCase(row.payment_bank) },
         ]
         else return [
             { Header: 'ID', accessor: 'id' },
-            { Header: 'Ref Code', accessor: 'ref_code' },
+            {
+                Header: 'Ref Code', accessor: row => <Transaction items={[row.ref_code]} id={row.ref_code} />
+            },
             {
                 Header: 'Assignee Fee', accessor: row => toMoney(row.assignee_fee)
             },
@@ -104,11 +123,12 @@ function Component() {
                     </Pill>
             },
             {
-                Header: 'Disbursement Date', accessor: row => type === 'merchant' ?
+                Header: 'Disbursed Date', accessor: row => type === 'merchant' ?
                     row.disbursement_date ? dateTimeFormatterCell(row.disbursement_date) : '-'
                     :
                     row.disbursement_date ? dateTimeFormatterCell(row.disbursement_date) : '-'
             },
+            { Header: 'Payment Channel', accessor: row => toSentenceCase(row.disbursement_bank).toUpperCase() },
         ]
     }, [type]);
 
@@ -128,40 +148,53 @@ function Component() {
             setLoadingMerchant(true);
             setLoadingCourier(true);
 
-            type === 'merchant' && dispatch(get(endpointMerchant + '/admin/list?filter=&limit='
-            + limit + '&search=' + searchValue, res => {
-                setMerchants(res.data.data.items);
-                setMerchant(res.data.data.items[active].id);
-                setLoadingMerchant(false);
-            }, err => {
-                console.log('FAILED GET LIST DISBURSEMENT MERCHANT:', err)
-                setLoadingMerchant(false);
-            }));
+            type === 'merchant' && dispatch(get(endpointMerchant +
+                '/admin/list?filter=' + filter +
+                '&limit=' + limit +
+                '&search=' + searchValue +
+                '&extra=disbursement',
+                res => {
+                    setMerchants(res.data.data.items);
+                    setMerchant(res.data.data.items[active].id);
+                    setLoadingMerchant(false);
+                },
+                err => {
+                    console.log('FAILED GET LIST DISBURSEMENT MERCHANT:', err)
+                    setLoadingMerchant(false);
+                }));
 
-            type === 'courier' && dispatch(get(endpointManagement + '/admin/staff/list?filter=&staff_role=courier&limit=' + limit + '&search=' + searchValue, res => {
-                setCouriers(res.data.data.items);
-                setCourier(res.data.data.items[active].id);
-                setLoadingCourier(false);
-            }, err => {
-                console.log('FAILED GET LIST DISBURSEMENT COURIER:', err)
-                setLoadingCourier(false);
-            }));
-            
+            type === 'courier' && dispatch(get(endpointManagement +
+                '/admin/staff/list?filter=' + filter +
+                '&limit=' + limit +
+                '&search=' + searchValue,
+                res => {
+                    setCouriers(res.data.data.items);
+                    setCourier(res.data.data.items[active].id);
+                    setLoadingCourier(false);
+                },
+                err => {
+                    console.log('FAILED GET LIST DISBURSEMENT COURIER:', err)
+                    setLoadingCourier(false);
+                }));
+
         }, searchValue ? 1000 : 0)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [type, searchValue, limit]);
+    }, [type, searchValue, limit, filter]);
 
 
     return (
         <>
+            <Breadcrumb title='Disbursement' />
             <Modal
-                isOpen={disburseModal} toggle={() => setDisburseModal(!disburseModal)}
+                isOpen={disburseModal} toggle={() =>
+                    setDisburseModal(!disburseModal)
+                }
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
                 disabledOk={transferCode.length === 0}
                 onClick={() => {
                     if (!transferCode) return;
-                    const currentDate = new Date().toISOString()
+                    const currentDate = moment().format() // already ISO format
                     const trx_codes = selected.map(el => el.trx_code)
                     const ref_codes = selected.map(el => el.ref_code)
                     const dataDisburse = type === 'merchant' ? {
@@ -176,16 +209,22 @@ function Component() {
                             amount: getSum(selected),
                             disbursed_on: currentDate,
                             disbursed_code: transferCode
-                    }
+                        }
 
-                    if (type === 'merchant') dispatch(post(endpointTransaction + '/admin/disbursement/merchant/create', dataDisburse, res => {
-                        setDisburseModal(false);
-                        dispatch(refresh());
-                    }))
-                    if (type === 'courier') dispatch(post(endpointTransaction + '/admin/disbursement/courier/create', dataDisburse, res => {
-                        setDisburseModal(false);
-                        dispatch(refresh());
-                    }));
+                    if (type === 'merchant') dispatch(post(endpointTransaction +
+                        '/admin/disbursement/merchant/create',
+                        dataDisburse,
+                        res => {
+                            setDisburseModal(false);
+                            dispatch(refresh());
+                        }))
+                    if (type === 'courier') dispatch(post(endpointTransaction +
+                        '/admin/disbursement/courier/create',
+                        dataDisburse,
+                        res => {
+                            setDisburseModal(false);
+                            dispatch(refresh());
+                        }));
                 }}
             >
                 <div style={{
@@ -193,9 +232,10 @@ function Component() {
                     marginBottom: 32,
                     position: 'relative'
                 }}>
-                    <Input compact
+                    <Input
                         type="text"
                         label="Transfer Code"
+                        placeholder="Input transfer code as evidence for this disbursement"
                         inputValue={transferCode}
                         setInputValue={setTransferCode}
                         noMargin={true}
@@ -272,6 +312,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -283,6 +324,7 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
@@ -300,22 +342,54 @@ function Component() {
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
-                        }}>Disbursed Amount</div>
-                        <AnimatedNumber className="BigNumber" value={info.total_disbursed_transaction_amount}
+                        }}>Merchant Disbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_merchant_disbursed_transaction_amount}
                             formatValue={formatValue}
                         />
                     </div>
                     <div style={{
                         display: 'flex',
                         alignItems: 'center',
+                        padding: '10px',
                     }}>
                         <div style={{
                             marginRight: 16,
-                        }}>Undisbursed Amount</div>
-                        <AnimatedNumber className="BigNumber" value={info.total_undisbursed_transaction_amount}
+                        }}>Merchant Undisbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_merchant_undisbursed_transaction_amount}
+                            formatValue={formatValue}
+                        />
+                    </div>
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '10px',
+                    }}>
+                        <div style={{
+                            marginRight: 16,
+                        }}>Courier Disbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_courier_disbursed_transaction_amount}
+                            formatValue={formatValue}
+                        />
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '10px',
+                    }}>
+                        <div style={{
+                            marginRight: 16,
+                        }}>Courier Undisbursed Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.total_courier_undisbursed_transaction_amount}
                             formatValue={formatValue}
                         />
                     </div>
@@ -323,37 +397,70 @@ function Component() {
             </div>
             <div style={{
                 display: 'flex',
-                marginTop: 16,
+                // marginTop: 16,
             }}>
-                <div className="Container" style={{
+                <Card className="Container" style={{
                     flexDirection: 'column',
-                    marginRight: 16,
+                    // marginRight: 16,
+                    boxShadow: 'none',
                 }}>
                     <Tab
-                        labels={["Merchant", "Courier"]}
+                        labels={tabs}
                         setTab={setType}
                         tabActive={setActive}
+                        activeTab={0}
                         contents={[
                             <>
-                                <h5 style={{
-                                    marginBottom: 16,
-                                }}>Select Merchant</h5>
+                                <div className="row no-gutters align-items-center mb-4">
+                                    <div className="col">
+                                        <h5 style={{
+                                            marginBottom: 0,
+                                        }}>Select Merchant</h5>
+                                    </div>
+                                    <div className="col-auto">
+                                        <select style={{
+                                            borderRadius: '4px',
+                                            border: '1px solid silver',
+                                            padding: '6px 4px'
+                                        }}
+                                            onChange={e => {
+                                                setFilter(e.target.value)
+                                            }}
+                                        >
+                                            <option selected={true} value="">All</option>
+                                            {filtersDisbursement.map(filter => (
+                                                <option value={filter.value}>{filter.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
                                 <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
                                 {loadingMerchant && <div className="w-100 py-5 d-flex justify-content-center">
                                     <ClinkLoader />
                                 </div>}
-                                {!loadingMerchant && merchants
-                                    .map((el, index) => <div
-                                        key={index}
-                                        className={index === active ? "GroupActive" : "Group"}
-                                        onClick={() => {
-                                            setMerchant(el.id.toString());
-                                            setCourier('');
-                                            setActive(index)
-                                        }}
-                                    >
-                                        {el.name}
-                                    </div>)}
+                                <ListGroup>
+                                    {!loadingMerchant && merchants
+                                        .map((el, index) => <ListGroupItem style={{ cursor: 'pointer' }}
+                                            key={index}
+                                            tag="b"
+                                            active={index === active}
+                                            onClick={() => {
+                                                setMerchant(el.id.toString());
+                                                setCourier('');
+                                                setActive(index)
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <div>{el.name}</div>
+                                                <div style={{ display: 'flex' }}>
+                                                    { /* <Pill color="success">{el.disbursed_count}</Pill> */}
+                                                    <Pill color={el.undisbursed_count > 0 ? "warning" : "light"}>
+                                                        {el.undisbursed_count}
+                                                    </Pill>
+                                                </div>
+                                            </div>
+                                        </ListGroupItem>)}
+                                </ListGroup>
                                 {!loadingMerchant && merchants.length === 0 && (
                                     <div className="w-100 text-center">No Merchant found</div>
                                 )}
@@ -364,25 +471,51 @@ function Component() {
                                 )}
                             </>,
                             <>
-                                <h5 style={{
-                                    marginBottom: 16,
-                                }}>Select Courier</h5>
+                                <div className="row no-gutters align-items-center mb-4">
+                                    <div className="col">
+                                        <h5 style={{
+                                            marginBottom: 0,
+                                        }}>Select Courier</h5>
+                                    </div>
+                                    <div className="col-auto">
+                                        <select style={{
+                                            borderRadius: '4px',
+                                            border: '1px solid silver',
+                                            padding: '6px 4px'
+                                        }}
+                                            onChange={e => {
+                                                setFilter(e.target.value)
+                                            }}
+                                        >
+                                            <option selected={true} value="">All</option>
+                                            {filtersDisbursement.map(filter => (
+                                                <option value={filter.value}>{filter.label}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                </div>
                                 <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
                                 {loadingCourier && <div className="w-100 py-5 d-flex justify-content-center">
                                     <ClinkLoader />
                                 </div>}
-                                {!loadingCourier && couriers
-                                    .map((el, index) => <div
-                                        key={index}
-                                        className={index === active ? "GroupActive" : "Group"}
-                                        onClick={() => {
-                                            setCourier(el.id.toString());
-                                            setMerchant('');
-                                            setActive(index)
-                                        }}
-                                    >
-                                        {el.firstname} {el.lastname}
-                                    </div>)}
+                                <ListGroup>
+                                    {!loadingCourier && couriers
+                                        .map((el, index) => <ListGroupItem style={{ cursor: 'pointer' }}
+                                            key={index}
+                                            tag="b"
+                                            active={index === active}
+                                            onClick={() => {
+                                                setCourier(el.id.toString());
+                                                setMerchant('');
+                                                setActive(index)
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                <div>{el.firstname} {el.lastname}</div>
+                                                <div>{}</div>
+                                            </div>
+                                        </ListGroupItem>)}
+                                </ListGroup>
                                 {!loadingCourier && couriers.length === 0 && (
                                     <div className="w-100 text-center">No Courier found</div>
                                 )}
@@ -393,18 +526,22 @@ function Component() {
                                 )}
                             </>,
                         ]}
-                        activeTab={0}
                     />
-                </div>
+                </Card>
                 <div style={{
-                    flex: 2,
+                    flex: 4,
                 }}>
-                    <div className="Container" style={{
+                    <Card className="Container" style={{
                         alignItems: 'center',
                         justifyContent: 'space-between',
+                        boxShadow: 'none',
+                        flexDirection: 'row',
                     }}>
                         <div>
-                            Total Undisbursed Amount
+                            Undisbursed Amount For {toSentenceCase(type)} {type === "merchant" ?
+                                <b>{(merchants.length > 0 ? merchants[active] && merchants[active].name : '')}</b>
+                                : <b>{(couriers.length > 0 ? couriers[active] &&
+                                    (couriers[active].firstname + " " + couriers[active].lastname) : '')}</b>}
                         </div>
                         <div style={{
                             display: 'flex',
@@ -414,12 +551,12 @@ function Component() {
                                 fontSize: '1.2rem',
                                 marginRight: 16,
                             }}>
-                                Rp {info.total_undisbursed_transaction_amount}
+                                {toMoney(disbursement.items.undisbursed_amount)}
                             </b>
                             <MyButton label="Disburse All"
-                                disabled={disbursement.items.some(item => item.disbursement_date)}
+                                disabled={disbursement.items?.undisbursed_amount === 0}
                                 onClick={() => {
-                                    setSelected(disbursement.items);
+                                    setSelected(disbursement.items.data.filter(el => el && !el.disbursement_date));
                                     setDisburseModal(true);
                                 }}
                             />
@@ -429,42 +566,85 @@ function Component() {
                                 }}
                             />
                         </div>
-                    </div>
-                    <div className="Container" style={{
-                    flex: 3,
-                    flexDirection: 'column',
-                }}>
-                    <Table
-                        onSelection={(selectedRows) => {
-                            setSelected(selectedRows);
-                        }}
-                        noContainer={true}
-                        totalItems={disbursement.total_items}
-                        columns={columns}
-                        data={disbursement.items}
-                        loading={loading}
-                        pageCount={disbursement.total_pages}
-                        fetchData={useCallback((pageIndex, pageSize, search) => {
-                            dispatch(getTransactionDisbursement(pageIndex, pageSize, search,
-                                type, merchant, courier));
-                            // eslint-disable-next-line react-hooks/exhaustive-deps
-                        }, [dispatch, refreshToggle, merchant, courier])}
-                        filters={[]}
-                        actions={[]}
-                        renderActions={(selectedRowIds, page) => {
-                            return ([
-                                <Button
-                                    disabled={Object.keys(selectedRowIds).length === 0}
-                                    onClick={() => {
-                                        setDisburseModal(true);
-                                    }}
-                                    icon={<FiCheck />}
-                                    label="Disburse Selection"
-                                />
-                            ])
-                        }}
-                    />
-                    </div>
+                    </Card>
+                    <Card className="Container" style={{
+                        flex: 3,
+                        flexDirection: 'column',
+                        boxShadow: 'none',
+                    }}>
+                        <Table
+                            onSelection={(selectedRows) => {
+                                setSelected(selectedRows.filter(el => el && !el.disbursement_date));
+                            }}
+                            noContainer={true}
+                            totalItems={disbursement.total_items}
+                            columns={columns}
+                            data={disbursement.items.data || []}
+                            loading={loading}
+                            pageCount={disbursement.total_pages}
+                            fetchData={useCallback((pageIndex, pageSize, search) => {
+                                dispatch(getTransactionDisbursement(pageIndex, pageSize, search,
+                                    type, merchant, courier, status.value,
+                                    ...(status.value === 'disbursed' ? [disbursedStart, disbursedEnd] : [today, today]),
+                                ));
+                                // eslint-disable-next-line react-hooks/exhaustive-deps
+                            }, [dispatch, refreshToggle, merchant, courier, type,
+                                disbursedStart, disbursedEnd, status
+                            ])}
+                            filters={[
+                                ...status.value === 'disbursed' ? [{
+                                    hidex: isRangeToday(disbursedStart, disbursedEnd),
+                                    label: "Disbursed Date: ",
+                                    delete: () => { setDisbursedStart(today); setDisbursedEnd(today) },
+                                    value: isRangeToday(disbursedStart, disbursedEnd) ? 'Today' :
+                                        moment(disbursedStart).format('DD-MM-yyyy') + ' - '
+                                        + moment(disbursedEnd).format('DD-MM-yyyy')
+                                    ,
+                                    component: (toggleModal) =>
+                                        <DateRangeFilter
+                                            title='Disbursed Date'
+                                            startDate={disbursedStart}
+                                            endDate={disbursedEnd}
+                                            onApply={(start, end) => {
+                                                setDisbursedStart(start);
+                                                setDisbursedEnd(end);
+                                                toggleModal();
+                                            }} />
+                                }] : [],
+                                {
+                                    hidex: status === '',
+                                    label: "Status: ",
+                                    delete: () => { setStatus('') },
+                                    value: status ? status.label : 'All',
+                                    component: (toggleModal) =>
+                                        <Filter
+                                            data={filterStatus}
+                                            onClickAll={() => {
+                                                setStatus('');
+                                                toggleModal();
+                                            }}
+                                            onClick={el => {
+                                                setStatus(el);
+                                                toggleModal(false);
+                                            }}
+                                        />
+                                },
+                            ]}
+                            actions={[]}
+                            renderActions={(selectedRowIds, page) => {
+                                return ([
+                                    <Button
+                                        disabled={Object.keys(selectedRowIds).length === 0}
+                                        onClick={() => {
+                                            setDisburseModal(true);
+                                        }}
+                                        icon={<FiCheck />}
+                                        label="Disburse Selection"
+                                    />
+                                ])
+                            }}
+                        />
+                    </Card>
                 </div>
             </div>
         </>

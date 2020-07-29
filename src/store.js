@@ -22,6 +22,7 @@ import transaction from './features/slices/transaction';
 import ads from './features/slices/ads';
 import announcement from './features/slices/announcement';
 import admin from './features/slices/admin';
+import notification from './features/slices/notification';
 
 const logger = createLogger({
   predicate: (getState, action) => 
@@ -46,6 +47,7 @@ const reducers = combineReducers({
   ads,
   chat,
   admin,
+  notification,
 });
 
 const persistConfig = {
@@ -63,7 +65,7 @@ const rootReducer = (state, action) => {
   return reducers(state, action);
 };
 
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+export const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
   reducer: persistedReducer,

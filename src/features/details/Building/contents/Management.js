@@ -24,7 +24,7 @@ const dateArray = (() => {
 })()
 
 function Component() {
-    const {auth} = useSelector(state => state)
+    const { auth } = useSelector(state => state)
     const [selectedRow, setRow] = useState({});
     const [edit, setEdit] = useState(false);
     const [addManagement, setAddManagement] = useState(false);
@@ -43,11 +43,14 @@ function Component() {
     const { selected, management, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
-    
+
     const columnsManagement = [
         { Header: "ID", accessor: "id" },
-        { Header: "Management Name", accessor: row => 
-            <a class="Link" href={"/" + auth.role + "/management/" + row.management_id}>{row.management_name}</a> },
+        {
+            Header: "Management Name", accessor: row =>
+                <a class="Link" href={"/" + auth.role + "/management/" + row.management_id}>{row.management_name}</a>
+        },
+        { Header: "In Range", accessor: row => row.in_range + ' km' },
         { Header: "Billing Published", accessor: row => "Day " + row.billing_published },
         { Header: "Billing Duedate", accessor: row => "Day " + row.billing_duedate },
         { Header: "Billing Penalty Fee", accessor: row => row.penalty_fee + ' %' },
@@ -64,11 +67,10 @@ function Component() {
                         label={row.status}
                         id={"managementStatus-" + row.id}
                         onClick={e => {
-                            if (row.status === 'active') return;
                             const data = {
                                 building_id: row.building_id,
                                 management_id: row.management_id,
-                                status: 'active',
+                                status: row.status === 'active' ? 'inactive' : 'active',
                                 management_name: row.management_name
                             }
                             handleConfirm(true);
@@ -83,23 +85,23 @@ function Component() {
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/management' +
-        '?limit=' + loadDefault + '&page=1' +
-        '&search=' + search,  res => {
-            let data = res.data.data.items;
-            const totalItems = res.data.data.total_items;
-            const currentItems = totalItems - data.length;
-            
-            let formatted = data.map(el => ({ label: el.name, value: el.id, clickable: true }));
-            if (currentItems > 0 && !search) {
-                formatted.push({
-                    label: `Load more (${currentItems})`,
-                    className: 'load-more',
-                    clickable: false
-                })
-                setManagements(formatted);
-            } else setManagements(formatted);
-        }))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+            '?limit=' + loadDefault + '&page=1' +
+            '&search=' + search, res => {
+                let data = res.data.data.items;
+                const totalItems = res.data.data.total_items;
+                const currentItems = totalItems - data.length;
+
+                let formatted = data.map(el => ({ label: el.name, value: el.id, clickable: true }));
+                if (currentItems > 0 && !search) {
+                    formatted.push({
+                        label: `Load more (${currentItems})`,
+                        className: 'load-more',
+                        clickable: false
+                    })
+                    setManagements(formatted);
+                } else setManagements(formatted);
+            }))
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, search, loadDefault]);
 
     return (
@@ -117,11 +119,12 @@ function Component() {
             >
                 <h4 className="mb-3" style={{
                     fontSize: '1.2rem'
-                }}>Are you sure to set <strong>{managementChose.management_name}</strong> as Active?</h4>
-                <span style={{
+                }}>Are you sure to set <strong>{managementChose.management_name}</strong> as
+                {managementChose.status === 'active' ? ' Active' : ' Inactive'}?</h4>
+                {managementChose.status === 'active' && <span style={{
                     color: '#ff1212',
                     fontSize: '.97rem'
-                }}>This will make all other management Inactive.</span>
+                }}>This will make all other management Inactive.</span>}
             </Modal>
             <Modal
                 isOpen={addManagement}
@@ -138,20 +141,21 @@ function Component() {
                     }}
                     onSubmit={data => {
                         console.log(data)
-                    edit ?
-                        dispatch(editBuildingManagement( {
-                            "building_id": selected.id, building_name: selected.name, ...data,
-                        }, selectedRow.id))
-                        :
-                        // console.log({
-                        //     "building_id": selected.id, building_name: selected.name, ...data})
-                        dispatch(createBuildingManagement( {
-                            "building_id": selected.id, building_name: selected.name, ...data,
-                        }))
-                    setAddManagement(false);
-                    setEdit(false);
-                    setRow({});
-                }}>
+                        edit ?
+                            dispatch(editBuildingManagement({
+                                "building_id": selected.id, building_name: selected.name, ...data,
+                                status: managementChose.status,
+                            }, selectedRow.id))
+                            :
+                            // console.log({
+                            //     "building_id": selected.id, building_name: selected.name, ...data})
+                            dispatch(createBuildingManagement({
+                                "building_id": selected.id, building_name: selected.name, ...data,
+                            }))
+                        setAddManagement(false);
+                        setEdit(false);
+                        setRow({});
+                    }}>
                     <Modal width="400px" disableFooter={true} isOpen={modalManagement} toggle={() => setModalManagement(false)}>
                         <Input label="Search"
                             inputValue={search} setInputValue={setSearch}
@@ -184,6 +188,7 @@ function Component() {
                         disabled={edit}
                     />
                     <Input label="Status" hidden inputValue="inactive" />
+                    <Input label="In Range" type="number" inputValue={selectedRow.in_range} addons="km" />
                     <Input label="Settlement Bank" type="select" options={banks} inputValue={selectedRow.settlement_bank} />
                     <Input label="Settlement Account No" inputValue={selectedRow.settlement_account_no} />
                     <Input label="Settlement Account Name"
@@ -216,9 +221,9 @@ function Component() {
                 pageCount={management.total_pages}
                 totalItems={management.items.length}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getBuildingManagement( pageIndex, pageSize, search, selected));
+                    dispatch(getBuildingManagement(pageIndex, pageSize, search, selected));
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle, ])}
+                }, [dispatch, refreshToggle])}
                 filters={[]}
                 actions={[
                     <Button key="Add Building Management" label="Add Building Management" icon={<FiPlus />}
@@ -231,13 +236,14 @@ function Component() {
                 ]}
                 onClickDelete={row => {
                     setRow(row);
-                    dispatch(deleteBuildingManagement(row, ))
+                    dispatch(deleteBuildingManagement(row,))
                     // setConfirm(true);
                 }}
                 onClickEdit={row => {
                     setRow(row);
                     setEdit(true);
                     setAddManagement(true);
+                    setManagementChose(row);
                 }}
             />
         </>

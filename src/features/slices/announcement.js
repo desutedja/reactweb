@@ -1,4 +1,4 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
 import { get, post, put, del, setInfo } from '../slice';
 
@@ -36,9 +36,6 @@ export const slice = createSlice({
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     },
-    publish: (state) => {
-      state.selected.publish = 1;
-    }
   },
 });
 
@@ -48,14 +45,13 @@ export const {
   setData,
   setSelected,
   refresh,
-  publish
 } = slice.actions;
 
 export default slice.reducer;
 
 export const getAnnoucement = (
    pageIndex, pageSize,
-  search = '',
+  search = '', consumer,
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -63,6 +59,8 @@ export const getAnnoucement = (
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&sort_field=created_on&sort_type=DESC' +
+    '&topic=announcement' +
+    '&consumer_role=' + consumer +
     '&search=' + search,
     
     res => {
@@ -84,12 +82,12 @@ export const getAnnouncementDetails = (row, history, url) => dispatch => {
     }))
 }
 
-export const createAnnouncement = ( data, history) => dispatch => {
+export const createAnnouncement = (data, history, role) => dispatch => {
   dispatch(startAsync());
 
   dispatch(post(announcementEndpoint, {...data, topic: "announcement"}, 
     res => {
-      history.push("/sa/announcement");
+      history.push("/" + role + "/announcement");
 
       dispatch(setInfo({
         color: 'success',
@@ -104,13 +102,13 @@ export const createAnnouncement = ( data, history) => dispatch => {
     }))
 }
 
-export const editAnnouncement = ( data, history, id) => dispatch => {
+export const editAnnouncement = ( data, history, id, role ) => dispatch => {
   dispatch(startAsync());
 
   dispatch(put(announcementEndpoint, { ...data, topic: "announcement", id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
-      history.push("/sa/announcement/details");
+        history.push("/" + role + "/announcement/" + id);
 
       dispatch(setInfo({
         color: 'success',
@@ -124,12 +122,14 @@ export const editAnnouncement = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteAnnouncement = (row, history=null) => dispatch => {
+export const deleteAnnouncement = (row, history=null) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(announcementEndpoint + '/' + row.id, 
     res => {
-      history && history.push('/sa/announcement');
+      history && history.push('/' + auth.role + '/announcement');
       dispatch(refresh());
 
       dispatch(setInfo({
@@ -141,13 +141,12 @@ export const deleteAnnouncement = (row, history=null) => dispatch => {
     }))
 }
 
-export const publishAnnouncement = ( data) => dispatch => {
+export const publishAnnouncement = ( data, history, role) => dispatch => {
   dispatch(startAsync());
 
   dispatch(post(announcementEndpoint + '/publish', { id: data.id }, 
     res => {
-      dispatch(publish());
-
+      dispatch(refresh());
       dispatch(setInfo({
         color: 'success',
         message: 'Announcement published.'

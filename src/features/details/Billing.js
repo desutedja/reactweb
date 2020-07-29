@@ -1,15 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import Detail from './components/Detail';
 import Template from './components/Template';
 
 import Button from '../../components/Button';
 import Table from '../../components/Table';
+import { Card } from 'reactstrap';
 import Filter from '../../components/Filter';
-import { useSelector, useDispatch } from 'react-redux';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { months, dateFormatter, toSentenceCase } from '../../utils';
+import { months, dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dateFormatter } from '../../utils';
 import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
+import { ListGroupItem, ListGroup } from 'reactstrap';
+import Pill from '../../components/Pill';
 import { FiPlus } from 'react-icons/fi';
 import BillingItem from '../../components/cells/BillingItem';
 
@@ -19,31 +22,45 @@ const details =
     'Unit': ['building_name', 'code_name', 'section_type', 'section_name', 'number']
 };
 
-const columns = [
-    { Header: 'ID', accessor: 'id' },
-    { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name]} />},
-    { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
-    { Header: 'Total', accessor: 'total' },
-    { Header: 'Month', accessor: row => months.find(el => el.value === row.month).label },
-    { Header: 'Year', accessor: 'year' },
-    { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
-    { Header: 'Payment', accessor: row => toSentenceCase(row.payment) },
-    {
-        Header: 'Payment Date', accessor: row => row.payment_date ? dateFormatter(row.payment_date)
-            : '-'
-    },
-]
 
 function Component() {
     const [status, setStatus] = useState('');
     const [items, setItems] = useState([]);
     const [active, setActive] = useState(0);
 
+    const { role } = useSelector(state => state.auth);
+
     const { selected, loading, unit, refreshToggle } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
+
+    const columns = useMemo(() => ([
+        { Header: 'ID', accessor: 'id' },
+        { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name]} />},
+        { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
+        { Header: 'Total', accessor: row => toMoney(row.total) },
+        { Header: 'Month', accessor: row => <div style={{ display: 'block' }}>
+                <div>{months.find(el => el.value === row.month).label}</div>
+                <div>{row.year}</div>
+            </div>},
+        { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
+        { Header: 'Ref Code', accessor: row => row.ref_code ? 
+           <a class="Link" href={"/" + role + "/billing/details/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
+        },
+        { Header: 'Payment', accessor: row => 
+            (
+                row.payment_method_by ? 
+                    <Pill color="primary">Cash Paid</Pill> :
+                <Pill color={row.payment === "paid" ? "success": "secondary"}>{toSentenceCase(row.payment)}</Pill> 
+            )
+        },
+        {
+            Header: 'Payment Date', accessor: row => row.payment_date ? dateTimeFormatterCell(row.payment_date)
+                : '-'
+        },
+    ]), [ role ]);
 
     useEffect(() => {
         dispatch(getBillingUnitItem(0, 100, '',
@@ -63,34 +80,58 @@ function Component() {
 
     return (
         <Template
+            title={(role === "sa" ? toSentenceCase(selected.building_name) + ", " : "" ) +
+                   toSentenceCase(selected.section_type) + " " + 
+                   toSentenceCase(selected.section_name) + " " + selected.number}
             loading={false}
-            labels={["Unit Information", "Billing List"]}
+            labels={["Billing List", "Unit Information"]}
             contents={[
-                <Detail type="Billing" data={selected} labels={details} editable={false} />,
                 <div style={{
                     display: 'flex',
                     marginTop: 16,
                 }}>
-                    {unit.items.length > 0 && <div className="Container" style={{
+                    <Card className="Container" style={{
+                        boxShadow: 'none',
                         flexDirection: 'column',
                     }}>
-                        {unit.items.map((el, index) => <div
-                            className={index === active ? "GroupActive" : "Group"}
-                            onClick={() => setActive(index)}
-                        >
-                            {el.billing_month}
-                        </div>)}
-                    </div>}
-                    <div className="Container" style={{
-                        flex: 3,
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }} >
+                            <h5> Billing Month </h5>
+                            <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
+                                onClick={() => {
+                                    dispatch(setSelectedUnit({}));
+                                    history.push(url + "/add");
+                                }}
+                            />
+                        </div>
+                        <ListGroup>
+                            {unit.items.length > 0 ? 
+                            unit.items.map((el, index) => <ListGroupItem 
+                                style={{ cursor: "pointer" }}
+                                active={index === active} 
+                                tag="b"
+                                onClick={() => setActive(index)}
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                    <div>{el.billing_month}</div> 
+                                    <div>{el.billing_item.some(it => it.payment === "unpaid") ? 
+                                        <Pill color="light">Unpaid</Pill> : <Pill color="success">Paid</Pill>
+                                    }</div>
+                            </div>
+                            </ListGroupItem>) : <div style={{ padding: "10px 0px" }} >No Billing Yet</div>}
+                        </ListGroup>
+                    </Card>
+                    <Card className="Container" style={{
+                        flex: 4,
                         flexDirection: 'column',
                         marginRight: 16,
+                        boxShadow: 'none',
                     }}>
                         <Table
                             columns={columns}
                             data={items}
                             loading={loading}
                             pageCount={unit.total_pages}
+                            totalItems={items.length}
                             filters={[
                                 {
                                     label: <p>{"Status: " + (status ? toSentenceCase(status) : "All")}</p>,
@@ -116,12 +157,9 @@ function Component() {
                                 },
                             ]}
                             actions={[
-                                <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
-                                    onClick={() => {
-                                        dispatch(setSelectedUnit({}));
-                                        history.push(url + "/add");
-                                    }}
-                                />
+                                <h3>
+                                    Total: {toMoney(items.reduce((sum, el) => sum + el.total, 0))}
+                                </h3>
                             ]}
                             onClickDetails={row => {
                                 dispatch(getBillingUnitItemDetails(row, history, url))
@@ -131,8 +169,9 @@ function Component() {
                                     rows[el].original.id)));
                             }}
                         />
-                    </div>
-                </div>
+                    </Card>
+                </div>,
+                <Detail type="Billing" data={selected} labels={details} editable={false} />,
             ]}
         />
     )

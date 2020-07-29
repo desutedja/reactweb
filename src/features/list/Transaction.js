@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-// import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
+// import { Link } from 'react-router-dom';
+import moment from 'moment';
 
 import Filter from '../../components/Filter';
 import { getTransaction, downloadTransaction } from '../slices/transaction';
 import { trx_status, trxStatusColor, merchant_types } from '../../settings';
-import { toMoney, toSentenceCase, dateTimeFormatterCell } from '../../utils';
+import { toMoney, toSentenceCase, dateTimeFormatterCell, isRangeToday } from '../../utils';
 import Pill from '../../components/Pill';
-import Transaction from '../../components/cells/Transaction';
 
+import Transaction from '../../components/cells/Transaction';
 import Template from './components/Template';
 import MyButton from '../../components/Button';
 import { FiDownload } from 'react-icons/fi';
+import DateRangeFilter from '../../components/DateRangeFilter';
 
 const payment_status = [
     { label: "Paid", value: "paid" },
@@ -22,7 +24,7 @@ const trx_type = merchant_types;
 
 const columns = [
     {
-        Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} id={row.trx_code} />
+        Header: 'Trx Code', accessor: row => <Transaction items={[row.trx_code]} trxcode={row.trx_code} />
     },
     { Header: 'Type', accessor: row => toSentenceCase(row.type) },
     { Header: 'Merchant', accessor: 'merchant_name' },
@@ -46,17 +48,39 @@ const columns = [
 function Component() {
     let dispatch = useDispatch();
 
+    const today = moment().format('yyyy-MM-DD');
+
     const [statusPayment, setStatusPayment] = useState('');
     const [status, setStatus] = useState('');
     const [type, setType] = useState('');
+
+    const [trxStart, setTrxStart] = useState(moment().format('yyyy-MM-DD'));
+    const [trxEnd, setTrxEnd] = useState(moment().format('yyyy-MM-DD'));
 
     return (
         <Template
             columns={columns}
             slice="transaction"
             getAction={getTransaction}
-            filterVars={[status, statusPayment, type]}
+            filterVars={[status.value, statusPayment.value, type.value, trxStart, trxEnd]}
             filters={[
+                {
+                    hidex: isRangeToday(trxStart, trxEnd),
+                    label: "Transaction Date: ",
+                    delete: () => { setTrxStart(today); setTrxEnd(today) },
+                    value: isRangeToday(trxStart, trxEnd) ? 'Today' :
+                    moment(trxStart).format('DD-MM-yyyy') + ' - '
+                    + moment(trxEnd).format('DD-MM-yyyy'),
+                    component: (toggleModal) =>
+                        <DateRangeFilter
+                            startDate={trxStart}
+                            endDate={trxEnd}
+                            onApply={(start, end) => {
+                                setTrxStart(start);
+                                setTrxEnd(end);
+                                toggleModal();
+                            }} />
+                },
                 {
                     hidex: statusPayment === "",
                     label: <p>{statusPayment ? "Payment: " + statusPayment.label : "Payment: All"}</p>,

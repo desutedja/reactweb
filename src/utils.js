@@ -76,63 +76,44 @@ export const months = [
     { value: 12, label: 'December' },
 ];
 
+// all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function dateTimeFormatterCell(serverDateTime, whenzero = '-') {
-    if (!serverDateTime) return;
+    if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
-
-    let date = serverDateTime.split('T')[0];
-    let time = serverDateTime.split('T')[1].split('Z')[0];
-    time = time.split(':').slice(0, 2).join(':');
-
-    let year = date.split('-')[0];
-    let month = parseInt(date.split('-')[1], 10);
-    let day = date.split('-')[2];
-
-    return <><div style={{ display: 'block' }}>
-        <div><FiCalendar /> {day + ' ' + months[month - 1].label + ' ' + year}</div>
-        <div><FiClock /> {time + ' WIB'}</div>
-    </div>
+    return <>
+        <div style={{ display: 'block' }}>
+            <div><FiCalendar /> {moment.utc(serverDateTime).format('D MMMM yyyy')} </div>
+            <div><FiClock /> {moment.utc(serverDateTime).format('HH:mm') + ' WIB'} </div>
+        </div>
     </>;
 }
 
+// all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function dateTimeFormatter(serverDateTime, whenzero = '-') {
+    if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
 
-    let date = serverDateTime.split('T')[0];
-    let time = serverDateTime.split('T')[1].split('Z')[0];
-    time = time.split(':').slice(0, 2).join(':');
-
-    let year = date.split('-')[0];
-    let month = parseInt(date.split('-')[1], 10);
-    let day = date.split('-')[2];
-
-    return day + ' ' + months[month - 1].label + ' ' + year + ' ' + time + ' WIB';
+    return moment.utc(serverDateTime).format('D MMMM yyyy') + " " +
+        moment.utc(serverDateTime).format('HH:mm') + ' WIB';
 }
 
+// all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function timeFormatter(serverDateTime, whenzero = '-', plusHour = 0) {
+    if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
-    let time = serverDateTime.split('T')[1].split('Z')[0];
-    let hour = parseInt(time.split(':')[0], 10) + plusHour;
-    let minute = time.split(':')[1];
-    // let second = time.split(':')[2];
-
-    return hour + ':' + minute + ' WIB';
+    return moment.utc(serverDateTime).format('HH:mm')  + ' WIB';
 }
 
+// all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function dateFormatter(serverDateTime, whenzero = '-') {
+    if (!serverDateTime) return whenzero;
     if (serverDateTime === "0001-01-01T00:00:00Z")
         return whenzero;
 
-    let date = serverDateTime.split('T')[0];
-    
-    let year = date.split('-')[0];
-    let month = parseInt(date.split('-')[1], 10);
-    let day = date.split('-')[2];
-
-    return day + ' ' + months[month - 1].label + ' ' + year;
+    return moment.utc(serverDateTime).format('D MMMM yyyy');
 }
 
 export function getDatesRange(startDate, stopDate, range = 'days') {
@@ -147,11 +128,7 @@ export function getDatesRange(startDate, stopDate, range = 'days') {
 }
 
 export function toSentenceCase(sentence) {
-    if (sentence === null) return null;
-    if (sentence.length < 3) {
-        return sentence.toUpperCase();
-    }
-
+    if (!sentence) return '-';
     let words = sentence.replace(/_/g, ' ').split(' ');
 
     return words.reduce((result, el) => {
@@ -161,7 +138,7 @@ export function toSentenceCase(sentence) {
 }
 
 export function toMoney(money) {
-    return money === null || money === undefined ? "-" : "Rp " + money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.");
+    return "Rp " + (!money ? "0" : money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")) + ',00';
 }
 
 export function removeLastFromPath(path, lastn = 1) {
@@ -175,18 +152,34 @@ export function removeLastFromPath(path, lastn = 1) {
 
 export function getCountryCode(country) {
     const c = countries.find((el) => el.label === country)
-    return c === undefined ? "Undefined Country Code" : c.value
+    return c === undefined ? "-" : c.value
 }
 
 export function getCountryFromCode(value) {
     const c = countries.find((el) => el.value === value)
-    return c === undefined ? "Undefined Country" : c.label
+    return c === undefined ? "-" : c.label
 }
 
 export function getBank(value, banks) {
     const c = banks.find((el) => el.value === value)
-    return c === undefined ? "Undefined Bank" : c.label
+    return c === undefined ? "-" : c.label
 }
+
 export function toEllipsis(value, limit) {
     return value.slice(0, limit - 1) + '...'
+}
+
+export function staffRoleFormatter(role) {
+    return role === "pic_bm" ? "PIC BM " :
+           role === "gm_bm" ? "GM BM " :
+           toSentenceCase(role);
+}
+
+export function isToday(momentDate) {
+    const a = moment()
+    return a.isSame(moment(momentDate).format('yyyy-MM-DD'), 'day');
+}
+
+export function isRangeToday(start, end) {
+    return (start === end) && isToday(start);
 }

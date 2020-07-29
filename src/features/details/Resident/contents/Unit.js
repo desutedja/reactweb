@@ -23,6 +23,7 @@ import { endpointAdmin, endpointResident } from '../../../../settings';
 import { get } from '../../../slice';
 
 const columnsUnit = [
+    { Header: "ID", accessor: "unit_id" },
     { Header: "Building", accessor: "building_name" },
     { Header: "Unit Number", accessor: "number" },
     { Header: "Level", accessor: "level" },
@@ -77,7 +78,7 @@ function Component({ id }) {
 
     useEffect(() => {
         if (role === 'bm') {
-            setSelectedBuilding({label: selected.name, value: selected});
+            setSelectedBuilding({ label: selected.name, value: selected });
             setAddUnitStep(2);
         }
     }, [role, selected])
@@ -173,16 +174,16 @@ function Component({ id }) {
                                     onClick={() => { setConfirmDelete(true); setSelectedUnit(item); setSubAccount(el) }} />
                             </div>
                         )}
-                        {subs.length < 5 &&
-                            <div style={{ padding: '10px', marginLeft: '50px' }} >
-                                <span className="Link"
-                                    onClick={() => {
-                                        setAddSubAccount(true);
-                                        setAddSubAccountStep(1);
-                                        setSelectedUnit(item);
-                                    }}>
-                                    <FiPlus /> Add Subaccount </span>
-                            </div>}
+
+                        <div style={{ padding: '10px', marginLeft: '50px' }} >
+                            <span className="Link"
+                                onClick={() => {
+                                    setAddSubAccount(true);
+                                    setAddSubAccountStep(1);
+                                    setSelectedUnit(item);
+                                }}>
+                                <FiPlus /> Add Subaccount </span>
+                        </div>
                     </div>
                 </div>
             </>

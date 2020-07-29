@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import AnimatedNumber from "animated-number-react";
+import ClinkLoader from '../../components/ClinkLoader';
 
-import { RiTaskLine, RiFileExcelLine, RiFileChartLine } from 'react-icons/ri'
+import { RiTaskLine, RiFileExcelLine, RiFileChartLine } from 'react-icons/ri';
 
 import { getSOS } from './slice';
 import { 
@@ -25,10 +27,10 @@ const formatValue = (value) => value.toFixed(0);
 const colors = ['#2ad170', '#007bff', '#f7b733', '#ed4057'];
 
 function Component() {
-    // task
+    const history = useHistory();
     const { sosData } = useSelector(state => state.dashboard);
-    const { auth } = useSelector(state => state);
-
+    const { auth, dashboard } = useSelector(state => state);
+    
     const [range, setRange] = useState('ytd');
     const [pieData, setPieData] = useState([]);
     const [taskData, setTaskData] = useState({});
@@ -142,7 +144,11 @@ function Component() {
         <>
             <div className="row no-gutters">
                 <div className="col">
-                    <div className="Container color-4 d-flex flex-column">
+                    <div className="Container color-4 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/task', {status: 'completed', statusLabel: 'Completed'})
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber
@@ -161,7 +167,11 @@ function Component() {
                     </div>
                 </div>
                 <div className="col">
-                    <div className="Container color-3 d-flex flex-column">
+                    <div className="Container color-3 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/task')
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber
@@ -180,7 +190,11 @@ function Component() {
                     </div>
                 </div>
                 <div className="col">
-                    <div className="Container color-5 d-flex flex-column">
+                    <div className="Container color-5 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/task')
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber
@@ -233,8 +247,23 @@ function Component() {
                         </div>
                         <div className="row">
                             <div className="col px-4" style={{
-                                height: '390px'
+                                height: '390px',
+                                position: 'relative'
                             }}>
+                            {dashboard.loading && <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                backgroundColor: 'rgba(255, 255, 255, .8)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                zIndex: '1'
+                            }}>
+                                <ClinkLoader />
+                            </div>}
                                 <ResponsiveContainer width='100%'>
                                     <ComposedChart data={sosDataFormatted}>
                                         <XAxis height={30} dy={10} dataKey="Time" />
@@ -242,7 +271,6 @@ function Component() {
                                         <Tooltip />
                                         <CartesianGrid vertical={false} stroke="#ddd" dataKey="Time" />
                                         <Bar radius={4} dataKey="SOS" fill="rgb(237, 64, 87)" maxBarSize={80} />
-                                        <Line type="monotone" dataKey="SOS" stroke="#ff7300" />
                                     </ComposedChart>
                                 </ResponsiveContainer>
                             </div>
@@ -355,7 +383,7 @@ function Component() {
                                             <div><b>{resolver.firstname + ' ' + resolver.lastname}</b></div>
                                             <div className="text-capitalize">{resolver.staff_role.replace('_', ' ')}</div>
                                         </div>
-                                        <div className="col-auto BigNumber">
+                                        <div className="col-auto BigNumber black">
                                             {resolver.resolved_task}
                                         </div>
                                     </li>

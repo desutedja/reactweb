@@ -7,10 +7,10 @@ import Button from '../../../components/Button';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
-import { patchAdminFee, setSelected } from '../../slices/product';
+import { patchAdminFee, setSelected, refresh } from '../../slices/product';
 import { toMoney } from '../../../utils.js';
 import { useParams } from 'react-router-dom';
-import { get } from '../../slice';
+import { get, patch, setInfo } from '../../slice';
 import { endpointMerchant } from '../../../settings';
 
 const labels = {
@@ -32,11 +32,11 @@ const labels = {
         "measurement_unit",
     ],
     "Pricing": [
-        { label: "base_price", labelFormatter: () => "Base Price", valueFormatter: (val) => toMoney(val) },
-        { label: "selling_price", labelFormatter: () => "Selling Price", valueFormatter: (val) => toMoney(val) },
-        { label: "total_selling_price", labelFormatter: (el) => "Display Price", valueFormatter: (val) => toMoney(val) },
-        { label: "admin_fee", labelFormatter: (el) => "Admin Fee", valueFormatter: (val) => val + "%" },
-        { label: "discount_fee", labelFormatter: (el) => "Discount", valueFormatter: (val) => val + "%" },
+        { label: "base_price", lfmt: () => "Base Price", vfmt: (val) => toMoney(val) },
+        { label: "selling_price", lfmt: () => "Selling Price", vfmt: (val) => toMoney(val) },
+        { label: "total_selling_price", lfmt: (el) => "Display Price", vfmt: (val) => toMoney(val) },
+        { label: "admin_fee", lfmt: (el) => "Admin Fee", vfmt: (val) => val + "%" },
+        { label: "discount_fee", lfmt: (el) => "Discount", vfmt: (val) => val + "%" },
     ],
 };
 
@@ -58,7 +58,7 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointMerchant + '/admin/items?id=' + id, res => {
             setData(res.data.data);
-            setSelected(res.data.data);
+            dispatch(setSelected(res.data.data));
         }))
     }, [id, dispatch])
 
@@ -139,7 +139,26 @@ function Component() {
                                 setAdminFee(data.admin_fee);
                                 setDiscFee(data.discount_fee);
                             }} />,
-                            <Button label="Take Down Product" onClick={() => { }} />,
+                            <Button disabled={data.status === 'blocked'} label="Take Down Product" onClick={() => {
+                                const dataInput = {
+                                    merchant_id: data.merchant_id,
+                                    item_id: data.id,
+                                    status: 'blocked'
+                                }
+                                dispatch(patch(endpointMerchant + '/admin/items/status', dataInput,
+                                    res => {
+                                        dispatch(refresh());
+                                        dispatch(setInfo({
+                                            color: 'success',
+                                            message: 'Product has been taken down.'
+                                        }));
+                                        setData({
+                                            ...data,
+                                            status: 'blocked'
+                                        })
+                                    }
+                                ))
+                            }} />,
                         ]}
                     />,
                     <div style={{

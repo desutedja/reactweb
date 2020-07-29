@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { FiSearch, FiDownload, FiPlus } from 'react-icons/fi';
 
 import Input from '../../components/Input';
@@ -17,6 +17,8 @@ import { setSelected } from '../slices/resident';
 function Component() {
 
     const [search, setSearch] = useState('');
+
+    const { auth } = useSelector(state => state);
 
     const [building, setBuilding] = useState('');
     const [buildingName, setBuildingName] = useState('');
@@ -40,37 +42,29 @@ function Component() {
 
     const columns = [
         // { Header: 'ID', accessor: 'code' },
-        { Header: 'ID', accessor: 'id' },
+        { Header: 'Unit ID', accessor: 'id' },
         {
             Header: 'Unit', accessor: row => <span className="Link"
                 onClick={() => dispatch(getBillingUnitDetails(row, history, url))}
-            >{toSentenceCase(row.section_type) + ' '
-                + row.section_name + ' ' + row.number}</span>
+            ><b>{toSentenceCase(row.section_type) + ' '
+                + row.section_name + ' ' + row.number}</b></span>
         },
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
         { Header: 'Unpaid Amount', accessor: row => <b>{toMoney(row.unpaid_amount)}</b> },
-        {
-            Header: 'Action', accessor: row => (
-                <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
-                    onClick={() => {
-                        dispatch(setSelected(row));
-                        dispatch(setSelectedUnit({}));
-                        dispatch(getBillingUnitDetails(row, history, url))
-                        history.push(url + '/item/add');
-                    }}
-                />
-            )
-        },
+        { Header: 'Additional Charges', accessor: row => <b>{toMoney(row.additional_charge)}</b> },
+        { Header: 'Penalty', accessor: row => <b>{toMoney(row.billing_penalty)}</b> },
+        { Header: 'Total', accessor: row => <b>{toMoney(row.total)}</b> },
     ]
 
     return (
         <Template
+            title='Unit'
             columns={columns}
             slice='billing'
             getAction={getBillingUnit}
             filterVars={[building]}
-            filters={[
+            filters={auth.role === 'sa' ? [
                 {
                     hidex: building === "",
                     label: <p>Building: {building ? buildingName : "All"}</p>,
@@ -101,12 +95,18 @@ function Component() {
                             />
                         </>
                 },
-            ]}
+            ] : []}
             actions={[
                 <Button label="Download .csv" icon={<FiDownload />}
                     onClick={() => dispatch(downloadBillingUnit(search, building))}
                 />
             ]}
+            onClickAddBilling={row => {
+                dispatch(setSelected(row));
+                dispatch(setSelectedUnit({}));
+                dispatch(getBillingUnitDetails(row, history, url))
+                history.push(url + '/item/add');
+            }}
         />
     )
 }

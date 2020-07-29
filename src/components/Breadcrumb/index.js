@@ -8,7 +8,8 @@ function Breadcrumb({ title }) {
     let location = useLocation();
 
     useEffect(() => {
-        // console.log(location.pathname)
+        console.log(location.pathname)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
@@ -39,7 +40,7 @@ function Breadcrumb({ title }) {
                                     history.push(el);
                                 }
                             }}>
-                            {toSentenceCase(el.replace(/-/g, ' '))}
+                            {el ? toSentenceCase(el.replace(/-/g, ' ')) : ''}
                         </div>
                     </Fragment>
                 )}

@@ -15,9 +15,12 @@
 
 .SectionSeparator {
   width: 100%;
+  max-width: 600px;
   height: 32px;
-  /* border-top: 1px solid #eee; */
-  margin-top: 4px;
+  margin-top: 24px;
+  margin-bottom: 16px;
+  text-align: left;
+  border-bottom: 1px solid silver;
 }
 
 .lists {
@@ -281,7 +284,7 @@
   border-radius: 4px;
   overflow: hidden;
   z-index: 1;
-  transition: .2s;
+  transition: 0.2s;
 }
 
 .time-pick.time-show {
@@ -310,5 +313,3 @@
   background-color: #2f78e9;
   color: white;
 }
-
-

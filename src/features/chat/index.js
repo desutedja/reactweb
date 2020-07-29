@@ -78,8 +78,6 @@ function Component() {
             limit: 50
         }
 
-        console.log("again and again" + room.id + " " + roomID);
-
         setLoadingMessages(true);
         roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
             .then(function (comments) {
@@ -89,6 +87,7 @@ function Component() {
                 messageBottom.current.scrollIntoView();
 
                 qiscus.readComment(roomID, room.last_comment_id);
+                qiscus.receiveComment(roomID, room.last_comment_id);
             })
             .catch(function (error) {
                 // On error
@@ -102,7 +101,7 @@ function Component() {
             dispatch(getAdminChat(listTopic,listPageIndex, listPageSize, listSearch));
         else
             dispatch(getPICBMChat(listTopic,listPageIndex, listPageSize, listSearch));
-            */
+        */
 
         var params = {
             page: 1,
@@ -116,7 +115,10 @@ function Component() {
             .then(function (rooms) {
                 // On success
                 dispatch(setRooms(rooms));
-                !roomID && dispatch(setRoomID(rooms[0].id));
+                // Isa: To prevent reloading comments twice when room is set, don't set room after load list,
+                //      usually, rooms are already chosen, but when not, just let the user pick which room
+                //dispatch(setRoom(rooms[0]));
+                //!roomID && dispatch(setRoomID(rooms[0].id));
                 !roomUniqueID && dispatch(setRoomUniqueID(rooms[0].unique_id));
                 dispatch(setReloadList(false));
                 setLoadingRooms(false);
@@ -180,7 +182,7 @@ function Component() {
                             <div key={el.id} className={
                                 el.email === userID ?
                                     "MessageContainer-own" : "MessageContainer"}>
-                                {index > 0 && messages[index - 1].username === el.username ?
+                                {index > 0 && messages[index - 1].email === el.email ?
                                     <div className="MessageAvatar" /> :
                                     <img alt="avatar" className="MessageAvatar" src={el.user_avatar_url} />}
                                 <div style={{
@@ -189,7 +191,7 @@ function Component() {
                                     alignItems: el.email === userID ?
                                         'flex-end' : 'flex-start',
                                 }}>
-                                    {index > 0 && messages[index - 1].username === el.username ?
+                                    {index > 0 && messages[index - 1].email === el.email ?
                                         null :
                                         <div className="MessageUsername" style={{ cursor: 'pointer' }} onClick={() => {
                                                 const userrole = el.email.split("-")[0]
@@ -205,7 +207,8 @@ function Component() {
                                                     history.push("/" + role + "/admin/" + userid)
                                                 }
                                         }}>
-                                            {el.username} ({el.email.split("-")[0]})
+                                            {el.username} 
+                                            ({el.email.split("-")[0]})
                                         </div>}
                                     <div style={{
                                         display: 'flex',

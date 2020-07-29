@@ -183,12 +183,14 @@ export const editBuilding = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteBuilding = (row, history) => dispatch => {
+export const deleteBuilding = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(buildingEndpoint + '/' + row.id, 
     res => {
-      history && history.goBack();
+      history && history.push('/' + auth.role + '/building');
 
       dispatch(setInfo({
         color: 'success',
@@ -316,7 +318,7 @@ export const changeBuildingManagement = ( data ) => dispatch => {
         message: 'Management status has been changed.'
       }));
 
-      dispatch(stopAsync());
+      // dispatch(stopAsync());
     },
     err => {
       dispatch(stopAsync());

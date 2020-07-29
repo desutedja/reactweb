@@ -20,7 +20,9 @@ export const slice = createSlice({
       total_pages: 1,
     },
     disbursement: {
-      items: [],
+      items: {
+        data: []
+      },
       selected: {},
       total_items: 0,
       total_pages: 1,
@@ -77,7 +79,8 @@ export default slice.reducer;
 
 export const getTransaction = (
   pageIndex, pageSize,
-  search = '', status = '', statusPayment = '', type = ''
+  search = '', status = '', statusPayment = '', type = '',
+  start, end
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -88,6 +91,8 @@ export const getTransaction = (
     '&payment_status=' + statusPayment +
     '&trx_type=' + type +
     '&sort_field=created_on&sort_type=DESC' +
+    '&start_date=' + start + 'T00:00:00' +
+    '&end_date=' + end + 'T23:59:59' +
     '&search=' + search,
 
     res => {
@@ -130,7 +135,7 @@ export const getTransactionDetails = (trx_code, history, url) => dispatch => {
 
 export const getTransactionSettlement = (
   pageIndex, pageSize,
-  search = '', settlementStatus = ''
+  search = '', settlementStatus = '', start, end
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -140,6 +145,8 @@ export const getTransactionSettlement = (
     '&settlement_status=' + settlementStatus +
     '&status=completed' +
     '&sort_field=created_on&sort_type=DESC' +
+    '&settlement_start_date=' + start + 'T00:00:00' +
+    '&settlement_end_date=' + end + 'T23:59:59' +
     '&search=' + search,
 
     res => {
@@ -164,7 +171,8 @@ export const downloadTransactionSettlement = (settlementStatus = '') => dispatch
 
 export const getTransactionDisbursement = (
   pageIndex, pageSize,
-  search = '', type, merchant = '', courier = ''
+  search = '', type, merchant = '', courier = '',
+  disbursementStatus = '', start, end
 ) => dispatch => {
 
   dispatch(startAsync());
@@ -176,7 +184,10 @@ export const getTransactionDisbursement = (
     '&courier_id=' + courier +
     '&limit=' + pageSize +
     '&sort_field=created_on&sort_type=DESC' +
-    '&search=' + search,
+    '&search=' + search +
+    '&disbursed_start_date=' + start + 'T00:00:00' +
+    '&disbursed_end_date=' + end + 'T23:59:59' +
+    '&disbursement_status=' + disbursementStatus,
 
     res => {
       dispatch(setDisbursement(res.data.data));

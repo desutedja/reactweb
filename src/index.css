@@ -8,7 +8,7 @@
   --primary-yellow-color: rgba(250, 219, 8, 1);
   --accent-color: rgba(0, 197, 255, 1);
   --light-black: #838383;
-  font-size: 14px;
+  font-size: 12px;
   font-family: "Noto Sans", sans-serif;
   --background-color: #f3f3fa;
   background-color: #f3f3fa;
@@ -98,7 +98,7 @@ a {
 
 a {
   text-decoration: none;
-  color: dodgerblue;
+  color: #212529;
 }
 
 button {
@@ -177,9 +177,8 @@ h5 {
 
 table {
   width: 100%;
-  /* background-color: white; */
   border-spacing: 0;
-  /* border-radius: 4px; */
+  border-collapse: separate;
 }
 
 th {
@@ -189,6 +188,10 @@ th {
   padding-left: 16px;
   text-align: left;
   border-bottom: 1px solid #f3f3fa;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
 }
 
 td {
@@ -280,16 +283,16 @@ form {
 }
 
 .NoDecorationLink div {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .Link {
-    color: dodgerblue;
-    cursor: pointer;
+  color: dodgerblue;
+  cursor: pointer;
 }
 
 .Link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .p-relative {

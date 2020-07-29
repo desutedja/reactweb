@@ -1,35 +1,26 @@
 import React, {  } from 'react';
-import { useSelector } from 'react-redux';
+import { Card, CardImg, CardBody, CardText, CardTitle, CardSubtitle } from 'reactstrap';
 import parse from 'html-react-parser';
+import ReactPlayer from 'react-player/youtube';
+
+import { useSelector } from 'react-redux';
 
 function Component() {
-    const { selected } = useSelector(state => state.ads);
+    const selected = useSelector(state => state.ads.selected);
 
     return (
         <div>
-            <div style={{
-                display: 'flex',
-                marginTop: 16,
-                paddingLeft: 8,
-            }}>
-                <div style={{
-                    flex: 1
-                }}>
-                    {selected.media_url ?
-                        <img className="Logo" src={selected.content_image} alt="media_url" />
-                        :
-                        <img src={'https://via.placeholder.com/200'} alt="media_url" />
-                    }
-                </div>
-                <div className="ml-4" style={{
-                    flex: 3
-                }}>
-                    <p style={{ fontWeight: 'bold', fontSize: '1.2rem', marginBottom: 8 }}>
-                        {selected.content_name ? selected.content_name : "(No Title)"}
-                    </p>
-                    {selected.content_description ? parse(selected.content_description) : "(No content)"}
-                </div>
-            </div>
+            <Card style= {{ width: "500px" }}>
+                {selected.content_video && <ReactPlayer style={{ maxWidth: "500px" }} url={selected.content_video} alt="Ads Content"/>}
+                {selected.content_image && <CardImg src={selected.content_image} alt="Ads Content"/>}
+                <CardBody>
+                    <CardTitle><h4>{selected.content_name}</h4></CardTitle>
+                    <CardSubtitle></CardSubtitle>
+                    <CardText style={{
+                        paddingTop: 8,
+                    }}>{parse(selected.content_description || "Loading..")}</CardText>
+                </CardBody>
+            </Card>
         </div>
     )
 }

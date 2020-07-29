@@ -9,7 +9,7 @@ function Component() {
 
     let dispatch = useDispatch();
 
-    return (
+    return info.message ? (
         <div style={{
             marginTop: 16,
             marginLeft: 16,
@@ -18,7 +18,7 @@ function Component() {
                 {info.message}
             </Alert>
         </div>
-    )
+    ) : null
 }
 
 export default Component;

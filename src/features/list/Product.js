@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
+import Pill from '../../components/Pill';
 import {
     getProduct,
 } from '../slices/product';
@@ -29,7 +30,11 @@ const columns = [
     { Header: 'Category', accessor: 'category_name' },
     { Header: 'Type', accessor: row => toSentenceCase(row.item_type) },
     { Header: 'Admin Fee', accessor: row => row.admin_fee + '%' },
-    { Header: 'Discount', accessor: row => <span className={row.discount_fee > 0 ? "HighlightValue-Red" : ""} >{row.discount_fee + '%'}</span> },
+    { Header: 'Discount', accessor: row => <span className={row.discount_fee > 0 ? "HighlightValue-Red" : ""} >
+        {row.discount_fee + '%'}</span> 
+    },
+    { Header: 'Status', accessor: row => <Pill color={row.status === 'active' ? "success" : "secondary"}>
+        {toSentenceCase(row.status)}</Pill> },
 ]
 
 function Component() {

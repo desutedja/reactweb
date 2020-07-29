@@ -20,6 +20,7 @@ function FormTemplate({ slice, payload, schema, renderChild = () => { }, formatV
                 <Formik
                     initialValues={payload}
                     validationSchema={schema}
+                    autoComplete={"off"}
                     onSubmit={(values, bag) => {
                         const data = formatValues(values);
                         console.log(data);

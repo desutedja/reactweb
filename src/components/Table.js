@@ -1,11 +1,11 @@
-import React, { useEffect, useState, forwardRef, useRef } from 'react'
-import { useTable, useExpanded, usePagination, useSortBy, useRowSelect, } from 'react-table'
+import React, { useEffect, useState } from 'react'
+import { useTable, useExpanded, usePagination } from 'react-table'
 import ClinkLoader from './ClinkLoader';
 import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
-    FiEdit, FiCheck, FiUserPlus, FiMessageSquare,
+    FiEdit, FiCheck, FiUserPlus, FiMessageSquare, FiFilter, FiList, FiArrowDown, FiArrowUp, FiPlus,
 } from 'react-icons/fi'
 import {
     FaCaretRight, FaCaretDown,
@@ -15,9 +15,9 @@ import Input from './Input';
 import Modal from './Modal';
 import FilterButton from './FilterButton';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { toSentenceCase } from '../utils';
 
 function Component({
-    noContainer,
     columns,
     data,
     totalItems,
@@ -32,9 +32,10 @@ function Component({
     onClickDelete,
     onClickDetails,
     onClickEdit,
+    onClickAddBilling,
     renderActions,
     deleteSelection,
-    onSelection,
+    sortBy = []
 }) {
     const {
         getTableProps,
@@ -48,7 +49,7 @@ function Component({
         pageCount,
         gotoPage,
         setPageSize,
-        state: { pageIndex, pageSize, selectedRowIds, sortBy }
+        state: { pageIndex, pageSize, selectedRowIds }
     } = useTable({
         columns,
         data,
@@ -57,32 +58,13 @@ function Component({
         manualSorting: true,
         pageCount: controlledPageCount,
         autoResetPage: false,
-        autoResetSortBy: false,
         autoResetSelectedRows: true,
     },
-        useSortBy,
         useExpanded,
         usePagination,
-        useRowSelect,
         hooks => {
             hooks.visibleColumns.push(columns => {
                 return [
-                    {
-                        id: 'selection',
-                        Header: ({ getToggleAllRowsSelectedProps }) => (
-                            <div>
-                                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-                            </div>
-                        ),
-                        Cell: ({ row }) => {
-                            // console.log(row.getToggleRowSelectedProps())
-                            return (
-                                <div >
-                                    <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-                                </div>
-                            )
-                        }
-                    },
                     {
                         id: 'expander',
                         Header: () => null,
@@ -105,54 +87,33 @@ function Component({
 
     const [activeFilter, setFilter] = useState(0);
     const [modalOpen, toggleModal] = useState(false);
+    const [filter, toggleFilter] = useState(false);
 
-    const [sortField, setSortField] = useState("");
-    const [sortType, setSortType] = useState("");
+    const [sortField, setSortField] = useState('created_on');
+    const [sortFieldInput, setSortFieldInput] = useState(sortField);
+    const [sortType, setSortType] = useState('DESC');
+    const [sortTypeInput, setSortTypeInput] = useState(sortType);
+    const [sort, toggleSort] = useState(false);
 
     useEffect(() => {
-        const { id, desc } = sortBy[0] ? sortBy[0] : {};
-
-        console.log('sortBy: ', id, desc);
-
-        const field = columns.find(el => el.Header === id)?.sorting;
-        const type = desc ? 'DESC' : 'ASC';
-
-        field ? setSortField(field) : setSortField('created_on');
-        field ? setSortType(type) : setSortType('DESC');
+        fetchData && fetchData(pageIndex, pageSize, searchToggle,
+            ...sortBy.length > 0 ? [sortField, sortType] : []);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [sortBy])
-
-
-    // sorting tapi gajadi, BE belum siap
-    useEffect(() => {
-        console.log('sortField: ', sortField);
-        console.log('sortType: ', sortType);
-
-        fetchData && fetchData(pageIndex, pageSize, searchToggle);
-        // fetchData && fetchData(pageIndex, pageSize, searchToggle, sortField, sortType);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchData, pageIndex, pageSize, searchToggle]);
-    // }, [fetchData, pageIndex, pageSize, searchToggle, sortField, sortType]);
+    }, [fetchData, pageIndex, pageSize, searchToggle, sortField, sortType]);
 
     useEffect(() => {
         gotoPage(0);
     }, [fetchData, gotoPage, searchToggle]);
 
     useEffect(() => {
-        let searchTimeout = setTimeout(() => toggleSearch(search), 500);
+        let searchTimeout = setTimeout(() => toggleSearch(search), 1000);
 
         return () => {
             clearTimeout(searchTimeout);
         }
     }, [search])
 
-    useEffect(() => {
-        const selectedRows = selectedRowIds ?
-            Object.keys(selectedRowIds).map(el => page[el].original) : [];
-        onSelection && onSelection(selectedRows);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, selectedRowIds]);
+    const countactivefilter = filters.filter(el => !el.hidex).length
 
     return (
         <div className="Table">
@@ -165,6 +126,26 @@ function Component({
                 {(filters.length > 0 && filters[activeFilter].component) ?
                     filters[activeFilter].component(toggleModal) : null}
             </Modal>
+            <Modal
+                onClick={() => {
+                    setSortField(sortFieldInput);
+                    setSortType(sortTypeInput);
+                    toggleSort(false);
+                }}
+                disableHeader={true}
+                isOpen={sort}
+                toggle={() => { toggleSort(false) }}
+            >
+                <Input label="Field" type="select" options={[
+                    { label: 'Created On', value: 'created_on' },
+                    ...sortBy.map(el =>
+                        ({ label: toSentenceCase(el), value: el }))]} inputValue={sortField}
+                    setInputValue={setSortFieldInput} />
+                <Input label="Type" type="select" options={[
+                    { label: 'Ascending', value: 'ASC' },
+                    { label: 'Descending', value: 'DESC' },
+                ]} inputValue={sortType} setInputValue={setSortTypeInput} />
+            </Modal>
             <div className="TableAction">
                 <div style={{
                     display: 'flex',
@@ -173,20 +154,36 @@ function Component({
                     {renderActions != null ? renderActions(selectedRowIds, page) : []}
                 </div>
                 <div className="TableAction-right d-flex align-items-center">
-                    {
-                        filters.map((el, index) => !el.hidden &&
-                            <FilterButton
-                                key={index}
-                                label={el.label}
-                                hideX={el.hidex}
-                                onClick={() => {
-                                    el.onClick && el.onClick();
-                                    el.component && toggleModal(true);
-                                    setFilter(index);
-                                }}
-                                onClickDelete={el.delete} />
-                        )
-                    }
+                    {countactivefilter > 0 && <span style={{ paddingRight: '10px' }}>
+                        {countactivefilter} filter{countactivefilter > 1 ? 's' : ''} applied
+                    </span>}
+                    {filters.length > 0 && <div className="Button" style={{
+                        cursor: 'pointer',
+                        color: 'white',
+                        marginRight: 8,
+                    }} onClick={() => {
+                        toggleFilter(!filter);
+                    }}>
+                        <FiFilter />
+                        <b style={{
+                            marginRight: 8,
+                            marginLeft: 8,
+                        }}>Filter</b>
+                        {filter ? <FiChevronUp /> : <FiChevronDown />}
+                    </div>}
+                    {sortBy.length > 0 && <div className="Button Secondary" style={{
+                        cursor: 'pointer',
+                        marginRight: 8,
+                    }} onClick={() => {
+                        toggleSort(!sort);
+                    }}>
+                        <FiList />
+                        <b style={{
+                            marginRight: 8,
+                            marginLeft: 8,
+                        }}>Sort by: {toSentenceCase(sortField)}</b>
+                        {sortType === 'DESC' ? <FiArrowDown /> : <FiArrowUp />}
+                    </div>}
                     <div className="TableSearch d-flex align-items-center">
                         <Input
                             label="Search"
@@ -199,19 +196,28 @@ function Component({
                     </div>
                 </div>
             </div>
+            {filters.length > 0 && <div className={"FilterContainer" + (filter ? ' down' : '')}>
+                {filters.map((el, index) => !el.hidden &&
+                    <FilterButton
+                        key={index}
+                        label={el.label}
+                        value={el.value}
+                        hideX={el.hidex}
+                        onClick={() => {
+                            el.onClick && el.onClick();
+                            el.component && toggleModal(true);
+                            setFilter(index);
+                        }}
+                        onClickDelete={el.delete} />
+                )}
+            </div>}
             <div className="Table-content scroller">
                 <table {...getTableProps()}>
                     {loading &&
                         <tbody className="TableLoading">
                             <tr className="Spinner">
                                 <td>
-                                    <ClinkLoader
-                                    />
-                                    {/* <MoonLoader
-                                    size={34}
-                                    color={"grey"}
-                                    loading={loading}
-                                    /> */}
+                                    <ClinkLoader />
                                 </td>
                             </tr>
                         </tbody>
@@ -220,16 +226,14 @@ function Component({
                         {headerGroups.map((headerGroup, i) => (
                             <tr {...headerGroup.getHeaderGroupProps()}>
                                 {headerGroup.headers.map(column => (
-                                    <th {...column.getHeaderProps(
-                                        column.getSortByToggleProps()
-                                    )}><div className="TableHeader">
-                                            {column.render('Header')}
-                                            {column.isSorted
-                                                ? column.isSortedDesc
-                                                    ? <FiChevronDown className="SortIcon" />
-                                                    : <FiChevronUp className="SortIcon" />
-                                                : ''}
-                                        </div>
+                                    <th {...column.getHeaderProps()}><div className="TableHeader">
+                                        {column.render('Header')}
+                                        {column.isSorted
+                                            ? column.isSortedDesc
+                                                ? <FiChevronDown className="SortIcon" />
+                                                : <FiChevronUp className="SortIcon" />
+                                            : ''}
+                                    </div>
                                     </th>
                                 ))}
                                 {(onClickDelete || onClickDetails || onClickEdit || onClickResolve) &&
@@ -247,10 +251,14 @@ function Component({
                         </tbody> :
                         <tbody {...getTableBodyProps()}>
                             {page.map((row, i) => {
-                                //row.isExpanded = row.original.expand;
                                 prepareRow(row);
 
                                 const MenuActions = [
+                                    (onClickAddBilling ? {
+                                        onClick: () => onClickAddBilling(row.original),
+                                        name: "Add Billing",
+                                        icon: <FiPlus />,
+                                    } : ""),
                                     (onClickChat ? {
                                         onClick: () => onClickChat(row.original),
                                         name: "Chat",
@@ -309,7 +317,11 @@ function Component({
                                                                     fontSize: '1.2rem',
                                                                 }} />
                                                             </DropdownToggle>
-                                                            <DropdownMenu>
+                                                            <DropdownMenu style={{
+                                                                top: '100%',
+                                                                left: '100%',
+                                                                transform: 'translateX(-100%) translateY(3px)'
+                                                            }}>
                                                                 {MenuActions.map((item, key) =>
                                                                     item.disabled ?
                                                                         null :
@@ -375,7 +387,7 @@ function Component({
                             marginRight: 8,
                             marginLeft: 8,
                         }}>of</p>
-                        <p>{pageCount}</p>
+                        <p>{pageCount ? pageCount : '1'}</p>
                     </div>
                     <IconButton
                         disabled={!canNextPage}
@@ -396,23 +408,5 @@ function Component({
         </div>
     )
 }
-
-const IndeterminateCheckbox = forwardRef(
-    ({ indeterminate, ...rest }, ref) => {
-        const defaultRef = useRef()
-        const resolvedRef = ref || defaultRef
-
-        // console.log('LOG', resolvedRef)
-
-
-        useEffect(() => {
-            resolvedRef.current.indeterminate = indeterminate
-        }, [resolvedRef, indeterminate])
-
-        return (
-            <input type="checkbox" ref={resolvedRef} {...rest} />
-        )
-    }
-);
 
 export default Component;

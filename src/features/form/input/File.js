@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import MoonLoader from "react-spinners/MoonLoader";
 
-import { storageRef } from '../../../firebase';
+// import { storageRef } from '../../../firebase';
 import { Field } from 'formik';
 import { FiAlertCircle } from 'react-icons/fi';
 import { useDispatch } from 'react-redux';
@@ -64,22 +64,15 @@ function FileInput(props) {
                 setFieldValue(fixedName, 'Uploading file...');
                 setUploading(true);
 
-                // let ref = storageRef.child('building_logo/' + Date.now() + '-' + file.name);
-                // await ref.put(file).then(function (snapshot) {
-                //     console.log(snapshot, 'File uploaded!');
-
-                //     snapshot.ref.getDownloadURL().then(url => {
-                //         setFieldValue(fixedName, url);
-                //     });
-
-                //     setUploading(false);
-                // })
-
                 let formData = new FormData();
                 formData.append('file', file);
 
                 dispatch(post(endpointAsset + '/file/upload', formData, res => {
                     setFieldValue(fixedName, res.data.data.url);
+                    setUploading(false);
+                }, err => {
+                    setFieldValue(fixedName, 'Upload failed, please try again.');
+                    setUploading(false);
                 }))
             }}
             onClick={onClick}

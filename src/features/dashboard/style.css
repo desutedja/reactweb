@@ -62,3 +62,21 @@
     border-left: none;
     border-right: none; */
 }
+
+.black {
+    color: #212529;
+}
+
+.blue {
+    color: rgb(0, 78, 146);
+}
+
+.bread {
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.bread:hover {
+    background-color: rgba(0, 0, 0, .08);
+    cursor: pointer;
+}

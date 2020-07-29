@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
 import './style.css';
-import { toSentenceCase } from '../../utils';
+import { staffRoleFormatter, toSentenceCase } from '../../utils';
 import { setSelected } from '../../features/slices/staff';
 
 function Component({ id, data = {}, compact = false }) {
@@ -25,9 +25,9 @@ function Component({ id, data = {}, compact = false }) {
             {!compact &&
                 <div>
                     <b>{data.firstname + ' ' + data.lastname}</b>
-                    <p className="Item-subtext">{toSentenceCase(data.staff_role)
-                        + toSentenceCase(data.staff_specialization ? ' - '
-                            + data.staff_specialization : '')}</p>
+                    <p className="Item-subtext">{
+                        staffRoleFormatter(data.staff_role) + (data.staff_specialization ? ' - ' + toSentenceCase(data.staff_specialization) : '')
+                    }</p>
                 </div>
             }
         </div>

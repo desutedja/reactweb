@@ -72,6 +72,8 @@ export const login = (role, email, history) => dispatch => {
 }
 
 export const otpCheck = (role, email, otp, history) => dispatch => {
+  dispatch(startAsync());
+
   dispatch(post(endpointAdmin + '/auth/' + (role === 'sa' ? 'centratama' : 'management')
     + '/otp', {
     "email": email,

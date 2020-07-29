@@ -107,7 +107,7 @@ export const getBillingUnit = (pageIndex, pageSize, search = '', building, unit)
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&sort_field=created_on&sort_type=DESC' +
-    '&resident_building=' + building +
+    '&building_id=' + building +
     '&search=' + search,
 
     res => {
@@ -130,7 +130,8 @@ export const downloadBillingUnit = (search = '', building) => dispatch => {
     }))
 }
 
-export const getBillingSettlement = (pageIndex, pageSize, search = '', building, settled) => dispatch => {
+export const getBillingSettlement = (pageIndex, pageSize, search = '', 
+building, settled, start = '', end = '') => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(billingEndpoint + '/settlement' +
@@ -139,6 +140,8 @@ export const getBillingSettlement = (pageIndex, pageSize, search = '', building,
     '&building_id=' + building +
     '&payment_settled=' + settled +
     '&sort_field=created_on&sort_type=DESC' +
+    '&date_min=' + start + 
+    '&date_max=' + end +
     '&search=' + search,
 
     res => {

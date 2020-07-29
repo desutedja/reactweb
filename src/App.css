@@ -102,7 +102,7 @@
   flex-direction: column;
   align-items: flex-start;
   z-index: 10;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
@@ -129,7 +129,7 @@
   color: #afafcf;
   width: 240px;
   overflow: hidden;
-  min-height: 48px;
+  height: 48px;
   transition: all 0.3s ease;
 }
 
@@ -178,11 +178,15 @@
 .Submenu {
   width: 100%;
   box-sizing: border-box;
+  transition: .2s;
+  overflow: hidden;
 }
 
 .SubmenuItem,
 .SubmenuItem-active {
-  padding: 8px;
+  display: flex;
+  align-items: center;
+  height: 36px;
   padding-left: 72px;
   color: #afafcf;
   cursor: pointer;
@@ -238,6 +242,16 @@
   /* height: fit-content; */
   overflow: hidden;
   /* margin-top: 16px; */
+}
+
+.Container-transparent {
+  padding: 16px;
+  border-radius: 4px;
+  display: flex;
+  flex: 1;
+  margin: 0 0 16px 16px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
 }
 
 .Details {
@@ -324,7 +338,7 @@
   right: 0;
   height: 100vh;
   margin: 0 !important;
-  width: 280px !important;
+  width: 580px !important;
 }
 
 .modal-content {
@@ -352,4 +366,20 @@
 
 .Settings-item:hover {
   background-color: #f3f3fa;
+}
+
+
+.CardList {
+  display: flex;
+  margin: 30px 0px;
+}
+
+.CardList-item {
+  width: 280px;
+  margin-right: 30px;
+  cursor: pointer;
+}
+
+.CardList-item:hover {
+  box-shadow: 0px 0px 42px 0px rgba(32, 91, 146, 0.12);
 }

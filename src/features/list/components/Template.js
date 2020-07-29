@@ -7,7 +7,8 @@ import Breadcrumb from '../../../components/Breadcrumb';
 
 import { setConfirmDelete } from '../../slice';
 
-function Component({ columns, slice, getAction, filterVars = [], filters = [], actions = [], deleteAction, ...props }) {
+function Component({ columns, slice, title = '', getAction, filterVars = [],
+    filters = [], actions = [], deleteAction, sortBy, ...props }) {
 
     const {
         loading,
@@ -22,7 +23,7 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [], a
 
     return (
         <>
-            <Breadcrumb />
+            <Breadcrumb title={title} />
             <div className="Container">
                 <Table
                     totalItems={total_items}
@@ -30,13 +31,14 @@ function Component({ columns, slice, getAction, filterVars = [], filters = [], a
                     data={items}
                     loading={loading}
                     pageCount={total_pages}
-                    fetchData={useCallback((pageIndex, pageSize, search) => {
-                        // fetchData={useCallback((pageIndex, pageSize, search, sortField, sortType) => {
-                        dispatch(getAction(pageIndex, pageSize, search, ...filterVars));
-                        // dispatch(getAction(pageIndex, pageSize, search, sortField, sortType, ...filterVars));
+                    fetchData={useCallback((pageIndex, pageSize, search, sortField, sortType) => {
+                        sortBy ?
+                            dispatch(getAction(pageIndex, pageSize, search, sortField, sortType, ...filterVars)) :
+                            dispatch(getAction(pageIndex, pageSize, search, ...filterVars));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, ...filterVars])}
                     filters={filters}
+                    sortBy={sortBy}
                     actions={actions}
                     onClickDelete={deleteAction ? row => {
                         dispatch(setConfirmDelete("Are you sure to delete this item?",

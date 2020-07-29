@@ -1,10 +1,13 @@
-import React, { useCallback, useState, useEffect, useMemo } from 'react';
-import { useRouteMatch, Switch, Route } from 'react-router-dom';
+import React, { useCallback, useRef, useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { FiSearch, FiCheck, FiFile, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
+import { ListGroup, ListGroupItem } from 'reactstrap';
+import moment from 'moment';
 
-import Table from '../../components/Table';
+import Table from '../../components/TableWithSelection';
+import Loading from '../../components/Loading';
+import Breadcrumb from '../../components/Breadcrumb';
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
@@ -12,13 +15,15 @@ import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
 import { getBillingSettlement, downloadBillingSettlement, refresh } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
-import { toMoney, dateTimeFormatterCell } from '../../utils';
+import { toMoney, dateTimeFormatterCell, isRangeToday } from '../../utils';
 import { get, post } from '../slice';
+import DateRangeFilter from '../../components/DateRangeFilter';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
 function Component() {
 
+    const { auth } = useSelector(state => state);
     const { loading, settlement, refreshToggle } = useSelector(state => state.billing);
 
     const [search, setSearch] = useState('');
@@ -33,8 +38,17 @@ function Component() {
     const [settleModal, setSettleModal] = useState(false);
     const [selected, setSelected] = useState([]);
 
+    const fileInput = useRef();
+    const [uploadModal, setUploadModal] = useState(false);
+    const [uploadResult, setUploadResult] = useState(false);
+    const [fileUpload, setFileUpload] = useState('');
+    const [loadingUpload, setLoadingUpload] = useState(false);
+
+    const today = moment().format('yyyy-MM-DD', 'day');
+    const [settlementStart, setSettlementStart] = useState(today);
+    const [settlementEnd, setSettlementEnd] = useState(today);
+
     let dispatch = useDispatch();
-    let { path } = useRouteMatch();
 
     const getSum = items => {
         return items.reduce((sum, el) => {
@@ -44,7 +58,7 @@ function Component() {
 
     const columns = useMemo(() => [
         { Header: 'ID', accessor: 'id' },
-        { Header: 'Trx Code', accessor: 'trx_code' },
+        { Header: 'Ref Code', accessor: 'trx_code' },
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
         {
@@ -77,7 +91,103 @@ function Component() {
 
     return (
         <div>
-            <Modal isOpen={settleModal} toggle={() => setSettleModal(!settleModal)}
+            <Breadcrumb title="Settlement" />
+            <Modal
+                isOpen={uploadModal}
+                toggle={() => {
+                    setUploadResult();
+                    setUploadModal(false);
+                }}
+                title="Upload Settlement"
+                subtitle="Upload csv from Xendit dashboard"
+                okLabel={uploadResult && uploadResult.valid_transactions.length > 0 ? "Flag As Settled" : "Submit"}
+                disablePrimary={loading || (uploadResult && uploadResult.valid_transactions.length === 0)}
+                disableSecondary={loading}
+                onClick={uploadResult ?
+                    () => {
+                        const trx_codes = uploadResult.valid_transactions.map(el => el.trx_code)
+                        const dataSettle = {
+                            trx_codes,
+                        }
+                        dispatch(post(endpointBilling + '/management/billing/settlement', dataSettle, res => {
+                            setSettleModal(false);
+                            dispatch(refresh());
+                            dispatch(setInfo({
+                                message: trx_codes.length + ' billing' + (trx_codes.length > 0 ? 's' : '') + ' was marked as settled',
+                            }))
+                        }))
+                        setUploadResult('');
+                        setUploadModal(false);
+                    }
+                    :
+                    () => {
+                        setLoadingUpload(true);
+
+                        let formData = new FormData();
+                        formData.append('file', fileUpload);
+
+                        dispatch(post(endpointBilling + '/management/billing/settlement/validate/bulk',
+                            formData,
+                            res => {
+                                setLoadingUpload(false);
+
+                                setUploadResult(res.data.data);
+                            },
+                            err => {
+                                setLoadingUpload(false);
+                            }
+                        ));
+                    }}
+            >
+                {uploadResult ?
+                    <div style={{ maxHeight: '600px', overflow: 'scroll' }} >
+                        <ListGroup style={{ marginBottom: '15px' }}>
+                            <div style={{ padding: '5px' }}><b>
+                                Valid Transaction Codes: <span style={{ color: "green" }} >
+                                    {uploadResult.valid_transactions.length + ' '}
+                                    result{uploadResult.valid_transactions.length > 1 ? 's' : ''}</span>
+                            </b></div>
+                            {uploadResult.valid_transactions.map((el) =>
+                                <ListGroupItem color={el.payment_amount - el.payment_charge !== el.xendit_amount ? "warning" : "success"}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <div>Trx Code</div> <b>Value: {toMoney(el.payment_amount - el.payment_charge)}</b>
+                                    </div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <div>{el.trx_code}</div> <b>From Xendit: {toMoney(el.xendit_amount)}</b>
+                                    </div>
+                                    {el.payment_amount - el.payment_charge !== el.xendit_amount && <div style={{ color: "red" }}>
+                                        There's difference between value of transaction and xendit amount.
+                                    </div>}
+                                </ListGroupItem>
+                            )}
+                        </ListGroup>
+                        <ListGroup>
+                            <div style={{ padding: '5px' }}><b>
+                                Invalid Transaction Codes: <span style={{ color: "red" }}>
+                                    {uploadResult.invalid_transactions.length + ' '}
+                                    result{uploadResult.invalid_transactions.length > 1 ? 's' : ''}</span>
+                            </b></div>
+                            {uploadResult.invalid_transactions.map((el) =>
+                                <ListGroupItem color="danger">{el.trx_code} ({el.reason})</ListGroupItem>
+                            )}
+                        </ListGroup>
+                    </div>
+                    :
+                    <Loading loading={loadingUpload}>
+                        <input
+                            ref={fileInput}
+                            type="file"
+                            onChange={e => {
+                                setFileUpload(fileInput.current.files[0]);
+                            }}
+                        />
+                    </Loading>
+                }
+            </Modal>
+            <Modal isOpen={settleModal} toggle={() => {
+                setSettleModal(!settleModal)
+                setSelected([]);
+            }}
                 title="Settlement Selection"
                 okLabel="Settle"
                 onClick={() => {
@@ -89,13 +199,6 @@ function Component() {
                     }))
                 }}
             >
-                <div style={{
-                    display: 'flex',
-                    marginBottom: 16,
-                }}>
-                    <Input compact label="Search" icon={<FiSearch />} />
-                    <Button label="Add" />
-                </div>
                 <div style={{
                     minHeight: 300,
                 }}>
@@ -125,138 +228,176 @@ function Component() {
                     <h5>Total {toMoney(getSum(selected))}</h5>
                 </div>
             </Modal>
-            <Switch>
-                {/* <Redirect exact from={path} to={`${path}`} /> */}
-                <Route path={`${path}`}>
-                    <div className="Container">
+            <div className="Container">
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
                         <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flex: 1,
+                            marginRight: 16,
                         }}>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <div style={{
-                                    marginRight: 16,
-                                }}>
-                                    Unsettled Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.unsettled_amount}
-                                    formatValue={formatValue}
-                                />
-                            </div>
-
-                        </div>
-                        <div style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            flex: 1,
-                        }}>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <div style={{
-                                    marginRight: 16,
-                                }}>
-                                    Settled Amount</div>
-                                <AnimatedNumber className="BigNumber" value={info.settled_amount}
-                                    formatValue={formatValue}
-                                />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="Container">
-                        <Table totalItems={settlement.total_items}
-                            onSelection={(selectedRows) => {
-                                setSelected(selectedRows);
-                            }}
-                            columns={columns}
-                            data={settlement.items}
-                            loading={loading}
-                            pageCount={settlement.total_pages}
-                            fetchData={useCallback((pageIndex, pageSize, search) => {
-                                dispatch(getBillingSettlement(pageIndex, pageSize, search,
-                                    building, settled));
-                                // eslint-disable-next-line react-hooks/exhaustive-deps
-                            }, [dispatch, refreshToggle, building, settled])}
-                            filters={[
-                                {
-                                    hidex: settled === "",
-                                    label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
-                                    delete: () => setSettled(''),
-                                    component: (toggleModal) =>
-                                            <Filter
-                                                data={[
-                                                    {value: '0', label: 'Unsettled'},
-                                                    {value: '1', label: 'Settled'},
-                                                ]}
-                                                onClick={(el) => {
-                                                    setSettled(el.value);
-                                                    toggleModal(false);
-                                                }}
-                                                onClickAll={() => {
-                                                    setSettled("");
-                                                    toggleModal(false);
-                                                }}
-                                            />
-                                },
-                                {
-                                    hidex: building === "",
-                                    label: <p>Building: {building ? buildingName : "All"}</p>,
-                                    delete: () => setBuilding(''),
-                                    component: (toggleModal) =>
-                                        <>
-                                            <Input
-                                                label="Search"
-                                                compact
-                                                icon={<FiSearch />}
-                                                inputValue={search}
-                                                setInputValue={setSearch}
-                                            />
-                                            <Filter
-                                                data={buildings}
-                                                onClick={(el) => {
-                                                    setBuilding(el.value);
-                                                    setBuildingName(el.label);
-                                                    toggleModal(false);
-                                                    setSearch("");
-                                                }}
-                                                onClickAll={() => {
-                                                    setBuilding("");
-                                                    setBuildingName("");
-                                                    toggleModal(false);
-                                                    setSearch("");
-                                                }}
-                                            />
-                                        </>
-                                },
-                            ]}
-                            renderActions={(selectedRowIds, page) => {
-                                return ([
-                                    <Button
-                                        disabled={Object.keys(selectedRowIds).length === 0}
-                                        onClick={() => {
-                                            setSettleModal(true);
-                                        }}
-                                        icon={<FiCheck />}
-                                        label="Settle"
-                                    />,
-                                    <Button
-                                        onClick={() => { }}
-                                        icon={<FiFile />}
-                                        label="Upload Settlement"
-                                    />,
-                                    <Button label="Download .csv" icon={<FiDownload />}
-                                        onClick={() => dispatch(downloadBillingSettlement(search, building))}
-                                    />
-                                ])
-                            }}
+                            Unsettled Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.unsettled_amount}
+                            formatValue={formatValue}
                         />
                     </div>
-                </Route>
-            </Switch>
+
+                </div>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 1,
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}>
+                        <div style={{
+                            marginRight: 16,
+                        }}>
+                            Settled Amount</div>
+                        <AnimatedNumber className="BigNumber" value={info.settled_amount}
+                            formatValue={formatValue}
+                        />
+                    </div>
+                </div>
+            </div>
+            <div className="Container">
+                <Table
+                    totalItems={settlement.total_items}
+                    onSelection={(selectedRows) => {
+                        setSelected(selectedRows.filter(el => el && !el.payment_settled_date));
+                    }}
+                    columns={columns}
+                    data={settlement.items}
+                    loading={loading}
+                    pageCount={settlement.total_pages}
+                    fetchData={useCallback((pageIndex, pageSize, search) => {
+                        dispatch(getBillingSettlement(pageIndex, pageSize, search,
+                            building, settled,
+                            ...(settled === '1' ? [settlementStart, settlementEnd] : [])
+                        ));
+                        // eslint-disable-next-line react-hooks/exhaustive-deps
+                    }, [dispatch, refreshToggle, building, settled, settlementStart, settlementEnd])}
+                    filters={auth.role === 'sa' ? [
+                        ...settled === '1' ? [{
+                            hidex: isRangeToday(settlementStart, settlementEnd),
+                            label: "Settlement Date: ",
+                            delete: () => { setSettlementStart(today); setSettlementEnd(today); },
+                            value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
+                                moment(settlementStart).format('DD-MM-yyyy') + ' - '
+                                + moment(settlementEnd).format('DD-MM-yyyy'),
+                            component: (toggleModal) =>
+                                <DateRangeFilter
+                                    startDate={settlementStart}
+                                    endDate={settlementEnd}
+                                    onApply={(start, end) => {
+                                        setSettlementStart(start);
+                                        setSettlementEnd(end);
+                                        toggleModal();
+                                    }} />
+                        }] : [],
+                        {
+                            hidex: settled === "",
+                            label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
+                            delete: () => setSettled(''),
+                            component: (toggleModal) =>
+                                <Filter
+                                    data={[
+                                        { value: '0', label: 'Unsettled' },
+                                        { value: '1', label: 'Settled' },
+                                    ]}
+                                    onClick={(el) => {
+                                        setSettled(el.value);
+                                        toggleModal(false);
+                                    }}
+                                    onClickAll={() => {
+                                        setSettled("");
+                                        toggleModal(false);
+                                    }}
+                                />
+                        },
+                        {
+                            hidex: building === "",
+                            label: <p>Building: {building ? buildingName : "All"}</p>,
+                            delete: () => setBuilding(''),
+                            component: (toggleModal) =>
+                                <>
+                                    <Input
+                                        label="Search"
+                                        compact
+                                        icon={<FiSearch />}
+                                        inputValue={search}
+                                        setInputValue={setSearch}
+                                    />
+                                    <Filter
+                                        data={buildings}
+                                        onClick={(el) => {
+                                            setBuilding(el.value);
+                                            setBuildingName(el.label);
+                                            toggleModal(false);
+                                            setSearch("");
+                                        }}
+                                        onClickAll={() => {
+                                            setBuilding("");
+                                            setBuildingName("");
+                                            toggleModal(false);
+                                            setSearch("");
+                                        }}
+                                    />
+                                </>
+                        }
+                    ] : [
+                            {
+                                hidex: settled === "",
+                                label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
+                                delete: () => setSettled(''),
+                                component: (toggleModal) =>
+                                    <Filter
+                                        data={[
+                                            { value: '0', label: 'Unsettled' },
+                                            { value: '1', label: 'Settled' },
+                                        ]}
+                                        onClick={(el) => {
+                                            setSettled(el.value);
+                                            toggleModal(false);
+                                        }}
+                                        onClickAll={() => {
+                                            setSettled("");
+                                            toggleModal(false);
+                                        }}
+                                    />
+                            }
+                        ]}
+                    renderActions={(selectedRowIds, page) => {
+                        return ([
+                            auth.role === 'sa' && <Button
+                                disabled={Object.keys(selectedRowIds).length === 0}
+                                onClick={() => {
+                                    setSettleModal(true);
+                                }}
+                                icon={<FiCheck />}
+                                label="Settle"
+                            />,
+                            auth.role === 'sa' && <Button
+                                onClick={() => {
+                                    setUploadModal(true);
+                                }}
+                                icon={<FiFile />}
+                                label="Upload Settlement"
+                            />,
+                            <Button label="Download .csv" icon={<FiDownload />}
+                                onClick={() => dispatch(downloadBillingSettlement(search, building))}
+                            />
+                        ])
+                    }}
+                />
+            </div>
         </div>
     )
 }
