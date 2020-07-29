@@ -86,7 +86,7 @@ function Component() {
             isOpen={confirmDelete}
             disableHeader={true}
             onClick={
-               () => dispatch(deleteAnnouncement(data, history, role))
+               () => dispatch(deleteAnnouncement(data, history))
             }
             toggle={() => setConfirmDelete(false)}
             okLabel={"Delete"}

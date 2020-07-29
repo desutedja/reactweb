@@ -106,11 +106,14 @@ export const editAdmin = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteAdmin = (row, ) => dispatch => {
+export const deleteAdmin = (row, history, role) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(adminEndpoint + '/' + row.id, 
     res => {
+      history && history.push('/' + auth.role + '/admin');
       dispatch(refresh());
 
       dispatch(setInfo({

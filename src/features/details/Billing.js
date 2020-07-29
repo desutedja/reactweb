@@ -46,8 +46,8 @@ function Component() {
                 <div>{row.year}</div>
             </div>},
         { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
-        { Header: 'Ref Code', accessor: row => 
-           <a class="Link" href={"/" + role + "/billing/details/" + row.ref_code}>{toEllipsis(row.ref_code ? row.ref_code : '-', 10)}</a>
+        { Header: 'Ref Code', accessor: row => row.ref_code ? 
+           <a class="Link" href={"/" + role + "/billing/details/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
         },
         { Header: 'Payment', accessor: row => 
             (

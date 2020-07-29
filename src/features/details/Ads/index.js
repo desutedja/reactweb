@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useHistory, useRouteMatch, useParams } from 'react-router-dom';
 import moment from 'moment';
 import {
-    useDispatch
+    useDispatch, useSelector
 } from 'react-redux';
 
 import Button from '../../../components/Button';
@@ -24,6 +24,8 @@ import { deleteAds, setSelected, publishAds } from '../../slices/ads';
 function Component() {
     const [modal, setModal] = useState(false);
     const [data, setData] = useState({});
+
+    const { role } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
     let history = useHistory();

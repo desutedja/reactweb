@@ -183,12 +183,14 @@ export const editBuilding = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteBuilding = (row, history) => dispatch => {
+export const deleteBuilding = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(buildingEndpoint + '/' + row.id, 
     res => {
-      history && history.goBack();
+      history && history.push('/' + auth.role + '/building');
 
       dispatch(setInfo({
         color: 'success',

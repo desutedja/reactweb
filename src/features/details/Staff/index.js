@@ -5,7 +5,7 @@ import Detail from '../components/Detail';
 import Template from '../components/Template';
 
 import { useParams, useHistory } from 'react-router-dom';
-import { get } from '../../slice';
+import { get, setConfirmDelete } from '../../slice';
 import Pill from '../../../components/Pill'
 import { dateTimeFormatter, toSentenceCase, staffRoleFormatter } from '../../../utils';
 import { endpointManagement } from '../../../settings';
@@ -18,29 +18,39 @@ function Component() {
     let { id } = useParams();
     let history = useHistory();
 
-    const details = useMemo(() => { return {
-    'Profile': ['created_on', 'gender', 'nationality', 'marital_status'],
-    'Address': ['address', 'district_name', 'city_name', 'province_name'],
-    'Availability Status': [
-        { disabled: data.staff_role === "courier",
-            label: 'on_shift', vfmt: (v) => <Pill color={data.current_shift_status ? "success" : "secondary"}>
-                {data.current_shift_status ? "Yes" : "No"}
-            </Pill> },
-        { disabled: data.staff_role === "courier", 
-            label: 'on_shift_until', lfmt: () => !data.current_shift_status ? "Last Shift Ended At" : "On Shift Until", 
-            vfmt: (v) => v ? dateTimeFormatter(v) : "-"},
-        { disabled: data.staff_role !== "courier",
-            label: 'is_available', lfmt: () => "Accepting Order", vfmt: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Yes" : "No"}</Pill>},
-    ],
-    'Management': [
-        'building_management_id', 
-        { label: 'staff_id', lfmt: () => "Staff ID" },
-        { label: 'staff_role', lfmt: () => "Staff Role", vfmt: (v) => staffRoleFormatter(v)},
-        { disabled: data.staff_role !== "Technician",
-            label: 'staff_specialization', lfmt: () => "Specialization", vfmt: (v) => v ? toSentenceCase(v) : "-" },
-    ],
-    'Bank Account': ['account_name', 'account_number', 'account_bank'],
-}}, [data]);
+    const details = useMemo(() => {
+        return {
+            'Profile': ['created_on', 'gender', 'nationality', 'marital_status'],
+            'Address': ['address', 'district_name', 'city_name', 'province_name'],
+            'Availability Status': [
+                {
+                    disabled: data.staff_role === "courier",
+                    label: 'on_shift', vfmt: (v) => <Pill color={data.current_shift_status ? "success" : "secondary"}>
+                        {data.current_shift_status ? "Yes" : "No"}
+                    </Pill>
+                },
+                {
+                    disabled: data.staff_role === "courier",
+                    label: 'on_shift_until', lfmt: () => !data.current_shift_status ? "Last Shift Ended At" : "On Shift Until",
+                    vfmt: (v) => v ? dateTimeFormatter(v) : "-"
+                },
+                {
+                    disabled: data.staff_role !== "courier",
+                    label: 'is_available', lfmt: () => "Accepting Order", vfmt: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Yes" : "No"}</Pill>
+                },
+            ],
+            'Management': [
+                'building_management_id',
+                { label: 'staff_id', lfmt: () => "Staff ID" },
+                { label: 'staff_role', lfmt: () => "Staff Role", vfmt: (v) => staffRoleFormatter(v) },
+                {
+                    disabled: data.staff_role !== "Technician",
+                    label: 'staff_specialization', lfmt: () => "Specialization", vfmt: (v) => v ? toSentenceCase(v) : "-"
+                },
+            ],
+            'Bank Account': ['account_name', 'account_number', 'account_bank'],
+        }
+    }, [data]);
 
 
     useEffect(() => {
@@ -60,7 +70,9 @@ function Component() {
             labels={["Details"]}
             contents={[
                 <Detail data={data} labels={details}
-                    onDelete={() => dispatch(deleteStaff(data, history))}
+                    onDelete={() => dispatch(setConfirmDelete("Are you sure to delete this item?",
+                        () => dispatch(deleteStaff(data, history))
+                    ))}
                 />,
             ]}
         />

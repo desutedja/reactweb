@@ -27,14 +27,14 @@ const tabsBM = ["Section", "Unit Type", "Unit", "Billing Service"];
 
 function Component() {
     const [data, setData] = useState({});
-    const {auth} = useSelector(state => state)
+    const { auth } = useSelector(state => state)
 
     const [confirmDelete, setConfirmDelete] = useState(false);
-    
+
     let dispatch = useDispatch();
     let history = useHistory();
     let { id } = useParams();
-    
+
     const contents = [
         <Detail data={data} labels={labels}
             onDelete={
@@ -64,28 +64,28 @@ function Component() {
 
     return (
         <>
-        <Modal 
-            isOpen={confirmDelete}
-            disableHeader={true}
-            onClick={
-              () =>  dispatch(deleteBuilding(data, history))
-            }
-            toggle={() => setConfirmDelete(false)}
-            okLabel={"Delete"}
-            cancelLabel={"Cancel"}
-        >
-            Are you sure you want to delete building <b>{data.name}</b>?
-        </Modal>
-        <Template
-            activeTab={history.location.state ? history.location.state.tab : 0}
-            image={auth.role === "sa" && data.logo}
-            title={data.name}
-            website={data.website}
-            phone={data.phone}
-            loading={!data.id}
-            labels={auth.role === 'sa' ? tabs : tabsBM}
-            contents={auth.role === 'sa' ? contents : contentsBM}
-        />
+            <Modal
+                isOpen={confirmDelete}
+                disableHeader={true}
+                onClick={
+                    () => dispatch(deleteBuilding(data, history))
+                }
+                toggle={() => setConfirmDelete(false)}
+                okLabel={"Delete"}
+                cancelLabel={"Cancel"}
+            >
+                Are you sure you want to delete building <b>{data.name}</b>?
+            </Modal>
+            <Template
+                activeTab={history.location.state ? history.location.state.tab : 0}
+                image={auth.role === "sa" && data.logo}
+                title={data.name}
+                website={data.website}
+                phone={data.phone}
+                loading={!data.id}
+                labels={auth.role === 'sa' ? tabs : tabsBM}
+                contents={auth.role === 'sa' ? contents : contentsBM}
+            />
         </>
     )
 }

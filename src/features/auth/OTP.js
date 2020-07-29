@@ -50,7 +50,7 @@ function Page({ role }) {
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
                 content={content}
             />
-            <Template>
+            <Template role={role}>
                 <form onSubmit={(e) => {
                     e.preventDefault();
                     dispatch(otpCheck(role, email, otp, history));

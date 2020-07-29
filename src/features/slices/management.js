@@ -106,12 +106,14 @@ export const editManagement = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteManagement = (row, history) => dispatch => {
+export const deleteManagement = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(managementEndpoint + '/' + row.id, 
     res => {
-      history && history.goBack()
+      history && history.push('/' + auth.role + '/management');
       
       dispatch(refresh());
 

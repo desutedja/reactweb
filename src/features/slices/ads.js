@@ -129,12 +129,14 @@ export const editAds = (data, history, id) => dispatch => {
     }))
 }
 
-export const deleteAds = (row, history) => dispatch => {
+export const deleteAds = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(adsEndpoint + '/' + row.id,
     res => {
-      history && history.goBack();
+      history && history.push('/' + auth.role + '/ads');
 
       dispatch(setInfo({
         color: 'success',
