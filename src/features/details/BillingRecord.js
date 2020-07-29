@@ -3,23 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { post, get } from '../slice';
 import { endpointBilling } from '../../settings';
+import moment from 'moment';
 
 import { Card, CardBody } from 'reactstrap';
 import Pill from '../../components/Pill';
 import Detail from './components/Detail';
 import Template from './components/Template';
 import Table from '../../components/Table';
-import { toMoney, toSentenceCase, dateTimeFormatter } from '../../utils';
-
-const columns = [
-    { Header: 'Name', accessor: 'name' },
-    { Header: 'Group', accessor: 'group' },
-    { Header: 'Usage (Recent - Previous)', 
-        accessor: row => <>{row.recent_usage - row.previous_usage} ({row.recent_usage} - {row.previous_usage}) {row.denom_unit}</>},
-    { Header: 'Price', accessor: row => toMoney(row.subtotal) },
-    { Header: 'Tax', accessor: row => row.tax === "percentage" ? row.tax_value + "%" : toMoney(row.tax_amount) },
-    { Header: 'Total', accessor: row => toMoney(row.total) },
-];
+import { toMoney, toSentenceCase, dateTimeFormatter, dateFormatter } from '../../utils';
 
 function Component() {
     const [data, setData] = useState({});
@@ -30,6 +21,19 @@ function Component() {
     const { unit } = useSelector(state => state.billing);
     let { trx_code } = useParams();
     let dispatch = useDispatch();
+
+    const columns = useMemo(() => ([
+        { Header: 'Name', accessor: 'name' },
+        { Header: 'Group', accessor: 'group' },
+        { Header: 'Usage (Recent - Previous)', 
+            accessor: row => <>{row.recent_usage - row.previous_usage} ({row.recent_usage} - {row.previous_usage}) {row.denom_unit}</>},
+        { Header: 'Due Date', accessor: row => 
+        <div style={{ display: 'block' }}><div>{dateFormatter(row.due_date)}</div> <b style={{ color: "red" }}>
+                {moment.utc(data.payment_date).isAfter(moment.utc(row.due_date)) ? "(Payment Overdue)" : ""}</b></div>},
+        { Header: 'Price', accessor: row => toMoney(row.subtotal) },
+        { Header: 'Tax', accessor: row => row.tax === "percentage" ? row.tax_value + "%" : toMoney(row.tax_amount) },
+        { Header: 'Total', accessor: row => toMoney(row.total) },
+    ]),[data]);
 
     const details = useMemo(() => (
     {
