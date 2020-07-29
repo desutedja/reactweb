@@ -106,7 +106,7 @@ function Component() {
     return (
         <Template
             slice="ads"
-            payload={selected.id ? {
+            payload={selected.content_name ? {
                 ...adsPayload, ...selected,
                 gender: selected.gender ? selected.gender : 'A',
                 occupation: selected.occupation ? selected.occupation : 'all',
@@ -212,7 +212,7 @@ function Component() {
                         />
                         <Input {...props} label="Priority" name="total_priority_score"
                             type="number"
-                            externalValue={score}
+                            externalValue={score ? score : null}
                         />
 
                         {!selected.id && <>

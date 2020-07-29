@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useHistory, useRouteMatch, useParams } from 'react-router-dom';
 import moment from 'moment';
-import {
-    useDispatch, useSelector
-} from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';

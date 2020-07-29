@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Modal from '../../../components/Modal';
 import Input from '../../../components/Input';
@@ -41,8 +41,11 @@ const labels = {
 };
 
 function Component() {
-    const [data, setData] = useState({});
 
+    const { product } = useSelector(state => state);
+    const data = product.selected;
+    // const [data, setData] = useState(product.selected || {});
+    
     const [modal, setModal] = useState(false);
     const [image, setImage] = useState('');
 
@@ -57,10 +60,10 @@ function Component() {
 
     useEffect(() => {
         dispatch(get(endpointMerchant + '/admin/items?id=' + id, res => {
-            setData(res.data.data);
+            // setData(res.data.data);
             dispatch(setSelected(res.data.data));
         }))
-    }, [id, dispatch])
+    }, [id, dispatch, product.refreshToggle])
 
     useEffect(() => {
         (discFee !== "" || adminFee !== "") && (setCalculatedPrice(
@@ -147,15 +150,11 @@ function Component() {
                                 }
                                 dispatch(patch(endpointMerchant + '/admin/items/status', dataInput,
                                     res => {
-                                        dispatch(refresh());
                                         dispatch(setInfo({
                                             color: 'success',
                                             message: 'Product has been taken down.'
                                         }));
-                                        setData({
-                                            ...data,
-                                            status: 'blocked'
-                                        })
+                                        dispatch(refresh());
                                     }
                                 ))
                             }} />,
