@@ -278,7 +278,7 @@ function Component() {
                                 </div>
                             </div>
                         </div>
-                        <div className="row pb-5">
+                        <div className="row pb-3">
                             <div className="col px-4" style={{
                                 height: '360px',
                                 position: 'relative'
@@ -299,11 +299,11 @@ function Component() {
                             </div>}
                                 <ResponsiveContainer width='100%'>
                                     <ComposedChart data={trxDataFormatted}>
-                                        <XAxis dy={10} dataKey="Date" />
+                                        <XAxis dy={10} height={50} dataKey="Date" />
                                         <YAxis orientation="right"
-                                            width={50} dx={10} dataKey="Total Transaction"
+                                            width={90} dx={10} dataKey="Total Transaction"
                                         />
-                                        <YAxis yAxisId="right" width={60}
+                                        <YAxis yAxisId="right" width={90}
                                             dx={-10} dataKey="Amount Transaction"
                                             tickFormatter={el => el && el.toString().length > 3 ?
                                                 (el + '').slice(0, -3) + 'k' : el}
