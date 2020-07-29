@@ -22,10 +22,9 @@ import { deleteAds, setSelected, publishAds } from '../../slices/ads';
 
 
 function Component() {
+    const [toggle, setToggle] = useState(false);
     const [modal, setModal] = useState(false);
     const [data, setData] = useState({});
-
-    const { role } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -79,7 +78,7 @@ function Component() {
             setData(res.data.data);
             dispatch(setSelected(res.data.data));
         }))
-    }, [dispatch, id])
+    }, [dispatch, id, toggle])
 
     return (
         <>
@@ -153,7 +152,10 @@ function Component() {
                                 icon={<FiArrowUpCircle/>}
                                 disabled={!!data.published}
                                 label={data.published ? "Published" : "Publish"}
-                                onClick={() => dispatch(publishAds(data))}
+                                onClick={() => {
+                                    dispatch(publishAds(data));
+                                    setToggle(!toggle);
+                                }}
                             />
                         ]}
                     /></div>,

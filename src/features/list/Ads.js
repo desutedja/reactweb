@@ -56,7 +56,7 @@ function Component() {
             slice={'ads'}
             getAction={getAds}
             deleteAction={deleteAds}
-            sortBy={['start_date', 'end_date']}
+            sortBy={['start_date', 'end_date', 'published']}
             actions={[
                 <Button key="Add Advertisement" label="Add Advertisement" icon={<FiPlus />}
                     onClick={() => {

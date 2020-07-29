@@ -136,7 +136,7 @@ export const deleteAds = (row, history) => (dispatch, getState) => {
 
   dispatch(del(adsEndpoint + '/' + row.id,
     res => {
-      history && history.push('/' + auth.role + '/ads');
+      history && history.push('/' + auth.role + '/advertisement');
 
       dispatch(setInfo({
         color: 'success',
