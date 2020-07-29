@@ -210,7 +210,7 @@ export const deleteAdsSchedule = (row,) => dispatch => {
     }))
 }
 
-export const publishAds = ( data) => dispatch => {
+export const publishAds = (data, callback) => dispatch => {
   dispatch(startAsync());
 
   dispatch(post(adsEndpoint + '/change_status', { advertisement_id: data.id, status: 'publish', }, 
@@ -223,6 +223,7 @@ export const publishAds = ( data) => dispatch => {
       }));
 
       dispatch(stopAsync());
+      callback();
     },
     err => {
       dispatch(stopAsync());

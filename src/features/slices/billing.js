@@ -245,7 +245,7 @@ export const editBillingUnitItem = (data, selected, history, id) => dispatch => 
 
   dispatch(put(billingEndpoint, { ...data, id: selected.id },
     res => {
-      dispatch(setSelected(res.data.data));
+      dispatch(setSelectedUnit(res.data.data));
       history.goBack();
 
       dispatch(setInfo({

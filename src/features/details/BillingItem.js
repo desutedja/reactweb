@@ -7,7 +7,7 @@ import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import { useSelector, useDispatch } from 'react-redux';
-import { payByCash } from '../slices/billing';
+import { payByCash, getBillingUnitItem } from '../slices/billing';
 import { Formik, Form } from 'formik';
 import Input from '../form/input';
 import SubmitButton from '../form/components/SubmitButton';

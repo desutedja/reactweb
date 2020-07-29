@@ -1,24 +1,13 @@
 import React, {  } from 'react';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import './style.css';
 import { toSentenceCase } from '../../utils';
-import { setSelected } from '../../features/slices/ads';
-
 
 function AdsCell({ id, data, compact=false }) {
-    let dispatch = useDispatch();
-    let history = useHistory();
 
     return (
-        <div className={ !compact ? "Item" : "Item-compact" } onClick={() => {
-            history.push({
-                pathname: 'advertisement/' + id,
-                state: data
-            });
-            dispatch(setSelected(data));
-        }}>
+        <Link to={'advertisement/' + id} className={ !compact ? "Item" : "Item-compact" }>
             { !compact &&
             <>
             <span> </span>
@@ -27,7 +16,7 @@ function AdsCell({ id, data, compact=false }) {
                 <p className="Item-subtext">{toSentenceCase(data.appear_as)}</p>
             </div>
             </> }
-        </div>
+        </Link>
     );
 }
 
