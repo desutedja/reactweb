@@ -169,7 +169,7 @@ function Component() {
                 <div className="col">
                     <div className="Container color-3 d-flex flex-column cursor-pointer"
                     onClick={() => {
-                        history.push('/' + auth.role + '/task')
+                        history.push('/' + auth.role + '/task', {status: 'unresolved', statusLabel: 'Unresolved'})
                     }}
                     >
                         <div className="row no-gutters align-items-center">
