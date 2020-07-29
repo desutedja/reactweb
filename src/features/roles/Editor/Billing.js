@@ -35,6 +35,9 @@ function Component() {
             <Route path={`${path}/unit/item/details`}>
                 <DetailsItem />
             </Route>
+            <Route path={`${path}/details/:trx_code`}>
+                <BillingRecord />
+            </Route>
             <Route path={`${path}/unit/item`}>
                 <Details />
             </Route>
