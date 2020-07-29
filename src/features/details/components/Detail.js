@@ -80,7 +80,6 @@ function Component({ imgPreview = false, data, labels, type = "",
                     }}>
                         <div style={{
                             color: 'grey',
-                            fontSize: '1.2rem',
                             borderBottom: '1px solid silver',
                             width: 200,
                             marginBottom: 8,
@@ -91,10 +90,10 @@ function Component({ imgPreview = false, data, labels, type = "",
                         {labels[group].map((el, i) => {
                             return !el.disabled ?
                                 <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
-                                    <Column flex={3} style={{ fontWeight: 'bold', fontSize: '1em', textAlign: 'left' }}>
+                                    <Column flex={3} style={{ fontWeight: 'bold', textAlign: 'left' }}>
                                         {el.lfmt ? el.lfmt(el) : formatLabel(el)}
                                     </Column>
-                                    <Column flex={9} style={{ fontWeight: 'normal', fontSize: '1em', }}>
+                                    <Column flex={9} style={{ fontWeight: 'normal', }}>
                                         {el.vfmt ? el.vfmt(data[el.label]) : el.label ? formatValue(el.label, data[el.label])
                                             : formatValue(el, data[el])}
                                     </Column>
