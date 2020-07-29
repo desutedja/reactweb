@@ -349,7 +349,7 @@ function Component() {
                 </div>
             </div>
 
-            {auth.role === 'bm' && <div className="row">
+            <div className="row">
                 <div className="col-12">
                     <div className="Container flex-column">
                         <div className="mb-4">
@@ -384,7 +384,7 @@ function Component() {
                         </div>
                     </div>
                 </div>
-            </div>}
+            </div>
         </>
     )
 }

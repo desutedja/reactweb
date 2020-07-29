@@ -183,7 +183,7 @@ export const getBillingDisbursement = (pageIndex, pageSize, search = '', buildin
 export const downloadBillingDisbursement = () => dispatch => {
   dispatch(startAsync());
 
-  dispatch(getFile(billingEndpoint + '/disbursement/list/management' +
+  dispatch(getFile(billingEndpoint + '/disbursement/list/transaction' +
     '?export=true',
     'billing_disbursement.csv',
     res => {
