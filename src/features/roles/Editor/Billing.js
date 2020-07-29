@@ -6,6 +6,7 @@ import Details from '../../details/Billing';
 import DetailsItem from '../../details/BillingItem';
 import Settlement from '../../settlement/Billing';
 import Disbursement from '../../disbursement/Billing';
+import BillingRecord from '../../details/BillingRecord';
 
 import List from '../../list/Billing';
 
@@ -29,6 +30,9 @@ function Component() {
             </Route>
             <Route path={`${path}/unit/item/details`}>
                 <DetailsItem />
+            </Route>
+            <Route path={`${path}/details/:trx_code`}>
+                <BillingRecord />
             </Route>
             <Route path={`${path}/unit/item`}>
                 <Details />
