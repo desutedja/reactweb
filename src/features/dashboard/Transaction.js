@@ -13,7 +13,8 @@ import { toMoney, getDatesRange } from '../../utils';
 import { endpointMerchant, endpointTransaction } from '../../settings';
 
 import './style.css';
-import { Line, Cell, Legend, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, ComposedChart, ResponsiveContainer } from 'recharts';
+import { Line, Cell, Legend, Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart,
+    Pie, ComposedChart, ResponsiveContainer, LabelList } from 'recharts';
 import { get } from '../slice';
 
 const colorsSuccess = ['#577590', '#43aa8b', '#90be6d', '#f9c74f'];
@@ -79,6 +80,7 @@ function Component() {
         dispatch(get(endpointMerchant + '/admin/statistic/successcategory?order_type=' + successType,
              res => {
                 setSuccessData(res.data.data);
+                // console.log(res.data.data)
             }))
     }, [dispatch, successType]);
 
@@ -276,7 +278,7 @@ function Component() {
                                 </div>
                             </div>
                         </div>
-                        <div className="row pb-5">
+                        <div className="row pb-3">
                             <div className="col px-4" style={{
                                 height: '360px',
                                 position: 'relative'
@@ -297,10 +299,14 @@ function Component() {
                             </div>}
                                 <ResponsiveContainer width='100%'>
                                     <ComposedChart data={trxDataFormatted}>
-                                        <XAxis height={50} dy={10} dataKey="Date" />
-                                        <YAxis axisLine={false} tickLine={false} width={50} dx={-10} dataKey="Total Transaction" />
-                                        <YAxis axisLine={false} yAxisId="right" width={60} dx={-10} dataKey="Amount Transaction"
-                                        tickFormatter={el => el && el.toString().length > 3 ? (el + '').slice(0, -3) + 'k' : el}
+                                        <XAxis dy={10} height={50} dataKey="Date" />
+                                        <YAxis orientation="right"
+                                            width={90} dx={10} dataKey="Total Transaction"
+                                        />
+                                        <YAxis yAxisId="right" width={90}
+                                            dx={-10} dataKey="Amount Transaction"
+                                            tickFormatter={el => el && el.toString().length > 3 ?
+                                                (el + '').slice(0, -3) + 'k' : el}
                                         />
                                         <Tooltip />
                                         <Legend />
@@ -330,12 +336,10 @@ function Component() {
                             }}>
                                 <ResponsiveContainer className="mt-5" width='100%'>
                                     <PieChart>
-                                        <Pie data={successData} dataKey="qty" nameKey="task_type"
+                                        <Pie data={successData} dataKey="qty"
                                         cx="50%" cy="50%" innerRadius={55} outerRadius={100}
-                                        fill="#8884d8" label>
-                                        {   
-                                            successData.map((entry, i) => <Cell fill={colorsSuccess[i]}/>)
-                                        }
+                                        fill="#8884d8" label  nameKey="category" labelLine={false}>
+                                            { successData.map((entry, i) => <Cell key={`cell-${i}`} fill={colorsSuccess[i]}/>) }
                                         </Pie>
                                         <Tooltip />
                                     </PieChart>
@@ -377,12 +381,10 @@ function Component() {
                             }}>
                                 <ResponsiveContainer className="mt-5" width='100%'>
                                     <PieChart>
-                                        <Pie data={failedData} dataKey="qty" nameKey="task_type"
+                                        <Pie data={failedData} dataKey="qty" nameKey="category"
                                         cx="50%" cy="50%" innerRadius={55} outerRadius={100}
-                                        fill="#8884d8" label>
-                                        {   
-                                            failedData.map((entry, i) => <Cell fill={colorsFailed[i]}/>)
-                                        }
+                                        fill="#8884d8" label labelLine={false}>
+                                            { failedData.map((entry, i) => <Cell fill={colorsFailed[i]}/>) }
                                         </Pie>
                                         <Tooltip />
                                     </PieChart>

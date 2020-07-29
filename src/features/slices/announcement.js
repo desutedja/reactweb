@@ -122,12 +122,14 @@ export const editAnnouncement = ( data, history, id, role ) => dispatch => {
     }))
 }
 
-export const deleteAnnouncement = (row, history=null) => dispatch => {
+export const deleteAnnouncement = (row, history=null) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(announcementEndpoint + '/' + row.id, 
     res => {
-      history && history.push('/announcement');
+      history && history.push('/' + auth.role + '/announcement');
       dispatch(refresh());
 
       dispatch(setInfo({

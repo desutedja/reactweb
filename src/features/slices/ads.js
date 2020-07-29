@@ -129,12 +129,14 @@ export const editAds = (data, history, id) => dispatch => {
     }))
 }
 
-export const deleteAds = (row, history) => dispatch => {
+export const deleteAds = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(adsEndpoint + '/' + row.id,
     res => {
-      history && history.goBack();
+      history && history.push('/' + auth.role + '/advertisement');
 
       dispatch(setInfo({
         color: 'success',
@@ -208,7 +210,7 @@ export const deleteAdsSchedule = (row,) => dispatch => {
     }))
 }
 
-export const publishAds = ( data) => dispatch => {
+export const publishAds = (data, callback) => dispatch => {
   dispatch(startAsync());
 
   dispatch(post(adsEndpoint + '/change_status', { advertisement_id: data.id, status: 'publish', }, 
@@ -221,6 +223,7 @@ export const publishAds = ( data) => dispatch => {
       }));
 
       dispatch(stopAsync());
+      callback();
     },
     err => {
       dispatch(stopAsync());

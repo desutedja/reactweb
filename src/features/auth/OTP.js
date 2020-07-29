@@ -30,7 +30,11 @@ function Page({ role }) {
         return () => {
             clearInterval(timer);
         }
-    }, [tick])
+    }, [tick]);
+
+    useEffect(() => {
+        console.log(auth.loading);
+    }, [auth])
 
     return (
         <>
@@ -50,7 +54,7 @@ function Page({ role }) {
             <CustomAlert isOpen={alert} toggle={() => dispatch(closeAlert())} title={title}
                 content={content}
             />
-            <Template>
+            <Template role={role}>
                 <form onSubmit={(e) => {
                     e.preventDefault();
                     dispatch(otpCheck(role, email, otp, history));
@@ -68,7 +72,6 @@ function Page({ role }) {
                         {tick > 0 ? <p>00:0{tick}</p> :
                             <button type="button" onClick={() => {
                                 dispatch(login(role, email, history));
-                                // dispatch(otpCheck(role, email, otp, history));
                                 setTick(time);
                             }}>Resend OTP</button>}
                         <input className="Auth-input" type="text" id="otp"

@@ -75,13 +75,9 @@ function Component() {
 
     const fileInput = useRef();
     const [uploadModal, setUploadModal] = useState(false);
-    // const [uploadData, setUploadData] = useState('');
     const [uploadResult, setUploadResult] = useState(false);
     const [fileUpload, setFileUpload] = useState('');
-    const [
-        // loadingUpload, 
-        setLoadingUpload] = useState(false);
-    // console.log(selected)
+    const [loadingUpload, setLoadingUpload] = useState(false);
 
     const [settlementStart, setSettlementStart] = useState(moment().format('yyyy-MM-DD'));
     const [settlementEnd, setSettlementEnd] = useState(moment().format('yyyy-MM-DD'));
@@ -194,7 +190,7 @@ function Component() {
                         </ListGroup>
                     </div>
                     :
-                    <Loading loading={loading}>
+                    <Loading loading={loadingUpload}>
                         <input
                             ref={fileInput}
                             type="file"
@@ -363,7 +359,7 @@ function Component() {
                     pageCount={settlement.total_pages}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
                         dispatch(getTransactionSettlement(pageIndex, pageSize, search,
-                            statusSettlement.value, ...(statusSettlement.value === 'undisbursed' ?
+                            statusSettlement.value, ...(statusSettlement.value === 'settled' ?
                                 [settlementStart, settlementEnd] : [today, today]),
                         ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps

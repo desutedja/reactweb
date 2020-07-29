@@ -46,8 +46,8 @@ function Component() {
                 <div>{row.year}</div>
             </div>},
         { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
-        { Header: 'Ref Code', accessor: row => 
-           <a class="Link" href={"/" + role + "/billing/details/" + row.ref_code}>{toEllipsis(row.ref_code ? row.ref_code : '-', 10)}</a>
+        { Header: 'Ref Code', accessor: row => row.ref_code ? 
+           <a class="Link" href={"/" + role + "/billing/details/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
         },
         { Header: 'Payment', accessor: row => 
             (
@@ -131,6 +131,7 @@ function Component() {
                             data={items}
                             loading={loading}
                             pageCount={unit.total_pages}
+                            totalItems={items.length}
                             filters={[
                                 {
                                     label: <p>{"Status: " + (status ? toSentenceCase(status) : "All")}</p>,
@@ -156,6 +157,9 @@ function Component() {
                                 },
                             ]}
                             actions={[
+                                <h3>
+                                    Total: {toMoney(items.reduce((sum, el) => sum + el.total, 0))}
+                                </h3>
                             ]}
                             onClickDetails={row => {
                                 dispatch(getBillingUnitItemDetails(row, history, url))

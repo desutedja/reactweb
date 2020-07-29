@@ -1,24 +1,14 @@
 import React, { } from 'react';
 import Avatar from 'react-avatar';
-import { useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import './style.css';
 import { staffRoleFormatter, toSentenceCase } from '../../utils';
-import { setSelected } from '../../features/slices/staff';
 
 function Component({ id, data = {}, compact = false }) {
-    let dispatch = useDispatch();
-    let history = useHistory();
 
     return (
-        <div className={!compact ? "Item" : "Item-compact"} onClick={() => {
-            history.push({
-                pathname: 'staff/' + id,
-                state: data,
-            });
-            dispatch(setSelected(data));
-        }}>
+        <Link to={'staff/' + id} className={!compact ? "Item" : "Item-compact"}>
             <Avatar className="Item-avatar" size="40" src={data.photo}
                 name={data.firstname + ' ' + data.lastname} round
                 email={data.photo ? null : data.email} />
@@ -30,7 +20,7 @@ function Component({ id, data = {}, compact = false }) {
                     }</p>
                 </div>
             }
-        </div>
+        </Link>
     );
 }
 

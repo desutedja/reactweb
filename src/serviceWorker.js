@@ -74,6 +74,11 @@ function registerValidSW(swUrl, config) {
                   'tabs for this page are closed. See https://bit.ly/CRA-PWA.'
               );
 
+              alert(
+                'New content is available and will be used when all ' +
+                  'tabs for this page are closed.'
+              );
+
               // Execute callback
               if (config && config.onUpdate) {
                 config.onUpdate(registration);

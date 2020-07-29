@@ -317,11 +317,7 @@ function Component({
                                                                     fontSize: '1.2rem',
                                                                 }} />
                                                             </DropdownToggle>
-                                                            <DropdownMenu style={{
-                                                                top: '100%',
-                                                                left: '100%',
-                                                                transform: 'translateX(-100%) translateY(3px)'
-                                                            }}>
+                                                            <DropdownMenu>
                                                                 {MenuActions.map((item, key) =>
                                                                     item.disabled ?
                                                                         null :
@@ -387,7 +383,7 @@ function Component({
                             marginRight: 8,
                             marginLeft: 8,
                         }}>of</p>
-                        <p>{pageCount}</p>
+                        <p>{pageCount ? pageCount : '1'}</p>
                     </div>
                     <IconButton
                         disabled={!canNextPage}

@@ -188,7 +188,7 @@ function Component() {
                         disabled={edit}
                     />
                     <Input label="Status" hidden inputValue="inactive" />
-                    <Input label="In Range" type="number" inputValue={selectedRow.in_range} />
+                    <Input label="In Range" type="number" inputValue={selectedRow.in_range} addons="km" />
                     <Input label="Settlement Bank" type="select" options={banks} inputValue={selectedRow.settlement_bank} />
                     <Input label="Settlement Account No" inputValue={selectedRow.settlement_account_no} />
                     <Input label="Settlement Account Name"

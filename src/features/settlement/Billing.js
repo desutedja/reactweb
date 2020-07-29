@@ -62,14 +62,25 @@ function Component() {
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
         {
-            Header: 'Settled', accessor: row => row.payment_settled_date ? <Pill color="success">Settled</Pill> :
-                <Pill color="secondary">Unsettled</Pill>
+            Header: 'Settled', accessor: row => auth.role === 'bm' ? (row.payment_settled === 1 ? <Pill color="success">Settled</Pill> :
+            <Pill color="secondary">Unsettled</Pill>) : (row.payment_settled_date ? <Pill color="success">Settled</Pill> :
+                <Pill color="secondary">Unsettled</Pill>)
         },
         {
-            Header: 'Settlement Date', accessor: row => row.payment_settled_date ?
-                dateTimeFormatterCell(row.payment_settled_date) : '-'
+            Header: 'Settlement Date', accessor: row => auth.role === 'bm' ? (row.disbursement_date ?
+            dateTimeFormatterCell(row.disbursement_date) : '- ') : (row.payment_settled_date ?
+                dateTimeFormatterCell(row.payment_settled_date) : '-')
         },
     ], [])
+
+    
+    useEffect(() => {
+        console.log(columns)
+        if (auth.role === 'bm') {
+            console.log(columns)
+            return;
+        }
+    }, [auth.role, columns])
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +

@@ -156,8 +156,8 @@ function Component() {
                 <GoogleMapReact
                   bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
                   defaultCenter={{
-                    lat: values.lat,
-                    lng: values.long,
+                    lat: values.lat ? values.lat : -6.2107863,
+                    lng: values.long ? values.long : 106.8137977,
                   }}
                   zoom={12}
                   onClick={({ x, y, lat, lng, event }) => {

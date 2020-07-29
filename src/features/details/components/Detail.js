@@ -9,7 +9,7 @@ import Row from '../../../components/Row';
 import Column from '../../../components/Column';
 import Button from '../../../components/Button';
 
-import { toSentenceCase, dateFormatter, getCountryFromCode, getBank } from '../../../utils';
+import { toSentenceCase, dateFormatter, getCountryFromCode, getBank, dateTimeFormatter } from '../../../utils';
 import { FiTrash, FiEdit } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 
@@ -39,7 +39,7 @@ function Component({ imgPreview = false, data, labels, type = "",
                 label === "birthdate" ? dateFormatter(value, '-') :
                     label === "birthplace" ? value.toUpperCase() :
                         label === "address" ? toSentenceCase(value) :
-                            label === "created_on" ? dateFormatter(value, '-') :
+                            label === "created_on" ? dateTimeFormatter(value, '-') :
                                 label === "nationality" ? getCountryFromCode(value) :
                                     label === "account_bank" ? getBank(value, banks) :
                                         label === "gender" ?
@@ -80,7 +80,6 @@ function Component({ imgPreview = false, data, labels, type = "",
                     }}>
                         <div style={{
                             color: 'grey',
-                            fontSize: '1.2rem',
                             borderBottom: '1px solid silver',
                             width: 200,
                             marginBottom: 8,
@@ -90,15 +89,15 @@ function Component({ imgPreview = false, data, labels, type = "",
                         </div>
                         {labels[group].map((el, i) => {
                             return !el.disabled ?
-                                <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
-                                    <Column flex={3} style={{ fontWeight: 'bold', fontSize: '1em', textAlign: 'left' }}>
+                                <div className="row no-gutters" style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
+                                    <div className="col-auto" flex={3} style={{ fontWeight: 'bold', textAlign: 'left', minWidth: 200 }}>
                                         {el.lfmt ? el.lfmt(el) : formatLabel(el)}
-                                    </Column>
-                                    <Column flex={9} style={{ fontWeight: 'normal', fontSize: '1em', }}>
+                                    </div>
+                                    <div className="col" flex={9} style={{ fontWeight: 'normal' }}>
                                         {el.vfmt ? el.vfmt(data[el.label]) : el.label ? formatValue(el.label, data[el.label])
                                             : formatValue(el, data[el])}
-                                    </Column>
-                                </Row> : null;
+                                    </div>
+                                </div> : null;
                         })}
                     </div>
                 )}

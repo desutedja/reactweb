@@ -122,12 +122,14 @@ export const editMerchant = ( data, history, id) => dispatch => {
     }))
 }
 
-export const deleteMerchant = (row, history) => dispatch => {
+export const deleteMerchant = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(del(merchantEndpoint + '?id=' + row.id, 
     res => {
-      history && history.goBack()
+      history && history.push('/' + auth.role + '/merchant');
 
       dispatch(refresh());
 

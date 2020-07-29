@@ -122,7 +122,7 @@ function Component() {
             formatValues={values => ({
                 ...values,
                 phone: '62' + values.phone,
-                birth_date: values.birth_date + ' 00:00:00',
+                birth_date: values.birth_date ? values.birth_date + ' 00:00:00' : null,
             })}
             edit={data => dispatch(editResident(data, history, selected.id))}
             add={data => dispatch(createResident(data, history))}

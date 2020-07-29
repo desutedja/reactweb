@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { FiPlus, FiTrash } from 'react-icons/fi';
 
 import Button from '../../../../components/Button';
-import Table from '../../../../components/TableWithSelection';
+import Table from '../../../../components/Table';
 import Modal from '../../../../components/Modal';
 import Form from '../../../../components/Form';
 import Input from '../../../../components/Input';
@@ -68,22 +68,6 @@ function Component() {
                         onClick={() => setAddSchedule(true)}
                     />
                 ]}
-                renderActions={(selectedRowIds, page) => {
-                    // console.log(selectedRowIds, page);
-                    return ([
-                        <Button color="danger"
-                            disabled={!selectedRowIds || Object.keys(selectedRowIds).length === 0}
-                            onClick={() => {
-                                Object.keys(selectedRowIds).map(el =>
-                                    dispatch(setConfirmDelete("Are you sure to delete this item?",
-                                        () => dispatch(deleteAdsSchedule(page[el].original)))
-                                    ))
-                            }}
-                            icon={<FiTrash />}
-                            label="Delete"
-                        />,
-                    ])
-                }}
                 onClickDelete={row =>
                     dispatch(setConfirmDelete("Are you sure to delete this item?",
                         () => dispatch(deleteAdsSchedule(row))
