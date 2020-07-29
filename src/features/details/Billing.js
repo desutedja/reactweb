@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory, useRouteMatch } from 'react-router-dom';
+import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
 
 import Detail from './components/Detail';
 import Template from './components/Template';
@@ -10,7 +10,7 @@ import Table from '../../components/Table';
 import { Card } from 'reactstrap';
 import Filter from '../../components/Filter';
 import { months, dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dateFormatter } from '../../utils';
-import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
+import { getBillingUnitDetails, getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
 import { ListGroupItem, ListGroup } from 'reactstrap';
 import Pill from '../../components/Pill';
 import { FiPlus } from 'react-icons/fi';
@@ -47,7 +47,7 @@ function Component() {
             </div>},
         { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
         { Header: 'Ref Code', accessor: row => row.ref_code ? 
-           <a class="Link" href={"/" + role + "/billing/details/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
+        <a class="Link" href={"/" + role + "/billing/unit/item/record/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
         },
         { Header: 'Payment', accessor: row => 
             (

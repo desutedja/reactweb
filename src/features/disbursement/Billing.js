@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import AnimatedNumber from "animated-number-react";
 import moment from 'moment';
 
@@ -21,21 +22,6 @@ import DateRangeFilter from '../../components/DateRangeFilter';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
-const columns = [
-    { Header: 'Billing Refcode', accessor: 'trx_code' },
-    // { Header: 'Unit', accessor: 'number' },
-    { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
-    {
-        Header: 'Status', accessor: row =>
-            row.disbursement_date ? <Pill color="success">Disbursed</Pill> :
-                <Pill color="secondary">Undisbursed</Pill>
-    },
-    {
-        Header: 'Disbursed at', accessor: row => row.disbursement_date ?
-            dateTimeFormatterCell(row.disbursement_date) : '-'
-    },
-    { Header: 'Payment Channel', accessor: row => toSentenceCase(row.payment_bank) },
-]
 
 function Component() {
     const [active, setActive] = useState(0);
@@ -59,6 +45,25 @@ function Component() {
 
     const { disbursement, refreshToggle } = useSelector(state => state.billing);
     const { banks } = useSelector(state => state.main);
+
+    const { role } = useSelector(state => state.auth);
+
+    const columns = useMemo(() => ([
+        { Header: 'Billing Refcode', accessor: row => 
+        <Link href="#" className="Link" to={"/" + role + "/billing/disbursement/" + row.trx_code}>{row.trx_code}</Link> },
+        // { Header: 'Unit', accessor: 'number' },
+        { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
+        {
+            Header: 'Status', accessor: row =>
+                row.disbursement_date ? <Pill color="success">Disbursed</Pill> :
+                    <Pill color="secondary">Undisbursed</Pill>
+        },
+        {
+            Header: 'Disbursed at', accessor: row => row.disbursement_date ?
+                dateTimeFormatterCell(row.disbursement_date) : '-'
+        },
+        { Header: 'Payment Channel', accessor: row => toSentenceCase(row.payment_bank) },
+    ]), [data]);
 
     let dispatch = useDispatch();
 

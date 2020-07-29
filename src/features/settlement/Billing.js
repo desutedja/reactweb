@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link  } from 'react-router-dom';
 import { FiSearch, FiCheck, FiFile, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import { ListGroup, ListGroupItem } from 'reactstrap';
@@ -58,7 +59,8 @@ function Component() {
 
     const columns = useMemo(() => [
         { Header: 'ID', accessor: 'id' },
-        { Header: 'Ref Code', accessor: 'trx_code' },
+        { Header: 'Ref Code', accessor: row =>  <Link class="Link" 
+            to={"/" + auth.role + "/billing/settlement/" + row.trx_code}>{row.trx_code}</Link> },
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
         {

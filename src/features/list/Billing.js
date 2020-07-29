@@ -45,7 +45,7 @@ function Component() {
         { Header: 'Unit ID', accessor: 'id' },
         {
             Header: 'Unit', accessor: row => <span className="Link"
-                onClick={() => dispatch(getBillingUnitDetails(row, history, url))}
+                onClick={() => dispatch(getBillingUnitDetails(row, history, url))} 
             ><b>{toSentenceCase(row.section_type) + ' '
                 + row.section_name + ' ' + row.number}</b></span>
         },
