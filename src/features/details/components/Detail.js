@@ -89,15 +89,15 @@ function Component({ imgPreview = false, data, labels, type = "",
                         </div>
                         {labels[group].map((el, i) => {
                             return !el.disabled ?
-                                <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
-                                    <Column flex={3} style={{ fontWeight: 'bold', textAlign: 'left' }}>
+                                <div className="row no-gutters" style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
+                                    <div className="col-auto" flex={3} style={{ fontWeight: 'bold', textAlign: 'left', minWidth: 200 }}>
                                         {el.lfmt ? el.lfmt(el) : formatLabel(el)}
-                                    </Column>
-                                    <Column flex={9} style={{ fontWeight: 'normal', }}>
+                                    </div>
+                                    <div className="col" flex={9} style={{ fontWeight: 'normal' }}>
                                         {el.vfmt ? el.vfmt(data[el.label]) : el.label ? formatValue(el.label, data[el.label])
                                             : formatValue(el, data[el])}
-                                    </Column>
-                                </Row> : null;
+                                    </div>
+                                </div> : null;
                         })}
                     </div>
                 )}
