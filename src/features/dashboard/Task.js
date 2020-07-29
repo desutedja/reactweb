@@ -271,7 +271,6 @@ function Component() {
                                         <Tooltip />
                                         <CartesianGrid vertical={false} stroke="#ddd" dataKey="Time" />
                                         <Bar radius={4} dataKey="SOS" fill="rgb(237, 64, 87)" maxBarSize={80} />
-                                        <Line type="monotone" dataKey="SOS" stroke="#ff7300" />
                                     </ComposedChart>
                                 </ResponsiveContainer>
                             </div>
