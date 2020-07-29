@@ -6,6 +6,7 @@ import { dateTimeFormatter, toSentenceCase } from '../../../utils'
 import { FiCopy, FiArrowUpCircle, FiTrash } from 'react-icons/fi';
 import Detail from '../components/Detail';
 import Modal from '../../../components/Modal';
+import Building from '../../../components/cells/Building';
 import Loading from '../../../components/Loading';
 import Button from '../../../components/Button';
 import Pill from '../../../components/Pill';
@@ -55,13 +56,14 @@ function Component() {
                 disabled: (data.consumer_role === 'merchant' && data.consumer_role === 'centratama'),
                 lfmt: () => "Target Building", 
                 vfmt: (v) => v && v.length > 0 ? v.map( el => 
-                    el.building_name
-                ).join(', ') : "All" },
+                    <Pill color="primary">{el.building_name}</Pill>
+                ) : "All" },
             { label: 'building_unit', 
                 disabled: data.consumer_role !== 'resident',
                 lfmt: () => "Target Unit", 
-                vfmt: (v) => v && v.length > 0 ? v.map( el => toSentenceCase(el.section_type) + " " + 
-                    toSentenceCase(el.section_name) + " " + el.number).join(', ') : "All" },
+                vfmt: (v) => v && v.length > 0 ? v.map( el => <Pill color="primary">
+                    {toSentenceCase(el.section_type) + toSentenceCase(el.section_name) + toSentenceCase(el.number)}
+                    </Pill> ): "All" },
             { label: 'merchant',
                 disabled: data.consumer_role !== 'merchant',
                 lfmt: () => "Target Merchant",
