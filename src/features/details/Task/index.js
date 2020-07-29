@@ -128,7 +128,7 @@ function Component() {
                             lat: -6.2107863,
                             lng: 106.8137977,
                         }}
-                        zoom={12}
+                        zoom={18}
                         onClick={({ x, y, lat, lng, event }) => {
                             console.log(lat, lng);
                         }}
@@ -189,7 +189,7 @@ function Component() {
                 labels={["Details"]}
                 contents={[
                     <>
-                        <Column style={{ width: '70%' }}>
+                        <Column style={{ width: '100%' }}>
                             <Row>
                                 <Column style={{ flex: '6', display: 'block' }}>
                                     <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
@@ -221,7 +221,7 @@ function Component() {
                                         </CardBody>
                                         <CardFooter>
                                             <div style={{ textAlign: 'right', padding: '5px' }}>
-                                                <Link to="#" onClick={() => {
+                                                <Link to={"/" + role + "/chat/" + data.ref_code} onClick={() => {
                                                     dispatch(setSelected(data));
                                                     history.push("/" + role + "/chat");
                                                 }}><MdChatBubble size="17" /> Go to chatroom</Link>
