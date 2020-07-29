@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { post } from '../slice';
 
@@ -6,12 +6,18 @@ import { endpointAdmin } from '../../settings';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 
-function PGFee({id, title, toggleRefresh, modal, toggleModal}) {
+function PGFee({id, title, toggleRefresh, modal, toggleModal, data}) {
     const [fee, setFee] = useState('0');
     const [percentage, setPercentage] = useState('0');
     const [markup, setMarkup] = useState('0');
 
     let dispatch = useDispatch();
+
+    useEffect(() => {
+        setFee(data.fee);
+        setPercentage(data.percentage);
+        setMarkup(data.markup_fee);
+    }, [data])
 
     const submit = () => {
         dispatch(post(endpointAdmin + '/centratama/config/pg_fee', {

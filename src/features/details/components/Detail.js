@@ -9,7 +9,7 @@ import Row from '../../../components/Row';
 import Column from '../../../components/Column';
 import Button from '../../../components/Button';
 
-import { toSentenceCase, dateFormatter, getCountryFromCode, getBank } from '../../../utils';
+import { toSentenceCase, dateFormatter, getCountryFromCode, getBank, dateTimeFormatter } from '../../../utils';
 import { FiTrash, FiEdit } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 
@@ -39,7 +39,7 @@ function Component({ imgPreview = false, data, labels, type = "",
                 label === "birthdate" ? dateFormatter(value, '-') :
                     label === "birthplace" ? value.toUpperCase() :
                         label === "address" ? toSentenceCase(value) :
-                            label === "created_on" ? dateFormatter(value, '-') :
+                            label === "created_on" ? dateTimeFormatter(value, '-') :
                                 label === "nationality" ? getCountryFromCode(value) :
                                     label === "account_bank" ? getBank(value, banks) :
                                         label === "gender" ?

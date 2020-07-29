@@ -25,9 +25,7 @@ function Component() {
             'Availability Status': [
                 {
                     disabled: data.staff_role === "courier",
-                    label: 'on_shift', vfmt: (v) => <Pill color={data.current_shift_status ? "success" : "secondary"}>
-                        {data.current_shift_status ? "Yes" : "No"}
-                    </Pill>
+                    label: 'current_shift_status', vfmt: v => v ? <Pill color="success">On Shift</Pill> : <Pill color="secondary">No</Pill>
                 },
                 {
                     disabled: data.staff_role === "courier",
@@ -40,7 +38,7 @@ function Component() {
                 },
             ],
             'Management': [
-                'building_management_id',
+                'management_name',
                 { label: 'staff_id', lfmt: () => "Staff ID" },
                 { label: 'staff_role', lfmt: () => "Staff Role", vfmt: (v) => staffRoleFormatter(v) },
                 {

@@ -48,7 +48,6 @@ function Component() {
 
     const [utNameFilter, setUtNameFilter] = useState({});
 
-    
     const { selected, unit_type, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
@@ -96,7 +95,7 @@ function Component() {
                         inputValue={selectedRow.unit_size ? selectedRow.unit_size : typeSize}
                         setInputValue={setTypeSize} />
                     <Input label="Type Trivial Name"  placeholder="e.g. Greenwood, Sandalwood"
-                        inputValue={selectedRow.trivial_name ? selectedRow.trivial_name : typeTrivial}
+                        inputValue={selectedRow.trivial ? selectedRow.trivial : typeTrivial}
                         setInputValue={setTypeTrivial} />
                     <div style={{
                         display: 'flex',

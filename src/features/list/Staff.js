@@ -26,7 +26,7 @@ const columns = [
     {
         Header: "Available", accessor: row =>
             row.staff_role === "courier" ? (row.is_available ? <Pill color="success">Accepting Order</Pill> : <Pill color="secondary">No</Pill>) :
-                row.staff_role === "gm_bm" || row.staff_role === "pic_bm" ? "-" :
+                row.staff_role === "gm_bm" || row.staff_role === "pic_bm" ? <Pill color="success">Always</Pill> :
                     (row.current_shift_status ? <Pill color="success">On Shift</Pill> : <Pill color="secondary">No</Pill>)
     },
     {

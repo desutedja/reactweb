@@ -1,7 +1,7 @@
 import React from 'react';
 import MoonLoader from "react-spinners/MoonLoader";
 
-function Loading({ loading, size=null, children }) {
+function Loading({ loading, size=null, children=null }) {
     return (
         loading ? (
             <div className="Spinner">
