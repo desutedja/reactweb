@@ -8,6 +8,14 @@ import { get } from '../slice';
 import { useDispatch } from 'react-redux';
 import { toSentenceCase } from '../../utils';
 
+const CustomLabelList = (props) => {
+    const {x, y, stroke, value} = props;
+    console.log(props)
+    return (
+        <text textAnchor="right" dy={20} dx={10} x={x} y={y} fill={stroke} >{value}</text>
+    )
+}
+
 function Component() {
     const [adsData, setAdsData] = useState([]);
 
@@ -47,7 +55,8 @@ function Component() {
                                         <Bar maxBarSize={30} yAxisId="category" radius={4}
                                             dataKey="total_actual_view" fill="#2ad170"
                                         >
-                                            <LabelList dataKey="total_actual_view" position="insideRight" />
+                                            <LabelList dataKey="total_actual_view" stroke="white" position="insideRight"
+                                            content={<CustomLabelList/>} />
                                         </Bar>
                                     </BarChart>
                                 </ResponsiveContainer>
@@ -76,8 +85,9 @@ function Component() {
                                         <XAxis height={40} hide type="number" dy={10} tickLine={false} axisLine={false}/>
                                         <YAxis width={123} tickFormatter={category => toSentenceCase(category)} yAxisId="category" type='category' dx={-10} dataKey="content_name" tickLine={false} axisLine={false}/>
                                         <Tooltip />
-                                        <Bar maxBarSize={30} yAxisId="category" radius={4} dataKey="total_actual_click" fill="#f7b733">
-                                            <LabelList dataKey="total_actual_click" position="insideRight" />
+                                        <Bar maxBarSize={30} yAxisId="category" radius={4} dataKey="total_actual_click" fill="#f7b733">  
+                                            <LabelList dataKey="total_actual_click" stroke="white" position="insideRight"
+                                                content={<CustomLabelList/>} />
                                         </Bar>
                                     </BarChart>
                                 </ResponsiveContainer>
