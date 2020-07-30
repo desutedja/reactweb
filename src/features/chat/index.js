@@ -111,7 +111,7 @@ function Component() {
         }
 
         setLoadingRooms(true);
-        qiscus.loadRoomList && qiscus.loadRoomList(params)
+        qiscus && qiscus.loadRoomList && qiscus.loadRoomList(params)
             .then(function (rooms) {
                 // On success
                 dispatch(setRooms(rooms));
