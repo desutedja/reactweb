@@ -51,8 +51,8 @@ export const slice = createSlice({
     setRoom: (state, action) => {
       state.room = action.payload;
     },
-    setReloadList: (state, action) => {
-      state.reloadList = action.payload;
+    setReloadList: (state) => {
+      state.reloadList = !state.reloadList;
     },
     setLastMessageOnRoom: (state, action) => {
       state.lastMessageOnRoom = action.payload;

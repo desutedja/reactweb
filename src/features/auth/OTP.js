@@ -9,7 +9,7 @@ import Template from './template';
 import { closeAlert } from '../slice';
 import ClinkLoader from '../../components/ClinkLoader';
 
-const time = 5;
+const time = 60;
 
 function Page({ role }) {
     const [otp, setOtp] = useState("");
@@ -66,9 +66,9 @@ function Page({ role }) {
                         <p style={{
                             marginBottom: 20
                         }}>Silahkan periksa email anda</p>
-                        <p style={{
+                        {/* <p style={{
                             marginBottom: 8
-                        }}>(ini harusnya 1 menit, cuma di persingkat buat dev purposes)</p>
+                        }}>(ini harusnya 1 menit, cuma di persingkat buat dev purposes)</p> */}
                         {tick > 0 ? <p>00:0{tick}</p> :
                             <button type="button" onClick={() => {
                                 dispatch(login(role, email, history));

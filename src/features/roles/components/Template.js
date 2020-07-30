@@ -99,7 +99,7 @@ function Component({ role, children }) {
             AppId: 'fastel-sa-hkxoyooktyv',
             options: {
                 newMessagesCallback: message => {
-                    dispatch(setReloadList(true));
+                    dispatch(setReloadList());
                     dispatch(setNotif({
                         title: "New Message",
                         message: message[0].username + ': ' + message[0].message,
