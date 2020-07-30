@@ -153,7 +153,9 @@ function Component() {
                             {values.consumer_role.length > 0 && values.consumer_role !== 'centratama' && values.consumer_role !== 'merchant' &&
                                 <Input {...props} label="Target Building" name="target_building" type="radio" options={target_buildings}
                                     defaultValue="allbuilding"
-                                    onChange={el => setFieldValue(el.value)} />}
+                                    onChange={el => {
+                                        el === 'allbuilding' && setFieldValue('building', [])
+                                    }} />}
                             {values.consumer_role.length > 0 && values.consumer_role === 'merchant' &&
                                 <Input {...props} label="Target Merchant" name="target_merchant" type="radio" options={target_merchants}
                                     onChange={el => setFieldValue(el.value)} />}
