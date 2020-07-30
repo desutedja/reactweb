@@ -116,12 +116,12 @@ function Component() {
                                     <ThreeColumn second="Total Selling Price" third={toMoney(data.total_selling_price)} />
                                     {data.discount_code && <ThreeColumn second="Discount Code" third={toMoney(data.discount_code)} />}
                                     <ThreeColumn second={"Tax (" + data.tax_type + ")"}  third={toMoney(data.tax_price)} />
-                                    <ThreeColumn second="Profit From Product" third={toMoney(data.profit_from_sales)} />
                                     <ThreeColumn second="Discount" third={<span style={{ color: "red" }}>
                                         {"-" + toMoney(data.discount_price)}</span>} />
+                                    <ThreeColumn second="Internal Courier Charge" third={toMoney(data.courier_internal_charges)} />
+                                    <ThreeColumn second="External Courier Charge" third={toMoney(data.courier_external_charges)} />
+                                    <ThreeColumn second="Profit From Product" third={toMoney(data.profit_from_sales)} />
                                     <ThreeColumn second="Profit From PG" third={toMoney(data.profit_from_pg)} />
-                                    <ThreeColumn second="Internal Courier Charge" third={toMoney(data.profit_from_pg)} />
-                                    <ThreeColumn second="External Courier Charge" third={toMoney(data.profit_from_pg)} />
                                     <ThreeColumn second="Profit From Delivery" third={toMoney(data.profit_from_delivery)} />
                                     <ThreeColumn second={<b>Total Profit</b>} 
                                         third={<b>{toMoney(data.profit_from_delivery + data.profit_from_sales + 
