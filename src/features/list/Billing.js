@@ -59,6 +59,7 @@ function Component() {
 
     return (
         <Template
+            pagetitle="Billing List"
             title='Unit'
             columns={columns}
             slice='billing'

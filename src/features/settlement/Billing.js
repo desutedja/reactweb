@@ -104,6 +104,7 @@ function Component() {
 
     return (
         <div>
+            <h2 style={{ marginLeft: '16px', marginTop: '10px' }}>Billing Settlement</h2>
             <Breadcrumb title="Settlement" />
             <Modal
                 isOpen={uploadModal}
