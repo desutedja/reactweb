@@ -141,6 +141,8 @@ function Component() {
         phone: '62' + values.phone,
         pic_phone: '62' + values.pic_phone,
         in_buildings: values.in_buildings.map(b => b.value),
+        lat: parseFloat(values.lat),
+        long: parseFloat(values.long),
       })}
       edit={data => dispatch(editMerchant(data, history, selected.id))}
       add={data => dispatch(createMerchant(data, history))}
