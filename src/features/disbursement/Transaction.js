@@ -106,7 +106,7 @@ function Component() {
         else return [
             { Header: 'ID', accessor: 'id' },
             {
-                Header: 'Ref Code', accessor: row => <Transaction items={[row.trx_code]} id={row.ref_code} />
+                Header: 'Ref Code', accessor: row => <Transaction items={[row.ref_code]} trxcode={row.ref_code} />
             },
             {
                 Header: 'Assignee Fee', accessor: row => toMoney(row.assignee_fee)
