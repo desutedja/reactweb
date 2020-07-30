@@ -89,7 +89,7 @@ function Component({ role, children }) {
 
     useEffect(() => {
         console.log("initializing qiscus...")
-        const adminID = role === "sa" ? user.id : user.building_management_id;
+        const adminID = role === "sa" ? user.id : user.management_id;
         const prefix = (role === "sa" ? "centratama" : "management") + "-clink-";
         const userKey = prefix + "key-" + adminID;
         const userID = prefix + adminID;

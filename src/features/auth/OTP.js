@@ -69,7 +69,7 @@ function Page({ role }) {
                         {/* <p style={{
                             marginBottom: 8
                         }}>(ini harusnya 1 menit, cuma di persingkat buat dev purposes)</p> */}
-                        {tick > 0 ? <p>00:0{tick}</p> :
+                        {tick > 0 ? <p>00:{tick}</p> :
                             <button type="button" onClick={() => {
                                 dispatch(login(role, email, history));
                                 setTick(time);
