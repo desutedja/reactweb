@@ -28,6 +28,7 @@ function Component() {
     const { loading, settlement, refreshToggle } = useSelector(state => state.billing);
 
     const [search, setSearch] = useState('');
+    const [limit, setLimit] = useState(5);
 
     const [settled, setSettled] = useState('');
     const [building, setBuilding] = useState('');
@@ -86,15 +87,29 @@ function Component() {
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
-            '?limit=5&page=1' +
+            '?limit=' + limit + '&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
+                let totalItems = Number(res.data.data.total_items);
+                let restTotal = totalItems - data.length;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
+                if (data.length < totalItems && search.length === 0) {
+                    formatted.push({
+                        label: 'Load ' + (restTotal > 5 ? 5 : restTotal) + ' more',
+                        restTotal: restTotal > 5 ? 5 : restTotal,
+                        className: 'load-more'
+                    })
+                }
+
                 setBuildings(formatted);
             }))
-    }, [dispatch, search]);
+    }, [dispatch, limit, search]);
+
+    useEffect(() => {
+        if (search.length === 0) setLimit(5);
+    }, [search])
 
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
@@ -351,6 +366,10 @@ function Component() {
                                     <Filter
                                         data={buildings}
                                         onClick={(el) => {
+                                            if (!el.value) {
+                                                setLimit(limit + el.restTotal);
+                                                return;
+                                            }
                                             setBuilding(el.value);
                                             setBuildingName(el.label);
                                             toggleModal(false);

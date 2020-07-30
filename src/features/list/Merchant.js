@@ -45,6 +45,7 @@ function Component() {
     const [typeLabel, setTypeLabel] = useState('');
 
     const [search, setSearch] = useState('');
+    const [limit, setLimit] = useState(5);
 
     const [cat, setCat] = useState('');
     const [catName, setCatName] = useState('');
@@ -55,14 +56,31 @@ function Component() {
     let { url } = useRouteMatch();
 
     useEffect(() => {
-        dispatch(get(endpointMerchant + '/admin/categories', res => {
+        dispatch(get(endpointMerchant + '/admin/categories?name=' + search, res => {
             let data = res.data.data;
+            let formatted = data.map(el => ({ label: el.name, value: el.id }));
+            let limited = formatted.slice(0, limit);
+            
+            const restTotal = formatted.length - limited.length;
+            const valueLimit = 5;
 
-            let formatted = data.map(el => ({ label: el.name, value: el.name }));
+            if (limited.length < formatted.length) {
+                limited.push({
+                    label: 'load ' + (restTotal > valueLimit ? valueLimit : restTotal) + ' more',
+                    className: 'load-more',
+                    restTotal: restTotal > valueLimit ? valueLimit : restTotal
+                })
+            }
 
-            setCats(formatted);
+            setCats(limited);
         }))
-    }, [dispatch]);
+    }, [dispatch, limit, search]);
+
+    useEffect(() => {
+        if (search.length === 0) {
+            setLimit(5);
+        }
+    }, [search]);
 
     return (
         <Template
@@ -111,14 +129,20 @@ function Component() {
                             <Filter
                                 data={cats}
                                 onClick={(el) => {
+                                    if (!el.value) {
+                                        setLimit(limit + el.restTotal);
+                                        return;
+                                    }
                                     setCat(el.value);
                                     setCatName(el.label);
+                                    setLimit(5);
                                     toggleModal(false);
                                     setSearch("");
                                 }}
                                 onClickAll={() => {
                                     setCat("");
                                     setCatName("");
+                                    setLimit(5);
                                     toggleModal(false);
                                     setSearch("");
                                 }}
