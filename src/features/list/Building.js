@@ -28,6 +28,7 @@ function Component() {
     const [modalType, setType] = useState("province");
 
     const [search, setSearch] = useState("");
+    const [limit, setLimit] = useState(5);
 
     const [district, setDistrict] = useState("");
     const [districtName, setDistrictName] = useState("");
@@ -80,14 +81,28 @@ function Component() {
     }, [city, dispatch]);
 
     useEffect(() => {
-        let filtered = (modalType === "province" ? provinces :
-            modalType === "city" ? cities : districts
-        ).filter(el => el.name.toLowerCase().includes(search));
+        const searched = (modalType === "province" ? provinces :
+        modalType === "city" ? cities : districts ).filter(el => el.name.toLowerCase().includes(search));
+        let limited = searched.slice(0, limit);
+        const restTotal = searched.length - limited.length;
+        const valueLimit = 5;
 
-        modalType === "province" ? setFilteredProvinces(filtered) :
-            modalType === "city" ? setFilteredCities(filtered) :
-                setFilteredDistricts(filtered);
-    }, [cities, districts, modalType, provinces, search]);
+        if (limited.length < searched.length) {
+            limited.push({
+                name: 'load ' + (restTotal > valueLimit ? valueLimit : restTotal) + ' more',
+                className: 'load-more',
+                restTotal: restTotal > valueLimit ? valueLimit : restTotal
+            })
+        }
+
+        modalType === "province" ? setFilteredProvinces(limited) :
+            modalType === "city" ? setFilteredCities(limited) :
+                                   setFilteredDistricts(limited);
+    }, [cities, districts, modalType, provinces, search, limit]);
+
+    useEffect(() => {
+        if (search.length === 0) setLimit(5)
+    }, [search])
 
     function select(item) {
         modalType === "province" ? setProvince(item.id) :
@@ -122,30 +137,45 @@ function Component() {
                     </button>}
                     {modalType === "province" && filteredProvinces.map(el => <button
                         key={el.name}
-                        className="ListItem"
+                        className={el.className === 'load-more' ? 'ListItem load-more' : 'ListItem'}
                         onClick={() => {
+                            if (el.className === 'load-more') {
+                                setLimit(limit + el.restTotal);
+                                return;
+                            }
                             select(el)
                             toggleModal(false);
+                            setLimit(5)
                         }}
                     >
                         {el.name}
                     </button>)}
                     {modalType === "city" && filteredCities.map(el => <button
                         key={el.name}
-                        className="ListItem"
+                        className={el.className === 'load-more' ? 'ListItem load-more' : 'ListItem'}
                         onClick={() => {
+                            if (el.className === 'load-more') {
+                                setLimit(limit + el.restTotal);
+                                return;
+                            }
                             select(el)
                             toggleModal(false);
+                            setLimit(5)
                         }}
                     >
                         {el.name}
                     </button>)}
                     {modalType === "district" && filteredDistricts.map(el => <button
                         key={el.name}
-                        className="ListItem"
+                        className={el.className === 'load-more' ? 'ListItem load-more' : 'ListItem'}
                         onClick={() => {
+                            if (el.className === 'load-more') {
+                                setLimit(limit + el.restTotal);
+                                return;
+                            }
                             select(el)
                             toggleModal(false);
+                            setLimit(5)
                         }}
                     >
                         {el.name}

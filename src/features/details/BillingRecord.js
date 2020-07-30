@@ -69,7 +69,8 @@ function Component() {
 
         return  (
         <>
-        <Template
+        <Template transparent
+                pagetitle="Paid Billing Details"
                 title={trx_code}
                 loading={loading}
                 labels={["Details"]}

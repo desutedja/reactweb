@@ -8,7 +8,7 @@ import Breadcrumb from '../../../components/Breadcrumb';
 import { setConfirmDelete } from '../../slice';
 
 function Component({ columns, slice, title = '', getAction, filterVars = [],
-    filters = [], actions = [], deleteAction, sortBy, ...props }) {
+    filters = [], actions = [], deleteAction, sortBy, pagetitle, ...props }) {
 
     const {
         loading,
@@ -23,6 +23,7 @@ function Component({ columns, slice, title = '', getAction, filterVars = [],
 
     return (
         <>
+            <h2 style={{ marginLeft: '16px' }}>{pagetitle}</h2>
             <Breadcrumb title={title} />
             <div className="Container">
                 <Table

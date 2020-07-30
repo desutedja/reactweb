@@ -43,6 +43,7 @@ function Component() {
     const [merchant, setMerchant] = useState('');
     const [merchantName, setMerchantName] = useState('');
     const [merchants, setMerchants] = useState('');
+    const [limit, setLimit] = useState(5);
 
     const [cat, setCat] = useState('');
     const [catName, setCatName] = useState('');
@@ -54,25 +55,50 @@ function Component() {
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointMerchant + '/admin/list' +
-            '?limit=5&page=1' +
+            '?limit=' + limit + '&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
+                let totalItems = Number(res.data.data.total_items);
+                let restTotal = totalItems - data.length;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
+                if (data.length < totalItems) {
+                    formatted.push({
+                        label: 'load ' + (restTotal > 5 ? 5 : restTotal) + ' more',
+                        restTotal: restTotal > 5 ? 5 : restTotal,
+                        className: 'load-more'
+                    })
+                }
+
                 setMerchants(formatted);
             }))
-    }, [search, dispatch]);
+    }, [search, dispatch, limit]);
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointMerchant + '/admin/categories?name=' + search, res => {
             let data = res.data.data;
-
             let formatted = data.map(el => ({ label: el.name, value: el.id }));
+            let limited = formatted.slice(0, limit);
+            
+            const restTotal = formatted.length - limited.length;
+            const valueLimit = 5;
 
-            setCats(formatted);
+            if (limited.length < formatted.length) {
+                limited.push({
+                    label: 'load ' + (restTotal > valueLimit ? valueLimit : restTotal) + ' more',
+                    className: 'load-more',
+                    restTotal: restTotal > valueLimit ? valueLimit : restTotal
+                })
+            }
+
+            setCats(limited);
         }))
-    }, [search, dispatch]);
+    }, [search, dispatch, limit]);
+
+    useEffect(() => {
+        if (search.length === 0) setLimit(5);
+    }, [search])
 
     return (
         <Template
@@ -109,7 +135,7 @@ function Component() {
                     component: (toggleModal) =>
                         <>
                             <Input
-                                label="Search"
+                                label="Search merchant here"
                                 compact
                                 icon={<FiSearch />}
                                 inputValue={search}
@@ -118,12 +144,19 @@ function Component() {
                             <Filter
                                 data={merchants}
                                 onClick={(el) => {
+                                    if (!el.value) {
+                                        setLimit(limit + el.restTotal);
+                                        setSearch('');
+                                        return;
+                                    }
                                     setMerchant(el.value);
                                     setMerchantName(el.label);
+                                    setLimit(5);
                                     toggleModal(false);
                                     setSearch("");
                                 }}
                                 onClickAll={() => {
+                                    setLimit(5);
                                     setMerchant("");
                                     setMerchantName("");
                                     toggleModal(false);
@@ -148,6 +181,10 @@ function Component() {
                             <Filter
                                 data={cats}
                                 onClick={(el) => {
+                                    if (!el.value) {
+                                        setLimit(limit + el.restTotal);
+                                        return;
+                                    }
                                     setCat(el.value);
                                     setCatName(el.label);
                                     toggleModal(false);
