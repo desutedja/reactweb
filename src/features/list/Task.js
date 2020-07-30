@@ -46,7 +46,7 @@ const columns = [
     },
     {
         Header: "Requester", accessor: row => <Resident compact={true} id={row.requester_id}
-            data={row.requester_details} onClickPath={"resident"} />
+            data={row.requester_details} />
     },
     {
         Header: "Assignee", accessor: row => row.assignee_id ? <Staff compact={true} id={row.assignee_id}

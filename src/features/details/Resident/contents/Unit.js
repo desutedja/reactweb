@@ -169,7 +169,7 @@ function Component({ id }) {
                     <div style={{ display: 'flex', flexWrap: 'wrap' }} >
                         {subs.map(el =>
                             <div style={{ display: 'flex', marginLeft: '50px' }} onClick={() => dispatch(refresh())} >
-                                <Resident id={el.id} data={el} onClickPath={removeLastFromPath(path)} />
+                                <Resident id={el.id} data={el} />
                                 <FiX size={15} style={{ marginTop: '10px', cursor: 'pointer' }}
                                     onClick={() => { setConfirmDelete(true); setSelectedUnit(item); setSubAccount(el) }} />
                             </div>
@@ -355,7 +355,7 @@ function Component({ id }) {
                                 <>
                                     <p>This unit already has main owner, click below to get to the main owner page : </p>
                                     <div onClick={() => { setAddUnitStep(1); setAddUnit(false) }} style={{ display: 'flex', justifyContent: 'space-between' }} >
-                                        <Resident id={mainOwner.id} data={mainOwner} onClickPath={removeLastFromPath(path)} />
+                                        <Resident id={mainOwner.id} data={mainOwner} />
                                     </div>
                                 </>}
                     </form>

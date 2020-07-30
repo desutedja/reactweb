@@ -323,9 +323,9 @@ function Component() {
                                             } />
                                             <Row>
                                                 <div style={{ width: '50%', borderRight: '1px solid rgba(0,0,0,0.125)' }}>
-                                                    <Resident id={data.resident_id}
+                                                    <Resident id={data.requester}
                                                         data={{
-                                                            photo: data.resident_photo, firstname: data.requester_name,
+                                                            id: data.requester, photo: data.resident_photo, firstname: data.requester_name,
                                                             lastname: '', email: data.requester_phone
                                                         }} />
                                                 </div>
