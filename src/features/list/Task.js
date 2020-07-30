@@ -99,6 +99,7 @@ function Component() {
     const today = moment().format('yyyy-MM-DD');
 
     const [selectedRow, setRow] = useState({});
+    const [limit, setLimit] = useState(5);
     const [resolve, setResolve] = useState(false);
     const [assign, setAssign] = useState(false);
     const [staff, setStaff] = useState({});
@@ -130,15 +131,29 @@ function Component() {
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
-            '?limit=5&page=1' +
+            '?limit=' + limit + '&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
+                let totalItems = Number(res.data.data.total_items);
+                let restTotal = totalItems - data.length;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
+                if (data.length < totalItems && search.length === 0) {
+                    formatted.push({
+                        label: 'Load ' + (restTotal > 5 ? 5 : restTotal) + ' more',
+                        restTotal: restTotal > 5 ? 5 : restTotal,
+                        className: 'load-more'
+                    })
+                }
+
                 setBuildings(formatted);
             }))
-    }, [dispatch, search]);
+    }, [dispatch, search, limit]);
+
+    useEffect(() => {
+        if (search.length === 0) setLimit(5);
+    }, [search]);
 
     useEffect(() => {
 
@@ -175,13 +190,27 @@ function Component() {
             '&building_id=' + building +
             '&search=' + unitSearch +
             '&sort_field=created_on&sort_type=DESC' +
-            '&limit=10', res => setUnits(
-                res.data.data.items.map(el => ({
+            '&limit=' + limit, res => {
+                let data = res.data.data.items;
+                let totalItems = Number(res.data.data.total_items);
+                let restTotal = totalItems - data.length;
+
+                const formatted = res.data.data.items.map(el => ({
                     label: toSentenceCase(el.section_type) + " " + el.section_name + ' ' + el.number,
                     value: el.id,
                 }))
-            )))
-    }, [building, dispatch, unitSearch])
+
+                if (data.length < totalItems && unitSearch.length === 0) {
+                    formatted.push({
+                        label: 'Load ' + (restTotal > 5 ? 5 : restTotal) + ' more',
+                        restTotal: restTotal > 5 ? 5 : restTotal,
+                        className: 'load-more'
+                    })
+                }
+
+                setUnits(formatted)
+            }))
+    }, [building, dispatch, limit, unitSearch])
 
     return (
         <>
@@ -282,17 +311,23 @@ function Component() {
                                 <Filter
                                     data={units}
                                     onClick={(el) => {
+                                        if (!el.value) {
+                                            setLimit(limit + el.restTotal);
+                                            return;
+                                        }
                                         setUnit(el.value);
                                         setUnitLabel(el.label);
+                                        setLimit(5);
                                         toggleModal(false);
                                     }}
                                     onClickAll={() => {
                                         setUnit("");
+                                        setLimit(5);
                                         toggleModal(false);
                                     }}
                                 />
-                                {unitSearch ? 'Showing at most 10 matching units' : 
-                                'Showing 10 most recent units'}
+                                {/* {unitSearch ? 'Showing at most 10 matching units' : 
+                                'Showing 10 most recent units'} */}
                             </>
                     }] : [],
                     {
@@ -312,13 +347,19 @@ function Component() {
                                 <Filter
                                     data={buildings}
                                     onClick={(el) => {
+                                        if (!el.value) {
+                                            setLimit(limit + el.restTotal);
+                                            return;
+                                        }
                                         setBuilding(el.value);
                                         setBuildingName(el.label);
+                                        setLimit(5);
                                         toggleModal(false);
                                     }}
                                     onClickAll={() => {
                                         setBuilding("");
                                         setBuildingName("");
+                                        setLimit(5);
                                         toggleModal(false);
                                     }}
                                 />
