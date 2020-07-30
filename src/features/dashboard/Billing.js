@@ -140,7 +140,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Paid Amount</div>
+                            <div>Paid Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_paid_amount}
                                 formatValue={formatValuetoMoney}
                             />
@@ -149,7 +149,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Settled Amount</div>
+                            <div>Settled Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_settle_amount}
                                 formatValue={formatValuetoMoney}
                             />
@@ -158,7 +158,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Disbursed Amount</div>
+                            <div>Disbursed Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_disburse_amount}
                                 formatValue={formatValuetoMoney}
                             />
@@ -171,7 +171,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Unpaid Amount</div>
+                            <div>Unpaid Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_unpaid_amount}
                                 formatValue={formatValuetoMoney}
                             />
@@ -180,7 +180,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Unsettled Amount</div>
+                            <div>Unsettled Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_unsettled_amount}
                                 formatValue={formatValuetoMoney}
                             />
@@ -189,7 +189,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Undisbursed Amount</div>
+                            <div>Undisbursed Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_undisburse_amount}
                                 formatValue={formatValuetoMoney}
                             />
