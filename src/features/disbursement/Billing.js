@@ -13,9 +13,9 @@ import Pill from '../../components/Pill';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import { toMoney, dateTimeFormatterCell, toSentenceCase, isRangeToday } from '../../utils';
-import { downloadBillingDisbursement, getBillingDisbursement, refresh } from '../slices/billing';
+import { getBillingDisbursement, refresh } from '../slices/billing';
 import { endpointBilling } from '../../settings';
-import { get, post } from '../slice';
+import { get, post, getFile } from '../slice';
 import MyButton from '../../components/Button';
 import { FiDownload, FiCheck } from 'react-icons/fi';
 import DateRangeFilter from '../../components/DateRangeFilter';
@@ -49,8 +49,10 @@ function Component() {
     const { role } = useSelector(state => state.auth);
 
     const columns = useMemo(() => ([
-        { Header: 'Billing Refcode', accessor: row => 
-        <Link href="#" className="Link" to={"/" + role + "/billing/disbursement/" + row.trx_code}>{row.trx_code}</Link> },
+        {
+            Header: 'Billing Refcode', accessor: row =>
+                <Link href="#" className="Link" to={"/" + role + "/billing/disbursement/" + row.trx_code}>{row.trx_code}</Link>
+        },
         // { Header: 'Unit', accessor: 'number' },
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
         {
@@ -63,6 +65,7 @@ function Component() {
                 dateTimeFormatterCell(row.disbursement_date) : '-'
         },
         { Header: 'Payment Channel', accessor: row => toSentenceCase(row.payment_bank) },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     ]), [data]);
 
     let dispatch = useDispatch();
@@ -270,7 +273,14 @@ function Component() {
                                         setModal(true);
                                     }} />
                                 <Button label="Download .csv" icon={<FiDownload />}
-                                    onClick={() => dispatch(downloadBillingDisbursement())}
+                                    onClick={() => dispatch(getFile(endpointBilling + '/management/billing/disbursement/list/transaction'
+                                        + '?building_id=' + disbursement.items[active]?.building_id
+                                        + '&management_id=' + disbursement.items[active]?.id
+                                        + '&date_min=' + (status === 'disbursed' ? disbursedStart : '')
+                                        + '&date_max=' + (status === 'disbursed' ? disbursedEnd : '')
+                                        + '&export=true',
+                                        'billing_disbursement.csv',
+                                        res => {}))}
                                 />
                             </div>
                         </Card>

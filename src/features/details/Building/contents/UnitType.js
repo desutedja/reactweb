@@ -119,7 +119,8 @@ function Component() {
                 filters={[
                     {
                         hidex: !utNameFilter.label,
-                        label: <p>{utNameFilter.label ? "Name: " + utNameFilter.label : "Name: All"}</p>,
+                        label: "Type: ",
+                        value: utNameFilter.label ? utNameFilter.label : "All",
                         delete: () => { setUtNameFilter({}); },
                         component: (toggleModal) =>
                             <Filter

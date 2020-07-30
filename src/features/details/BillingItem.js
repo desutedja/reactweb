@@ -14,6 +14,7 @@ import SubmitButton from '../form/components/SubmitButton';
 import { post, get, setConfirmDelete } from '../slice';
 import { endpointBilling } from '../../settings';
 import { toMoney, dateTimeFormatter } from '../../utils';
+import { FiPlus } from 'react-icons/fi';
 
 const details =
 {
@@ -120,9 +121,6 @@ function Component() {
                     <Detail type="Billing" data={unit.selected} labels={details}
                         editable={unit.selected.payment !== 'paid'}
                         renderButtons={() => ([
-                            unit.selected.payment !== 'paid' && <Button label="Add Additional Charge" onClick={() => {
-                                setModal(true);
-                            }} />,
                             unit.selected.payment !== "paid" && <Button label="Set as Paid" onClick={() => {
                                 dispatch(payByCash({
                                     "id": unit.selected.id,
@@ -140,6 +138,12 @@ function Component() {
                         totalItems={totalItems}
                         pageCount={pageCount}
                         data={data}
+                        actions={[
+                            unit.selected.payment !== 'paid' && <Button icon={<FiPlus />}
+                                label="Add Additional Charge" onClick={() => {
+                                    setModal(true);
+                                }} />,
+                        ]}
                         onClickDelete={row => {
                             dispatch(setConfirmDelete("Are you sure to delete this item?",
                                 () => {
