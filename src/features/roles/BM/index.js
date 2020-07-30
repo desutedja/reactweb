@@ -2,7 +2,10 @@ import React, { useEffect, useState } from 'react';
 import {
     FiHome, FiUsers, FiZap, FiRss, FiVolume2, FiBarChart2
 } from "react-icons/fi";
-import { RiTaskLine, RiCustomerService2Line } from 'react-icons/ri';
+import {
+    RiStore2Line, RiTaskLine,
+    RiBuilding2Line, RiCustomerService2Line,
+} from "react-icons/ri";
 import { Redirect, Route } from 'react-router-dom';
 
 import Template from '../components/Template';
@@ -37,7 +40,7 @@ const modules = [
         component: <Dashboard />,
     },
     {
-        icon: <FiHome className="MenuItem-icon" />,
+        icon: <RiBuilding2Line className="MenuItem-icon" />,
         label: "Building",
         path: "/building",
         component: <Building />,
@@ -99,9 +102,9 @@ function Component() {
     const [menus, setMenus] = useState(modules || []);
 
     useEffect(() => {
-        const modulesLabel = blacklist_modules.map(module => module.module);
+        const modulesLabel = blacklist_modules?.map(module => module.module);
         const modulesFilter = menus.filter(menu => {
-            const truthy = modulesLabel.some(label => label === menu.label.toLowerCase())
+            const truthy = modulesLabel?.some(label => label === menu.label.toLowerCase())
             return !truthy
         })
         setMenus(modulesFilter)
