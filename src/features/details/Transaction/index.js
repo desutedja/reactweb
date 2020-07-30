@@ -120,9 +120,13 @@ function Component() {
                                         {"-" + toMoney(data.discount_price)}</span>} />
                                     <ThreeColumn second="Internal Courier Charge" third={toMoney(data.courier_internal_charges)} />
                                     <ThreeColumn second="External Courier Charge" third={toMoney(data.courier_external_charges)} />
+                                    <ThreeColumn second="Markup delivery" third={toMoney(data.profit_from_delivery)} />
+                                    <ThreeColumn second="PG Fee" third={toMoney(data.payment_charge)} />
+                                    <ThreeColumn second={<b>Total Paid Amount</b>} third={<b>{toMoney(data.payment_amount)}</b>} />
+                                    <hr/>
+                                    <ThreeColumn second="Profit From Delivery" third={toMoney(data.profit_from_delivery)} />
                                     <ThreeColumn second="Profit From Product" third={toMoney(data.profit_from_sales)} />
                                     <ThreeColumn second="Profit From PG" third={toMoney(data.profit_from_pg)} />
-                                    <ThreeColumn second="Profit From Delivery" third={toMoney(data.profit_from_delivery)} />
                                     <ThreeColumn second={<b>Total Profit</b>} 
                                         third={<b>{toMoney(data.profit_from_delivery + data.profit_from_sales + 
                                             data.profit_from_pg - data.discount_price)}</b>} />
