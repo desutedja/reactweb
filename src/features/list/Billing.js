@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { FiSearch, FiDownload, FiPlus } from 'react-icons/fi';
+import { FiSearch, FiDownload, FiPlus, FiUpload } from 'react-icons/fi';
 
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
@@ -97,9 +97,12 @@ function Component() {
                 },
             ] : []}
             actions={[
+                <Button label="Upload Bulk" icon={<FiUpload />}
+                    onClick={() => dispatch(downloadBillingUnit(search, building))}
+                />,
                 <Button label="Download .csv" icon={<FiDownload />}
                     onClick={() => dispatch(downloadBillingUnit(search, building))}
-                />
+                />,
             ]}
             onClickAddBilling={row => {
                 dispatch(setSelected(row));
