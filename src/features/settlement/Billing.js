@@ -74,7 +74,7 @@ function Component() {
             dateTimeFormatterCell(row.disbursement_date) : '- ') : (row.payment_settled_date ?
                 dateTimeFormatterCell(row.payment_settled_date) : '-')
         },
-    ], [])
+    ], [auth])
 
     
     useEffect(() => {
@@ -225,6 +225,9 @@ function Component() {
                     }, res => {
                         dispatch(refresh());
                         setSettleModal(false);
+                        dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
+                            setInfo(res.data.data);
+                        }))
                     }))
                 }}
             >

@@ -218,6 +218,9 @@ function Component() {
                     dispatch(post(endpointTransaction + '/admin/transaction/settlement/create', dataSettle, res => {
                         setSettleModal(false);
                         dispatch(refresh());
+                        dispatch(get(endpointTransaction + '/admin/transaction/summary', res => {
+                            setInfo(res.data.data);
+                        }));
                     }))
                 }}
             >
