@@ -84,6 +84,7 @@ function Component({ id }) {
     }, [role, selected])
 
     useEffect(() => {
+        setMainOwner();
         addUnitStep === 3 && selectedUnit !== '' && dispatch(get(endpointResident + '/management/resident/get_main_owner/' + selectedUnit.value.id,
             res => {
                 if (res.data.data.resident && res.data.data.resident.id !== 0) {
