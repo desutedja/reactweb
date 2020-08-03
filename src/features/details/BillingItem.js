@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 
 import Detail from './components/Detail';
 import Template from './components/Template';
@@ -10,38 +10,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { payByCash, getBillingUnitItem } from '../slices/billing';
 import { Formik, Form } from 'formik';
 import Input from '../form/input';
+import Pill from '../../components/Pill';
 import SubmitButton from '../form/components/SubmitButton';
 import { post, get, setConfirmDelete } from '../slice';
 import { endpointBilling } from '../../settings';
-import { toMoney, dateTimeFormatter } from '../../utils';
+import { toMoney, dateFormatter, dateTimeFormatter } from '../../utils';
 import { FiPlus } from 'react-icons/fi';
-
-const details =
-{
-    'Information': [
-        'created_on',
-        'ref_code',
-        'name',
-        'group',
-        'service',
-        'previous_usage',
-        'recent_usage',
-        {label: 'price_unit', vfmt: v => toMoney(v)},
-        'denom_unit',
-        'month',
-        'year',
-        'due_date',
-        'payment',
-        'payment_date',
-        {label: 'subtotal', vfmt: v => toMoney(v)},
-        'tax',
-        {label: 'tax_amount', vfmt: v => v ? toMoney(v) : '-'},
-        {label: 'tax_value',  vfmt: v => v ? toMoney(v) : '-'},
-        {label: 'total', vfmt: v => toMoney(v)},
-        {label: 'additional_charge_amount', vfmt: v => toMoney(v)},
-        {label: 'total_amount', vfmt: v => toMoney(v)},
-    ],
-};
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -50,6 +24,10 @@ const columns = [
     { Header: 'Charge Description', accessor: 'charge_description' },
     { Header: 'Charge Price', accessor: row => toMoney(row.charge_price) },
 ]
+
+const months = [
+    "", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",
+];
 
 function Component() {
     const [modal, setModal] = useState(false);
@@ -62,7 +40,38 @@ function Component() {
 
     const { unit } = useSelector(state => state.billing);
 
+    const { role } = useSelector(state => state.auth);
+
     let dispatch = useDispatch();
+
+    const details = useMemo(() => (
+    {
+        'Information': [
+            'created_on',
+            {label: 'month', vfmt: v => <>{months[v]} {unit.selected.year}</>},
+            {label: 'name', lfmt: () => "Billing Name", vfmt: v => v} ,
+            {label: 'group', vfmt: (v) => v === 'ipl' ? "IPL" : "Non-IPL" },
+            'service_name',
+            {label: 'previous_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
+            {label: 'recent_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
+            {label: 'price_unit', vfmt: v => <>{toMoney(v)}{unit.selected.denom_unit && ("/"+unit.selected.denom_unit)}</> },
+        ],
+        'Payment Calculation': [
+            {label: 'subtotal', vfmt: v => toMoney(v)},
+            {label: 'tax', vfmt: (v) => <>{toMoney(unit.selected.tax_amount)} ({v === "percentage" ? (unit.selected.tax_value + "%") : "fixed"})</>},
+            //{label: 'tax_amount', vfmt: v => v ? toMoney(v) : '-'},
+            //{label: 'tax_value',  vfmt: v => v ? toMoney(v) : '-'},
+            {label: 'total', vfmt: v => toMoney(v)},
+            {label: 'additional_charge_amount', vfmt: v => toMoney(v)},
+            {label: 'total_amount', vfmt: v => toMoney(v)},
+        ],
+        'Payment Information': [
+            {label: 'due_date', vfmt: v => dateFormatter(v) },
+            'ref_code',
+            {label: 'payment', vfmt: v => <Pill color={v === "paid" ? "success": "secondary"}>{v}</Pill>},
+            {label: 'payment_date', vfmt: v => dateTimeFormatter(v) },
+        ],
+    }),[ unit.selected, role ]);
 
     useEffect(() => {
         setLoading(true);
