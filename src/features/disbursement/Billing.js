@@ -90,7 +90,7 @@ function Component() {
         <div>
             <Breadcrumb title="Disbursement" />
             <Modal isOpen={modal} toggle={() => {
-                setSelected([]);
+                // setSelected([]);
                 setModal(!modal)
             }}
                 title="Disbursement Selection"
