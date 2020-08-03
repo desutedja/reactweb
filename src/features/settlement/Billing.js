@@ -216,7 +216,7 @@ function Component() {
             </Modal>
             <Modal isOpen={settleModal} toggle={() => {
                 setSettleModal(!settleModal)
-                setSelected([]);
+                // setSelected([]);
             }}
                 title="Settlement Selection"
                 okLabel="Settle"

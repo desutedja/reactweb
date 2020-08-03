@@ -370,7 +370,6 @@ function Component() {
                         ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, statusSettlement, settlementStart, settlementEnd])}
-                    onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}
                     filters={[
                         ...statusSettlement.value === 'settled' ? [{
                             hidex: isRangeToday(settlementStart, settlementEnd),
