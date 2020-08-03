@@ -86,7 +86,7 @@ function Component() {
                 setStaffs(formatted);
             }))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, search, data]);
+    }, [dispatch, search, data, assign]);
 
     return (
         <>
@@ -158,27 +158,27 @@ function Component() {
             >
                 Are you sure you want to resolve this task?
             </Modal>
-            <Modal isOpen={assign} toggle={() => setAssign(false)} disableHeader
-                disableFooter={staffs.length === 0}
-                okLabel="Yes"
-                onClick={() => {
-                    setStaff({});
-                    setAssign(false);
-                    dispatch(reassignTask({
-                        "task_id": data.id,
-                        "assignee_id": staff.value,
-                    }));
-                }}
-                cancelLabel="No"
+            <Modal 
+                title="Assign Staff"
+                subtitle="Choose eligible staffs to assign for this task"
+                isOpen={assign} 
+                toggle={() => setAssign(false)} 
+                cancelLabel="Cancel"
                 onClickSecondary={() => {
                     setStaff({});
                     setAssign(false);
                 }}
             >
-                Choose assignee:
-                {staffs.length !== 0 && !staff.value && <Input label="Search" icon={<FiSearch />}
-                    compact inputValue={search} setInputValue={setSearch} />}
-                <Filter data={staff.value ? [staff] : staffs} onClick={el => setStaff(el)} />
+                    <Filter data={staff.value ? [staff] : staffs} onClick={
+                        el => {
+                            dispatch(reassignTask({
+                                "task_id": parseInt(data.task_id),
+                                "assignee_id": el.value,
+                            })); 
+                            setStaff({});
+                            setAssign(false)
+                        }
+                    } />
                 {staffs.length === 0 && <p style={{
                     fontStyle: 'italic'
                 }}>No elligible staff found.</p>}
