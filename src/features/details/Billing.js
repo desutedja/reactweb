@@ -215,11 +215,12 @@ function Component() {
                                         Summary {unit.items && unit.items.billing && unit.items.billing[active] ? 
                                             "for " + unit.items.billing[active].billing_month : ""}
                                     </CardTitle>
+                                    {(unit.items && unit.items.billing) ? <>
                                     <ThreeColumn second="Total Paid" third={toMoney(unit.items.billing[active].group_amount)} />
                                     <ThreeColumn second="Total Penalty" 
                                         third={<span style={{ color: 'red' }}>
                                             {toMoney(unit.items.billing[active].group_penalty)}</span>} />
-                                    <ThreeColumn second="Total" third={<h4>{toMoney(unit.items.billing[active].total_group_amount)}</h4>}/>
+                                    <ThreeColumn second="Total" third={<h4>{toMoney(unit.items.billing[active].total_group_amount)}</h4>}/></> : "-"}
                                     {/* JSON.stringify(unit.items, null, 4) */}
                                 </CardBody>
                             </Card>
