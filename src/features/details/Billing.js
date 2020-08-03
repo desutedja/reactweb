@@ -16,8 +16,9 @@ import { months, dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dat
 import { getBillingUnitDetails, getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
 import { ListGroupItem, ListGroup } from 'reactstrap';
 import Pill from '../../components/Pill';
-import { FiPlus } from 'react-icons/fi';
+import { FiClock, FiPlus } from 'react-icons/fi';
 import BillingItem from '../../components/cells/BillingItem';
+import moment from 'moment';
 
 const details =
 {
@@ -38,15 +39,23 @@ function Component() {
     let history = useHistory();
     let { url } = useRouteMatch();
 
+    function isLate(payment, due_date, payment_date) {
+        return payment === "paid" ? moment.utc(payment_date).isAfter(moment.utc(due_date)) : 
+                 moment.utc().isAfter(moment.utc(due_date))
+    }
+
     const columns = useMemo(() => ([
         { Header: 'ID', accessor: 'id' },
-        { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name, row.service_name]} />},
-        { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
-        { Header: 'Total', accessor: row => toMoney(row.total) },
-        { Header: 'Month', accessor: row => <div style={{ display: 'block' }}>
-                <div>{months.find(el => el.value === row.month).label}</div>
-                <div>{row.year}</div>
-            </div>},
+        { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name, <>{row.service_name} - {row.group === 'ipl' ? 'IPL' : 'Non-IPL'}</>]} />},
+        { Header: 'Total', accessor: row => 
+        <div style={{ display: 'block' }}>
+            <div>{toMoney(row.total)}</div>
+            { row.total_additional_charge > 0 && <div>+ {toMoney(row.total_additional_charge)}</div>}
+        </div>},
+        //{ Header: 'Month', accessor: row => <div style={{ display: 'block' }}>
+        //        <div>{months.find(el => el.value === row.month).label}</div>
+        //        <div>{row.year}</div>
+        //    </div>},
         { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
         { Header: 'Ref Code', accessor: row => row.ref_code ? 
         <a class="Link" href={"/" + role + "/billing/unit/item/record/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
@@ -59,10 +68,15 @@ function Component() {
             )
         },
         {
-            Header: 'Payment Date', accessor: row => row.payment_date ? dateTimeFormatterCell(row.payment_date)
+            Header: 'Payment Date', accessor: row => row.payment_date ? 
+            <div>
+                <div>{dateTimeFormatterCell(row.payment_date)}</div>
+                {isLate(row.payment, row.due_date, row.payment_date) && 
+                    <div style={{color: 'red'}}><FiClock/> Overdue Payment</div>}
+            </div>
                 : '-'
         },
-    ]), [ role ]);
+    ]), [ role, isLate ]);
 
     useEffect(() => {
         console.log("selected => ");
@@ -73,7 +87,7 @@ function Component() {
 
     useEffect(() => {
         setItems([]);
-        unit.items && unit.items.billing[active] && setItems(unit.items.billing[active].billing_item
+        unit.items && unit.items.billing && unit.items.billing[active] && setItems(unit.items.billing[active].billing_item
             .filter(el => status === '' ? true : el.payment === status));
     }, [unit.items, active, status]);
 
@@ -110,8 +124,8 @@ function Component() {
                                 />
                             </div>
                             <ListGroup>
-                                {unit?.items?.billing.length > 0 ? 
-                                unit?.items?.billing.map((el, index) => <ListGroupItem 
+                                {unit?.items?.billing?.length > 0 ? 
+                                unit?.items?.billing?.map((el, index) => <ListGroupItem 
                                     style={{ cursor: "pointer" }}
                                     active={index === active} 
                                     tag="b"
@@ -166,12 +180,9 @@ function Component() {
                                     },
                                 ]}
                                 actions={[
-                                <>Billing Items {unit.items && unit.items.billing[active] ? 
+                                <>Billing Items {unit.items && unit.items.billing && unit.items.billing[active] ? 
                                         "for " + unit.items.billing[active].billing_month : ""}</>
                                 ]}
-                                onClickDetails={row => {
-                                    dispatch(getBillingUnitItemDetails(row, history, url))
-                                }}
                                 deleteSelection={(selectedRows, rows) => {
                                     Object.keys(selectedRows).map(el => dispatch(deleteBillingUnitItem(
                                         rows[el].original.id)));
@@ -180,7 +191,7 @@ function Component() {
                         </Card>
                     </Row>
                     <Row>
-                        <Column>
+                        <Column style={{ display: 'block' }}>
                             <Card style={{
                                 marginLeft: 16,
                                 marginRight: 20,
@@ -193,7 +204,7 @@ function Component() {
                                 </CardBody>
                             </Card>
                         </Column>
-                        <Column>
+                        <Column style={{ display: 'block' }}>
                             <Card style={{
                                 marginRight: 16,
                                 marginBottom: 20,
@@ -201,12 +212,15 @@ function Component() {
                             }}>
                                 <CardBody>
                                     <CardTitle>
-                                        Summary {unit.items && unit.items.billing[active] ? "for " + unit.items.billing[active].billing_month : ""}
+                                        Summary {unit.items && unit.items.billing && unit.items.billing[active] ? 
+                                            "for " + unit.items.billing[active].billing_month : ""}
                                     </CardTitle>
-                                    <ThreeColumn second="Total Paid" third="Rp 123.123.123" />
-                                    <ThreeColumn second="Total Unpaid" third="Rp 123.123.123" />
-                                    <ThreeColumn second="Total Penalty" third="Rp 123.123.123" />
-                                    <ThreeColumn second="Total" third={<h4>{toMoney(items.reduce((sum, el) => sum + el.total, 0))}</h4>}/>
+                                    <ThreeColumn second="Total Paid" third={toMoney(unit.items.billing[active].group_amount)} />
+                                    <ThreeColumn second="Total Penalty" 
+                                        third={<span style={{ color: 'red' }}>
+                                            {toMoney(unit.items.billing[active].group_penalty)}</span>} />
+                                    <ThreeColumn second="Total" third={<h4>{toMoney(unit.items.billing[active].total_group_amount)}</h4>}/>
+                                    {/* JSON.stringify(unit.items, null, 4) */}
                                 </CardBody>
                             </Card>
                         </Column>
