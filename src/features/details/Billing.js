@@ -216,8 +216,8 @@ function Component() {
                                             "for " + unit.items.billing[active].billing_month : ""}
                                     </CardTitle>
                                     {(unit.items && unit.items.billing) ? <>
-                                    <ThreeColumn second="Total Paid" third={toMoney(unit.items.billing[active].group_amount)} />
-                                    <ThreeColumn second="Total Penalty" 
+                                    <ThreeColumn second="Subtotal" third={toMoney(unit.items.billing[active].group_amount)} />
+                                    <ThreeColumn second="Penalty" 
                                         third={<span style={{ color: 'red' }}>
                                             {toMoney(unit.items.billing[active].group_penalty)}</span>} />
                                     <ThreeColumn second="Total" third={<h4>{toMoney(unit.items.billing[active].total_group_amount)}</h4>}/></> : "-"}
