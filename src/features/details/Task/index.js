@@ -219,14 +219,14 @@ function Component() {
                                                 </div>
                                             </div>
                                         </CardBody>
-                                        <CardFooter>
+                                        { role === "bm" && <CardFooter>
                                             <div style={{ textAlign: 'right', padding: '5px' }}>
                                                 <Link to={"/" + role + "/chat/" + data.ref_code} onClick={() => {
                                                     dispatch(setSelected(data));
                                                     history.push("/" + role + "/chat");
                                                 }}><MdChatBubble size="17" /> Go to chatroom</Link>
                                             </div>
-                                        </CardFooter>
+                                        </CardFooter> }
                                     </Card>
                                     <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                         <CardBody>
