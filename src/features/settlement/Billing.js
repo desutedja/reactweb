@@ -16,7 +16,7 @@ import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
 import { getBillingSettlement, downloadBillingSettlement, refresh } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
-import { toMoney, dateTimeFormatterCell, isRangeToday } from '../../utils';
+import { toMoney, dateTimeFormatterCell, isRangeToday, toSentenceCase } from '../../utils';
 import { get, post } from '../slice';
 import DateRangeFilter from '../../components/DateRangeFilter';
 
@@ -61,7 +61,8 @@ function Component() {
     const columns = useMemo(() => [
         { Header: 'ID', accessor: 'id' },
         { Header: 'Ref Code', accessor: row =>  <Link class="Link" 
-            to={"/" + auth.role + "/billing/settlement/" + row.trx_code}>{row.trx_code}</Link> },
+            to={"/" + auth.role + "/billing/settlement/" + row.trx_code}><b>{row.trx_code}</b></Link> },
+        { Header: 'Unit', accessor: row => <>{toSentenceCase(row.section_type)} {toSentenceCase(row.section_name)} {row.number}</>  },
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
         {
