@@ -40,7 +40,7 @@ function Component() {
 
     const columns = useMemo(() => ([
         { Header: 'ID', accessor: 'id' },
-        { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name]} />},
+        { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name, row.service_name]} />},
         { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
         { Header: 'Total', accessor: row => toMoney(row.total) },
         { Header: 'Month', accessor: row => <div style={{ display: 'block' }}>
