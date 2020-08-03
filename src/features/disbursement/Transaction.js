@@ -418,6 +418,7 @@ function Component() {
                                         <div className="col">
                                             <h5 style={{
                                                 marginBottom: 0,
+                                                minWidth: 100
                                             }}>Select Merchant</h5>
                                         </div>
                                         <div className="col-auto">
@@ -483,6 +484,7 @@ function Component() {
                                         <div className="col">
                                             <h5 style={{
                                                 marginBottom: 0,
+                                                minWidth: 100
                                             }}>Select Courier</h5>
                                         </div>
                                         <div className="col-auto">
