@@ -65,13 +65,15 @@ function Component() {
     ]), [ role ]);
 
     useEffect(() => {
+        console.log("selected => ");
+        console.log(selected);
         dispatch(getBillingUnitItem(0, 100, '',
-            selected, status));
+            {id: selected.id, building_id: selected.building_id}, status));
     }, [dispatch, refreshToggle, selected, status])
 
     useEffect(() => {
         setItems([]);
-        unit.items[active] && setItems(unit.items[active].billing_item
+        unit.items && unit.items.billing[active] && setItems(unit.items.billing[active].billing_item
             .filter(el => status === '' ? true : el.payment === status));
     }, [unit.items, active, status]);
 
@@ -108,8 +110,8 @@ function Component() {
                                 />
                             </div>
                             <ListGroup>
-                                {unit.items.length > 0 ? 
-                                unit.items.map((el, index) => <ListGroupItem 
+                                {unit?.items?.billing.length > 0 ? 
+                                unit?.items?.billing.map((el, index) => <ListGroupItem 
                                     style={{ cursor: "pointer" }}
                                     active={index === active} 
                                     tag="b"
@@ -164,7 +166,8 @@ function Component() {
                                     },
                                 ]}
                                 actions={[
-                                    <>Billing Items {unit.items[active] ? "for " + unit.items[active].billing_month : ""}</>
+                                <>Billing Items {unit.items && unit.items.billing[active] ? 
+                                        "for " + unit.items.billing[active].billing_month : ""}</>
                                 ]}
                                 onClickDetails={row => {
                                     dispatch(getBillingUnitItemDetails(row, history, url))
@@ -197,7 +200,9 @@ function Component() {
                                 flex: 8,
                             }}>
                                 <CardBody>
-                                    <CardTitle>Summary {unit.items[active] ? "for " + unit.items[active].billing_month : ""}</CardTitle>
+                                    <CardTitle>
+                                        Summary {unit.items && unit.items.billing[active] ? "for " + unit.items.billing[active].billing_month : ""}
+                                    </CardTitle>
                                     <ThreeColumn second="Total Paid" third="Rp 123.123.123" />
                                     <ThreeColumn second="Total Unpaid" third="Rp 123.123.123" />
                                     <ThreeColumn second="Total Penalty" third="Rp 123.123.123" />
