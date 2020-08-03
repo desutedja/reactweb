@@ -138,6 +138,7 @@ export function toSentenceCase(sentence) {
 }
 
 export function toMoney(money) {
+    money = Math.floor(money);
     return "Rp " + (!money ? "0" : money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")) + ',00';
 }
 
