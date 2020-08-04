@@ -29,7 +29,7 @@ const adsPayload = {
     os: "all",
 
     target_building: 'allbuilding',
-    building: [],
+    building_list: [],
 
     content_name: "",
     content_type: "image",
@@ -139,8 +139,9 @@ function Component() {
                 os: selected.os ? selected.os : 'all',
                 start_date: selected.start_date.split('T')[0],
                 end_date: selected.end_date.split('T')[0],
-                target_building: selected.building && selected.building.length > 0 ? 'specificbuilding' : 'allbuilding',
-                building: selected.building && selected.building.map(el => ({ label: el.building_name, value: el.building_id })),
+                target_building: selected.building_list && selected.building_list.length > 0 ? 'specificbuilding' : 'allbuilding',
+                building_list: selected.building_list && selected.building_list.map(el => 
+                    ({ label: el.building_name, value: el.building_id })),
             } : adsPayload}
             schema={adsSchema}
             formatValues={values => {
@@ -155,7 +156,7 @@ function Component() {
                         start_date: ads.start_date + ' 00:00:00',
                         end_date: ads.end_date + ' 23:59:59',
                         default_priority_score: scoreDef,
-                        building: values.building.map(el => el.value),
+                        building_list: values.building_list.map(el => el.value),
                     },
                     schedules: schedules,
                 }
@@ -214,8 +215,8 @@ function Component() {
                             }} />
                         {values.target_building === "specificbuilding" &&
                             <Input {...props} type="multiselect"
-                                label="Select Building(s)" name="building"
-                                defaultValue={values.building}
+                                label="Select Building(s)" name="building_list"
+                                defaultValue={values.building_list}
                                 placeholder="Start typing building name to add" options={buildings}
                                 onInputChange={(e, value) => value === '' ? setBuildings([]) : setSearchbuilding(value)}
                                 onChange={(e, value) => {
