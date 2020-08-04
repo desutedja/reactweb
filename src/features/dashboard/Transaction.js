@@ -73,7 +73,6 @@ function Component() {
             res => {
                 setLoading(false);
                 setTrxData(res.data.data.graph);
-                console.log(res.data.data)
             }))
     }, [dispatch, range]);
 

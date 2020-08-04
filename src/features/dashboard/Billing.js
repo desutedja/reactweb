@@ -4,7 +4,9 @@ import { useHistory } from 'react-router-dom';
 import moment from 'moment';
 import parser from 'html-react-parser';
 
-import { FiUsers, FiBriefcase } from 'react-icons/fi';
+import ClinkLoader from '../../components/ClinkLoader';
+import { Line, Legend, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+    ComposedChart, ResponsiveContainer } from 'recharts';import { FiUsers, FiBriefcase } from 'react-icons/fi';
 import { FaTools, FaBoxOpen } from 'react-icons/fa';
 import { MdSecurity } from 'react-icons/md';
 import { RiBuilding2Line, RiBuilding4Line, RiHotelLine } from 'react-icons/ri';
@@ -30,6 +32,7 @@ function Component() {
     const announcementLists = notification.items
         .filter(item => item.topic === 'announcement');
 
+    const [loading, setLoading] = useState(false);
     const [range, setRange] = useState('mtd');
     const [billingData, setBillingData] = useState({});
     const [staffData, setStaffData] = useState({});
@@ -132,12 +135,12 @@ function Component() {
                     </div>
                 </div>}
             </div>
-            {/* <div className="row no-gutters">
+            <div className="row no-gutters">
                 <div className="col-12">
                     <div className="Container flex-column pr-4">
                         <div className="row mb-5 justify-content-between">
                             <div className="col">
-                                <h5>Transaction Statistics</h5>
+                                <h5>Billing Statistics</h5>
                             </div>
                             <div className="col-auto">
                                 <div style={{
@@ -184,7 +187,7 @@ function Component() {
                                 <ClinkLoader />
                             </div>}
                                 <ResponsiveContainer width='100%'>
-                                    <ComposedChart data={trxDataFormatted}>
+                                    <ComposedChart data={[]}>
                                         <XAxis dy={10} height={50} dataKey="Date" />
                                         <YAxis orientation="right"
                                             width={90} dx={10} dataKey="Total Transaction"
@@ -195,7 +198,7 @@ function Component() {
                                                 (el + '').slice(0, -3) + 'k' : el}
                                         />
                                         <Tooltip />
-                                        <Legend />
+                                        {/* <Legend /> */}
                                         <CartesianGrid vertical={false} stroke="#ddd" dataKey="Date" />
                                         <Bar radius={4} dataKey="Amount Transaction" fill="#004e92" 
                                         yAxisId="right" maxBarSize={70} className="cursor-pointer"
@@ -214,7 +217,7 @@ function Component() {
                         </div>
                     </div>
                 </div>
-            </div> */}
+            </div>
             <div className="Row">
                 <div className="Container cursor-pointer" style={{
                     // marginLeft: 16,
