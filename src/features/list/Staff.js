@@ -4,12 +4,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import {  FiPlus } from 'react-icons/fi';
 
 import { toSentenceCase } from '../../utils';
+import { endpointAdmin } from '../../settings';
+import { FiSearch } from 'react-icons/fi';
 
 import Button from '../../components/Button';
+import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Pill from '../../components/Pill';
 import Staff from '../../components/cells/Staff';
 import { getStaff, setSelected, deleteStaff } from '../slices/staff';
+import { get } from '../slice';
 
 import Template from './components/Template';
 
@@ -60,8 +64,10 @@ function Component({ view }) {
     const [shiftLabel, setShiftLabel] = useState('');
 
     const [building,
-        // setBuilding
+         setBuilding
     ] = useState('');
+    const [buildings, setBuildings] = useState('');
+    const [buildingLabel, setBuildingLabel] = useState('');
 
     const [management,
         // setManagement
@@ -70,6 +76,30 @@ function Component({ view }) {
     const [role, setRole] = useState(history.location.state ? history.location.state.role : '');
     const [roleLabel, setRoleLabel] = useState(history.location.state ? history.location.state.roleLabel : '');
 
+    const [search, setSearch] = useState('');
+    const [limit, setLimit] = useState(5);
+
+    useEffect(() => {
+        (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
+            '?limit=' + limit + '&page=1' +
+            '&search=' + search, res => {
+                let data = res.data.data.items;
+                let totalItems = Number(res.data.data.total_items);
+                let restTotal = totalItems - data.length;
+
+                let formatted = data.map(el => ({ label: el.name, value: el.id }));
+
+                if (data.length < totalItems && search.length === 0) {
+                    formatted.push({
+                        label: 'Load ' + (restTotal > 5 ? 5 : restTotal) + ' more',
+                        restTotal: restTotal > 5 ? 5 : restTotal,
+                        className: 'load-more'
+                    })
+                }
+
+                setBuildings(formatted);
+            }))
+    }, [dispatch, search, limit]);
 
     useEffect(() => {
         if (auth.role === 'bm') {
@@ -83,6 +113,7 @@ function Component({ view }) {
             if (isSecurity) delete roles[4];
         }
     }, [auth])
+
     return (
         <Template
             view={view}
@@ -91,6 +122,41 @@ function Component({ view }) {
             getAction={getStaff}
             filterVars={[role, building, shift, management]}
             filters={[
+                    {
+                        hidex: building === "",
+                        label: "Building: ",
+                        value: building ? buildingLabel : "All",
+                        delete: () => { setBuilding(""); },
+                        component: (toggleModal) =>
+                            <>
+                                <Input
+                                    label="Search Building"
+                                    compact
+                                    icon={<FiSearch />}
+                                    inputValue={search}
+                                    setInputValue={setSearch}
+                                />
+                                <Filter
+                                    data={buildings}
+                                    onClick={(el) => {
+                                        if (!el.value) {
+                                            setLimit(limit + el.restTotal);
+                                            return;
+                                        }
+                                        setBuilding(el.value);
+                                        setBuildingLabel(el.label);
+                                        setLimit(5);
+                                        toggleModal(false);
+                                    }}
+                                    onClickAll={() => {
+                                        setBuilding("");
+                                        setBuildingLabel("");
+                                        setLimit(5);
+                                        toggleModal(false);
+                                    }}
+                                />
+                            </>
+                    },
                 {
                     hidex: shift === "",
                     label: <p>{shiftLabel ? "Availability: " + shiftLabel : "Availability: All"}</p>,
