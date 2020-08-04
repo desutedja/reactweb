@@ -40,8 +40,7 @@ const labels = {
     ],
 };
 
-function Component() {
-
+function Component({ view }) {
     const { product } = useSelector(state => state);
     const data = product.selected;
     // const [data, setData] = useState(product.selected || {});
@@ -135,7 +134,7 @@ function Component() {
                 loading={!data.id}
                 labels={["Details", "Images"]}
                 contents={[
-                    <Detail data={data} labels={labels} editable={false}
+                    <Detail view={view} data={data} labels={labels} editable={false}
                         renderButtons={() => [
                             <Button label="Adjust Fees & Discount" onClick={() => {
                                 setModalFee(true);

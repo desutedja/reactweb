@@ -47,7 +47,6 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointManagement + '/admin/staff/statistics', res => {
             setStaffData(res.data.data);
-            console.log(res.data.data)
         }))
     }, [dispatch]);
 
@@ -69,7 +68,7 @@ function Component() {
                 {auth.role === 'sa' && <div className="col">
                     <div className="Container color-2 d-flex flex-column cursor-pointer"
                     onClick={() => {
-                        history.push('/' + auth.role + '/building')
+                        history.push('/' + auth.role + '/building');
                     }}
                     >
                         <div className="row no-gutters align-items-center">
@@ -88,9 +87,10 @@ function Component() {
                     </div>
                 </div>}
                 <div className="col">
-                    <div className={"Container color-4 d-flex flex-column" + (auth.role === 'bm' ? ' cursor-pointer' : '')}
+                    <div className="Container color-4 d-flex flex-column cursor-pointer"
                     onClick={() => {
-                        auth.role === 'bm' && history.push('/' + auth.role + '/building/' + auth.user.building_id, {tab: 2})
+                        auth.role === 'bm' ? history.push('/' + auth.role + '/building/' + auth.user.building_id, {tab: 2}) :
+                        history.push('/' + auth.role + '/building');
                     }}
                     >
                         <div className="row no-gutters align-items-center">
@@ -109,7 +109,11 @@ function Component() {
                     </div>
                 </div>
                 {auth.role === 'sa' && <div className="col">
-                    <div className="Container color-5 d-flex flex-column">
+                    <div className="Container color-5 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/building');
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber className="h2 font-weight-bold white"
@@ -370,7 +374,10 @@ function Component() {
                                     <div className="row no-gutters">
                                         <div className="col-12">
                                             <CardList
-                                            className="mb-4"
+                                            onClick={() => {
+                                                history.push('/' + auth.role + '/announcement/' + id);
+                                            }}
+                                            className="mb-4 bread"
                                             key={id}
                                             title={title}
                                             description={parser(description)}

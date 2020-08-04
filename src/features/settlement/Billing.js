@@ -410,9 +410,9 @@ function Component({ view }) {
                                     />
                             }
                         ]}
-                    renderActions={view ? null : (selectedRowIds, page) => {
+                    renderActions={(selectedRowIds, page) => {
                         return ([
-                            auth.role === 'sa' && <Button
+                            view ? null : auth.role === 'sa' && <Button
                                 disabled={Object.keys(selectedRowIds).length === 0}
                                 onClick={() => {
                                     setSettleModal(true);
@@ -420,7 +420,7 @@ function Component({ view }) {
                                 icon={<FiCheck />}
                                 label="Settle"
                             />,
-                            auth.role === 'sa' && <Button
+                            view ? null : auth.role === 'sa' && <Button
                                 onClick={() => {
                                     setUploadModal(true);
                                 }}

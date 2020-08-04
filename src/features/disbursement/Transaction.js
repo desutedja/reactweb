@@ -30,7 +30,7 @@ const tabs = [
     "Merchant", "Courier"
 ]
 
-function Component() {
+function Component({ view }) {
     const [info, setInfo] = useState({});
     const [active, setActive] = useState(null);
     const [selectedId, setSelectedId] = useState([]);
@@ -591,13 +591,13 @@ function Component() {
                             }}>
                                 {toMoney(disbursement.items.undisbursed_amount)}
                             </b>
-                            <MyButton label="Disburse All"
+                            {view ? null : <MyButton label="Disburse All"
                                 disabled={disbursement.items?.undisbursed_amount === 0}
                                 onClick={() => {
                                     setSelected(disbursement.items.data.filter(el => el && !el.disbursement_date));
                                     setDisburseModal(true);
                                 }}
-                            />
+                            />}
                             <Button label="Download .csv" icon={<FiDownload />}
                                 onClick={() => {
                                     dispatch(downloadTransactionDisbursement(type, merchant, courier))
@@ -669,7 +669,7 @@ function Component() {
                                 },
                             ]}
                             actions={[]}
-                            renderActions={(selectedRowIds, page) => {
+                            renderActions={view ? null : (selectedRowIds, page) => {
                                 return ([
                                     <Button
                                         disabled={Object.keys(selectedRowIds).length === 0}

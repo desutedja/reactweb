@@ -93,7 +93,7 @@ const prios = [
     { label: 'Low', value: 'low', },
 ]
 
-function Component() {
+function Component({ view }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
@@ -256,6 +256,7 @@ function Component() {
                 }}>No elligible staff found.</p>}
             </Modal>
             <Template
+                view={view}
                 columns={columns}
                 slice='task'
                 getAction={getTask}
@@ -429,7 +430,7 @@ function Component() {
                             />
                     },
                 ]}
-                actions={[
+                actions={view ? null : [
                     role === 'bm' && <Button key="Add Task" label="Add Task" icon={<FiPlus />}
                         onClick={() => {
                             dispatch(setSelected({}));
@@ -437,15 +438,15 @@ function Component() {
                         }}
                     />
                 ]}
-                onClickResolve={row => {
+                onClickResolve={view ? null : row => {
                     setRow(row);
                     setResolve(true);
                 }}
-                onClickReassign={row => {
+                onClickReassign={view ? null : row => {
                     setRow(row);
                     setAssign(true);
                 }}
-                onClickChat={row => {
+                onClickChat={view ? null : role === 'sa' ? null : row => {
                     dispatch(setSelected(row));
                     history.push("chat");
                 }}

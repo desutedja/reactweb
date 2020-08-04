@@ -61,7 +61,7 @@ const columns = [
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
-function Component() {
+function Component({ view }) {
     const [info, setInfo] = useState({});
     // const [inputValue, setInputValue] = useState('');
 
@@ -84,8 +84,6 @@ function Component() {
     const [settlementEnd, setSettlementEnd] = useState(moment().format('yyyy-MM-DD'));
 
     let dispatch = useDispatch();
-    let history = useHistory();
-    let { url } = useRouteMatch();
 
     const getSum = items => {
         return items.reduce((sum, el) => {
@@ -413,7 +411,7 @@ function Component() {
                     renderActions={(selectedRowIds, page) => {
                         // console.log(selectedRowIds);
                         return ([
-                            <Button
+                            view ? null : <Button
                                 disabled={Object.keys(selectedRowIds).length === 0}
                                 onClick={() => {
                                     setSettleModal(true);
@@ -421,7 +419,7 @@ function Component() {
                                 icon={<FiCheck />}
                                 label="Settle Selection"
                             />,
-                            <MyButton label="Upload Settlement" icon={<FiUpload />}
+                            view ? null : <MyButton label="Upload Settlement" icon={<FiUpload />}
                                 onClick={() => {
                                     setUploadModal(true);
                                 }}

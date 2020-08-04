@@ -90,7 +90,7 @@ function Component({ role, children }) {
 
     useEffect(() => {
         console.log("initializing qiscus...")
-        const adminID = role === "sa" ? user.id : user.management_id;
+        const adminID = role === "sa" ? 'admin' : user.management_id;
         const prefix = (role === "sa" ? "centratama" : "management") + "-clink-";
         const userKey = prefix + "key-" + adminID;
         const userID = prefix + adminID;
@@ -195,15 +195,23 @@ function Component({ role, children }) {
                 disableHeader
                 disableFooter
             >
-                <p className="NotificationModal-title" >Notifications</p>
+                <p className="NotificationModal-title" onClick={() => console.log(items)}>Notifications</p>
                 <Loading loading={loadingNotif}>
                     {items.length === 0 && <div className="NotificationModal-empty">
                         No notifications.
                     </div>}
                     <div style={{ height: '1000px', overflow: 'scroll' }} >
                         {items.length > 0 && items.map(el =>
-                            <div class="Container" style={{ margin: '10px 0px', padding: '14px', display: 'flex', cursor: 'pointer' }} onClick={
-                                () => { history.push("/" + role + "/task/" + el.topic_ref_id); setNotifModal(false); }}>
+                            <div class="Container" style={{ margin: '10px 0px', padding: '14px', display: 'flex', cursor: 'pointer' }}
+                            onClick={() => {
+                                if (el.topic === 'announcement') {
+                                    history.push('/' + role + '/announcement/' + el.id);
+                                    setNotifModal(false);
+                                    return;
+                                }
+                                history.push("/" + role + "/task/" + el.topic_ref_id)
+                                setNotifModal(false);
+                            }}>
                                 {el.image && <div
                                 style={{
                                     backgroundColor: 'grey',

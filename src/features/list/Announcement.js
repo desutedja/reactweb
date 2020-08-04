@@ -13,7 +13,7 @@ import Template from './components/Template';
 
 const cons = ['centratama','management','staff','staff_courier','staff_security','staff_technician','resident','merchant']
 
-function Component() {
+function Component({ view }) {
     const [con, setCon] = useState('');
 
     let dispatch = useDispatch();
@@ -42,6 +42,7 @@ function Component() {
 
     return (
         <Template
+            view={view}
             columns={columns}
             slice='announcement'
             getAction={getAnnoucement}
@@ -67,7 +68,7 @@ function Component() {
                         />
                 },
             ]}
-            actions={[
+            actions={view ? null : [
                 <Button key="Add Announcement" label="Add Announcement" icon={<FiPlus />}
                     onClick={() => {
                         dispatch(setSelected({}));
