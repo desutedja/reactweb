@@ -78,8 +78,28 @@ function Component({ role, children }) {
 
         messaging.onMessage((payload) => {
             console.log('Message received. ', payload);
+
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+            }
+
+            // Let's check whether notification permissions have already been granted
+            else if (Notification.permission === "granted") {
+                // If it's okay let's create a notification
+                var notification = new Notification(payload.notification.body);
+            }
+
+            // Otherwise, we need to ask the user for permission
+            else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(function (permission) {
+                    // If the user accepts, let's create a notification
+                    if (permission === "granted") {
+                        var notification = new Notification(payload.notification.body);
+                    }
+                });
+            }
         });
-    }, [dispatch, user.id])
+    }, [alert, dispatch, user.id])
 
     useEffect(() => {
         notifModal && dispatch(get(endpointManagement + '/admin/notification', res => {
@@ -203,32 +223,32 @@ function Component({ role, children }) {
                     <div style={{ height: '1000px', overflow: 'scroll' }} >
                         {items.length > 0 && items.map(el =>
                             <div class="Container" style={{ margin: '10px 0px', padding: '14px', display: 'flex', cursor: 'pointer' }}
-                            onClick={() => {
-                                if (el.topic === 'announcement') {
-                                    history.push('/' + role + '/announcement/' + el.id);
+                                onClick={() => {
+                                    if (el.topic === 'announcement') {
+                                        history.push('/' + role + '/announcement/' + el.id);
+                                        setNotifModal(false);
+                                        return;
+                                    }
+                                    history.push("/" + role + "/task/" + el.topic_ref_id)
                                     setNotifModal(false);
-                                    return;
-                                }
-                                history.push("/" + role + "/task/" + el.topic_ref_id)
-                                setNotifModal(false);
-                            }}>
-                                {el.image && <div
-                                style={{
-                                    backgroundColor: 'grey',
-                                    width: el.image ? '140px' : '0px',
-                                    borderRadius: '4px',
-                                    marginRight: '15px',
-                                    color: 'white',
-                                    overflow: 'hidden',
-                                    position: 'relative'
                                 }}>
-                                    <img src={el.image} alt=""
+                                {el.image && <div
                                     style={{
-                                        position: 'absolute',
-                                        top: '50%',
-                                        left: '50%',
-                                        transform: 'translateY(-50%) translateX(-50%)'
-                                    }}
+                                        backgroundColor: 'grey',
+                                        width: el.image ? '140px' : '0px',
+                                        borderRadius: '4px',
+                                        marginRight: '15px',
+                                        color: 'white',
+                                        overflow: 'hidden',
+                                        position: 'relative'
+                                    }}>
+                                    <img src={el.image} alt=""
+                                        style={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '50%',
+                                            transform: 'translateY(-50%) translateX(-50%)'
+                                        }}
                                     />
                                 </div>}
                                 <div style={{ textAlign: 'left' }} >
