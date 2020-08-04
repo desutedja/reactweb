@@ -1,5 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useMemo, useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import AnimatedNumber from "animated-number-react";
 import moment from 'moment';
 
@@ -12,32 +13,17 @@ import Pill from '../../components/Pill';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import { toMoney, dateTimeFormatterCell, toSentenceCase, isRangeToday } from '../../utils';
-import { downloadBillingDisbursement, getBillingDisbursement, refresh } from '../slices/billing';
+import { getBillingDisbursement, refresh } from '../slices/billing';
 import { endpointBilling } from '../../settings';
-import { get, post } from '../slice';
+import { get, post, getFile } from '../slice';
 import MyButton from '../../components/Button';
 import { FiDownload, FiCheck } from 'react-icons/fi';
 import DateRangeFilter from '../../components/DateRangeFilter';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
-const columns = [
-    { Header: 'Billing Refcode', accessor: 'trx_code' },
-    // { Header: 'Unit', accessor: 'number' },
-    { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
-    {
-        Header: 'Status', accessor: row =>
-            row.disbursement_date ? <Pill color="success">Disbursed</Pill> :
-                <Pill color="secondary">Undisbursed</Pill>
-    },
-    {
-        Header: 'Disbursed at', accessor: row => row.disbursement_date ?
-            dateTimeFormatterCell(row.disbursement_date) : '-'
-    },
-    { Header: 'Payment Channel', accessor: row => toSentenceCase(row.payment_bank) },
-]
 
-function Component() {
+function Component({ view }) {
     const [active, setActive] = useState(0);
     const [info, setInfo] = useState({});
     const [amount, setAmount] = useState('');
@@ -59,6 +45,28 @@ function Component() {
 
     const { disbursement, refreshToggle } = useSelector(state => state.billing);
     const { banks } = useSelector(state => state.main);
+
+    const { role } = useSelector(state => state.auth);
+
+    const columns = useMemo(() => ([
+        {
+            Header: 'Billing Refcode', accessor: row =>
+                <Link href="#" className="Link" to={"/" + role + "/billing/disbursement/" + row.trx_code}>{row.trx_code}</Link>
+        },
+        // { Header: 'Unit', accessor: 'number' },
+        { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
+        {
+            Header: 'Status', accessor: row =>
+                row.disbursement_date ? <Pill color="success">Disbursed</Pill> :
+                    <Pill color="secondary">Undisbursed</Pill>
+        },
+        {
+            Header: 'Disbursed at', accessor: row => row.disbursement_date ?
+                dateTimeFormatterCell(row.disbursement_date) : '-'
+        },
+        { Header: 'Payment Channel', accessor: row => toSentenceCase(row.payment_bank) },
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    ]), [data]);
 
     let dispatch = useDispatch();
 
@@ -82,7 +90,7 @@ function Component() {
         <div>
             <Breadcrumb title="Disbursement" />
             <Modal isOpen={modal} toggle={() => {
-                setSelected([]);
+                // setSelected([]);
                 setModal(!modal)
             }}
                 title="Disbursement Selection"
@@ -258,14 +266,21 @@ function Component() {
                                 }}>
                                     {toMoney(amount)}
                                 </b>
-                                <MyButton label="Disburse All"
+                                {view ? null : <MyButton label="Disburse All"
                                     disabled={amount && amount === 0}
                                     onClick={() => {
                                         setSelected(data.filter(el => el && !el.disbursement_date));
                                         setModal(true);
-                                    }} />
+                                    }} />}
                                 <Button label="Download .csv" icon={<FiDownload />}
-                                    onClick={() => dispatch(downloadBillingDisbursement())}
+                                    onClick={() => dispatch(getFile(endpointBilling + '/management/billing/disbursement/list/transaction'
+                                        + '?building_id=' + disbursement.items[active]?.building_id
+                                        + '&management_id=' + disbursement.items[active]?.id
+                                        + '&date_min=' + (status === 'disbursed' ? disbursedStart : '')
+                                        + '&date_max=' + (status === 'disbursed' ? disbursedEnd : '')
+                                        + '&export=true',
+                                        'billing_disbursement.csv',
+                                        res => {}))}
                                 />
                             </div>
                         </Card>
@@ -356,7 +371,7 @@ function Component() {
                                             />
                                     },
                                 ]}
-                                renderActions={(selectedRowIds, page) => {
+                                renderActions={view ? null : (selectedRowIds, page) => {
                                     return ([
                                         <Button
                                             disabled={Object.keys(selectedRowIds).length === 0}

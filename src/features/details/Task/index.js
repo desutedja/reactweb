@@ -37,7 +37,7 @@ const attachments = [
     "attachment_5",
 ]
 
-function Component() {
+function Component({ view }) {
     const [modal, setModal] = useState(false);
     const [mapModal, setMapModal] = useState(false);
     const [historyModal, setHistoryModal] = useState(false);
@@ -86,7 +86,7 @@ function Component() {
                 setStaffs(formatted);
             }))
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, search, data]);
+    }, [dispatch, search, data, assign]);
 
     return (
         <>
@@ -128,7 +128,7 @@ function Component() {
                             lat: -6.2107863,
                             lng: 106.8137977,
                         }}
-                        zoom={12}
+                        zoom={18}
                         onClick={({ x, y, lat, lng, event }) => {
                             console.log(lat, lng);
                         }}
@@ -158,27 +158,27 @@ function Component() {
             >
                 Are you sure you want to resolve this task?
             </Modal>
-            <Modal isOpen={assign} toggle={() => setAssign(false)} disableHeader
-                disableFooter={staffs.length === 0}
-                okLabel="Yes"
-                onClick={() => {
-                    setStaff({});
-                    setAssign(false);
-                    dispatch(reassignTask({
-                        "task_id": data.id,
-                        "assignee_id": staff.value,
-                    }));
-                }}
-                cancelLabel="No"
+            <Modal 
+                title="Assign Staff"
+                subtitle="Choose eligible staffs to assign for this task"
+                isOpen={assign} 
+                toggle={() => setAssign(false)} 
+                cancelLabel="Cancel"
                 onClickSecondary={() => {
                     setStaff({});
                     setAssign(false);
                 }}
             >
-                Choose assignee:
-                {staffs.length !== 0 && !staff.value && <Input label="Search" icon={<FiSearch />}
-                    compact inputValue={search} setInputValue={setSearch} />}
-                <Filter data={staff.value ? [staff] : staffs} onClick={el => setStaff(el)} />
+                    <Filter data={staff.value ? [staff] : staffs} onClick={
+                        el => {
+                            dispatch(reassignTask({
+                                "task_id": parseInt(data.task_id),
+                                "assignee_id": el.value,
+                            })); 
+                            setStaff({});
+                            setAssign(false)
+                        }
+                    } />
                 {staffs.length === 0 && <p style={{
                     fontStyle: 'italic'
                 }}>No elligible staff found.</p>}
@@ -189,7 +189,7 @@ function Component() {
                 labels={["Details"]}
                 contents={[
                     <>
-                        <Column style={{ width: '70%' }}>
+                        <Column style={{ width: '100%' }}>
                             <Row>
                                 <Column style={{ flex: '6', display: 'block' }}>
                                     <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
@@ -219,14 +219,14 @@ function Component() {
                                                 </div>
                                             </div>
                                         </CardBody>
-                                        <CardFooter>
+                                        { role === "bm" && <CardFooter>
                                             <div style={{ textAlign: 'right', padding: '5px' }}>
-                                                <Link to="#" onClick={() => {
+                                                <Link to={"/" + role + "/chat/" + data.ref_code} onClick={() => {
                                                     dispatch(setSelected(data));
                                                     history.push("/" + role + "/chat");
                                                 }}><MdChatBubble size="17" /> Go to chatroom</Link>
                                             </div>
-                                        </CardFooter>
+                                        </CardFooter> }
                                     </Card>
                                     <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                         <CardBody>
@@ -270,21 +270,19 @@ function Component() {
                                                             </Row>
                                                             <hr />
                                                             <Row>
-                                                                {el.attachments > 0 &&
-                                                                    [1, 2, 3, 4, 5].map(at => {
-                                                                        const key = "attachment_" + at;
-                                                                        return (
-                                                                            !el[key] && <img src={el[key]} alt='attachment'
-                                                                                onClick={() => {
-                                                                                    setModal(true);
-                                                                                    setImage(el[key]);
-                                                                                }}
-                                                                                style={{
-                                                                                    height: 80,
-                                                                                    aspectRatio: 1
-                                                                                }}
-                                                                            />)
-                                                                    })}
+                                                                { el.attachments > 0 && 
+                                                                    attachments.map(key =>
+                                                                        el[key] && <img src={el[key]} alt='attachment'
+                                                                            onClick={() => {
+                                                                                setModal(true);
+                                                                                setImage(el[key]);
+                                                                            }}
+                                                                            style={{
+                                                                                height: 80,
+                                                                                aspectRatio: 1
+                                                                            }}
+                                                                        /> 
+                                                                    )}
                                                             </Row>
                                                         </>
                                                     )}
@@ -305,7 +303,7 @@ function Component() {
                                             } />
                                             <div><Pill color={taskStatusColor[data.status]}>{toSentenceCase(data.status)}</Pill></div>
                                         </CardBody>
-                                        {(data.status != 'completed' && data.status != 'canceled') &&
+                                        {view ? null : (data.status != 'completed' && data.status != 'canceled') &&
                                             <CardFooter style={{ textAlign: "right" }}>
                                                 <Button onClick={
                                                     () => setResolve(true)
@@ -323,9 +321,9 @@ function Component() {
                                             } />
                                             <Row>
                                                 <div style={{ width: '50%', borderRight: '1px solid rgba(0,0,0,0.125)' }}>
-                                                    <Resident id={data.resident_id}
+                                                    <Resident id={data.requester}
                                                         data={{
-                                                            photo: data.resident_photo, firstname: data.requester_name,
+                                                            id: data.requester, photo: data.resident_photo, firstname: data.requester_name,
                                                             lastname: '', email: data.requester_phone
                                                         }} />
                                                 </div>
@@ -361,7 +359,7 @@ function Component() {
                                                         <i>No Assigned Staff Yet</i></div>}
                                             </Row>
                                         </CardBody>
-                                        {(data.status === "rejected" || data.status === "created") && <CardFooter style={{ textAlign: "right" }}>
+                                        {view ? null : (data.status === "rejected" || data.status === "created") && <CardFooter style={{ textAlign: "right" }}>
                                             <Button onClick={
                                                 () => setAssign(true)
                                             } icon={<FiUserPlus />} label="Assign Staff" />

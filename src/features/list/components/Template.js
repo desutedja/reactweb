@@ -7,8 +7,8 @@ import Breadcrumb from '../../../components/Breadcrumb';
 
 import { setConfirmDelete } from '../../slice';
 
-function Component({ columns, slice, title = '', getAction, filterVars = [],
-    filters = [], actions = [], deleteAction, sortBy, ...props }) {
+function Component({ view = false, columns, slice, title = '', getAction, filterVars = [],
+    filters = [], actions = [], deleteAction, sortBy, pagetitle, ...props }) {
 
     const {
         loading,
@@ -23,6 +23,7 @@ function Component({ columns, slice, title = '', getAction, filterVars = [],
 
     return (
         <>
+            <h2 style={{ marginLeft: '16px' }}>{pagetitle}</h2>
             <Breadcrumb title={title} />
             <div className="Container">
                 <Table
@@ -39,8 +40,8 @@ function Component({ columns, slice, title = '', getAction, filterVars = [],
                     }, [dispatch, refreshToggle, ...filterVars])}
                     filters={filters}
                     sortBy={sortBy}
-                    actions={actions}
-                    onClickDelete={deleteAction ? row => {
+                    actions={view ? null : actions}
+                    onClickDelete={view ? null : deleteAction ? row => {
                         dispatch(setConfirmDelete("Are you sure to delete this item?",
                             () => dispatch(deleteAction(row))
                         ));

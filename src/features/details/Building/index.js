@@ -25,7 +25,7 @@ const labels = {
 const tabs = ["Details", "Section", "Unit Type", "Unit", "Service", "Management", "Module"];
 const tabsBM = ["Section", "Unit Type", "Unit", "Billing Service"];
 
-function Component() {
+function Component({ view }) {
     const [data, setData] = useState({});
     const { auth } = useSelector(state => state)
 
@@ -36,17 +36,17 @@ function Component() {
     let { id } = useParams();
 
     const contents = [
-        <Detail data={data} labels={labels}
+        <Detail view={view} data={data} labels={labels}
             onDelete={
                 () => setConfirmDelete(true)
             }
         />,
-        <Section />,
-        <UnitType />,
-        <Unit />,
-        <Service />,
-        <Management />,
-        <Module />
+        <Section view={view} />,
+        <UnitType view={view} />,
+        <Unit view={view} />,
+        <Service view={view} />,
+        <Management view={view} />,
+        <Module view={view} />
     ];
     const contentsBM = [
         <Section />,

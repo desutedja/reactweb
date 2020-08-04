@@ -5,15 +5,13 @@ import defaultImg from '../../../assets/fallback.jpg';
 
 import { FaPhone } from 'react-icons/fa';
 
-import Row from '../../../components/Row';
-import Column from '../../../components/Column';
 import Button from '../../../components/Button';
 
 import { toSentenceCase, dateFormatter, getCountryFromCode, getBank, dateTimeFormatter } from '../../../utils';
 import { FiTrash, FiEdit } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 
-function Component({ imgPreview = false, data, labels, type = "",
+function Component({ view = false, imgPreview = false, data, labels, type = "", horizontal=false,
     editable = true, editPath = 'edit', onDelete, renderButtons = () => { } }) {
 
     const { banks } = useSelector(state => state.main);
@@ -49,7 +47,7 @@ function Component({ imgPreview = false, data, labels, type = "",
     }
 
     return (
-        <div className="row no-gutters w-100">
+        <div className="row no-gutters w-100" style={{ justifyContent: 'space-between' }}>
             {imgPreview && <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
                 <div className="row no-gutters h-100">
                     <div className="col-12">
@@ -73,10 +71,11 @@ function Component({ imgPreview = false, data, labels, type = "",
                     </div>
                 </div>
             </div>}
-            <div className="col">
+            <div className={horizontal ? "row" : "col"}>
                 {Object.keys(labels).map((group, i) =>
                     <div key={i} style={{
                         marginBottom: 16,
+                        marginRight: 30,
                     }}>
                         <div style={{
                             color: 'grey',
@@ -89,27 +88,27 @@ function Component({ imgPreview = false, data, labels, type = "",
                         </div>
                         {labels[group].map((el, i) => {
                             return !el.disabled ?
-                                <Row style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
-                                    <Column flex={3} style={{ fontWeight: 'bold', textAlign: 'left' }}>
+                                <div className="row no-gutters" style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
+                                    <div className="col-auto" flex={3} style={{ fontWeight: 'bold', textAlign: 'left', minWidth: 200 }}>
                                         {el.lfmt ? el.lfmt(el) : formatLabel(el)}
-                                    </Column>
-                                    <Column flex={9} style={{ fontWeight: 'normal', }}>
+                                    </div>
+                                    <div className="col" flex={9} style={{ fontWeight: 'normal' }}>
                                         {el.vfmt ? el.vfmt(data[el.label]) : el.label ? formatValue(el.label, data[el.label])
                                             : formatValue(el, data[el])}
-                                    </Column>
-                                </Row> : null;
+                                    </div>
+                                </div> : null;
                         })}
                     </div>
                 )}
             </div>
-            <div className="col-auto d-flex flex-column">
+            {!view && <div className="col-auto d-flex flex-column">
                 {editable && <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
                     pathname: editPath,
                     state: data,
                 })} />}
                 {renderButtons()}
                 {onDelete && <Button icon={<FiTrash />} color="danger" label="Delete" onClick={onDelete} />}
-            </div>
+            </div>}
         </div>
     )
 }

@@ -18,10 +18,10 @@ function Component() {
                     <List />
                 </Route>
                 <Route path={`${path}/settlement`}>
-                    <Settlement />
+                    <Settlement view />
                 </Route>
                 <Route path={`${path}/disbursement`}>
-                    <Disbursement />
+                    <Disbursement view />
                 </Route>
                 <Route path={`${path}/:id`}>
                     <Details />

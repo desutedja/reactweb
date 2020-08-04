@@ -23,7 +23,7 @@ const dateArray = (() => {
     }))
 })()
 
-function Component() {
+function Component({ view }) {
     const { auth } = useSelector(state => state)
     const [selectedRow, setRow] = useState({});
     const [edit, setEdit] = useState(false);
@@ -77,6 +77,7 @@ function Component() {
                             setManagementChose(data);
                         }}
                         checked={row.status === "active"}
+                        disabled={view}
                     />
                 )
             }
@@ -225,7 +226,7 @@ function Component() {
                     // eslint-disable-next-line react-hooks/exhaustive-deps
                 }, [dispatch, refreshToggle])}
                 filters={[]}
-                actions={[
+                actions={view ? null : [
                     <Button key="Add Building Management" label="Add Building Management" icon={<FiPlus />}
                         onClick={() => {
                             setEdit(false);
@@ -234,12 +235,11 @@ function Component() {
                         }}
                     />
                 ]}
-                onClickDelete={row => {
+                onClickDelete={view ? null : row => {
                     setRow(row);
-                    dispatch(deleteBuildingManagement(row,))
-                    // setConfirm(true);
+                    dispatch(deleteBuildingManagement(row))
                 }}
-                onClickEdit={row => {
+                onClickEdit={view ? null : row => {
                     setRow(row);
                     setEdit(true);
                     setAddManagement(true);

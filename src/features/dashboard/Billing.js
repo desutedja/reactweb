@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AnimatedNumber from "animated-number-react";
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
+import parser from 'html-react-parser';
 
 import { FiUsers, FiBriefcase } from 'react-icons/fi';
 import { FaTools, FaBoxOpen } from 'react-icons/fa';
@@ -46,7 +47,6 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointManagement + '/admin/staff/statistics', res => {
             setStaffData(res.data.data);
-            console.log(res.data.data)
         }))
     }, [dispatch]);
 
@@ -68,7 +68,7 @@ function Component() {
                 {auth.role === 'sa' && <div className="col">
                     <div className="Container color-2 d-flex flex-column cursor-pointer"
                     onClick={() => {
-                        history.push('/' + auth.role + '/building')
+                        history.push('/' + auth.role + '/building');
                     }}
                     >
                         <div className="row no-gutters align-items-center">
@@ -87,9 +87,10 @@ function Component() {
                     </div>
                 </div>}
                 <div className="col">
-                    <div className={"Container color-4 d-flex flex-column" + (auth.role === 'bm' ? ' cursor-pointer' : '')}
+                    <div className="Container color-4 d-flex flex-column cursor-pointer"
                     onClick={() => {
-                        auth.role === 'bm' && history.push('/' + auth.role + '/building/' + auth.user.building_id, {tab: 2})
+                        auth.role === 'bm' ? history.push('/' + auth.role + '/building/' + auth.user.building_id, {tab: 2}) :
+                        history.push('/' + auth.role + '/building');
                     }}
                     >
                         <div className="row no-gutters align-items-center">
@@ -108,7 +109,11 @@ function Component() {
                     </div>
                 </div>
                 {auth.role === 'sa' && <div className="col">
-                    <div className="Container color-5 d-flex flex-column">
+                    <div className="Container color-5 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/building');
+                    }}
+                    >
                         <div className="row no-gutters align-items-center">
                             <div className="col">
                                 <AnimatedNumber className="h2 font-weight-bold white"
@@ -140,7 +145,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Paid Amount</div>
+                            <div>Paid Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_paid_amount}
                                 formatValue={formatValuetoMoney}
                             />
@@ -149,7 +154,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Settled Amount</div>
+                            <div>Settled Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_settle_amount}
                                 formatValue={formatValuetoMoney}
                             />
@@ -158,7 +163,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Disbursed Amount</div>
+                            <div>Disbursed Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_disburse_amount}
                                 formatValue={formatValuetoMoney}
                             />
@@ -171,7 +176,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Unpaid Amount</div>
+                            <div>Unpaid Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_unpaid_amount}
                                 formatValue={formatValuetoMoney}
                             />
@@ -180,7 +185,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Unsettled Amount</div>
+                            <div>Unsettled Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_unsettled_amount}
                                 formatValue={formatValuetoMoney}
                             />
@@ -189,7 +194,7 @@ function Component() {
                             flex: 1,
                             padding: 16,
                         }}>
-                            <div>Undisbursed Amount</div>
+                            <div>Undisbursed Amount Billing</div>
                             <AnimatedNumber className="BigNumber" value={billingData.total_undisburse_amount}
                                 formatValue={formatValuetoMoney}
                             />
@@ -369,10 +374,13 @@ function Component() {
                                     <div className="row no-gutters">
                                         <div className="col-12">
                                             <CardList
-                                            className="mb-4"
+                                            onClick={() => {
+                                                history.push('/' + auth.role + '/announcement/' + id);
+                                            }}
+                                            className="mb-4 bread"
                                             key={id}
                                             title={title}
-                                            description={description}
+                                            description={parser(description)}
                                             imgSrc={image}
                                             createdOn={moment(created_on).format('DD MMM YYYY')}
                                             />

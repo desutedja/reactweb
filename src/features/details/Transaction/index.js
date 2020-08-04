@@ -12,7 +12,7 @@ import Column from '../../../components/Column';
 import Template from '../components/Template';
 import ThreeColumn from '../../../components/ThreeColumn';
 import TwoColumn from '../../../components/TwoColumn';
-import { FiArrowUpRight } from 'react-icons/fi';
+import { FiArrowUpRight, FiCalendar } from 'react-icons/fi';
 
 import { Card, CardFooter, CardTitle, CardBody } from 'reactstrap';
 
@@ -78,7 +78,11 @@ function Component() {
                             <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                 <CardBody>
                                     <Row style={{ justifyContent: 'space-between', alignItems: 'bottom' }} >
-                                        <CardTitle><h5>Summary</h5> Transaction Code : {data.trx_code}</CardTitle>
+                                        <CardTitle>
+                                            <h5>Summary</h5> 
+                                            <div>Transaction Code : {data.trx_code}</div>
+                                            <div>Type : {toSentenceCase(data.type)}</div>
+                                        </CardTitle>
                                         <div style={{ display: 'block', textAlign: 'right',  }}>
                                             <Pill color={data.payment === "paid" ? "success": "secondary"}>
                                                 {toSentenceCase(data.payment)}
@@ -92,7 +96,8 @@ function Component() {
                                         {data.items && data.items.map(el =>
                                         <>
                                         <ThreeColumn first={<Product id={el.item_id} 
-                                            data={{id: el.item_id, thumbnails: el.item_thumbnails, name: el.item_name, merchant_name: data.merchant_name}}/>} 
+                                            data={{id: el.item_id, thumbnails: el.item_thumbnails, 
+                                                name: el.item_name, merchant_name: data.merchant_name}}/>} 
                                             second={el.qty + (" item" + (el.qty > 1 ? "s": ""))} 
                                             third={toMoney(el.total_price)} />
                                             <div>
@@ -106,18 +111,25 @@ function Component() {
                                             </>
                                         )}
                                     </div>
-                                    {data.items && <ThreeColumn second="Subtotal" third={toMoney(data.items.reduce((sum, el) => sum + el.total_price, 0))} />}
+                                    {data.items && 
+                                    <ThreeColumn second="Subtotal" third={toMoney(data.items.reduce((sum, el) => sum + el.total_price, 0))} />}
                                     <ThreeColumn second="Total Selling Price" third={toMoney(data.total_selling_price)} />
                                     {data.discount_code && <ThreeColumn second="Discount Code" third={toMoney(data.discount_code)} />}
                                     <ThreeColumn second={"Tax (" + data.tax_type + ")"}  third={toMoney(data.tax_price)} />
-                                    <ThreeColumn second="Profit From Product" third={toMoney(data.profit_from_sales)} />
-                                    <ThreeColumn second="Discount" third={<span style={{ color: "red" }}>{"-" + toMoney(data.discount_price)}</span>} />
-                                    <ThreeColumn second="Profit From PG" third={toMoney(data.profit_from_pg)} />
-                                    <ThreeColumn second="Internal Courier Charge" third={toMoney(data.profit_from_pg)} />
-                                    <ThreeColumn second="External Courier Charge" third={toMoney(data.profit_from_pg)} />
+                                    <ThreeColumn second="Discount" third={<span style={{ color: "red" }}>
+                                        {"-" + toMoney(data.discount_price)}</span>} />
+                                    <ThreeColumn second="Internal Courier Charge" third={toMoney(data.courier_internal_charges)} />
+                                    <ThreeColumn second="External Courier Charge" third={toMoney(data.courier_external_charges)} />
+                                    <ThreeColumn second="Markup delivery" third={toMoney(data.profit_from_delivery)} />
+                                    <ThreeColumn second="PG Fee" third={toMoney(data.payment_charge)} />
+                                    <ThreeColumn second={<b>Total Paid Amount</b>} third={<b>{toMoney(data.payment_amount)}</b>} />
+                                    <hr/>
                                     <ThreeColumn second="Profit From Delivery" third={toMoney(data.profit_from_delivery)} />
+                                    <ThreeColumn second="Profit From Product" third={toMoney(data.profit_from_sales)} />
+                                    <ThreeColumn second="Profit From PG" third={toMoney(data.profit_from_pg)} />
                                     <ThreeColumn second={<b>Total Profit</b>} 
-                                        third={<b>{toMoney(data.profit_from_delivery + data.profit_from_sales + data.profit_from_pg - data.discount_price)}</b>} />
+                                        third={<b>{toMoney(data.profit_from_delivery + data.profit_from_sales + 
+                                            data.profit_from_pg - data.discount_price)}</b>} />
 
                                 </CardBody>
                                 <CardFooter>
@@ -126,6 +138,10 @@ function Component() {
                                         <div><a style={{ textDecoration: 'none', color: 'black', fontWeight: 'bold' }} 
                                                 href={"/sa/merchant/"+ data.merchant_id}>{data.merchant_name}</a></div>
                                     </div>
+                                    {data.type === "services" && <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '5px' }}>
+                                        <div>Appointment</div>
+                                        <div><FiCalendar/> {dateTimeFormatter(data.appointment_datetime)} </div>
+                                    </div>}
                                 </CardFooter>
                             </Card>
                             {data.status === 'completed' && <Card style={{ marginRight: '20px' }}>

@@ -12,7 +12,7 @@ import Loading from '../../../components/Loading';
 import Tab from '../../../components/Tab';
 import Breadcrumb from '../../../components/Breadcrumb';
 
-function Component({ image, title, website, phone, merchant, transparent=false,
+function Component({image, title, website, phone, merchant, transparent=false,
     email, labels, contents, activeTab, imageTitle = '', loading = true }) {
 
     const [imgLoading, setImgLoading] = useState(true);

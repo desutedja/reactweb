@@ -23,7 +23,7 @@ const columnsUnit = [
     },
 ]
 
-function Component() {
+function Component({ view }) {
     const [selectedRow, setRow] = useState({});
     const [edit, setEdit] = useState(false);
     const [addUnit, setAddUnit] = useState(false);
@@ -114,7 +114,7 @@ function Component() {
                     // eslint-disable-next-line react-hooks/exhaustive-deps
                     [dispatch,  selected, refreshToggle])}
                 filters={[]}
-                actions={[
+                actions={view ? null : [
                     <Button key="Add Unit" label="Add Unit" icon={<FiPlus />}
                         onClick={() => {
                             setEdit(false);
@@ -128,12 +128,10 @@ function Component() {
                         }}
                     />
                 ]}
-                onClickDelete={row => {
-                    // setRow(row);
+                onClickDelete={view ? null : row => {
                     dispatch(deleteBuildingUnit(row, ))
-                    // setConfirm(true);
                 }}
-                onClickEdit={row => {
+                onClickEdit={view ? null : row => {
                     setRow(row);
                     setEdit(true);
                     setAddUnit(true);

@@ -15,7 +15,7 @@ import Resident from '../../components/cells/Resident';
 import Staff from '../../components/cells/Staff';
 
 import { useSelector } from 'react-redux';
-import { toSentenceCase, dateTimeFormatter, isRangeToday } from '../../utils';
+import { toSentenceCase, isRangeThisMonth, isRangeToday, dateTimeFormatterCell } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import { getTask, resolveTask, reassignTask, setSelected } from '../slices/task';
 import { get } from '../slice';
@@ -29,6 +29,9 @@ const columns = [
         Header: "Title", accessor: row => <Task
             id={row.id} data={row}
             items={[row.title, <small>{row.ref_code}</small>]} />
+    },
+    {
+        Header: "Created On", accessor: row => dateTimeFormatterCell(row.created_on)
     },
     {
         Header: "Type", accessor: row => row.task_type === "service" ? <>{toSentenceCase(row.task_type) +
@@ -46,13 +49,13 @@ const columns = [
     },
     {
         Header: "Requester", accessor: row => <Resident compact={true} id={row.requester_id}
-            data={row.requester_details} onClickPath={"resident"} />
+            data={row.requester_details} />
     },
     {
         Header: "Assignee", accessor: row => row.assignee_id ? <Staff compact={true} id={row.assignee_id}
             data={row.assignee_details} /> : "-"
     },
-    { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
+    { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatterCell(row.assigned_on) : "-" },
     {
         Header: "Status", accessor: row => row.status ?
             <Pill color={taskStatusColor[row.status]}>
@@ -90,7 +93,7 @@ const prios = [
     { label: 'Low', value: 'low', },
 ]
 
-function Component() {
+function Component({ view }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
@@ -99,6 +102,7 @@ function Component() {
     const today = moment().format('yyyy-MM-DD');
 
     const [selectedRow, setRow] = useState({});
+    const [limit, setLimit] = useState(5);
     const [resolve, setResolve] = useState(false);
     const [assign, setAssign] = useState(false);
     const [staff, setStaff] = useState({});
@@ -118,8 +122,8 @@ function Component() {
     const [prio, setPrio] = useState('');
     const [prioLabel, setPrioLabel] = useState('');
 
-    const [createdStart, setCreatedStart] = useState(moment().format('yyyy-MM-DD'));
-    const [createdEnd, setCreatedEnd] = useState(moment().format('yyyy-MM-DD'));
+    const [createdStart, setCreatedStart] = useState(moment().startOf('month').format('yyyy-MM-DD'));
+    const [createdEnd, setCreatedEnd] = useState(moment().endOf('month').format('yyyy-MM-DD'));
     const [resolvedStart, setResolvedStart] = useState(moment().format('yyyy-MM-DD'));
     const [resolvedEnd, setResolvedEnd] = useState(moment().format('yyyy-MM-DD'));
 
@@ -130,15 +134,29 @@ function Component() {
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
-            '?limit=5&page=1' +
+            '?limit=' + limit + '&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
+                let totalItems = Number(res.data.data.total_items);
+                let restTotal = totalItems - data.length;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
+                if (data.length < totalItems && search.length === 0) {
+                    formatted.push({
+                        label: 'Load ' + (restTotal > 5 ? 5 : restTotal) + ' more',
+                        restTotal: restTotal > 5 ? 5 : restTotal,
+                        className: 'load-more'
+                    })
+                }
+
                 setBuildings(formatted);
             }))
-    }, [dispatch, search]);
+    }, [dispatch, search, limit]);
+
+    useEffect(() => {
+        if (search.length === 0) setLimit(5);
+    }, [search]);
 
     useEffect(() => {
 
@@ -175,13 +193,27 @@ function Component() {
             '&building_id=' + building +
             '&search=' + unitSearch +
             '&sort_field=created_on&sort_type=DESC' +
-            '&limit=10', res => setUnits(
-                res.data.data.items.map(el => ({
+            '&limit=' + limit, res => {
+                let data = res.data.data.items;
+                let totalItems = Number(res.data.data.total_items);
+                let restTotal = totalItems - data.length;
+
+                const formatted = res.data.data.items.map(el => ({
                     label: toSentenceCase(el.section_type) + " " + el.section_name + ' ' + el.number,
                     value: el.id,
                 }))
-            )))
-    }, [building, dispatch, unitSearch])
+
+                if (data.length < totalItems && unitSearch.length === 0) {
+                    formatted.push({
+                        label: 'Load ' + (restTotal > 5 ? 5 : restTotal) + ' more',
+                        restTotal: restTotal > 5 ? 5 : restTotal,
+                        className: 'load-more'
+                    })
+                }
+
+                setUnits(formatted)
+            }))
+    }, [building, dispatch, limit, unitSearch])
 
     return (
         <>
@@ -224,6 +256,7 @@ function Component() {
                 }}>No elligible staff found.</p>}
             </Modal>
             <Template
+                view={view}
                 columns={columns}
                 slice='task'
                 getAction={getTask}
@@ -231,11 +264,11 @@ function Component() {
                     ...status === 'completed' ? [resolvedStart, resolvedEnd] : []]}
                 filters={[
                     {
-                        hidex: isRangeToday(createdStart, createdEnd),
+                        hidex: isRangeThisMonth(createdStart, createdEnd),
                         label: "Created Date: ",
-                        delete: () => { setCreatedStart(today); setCreatedEnd(today) },
-                        value: isRangeToday(createdStart, createdEnd) ? 'Today' :
-                            moment(createdStart).format('DD-MM-yyyy') + ' - '
+                        delete: () => { setCreatedStart(moment().startOf('month').format('yyyy-MM-DD')); 
+                            setCreatedEnd(moment().endOf('month').format('yyyy-MM-DD')) },
+                        value: moment(createdStart).format('DD-MM-yyyy') + ' - '
                             + moment(createdEnd).format('DD-MM-yyyy'),
                         component: (toggleModal) =>
                             <DateRangeFilter
@@ -282,17 +315,23 @@ function Component() {
                                 <Filter
                                     data={units}
                                     onClick={(el) => {
+                                        if (!el.value) {
+                                            setLimit(limit + el.restTotal);
+                                            return;
+                                        }
                                         setUnit(el.value);
                                         setUnitLabel(el.label);
+                                        setLimit(5);
                                         toggleModal(false);
                                     }}
                                     onClickAll={() => {
                                         setUnit("");
+                                        setLimit(5);
                                         toggleModal(false);
                                     }}
                                 />
-                                {unitSearch ? 'Showing at most 10 matching units' : 
-                                'Showing 10 most recent units'}
+                                {/* {unitSearch ? 'Showing at most 10 matching units' : 
+                                'Showing 10 most recent units'} */}
                             </>
                     }] : [],
                     {
@@ -312,13 +351,19 @@ function Component() {
                                 <Filter
                                     data={buildings}
                                     onClick={(el) => {
+                                        if (!el.value) {
+                                            setLimit(limit + el.restTotal);
+                                            return;
+                                        }
                                         setBuilding(el.value);
                                         setBuildingName(el.label);
+                                        setLimit(5);
                                         toggleModal(false);
                                     }}
                                     onClickAll={() => {
                                         setBuilding("");
                                         setBuildingName("");
+                                        setLimit(5);
                                         toggleModal(false);
                                     }}
                                 />
@@ -385,7 +430,7 @@ function Component() {
                             />
                     },
                 ]}
-                actions={[
+                actions={view ? null : [
                     role === 'bm' && <Button key="Add Task" label="Add Task" icon={<FiPlus />}
                         onClick={() => {
                             dispatch(setSelected({}));
@@ -393,15 +438,15 @@ function Component() {
                         }}
                     />
                 ]}
-                onClickResolve={row => {
+                onClickResolve={view ? null : row => {
                     setRow(row);
                     setResolve(true);
                 }}
-                onClickReassign={row => {
+                onClickReassign={view ? null : row => {
                     setRow(row);
                     setAssign(true);
                 }}
-                onClickChat={row => {
+                onClickChat={view ? null : role === 'sa' ? null : row => {
                     dispatch(setSelected(row));
                     history.push("chat");
                 }}

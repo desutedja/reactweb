@@ -78,7 +78,7 @@ function Component() {
             limit: 50
         }
 
-        setLoadingMessages(true);
+        roomID && setLoadingMessages(true);
         roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
             .then(function (comments) {
                 // On success
@@ -111,7 +111,7 @@ function Component() {
         }
 
         setLoadingRooms(true);
-        qiscus.loadRoomList && qiscus.loadRoomList(params)
+        qiscus && qiscus.loadRoomList && qiscus.loadRoomList(params)
             .then(function (rooms) {
                 // On success
                 dispatch(setRooms(rooms));
@@ -178,7 +178,7 @@ function Component() {
                     overflow: 'scroll',
                 }} >
                     <Loading loading={loadingMessages}>
-                        {messages.map((el, index) =>
+                        {messages.length > 0 ? messages.map((el, index) =>
                             <div key={el.id} className={
                                 el.email === userID ?
                                     "MessageContainer-own" : "MessageContainer"}>
@@ -245,7 +245,13 @@ function Component() {
                                         }} />}
                                 </div>
                             </div>
-                        )}
+                        ): <h3 style={{
+                            color: 'grey',
+                            textAlign: 'center',
+                            marginTop: 48,
+                        }}>
+                            Please select a room to load messages.    
+                        </h3>}
                     </Loading>
                     <div style={{ float: "left", clear: "both" }}
                         ref={messageBottom}>

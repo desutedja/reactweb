@@ -138,6 +138,7 @@ export function toSentenceCase(sentence) {
 }
 
 export function toMoney(money) {
+    money = Math.floor(money);
     return "Rp " + (!money ? "0" : money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1.")) + ',00';
 }
 
@@ -182,4 +183,10 @@ export function isToday(momentDate) {
 
 export function isRangeToday(start, end) {
     return (start === end) && isToday(start);
+}
+
+export function isRangeThisMonth(start, end) {
+    return (start === moment().startOf('month').format('yyyy-MM-DD')) 
+        && (end === moment().endOf('month').format('yyyy-MM-DD'));
+
 }

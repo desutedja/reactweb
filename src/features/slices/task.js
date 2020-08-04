@@ -101,6 +101,9 @@ export const reassignTask = (data) => dispatch => {
     res => {
       dispatch(stopAsync());
       dispatch(refresh());
+
+      dispatch(setInfo({message: "Task " + data.task_id + " has been reassigned to staff id " + data.assignee_id}));
+      setTimeout(() => dispatch(setInfo({message: ''})), 3000);
     },
     err => {
       dispatch(stopAsync());

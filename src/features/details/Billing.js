@@ -5,25 +5,28 @@ import { useHistory, useRouteMatch } from 'react-router-dom';
 import Detail from './components/Detail';
 import Template from './components/Template';
 
+import ThreeColumn from '../../components/ThreeColumn';
 import Button from '../../components/Button';
+import Row from '../../components/Row';
+import Column from '../../components/Column';
 import Table from '../../components/Table';
-import { Card } from 'reactstrap';
+import { Card, CardTitle, CardBody } from 'reactstrap';
 import Filter from '../../components/Filter';
-import { months, dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dateFormatter } from '../../utils';
-import { getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
+import { dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dateFormatter } from '../../utils';
+import { getBillingUnitItem, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
 import { ListGroupItem, ListGroup } from 'reactstrap';
 import Pill from '../../components/Pill';
-import { FiPlus } from 'react-icons/fi';
+import { FiClock, FiPlus } from 'react-icons/fi';
 import BillingItem from '../../components/cells/BillingItem';
+import moment from 'moment';
 
 const details =
 {
-    'Information': ['id', 'created_on', 'resident_name'],
-    'Unit': ['building_name', 'code_name', 'section_type', 'section_name', 'number']
+    '': ['resident_name', 'building_name', 'section_name', 'number'],
 };
 
 
-function Component() {
+function Component({ view }) {
     const [status, setStatus] = useState('');
     const [items, setItems] = useState([]);
     const [active, setActive] = useState(0);
@@ -36,40 +39,51 @@ function Component() {
     let history = useHistory();
     let { url } = useRouteMatch();
 
+    function isLate(payment, due_date, payment_date) {
+        return payment === "paid" ? moment.utc(payment_date).isAfter(moment.utc(due_date)) : 
+                 moment.utc().isAfter(moment.utc(due_date))
+    }
+
     const columns = useMemo(() => ([
         { Header: 'ID', accessor: 'id' },
-        { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name]} />},
-        { Header: 'Group', accessor: row => row.group === 'ipl' ? 'IPL' : 'Non-IPL' },
-        { Header: 'Total', accessor: row => toMoney(row.total) },
-        { Header: 'Month', accessor: row => <div style={{ display: 'block' }}>
-                <div>{months.find(el => el.value === row.month).label}</div>
-                <div>{row.year}</div>
-            </div>},
+        { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name, <>{row.service_name} - {row.group === 'ipl' ? 'IPL' : 'Non-IPL'}</>]} />},
+        { Header: 'Total', accessor: row => 
+        <div style={{ display: 'block' }}>
+            <div>{toMoney(row.total)}</div>
+            { row.total_additional_charge > 0 && <div>+ {toMoney(row.total_additional_charge)}</div>}
+        </div>},
         { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
         { Header: 'Ref Code', accessor: row => row.ref_code ? 
-           <a class="Link" href={"/" + role + "/billing/details/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
+        <a class="Link" href={"/" + role + "/billing/unit/item/record/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
         },
         { Header: 'Payment', accessor: row => 
             (
-                row.payment_method_by ? 
+                row.payment_method === 'cash' ? 
                     <Pill color="primary">Cash Paid</Pill> :
                 <Pill color={row.payment === "paid" ? "success": "secondary"}>{toSentenceCase(row.payment)}</Pill> 
             )
         },
         {
-            Header: 'Payment Date', accessor: row => row.payment_date ? dateTimeFormatterCell(row.payment_date)
+            Header: 'Payment Date', accessor: row => row.payment_date ? 
+            <div>
+                <div>{dateTimeFormatterCell(row.payment_date)}</div>
+                {isLate(row.payment, row.due_date, row.payment_date) && 
+                    <div style={{color: 'red'}}><FiClock/> Overdue Payment</div>}
+            </div>
                 : '-'
         },
-    ]), [ role ]);
+    ]), [ role, isLate ]);
 
     useEffect(() => {
+        console.log("selected => ");
+        console.log(selected);
         dispatch(getBillingUnitItem(0, 100, '',
-            selected, status));
+            {id: selected.id, building_id: selected.building_id}, status));
     }, [dispatch, refreshToggle, selected, status])
 
     useEffect(() => {
         setItems([]);
-        unit.items[active] && setItems(unit.items[active].billing_item
+        unit.items && unit.items.billing && unit.items.billing[active] && setItems(unit.items.billing[active].billing_item
             .filter(el => status === '' ? true : el.payment === status));
     }, [unit.items, active, status]);
 
@@ -79,99 +93,139 @@ function Component() {
     }, [])
 
     return (
-        <Template
+        <Template transparent
+            pagetitle="Unit Billing Details"
             title={(role === "sa" ? toSentenceCase(selected.building_name) + ", " : "" ) +
                    toSentenceCase(selected.section_type) + " " + 
                    toSentenceCase(selected.section_name) + " " + selected.number}
             loading={false}
-            labels={["Billing List", "Unit Information"]}
+            labels={[]}
             contents={[
                 <div style={{
                     display: 'flex',
                     marginTop: 16,
                 }}>
-                    <Card className="Container" style={{
-                        boxShadow: 'none',
-                        flexDirection: 'column',
-                    }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }} >
-                            <h5> Billing Month </h5>
-                            <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
-                                onClick={() => {
-                                    dispatch(setSelectedUnit({}));
-                                    history.push(url + "/add");
+                    <Column style={{ flex: 2 }}>
+                        <Card className="Container" style={{
+                            boxShadow: 'none',
+                            flexDirection: 'column',
+                        }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }} >
+                                <h5> Billing Month </h5>
+                                {view ? null : <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
+                                    onClick={() => {
+                                        dispatch(setSelectedUnit({}));
+                                        history.push(url + "/add");
+                                    }}
+                                />}
+                            </div>
+                            <ListGroup>
+                                {unit?.items?.billing?.length > 0 ? 
+                                unit?.items?.billing?.map((el, index) => <ListGroupItem 
+                                    style={{ cursor: "pointer" }}
+                                    active={index === active} 
+                                    tag="b"
+                                    onClick={() => setActive(index)}
+                                >
+                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                        <div>{el.billing_month}</div> 
+                                        <div>{el.billing_item.some(it => it.payment === "unpaid") ? 
+                                            <Pill color="light">Unpaid</Pill> : <Pill color="success">Paid</Pill>
+                                        }</div>
+                                </div>
+                                </ListGroupItem>) : <div style={{ padding: "10px 0px" }} >No Billing Yet</div>}
+                            </ListGroup>
+                        </Card>
+                    </Column>
+                    <Column style={{ flex: 8 }}>
+                    <Row>
+                        <Card className="Container" style={{
+                            flex: 4,
+                            flexDirection: 'column',
+                            marginRight: 16,
+                            boxShadow: 'none',
+                        }}>
+                            <Table
+                                columns={columns}
+                                data={items}
+                                loading={loading}
+                                pageCount={unit.total_pages}
+                                totalItems={items.length}
+                                filters={[
+                                    {
+                                        label: <p>{"Status: " + (status ? toSentenceCase(status) : "All")}</p>,
+                                        hidex: status === '',
+                                        delete: () => setStatus(''),
+                                        component: (toggleModal) =>
+                                            <>
+                                                <Filter
+                                                    data={[
+                                                        { label: 'Paid', value: 'paid' },
+                                                        { label: 'Unpaid', value: 'unpaid' },
+                                                    ]}
+                                                    onClick={(el) => {
+                                                        setStatus(el.value);
+                                                        toggleModal(false);
+                                                    }}
+                                                    onClickAll={() => {
+                                                        setStatus('');
+                                                        toggleModal(false);
+                                                    }}
+                                                />
+                                            </>
+                                    },
+                                ]}
+                                actions={[
+                                <>Billing Items {unit.items && unit.items.billing && unit.items.billing[active] ? 
+                                        "for " + unit.items.billing[active].billing_month : ""}</>
+                                ]}
+                                deleteSelection={(selectedRows, rows) => {
+                                    Object.keys(selectedRows).map(el => dispatch(deleteBillingUnitItem(
+                                        rows[el].original.id)));
                                 }}
                             />
-                        </div>
-                        <ListGroup>
-                            {unit.items.length > 0 ? 
-                            unit.items.map((el, index) => <ListGroupItem 
-                                style={{ cursor: "pointer" }}
-                                active={index === active} 
-                                tag="b"
-                                onClick={() => setActive(index)}
-                            >
-                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                    <div>{el.billing_month}</div> 
-                                    <div>{el.billing_item.some(it => it.payment === "unpaid") ? 
-                                        <Pill color="light">Unpaid</Pill> : <Pill color="success">Paid</Pill>
-                                    }</div>
-                            </div>
-                            </ListGroupItem>) : <div style={{ padding: "10px 0px" }} >No Billing Yet</div>}
-                        </ListGroup>
-                    </Card>
-                    <Card className="Container" style={{
-                        flex: 4,
-                        flexDirection: 'column',
-                        marginRight: 16,
-                        boxShadow: 'none',
-                    }}>
-                        <Table
-                            columns={columns}
-                            data={items}
-                            loading={loading}
-                            pageCount={unit.total_pages}
-                            totalItems={items.length}
-                            filters={[
-                                {
-                                    label: <p>{"Status: " + (status ? toSentenceCase(status) : "All")}</p>,
-                                    hidex: status === '',
-                                    delete: () => setStatus(''),
-                                    component: (toggleModal) =>
-                                        <>
-                                            <Filter
-                                                data={[
-                                                    { label: 'Paid', value: 'paid' },
-                                                    { label: 'Unpaid', value: 'unpaid' },
-                                                ]}
-                                                onClick={(el) => {
-                                                    setStatus(el.value);
-                                                    toggleModal(false);
-                                                }}
-                                                onClickAll={() => {
-                                                    setStatus('');
-                                                    toggleModal(false);
-                                                }}
-                                            />
-                                        </>
-                                },
-                            ]}
-                            actions={[
-                                <h3>
-                                    Total: {toMoney(items.reduce((sum, el) => sum + el.total, 0))}
-                                </h3>
-                            ]}
-                            onClickDetails={row => {
-                                dispatch(getBillingUnitItemDetails(row, history, url))
-                            }}
-                            deleteSelection={(selectedRows, rows) => {
-                                Object.keys(selectedRows).map(el => dispatch(deleteBillingUnitItem(
-                                    rows[el].original.id)));
-                            }}
-                        />
-                    </Card>
-                </div>,
-                <Detail type="Billing" data={selected} labels={details} editable={false} />,
+                        </Card>
+                    </Row>
+                    <Row>
+                        <Column style={{ display: 'block' }}>
+                            <Card style={{
+                                marginLeft: 16,
+                                marginRight: 20,
+                                marginBottom: 20,
+                                flex: 2,
+                            }}>
+                                <CardBody>
+                                    <CardTitle>Unit Information</CardTitle>
+                                    <Detail type="Billing" data={selected} labels={details} editable={false} />,
+                                </CardBody>
+                            </Card>
+                        </Column>
+                        <Column style={{ display: 'block' }}>
+                            <Card style={{
+                                marginRight: 16,
+                                marginBottom: 20,
+                                flex: 8,
+                            }}>
+                                <CardBody>
+                                    <CardTitle>
+                                        Summary {unit.items && unit.items.billing && unit.items.billing[active] ? 
+                                            "for " + unit.items.billing[active].billing_month : ""}
+                                    </CardTitle>
+                                    {(unit.items && unit.items.billing) ? <>
+                                    <ThreeColumn second="Subtotal" third={toMoney(unit.items.billing[active].group_amount)} />
+                                    <ThreeColumn second={"Penalty (" + (unit.items.billing[active].group_penalty_percentage) + "%)"}
+                                        third={<span style={{ color: 'red' }}>
+                                            {toMoney(unit.items.billing[active].group_penalty)}</span>} />
+                                    <ThreeColumn second="Total" 
+                                        third={<h4>{toMoney(unit.items.billing[active].total_group_amount)}</h4>}/></> : "-"}
+                                    {/* JSON.stringify(unit.items, null, 4) */}
+                                </CardBody>
+                            </Card>
+                        </Column>
+                    </Row>
+                </Column>
+                </div>
+                ,
             ]}
         />
     )

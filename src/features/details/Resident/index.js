@@ -20,7 +20,7 @@ const details = {
     'Bank Account': ['account_name', 'account_no', 'account_bank'],
 };
 
-function Component() {
+function Component({ view }) {
     const [data, setData] = useState({});
     const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -58,10 +58,10 @@ function Component() {
             labels={["Details", "Unit"]}
             activeTab={0}
             contents={[
-                <Detail data={data} labels={details}
+                <Detail view={view} data={data} labels={details}
                     onDelete={() => setConfirmDelete(true) }
                 />,
-                <Unit id={id} />,
+                <Unit view={view} id={id} />,
             ]}
         />
         </>

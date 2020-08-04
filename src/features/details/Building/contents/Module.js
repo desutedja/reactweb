@@ -144,7 +144,7 @@ export default (props) => {
               className="" type="checkbox"
               id={el.label.toLowerCase()}
               value={el.truthvalue}
-              onClick={e => {
+              onClick={props.view ? null : e => {
                   setClickedModule(el);
                   setConfirmChange(true);
                }}

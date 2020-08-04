@@ -5,7 +5,7 @@ import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 import ClinkLoader from '../../components/ClinkLoader';
-import { FiCheck, FiSearch, FiDownload } from 'react-icons/fi';
+import { FiCheck, FiSearch, FiDownload, FiXCircle } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import Tab from '../../components/Tab';
 import Breadcrumb from '../../components/Breadcrumb';
@@ -30,13 +30,14 @@ const tabs = [
     "Merchant", "Courier"
 ]
 
-function Component() {
+function Component({ view }) {
     const [info, setInfo] = useState({});
-    const [active, setActive] = useState(0);
+    const [active, setActive] = useState(null);
+    const [selectedId, setSelectedId] = useState([]);
     const [selected, setSelected] = useState([]);
     const [limit, setLimit] = useState(5);
     const [status, setStatus] = useState('');
-    const [filter, setFilter] = useState('');
+    const [filter, setFilter] = useState('undisbursed');
     const [loadingMerchant, setLoadingMerchant] = useState(false)
     const [loadingCourier, setLoadingCourier] = useState(false)
     const [transferCode, setTransferCode] = useState('');
@@ -65,7 +66,7 @@ function Component() {
 
     const filtersDisbursement = [
         { label: 'Disbursed Only', value: 'disbursed' },
-        { label: 'Undisbursed Only', value: 'undisbursed' }
+        { label: 'Undisbursed Only', value: 'undisbursed' },
     ]
 
     const filterStatus = [
@@ -106,7 +107,7 @@ function Component() {
         else return [
             { Header: 'ID', accessor: 'id' },
             {
-                Header: 'Ref Code', accessor: row => <Transaction items={[row.ref_code]} id={row.ref_code} />
+                Header: 'Ref Code', accessor: row => <Transaction items={[row.ref_code]} trxcode={row.ref_code} />
             },
             {
                 Header: 'Assignee Fee', accessor: row => toMoney(row.assignee_fee)
@@ -140,6 +141,7 @@ function Component() {
 
     useEffect(() => {
         setLimit(5);
+        setSelectedId([]);
     }, [type])
 
     useEffect(() => {
@@ -181,6 +183,11 @@ function Component() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [type, searchValue, limit, filter]);
 
+    useEffect(() => {
+        type === 'merchant' ?
+        setMerchant(selectedId.map(item => item.id).join(',')) :
+        setCourier(selectedId.map(item => item.id).join(','));
+    }, [selectedId, type]);
 
     return (
         <>
@@ -395,142 +402,148 @@ function Component() {
                     </div>
                 </div>
             </div>
-            <div style={{
-                display: 'flex',
-                // marginTop: 16,
-            }}>
-                <Card className="Container" style={{
-                    flexDirection: 'column',
-                    // marginRight: 16,
-                    boxShadow: 'none',
-                }}>
-                    <Tab
-                        labels={tabs}
-                        setTab={setType}
-                        tabActive={setActive}
-                        activeTab={0}
-                        contents={[
-                            <>
-                                <div className="row no-gutters align-items-center mb-4">
-                                    <div className="col">
-                                        <h5 style={{
-                                            marginBottom: 0,
-                                        }}>Select Merchant</h5>
-                                    </div>
-                                    <div className="col-auto">
-                                        <select style={{
-                                            borderRadius: '4px',
-                                            border: '1px solid silver',
-                                            padding: '6px 4px'
-                                        }}
-                                            onChange={e => {
-                                                setFilter(e.target.value)
+            <div className="row no-gutters">
+                <div className="col-12 col-md-4 col-lg-3">
+                    <Card className="Container" style={{
+                        flexDirection: 'column',
+                        boxShadow: 'none',
+                    }}>
+                        <Tab
+                            labels={tabs}
+                            setTab={setType}
+                            activeTab={0}
+                            contents={[
+                                <>
+                                    <div className="row no-gutters align-items-center mb-4">
+                                        <div className="col">
+                                            <h5 style={{
+                                                marginBottom: 0,
+                                                minWidth: 100
+                                            }}>Select Merchant</h5>
+                                        </div>
+                                        <div className="col-auto">
+                                            <select style={{
+                                                borderRadius: '4px',
+                                                border: '1px solid silver',
+                                                padding: '6px 4px'
                                             }}
-                                        >
-                                            <option selected={true} value="">All</option>
-                                            {filtersDisbursement.map(filter => (
-                                                <option value={filter.value}>{filter.label}</option>
-                                            ))}
-                                        </select>
+                                                onChange={e => {
+                                                    setFilter(e.target.value)
+                                                }}
+                                            >
+                                                <option selected={true} value="">All</option>
+                                                {filtersDisbursement.map(item => (
+                                                    <option selected={item.value === filter} value={item.value}>{item.label}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
-                                {loadingMerchant && <div className="w-100 py-5 d-flex justify-content-center">
-                                    <ClinkLoader />
-                                </div>}
-                                <ListGroup>
-                                    {!loadingMerchant && merchants
-                                        .map((el, index) => <ListGroupItem style={{ cursor: 'pointer' }}
-                                            key={index}
-                                            tag="b"
-                                            active={index === active}
-                                            onClick={() => {
-                                                setMerchant(el.id.toString());
-                                                setCourier('');
-                                                setActive(index)
-                                            }}
-                                        >
-                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                <div>{el.name}</div>
-                                                <div style={{ display: 'flex' }}>
-                                                    { /* <Pill color="success">{el.disbursed_count}</Pill> */}
-                                                    <Pill color={el.undisbursed_count > 0 ? "warning" : "light"}>
-                                                        {el.undisbursed_count}
-                                                    </Pill>
+                                    <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
+                                    {loadingMerchant && <div className="w-100 py-5 d-flex justify-content-center">
+                                        <ClinkLoader />
+                                    </div>}
+                                    <ListGroup>
+                                        {!loadingMerchant && merchants
+                                            .map((el, index) => <ListGroupItem style={{ cursor: 'pointer' }}
+                                                key={index}
+                                                tag="b"
+                                                // active={index === active}
+                                                active={selectedId.some(items => items.id === el.id)}
+                                                onClick={() => {
+                                                    setCourier('');
+                                                    !selectedId.some(items => items.id === el.id) ?
+                                                    setSelectedId([
+                                                        ...selectedId,
+                                                        el
+                                                    ]) :
+                                                    setSelectedId(selectedId.filter(items => items.id !== el.id))
+                                                }}
+                                            >
+                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                    <div>{el.name}</div>
+                                                    <div style={{ display: 'flex' }}>
+                                                        { /* <Pill color="success">{el.disbursed_count}</Pill> */}
+                                                        <Pill color={el.undisbursed_count > 0 ? "warning" : "light"}>
+                                                            {el.undisbursed_count}
+                                                        </Pill>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </ListGroupItem>)}
-                                </ListGroup>
-                                {!loadingMerchant && merchants.length === 0 && (
-                                    <div className="w-100 text-center">No Merchant found</div>
-                                )}
-                                {!loadingMerchant && merchants.length !== 0 && merchants.length >= limit && (
-                                    <div className="btn w-100 text-primary"
-                                        onClick={() => setLimit(limit + 10)}
-                                    >load 10 more</div>
-                                )}
-                            </>,
-                            <>
-                                <div className="row no-gutters align-items-center mb-4">
-                                    <div className="col">
-                                        <h5 style={{
-                                            marginBottom: 0,
-                                        }}>Select Courier</h5>
-                                    </div>
-                                    <div className="col-auto">
-                                        <select style={{
-                                            borderRadius: '4px',
-                                            border: '1px solid silver',
-                                            padding: '6px 4px'
-                                        }}
-                                            onChange={e => {
-                                                setFilter(e.target.value)
+                                            </ListGroupItem>)}
+                                    </ListGroup>
+                                    {!loadingMerchant && merchants.length === 0 && (
+                                        <div className="w-100 text-center">No Merchant found</div>
+                                    )}
+                                    {!loadingMerchant && merchants.length !== 0 && merchants.length >= limit && (
+                                        <div className="btn w-100 text-primary"
+                                            onClick={() => setLimit(limit + 10)}
+                                        >load 10 more</div>
+                                    )}
+                                </>,
+                                <>
+                                    <div className="row no-gutters align-items-center mb-4">
+                                        <div className="col">
+                                            <h5 style={{
+                                                marginBottom: 0,
+                                                minWidth: 100
+                                            }}>Select Courier</h5>
+                                        </div>
+                                        <div className="col-auto">
+                                            <select style={{
+                                                borderRadius: '4px',
+                                                border: '1px solid silver',
+                                                padding: '6px 4px'
                                             }}
-                                        >
-                                            <option selected={true} value="">All</option>
-                                            {filtersDisbursement.map(filter => (
-                                                <option value={filter.value}>{filter.label}</option>
-                                            ))}
-                                        </select>
+                                                onChange={e => {
+                                                    setFilter(e.target.value)
+                                                }}
+                                            >
+                                                <option selected={true} value="">All</option>
+                                                {filtersDisbursement.map(item => (
+                                                    <option selected={item.value === filter} value={item.value}>{item.label}</option>
+                                                ))}
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
-                                {loadingCourier && <div className="w-100 py-5 d-flex justify-content-center">
-                                    <ClinkLoader />
-                                </div>}
-                                <ListGroup>
-                                    {!loadingCourier && couriers
-                                        .map((el, index) => <ListGroupItem style={{ cursor: 'pointer' }}
-                                            key={index}
-                                            tag="b"
-                                            active={index === active}
-                                            onClick={() => {
-                                                setCourier(el.id.toString());
-                                                setMerchant('');
-                                                setActive(index)
-                                            }}
-                                        >
-                                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                <div>{el.firstname} {el.lastname}</div>
-                                                <div>{}</div>
-                                            </div>
-                                        </ListGroupItem>)}
-                                </ListGroup>
-                                {!loadingCourier && couriers.length === 0 && (
-                                    <div className="w-100 text-center">No Courier found</div>
-                                )}
-                                {!loadingMerchant && couriers.length !== 0 && couriers.length >= limit && (
-                                    <div className="btn w-100 text-primary"
-                                        onClick={() => setLimit(limit + 10)}
-                                    >load 10 more</div>
-                                )}
-                            </>,
-                        ]}
-                    />
-                </Card>
-                <div style={{
-                    flex: 4,
-                }}>
+                                    <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
+                                    {loadingCourier && <div className="w-100 py-5 d-flex justify-content-center">
+                                        <ClinkLoader />
+                                    </div>}
+                                    <ListGroup>
+                                        {!loadingCourier && couriers
+                                            .map((el, index) => <ListGroupItem style={{ cursor: 'pointer' }}
+                                                key={index}
+                                                tag="b"
+                                                active={selectedId.some(items => items.id === el.id)}
+                                                onClick={() => {
+                                                    setMerchant('');
+                                                    !selectedId.some(items => items.id === el.id) ?
+                                                    setSelectedId([
+                                                        ...selectedId,
+                                                        el
+                                                    ]) :
+                                                    setSelectedId(selectedId.filter(items => items.id !== el.id))
+                                                }}
+                                            >
+                                                <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                    <div>{el.firstname} {el.lastname}</div>
+                                                    <div>{}</div>
+                                                </div>
+                                            </ListGroupItem>)}
+                                    </ListGroup>
+                                    {!loadingCourier && couriers.length === 0 && (
+                                        <div className="w-100 text-center">No Courier found</div>
+                                    )}
+                                    {!loadingMerchant && couriers.length !== 0 && couriers.length >= limit && (
+                                        <div className="btn w-100 text-primary"
+                                            onClick={() => setLimit(limit + 10)}
+                                        >load 10 more</div>
+                                    )}
+                                </>,
+                            ]}
+                        />
+                    </Card>
+                </div>
+                <div className="col-12 col-md">
                     <Card className="Container" style={{
                         alignItems: 'center',
                         justifyContent: 'space-between',
@@ -538,10 +551,35 @@ function Component() {
                         flexDirection: 'row',
                     }}>
                         <div>
-                            Undisbursed Amount For {toSentenceCase(type)} {type === "merchant" ?
-                                <b>{(merchants.length > 0 ? merchants[active] && merchants[active].name : '')}</b>
-                                : <b>{(couriers.length > 0 ? couriers[active] &&
-                                    (couriers[active].firstname + " " + couriers[active].lastname) : '')}</b>}
+                <p>Undisbursed Amount For {selectedId.length === 0 ? (<b>{'All ' + toSentenceCase(type).replace(' ', '') + 's'}</b>) : (selectedId.length > 1 ? toSentenceCase(type).replace(' ', '') + 's' : toSentenceCase(type)).replace(' ', '') + ' :' }</p>
+                            {selectedId && selectedId.map(el => <>
+                                <div
+                                style={{
+                                    position: 'relative',
+                                    display: 'inline-block',
+                                    backgroundColor: '#d9d9d9',
+                                    borderRadius: 80,
+                                    paddingLeft: 6,
+                                    paddingRight: 6 + 18,
+                                    marginRight: 6,
+                                    marginBottom: 4
+                                }}
+                                >
+                                    <b>{type === "merchant" ? el.name : el.firstname + " " + el.lastname}</b>
+                                    <FiXCircle
+                                    onClick={() => {
+                                        setSelectedId(selectedId.filter(items => items.id !== el.id))
+                                    }}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        right: 6,
+                                        transform: 'translateY(-50%)',
+                                        cursor: 'pointer'
+                                    }}
+                                    />
+                                </div>  
+                            </>)}
                         </div>
                         <div style={{
                             display: 'flex',
@@ -553,13 +591,13 @@ function Component() {
                             }}>
                                 {toMoney(disbursement.items.undisbursed_amount)}
                             </b>
-                            <MyButton label="Disburse All"
+                            {view ? null : <MyButton label="Disburse All"
                                 disabled={disbursement.items?.undisbursed_amount === 0}
                                 onClick={() => {
                                     setSelected(disbursement.items.data.filter(el => el && !el.disbursement_date));
                                     setDisburseModal(true);
                                 }}
-                            />
+                            />}
                             <Button label="Download .csv" icon={<FiDownload />}
                                 onClick={() => {
                                     dispatch(downloadTransactionDisbursement(type, merchant, courier))
@@ -631,7 +669,7 @@ function Component() {
                                 },
                             ]}
                             actions={[]}
-                            renderActions={(selectedRowIds, page) => {
+                            renderActions={view ? null : (selectedRowIds, page) => {
                                 return ([
                                     <Button
                                         disabled={Object.keys(selectedRowIds).length === 0}

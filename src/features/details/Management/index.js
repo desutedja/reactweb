@@ -15,7 +15,7 @@ const details =
     'Contact Person': ['pic_name', 'pic_phone', 'pic_email']
 };
 
-function Component() {
+function Component({ view }) {
     const [data, setData] = useState({});
 
     const [confirmDelete, setConfirmDelete] = useState(false);
@@ -46,6 +46,7 @@ function Component() {
             Are you sure you want to delete management <b>{data.name}</b> ?
         </Modal>
         <Template
+            view={view}
             image={data.logo}
             title={data.name}
             website={data.website}
@@ -53,7 +54,7 @@ function Component() {
             loading={!data.id}
             labels={["Details"]}
             contents={[
-                <Detail type="Management" data={data} labels={details}
+                <Detail view={view} type="Management" data={data} labels={details}
                     onDelete={
                         () => setConfirmDelete(true)
                     }

@@ -109,6 +109,8 @@ function Component() {
                 province_name: values.province_label,
                 city_name: values.city_label,
                 district_name: values.district_label,
+                lat: parseFloat(values.lat),
+                long: parseFloat(values.long),
             })}
             edit={data => dispatch(editBuilding(data, history, selected.id))}
             add={data => dispatch(createBuilding(data, history))}

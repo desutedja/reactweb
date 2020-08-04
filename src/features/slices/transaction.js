@@ -180,8 +180,7 @@ export const getTransactionDisbursement = (
   dispatch(get(endpointTransaction + '/admin/disbursement/' + type +
     '?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
-    '&merchant_id=' + merchant +
-    '&courier_id=' + courier +
+    (type === 'merchant' ? '&merchant_id=' + merchant : '&courier_id=' + courier) +
     '&limit=' + pageSize +
     '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search +

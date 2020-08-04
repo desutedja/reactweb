@@ -66,6 +66,7 @@ function Component() {
             res => {
                 setLoading(false);
                 setTrxData(res.data.data.graph);
+                console.log(res.data.data)
             }))
     }, [dispatch, range]);
 
@@ -131,7 +132,7 @@ function Component() {
             const aMonthBefore  = new Date().setDate(new Date().getDate() - 30);
             const datesRange = getDatesRange(new Date(aMonthBefore), new Date(), 'days')
             const trxDatas = datesRange.map((date, i) => {
-                const data = trxData.filter(data => data.date.split(' ')[0] === date.split(' ')[0]);
+                const data = trxData ? trxData.filter(data => data.date.split(' ')[0] === date.split(' ')[0]) : [];
                 let month = moment(date).format('MMM') + ' ';
                 const d = moment(date).format('D');
                 if (trxData) {
@@ -169,8 +170,7 @@ function Component() {
             })
             setTrxDataFormatted(trxDatas)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [trxData]);
+    }, [range, trxData]);
 
     const transactionsSummary = [
         { header: 'Orders', accessor: trxSumm.total_transaction_count },

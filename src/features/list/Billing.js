@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { FiSearch, FiDownload, FiPlus } from 'react-icons/fi';
+import { FiSearch, FiDownload, FiUpload } from 'react-icons/fi';
 
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
@@ -14,7 +14,7 @@ import { get } from '../slice';
 import Template from './components/Template';
 import { setSelected } from '../slices/resident';
 
-function Component() {
+function Component({ view }) {
 
     const [search, setSearch] = useState('');
 
@@ -24,28 +24,44 @@ function Component() {
     const [buildingName, setBuildingName] = useState('');
     const [buildings, setBuildings] = useState('');
 
+    const [limit, setLimit] = useState(5);
+
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
 
     useEffect(() => {
         dispatch(get(endpointAdmin + '/building' +
-            '?limit=5&page=1' +
+            '?limit=' + limit + '&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
+                let totalItems = Number(res.data.data.total_items);
+                let restTotal = totalItems - data.length;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
+                if (data.length < totalItems && search.length === 0) {
+                    formatted.push({
+                        label: 'Load ' + (restTotal > 5 ? 5 : restTotal) + ' more',
+                        restTotal: restTotal > 5 ? 5 : restTotal,
+                        className: 'load-more'
+                    })
+                }
+
                 setBuildings(formatted);
             }))
-    }, [dispatch, search]);
+    }, [dispatch, search, limit]);
+
+    useEffect(() => {
+        if (search.length ===  0) setLimit(5)
+    }, [search])
 
     const columns = [
         // { Header: 'ID', accessor: 'code' },
         { Header: 'Unit ID', accessor: 'id' },
         {
             Header: 'Unit', accessor: row => <span className="Link"
-                onClick={() => dispatch(getBillingUnitDetails(row, history, url))}
+                onClick={() => dispatch(getBillingUnitDetails(row, history, url))} 
             ><b>{toSentenceCase(row.section_type) + ' '
                 + row.section_name + ' ' + row.number}</b></span>
         },
@@ -59,6 +75,7 @@ function Component() {
 
     return (
         <Template
+            pagetitle="Billing List"
             title='Unit'
             columns={columns}
             slice='billing'
@@ -81,27 +98,36 @@ function Component() {
                             <Filter
                                 data={buildings}
                                 onClick={(el) => {
+                                    if (!el.value) {
+                                        setLimit(limit + el.restTotal);
+                                        return;
+                                    }
                                     setBuilding(el.value);
                                     setBuildingName(el.label);
                                     toggleModal(false);
                                     setSearch("");
+                                    setLimit(5);
                                 }}
                                 onClickAll={() => {
                                     setBuilding("");
                                     setBuildingName("");
                                     toggleModal(false);
                                     setSearch("");
+                                    setLimit(5);
                                 }}
                             />
                         </>
                 },
             ] : []}
-            actions={[
+            actions={view ? null : [
+                <Button label="Upload Bulk" icon={<FiUpload />}
+                    onClick={() => dispatch(downloadBillingUnit(search, building))}
+                />,
                 <Button label="Download .csv" icon={<FiDownload />}
                     onClick={() => dispatch(downloadBillingUnit(search, building))}
-                />
+                />,
             ]}
-            onClickAddBilling={row => {
+            onClickAddBilling={view ? null : row => {
                 dispatch(setSelected(row));
                 dispatch(setSelectedUnit({}));
                 dispatch(getBillingUnitDetails(row, history, url))

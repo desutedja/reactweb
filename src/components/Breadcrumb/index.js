@@ -29,16 +29,8 @@ function Breadcrumb({ title }) {
                             className="Crumbs"
                             onClick={() => {
                                 let array = location.pathname.split('/');
-
-                                if (array[1] === el && array.length > 1) {
-                                    history.push('/' + el);
-                                } else if (array[2] === el && array.length > 2) {
-                                    history.push('/' + array[1] + '/' + el);
-                                } else if (array[3] === el && array.length > 3) {
-                                    history.push('/' + array[1] + '/' + array[2] + '/' + el);
-                                } else {
-                                    history.push(el);
-                                }
+                                // it's a breadcrumb, it should be able to track back indefinitely.
+                                history.push(array.splice(0, index + 1).join('/'));
                             }}>
                             {el ? toSentenceCase(el.replace(/-/g, ' ')) : ''}
                         </div>

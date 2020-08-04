@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link  } from 'react-router-dom';
 import { FiSearch, FiCheck, FiFile, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import { ListGroup, ListGroupItem } from 'reactstrap';
@@ -15,18 +16,19 @@ import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
 import { getBillingSettlement, downloadBillingSettlement, refresh } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
-import { toMoney, dateTimeFormatterCell, isRangeToday } from '../../utils';
+import { toMoney, dateTimeFormatterCell, isRangeToday, toSentenceCase } from '../../utils';
 import { get, post } from '../slice';
 import DateRangeFilter from '../../components/DateRangeFilter';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
-function Component() {
+function Component({ view }) {
 
     const { auth } = useSelector(state => state);
     const { loading, settlement, refreshToggle } = useSelector(state => state.billing);
 
     const [search, setSearch] = useState('');
+    const [limit, setLimit] = useState(5);
 
     const [settled, setSettled] = useState('');
     const [building, setBuilding] = useState('');
@@ -58,30 +60,57 @@ function Component() {
 
     const columns = useMemo(() => [
         { Header: 'ID', accessor: 'id' },
-        { Header: 'Ref Code', accessor: 'trx_code' },
+        { Header: 'Ref Code', accessor: row =>  <Link class="Link" 
+            to={"/" + auth.role + "/billing/settlement/" + row.trx_code}><b>{row.trx_code}</b></Link> },
+        { Header: 'Unit', accessor: row => <>{toSentenceCase(row.section_type)} {toSentenceCase(row.section_name)} {row.number}</>  },
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
         {
-            Header: 'Settled', accessor: row => row.payment_settled_date ? <Pill color="success">Settled</Pill> :
-                <Pill color="secondary">Unsettled</Pill>
+            Header: 'Settled', accessor: row => auth.role === 'bm' ? (row.payment_settled === 1 ? <Pill color="success">Settled</Pill> :
+            <Pill color="secondary">Unsettled</Pill>) : (row.payment_settled_date ? <Pill color="success">Settled</Pill> :
+                <Pill color="secondary">Unsettled</Pill>)
         },
         {
-            Header: 'Settlement Date', accessor: row => row.payment_settled_date ?
-                dateTimeFormatterCell(row.payment_settled_date) : '-'
+            Header: 'Settlement Date', accessor: row => auth.role === 'bm' ? (row.disbursement_date ?
+            dateTimeFormatterCell(row.disbursement_date) : '- ') : (row.payment_settled_date ?
+                dateTimeFormatterCell(row.payment_settled_date) : '-')
         },
-    ], [])
+    ], [auth])
+
+    
+    useEffect(() => {
+        console.log(columns)
+        if (auth.role === 'bm') {
+            console.log(columns)
+            return;
+        }
+    }, [auth.role, columns])
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
-            '?limit=5&page=1' +
+            '?limit=' + limit + '&page=1' +
             '&search=' + search, res => {
                 let data = res.data.data.items;
+                let totalItems = Number(res.data.data.total_items);
+                let restTotal = totalItems - data.length;
 
                 let formatted = data.map(el => ({ label: el.name, value: el.id }));
 
+                if (data.length < totalItems && search.length === 0) {
+                    formatted.push({
+                        label: 'Load ' + (restTotal > 5 ? 5 : restTotal) + ' more',
+                        restTotal: restTotal > 5 ? 5 : restTotal,
+                        className: 'load-more'
+                    })
+                }
+
                 setBuildings(formatted);
             }))
-    }, [dispatch, search]);
+    }, [dispatch, limit, search]);
+
+    useEffect(() => {
+        if (search.length === 0) setLimit(5);
+    }, [search])
 
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
@@ -91,6 +120,7 @@ function Component() {
 
     return (
         <div>
+            <h2 style={{ marginLeft: '16px', marginTop: '10px' }}>Billing Settlement</h2>
             <Breadcrumb title="Settlement" />
             <Modal
                 isOpen={uploadModal}
@@ -186,7 +216,6 @@ function Component() {
             </Modal>
             <Modal isOpen={settleModal} toggle={() => {
                 setSettleModal(!settleModal)
-                setSelected([]);
             }}
                 title="Settlement Selection"
                 okLabel="Settle"
@@ -196,6 +225,9 @@ function Component() {
                     }, res => {
                         dispatch(refresh());
                         setSettleModal(false);
+                        dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
+                            setInfo(res.data.data);
+                        }))
                     }))
                 }}
             >
@@ -338,6 +370,10 @@ function Component() {
                                     <Filter
                                         data={buildings}
                                         onClick={(el) => {
+                                            if (!el.value) {
+                                                setLimit(limit + el.restTotal);
+                                                return;
+                                            }
                                             setBuilding(el.value);
                                             setBuildingName(el.label);
                                             toggleModal(false);
@@ -376,7 +412,7 @@ function Component() {
                         ]}
                     renderActions={(selectedRowIds, page) => {
                         return ([
-                            auth.role === 'sa' && <Button
+                            view ? null : auth.role === 'sa' && <Button
                                 disabled={Object.keys(selectedRowIds).length === 0}
                                 onClick={() => {
                                     setSettleModal(true);
@@ -384,7 +420,7 @@ function Component() {
                                 icon={<FiCheck />}
                                 label="Settle"
                             />,
-                            auth.role === 'sa' && <Button
+                            view ? null : auth.role === 'sa' && <Button
                                 onClick={() => {
                                     setUploadModal(true);
                                 }}

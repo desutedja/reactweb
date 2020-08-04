@@ -19,13 +19,14 @@ const columns = [
     { Header: "Website", accessor: row => <Link>{row.website}</Link> },
 ]
 
-function Component() {
+function Component({ view }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
 
     return (
         <Template
+            view={view}
             columns={columns}
             slice="management"
             getAction={getManagement}

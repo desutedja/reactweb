@@ -31,7 +31,7 @@ const columnsUnit = [
     { Header: "Type", accessor: row => row.unit_type + " - " + row.unit_size },
 ]
 
-function Component({ id }) {
+function Component({ id, view }) {
     const [addUnit, setAddUnit] = useState(false);
     const [delUnit, setDelUnit] = useState({
         delete: []
@@ -84,6 +84,7 @@ function Component({ id }) {
     }, [role, selected])
 
     useEffect(() => {
+        setMainOwner();
         addUnitStep === 3 && selectedUnit !== '' && dispatch(get(endpointResident + '/management/resident/get_main_owner/' + selectedUnit.value.id,
             res => {
                 if (res.data.data.resident && res.data.data.resident.id !== 0) {
@@ -169,7 +170,7 @@ function Component({ id }) {
                     <div style={{ display: 'flex', flexWrap: 'wrap' }} >
                         {subs.map(el =>
                             <div style={{ display: 'flex', marginLeft: '50px' }} onClick={() => dispatch(refresh())} >
-                                <Resident id={el.id} data={el} onClickPath={removeLastFromPath(path)} />
+                                <Resident id={el.id} data={el} />
                                 <FiX size={15} style={{ marginTop: '10px', cursor: 'pointer' }}
                                     onClick={() => { setConfirmDelete(true); setSelectedUnit(item); setSubAccount(el) }} />
                             </div>
@@ -355,7 +356,7 @@ function Component({ id }) {
                                 <>
                                     <p>This unit already has main owner, click below to get to the main owner page : </p>
                                     <div onClick={() => { setAddUnitStep(1); setAddUnit(false) }} style={{ display: 'flex', justifyContent: 'space-between' }} >
-                                        <Resident id={mainOwner.id} data={mainOwner} onClickPath={removeLastFromPath(path)} />
+                                        <Resident id={mainOwner.id} data={mainOwner} />
                                     </div>
                                 </>}
                     </form>
@@ -376,12 +377,12 @@ function Component({ id }) {
                 pageCount={unit.total_pages}
                 fetchData={fetchData}
                 filters={[]}
-                actions={[
+                actions={view ? null : [
                     <Button key="Add Unit" label="Add Unit" icon={<FiPlus />}
                         onClick={() => setAddUnit(true)}
                     />
                 ]}
-                onClickDelete={row => {
+                onClickDelete={view ? null : row => {
                     let del = row.unit_sub_account ? row.unit_sub_account.map(item => ({
                         unit_id: Number(row.unit_id),
                         owner_id: Number(item.id)

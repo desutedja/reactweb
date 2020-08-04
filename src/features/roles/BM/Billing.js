@@ -5,6 +5,7 @@ import Add from '../../form/Billing';
 import Details from '../../details/Billing';
 import DetailsItem from '../../details/BillingItem';
 import Settlement from '../../settlement/Billing';
+import BillingRecord from '../../details/BillingRecord';
 
 import List from '../../list/Billing';
 
@@ -20,6 +21,10 @@ function Component() {
             <Route path={`${path}/edit`}>
                 <Add />
             </Route>
+            <Redirect exact from={`${path}/unit/item/record`} to={`${path}/unit/item`} />
+            <Route path={`${path}/unit/item/record/:trx_code`}>
+                <BillingRecord />
+            </Route>
             <Route path={`${path}/unit/item/add`}>
                 <Add />
             </Route>
@@ -31,6 +36,9 @@ function Component() {
             </Route>
             <Route path={`${path}/unit/item`}>
                 <Details />
+            </Route>
+            <Route path={`${path}/settlement/:trx_code`}>
+                <BillingRecord />
             </Route>
             <Route path={`${path}/settlement`}>
                 <Settlement />

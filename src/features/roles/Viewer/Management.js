@@ -10,7 +10,7 @@ function Component() {
     return (
         <Switch>
             <Route exact path={path}>
-                <List />
+                <List view />
             </Route>
             <Route path={`${path}/:id`}>
                 <Details />

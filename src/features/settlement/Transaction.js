@@ -5,6 +5,7 @@ import { FiCheck, FiDownload, FiUpload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import moment from 'moment';
 
+import Breadcrumb from '../../components/Breadcrumb';
 import Filter from '../../components/Filter';
 import Modal from '../../components/Modal';
 import Loading from '../../components/Loading';
@@ -60,7 +61,7 @@ const columns = [
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
-function Component() {
+function Component({ view }) {
     const [info, setInfo] = useState({});
     // const [inputValue, setInputValue] = useState('');
 
@@ -83,8 +84,6 @@ function Component() {
     const [settlementEnd, setSettlementEnd] = useState(moment().format('yyyy-MM-DD'));
 
     let dispatch = useDispatch();
-    let history = useHistory();
-    let { url } = useRouteMatch();
 
     const getSum = items => {
         return items.reduce((sum, el) => {
@@ -105,6 +104,8 @@ function Component() {
 
     return (
         <>
+            <h2 style={{ marginLeft: '16px', marginTop: '10px' }}>Transaction Settlement</h2>
+            <Breadcrumb title="Settlement" />
             <Modal
                 width='700px'
                 isOpen={uploadModal}
@@ -215,6 +216,9 @@ function Component() {
                     dispatch(post(endpointTransaction + '/admin/transaction/settlement/create', dataSettle, res => {
                         setSettleModal(false);
                         dispatch(refresh());
+                        dispatch(get(endpointTransaction + '/admin/transaction/summary', res => {
+                            setInfo(res.data.data);
+                        }));
                     }))
                 }}
             >
@@ -364,7 +368,6 @@ function Component() {
                         ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, statusSettlement, settlementStart, settlementEnd])}
-                    onClickDetails={row => dispatch(getTransactionDetails(row, history, url))}
                     filters={[
                         ...statusSettlement.value === 'settled' ? [{
                             hidex: isRangeToday(settlementStart, settlementEnd),
@@ -408,7 +411,7 @@ function Component() {
                     renderActions={(selectedRowIds, page) => {
                         // console.log(selectedRowIds);
                         return ([
-                            <Button
+                            view ? null : <Button
                                 disabled={Object.keys(selectedRowIds).length === 0}
                                 onClick={() => {
                                     setSettleModal(true);
@@ -416,7 +419,7 @@ function Component() {
                                 icon={<FiCheck />}
                                 label="Settle Selection"
                             />,
-                            <MyButton label="Upload Settlement" icon={<FiUpload />}
+                            view ? null : <MyButton label="Upload Settlement" icon={<FiUpload />}
                                 onClick={() => {
                                     setUploadModal(true);
                                 }}

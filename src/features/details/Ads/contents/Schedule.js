@@ -17,7 +17,7 @@ const columns = [
     { Header: "Hour To", accessor: "hour_to" },
 ]
 
-function Component() {
+function Component({ view }) {
     const [addSchedule, setAddSchedule] = useState(false);
     const [allDay, setAllDay] = useState(false);
 
@@ -63,12 +63,12 @@ function Component() {
                 pageCount={schedule.total_pages}
                 fetchData={fetchData}
                 filters={[]}
-                actions={[
+                actions={view ? null : [
                     <Button key="Add" label="Add" icon={<FiPlus />}
                         onClick={() => setAddSchedule(true)}
                     />
                 ]}
-                onClickDelete={row =>
+                onClickDelete={view ? null : row =>
                     dispatch(setConfirmDelete("Are you sure to delete this item?",
                         () => dispatch(deleteAdsSchedule(row))
                     ))

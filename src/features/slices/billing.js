@@ -180,20 +180,9 @@ export const getBillingDisbursement = (pageIndex, pageSize, search = '', buildin
     }))
 }
 
-export const downloadBillingDisbursement = () => dispatch => {
-  dispatch(startAsync());
-
-  dispatch(getFile(billingEndpoint + '/disbursement/list/management' +
-    '?export=true',
-    'billing_disbursement.csv',
-    res => {
-      dispatch(stopAsync());
-    }))
-}
-
 export const getBillingUnitDetails = (row, history, url) => dispatch => {
   dispatch(setSelected(row));
-  history.push(url + '/item');
+    history.push(url + '/item');
 }
 
 export const getBillingUnitItem = (pageIndex, pageSize, search = '', selected, status) => dispatch => {
@@ -245,7 +234,7 @@ export const editBillingUnitItem = (data, selected, history, id) => dispatch => 
 
   dispatch(put(billingEndpoint, { ...data, id: selected.id },
     res => {
-      dispatch(setSelected(res.data.data));
+      dispatch(setSelectedUnit(res.data.data));
       history.goBack();
 
       dispatch(setInfo({
