@@ -25,7 +25,9 @@ function Component({ view }) {
             'Availability Status': [
                 {
                     disabled: data.staff_role === "courier",
-                    label: 'current_shift_status', vfmt: v => v ? <Pill color="success">On Shift</Pill> : <Pill color="secondary">No</Pill>
+                    label: 'current_shift_status', vfmt: v =>
+                        data.staff_role === "gm_bm" || data.staff_role === "pic_bm" ? <Pill color="success">Always</Pill> :
+                            v ? <Pill color="success">On Shift</Pill> : <Pill color="secondary">No</Pill>
                 },
                 {
                     disabled: data.staff_role === "courier",
