@@ -28,6 +28,7 @@ function Component() {
     let dispatch = useDispatch();
 
     const { auth } = useSelector(state => state);
+    const [cats, setCats] = useState([]);
     const [trxData, setTrxData] = useState([]);
     const [trxDataFormatted, setTrxDataFormatted] = useState([]);
 
@@ -59,6 +60,15 @@ function Component() {
         orderType,
         // setOrderType
     ] = useState('year');
+
+    useEffect(() => {
+        dispatch(get(endpointMerchant + '/admin/categories',
+        res => {
+            const data = res.data.data;
+            const formatted = data.map(el => ({label: el.name, value: el.id}))
+            setCats(formatted);
+        }))
+    }, [dispatch])
 
     useEffect(() => {
         setLoading(true);
@@ -187,7 +197,11 @@ function Component() {
         <>
             <div className="row no-gutters">
                 <div className="col-9">
-                    <div className="Container color-2 d-flex flex-column cursor-pointer">
+                    <div className="Container color-2 d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/transaction/list');
+                    }}
+                    >
                         <div className="row no-gutters align-items-center py-2">
                             <div className="col">
                                 <AnimatedNumber
@@ -206,7 +220,11 @@ function Component() {
                     </div>
                 </div>
                 <div className="col">
-                    <div className="Container d-flex flex-column">
+                    <div className="Container d-flex flex-column cursor-pointer"
+                    onClick={() => {
+                        history.push('/' + auth.role + '/merchant');
+                    }}
+                    >
                         <div className="d-flex justify-content-between mb-2">
                             <div>
                                 Active Merchant
@@ -312,9 +330,16 @@ function Component() {
                                         <Legend />
                                         <CartesianGrid vertical={false} stroke="#ddd" dataKey="Date" />
                                         <Bar radius={4} dataKey="Amount Transaction" fill="#004e92" 
-                                        yAxisId="right" maxBarSize={70}
+                                        yAxisId="right" maxBarSize={70} className="cursor-pointer"
+                                        onClick={() => {
+                                            history.push('/' + auth.role + '/transaction/list');
+                                        }}
                                         />
-                                        <Line type="monotone" dataKey="Total Transaction" stroke="#ff7300"/>
+                                        <Line type="monotone" dataKey="Total Transaction" stroke="#ff7300" className="cursor-pointer"
+                                        onClick={() => {
+                                            history.push('/' + auth.role + '/transaction/list');
+                                        }}
+                                        />
                                     </ComposedChart>
                                 </ResponsiveContainer>
                             </div>
@@ -338,8 +363,13 @@ function Component() {
                                     <PieChart>
                                         <Pie data={successData} dataKey="qty"
                                         cx="50%" cy="50%" innerRadius={55} outerRadius={100}
-                                        fill="#8884d8" label  nameKey="category" labelLine={false}>
-                                            { successData.map((entry, i) => <Cell key={`cell-${i}`} fill={colorsSuccess[i]}/>) }
+                                        fill="#8884d8" label  nameKey="category" labelLine={false}
+                                        onClick={(el) => {
+                                            const clicked = cats.find(item => item.label === el.name);
+                                            if (clicked) history.push('/' + auth.role + '/product', {cat: clicked.value, catName: clicked.label})
+                                        }}
+                                        >
+                                            { successData.map((entry, i) => <Cell className="cursor-pointer" key={`cell-${i}`} fill={colorsSuccess[i]}/>) }
                                         </Pie>
                                         <Tooltip />
                                     </PieChart>
@@ -355,7 +385,12 @@ function Component() {
                                 }}>
                                     {successData.map((data, i) => (
                                         <>
-                                        <li className="text-capitalize py-1 col-6">
+                                        <li className="text-capitalize py-1 col-6 cursor-pointer"
+                                        onClick={() => {
+                                            const clicked = cats.find(item => item.label === data.category);
+                                            if (clicked) history.push('/' + auth.role + '/product', {cat: clicked.value, catName: clicked.label})
+                                        }}
+                                        >
                                             <svg height="14" width="14" >
                                                 <circle cx="7" cy="7" r="7" fill={colorsSuccess[i]} />
                                             </svg>
@@ -383,8 +418,13 @@ function Component() {
                                     <PieChart>
                                         <Pie data={failedData} dataKey="qty" nameKey="category"
                                         cx="50%" cy="50%" innerRadius={55} outerRadius={100}
-                                        fill="#8884d8" label labelLine={false}>
-                                            { failedData.map((entry, i) => <Cell fill={colorsFailed[i]}/>) }
+                                        fill="#8884d8" label labelLine={false}
+                                        onClick={(el) => {
+                                            const clicked = cats.find(item => item.label === el.name);
+                                            if (clicked) history.push('/' + auth.role + '/product', {cat: clicked.value, catName: clicked.label})
+                                        }}
+                                        >
+                                            { failedData.map((entry, i) => <Cell className="cursor-pointer" fill={colorsFailed[i]}/>) }
                                         </Pie>
                                         <Tooltip />
                                     </PieChart>
@@ -400,7 +440,12 @@ function Component() {
                                 }}>
                                     {failedData.map((data, i) => (
                                         <>
-                                        <li className="text-capitalize py-1 col-6">
+                                        <li className="text-capitalize py-1 col-6 cursor-pointer"
+                                        onClick={() => {
+                                            const clicked = cats.find(item => item.label === data.category);
+                                            if (clicked) history.push('/' + auth.role + '/product', {cat: clicked.value, catName: clicked.label})
+                                        }}
+                                        >
                                             <svg height="14" width="14" >
                                                 <circle cx="7" cy="7" r="7" fill={colorsFailed[i]} />
                                             </svg>
@@ -416,10 +461,14 @@ function Component() {
                 <div className="col-3">
                     <div className="row">
                         <div className="col">
-                            <div className="Container" style={{
+                            <div className="Container cursor-pointer" style={{
                             marginRight: 0,
                             flexDirection: 'column',
-                            }}>
+                            }}
+                            onClick={() => {
+                                history.push('/' + auth.role + '/transaction/disbursement');
+                            }}
+                            >
                                 <div className="row">
                                     <div className="col">
                                         <h5 className="mb-4">Transaction Summary</h5>
