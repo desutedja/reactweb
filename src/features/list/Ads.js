@@ -35,7 +35,7 @@ const columns = [
     },
 ]
 
-function Component() {
+function Component({ view }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
@@ -52,12 +52,13 @@ function Component() {
 
     return (
         <Template
+            view={view}
             columns={columns}
             slice={'ads'}
             getAction={getAds}
             deleteAction={deleteAds}
             sortBy={['start_date', 'end_date', 'published']}
-            actions={[
+            actions={view ? null : [
                 <Button key="Add Advertisement" label="Add Advertisement" icon={<FiPlus />}
                     onClick={() => {
                         dispatch(setSelected({}));

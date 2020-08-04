@@ -6,7 +6,6 @@ import { dateTimeFormatter, toSentenceCase } from '../../../utils'
 import { FiCopy, FiArrowUpCircle, FiTrash } from 'react-icons/fi';
 import Detail from '../components/Detail';
 import Modal from '../../../components/Modal';
-import Building from '../../../components/cells/Building';
 import Loading from '../../../components/Loading';
 import Button from '../../../components/Button';
 import Pill from '../../../components/Pill';
@@ -17,7 +16,7 @@ import Content from './contents/Content';
 import { get } from '../../slice';
 import { endpointAdmin } from '../../../settings';
 
-function Component() {
+function Component({ view }) {
     const [data, setData] = useState({});
 
     const [ confirmDelete, setConfirmDelete ] = useState(false);
@@ -103,7 +102,7 @@ function Component() {
             contents={[
             <div style={{ display: 'flex' }}>
             <div style={{ marginRight: '20px' }}><Content /></div>
-            <Detail type="Announcement" data={data} labels={details} 
+            <Detail view={view} type="Announcement" data={data} labels={details} 
                 editable={data.publish === 0}
                 renderButtons={() => [
                 <Loading size={10} loading={publishing && data.publish === 0}> 

@@ -19,7 +19,7 @@ import { dateTimeFormatter, toSentenceCase } from '../../../utils';
 import { deleteAds, setSelected, publishAds } from '../../slices/ads';
 
 
-function Component() {
+function Component({ view }) {
     const [toggle, setToggle] = useState(false);
     const [modal, setModal] = useState(false);
     const [data, setData] = useState({});
@@ -130,7 +130,7 @@ function Component() {
                 contents={[
                     <div style={{ display: "flex" }}>
                         <div style={{ marginRight: "20px" }}><Content /></div>
-                        <Detail type="Advertisement" data={data} labels={details}
+                        <Detail view={view} type="Advertisement" data={data} labels={details}
                             onDelete={() => dispatch(setConfirmDelete("Are you sure to delete this item?",
                                 () => dispatch(deleteAds(data, history))
                             ))}
@@ -165,7 +165,7 @@ function Component() {
                                 />
                             ]}
                         /></div>,
-                    <Schedule />,
+                    <Schedule view={view} />,
                 ]}
             />
         </>
