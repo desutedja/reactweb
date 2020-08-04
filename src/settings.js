@@ -1,5 +1,3 @@
-
-
 export const endpointBase = 'https://centratama.okbabe.technology';
 
 export const endpointAsset = endpointBase + '/clink-assets';

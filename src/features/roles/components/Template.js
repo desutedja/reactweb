@@ -79,25 +79,10 @@ function Component({ role, children }) {
         messaging.onMessage((payload) => {
             console.log('Message received. ', payload);
 
-            if (!("Notification" in window)) {
-                alert("This browser does not support desktop notification");
-            }
-
-            // Let's check whether notification permissions have already been granted
-            else if (Notification.permission === "granted") {
-                // If it's okay let's create a notification
-                var notification = new Notification(payload.notification.body);
-            }
-
-            // Otherwise, we need to ask the user for permission
-            else if (Notification.permission !== "denied") {
-                Notification.requestPermission().then(function (permission) {
-                    // If the user accepts, let's create a notification
-                    if (permission === "granted") {
-                        var notification = new Notification(payload.notification.body);
-                    }
-                });
-            }
+            dispatch(setNotif({
+                title: "New Notification",
+                message: payload.notification.body,
+            }))
         });
     }, [alert, dispatch, user.id])
 
@@ -280,7 +265,8 @@ function Component({ role, children }) {
                         <FiMenu style={{
                             marginRight: 16,
                         }} />
-                        {role === 'sa' ? 'Superadmin' : 'Building Manager'}
+                        {role === 'sa' ? 'Superadmin - ' + toSentenceCase(user.group)
+                            : 'Building Manager'}
                     </IconButton>
                 </div>
                 <div style={{
