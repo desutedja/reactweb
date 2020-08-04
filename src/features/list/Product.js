@@ -56,8 +56,8 @@ function Component() {
     const history = useHistory();
 
     useEffect(() => {
-        history.location.state && setCat(history.location.state.cat);
-        history.location.state && setCatName(history.location.state.catName);
+        history.location.state && history.location.state.cat && setCat(history.location.state.cat);
+        history.location.state && history.location.state.catName && setCatName(history.location.state.catName);
     }, [history.location.state])
 
     useEffect(() => {
