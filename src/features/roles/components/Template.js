@@ -195,7 +195,7 @@ function Component({ role, children }) {
                 disableHeader
                 disableFooter
             >
-                <p className="NotificationModal-title" onClick={() => console.log(items)}>Notifications</p>
+                <p className="NotificationModal-title">Notifications</p>
                 <Loading loading={loadingNotif}>
                     {items.length === 0 && <div className="NotificationModal-empty">
                         No notifications.

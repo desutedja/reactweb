@@ -97,7 +97,7 @@ function Component({ view }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
-    const { role } = useSelector(state => state.auth)
+    const { role } = useSelector(state => state.auth);
 
     const today = moment().format('yyyy-MM-DD');
 
@@ -116,8 +116,8 @@ function Component({ view }) {
     const [type, setType] = useState('');
     const [typeLabel, setTypeLabel] = useState('');
 
-    const [status, setStatus] = useState(history.location.state ? history.location.state.status : '');
-    const [statusLabel, setStatusLabel] = useState(history.location.state ? history.location.state.statusLabel : '');
+    const [status, setStatus] = useState('');
+    const [statusLabel, setStatusLabel] = useState('');
 
     const [prio, setPrio] = useState('');
     const [prioLabel, setPrioLabel] = useState('');
@@ -131,6 +131,16 @@ function Component({ view }) {
     const [unitLabel, setUnitLabel] = useState('');
     const [units, setUnits] = useState([]);
     const [unitSearch, setUnitSearch] = useState('');
+
+    useEffect(() => {
+        history.location.state && history.location.state.type ?
+            setType(history.location.state.type) : 
+            setStatus(history.location.state.status)
+
+        history.location.state && history.location.state.typeLabel ?
+            setTypeLabel(history.location.state.typeLabel) :
+            setStatusLabel(history.location.state.statusLabel)
+    }, [history.location.state]);
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointAdmin + '/building' +
