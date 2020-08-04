@@ -184,3 +184,9 @@ export function isToday(momentDate) {
 export function isRangeToday(start, end) {
     return (start === end) && isToday(start);
 }
+
+export function isRangeThisMonth(start, end) {
+    return (start === moment().startOf('month').format('yyyy-MM-DD')) 
+        && (end === moment().endOf('month').format('yyyy-MM-DD'));
+
+}

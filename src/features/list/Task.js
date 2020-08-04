@@ -15,7 +15,7 @@ import Resident from '../../components/cells/Resident';
 import Staff from '../../components/cells/Staff';
 
 import { useSelector } from 'react-redux';
-import { toSentenceCase, dateTimeFormatter, isRangeToday } from '../../utils';
+import { toSentenceCase, isRangeThisMonth, isRangeToday, dateTimeFormatterCell } from '../../utils';
 import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settings';
 import { getTask, resolveTask, reassignTask, setSelected } from '../slices/task';
 import { get } from '../slice';
@@ -29,6 +29,9 @@ const columns = [
         Header: "Title", accessor: row => <Task
             id={row.id} data={row}
             items={[row.title, <small>{row.ref_code}</small>]} />
+    },
+    {
+        Header: "Created On", accessor: row => dateTimeFormatterCell(row.created_on)
     },
     {
         Header: "Type", accessor: row => row.task_type === "service" ? <>{toSentenceCase(row.task_type) +
@@ -52,7 +55,7 @@ const columns = [
         Header: "Assignee", accessor: row => row.assignee_id ? <Staff compact={true} id={row.assignee_id}
             data={row.assignee_details} /> : "-"
     },
-    { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatter(row.assigned_on) : "-" },
+    { Header: "Assigned on", accessor: row => row.assigned_on ? dateTimeFormatterCell(row.assigned_on) : "-" },
     {
         Header: "Status", accessor: row => row.status ?
             <Pill color={taskStatusColor[row.status]}>
@@ -119,8 +122,8 @@ function Component() {
     const [prio, setPrio] = useState('');
     const [prioLabel, setPrioLabel] = useState('');
 
-    const [createdStart, setCreatedStart] = useState(moment().format('yyyy-MM-DD'));
-    const [createdEnd, setCreatedEnd] = useState(moment().format('yyyy-MM-DD'));
+    const [createdStart, setCreatedStart] = useState(moment().startOf('month').format('yyyy-MM-DD'));
+    const [createdEnd, setCreatedEnd] = useState(moment().endOf('month').format('yyyy-MM-DD'));
     const [resolvedStart, setResolvedStart] = useState(moment().format('yyyy-MM-DD'));
     const [resolvedEnd, setResolvedEnd] = useState(moment().format('yyyy-MM-DD'));
 
@@ -260,11 +263,11 @@ function Component() {
                     ...status === 'completed' ? [resolvedStart, resolvedEnd] : []]}
                 filters={[
                     {
-                        hidex: isRangeToday(createdStart, createdEnd),
+                        hidex: isRangeThisMonth(createdStart, createdEnd),
                         label: "Created Date: ",
-                        delete: () => { setCreatedStart(today); setCreatedEnd(today) },
-                        value: isRangeToday(createdStart, createdEnd) ? 'Today' :
-                            moment(createdStart).format('DD-MM-yyyy') + ' - '
+                        delete: () => { setCreatedStart(moment().startOf('month').format('yyyy-MM-DD')); 
+                            setCreatedEnd(moment().endOf('month').format('yyyy-MM-DD')) },
+                        value: moment(createdStart).format('DD-MM-yyyy') + ' - '
                             + moment(createdEnd).format('DD-MM-yyyy'),
                         component: (toggleModal) =>
                             <DateRangeFilter
