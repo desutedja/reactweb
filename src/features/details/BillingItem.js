@@ -7,7 +7,7 @@ import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import { useSelector, useDispatch } from 'react-redux';
-import { payByCash, getBillingUnitItem } from '../slices/billing';
+import { payByCash } from '../slices/billing';
 import { Formik, Form } from 'formik';
 import Input from '../form/input';
 import Pill from '../../components/Pill';
@@ -29,7 +29,7 @@ const months = [
     "", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",
 ];
 
-function Component() {
+function Component({ view }) {
     const [modal, setModal] = useState(false);
     const [toggle, setToggle] = useState(false);
 
@@ -39,8 +39,6 @@ function Component() {
     const [pageCount, setPageCount] = useState('');
 
     const { unit } = useSelector(state => state.billing);
-
-    const { role } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
 
@@ -71,7 +69,7 @@ function Component() {
             {label: 'payment', vfmt: v => <Pill color={v === "paid" ? "success": "secondary"}>{v}</Pill>},
             {label: 'payment_date', vfmt: v => dateTimeFormatter(v) },
         ],
-    }),[ unit.selected, role ]);
+    }),[unit.selected]);
 
     useEffect(() => {
         setLoading(true);
@@ -128,7 +126,7 @@ function Component() {
                 loading={false}
                 labels={["Details", "Additional Charges"]}
                 contents={[
-                    <Detail type="Billing" data={unit.selected} labels={details}
+                    <Detail view={view} type="Billing" data={unit.selected} labels={details}
                         editable={unit.selected.payment !== 'paid'}
                         renderButtons={() => ([
                             unit.selected.payment !== "paid" && <Button label="Set as Paid" onClick={() => {
@@ -148,13 +146,13 @@ function Component() {
                         totalItems={totalItems}
                         pageCount={pageCount}
                         data={data}
-                        actions={[
+                        actions={view ? null : [
                             unit.selected.payment !== 'paid' && <Button icon={<FiPlus />}
                                 label="Add Additional Charge" onClick={() => {
                                     setModal(true);
                                 }} />,
                         ]}
-                        onClickDelete={row => {
+                        onClickDelete={view ? null : row => {
                             dispatch(setConfirmDelete("Are you sure to delete this item?",
                                 () => {
                                     dispatch(post(endpointBilling
