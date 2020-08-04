@@ -31,7 +31,7 @@ const columnsUnit = [
     { Header: "Type", accessor: row => row.unit_type + " - " + row.unit_size },
 ]
 
-function Component({ id }) {
+function Component({ id, view }) {
     const [addUnit, setAddUnit] = useState(false);
     const [delUnit, setDelUnit] = useState({
         delete: []
@@ -377,12 +377,12 @@ function Component({ id }) {
                 pageCount={unit.total_pages}
                 fetchData={fetchData}
                 filters={[]}
-                actions={[
+                actions={view ? null : [
                     <Button key="Add Unit" label="Add Unit" icon={<FiPlus />}
                         onClick={() => setAddUnit(true)}
                     />
                 ]}
-                onClickDelete={row => {
+                onClickDelete={view ? null : row => {
                     let del = row.unit_sub_account ? row.unit_sub_account.map(item => ({
                         unit_id: Number(row.unit_id),
                         owner_id: Number(item.id)

@@ -52,7 +52,7 @@ const columns = [
     },
 ]
 
-function Component() {
+function Component({ view }) {
     const { role } = useSelector(state => state.auth);
 
     const [loading, setLoading] = useState(false);
@@ -147,10 +147,11 @@ function Component() {
                 }
             </Modal>
             <Template
+                view={view}
                 columns={columns}
                 slice={'resident'}
                 getAction={getResident}
-                actions={[
+                actions={view ? null : [
                     <Button key="Add Resident" label="Add Resident" icon={<FiPlus />}
                         onClick={() => {
                             dispatch(setSelected({}));
@@ -163,7 +164,7 @@ function Component() {
                         }}
                     />,
                 ]}
-                deleteAction={role === 'sa' && deleteResident}
+                deleteAction={view ? null : role === 'sa' && deleteResident}
                 filterVars={[status, KYCStatus]}
                 filters={[
                     {
