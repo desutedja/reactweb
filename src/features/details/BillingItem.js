@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 
 import Detail from './components/Detail';
 import Template from './components/Template';
@@ -52,24 +52,25 @@ function Component() {
             {label: 'name', lfmt: () => "Billing Name", vfmt: v => v} ,
             {label: 'group', vfmt: (v) => v === 'ipl' ? "IPL" : "Non-IPL" },
             'service_name',
-            {label: 'previous_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
-            {label: 'recent_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
-            {label: 'price_unit', vfmt: v => <>{toMoney(v)}{unit.selected.denom_unit && ("/"+unit.selected.denom_unit)}</> },
-        ],
-        'Payment Calculation': [
-            {label: 'subtotal', vfmt: v => toMoney(v)},
-            {label: 'tax', vfmt: (v) => <>{toMoney(unit.selected.tax_amount)} ({v === "percentage" ? (unit.selected.tax_value + "%") : "fixed"})</>},
-            //{label: 'tax_amount', vfmt: v => v ? toMoney(v) : '-'},
-            //{label: 'tax_value',  vfmt: v => v ? toMoney(v) : '-'},
-            {label: 'total', vfmt: v => toMoney(v)},
-            {label: 'additional_charge_amount', vfmt: v => toMoney(v)},
-            {label: 'total_amount', vfmt: v => toMoney(v)},
         ],
         'Payment Information': [
             {label: 'due_date', vfmt: v => dateFormatter(v) },
             'ref_code',
             {label: 'payment', vfmt: v => <Pill color={v === "paid" ? "success": "secondary"}>{v}</Pill>},
             {label: 'payment_date', vfmt: v => dateTimeFormatter(v) },
+        ],
+        'Payment Calculation': [
+            {label: 'previous_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
+            {label: 'recent_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
+            {label: '', lfmt: () => "Usage", vfmt: (v) => <>{unit.selected.recent_usage - unit.selected.previous_usage} {unit.selected.denom_unit}</> },
+            {label: 'price_unit', vfmt: v => <>{toMoney(v)}{unit.selected.denom_unit && ("/"+unit.selected.denom_unit)}</> },
+            {label: 'subtotal', vfmt: v => toMoney(v)},
+            {label: 'tax', vfmt: (v) => <>{toMoney(unit.selected.tax_amount)} ({v === "percentage" ? (unit.selected.tax_value + "%") : "fixed"})</>},
+            //{label: 'tax_amount', vfmt: v => v ? toMoney(v) : '-'},
+            //{label: 'tax_value',  vfmt: v => v ? toMoney(v) : '-'},
+            {label: 'total', lfmt: () => "Subtotal After Tax", vfmt: v => toMoney(v)},
+            {label: 'additional_charge_amount', vfmt: v => toMoney(v)},
+            {label: 'total_amount', vfmt: v => toMoney(v)},
         ],
     }),[ unit.selected, role ]);
 
@@ -84,9 +85,14 @@ function Component() {
             }))
     }, [dispatch, unit.selected.id, toggle])
 
+    const cashModalUp = useCallback(() => {
+        setModal(true);
+    }, [setModal])
+
     return (
         <>
-            <Modal disableFooter isOpen={modal} toggle={() => setModal(false)}
+            <Modal disableFooter isOpen={modal} 
+                toggle={() => setModal(false)}
                 title="Add Additional Charge"
             >
                 <Formik
@@ -150,9 +156,7 @@ function Component() {
                         data={data}
                         actions={[
                             unit.selected.payment !== 'paid' && <Button icon={<FiPlus />}
-                                label="Add Additional Charge" onClick={() => {
-                                    setModal(true);
-                                }} />,
+                            label="Add Additional Charge" onClick={() => cashModalUp()} />,
                         ]}
                         onClickDelete={row => {
                             dispatch(setConfirmDelete("Are you sure to delete this item?",
