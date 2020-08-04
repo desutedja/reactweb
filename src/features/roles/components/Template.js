@@ -239,8 +239,13 @@ function Component({ role, children }) {
                                 <div style={{ textAlign: 'left' }} >
                                     <b>{el.title}</b>
                                     <p style={{ margin: '8px 0px' }}>
-                                        <span style={{ padding: '2px 4px', backgroundColor: 'lightgrey' }} >
-                                            Task</span> {dateTimeFormatter(el.created_on)}
+                                        <span style={{
+                                            padding: '2px 4px', marginRight: 4,
+                                            backgroundColor: 'lightgrey'
+                                        }}>
+                                            {toSentenceCase(el.topic)}
+                                        </span>
+                                        {dateTimeFormatter(el.created_on)}
                                     </p>
                                     {parser(el.description)}
                                 </div>
