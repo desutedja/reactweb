@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { FiSearch, FiDownload, FiPlus, FiUpload } from 'react-icons/fi';
+import { FiSearch, FiDownload, FiUpload } from 'react-icons/fi';
 
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
@@ -14,7 +14,7 @@ import { get } from '../slice';
 import Template from './components/Template';
 import { setSelected } from '../slices/resident';
 
-function Component() {
+function Component({ view }) {
 
     const [search, setSearch] = useState('');
 
@@ -119,7 +119,7 @@ function Component() {
                         </>
                 },
             ] : []}
-            actions={[
+            actions={view ? null : [
                 <Button label="Upload Bulk" icon={<FiUpload />}
                     onClick={() => dispatch(downloadBillingUnit(search, building))}
                 />,
@@ -127,7 +127,7 @@ function Component() {
                     onClick={() => dispatch(downloadBillingUnit(search, building))}
                 />,
             ]}
-            onClickAddBilling={row => {
+            onClickAddBilling={view ? null : row => {
                 dispatch(setSelected(row));
                 dispatch(setSelectedUnit({}));
                 dispatch(getBillingUnitDetails(row, history, url))
