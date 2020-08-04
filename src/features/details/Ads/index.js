@@ -58,6 +58,10 @@ function Component({ view }) {
             ],
             "Target Parameters": [
                 {
+                    label: 'building_list', lfmt: () => "Target Building", 
+                    vfmt: (v) => { return (v && v.length > 0) ? v.map(el => <Pill color="primary">{el.name}</Pill>).join(", ") : "All" }
+                },
+                {
                     label: 'age_from', lfmt: () => "Target Age Range",
                     vfmt: (v) => {
                         return ((v + " years old - " + data.age_to + " years old") + ((v === 10 && data.age_to === 85) ? " (Default)" : ""))
