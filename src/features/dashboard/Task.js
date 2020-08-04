@@ -354,7 +354,10 @@ function Component() {
                             <div className="col">
                                 <ul className="list-stats">
                                 {taskData.task_resolver_last_month && taskData.task_resolver_this_month.map((resolver, i) => (
-                                    <li className="row no-gutters align-items-center">
+                                    <li className="row no-gutters align-items-center bread"
+                                    onClick={() => {
+                                        history.push('/' + auth.role + '/staff/' + resolver.assignee)
+                                    }}>
                                         <div className="col-auto">
                                             <div style={{
                                                 width: '40px',
@@ -387,7 +390,11 @@ function Component() {
                             <div className="col">
                                 <ul className="list-stats">
                                 {taskData.task_resolver_this_month && taskData.task_resolver_last_month.map((resolver, i) => (
-                                    <li className="row no-gutters">
+                                    <li className="row no-gutters bread"
+                                    onClick={() => {
+                                        history.push('/' + auth.role + '/staff/' + resolver.assignee)
+                                    }}
+                                    >
                                         <div className="col-auto">
                                             <div style={{
                                                 width: '40px',
