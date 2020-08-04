@@ -1,5 +1,6 @@
 import React, { useState, Fragment, useEffect, Children } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import parser from 'html-react-parser';
 import {
     FiMenu, FiLogOut, FiChevronDown, FiChevronUp,
 } from "react-icons/fi";
@@ -194,7 +195,7 @@ function Component({ role, children }) {
                 disableHeader
                 disableFooter
             >
-                <p className="NotificationModal-title">Notifications</p>
+                <p className="NotificationModal-title" >Notifications</p>
                 <Loading loading={loadingNotif}>
                     {items.length === 0 && <div className="NotificationModal-empty">
                         No notifications.
@@ -203,8 +204,24 @@ function Component({ role, children }) {
                         {items.length > 0 && items.map(el =>
                             <div class="Container" style={{ margin: '10px 0px', padding: '14px', display: 'flex', cursor: 'pointer' }} onClick={
                                 () => { history.push("/" + role + "/task/" + el.topic_ref_id); setNotifModal(false); }}>
-                                {el.image && <div style={{ backgroundColor: 'grey', padding: '10px', maxWidth: '100px', marginRight: '15px', color: 'white' }}>
-                                    {el.image}
+                                {el.image && <div
+                                style={{
+                                    backgroundColor: 'grey',
+                                    width: el.image ? '140px' : '0px',
+                                    borderRadius: '4px',
+                                    marginRight: '15px',
+                                    color: 'white',
+                                    overflow: 'hidden',
+                                    position: 'relative'
+                                }}>
+                                    <img src={el.image} alt=""
+                                    style={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        transform: 'translateY(-50%) translateX(-50%)'
+                                    }}
+                                    />
                                 </div>}
                                 <div style={{ textAlign: 'left' }} >
                                     <b>{el.title}</b>
@@ -212,7 +229,7 @@ function Component({ role, children }) {
                                         <span style={{ padding: '2px 4px', backgroundColor: 'lightgrey' }} >
                                             Task</span> {dateTimeFormatter(el.created_on)}
                                     </p>
-                                    <p>{el.description}</p>
+                                    {parser(el.description)}
                                 </div>
                             </div>
                         )

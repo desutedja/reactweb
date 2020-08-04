@@ -37,7 +37,7 @@ export default ({ className, imgSrc, title, description, style, createdOn }) => 
               >
                   <p><b>{title ? title : 'title'}</b></p>
                   <div className="mb-1 d-flex align-items-center"><FiCalendar className="mr-1"/>{createdOn ? createdOn: ''}</div>
-                  <p>{description ? description : 'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis dolorum, esse vitae sint, tempora iste possimus earum obcaecati accusantium eius temporibus, distinctio unde. Obcaecati excepturi voluptas iure ipsa? Nostrum, quibusdam!'}</p>
+                  {description ? description : <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Reiciendis dolorum, esse vitae sint, tempora iste possimus earum obcaecati accusantium eius temporibus, distinctio unde. Obcaecati excepturi voluptas iure ipsa? Nostrum, quibusdam!</p>}
               </div>
           </div>
       </div>

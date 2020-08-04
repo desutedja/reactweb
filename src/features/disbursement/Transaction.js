@@ -37,7 +37,7 @@ function Component() {
     const [selected, setSelected] = useState([]);
     const [limit, setLimit] = useState(5);
     const [status, setStatus] = useState('');
-    const [filter, setFilter] = useState('');
+    const [filter, setFilter] = useState('undisbursed');
     const [loadingMerchant, setLoadingMerchant] = useState(false)
     const [loadingCourier, setLoadingCourier] = useState(false)
     const [transferCode, setTransferCode] = useState('');
@@ -66,7 +66,7 @@ function Component() {
 
     const filtersDisbursement = [
         { label: 'Disbursed Only', value: 'disbursed' },
-        { label: 'Undisbursed Only', value: 'undisbursed' }
+        { label: 'Undisbursed Only', value: 'undisbursed' },
     ]
 
     const filterStatus = [
@@ -432,8 +432,8 @@ function Component() {
                                                 }}
                                             >
                                                 <option selected={true} value="">All</option>
-                                                {filtersDisbursement.map(filter => (
-                                                    <option value={filter.value}>{filter.label}</option>
+                                                {filtersDisbursement.map(item => (
+                                                    <option selected={item.value === filter} value={item.value}>{item.label}</option>
                                                 ))}
                                             </select>
                                         </div>
@@ -498,8 +498,8 @@ function Component() {
                                                 }}
                                             >
                                                 <option selected={true} value="">All</option>
-                                                {filtersDisbursement.map(filter => (
-                                                    <option value={filter.value}>{filter.label}</option>
+                                                {filtersDisbursement.map(item => (
+                                                    <option selected={item.value === filter} value={item.value}>{item.label}</option>
                                                 ))}
                                             </select>
                                         </div>

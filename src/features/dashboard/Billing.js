@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import AnimatedNumber from "animated-number-react";
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
+import parser from 'html-react-parser';
 
 import { FiUsers, FiBriefcase } from 'react-icons/fi';
 import { FaTools, FaBoxOpen } from 'react-icons/fa';
@@ -372,7 +373,7 @@ function Component() {
                                             className="mb-4"
                                             key={id}
                                             title={title}
-                                            description={description}
+                                            description={parser(description)}
                                             imgSrc={image}
                                             createdOn={moment(created_on).format('DD MMM YYYY')}
                                             />
