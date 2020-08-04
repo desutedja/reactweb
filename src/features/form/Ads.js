@@ -5,6 +5,8 @@ import moment from 'moment';
 
 import SectionSeparator from '../../components/SectionSeparator';
 import { editAds, createAds } from '../slices/ads';
+import { get } from '../slice';
+import { endpointAdmin, endpointMerchant } from '../../settings';
 
 import Template from "./components/TemplateWithFormik";
 import { Form, FieldArray, Field } from 'formik';
@@ -25,6 +27,9 @@ const adsPayload = {
     age_from: 10,
     age_to: 85,
     os: "all",
+
+    target_building: 'allbuilding',
+    building: [],
 
     content_name: "",
     content_type: "image",
@@ -74,6 +79,11 @@ const adsPayload = {
     ],
 }
 
+const target_buildings = [
+    { label: "All Building", value: "allbuilding" },
+    { label: "Specific Building(s)", value: "specificbuilding" },
+]
+
 function Component() {
     const { auth } = useSelector(state => state);
 
@@ -87,6 +97,10 @@ function Component() {
     const [os, setOS] = useState('all');
 
     const { selected, loading } = useSelector(state => state.ads);
+
+    const [buildings, setBuildings] = useState([]);
+    const [selectedBuildings, setSelectedBuildings] = useState(selected.building ? selected.building : []);
+    const [searchbuilding, setSearchbuilding] = useState('');
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -103,6 +117,18 @@ function Component() {
         setScoreDef(i);
     }, [agef, aget, gender, job, os])
 
+    useEffect(() => {
+        searchbuilding.length > 1 && dispatch(get(endpointAdmin + '/building' +
+            '?limit=5&page=1' +
+            '&search=' + searchbuilding, res => {
+                let data = res.data.data.items;
+
+                let formatted = data.map(el => ({ label: el.name, value: el.id }));
+
+                setBuildings(formatted);
+            }));
+    }, [dispatch, searchbuilding]);
+
     return (
         <Template
             slice="ads"
@@ -113,6 +139,8 @@ function Component() {
                 os: selected.os ? selected.os : 'all',
                 start_date: selected.start_date.split('T')[0],
                 end_date: selected.end_date.split('T')[0],
+                target_building: selected.building && selected.building.length > 0 ? 'specificbuilding' : 'allbuilding',
+                building: selected.building && selected.building.map(el => ({ label: el.building_name, value: el.building_id })),
             } : adsPayload}
             schema={adsSchema}
             formatValues={values => {
@@ -127,6 +155,7 @@ function Component() {
                         start_date: ads.start_date + ' 00:00:00',
                         end_date: ads.end_date + ' 23:59:59',
                         default_priority_score: scoreDef,
+                        building: values.building.map(el => el.value),
                     },
                     schedules: schedules,
                 }
@@ -178,6 +207,21 @@ function Component() {
                         <Input {...props} label="End Date" type="date" />
 
                         <SectionSeparator title="Targetting" />
+                        <Input {...props} label="Target Building" name="target_building" type="radio" options={target_buildings}
+                            defaultValue="allbuilding"
+                            onChange={el => {
+                                el === 'allbuilding' && setFieldValue('building', [])
+                            }} />
+                        {values.target_building === "specificbuilding" &&
+                            <Input {...props} type="multiselect"
+                                label="Select Building(s)" name="building"
+                                defaultValue={values.building}
+                                placeholder="Start typing building name to add" options={buildings}
+                                onInputChange={(e, value) => value === '' ? setBuildings([]) : setSearchbuilding(value)}
+                                onChange={(e, value) => {
+                                    setSelectedBuildings(value)
+                                }}
+                            />}
                         <Input {...props} optional label="Gender" type="radio" options={[
                             { value: "A", label: "All" },
                             { value: "M", label: "Male" },
