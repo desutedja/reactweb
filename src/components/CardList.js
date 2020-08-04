@@ -3,20 +3,23 @@ import React from 'react';
 import { FiCalendar } from 'react-icons/fi';
 import fallback from '../assets/fallback.jpg';
 
-export default ({ className, imgSrc, title, description, style, createdOn }) => {
+export default ({ className, imgSrc, title, description, style, createdOn, onClick }) => {
   return (
       <div className={(className ? className : '') + ' d-flex'}
+      onClick={onClick}
       style={{
-          height: '120px',
+          height: '140px',
+          padding: '1rem',
+          borderRadius: '4px',
           ...style
       }}
       >
           <div
           style={{
-              minWidth: '260px',
-              height: '120px',
+              minWidth: '240px',
+              height: '100%',
               overflow: 'hidden',
-              borderRadius: '8px',
+              borderRadius: '4px',
               position: 'relative'
           }}>
               <img
