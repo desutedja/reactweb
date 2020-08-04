@@ -34,10 +34,7 @@ function Component() {
 
     const [loading, setLoading] = useState(false);
 
-    const [
-        range,
-        setRange
-    ] = useState('mtd');
+    const [range, setRange] = useState('mtd');
 
     const [trxSumm, setTrxSumm] = useState({});
 
