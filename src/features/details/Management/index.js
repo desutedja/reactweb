@@ -54,7 +54,7 @@ function Component({ view }) {
             loading={!data.id}
             labels={["Details"]}
             contents={[
-                <Detail view type="Management" data={data} labels={details}
+                <Detail view={view} type="Management" data={data} labels={details}
                     onDelete={
                         () => setConfirmDelete(true)
                     }

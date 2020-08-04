@@ -11,7 +11,7 @@ import { dateTimeFormatter, toSentenceCase, staffRoleFormatter } from '../../../
 import { endpointManagement } from '../../../settings';
 import { deleteStaff, setSelected } from '../../slices/staff';
 
-function Component() {
+function Component({ view }) {
     const [data, setData] = useState({});
 
     let dispatch = useDispatch();
@@ -67,7 +67,7 @@ function Component() {
             loading={!data.id}
             labels={["Details"]}
             contents={[
-                <Detail data={data} labels={details}
+                <Detail view={view} data={data} labels={details}
                     onDelete={() => dispatch(setConfirmDelete("Are you sure to delete this item?",
                         () => dispatch(deleteStaff(data, history))
                     ))}

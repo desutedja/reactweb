@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useParams, useHistory, useRouteMatch } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 
 import Detail from './components/Detail';
 import Template from './components/Template';
@@ -12,8 +12,8 @@ import Column from '../../components/Column';
 import Table from '../../components/Table';
 import { Card, CardTitle, CardBody } from 'reactstrap';
 import Filter from '../../components/Filter';
-import { months, dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dateFormatter } from '../../utils';
-import { getBillingUnitDetails, getBillingUnitItem, getBillingUnitItemDetails, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
+import { dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dateFormatter } from '../../utils';
+import { getBillingUnitItem, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
 import { ListGroupItem, ListGroup } from 'reactstrap';
 import Pill from '../../components/Pill';
 import { FiClock, FiPlus } from 'react-icons/fi';
@@ -25,12 +25,8 @@ const details =
     '': ['resident_name', 'building_name', 'section_name', 'number'],
 };
 
-function isLate(payment, due_date, payment_date) {
-    return payment === "paid" ? moment.utc(payment_date).isAfter(moment.utc(due_date)) : 
-             moment.utc().isAfter(moment.utc(due_date))
-}
 
-function Component() {
+function Component({ view }) {
     const [status, setStatus] = useState('');
     const [items, setItems] = useState([]);
     const [active, setActive] = useState(0);
@@ -43,6 +39,11 @@ function Component() {
     let history = useHistory();
     let { url } = useRouteMatch();
 
+    function isLate(payment, due_date, payment_date) {
+        return payment === "paid" ? moment.utc(payment_date).isAfter(moment.utc(due_date)) : 
+                 moment.utc().isAfter(moment.utc(due_date))
+    }
+
     const columns = useMemo(() => ([
         { Header: 'ID', accessor: 'id' },
         { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name, <>{row.service_name} - {row.group === 'ipl' ? 'IPL' : 'Non-IPL'}</>]} />},
@@ -51,10 +52,6 @@ function Component() {
             <div>{toMoney(row.total)}</div>
             { row.total_additional_charge > 0 && <div>+ {toMoney(row.total_additional_charge)}</div>}
         </div>},
-        //{ Header: 'Month', accessor: row => <div style={{ display: 'block' }}>
-        //        <div>{months.find(el => el.value === row.month).label}</div>
-        //        <div>{row.year}</div>
-        //    </div>},
         { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
         { Header: 'Ref Code', accessor: row => row.ref_code ? 
         <a class="Link" href={"/" + role + "/billing/unit/item/record/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
@@ -75,7 +72,7 @@ function Component() {
             </div>
                 : '-'
         },
-    ]), [role]);
+    ]), [ role, isLate ]);
 
     useEffect(() => {
         console.log("selected => ");
@@ -115,12 +112,12 @@ function Component() {
                         }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }} >
                                 <h5> Billing Month </h5>
-                                <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
+                                {view ? null : <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
                                     onClick={() => {
                                         dispatch(setSelectedUnit({}));
                                         history.push(url + "/add");
                                     }}
-                                />
+                                />}
                             </div>
                             <ListGroup>
                                 {unit?.items?.billing?.length > 0 ? 
@@ -199,7 +196,7 @@ function Component() {
                             }}>
                                 <CardBody>
                                     <CardTitle>Unit Information</CardTitle>
-                                    <Detail type="Billing" data={selected} labels={details} editable={false} />
+                                    <Detail type="Billing" data={selected} labels={details} editable={false} />,
                                 </CardBody>
                             </Card>
                         </Column>
@@ -215,11 +212,12 @@ function Component() {
                                             "for " + unit.items.billing[active].billing_month : ""}
                                     </CardTitle>
                                     {(unit.items && unit.items.billing) ? <>
-                                    <ThreeColumn second="Subtotal" third={unit.items.billing.length > 0 ? toMoney(unit.items.billing[active].group_amount) : '-'} />
-                                    <ThreeColumn second="Penalty" 
+                                    <ThreeColumn second="Subtotal" third={toMoney(unit.items.billing[active].group_amount)} />
+                                    <ThreeColumn second={"Penalty (" + (unit.items.billing[active].group_penalty_percentage) + "%)"}
                                         third={<span style={{ color: 'red' }}>
-                                            {unit.items.billing.length > 0 ? toMoney(unit.items.billing[active].group_penalty) : '-'}</span>} />
-                                    <ThreeColumn second="Total" third={<h4>{unit.items.billing.length > 0 ? toMoney(unit.items.billing[active].total_group_amount) : '-'}</h4>}/></> : "-"}
+                                            {toMoney(unit.items.billing[active].group_penalty)}</span>} />
+                                    <ThreeColumn second="Total" 
+                                        third={<h4>{toMoney(unit.items.billing[active].total_group_amount)}</h4>}/></> : "-"}
                                     {/* JSON.stringify(unit.items, null, 4) */}
                                 </CardBody>
                             </Card>

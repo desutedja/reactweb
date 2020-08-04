@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useCallback, useMemo, useState, useEffect } from 'react';
 
 import Detail from './components/Detail';
 import Template from './components/Template';
@@ -7,7 +7,7 @@ import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
 import { useSelector, useDispatch } from 'react-redux';
-import { payByCash, getBillingUnitItem } from '../slices/billing';
+import { payByCash } from '../slices/billing';
 import { Formik, Form } from 'formik';
 import Input from '../form/input';
 import Pill from '../../components/Pill';
@@ -29,7 +29,7 @@ const months = [
     "", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December",
 ];
 
-function Component() {
+function Component({ view }) {
     const [modal, setModal] = useState(false);
     const [toggle, setToggle] = useState(false);
 
@@ -39,8 +39,6 @@ function Component() {
     const [pageCount, setPageCount] = useState('');
 
     const { unit } = useSelector(state => state.billing);
-
-    const { role } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
 
@@ -52,18 +50,6 @@ function Component() {
             {label: 'name', lfmt: () => "Billing Name", vfmt: v => v} ,
             {label: 'group', vfmt: (v) => v === 'ipl' ? "IPL" : "Non-IPL" },
             'service_name',
-            {label: 'previous_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
-            {label: 'recent_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
-            {label: 'price_unit', vfmt: v => <>{toMoney(v)}{unit.selected.denom_unit && ("/"+unit.selected.denom_unit)}</> },
-        ],
-        'Payment Calculation': [
-            {label: 'subtotal', vfmt: v => toMoney(v)},
-            {label: 'tax', vfmt: (v) => <>{toMoney(unit.selected.tax_amount)} ({v === "percentage" ? (unit.selected.tax_value + "%") : "fixed"})</>},
-            //{label: 'tax_amount', vfmt: v => v ? toMoney(v) : '-'},
-            //{label: 'tax_value',  vfmt: v => v ? toMoney(v) : '-'},
-            {label: 'total', vfmt: v => toMoney(v)},
-            {label: 'additional_charge_amount', vfmt: v => toMoney(v)},
-            {label: 'total_amount', vfmt: v => toMoney(v)},
         ],
         'Payment Information': [
             {label: 'due_date', vfmt: v => dateFormatter(v) },
@@ -71,7 +57,20 @@ function Component() {
             {label: 'payment', vfmt: v => <Pill color={v === "paid" ? "success": "secondary"}>{v}</Pill>},
             {label: 'payment_date', vfmt: v => dateTimeFormatter(v) },
         ],
-    }),[ unit.selected, role ]);
+        'Payment Calculation': [
+            {label: 'previous_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
+            {label: 'recent_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
+            {label: '', lfmt: () => "Usage", vfmt: (v) => <>{unit.selected.recent_usage - unit.selected.previous_usage} {unit.selected.denom_unit}</> },
+            {label: 'price_unit', vfmt: v => <>{toMoney(v)}{unit.selected.denom_unit && ("/"+unit.selected.denom_unit)}</> },
+            {label: 'subtotal', vfmt: v => toMoney(v)},
+            {label: 'tax', vfmt: (v) => <>{toMoney(unit.selected.tax_amount)} ({v === "percentage" ? (unit.selected.tax_value + "%") : "fixed"})</>},
+            //{label: 'tax_amount', vfmt: v => v ? toMoney(v) : '-'},
+            //{label: 'tax_value',  vfmt: v => v ? toMoney(v) : '-'},
+            {label: 'total', lfmt: () => "Subtotal After Tax", vfmt: v => toMoney(v)},
+            {label: 'additional_charge_amount', vfmt: v => toMoney(v)},
+            {label: 'total_amount', vfmt: v => toMoney(v)},
+        ],
+    }),[ unit.selected ]);
 
     useEffect(() => {
         setLoading(true);
@@ -84,9 +83,14 @@ function Component() {
             }))
     }, [dispatch, unit.selected.id, toggle])
 
+    const cashModalUp = useCallback(() => {
+        setModal(true);
+    }, [setModal])
+
     return (
         <>
-            <Modal disableFooter isOpen={modal} toggle={() => setModal(false)}
+            <Modal disableFooter isOpen={modal} 
+                toggle={() => setModal(false)}
                 title="Add Additional Charge"
             >
                 <Formik
@@ -128,7 +132,7 @@ function Component() {
                 loading={false}
                 labels={["Details", "Additional Charges"]}
                 contents={[
-                    <Detail type="Billing" data={unit.selected} labels={details}
+                    <Detail view={view} type="Billing" data={unit.selected} labels={details}
                         editable={unit.selected.payment !== 'paid'}
                         renderButtons={() => ([
                             unit.selected.payment !== "paid" && <Button label="Set as Paid" onClick={() => {
@@ -148,13 +152,11 @@ function Component() {
                         totalItems={totalItems}
                         pageCount={pageCount}
                         data={data}
-                        actions={[
+                        actions={view ? null : [
                             unit.selected.payment !== 'paid' && <Button icon={<FiPlus />}
-                                label="Add Additional Charge" onClick={() => {
-                                    setModal(true);
-                                }} />,
+                            label="Add Additional Charge" onClick={() => cashModalUp()} />,
                         ]}
-                        onClickDelete={row => {
+                        onClickDelete={view ? null : row => {
                             dispatch(setConfirmDelete("Are you sure to delete this item?",
                                 () => {
                                     dispatch(post(endpointBilling

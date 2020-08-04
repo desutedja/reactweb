@@ -58,10 +58,10 @@ function Component({ view }) {
             labels={["Details", "Unit"]}
             activeTab={0}
             contents={[
-                <Detail view data={data} labels={details}
+                <Detail view={view} data={data} labels={details}
                     onDelete={() => setConfirmDelete(true) }
                 />,
-                <Unit view id={id} />,
+                <Unit view={view} id={id} />,
             ]}
         />
         </>
