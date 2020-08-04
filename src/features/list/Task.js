@@ -133,12 +133,14 @@ function Component({ view }) {
     const [unitSearch, setUnitSearch] = useState('');
 
     useEffect(() => {
-        history.location.state && history.location.state.type ?
-            setType(history.location.state.type) : 
+        history.location.state && history.location.state.type &&
+            setType(history.location.state.type)
+        history.location.state && history.location.state.status &&
             setStatus(history.location.state.status)
 
-        history.location.state && history.location.state.typeLabel ?
-            setTypeLabel(history.location.state.typeLabel) :
+        history.location.state && history.location.state.typeLabel &&
+            setTypeLabel(history.location.state.typeLabel)
+        history.location.state && history.location.state.statusLabel &&
             setStatusLabel(history.location.state.statusLabel)
     }, [history.location.state]);
 
