@@ -23,7 +23,7 @@ import DateRangeFilter from '../../components/DateRangeFilter';
 const formatValue = (value) => toMoney(value.toFixed(0));
 
 
-function Component() {
+function Component({ view }) {
     const [active, setActive] = useState(0);
     const [info, setInfo] = useState({});
     const [amount, setAmount] = useState('');
@@ -266,12 +266,12 @@ function Component() {
                                 }}>
                                     {toMoney(amount)}
                                 </b>
-                                <MyButton label="Disburse All"
+                                {view ? null : <MyButton label="Disburse All"
                                     disabled={amount && amount === 0}
                                     onClick={() => {
                                         setSelected(data.filter(el => el && !el.disbursement_date));
                                         setModal(true);
-                                    }} />
+                                    }} />}
                                 <Button label="Download .csv" icon={<FiDownload />}
                                     onClick={() => dispatch(getFile(endpointBilling + '/management/billing/disbursement/list/transaction'
                                         + '?building_id=' + disbursement.items[active]?.building_id
@@ -371,7 +371,7 @@ function Component() {
                                             />
                                     },
                                 ]}
-                                renderActions={(selectedRowIds, page) => {
+                                renderActions={view ? null : (selectedRowIds, page) => {
                                     return ([
                                         <Button
                                             disabled={Object.keys(selectedRowIds).length === 0}

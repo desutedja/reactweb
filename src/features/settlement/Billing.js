@@ -22,7 +22,7 @@ import DateRangeFilter from '../../components/DateRangeFilter';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
-function Component() {
+function Component({ view }) {
 
     const { auth } = useSelector(state => state);
     const { loading, settlement, refreshToggle } = useSelector(state => state.billing);
@@ -216,7 +216,6 @@ function Component() {
             </Modal>
             <Modal isOpen={settleModal} toggle={() => {
                 setSettleModal(!settleModal)
-                // setSelected([]);
             }}
                 title="Settlement Selection"
                 okLabel="Settle"
@@ -411,7 +410,7 @@ function Component() {
                                     />
                             }
                         ]}
-                    renderActions={(selectedRowIds, page) => {
+                    renderActions={view ? null : (selectedRowIds, page) => {
                         return ([
                             auth.role === 'sa' && <Button
                                 disabled={Object.keys(selectedRowIds).length === 0}
