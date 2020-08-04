@@ -35,7 +35,7 @@ const columnsService = [
     },
 ]
 
-function Component() {
+function Component({ view }) {
     const [selectedRow, setRow] = useState({});
     const [edit, setEdit] = useState(false);
 
@@ -52,20 +52,8 @@ function Component() {
 
     return (
         <>
-            <Modal isOpen={addService} toggle={() => setAddService(false)} title={edit ? "Edit Service" : "Add Service"} disableFooter={true}
-                // okLabel={edit ? "Save" : "Add"}
-                // onClick={data => {
-                    // console.log(selected)
-                    // edit ?
-                    //     dispatch(editBuildingService( {
-                    //         "building_id": selected.id, building_name: selected.name, ...data,
-                    //     }, selectedRow.id))
-                    //     : dispatch(createBuildingService( { ...data, building_id: selected.id }));
-
-                    // setAddService(false);
-                    // setEdit(false);
-                    // setRow({});
-                // }}
+            <Modal isOpen={addService} toggle={() => setAddService(false)} 
+            title={edit ? "Edit Service" : "Add Service"} disableFooter={true}
             >
                 <Form
                     noContainer={true}
@@ -75,9 +63,6 @@ function Component() {
                         setEdit(false);
                     }}
                     onSubmit={(data) => {
-                        // console.log({
-                        //         "building_id": selected.id, building_name: selected.name, ...data,
-                        // })
                         edit ?
                         dispatch(editBuildingService({
                             "building_id": selected.id, building_name: selected.name, ...data,
@@ -157,7 +142,7 @@ function Component() {
                             />
                     },
                 ]}
-                actions={[
+                actions={view ? null : [
                     <Button key="Add Billing Service" label="Add Billing Service" icon={<FiPlus />}
                         onClick={() => {
                             setEdit(false);
@@ -167,7 +152,7 @@ function Component() {
                         }}
                     />
                 ]}
-                onClickEdit={row => {
+                onClickEdit={view ? null : row => {
                     setRow(row);
                     console.log(row);
                     setPriceType(row.price_fixed > 0 ? 'fixed' : 'unit');
@@ -175,10 +160,8 @@ function Component() {
                     setEdit(true);
                     setAddService(true);
                 }}
-                onClickDelete={row => {
-                    // setRow(row);
+                onClickDelete={view ? null : row => {
                     dispatch(deleteBuildingService(row, ))
-                    // setConfirm(true);
                 }}
             />
         </>

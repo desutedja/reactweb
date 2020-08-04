@@ -24,7 +24,7 @@ const columns = [
     { Header: 'Website', accessor: row => <Link>{row.website}</Link> },
 ]
 
-function Component() {
+function Component({ view }) {
     const [modalType, setType] = useState("province");
 
     const [search, setSearch] = useState("");
@@ -187,6 +187,7 @@ function Component() {
 
     return (
         <Template
+            view={view}
             columns={columns}
             slice='building'
             getAction={getBuilding}

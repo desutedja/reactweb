@@ -37,7 +37,7 @@ const columnsUnitType = [
     },
 ]
 
-function Component() {
+function Component({ view }) {
     const [selectedRow, setRow] = useState({});
     const [edit, setEdit] = useState(false);
     const [addUnitType, setAddUnitType] = useState(false);
@@ -136,7 +136,7 @@ function Component() {
                             />
                     },
                 ]}
-                actions={[
+                actions={view ? null : [
                     <Button key="Add Unit Type" label="Add Unit Type" icon={<FiPlus />}
                         onClick={() => {
                             setEdit(false);
@@ -148,12 +148,12 @@ function Component() {
                         }}
                     />
                 ]}
-                onClickDelete={row => {
+                onClickDelete={view ? null : row => {
                     // setRow(row);
                     dispatch(deleteBuildingUnitType(row, ))
                     // setConfirm(true);
                 }}
-                onClickEdit={row => {
+                onClickEdit={view ? null : row => {
                     setRow(row);
                     setEdit(true);
                     setAddUnitType(true);

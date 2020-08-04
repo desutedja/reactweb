@@ -36,17 +36,17 @@ function Component() {
     let { id } = useParams();
 
     const contents = [
-        <Detail data={data} labels={labels}
+        <Detail view data={data} labels={labels}
             onDelete={
                 () => setConfirmDelete(true)
             }
         />,
-        <Section />,
-        <UnitType />,
-        <Unit />,
-        <Service />,
-        <Management />,
-        <Module />
+        <Section view />,
+        <UnitType view />,
+        <Unit view />,
+        <Service view />,
+        <Management view />,
+        <Module view />
     ];
     const contentsBM = [
         <Section />,

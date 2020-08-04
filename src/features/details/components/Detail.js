@@ -5,15 +5,13 @@ import defaultImg from '../../../assets/fallback.jpg';
 
 import { FaPhone } from 'react-icons/fa';
 
-import Row from '../../../components/Row';
-import Column from '../../../components/Column';
 import Button from '../../../components/Button';
 
 import { toSentenceCase, dateFormatter, getCountryFromCode, getBank, dateTimeFormatter } from '../../../utils';
 import { FiTrash, FiEdit } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 
-function Component({ imgPreview = false, data, labels, type = "", horizontal=false,
+function Component({ view = false, imgPreview = false, data, labels, type = "", horizontal=false,
     editable = true, editPath = 'edit', onDelete, renderButtons = () => { } }) {
 
     const { banks } = useSelector(state => state.main);
@@ -103,14 +101,14 @@ function Component({ imgPreview = false, data, labels, type = "", horizontal=fal
                     </div>
                 )}
             </div>
-            <div className="col-auto d-flex flex-column">
+            {!view && <div className="col-auto d-flex flex-column">
                 {editable && <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
                     pathname: editPath,
                     state: data,
                 })} />}
                 {renderButtons()}
                 {onDelete && <Button icon={<FiTrash />} color="danger" label="Delete" onClick={onDelete} />}
-            </div>
+            </div>}
         </div>
     )
 }

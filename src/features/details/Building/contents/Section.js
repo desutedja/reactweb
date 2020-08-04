@@ -25,7 +25,7 @@ const columnsSection = [
     { Header: "Type", accessor: row => toSentenceCase(row.section_type) },
 ]
 
-function Component() {
+function Component({ view = false }) {
     const [selectedRow, setRow] = useState({});
     const [edit, setEdit] = useState(false);
 
@@ -111,7 +111,7 @@ function Component() {
                             />
                     },
                 ]}
-                actions={[
+                actions={view ? null : [
                     <Button key="Add Section" label="Add Section" icon={<FiPlus />}
                         onClick={() => {
                             setEdit(false);
@@ -123,12 +123,10 @@ function Component() {
                         }}
                     />
                 ]}
-                onClickDelete={row => {
-                    // setRow(row);
+                onClickDelete={view ? null : row => {
                     dispatch(deleteBuildingSection(row, ))
-                    // setConfirm(true);
                 }}
-                onClickEdit={row => {
+                onClickEdit={view ? null : row => {
                     setRow(row);
                     setEdit(true);
                     setAddSection(true);
