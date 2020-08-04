@@ -50,7 +50,7 @@ const shifts = [
     { label: 'Not Available', value: 'no', },
 ]
 
-function Component() {
+function Component({ view }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
@@ -85,6 +85,7 @@ function Component() {
     }, [auth])
     return (
         <Template
+            view={view}
             columns={columns}
             slice='staff'
             getAction={getStaff}
@@ -129,7 +130,7 @@ function Component() {
                         />
                 },
             ]}
-            actions={[
+            actions={view ? null : [
                 <Button key="Add Staff" label="Add Staff" icon={<FiPlus />}
                     onClick={() => {
                         dispatch(setSelected({}));

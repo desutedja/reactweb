@@ -37,7 +37,7 @@ const attachments = [
     "attachment_5",
 ]
 
-function Component() {
+function Component({ view }) {
     const [modal, setModal] = useState(false);
     const [mapModal, setMapModal] = useState(false);
     const [historyModal, setHistoryModal] = useState(false);
@@ -305,7 +305,7 @@ function Component() {
                                             } />
                                             <div><Pill color={taskStatusColor[data.status]}>{toSentenceCase(data.status)}</Pill></div>
                                         </CardBody>
-                                        {(data.status != 'completed' && data.status != 'canceled') &&
+                                        {view ? null : (data.status != 'completed' && data.status != 'canceled') &&
                                             <CardFooter style={{ textAlign: "right" }}>
                                                 <Button onClick={
                                                     () => setResolve(true)
@@ -361,7 +361,7 @@ function Component() {
                                                         <i>No Assigned Staff Yet</i></div>}
                                             </Row>
                                         </CardBody>
-                                        {(data.status === "rejected" || data.status === "created") && <CardFooter style={{ textAlign: "right" }}>
+                                        {view ? null : (data.status === "rejected" || data.status === "created") && <CardFooter style={{ textAlign: "right" }}>
                                             <Button onClick={
                                                 () => setAssign(true)
                                             } icon={<FiUserPlus />} label="Assign Staff" />
