@@ -25,10 +25,6 @@ const details =
     '': ['resident_name', 'building_name', 'section_name', 'number'],
 };
 
-function isLate(payment, due_date, payment_date) {
-    return payment === "paid" ? moment.utc(payment_date).isAfter(moment.utc(due_date)) : 
-             moment.utc().isAfter(moment.utc(due_date))
-}
 
 function Component({ view }) {
     const [status, setStatus] = useState('');
@@ -42,6 +38,11 @@ function Component({ view }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
+
+    function isLate(payment, due_date, payment_date) {
+        return payment === "paid" ? moment.utc(payment_date).isAfter(moment.utc(due_date)) : 
+                 moment.utc().isAfter(moment.utc(due_date))
+    }
 
     const columns = useMemo(() => ([
         { Header: 'ID', accessor: 'id' },
@@ -71,7 +72,7 @@ function Component({ view }) {
             </div>
                 : '-'
         },
-    ]), [role]);
+    ]), [ role, isLate ]);
 
     useEffect(() => {
         console.log("selected => ");
@@ -195,7 +196,7 @@ function Component({ view }) {
                             }}>
                                 <CardBody>
                                     <CardTitle>Unit Information</CardTitle>
-                                    <Detail type="Billing" data={selected} labels={details} editable={false} />
+                                    <Detail type="Billing" data={selected} labels={details} editable={false} />,
                                 </CardBody>
                             </Card>
                         </Column>
@@ -211,11 +212,12 @@ function Component({ view }) {
                                             "for " + unit.items.billing[active].billing_month : ""}
                                     </CardTitle>
                                     {(unit.items && unit.items.billing) ? <>
-                                    <ThreeColumn second="Subtotal" third={unit.items.billing.length > 0 ? toMoney(unit.items.billing[active].group_amount) : '-'} />
-                                    <ThreeColumn second="Penalty" 
+                                    <ThreeColumn second="Subtotal" third={toMoney(unit.items.billing[active].group_amount)} />
+                                    <ThreeColumn second={"Penalty (" + (unit.items.billing[active].group_penalty_percentage) + "%)"}
                                         third={<span style={{ color: 'red' }}>
-                                            {unit.items.billing.length > 0 ? toMoney(unit.items.billing[active].group_penalty) : '-'}</span>} />
-                                    <ThreeColumn second="Total" third={<h4>{unit.items.billing.length > 0 ? toMoney(unit.items.billing[active].total_group_amount) : '-'}</h4>}/></> : "-"}
+                                            {toMoney(unit.items.billing[active].group_penalty)}</span>} />
+                                    <ThreeColumn second="Total" 
+                                        third={<h4>{toMoney(unit.items.billing[active].total_group_amount)}</h4>}/></> : "-"}
                                     {/* JSON.stringify(unit.items, null, 4) */}
                                 </CardBody>
                             </Card>

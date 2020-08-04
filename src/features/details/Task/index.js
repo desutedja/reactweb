@@ -270,21 +270,19 @@ function Component({ view }) {
                                                             </Row>
                                                             <hr />
                                                             <Row>
-                                                                {el.attachments > 0 &&
-                                                                    [1, 2, 3, 4, 5].map(at => {
-                                                                        const key = "attachment_" + at;
-                                                                        return (
-                                                                            !el[key] && <img src={el[key]} alt='attachment'
-                                                                                onClick={() => {
-                                                                                    setModal(true);
-                                                                                    setImage(el[key]);
-                                                                                }}
-                                                                                style={{
-                                                                                    height: 80,
-                                                                                    aspectRatio: 1
-                                                                                }}
-                                                                            />)
-                                                                    })}
+                                                                { el.attachments > 0 && 
+                                                                    attachments.map(key =>
+                                                                        el[key] && <img src={el[key]} alt='attachment'
+                                                                            onClick={() => {
+                                                                                setModal(true);
+                                                                                setImage(el[key]);
+                                                                            }}
+                                                                            style={{
+                                                                                height: 80,
+                                                                                aspectRatio: 1
+                                                                            }}
+                                                                        /> 
+                                                                    )}
                                                             </Row>
                                                         </>
                                                     )}
