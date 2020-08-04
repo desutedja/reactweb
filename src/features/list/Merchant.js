@@ -40,7 +40,7 @@ const columns = [
     { Header: 'Open Until', accessor: row => row.is_open === 1 ? dateTimeFormatterCell(row.is_open_until) : "-" }
 ]
 
-function Component() {
+function Component({ view }) {
     const [type, setType] = useState('');
     const [typeLabel, setTypeLabel] = useState('');
 
@@ -84,6 +84,7 @@ function Component() {
 
     return (
         <Template
+            view={view}
             columns={columns}
             slice='merchant'
             getAction={getMerchant}
@@ -150,7 +151,7 @@ function Component() {
                         </>
                 },
             ]}
-            actions={[
+            actions={view ? null : [
                 <Button key="Add Merchant" label="Add Merchant" icon={<FiPlus />}
                     onClick={() => {
                         dispatch(setSelected({}));
