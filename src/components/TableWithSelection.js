@@ -409,7 +409,7 @@ function Component({
                             marginRight: 8,
                             marginLeft: 8,
                         }}>of</p>
-                        <p>{pageCount}</p>
+                        <p>{pageCount ? pageCount : '1'}</p>
                     </div>
                     <IconButton
                         disabled={!canNextPage}
