@@ -191,8 +191,13 @@ function Component({ id, view }) {
         )
     }
 
-    function SubAccountItemList(resident, itemOnClick) {
-        return <Resident id={resident.value.id} data={resident.value} onClick={itemOnClick} />
+    function SubAccountListItem(resident, itemOnClick) {
+        return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div><Resident id={resident.value.id} data={resident.value} /></div>
+                <div><Button label="Select" key={resident.value.id} onClick={
+                    () => itemOnClick(resident)
+                } /></div>
+                </div>
     }
 
     function AddSubAccountNotFound() {
@@ -251,9 +256,9 @@ function Component({ id, view }) {
                             return { label: el.firstname + ' ' + el.lastname, value: el };
                         })}
                         altDataComponent={search.length >= 1 && residents.length === 0 && AddSubAccountNotFound}
-                        customComponent={SubAccountItemList}
+                        customComponent={SubAccountListItem}
                         onClick={(el) => {
-                            setSubAccount(el);
+                            setSubAccount(el.value);
                             setAddSubAccountStep(2);
                         }}
                     />
@@ -272,7 +277,7 @@ function Component({ id, view }) {
                 </>}
                 {addSubAccountStep === 3 && <>
                     <Resident id={subAccount.id} data={subAccount} onClick={() => { }} />
-                    <Input fullwidth type="button" label={"Sub Account Ownership Status"} inputValue={ownershipStatus.label} onClick={() => { }} />
+                    <Input fullwidth type="button" label={"Sub Account Ownership Status"} inputValue={ownershipStatus.label} onClick={() => {}} />
                 </>}
             </Modal>
             <Modal

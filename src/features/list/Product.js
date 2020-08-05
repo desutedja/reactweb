@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
@@ -51,7 +52,13 @@ function Component() {
 
     const [type, setType] = useState('');
 
-    let dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const history = useHistory();
+
+    useEffect(() => {
+        history.location.state && history.location.state.cat && setCat(history.location.state.cat);
+        history.location.state && history.location.state.catName && setCatName(history.location.state.catName);
+    }, [history.location.state])
 
     useEffect(() => {
         (!search || search.length >= 1) && dispatch(get(endpointMerchant + '/admin/list' +

@@ -270,7 +270,7 @@ function Component() {
                                         <YAxis axisLine={false} tickLine={false} width={40} dx={-10} dataKey="SOS" />
                                         <Tooltip />
                                         <CartesianGrid vertical={false} stroke="#ddd" dataKey="Time" />
-                                        <Bar radius={4} dataKey="SOS" fill="rgb(237, 64, 87)" maxBarSize={80} />
+                                        <Bar className="cursor-pointer" onClick={() => {history.push('/' + auth.role + '/task')}} radius={4} dataKey="SOS" fill="rgb(237, 64, 87)" maxBarSize={80} />
                                     </ComposedChart>
                                 </ResponsiveContainer>
                             </div>
@@ -290,7 +290,15 @@ function Component() {
                             }}>
                                 <ResponsiveContainer className="mt-5" width='100%'>
                                     <PieChart>
-                                        <Pie data={pieData} dataKey="num_of_task" nameKey="task_type"
+                                        <Pie className="cursor-pointer" onClick={(el) => {
+                                            el.name === 'security' ?
+                                                history.push('/' + auth.role + '/task', { typeLabel: 'Security', type: 'security' }) :
+                                            el.name === 'delivery' ?
+                                                history.push('/' + auth.role + '/task', { typeLabel: 'Delivery', type: 'delivery' }) :
+                                            el.name === 'service' ?
+                                                history.push('/' + auth.role + '/task', { typeLabel: 'Service', type: 'service' }) :
+                                                history.push('/' + auth.role + '/task', { typeLabel: '', type: ''})
+                                        }} data={pieData} dataKey="num_of_task" nameKey="task_type"
                                         cx="50%" cy="50%" innerRadius={55} outerRadius={100}
                                         fill="#8884d8" label>
                                         {   
@@ -311,7 +319,15 @@ function Component() {
                                 }}>
                                     {pieData.map((data, i) => (
                                         <>
-                                        <li className="text-capitalize py-1 col-6">
+                                        <li className="text-capitalize py-1 col-6 cursor-pointer" onClick={(el) => {
+                                            data.task_type === 'security' ?
+                                                history.push('/' + auth.role + '/task', { typeLabel: 'Security', type: 'security' }) :
+                                            data.task_type === 'delivery' ?
+                                                history.push('/' + auth.role + '/task', { typeLabel: 'Delivery', type: 'delivery' }) :
+                                            data.task_type === 'service' ?
+                                                history.push('/' + auth.role + '/task', { typeLabel: 'Service', type: 'service' }) :
+                                                history.push('/' + auth.role + '/task', { typeLabel: '', type: ''})
+                                        }} >
                                             <svg height="14" width="14" >
                                                 <circle cx="7" cy="7" r="7" fill={colors[i]} />
                                                 Sorry, your browser does not support inline SVG.  

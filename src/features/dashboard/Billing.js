@@ -133,10 +133,14 @@ function Component() {
             </div>
 
             <div className="Row">
-                <div className="Container" style={{
+                <div className="Container cursor-pointer" style={{
                     // marginLeft: 16,
                     marginRight: 0,
-                }}>
+                }}
+                onClick={() => {
+                    history.push('/' + auth.role + '/billing/settlement');
+                }}
+                >
                     <div style={{
                         flex: 1,
                         borderRight: '1px solid #f3f3fa',

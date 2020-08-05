@@ -10,7 +10,6 @@ import { toSentenceCase } from '../../utils';
 
 const CustomLabelList = (props) => {
     const {x, y, stroke, value} = props;
-    console.log(props)
     return (
         <text textAnchor="right" dy={20} dx={10} x={x} y={y} fill={stroke} >{value}</text>
     )
@@ -24,7 +23,6 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointAds + '/management/ads/report/overview',  res => {
             setAdsData(res.data.data);
-            console.log(res.data.data)
         }))
     }, [dispatch]);
 
