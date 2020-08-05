@@ -10,8 +10,10 @@ import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import Form from '../../../../components/Form';
 import Filter from '../../../../components/Filter';
-import { editBuildingService, createBuildingService, getBuildingService, 
-    deleteBuildingService } from '../../../slices/building';
+import {
+    editBuildingService, createBuildingService, getBuildingService,
+    deleteBuildingService
+} from '../../../slices/building';
 
 const serviceGroup = [
     { label: 'IPL', value: 'ipl' },
@@ -45,15 +47,15 @@ function Component({ view }) {
     const [taxType, setTaxType] = useState('percentage');
 
     const [sGroupFilter, setSGroupFilter] = useState({});
-    
+
     const { selected, service, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
 
     return (
         <>
-            <Modal isOpen={addService} toggle={() => setAddService(false)} 
-            title={edit ? "Edit Service" : "Add Service"} disableFooter={true}
+            <Modal isOpen={addService} toggle={() => setAddService(false)}
+                title={edit ? "Edit Service" : "Add Service"} disableFooter={true}
             >
                 <Form
                     noContainer={true}
@@ -64,38 +66,46 @@ function Component({ view }) {
                     }}
                     onSubmit={(data) => {
                         edit ?
-                        dispatch(editBuildingService({
-                            "building_id": selected.id, building_name: selected.name, ...data,
-                        }, selectedRow.id)) :
-                            dispatch(createBuildingService( { ...data, building_id: selected.id }));
+                            dispatch(editBuildingService({
+                                "building_id": selected.id, building_name: selected.name,
+                                ...data,
+                                price_fixed: data.price_fixed ? data.price_fixed : null,
+                                price_unit: data.price_unit ? data.price_unit : null,
+                            }, selectedRow.id)) :
+                            dispatch(createBuildingService({
+                                ...data,
+                                price_fixed: data.price_fixed ? data.price_fixed : null,
+                                price_unit: data.price_unit ? data.price_unit : null,
+                                building_id: selected.id
+                            }));
 
                         setAddService(false);
                         setEdit(false);
-                        setRow({});      
+                        setRow({});
                     }}
                 >
-                    <Input label="Name" placeholder="Input Service Name (e.g. Elecricity, Water)" 
+                    <Input label="Name" placeholder="Input Service Name (e.g. Elecricity, Water)"
                         inputValue={selectedRow.name} />
-                    <Input label="Group" placeholder="Select billing group" 
+                    <Input label="Group" placeholder="Select billing group"
                         type="select" inputValue={selectedRow.group} options={[
-                        { value: 'ipl', label: 'IPL' },
-                        { value: 'nonipl', label: 'Non-IPL' },
-                    ]} optional />
-                    <Input label="Description" placeholder="Input service description" 
+                            { value: 'ipl', label: 'IPL' },
+                            { value: 'nonipl', label: 'Non-IPL' },
+                        ]} optional />
+                    <Input label="Description" placeholder="Input service description"
                         inputValue={selectedRow.description} optional />
                     <Input label="Price Type" type="select" placeholder="Select pricing type (fixed or per unit usage)"
                         inputValue={priceType ? priceType : selectedRow.price_type} options={[
-                        { value: 'unit', label: 'Unit' },
-                        { value: 'fixed', label: 'Fixed' },
-                    ]} setInputValue={setPriceType} optional />
+                            { value: 'unit', label: 'Unit' },
+                            { value: 'fixed', label: 'Fixed' },
+                        ]} setInputValue={setPriceType} optional />
                     <Input label="Unit Name" placeholder="Unit name, ex: kWh, m^3" name="denom_unit"
                         hidden={priceType === 'fixed' || priceType === ''} inputValue={selectedRow.denom_unit}
-                    optional />
+                        optional />
                     <Input label="Price" name="price_unit" type="number" placeholder="Price per unit usage"
-                        hidden={priceType === 'fixed' || priceType === ''} inputValue={selectedRow.price_unit} 
-                            addons="rupiah" optional />
+                        hidden={priceType === 'fixed' || priceType === ''} inputValue={selectedRow.price_unit}
+                        addons="rupiah" optional />
                     <Input label="Price" name="price_fixed" type="number"
-                        hidden={priceType === 'unit' || priceType === ''} inputValue={selectedRow.price_fixed} 
+                        hidden={priceType === 'unit' || priceType === ''} inputValue={selectedRow.price_fixed}
                         addons="rupiah" optional />
                     <Input label="Tax Type" name="tax" type="select"
                         options={[
@@ -104,7 +114,7 @@ function Component({ view }) {
                         ]}
                         setInputValue={setTaxType} inputValue={taxType ? taxType : selectedRow.tax} optional />
                     <Input label="Tax Value" hidden={taxType === 'value'} inputValue={selectedRow.tax_value} addons="%" optional />
-                    <Input label="Tax Amount" hidden={taxType === 'percentage'} inputValue={selectedRow.tax_amount} addons="rupiah" 
+                    <Input label="Tax Amount" hidden={taxType === 'percentage'} inputValue={selectedRow.tax_amount} addons="rupiah"
                         optional />
                 </Form>
             </Modal>
@@ -115,9 +125,9 @@ function Component({ view }) {
                 loading={loading}
                 pageCount={service.total_pages}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getBuildingService( pageIndex, pageSize, search, selected, sGroupFilter.value));
+                    dispatch(getBuildingService(pageIndex, pageSize, search, selected, sGroupFilter.value));
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                }, [dispatch, refreshToggle,  sGroupFilter])}
+                }, [dispatch, refreshToggle, sGroupFilter])}
                 totalItems={service.items.length}
                 filters={[
                     {
@@ -161,7 +171,7 @@ function Component({ view }) {
                     setAddService(true);
                 }}
                 onClickDelete={view ? null : row => {
-                    dispatch(deleteBuildingService(row, ))
+                    dispatch(deleteBuildingService(row,))
                 }}
             />
         </>

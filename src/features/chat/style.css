@@ -99,6 +99,10 @@
 
 .Room-message {
     color: grey;
+    width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .Room-unread {
