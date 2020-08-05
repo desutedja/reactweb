@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useHistory, useRouteMatch, useParams } from 'react-router-dom';
 import moment from 'moment';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';
@@ -29,12 +29,15 @@ function Component({ view }) {
     let { url } = useRouteMatch();
     let { id } = useParams();
 
+    const { role } = useSelector(state => state.auth);
+
     const details = useMemo(() => {
         return {
             "Information": [
                 'id',
                 { label: 'appear_as', vfmt: (v) => <Pill color="success">{v}</Pill> },
                 { label: 'created_on', lfmt: () => "Created On", vfmt: (v) => dateTimeFormatter(v, "-") },
+                { label: 'created_by', lfmt: () => "Created By", vfmt: (v) => v > 0 ? data.bm_ad_building_name : "Centratama" },
                 { label: 'modified_on', lfmt: () => 'Last Modified', vfmt: (v) => dateTimeFormatter(v, "-") },
                 {
                     label: 'media', vfmt: (v) => toSentenceCase(v) + (v === 'apps' ?
@@ -57,6 +60,16 @@ function Component({ view }) {
                 { label: 'end_date', vfmt: (v) => dateTimeFormatter(v) + " (" + moment(v.slice(0, -1)).fromNow() + ") " },
             ],
             "Target Parameters": [
+                {
+                    disabled: role !== 'sa',  label: 'buildings', lfmt: () => "Target Building", 
+                    vfmt: (v) => { 
+                        if (!data.bm_ad_building_id) {
+                            return (v && v.length > 0) ? v.map(el => <Pill color="primary">{el.name}</Pill>) : "All" 
+                        } else {
+                            return <Pill color="primary">{data.bm_ad_building_name}</Pill>
+                        }
+                    }
+                },
                 {
                     label: 'age_from', lfmt: () => "Target Age Range",
                     vfmt: (v) => {
@@ -130,16 +143,18 @@ function Component({ view }) {
                 contents={[
                     <div style={{ display: "flex" }}>
                         <div style={{ marginRight: "20px" }}><Content /></div>
-                        <Detail view={view} type="Advertisement" data={data} labels={details}
+                        <Detail 
+                            editable={!(role === 'sa' && data.bm_ad_building_id > 0)}
+                            view={view} type="Advertisement" data={data} labels={details}
                             onDelete={() => dispatch(setConfirmDelete("Are you sure to delete this item?",
                                 () => dispatch(deleteAds(data, history))
                             ))}
                             renderButtons={() => [
-                                <Button
+                                !(role === 'sa' && data.bm_ad_building_id > 0) && <Button
                                     icon={<FiCopy />}
                                     label="Duplicate"
                                     onClick={() => {
-                                        dispatch(setSelected({ ...data, id: null }));
+                                        dispatch(setSelected({ ...data, duplicate: true, id: null }));
                                         history.push(
                                             url.split('/').slice(0, -1).join('/') + "/add"
                                         )

@@ -5,6 +5,8 @@ import moment from 'moment';
 
 import SectionSeparator from '../../components/SectionSeparator';
 import { editAds, createAds } from '../slices/ads';
+import { get } from '../slice';
+import { endpointAdmin, endpointMerchant } from '../../settings';
 
 import Template from "./components/TemplateWithFormik";
 import { Form, FieldArray, Field } from 'formik';
@@ -25,6 +27,9 @@ const adsPayload = {
     age_from: 10,
     age_to: 85,
     os: "all",
+
+    target_building: 'allbuilding',
+    building_list: [],
 
     content_name: "",
     content_type: "image",
@@ -74,6 +79,11 @@ const adsPayload = {
     ],
 }
 
+const target_buildings = [
+    { label: "All Building", value: "allbuilding" },
+    { label: "Specific Building(s)", value: "specificbuilding" },
+]
+
 function Component() {
     const { auth } = useSelector(state => state);
 
@@ -87,6 +97,10 @@ function Component() {
     const [os, setOS] = useState('all');
 
     const { selected, loading } = useSelector(state => state.ads);
+
+    const [buildings, setBuildings] = useState([]);
+    const [selectedBuildings, setSelectedBuildings] = useState(selected.building ? selected.building : []);
+    const [searchbuilding, setSearchbuilding] = useState('');
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -103,20 +117,37 @@ function Component() {
         setScoreDef(i);
     }, [agef, aget, gender, job, os])
 
+    useEffect(() => {
+        searchbuilding.length > 1 && dispatch(get(endpointAdmin + '/building' +
+            '?limit=5&page=1' +
+            '&search=' + searchbuilding, res => {
+                let data = res.data.data.items;
+
+                let formatted = data.map(el => ({ label: el.name, value: el.id }));
+
+                setBuildings(formatted);
+            }));
+    }, [dispatch, searchbuilding]);
+
     return (
         <Template
             slice="ads"
             payload={selected.content_name ? {
                 ...adsPayload, ...selected,
                 gender: selected.gender ? selected.gender : 'A',
+                content_name: selected.duplicate ? "Duplicate of " + selected.content_name : selected.content_name,
+                duplicate: selected.duplicate,
                 occupation: selected.occupation ? selected.occupation : 'all',
                 os: selected.os ? selected.os : 'all',
                 start_date: selected.start_date.split('T')[0],
                 end_date: selected.end_date.split('T')[0],
+                target_building: selected.buildings && selected.buildings.length > 0 ? 'specificbuilding' : 'allbuilding',
+                building_list: selected.buildings && selected.buildings.length > 0 ? selected.buildings.map(el => 
+                    ({ label: el.name, value: el.id })) : [],
             } : adsPayload}
             schema={adsSchema}
             formatValues={values => {
-                const { schedules, ...ads } = values;
+                const { schedules, building_list, ...ads } = values;
 
                 return {
                     ads: {
@@ -128,10 +159,14 @@ function Component() {
                         end_date: ads.end_date + ' 23:59:59',
                         default_priority_score: scoreDef,
                     },
+                    building_list: building_list.map(el => el.value),
                     schedules: schedules,
                 }
             }}
-            edit={data => dispatch(editAds(data, history, selected.id))}
+            edit={data =>  {
+                const { schedules, ads, building_list } = data;
+                dispatch(editAds({ads, building_list}, history, selected.id))
+            }}
             add={data => {
                 if (auth.role === 'bm') {
                     const dataBM = {
@@ -178,6 +213,21 @@ function Component() {
                         <Input {...props} label="End Date" type="date" />
 
                         <SectionSeparator title="Targetting" />
+                        {auth.role === "sa" && <Input {...props} label="Target Building" name="target_building" type="radio" options={target_buildings}
+                            defaultValue="allbuilding"
+                            onChange={el => {
+                                el === 'allbuilding' && setFieldValue('building', [])
+                            }} />}
+                        {auth.role === "sa" && values.target_building === "specificbuilding" &&
+                            <Input {...props} type="multiselect"
+                                label="Select Building(s)" name="building_list"
+                                defaultValue={values.building_list}
+                                placeholder="Start typing building name to add" options={buildings}
+                                onInputChange={(e, value) => value === '' ? setBuildings([]) : setSearchbuilding(value)}
+                                onChange={(e, value) => {
+                                    setSelectedBuildings(value)
+                                }}
+                            />}
                         <Input {...props} optional label="Gender" type="radio" options={[
                             { value: "A", label: "All" },
                             { value: "M", label: "Male" },
@@ -210,8 +260,9 @@ function Component() {
                         ]}
                             onChange={el => setOS(el)}
                         />
-                        <Input {...props} label="Priority" name="total_priority_score"
+                        <Input {...props} label="Weight" name="total_priority_score"
                             type="number"
+                            hint="This is calculated by setting above target parameters, override with higher number if you want the ads to be prioritized"
                             externalValue={score ? score : null}
                         />
 

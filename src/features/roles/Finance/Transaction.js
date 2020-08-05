@@ -4,6 +4,7 @@ import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 
 import Settlement from '../../settlement/Transaction';
 import Disbursement from '../../disbursement/Transaction';
+import Details from '../../details/Transaction';
 
 function Component() {
     
@@ -17,6 +18,9 @@ function Component() {
                 </Route>
                 <Route path={`${path}/disbursement`}>
                     <Disbursement />
+                </Route>
+                <Route path={`${path}/:id`}>
+                    <Details />
                 </Route>
             </Switch>
     )

@@ -1,6 +1,6 @@
 import React, { useCallback, useRef, useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link  } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { FiSearch, FiCheck, FiFile, FiDownload } from 'react-icons/fi';
 import AnimatedNumber from "animated-number-react";
 import { ListGroup, ListGroupItem } from 'reactstrap';
@@ -60,24 +60,26 @@ function Component({ view }) {
 
     const columns = useMemo(() => [
         { Header: 'ID', accessor: 'id' },
-        { Header: 'Ref Code', accessor: row =>  <Link class="Link" 
-            to={"/" + auth.role + "/billing/settlement/" + row.trx_code}><b>{row.trx_code}</b></Link> },
-        { Header: 'Unit', accessor: row => <>{toSentenceCase(row.section_type)} {toSentenceCase(row.section_name)} {row.number}</>  },
+        {
+            Header: 'Ref Code', accessor: row => <Link class="Link"
+                to={"/" + auth.role + "/billing/settlement/" + row.trx_code}><b>{row.trx_code}</b></Link>
+        },
+        { Header: 'Unit', accessor: row => <>{toSentenceCase(row.section_type)} {toSentenceCase(row.section_name)} {row.number}</> },
         { Header: 'Building', accessor: 'building_name' },
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
         {
             Header: 'Settled', accessor: row => auth.role === 'bm' ? (row.payment_settled === 1 ? <Pill color="success">Settled</Pill> :
-            <Pill color="secondary">Unsettled</Pill>) : (row.payment_settled_date ? <Pill color="success">Settled</Pill> :
-                <Pill color="secondary">Unsettled</Pill>)
+                <Pill color="secondary">Unsettled</Pill>) : (row.payment_settled_date ? <Pill color="success">Settled</Pill> :
+                    <Pill color="secondary">Unsettled</Pill>)
         },
         {
             Header: 'Settlement Date', accessor: row => auth.role === 'bm' ? (row.disbursement_date ?
-            dateTimeFormatterCell(row.disbursement_date) : '- ') : (row.payment_settled_date ?
-                dateTimeFormatterCell(row.payment_settled_date) : '-')
+                dateTimeFormatterCell(row.disbursement_date) : '- ') : (row.payment_settled_date ?
+                    dateTimeFormatterCell(row.payment_settled_date) : '-')
         },
     ], [auth])
 
-    
+
     useEffect(() => {
         console.log(columns)
         if (auth.role === 'bm') {

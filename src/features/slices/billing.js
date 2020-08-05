@@ -209,12 +209,12 @@ export const getBillingUnitItemDetails = (row, history, url) => dispatch => {
   history.push(url + '/details');
 }
 
-export const createBillingUnitItem = (data, selected, history) => dispatch => {
+export const createBillingUnitItem = (data, selected, history, role) => dispatch => {
   dispatch(startAsync());
 
   dispatch(post(billingEndpoint, data,
     res => {
-      history.goBack();
+      history.push('/' + role + '/billing/unit/item');
 
       dispatch(setInfo({
         color: 'success',
@@ -229,13 +229,13 @@ export const createBillingUnitItem = (data, selected, history) => dispatch => {
     }))
 }
 
-export const editBillingUnitItem = (data, selected, history, id) => dispatch => {
+export const editBillingUnitItem = (data, selected, history, id, role) => dispatch => {
   dispatch(startAsync());
 
   dispatch(put(billingEndpoint, { ...data, id: selected.id },
     res => {
       dispatch(setSelectedUnit(res.data.data));
-      history.goBack();
+      history.push('/' + role + '/billing/unit/item/details');
 
       dispatch(setInfo({
         color: 'success',
@@ -274,7 +274,7 @@ export const payByCash = (data) => dispatch => {
       message: 'Billing has been set as paid by cash.'
     }));
 
-    dispatch(setUnitPaid());
+    dispatch(setSelectedUnit(res.data.data));
     dispatch(stopAsync());
   }))
 }

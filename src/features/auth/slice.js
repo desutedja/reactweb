@@ -79,7 +79,7 @@ export const otpCheck = (role, email, otp, history) => dispatch => {
     "email": email,
     "otp": otp,
     "device": "web",
-    "fcm_id": "1:10663666241:web:f3a844afac4e2025a6dcc0"
+    "fcm_id": "",
   }, res => {
     dispatch(setRole(role));
     dispatch(otpSuccess({...res.data.data, role: role}));

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useRouteMatch, useParams } from 'react-router-dom';
 import { dateTimeFormatter, toSentenceCase } from '../../../utils'
 
-import { FiCopy, FiArrowUpCircle, FiTrash } from 'react-icons/fi';
+import { FiCopy, FiArrowUpCircle, FiTrash, FiImage } from 'react-icons/fi';
 import Detail from '../components/Detail';
 import Modal from '../../../components/Modal';
 import Loading from '../../../components/Loading';
@@ -19,8 +19,8 @@ import { endpointAdmin } from '../../../settings';
 function Component({ view }) {
     const [data, setData] = useState({});
 
-    const [ confirmDelete, setConfirmDelete ] = useState(false);
-    const [ publishing, setPublishing ] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
+    const [publishing, setPublishing] = useState(false);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -30,9 +30,9 @@ function Component({ view }) {
     const { role } = useSelector(state => state.auth);
     const { refreshToggle } = useSelector(state => state.announcement);
 
-    const publishCb = useCallback(() => { 
-          setPublishing(true);
-          dispatch(publishAnnouncement(data, history, role)) 
+    const publishCb = useCallback(() => {
+        setPublishing(true);
+        dispatch(publishAnnouncement(data, history, role))
     }, [data, history, role, dispatch])
 
     useEffect(() => {
@@ -44,84 +44,98 @@ function Component({ view }) {
 
     const details =
         useMemo(() => ({
-        'Information': [
-            'id',
-            { label: 'created_on', lfmt: () => "Created On" , vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
-            { label: 'modified_on', lfmt: () => "Last Modified", vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
-        ],
-        'Consumer': [
-            { label: 'consumer_role', vfmt: (val) => toSentenceCase(val) },
-            { label: 'building', 
-                disabled: (data.consumer_role === 'merchant' && data.consumer_role === 'centratama'),
-                lfmt: () => "Target Building", 
-                vfmt: (v) => v && v.length > 0 ? v.map( el => 
-                    <Pill color="primary">{el.building_name}</Pill>
-                ) : "All" },
-            { label: 'building_unit', 
-                disabled: data.consumer_role !== 'resident',
-                lfmt: () => "Target Unit", 
-                vfmt: (v) => v && v.length > 0 ? v.map( el => <Pill color="primary">
-                    {toSentenceCase(el.section_type) + toSentenceCase(el.section_name) + toSentenceCase(el.number)}
-                    </Pill> ): "All" },
-            { label: 'merchant',
-                disabled: data.consumer_role !== 'merchant',
-                lfmt: () => "Target Merchant",
-                vfmt: (v) => v && v.length > 0 ? v.map( el => el.merchant_name ).join(', ') : "All" },
-        ],
-        'Publisher': [
-            { label: 'publish', lfmt: () => "Status", vfmt: (val) => val === 0 ? <Pill color="secondary">Draft</Pill> : 
-            <Pill color="success">Published</Pill> },
-            { label: 'publisher', lfmt: () => "Publisher ID" },
-            'publisher_name',
-            { label: 'publisher_role', vfmt: (v) => { 
-                if (v === "sa") return "Super Admin";
-                else if(v === "bm") return "Building Management Admin"
-                else return v;
-            }},
-        ],
-    }),[data]);
+            'Information': [
+                'id',
+                { label: 'created_on', lfmt: () => "Created On", vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
+                { label: 'modified_on', lfmt: () => "Last Modified", vfmt: (val) => val ? dateTimeFormatter(val, "-") : "-" },
+            ],
+            'Consumer': [
+                { label: 'consumer_role', vfmt: (val) => toSentenceCase(val) },
+                {
+                    label: 'building',
+                    disabled: (data.consumer_role === 'merchant' && data.consumer_role === 'centratama'),
+                    lfmt: () => "Target Building",
+                    vfmt: (v) => v && v.length > 0 ? v.map(el =>
+                        <Pill color="primary">{el.building_name}</Pill>
+                    ) : "All"
+                },
+                {
+                    label: 'building_unit',
+                    disabled: data.consumer_role !== 'resident',
+                    lfmt: () => "Target Unit",
+                    vfmt: (v) => v && v.length > 0 ? v.map(el => <Pill color="primary">
+                        {toSentenceCase(el.section_type) + toSentenceCase(el.section_name) + toSentenceCase(el.number)}
+                    </Pill>) : "All"
+                },
+                {
+                    label: 'merchant',
+                    disabled: data.consumer_role !== 'merchant',
+                    lfmt: () => "Target Merchant",
+                    vfmt: (v) => v && v.length > 0 ? v.map(el => el.merchant_name).join(', ') : "All"
+                },
+            ],
+            'Publisher': [
+                {
+                    label: 'publish', lfmt: () => "Status", vfmt: (val) => val === 0 ? <Pill color="secondary">Draft</Pill> :
+                        <Pill color="success">Published</Pill>
+                },
+                { label: 'publisher', lfmt: () => "Publisher ID" },
+                'publisher_name',
+                {
+                    label: 'publisher_role', vfmt: (v) => {
+                        if (v === "sa") return "Super Admin";
+                        else if (v === "bm") return "Building Management Admin"
+                        else return v;
+                    }
+                },
+            ],
+        }), [data]);
 
     return (
         <>
-        <Modal 
-            isOpen={confirmDelete}
-            disableHeader={true}
-            onClick={
-               () => dispatch(deleteAnnouncement(data, history))
-            }
-            toggle={() => setConfirmDelete(false)}
-            okLabel={"Delete"}
-            cancelLabel={"Cancel"}
-        >
-            Are you sure you want to delete this announcement?
+            <Modal
+                isOpen={confirmDelete}
+                disableHeader={true}
+                onClick={
+                    () => dispatch(deleteAnnouncement(data, history))
+                }
+                toggle={() => setConfirmDelete(false)}
+                okLabel={"Delete"}
+                cancelLabel={"Cancel"}
+            >
+                Are you sure you want to delete this announcement?
         </Modal>
-        <Template
-            title={data.title}
-            loading={!data.id}
-            labels={["Details"]}
-            contents={[
-            <div style={{ display: 'flex' }}>
-            <div style={{ marginRight: '20px' }}><Content /></div>
-            <Detail view={view} type="Announcement" data={data} labels={details} 
-                editable={data.publish === 0}
-                renderButtons={() => [
-                <Loading size={10} loading={publishing && data.publish === 0}> 
-                    <Button label="Publish" icon={<FiArrowUpCircle/>} disabled={data.publish === 1} 
-                    onClick={publishCb} />
-                </Loading>,
-                <Button label="Duplicate" icon={<FiCopy/>}
-                    onClick={() => { 
-                        history.push({
-                            pathname: url.split("/").slice(0, -1).join("/") + "/add",
-                        });
-                        dispatch(setSelected({ ...data, duplicate: true}));
-                    }} />,
-                <Button color="danger" icon={<FiTrash/>} label="Delete" 
-                    onClick={() => setConfirmDelete(true) } />,
+            <Template
+                title={data.title}
+                loading={!data.id}
+                labels={["Details"]}
+                contents={[
+                    <div style={{ display: 'flex' }}>
+                        <div style={{ marginRight: '20px' }}><Content /></div>
+                        <Detail view={view} type="Announcement" data={data} labels={details}
+                            editable={data.publish === 0}
+                            renderButtons={() => [
+                                <Loading size={10} loading={publishing && data.publish === 0}>
+                                    <Button label="Publish" icon={<FiArrowUpCircle />} disabled={data.publish === 1}
+                                        onClick={publishCb} />
+                                </Loading>,
+                                <Button label="Preview" icon={<FiImage />}
+                                    onClick={() => {
+                                        history.push(url + '/view');
+                                    }} />,
+                                <Button label="Duplicate" icon={<FiCopy />}
+                                    onClick={() => {
+                                        history.push({
+                                            pathname: url.split("/").slice(0, -1).join("/") + "/add",
+                                        });
+                                        dispatch(setSelected({ ...data, duplicate: true }));
+                                    }} />,
+                                <Button color="danger" icon={<FiTrash />} label="Delete"
+                                    onClick={() => setConfirmDelete(true)} />,
+                            ]}
+                        /></div>
                 ]}
-            /></div>
-            ]}
-        />
+            />
         </>
     )
 }

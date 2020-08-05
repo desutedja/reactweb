@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Filter from '../../components/Filter';
 import AgeRangeInput from '../../components/AgeRangeInput';
 import { FiPlus } from 'react-icons/fi';
@@ -15,7 +15,7 @@ import { getAds, deleteAds, setSelected } from '../slices/ads';
 import { dateTimeFormatterCell } from '../../utils';
 import AdsCell from '../../components/cells/Ads';
 
-const columns = [
+const columnsBM = [
     { Header: "ID", accessor: 'id' },
     { Header: "Title", accessor: row => <AdsCell id={row.id} data={row} /> },
     { Header: "Gender", accessor: row => row.gender ? row.gender : 'All' },
@@ -35,6 +35,11 @@ const columns = [
     },
 ]
 
+const columnsSA = [
+    ...columnsBM,
+    { Header: "Created By", accessor: row => row.bm_ad_building_id ? row.bm_ad_building_name : "Centratama" },
+]
+
 function Component({ view }) {
     let dispatch = useDispatch();
     let history = useHistory();
@@ -46,6 +51,8 @@ function Component({ view }) {
     const [gender, setGender] = useState('');
     const [day, setDay] = useState('');
 
+    const { role } = useSelector(state => state.auth);
+
     useEffect(() => {
         console.log(os, gender, ageFrom);
     }, [os, gender, ageFrom])
@@ -53,7 +60,7 @@ function Component({ view }) {
     return (
         <Template
             view={view}
-            columns={columns}
+            columns={role === 'sa' ? columnsSA : columnsBM}
             slice={'ads'}
             getAction={getAds}
             deleteAction={deleteAds}

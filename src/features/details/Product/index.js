@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Modal from '../../../components/Modal';
@@ -12,33 +12,6 @@ import { toMoney } from '../../../utils.js';
 import { useParams } from 'react-router-dom';
 import { get, patch, setInfo } from '../../slice';
 import { endpointMerchant } from '../../../settings';
-
-const labels = {
-    'Information': [
-        "id",
-        "name",
-        "item_type",
-        "description",
-        "stock",
-        "promoted",
-        "promoted_until",
-    ],
-    "Specification": [
-        "length",
-        "width",
-        "height",
-        "weight",
-        "measurement_standard",
-        "measurement_unit",
-    ],
-    "Pricing": [
-        { label: "base_price", lfmt: () => "Base Price", vfmt: (val) => toMoney(val) },
-        { label: "selling_price", lfmt: () => "Selling Price", vfmt: (val) => toMoney(val) },
-        { label: "total_selling_price", lfmt: (el) => "Display Price", vfmt: (val) => toMoney(val) },
-        { label: "admin_fee", lfmt: (el) => "Admin Fee", vfmt: (val) => val + "%" },
-        { label: "discount_fee", lfmt: (el) => "Discount", vfmt: (val) => val + "%" },
-    ],
-};
 
 function Component({ view }) {
     const { product } = useSelector(state => state);
@@ -54,8 +27,39 @@ function Component({ view }) {
 
     const [calculatedPrice, setCalculatedPrice] = useState(0);
 
+    const [confirmChangeStatus, setConfirmChangeStatus] = useState(false);
+
     let dispatch = useDispatch();
     let { id } = useParams();
+
+    const labels = useMemo(() => ({
+        'Information': [
+            "id",
+            "name",
+            "item_type",
+            "description",
+            "stock",
+            //"promoted",
+            //"promoted_until",
+        ],
+        "Specification": [
+            { label: "measurement_standard", lfmt: () => "Measurement Type", 
+                vfmt: (v) => v === "yes" ? "Standard Measurement" : "Nonstandard Measurement" },
+            { disabled: data.measurement_standard === "no", label: "length", lfmt: () => "Dimension", vfmt: () =>
+              data.length + " cm x " + data.width + " cm x " + data.height + " cm" },
+            { disabled: data.measurement_standard === "no", label: "weight", lfmt: () => "Weight", 
+                vfmt: (v) => (v + " gram") },
+            { disabled: data.measurement_standard === "yes", lfmt: () => "Unit of Measurement", vfmt: (v) => v,
+                label: "measurement_unit" },
+        ],
+        "Pricing": [
+            { label: "base_price", lfmt: () => "Base Price", vfmt: (val) => toMoney(val) },
+            { label: "selling_price", lfmt: () => "Selling Price", vfmt: (val) => toMoney(val) },
+            { label: "total_selling_price", lfmt: (el) => "Display Price", vfmt: (val) => toMoney(val) },
+            { label: "admin_fee", lfmt: (el) => "Admin Fee", vfmt: (val) => val + "%" },
+            { label: "discount_fee", lfmt: (el) => "Discount", vfmt: (val) => val + "%" },
+        ],
+    }), [ data ]);
 
     useEffect(() => {
         dispatch(get(endpointMerchant + '/admin/items?id=' + id, res => {
@@ -76,6 +80,32 @@ function Component({ view }) {
 
     return (
         <>
+            <Modal 
+                isOpen={confirmChangeStatus}
+                disableHeader={true}
+                onClick={ () => {
+                    const dataInput = {
+                        merchant_id: data.merchant_id,
+                        item_id: data.id,
+                        status: data.status === 'blocked' ? 'active' : 'blocked',
+                    }
+                    dispatch(patch(endpointMerchant + '/admin/items/status', dataInput,
+                        res => {
+                            dispatch(setInfo({
+                                color: 'success',
+                                message: 'Product has been ' + (res.data.data.status === 'blocked' ? 'blocked' : 'unblocked'),
+                            }));
+                            dispatch(refresh());
+                        }
+                    ))
+                    setConfirmChangeStatus(false);
+                }}
+                toggle={() => setConfirmChangeStatus(false)}
+                okLabel={"Confirm"}
+                cancelLabel={"Cancel"}
+            >
+                Are you sure you want to set product <b>{data.name}</b> as {data.status === "blocked" ? "unblocked" : "blocked"}?
+            </Modal>
             <Modal disableFooter disableHeader isOpen={modal} toggle={() => setModal(false)}>
                 <img src={image} alt='attachment' style={{
                     maxHeight: 600,
@@ -141,22 +171,11 @@ function Component({ view }) {
                                 setAdminFee(data.admin_fee);
                                 setDiscFee(data.discount_fee);
                             }} />,
-                            <Button disabled={data.status === 'blocked'} label="Take Down Product" onClick={() => {
-                                const dataInput = {
-                                    merchant_id: data.merchant_id,
-                                    item_id: data.id,
-                                    status: 'blocked'
-                                }
-                                dispatch(patch(endpointMerchant + '/admin/items/status', dataInput,
-                                    res => {
-                                        dispatch(setInfo({
-                                            color: 'success',
-                                            message: 'Product has been taken down.'
-                                        }));
-                                        dispatch(refresh());
-                                    }
-                                ))
-                            }} />,
+                        <Button label={data.status === 'blocked' ? "Unblock Product" : "Block Product"} 
+                            color={data.status === 'blocked' ? 'success' : 'danger'}
+                            onClick={() => 
+                                setConfirmChangeStatus(true)
+                            } />,
                         ]}
                     />,
                     <div style={{

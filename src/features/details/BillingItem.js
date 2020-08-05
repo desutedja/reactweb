@@ -31,8 +31,10 @@ const months = [
 
 function Component({ view }) {
     const [modal, setModal] = useState(false);
+    const [modalCash, setModalCash] = useState(false);
     const [toggle, setToggle] = useState(false);
 
+    const [dataDetails, setDataDetails] = useState({});
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalItems, setTotalItems] = useState('');
@@ -74,6 +76,15 @@ function Component({ view }) {
 
     useEffect(() => {
         setLoading(true);
+        dispatch(get(endpointBilling + '/management/billing/detail/' +
+            unit.selected.id, res => {
+                setDataDetails(res.data.data);
+                setLoading(false);
+            }))
+    }, [dispatch, unit.selected.id, toggle])
+
+    useEffect(() => {
+        setLoading(true);
         dispatch(get(endpointBilling + '/management/billing/additional-charge?id=' +
             unit.selected.id, res => {
                 setData(res.data.data);
@@ -84,12 +95,31 @@ function Component({ view }) {
     }, [dispatch, unit.selected.id, toggle])
 
     const cashModalUp = useCallback(() => {
-        setModal(true);
-    }, [setModal])
+        setModalCash(true);
+    }, [])
 
     return (
         <>
-            <Modal disableFooter isOpen={modal} 
+            <Modal 
+                disableHeader
+                isOpen={modalCash}
+                onClick={ () => {
+                    dispatch(payByCash({
+                        "id": unit.selected.id,
+                        "total": unit.selected.total,
+                        "penalty_amount": unit.selected.penalty_amount,
+                        "total_payment": unit.selected.total_payment,
+                        "additional_charge_amount": unit.selected.additional_charge_amount,
+                    }));
+                    setModalCash(false);
+                }}
+                toggle={ () => setModalCash(false) }
+                okLabel="Confirm"
+            >
+                Are you sure you want to set <b>{unit.selected.name}</b> as paid by cash?
+            </Modal>
+            <Modal disableFooter 
+                isOpen={modal} 
                 toggle={() => setModal(false)}
                 title="Add Additional Charge"
             >
@@ -132,18 +162,10 @@ function Component({ view }) {
                 loading={false}
                 labels={["Details", "Additional Charges"]}
                 contents={[
-                    <Detail view={view} type="Billing" data={unit.selected} labels={details}
+                    <Detail view={view} type="Billing" data={dataDetails} labels={details}
                         editable={unit.selected.payment !== 'paid'}
                         renderButtons={() => ([
-                            unit.selected.payment !== "paid" && <Button label="Set as Paid" onClick={() => {
-                                dispatch(payByCash({
-                                    "id": unit.selected.id,
-                                    "total": unit.selected.total,
-                                    "penalty_amount": unit.selected.penalty_amount,
-                                    "total_payment": unit.selected.total_payment,
-                                    "additional_charge_amount": unit.selected.additional_charge_amount,
-                                }));
-                            }} />
+                            unit.selected.payment !== "paid" && <Button label="Set as Paid" onClick={() => cashModalUp()} />
                         ])}
                     />,
                     <Table
@@ -154,7 +176,7 @@ function Component({ view }) {
                         data={data}
                         actions={view ? null : [
                             unit.selected.payment !== 'paid' && <Button icon={<FiPlus />}
-                            label="Add Additional Charge" onClick={() => cashModalUp()} />,
+                            label="Add Additional Charge" onClick={() => setModal(true)} />,
                         ]}
                         onClickDelete={view ? null : row => {
                             dispatch(setConfirmDelete("Are you sure to delete this item?",

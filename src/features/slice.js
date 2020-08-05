@@ -15,7 +15,7 @@ export const slice = createSlice({
     confirmDelete: {
       modal: false,
       content: '',
-      confirmed: () => {},
+      confirmed: () => { },
     },
     notif: {
       title: '',
@@ -61,7 +61,7 @@ export const {
   setBanks,
 } = slice.actions;
 
-export const setConfirmDelete = (content, confirmed = () => {}) => dispatch => {
+export const setConfirmDelete = (content, confirmed = () => { }) => dispatch => {
   dispatch(toggleDelete({
     content: content,
     confirmed: confirmed,
@@ -70,6 +70,26 @@ export const setConfirmDelete = (content, confirmed = () => {}) => dispatch => {
 
 export const setNotif = data => dispatch => {
   dispatch(setNotifData(data));
+
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+  }
+
+  // Let's check whether notification permissions have already been granted
+  else if (Notification.permission === "granted") {
+    // If it's okay let's create a notification
+    var notification = new Notification(data.title + ': ' + data.message);
+  }
+
+  // Otherwise, we need to ask the user for permission
+  else if (Notification.permission !== "denied") {
+    Notification.requestPermission().then(function (permission) {
+      // If the user accepts, let's create a notification
+      if (permission === "granted") {
+        var notification = new Notification(data.title + ': ' + data.message);
+      }
+    });
+  }
 
   setTimeout(() => dispatch(setNotifData({
     title: '',
@@ -85,7 +105,7 @@ export const setInfo = data => dispatch => {
 }
 
 const responseAlert = (err, link) => async dispatch => {
-    const response = err.response
+  const response = err.response
     /* if (response && response.status === 401) {
     dispatch(openAlert({
       title: 'Token Expired',
@@ -94,8 +114,8 @@ const responseAlert = (err, link) => async dispatch => {
   } else */ if (response && response.data.error_message) {
     dispatch(openAlert({
       title: 'Server Error',
-      subtitle: link ,
-        //subtitle: err,
+      subtitle: link,
+      //subtitle: err,
       content: response?.data.error_message,
     }));
   } else return null

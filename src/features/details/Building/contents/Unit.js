@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiPlus } from 'react-icons/fi';
+import { FiPlus, FiUpload } from 'react-icons/fi';
 
 import Table from '../../../../components/Table';
 import Button from '../../../../components/Button';
@@ -8,6 +8,7 @@ import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import { toSentenceCase } from '../../../../utils';
 import { deleteBuildingUnit, getBuildingUnit, editBuildingUnit, createBuildingUnit, getBuildingSection, getBuildingUnitType } from '../../../slices/building';
+import UploadModal from '../../../../components/UploadModal';
 
 const columnsUnit = [
     { Header: "ID", accessor: "id" },
@@ -32,23 +33,28 @@ function Component({ view }) {
     const [unitTypeID, setUnitTypeID] = useState('');
     const [floor, setFloor] = useState('');
     const [number, setNumber] = useState('');
+    const [upload, setUpload] = useState(false);
 
     const { selected, loading, unit, section, unit_type, refreshToggle } = useSelector(state => state.building);
+    const { user } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getBuildingSection( 0, 100, '', selected));
-        dispatch(getBuildingUnitType( 0, 100, '', selected));
+        dispatch(getBuildingSection(0, 100, '', selected));
+        dispatch(getBuildingUnitType(0, 100, '', selected));
     }, [dispatch, selected]);
 
     return (
         <>
+            <UploadModal open={upload} toggle={() => setUpload(false)}
+                templateLink={user.unit_bulk_template}
+            />
             <Modal disableFooter={false} okLabel={edit ? "Save" : "Add"} title={edit ? "Edit Unit" : "Add Unit"}
                 isOpen={addUnit} toggle={() => setAddUnit(false)}
                 onClick={() => {
                     edit ?
-                        dispatch(editBuildingUnit( {
+                        dispatch(editBuildingUnit({
                             "building_id": selected.id,
                             "building_section": parseFloat(sectionID ? sectionID : selectedRow.building_section),
                             "unit_type": parseFloat(unitTypeID ? unitTypeID : selectedRow.unit_type),
@@ -56,7 +62,7 @@ function Component({ view }) {
                             "number": number ? number : selectedRow.number,
                         }, selectedRow.id))
                         :
-                        dispatch(createBuildingUnit( {
+                        dispatch(createBuildingUnit({
                             "building_id": selected.id,
                             "building_section": parseFloat(sectionID),
                             "unit_type": parseFloat(unitTypeID),
@@ -110,9 +116,9 @@ function Component({ view }) {
                 pageCount={unit.total_pages}
                 totalItems={unit.items.length}
                 fetchData={useCallback((pageIndex, pageSize, search) =>
-                    dispatch(getBuildingUnit( pageIndex, pageSize, search, selected)),
+                    dispatch(getBuildingUnit(pageIndex, pageSize, search, selected)),
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                    [dispatch,  selected, refreshToggle])}
+                    [dispatch, selected, refreshToggle])}
                 filters={[]}
                 actions={view ? null : [
                     <Button key="Add Unit" label="Add Unit" icon={<FiPlus />}
@@ -126,10 +132,13 @@ function Component({ view }) {
 
                             setAddUnit(true);
                         }}
-                    />
+                    />,
+                    <Button label="Upload Bulk" icon={<FiUpload />}
+                        onClick={() => setUpload(true)}
+                    />,
                 ]}
                 onClickDelete={view ? null : row => {
-                    dispatch(deleteBuildingUnit(row, ))
+                    dispatch(deleteBuildingUnit(row,))
                 }}
                 onClickEdit={view ? null : row => {
                     setRow(row);

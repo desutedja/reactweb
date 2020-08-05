@@ -17,7 +17,7 @@ import FilterButton from './FilterButton';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { toSentenceCase } from '../utils';
 
-function Component({
+function Table({
     columns,
     data,
     totalItems,
@@ -244,7 +244,7 @@ function Component({
                     {page.length === 0 ?
                         <tbody>
                             <tr>
-                                <td colspan={columns.length + 2} style={{ textAlign: "center" }} >
+                                <td colSpan={columns.length + 2} style={{ textAlign: "center" }} >
                                     No items.
                                 </td>
                             </tr>
@@ -405,4 +405,4 @@ function Component({
     )
 }
 
-export default Component;
+export default Table;

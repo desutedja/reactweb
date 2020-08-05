@@ -270,7 +270,7 @@ function Component({
                     {page.length === 0 ?
                         <tbody>
                             <tr>
-                                <td colspan={columns.length + 2} style={{ textAlign: "center" }} >
+                                <td colSpan={columns.length + 2} style={{ textAlign: "center" }} >
                                     No items.
                                 </td>
                             </tr>
@@ -409,7 +409,7 @@ function Component({
                             marginRight: 8,
                             marginLeft: 8,
                         }}>of</p>
-                        <p>{pageCount}</p>
+                        <p>{pageCount ? pageCount : '1'}</p>
                     </div>
                     <IconButton
                         disabled={!canNextPage}

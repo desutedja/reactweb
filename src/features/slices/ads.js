@@ -111,9 +111,7 @@ export const createAds = (data, history) => dispatch => {
 export const editAds = (data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  const {schedules, ...rest} = data;
-
-  dispatch(put(adsEndpoint, { ...rest.ads, id: id },
+  dispatch(put(adsEndpoint, data,
     res => {
       // dispatch(setSelected(res.data.data));
       history.push("/sa/advertisement/" + id);

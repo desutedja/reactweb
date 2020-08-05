@@ -35,6 +35,7 @@ function Component() {
     const [services, setServices] = useState([]);
 
     const { selected, unit, loading } = useSelector(state => state.billing);
+    const { role } = useSelector(state => state.auth);
     const selectedUnit = unit.selected;
 
     let dispatch = useDispatch();
@@ -90,8 +91,8 @@ function Component() {
                 resident_id: selected.resident_id,
                 resident_name: selected.resident_name,
             })}
-            edit={data => dispatch(editBillingUnitItem(data, unit.selected, history, selectedUnit.id))}
-            add={data => dispatch(createBillingUnitItem(data, unit.selected, history))}
+            edit={data => dispatch(editBillingUnitItem(data, unit.selected, history, selectedUnit.id, role))}
+            add={data => dispatch(createBillingUnitItem(data, unit.selected, history, role))}
             renderChild={props => {
                 const { errors } = props;
 

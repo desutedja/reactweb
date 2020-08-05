@@ -78,8 +78,13 @@ function Component({ role, children }) {
 
         messaging.onMessage((payload) => {
             console.log('Message received. ', payload);
+
+            dispatch(setNotif({
+                title: "New Notification",
+                message: payload.notification.body,
+            }))
         });
-    }, [dispatch, user.id])
+    }, [alert, dispatch, user.id])
 
     useEffect(() => {
         notifModal && dispatch(get(endpointManagement + '/admin/notification', res => {
@@ -100,8 +105,9 @@ function Component({ role, children }) {
             AppId: 'fastel-sa-hkxoyooktyv',
             options: {
                 newMessagesCallback: message => {
+                    console.log(message);
                     dispatch(setReloadList());
-                    dispatch(setNotif({
+                    message[0].email !== userID && dispatch(setNotif({
                         title: "New Message",
                         message: message[0].username + ': ' + message[0].message,
                     }))
@@ -203,39 +209,44 @@ function Component({ role, children }) {
                     <div style={{ height: '1000px', overflow: 'scroll' }} >
                         {items.length > 0 && items.map(el =>
                             <div class="Container" style={{ margin: '10px 0px', padding: '14px', display: 'flex', cursor: 'pointer' }}
-                            onClick={() => {
-                                if (el.topic === 'announcement') {
-                                    history.push('/' + role + '/announcement/' + el.id);
+                                onClick={() => {
+                                    if (el.topic === 'announcement') {
+                                        history.push('/' + role + '/announcement/' + el.id + '/view');
+                                        setNotifModal(false);
+                                        return;
+                                    }
+                                    history.push("/" + role + "/task/" + el.topic_ref_id)
                                     setNotifModal(false);
-                                    return;
-                                }
-                                history.push("/" + role + "/task/" + el.topic_ref_id)
-                                setNotifModal(false);
-                            }}>
-                                {el.image && <div
-                                style={{
-                                    backgroundColor: 'grey',
-                                    width: el.image ? '140px' : '0px',
-                                    borderRadius: '4px',
-                                    marginRight: '15px',
-                                    color: 'white',
-                                    overflow: 'hidden',
-                                    position: 'relative'
                                 }}>
-                                    <img src={el.image} alt=""
+                                {el.image && <div
                                     style={{
-                                        position: 'absolute',
-                                        top: '50%',
-                                        left: '50%',
-                                        transform: 'translateY(-50%) translateX(-50%)'
-                                    }}
+                                        backgroundColor: 'grey',
+                                        width: el.image ? '140px' : '0px',
+                                        borderRadius: '4px',
+                                        marginRight: '15px',
+                                        color: 'white',
+                                        overflow: 'hidden',
+                                        position: 'relative'
+                                    }}>
+                                    <img src={el.image} alt=""
+                                        style={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '50%',
+                                            transform: 'translateY(-50%) translateX(-50%)'
+                                        }}
                                     />
                                 </div>}
                                 <div style={{ textAlign: 'left' }} >
                                     <b>{el.title}</b>
                                     <p style={{ margin: '8px 0px' }}>
-                                        <span style={{ padding: '2px 4px', backgroundColor: 'lightgrey' }} >
-                                            Task</span> {dateTimeFormatter(el.created_on)}
+                                        <span style={{
+                                            padding: '2px 4px', marginRight: 4,
+                                            backgroundColor: 'lightgrey'
+                                        }}>
+                                            {toSentenceCase(el.topic)}
+                                        </span>
+                                        {dateTimeFormatter(el.created_on)}
                                     </p>
                                     {parser(el.description)}
                                 </div>
@@ -260,7 +271,8 @@ function Component({ role, children }) {
                         <FiMenu style={{
                             marginRight: 16,
                         }} />
-                        {role === 'sa' ? 'Superadmin' : 'Building Manager'}
+                        {role === 'sa' ? 'Superadmin - ' + toSentenceCase(user.group)
+                            : 'Building Manager'}
                     </IconButton>
                 </div>
                 <div style={{
