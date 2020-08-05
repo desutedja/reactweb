@@ -69,15 +69,12 @@ function Component({ view }) {
                     onSubmit={(data) => {
                         edit ?
                             dispatch(editBuildingService({
-                                "building_id": selected.id, building_name: selected.name,
+                                building_id: selected.id, 
+                                building_name: selected.name,
                                 ...data,
-                                price_fixed: data.price_fixed ? data.price_fixed : null,
-                                price_unit: data.price_unit ? data.price_unit : null,
                             }, selectedRow.id)) :
                             dispatch(createBuildingService({
                                 ...data,
-                                price_fixed: data.price_fixed ? data.price_fixed : null,
-                                price_unit: data.price_unit ? data.price_unit : null,
                                 building_id: selected.id
                             }));
 
@@ -95,19 +92,19 @@ function Component({ view }) {
                         ]} optional />
                     <Input label="Description" placeholder="Input service description"
                         inputValue={selectedRow.description} optional />
-                    <Input label="Price Type" type="select" placeholder="Select pricing type (fixed or per unit usage)"
-                        inputValue={priceType} options={[
+                    <Input label="Price Type" name="price_type" type="select" placeholder="Select pricing type (fixed or per unit usage)"
+                        inputValue={priceType ? priceType : selectedRow.price_type} options={[
                         { value: 'unit', label: 'Unit' },
                         { value: 'fixed', label: 'Fixed' },
                     ]} setInputValue={setPriceType} optional />
                     <Input label="Unit Name" placeholder="Unit name, ex: kWh, m^3" name="denom_unit"
-                        hidden={priceType === 'fixed' || priceType === ''} inputValue={selectedRow.denom_unit}
+                        hidden={priceType === 'fixed' || priceType === ''} inputValue={priceType === 'fixed' ? null : selectedRow.denom_unit}
                         optional />
                     <Input label="Price" name="price_unit" type="number" placeholder="Price per unit usage"
-                        hidden={priceType === 'fixed' || priceType === ''} inputValue={selectedRow.price_unit}
+                        hidden={priceType === 'fixed' || priceType === ''} inputValue={priceType === 'fixed' ? null : selectedRow.price_unit}
                         addons="rupiah" optional />
                     <Input label="Price" name="price_fixed" type="number"
-                        hidden={priceType === 'unit' || priceType === ''} inputValue={selectedRow.price_fixed}
+                        hidden={priceType === 'unit' || priceType === ''} inputValue={priceType === 'unit' ? null : selectedRow.price_fixed}
                         addons="rupiah" optional />
                     <Input label="Tax Type" name="tax" type="select"
                         options={[
@@ -167,7 +164,7 @@ function Component({ view }) {
                 onClickEdit={view ? null : row => {
                     setRow(row);
                     console.log(row);
-                    setPriceType(row.price_fixed > 0 ? 'fixed' : 'unit');
+                    setPriceType(row.price_type);
                     setTaxType(row.tax);
                     setEdit(true);
                     setAddService(true);
