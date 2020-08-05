@@ -39,46 +39,52 @@ function Component({ view }) {
     let history = useHistory();
     let { url } = useRouteMatch();
 
-    function isLate(payment, due_date, payment_date) {
-        return payment === "paid" ? moment.utc(payment_date).isAfter(moment.utc(due_date)) : 
-                 moment.utc().isAfter(moment.utc(due_date))
-    }
+    const columns = useMemo(() => {
+        function isLate(payment, due_date, payment_date) {
+            return payment === "paid" ? moment.utc(payment_date).isAfter(moment.utc(due_date)) :
+                moment.utc().isAfter(moment.utc(due_date))
+        }
 
-    const columns = useMemo(() => ([
-        { Header: 'ID', accessor: 'id' },
-        { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name, <>{row.service_name} - {row.group === 'ipl' ? 'IPL' : 'Non-IPL'}</>]} />},
-        { Header: 'Total', accessor: row => 
-        <div style={{ display: 'block' }}>
-            <div>{toMoney(row.total)}</div>
-            { row.total_additional_charge > 0 && <div>+ {toMoney(row.total_additional_charge)}</div>}
-        </div>},
-        { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
-        { Header: 'Ref Code', accessor: row => row.ref_code ? 
-        <a class="Link" href={"/" + role + "/billing/unit/item/record/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
-        },
-        { Header: 'Payment', accessor: row => 
-            (
-                row.payment_method === 'cash' ? 
-                    <Pill color="primary">Cash Paid</Pill> :
-                <Pill color={row.payment === "paid" ? "success": "secondary"}>{toSentenceCase(row.payment)}</Pill> 
-            )
-        },
-        {
-            Header: 'Payment Date', accessor: row => row.payment_date ? 
-            <div>
-                <div>{dateTimeFormatterCell(row.payment_date)}</div>
-                {isLate(row.payment, row.due_date, row.payment_date) && 
-                    <div style={{color: 'red'}}><FiClock/> Overdue Payment</div>}
-            </div>
-                : '-'
-        },
-    ]), [ role, isLate ]);
+        return [
+            { Header: 'ID', accessor: 'id' },
+            { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name, <>{row.service_name} - {row.group === 'ipl' ? 'IPL' : 'Non-IPL'}</>]} /> },
+            {
+                Header: 'Total', accessor: row =>
+                    <div style={{ display: 'block' }}>
+                        <div>{toMoney(row.total)}</div>
+                        {row.total_additional_charge > 0 && <div>+ {toMoney(row.total_additional_charge)}</div>}
+                    </div>
+            },
+            { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
+            {
+                Header: 'Ref Code', accessor: row => row.ref_code ?
+                    <a class="Link" href={"/" + role + "/billing/unit/item/record/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
+            },
+            {
+                Header: 'Payment', accessor: row =>
+                    (
+                        row.payment_method === 'cash' ?
+                            <Pill color="primary">Cash Paid</Pill> :
+                            <Pill color={row.payment === "paid" ? "success" : "secondary"}>{toSentenceCase(row.payment)}</Pill>
+                    )
+            },
+            {
+                Header: 'Payment Date', accessor: row => row.payment_date ?
+                    <div>
+                        <div>{dateTimeFormatterCell(row.payment_date)}</div>
+                        {isLate(row.payment, row.due_date, row.payment_date) &&
+                            <div style={{ color: 'red' }}><FiClock /> Overdue Payment</div>}
+                    </div>
+                    : '-'
+            },
+        ]
+    }, [role]);
 
     useEffect(() => {
         console.log("selected => ");
         console.log(selected);
         dispatch(getBillingUnitItem(0, 100, '',
-            {id: selected.id, building_id: selected.building_id}, status));
+            { id: selected.id, building_id: selected.building_id }, status));
     }, [dispatch, refreshToggle, selected, status])
 
     useEffect(() => {
@@ -95,9 +101,9 @@ function Component({ view }) {
     return (
         <Template transparent
             pagetitle="Unit Billing Details"
-            title={(role === "sa" ? toSentenceCase(selected.building_name) + ", " : "" ) +
-                   toSentenceCase(selected.section_type) + " " + 
-                   toSentenceCase(selected.section_name) + " " + selected.number}
+            title={(role === "sa" ? toSentenceCase(selected.building_name) + ", " : "") +
+                toSentenceCase(selected.section_type) + " " +
+                toSentenceCase(selected.section_name) + " " + selected.number}
             loading={false}
             labels={[]}
             contents={[
@@ -120,111 +126,111 @@ function Component({ view }) {
                                 />}
                             </div>
                             <ListGroup>
-                                {unit?.items?.billing?.length > 0 ? 
-                                unit?.items?.billing?.map((el, index) => <ListGroupItem 
-                                    style={{ cursor: "pointer" }}
-                                    active={index === active} 
-                                    tag="b"
-                                    onClick={() => setActive(index)}
-                                >
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <div>{el.billing_month}</div> 
-                                        <div>{el.billing_item.some(it => it.payment === "unpaid") ? 
-                                            <Pill color="light">Unpaid</Pill> : <Pill color="success">Paid</Pill>
-                                        }</div>
-                                </div>
-                                </ListGroupItem>) : <div style={{ padding: "10px 0px" }} >No Billing Yet</div>}
+                                {unit?.items?.billing?.length > 0 ?
+                                    unit?.items?.billing?.map((el, index) => <ListGroupItem
+                                        style={{ cursor: "pointer" }}
+                                        active={index === active}
+                                        tag="b"
+                                        onClick={() => setActive(index)}
+                                    >
+                                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                            <div>{el.billing_month}</div>
+                                            <div>{el.billing_item.some(it => it.payment === "unpaid") ?
+                                                <Pill color="light">Unpaid</Pill> : <Pill color="success">Paid</Pill>
+                                            }</div>
+                                        </div>
+                                    </ListGroupItem>) : <div style={{ padding: "10px 0px" }} >No Billing Yet</div>}
                             </ListGroup>
                         </Card>
                     </Column>
                     <Column style={{ flex: 8 }}>
-                    <Row>
-                        <Card className="Container" style={{
-                            flex: 4,
-                            flexDirection: 'column',
-                            marginRight: 16,
-                            boxShadow: 'none',
-                        }}>
-                            <Table
-                                columns={columns}
-                                data={items}
-                                loading={loading}
-                                pageCount={unit.total_pages}
-                                totalItems={items.length}
-                                filters={[
-                                    {
-                                        label: <p>{"Status: " + (status ? toSentenceCase(status) : "All")}</p>,
-                                        hidex: status === '',
-                                        delete: () => setStatus(''),
-                                        component: (toggleModal) =>
-                                            <>
-                                                <Filter
-                                                    data={[
-                                                        { label: 'Paid', value: 'paid' },
-                                                        { label: 'Unpaid', value: 'unpaid' },
-                                                    ]}
-                                                    onClick={(el) => {
-                                                        setStatus(el.value);
-                                                        toggleModal(false);
-                                                    }}
-                                                    onClickAll={() => {
-                                                        setStatus('');
-                                                        toggleModal(false);
-                                                    }}
-                                                />
-                                            </>
-                                    },
-                                ]}
-                                actions={[
-                                <>Billing Items {unit.items && unit.items.billing && unit.items.billing[active] ? 
-                                        "for " + unit.items.billing[active].billing_month : ""}</>
-                                ]}
-                                deleteSelection={(selectedRows, rows) => {
-                                    Object.keys(selectedRows).map(el => dispatch(deleteBillingUnitItem(
-                                        rows[el].original.id)));
-                                }}
-                            />
-                        </Card>
-                    </Row>
-                    <Row>
-                        <Column style={{ display: 'block' }}>
-                            <Card style={{
-                                marginLeft: 16,
-                                marginRight: 20,
-                                marginBottom: 20,
-                                flex: 2,
-                            }}>
-                                <CardBody>
-                                    <CardTitle>Unit Information</CardTitle>
-                                    <Detail type="Billing" data={selected} labels={details} editable={false} />
-                                </CardBody>
-                            </Card>
-                        </Column>
-                        <Column style={{ display: 'block' }}>
-                            <Card style={{
+                        <Row>
+                            <Card className="Container" style={{
+                                flex: 4,
+                                flexDirection: 'column',
                                 marginRight: 16,
-                                marginBottom: 20,
-                                flex: 8,
+                                boxShadow: 'none',
                             }}>
-                                <CardBody>
-                                    <CardTitle>
-                                        Summary {unit.items && unit.items.billing && unit.items.billing[active] ? 
-                                            "for " + unit.items.billing[active].billing_month : ""}
-                                    </CardTitle>
-                                    {(unit.items && unit.items.billing.length > 0) ? <>
-                                        <ThreeColumn second="Subtotal" third={toMoney(unit.items.billing[active].group_amount)} />
-                                        <ThreeColumn second={"Penalty (" + (unit.items.billing[active].group_penalty_percentage) + "%)"}
-                                            third={<span style={{ color: 'red' }}>
-                                                {toMoney(unit.items.billing[active].group_penalty)}</span>} />
-                                        <ThreeColumn second="Total" 
-                                            third={<h4 className="m-0">{toMoney(unit.items.billing[active].total_group_amount)}</h4>}/>
-                                    </> : "-"}
-                                    {/* JSON.stringify(unit.items, null, 4) */}
-                                </CardBody>
+                                <Table
+                                    columns={columns}
+                                    data={items}
+                                    loading={loading}
+                                    pageCount={unit.total_pages}
+                                    totalItems={items.length}
+                                    filters={[
+                                        {
+                                            label: <p>{"Status: " + (status ? toSentenceCase(status) : "All")}</p>,
+                                            hidex: status === '',
+                                            delete: () => setStatus(''),
+                                            component: (toggleModal) =>
+                                                <>
+                                                    <Filter
+                                                        data={[
+                                                            { label: 'Paid', value: 'paid' },
+                                                            { label: 'Unpaid', value: 'unpaid' },
+                                                        ]}
+                                                        onClick={(el) => {
+                                                            setStatus(el.value);
+                                                            toggleModal(false);
+                                                        }}
+                                                        onClickAll={() => {
+                                                            setStatus('');
+                                                            toggleModal(false);
+                                                        }}
+                                                    />
+                                                </>
+                                        },
+                                    ]}
+                                    actions={[
+                                        <>Billing Items {unit.items && unit.items.billing && unit.items.billing[active] ?
+                                            "for " + unit.items.billing[active].billing_month : ""}</>
+                                    ]}
+                                    deleteSelection={(selectedRows, rows) => {
+                                        Object.keys(selectedRows).map(el => dispatch(deleteBillingUnitItem(
+                                            rows[el].original.id)));
+                                    }}
+                                />
                             </Card>
-                        </Column>
-                    </Row>
-                </Column>
+                        </Row>
+                        <Row>
+                            <Column style={{ display: 'block' }}>
+                                <Card style={{
+                                    marginLeft: 16,
+                                    marginRight: 20,
+                                    marginBottom: 20,
+                                    flex: 2,
+                                }}>
+                                    <CardBody>
+                                        <CardTitle>Unit Information</CardTitle>
+                                        <Detail type="Billing" data={selected} labels={details} editable={false} />
+                                    </CardBody>
+                                </Card>
+                            </Column>
+                            <Column style={{ display: 'block' }}>
+                                <Card style={{
+                                    marginRight: 16,
+                                    marginBottom: 20,
+                                    flex: 8,
+                                }}>
+                                    <CardBody>
+                                        <CardTitle>
+                                            Summary {unit.items && unit.items.billing && unit.items.billing[active] ?
+                                                "for " + unit.items.billing[active].billing_month : ""}
+                                        </CardTitle>
+                                        {(unit.items && unit.items.billing?.length > 0) ? <>
+                                            <ThreeColumn second="Subtotal" third={toMoney(unit.items.billing[active].group_amount)} />
+                                            <ThreeColumn second={"Penalty (" + (unit.items.billing[active].group_penalty_percentage) + "%)"}
+                                                third={<span style={{ color: 'red' }}>
+                                                    {toMoney(unit.items.billing[active].group_penalty)}</span>} />
+                                            <ThreeColumn second="Total"
+                                                third={<h4 className="m-0">{toMoney(unit.items.billing[active].total_group_amount)}</h4>} />
+                                        </> : "-"}
+                                        {/* JSON.stringify(unit.items, null, 4) */}
+                                    </CardBody>
+                                </Card>
+                            </Column>
+                        </Row>
+                    </Column>
                 </div>
                 ,
             ]}
