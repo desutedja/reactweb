@@ -210,7 +210,7 @@ function Component({ role, children }) {
                             <div class="Container" style={{ margin: '10px 0px', padding: '14px', display: 'flex', cursor: 'pointer' }}
                                 onClick={() => {
                                     if (el.topic === 'announcement') {
-                                        history.push('/' + role + '/announcement/' + el.id);
+                                        history.push('/' + role + '/announcement/' + el.id + '/view');
                                         setNotifModal(false);
                                         return;
                                     }
