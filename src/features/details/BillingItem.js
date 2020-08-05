@@ -108,7 +108,8 @@ function Component({ view }) {
             >
                 Are you sure you want to set <b>{unit.selected.name}</b> as paid by cash?
             </Modal>
-            <Modal disableFooter isOpen={modal} 
+            <Modal disableFooter 
+                isOpen={modal} 
                 toggle={() => setModal(false)}
                 title="Add Additional Charge"
             >
@@ -165,7 +166,7 @@ function Component({ view }) {
                         data={data}
                         actions={view ? null : [
                             unit.selected.payment !== 'paid' && <Button icon={<FiPlus />}
-                            label="Add Additional Charge" onClick={() => cashModalUp()} />,
+                            label="Add Additional Charge" onClick={() => setModal(true)} />,
                         ]}
                         onClickDelete={view ? null : row => {
                             dispatch(setConfirmDelete("Are you sure to delete this item?",
