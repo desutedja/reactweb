@@ -52,7 +52,7 @@ function Component({ view }) {
                 Header: 'Total', accessor: row =>
                     <div style={{ display: 'block' }}>
                         <div>{toMoney(row.total)}</div>
-                        {row.total_additional_charge > 0 && <div>+ {toMoney(row.total_additional_charge)}</div>}
+                        {row.additional_charge_amount > 0 && <div>+ {toMoney(row.additional_charge_amount)}</div>}
                     </div>
             },
             { Header: 'Due Date', accessor: row => dateFormatter(row.due_date) },
