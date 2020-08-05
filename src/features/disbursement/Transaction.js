@@ -448,15 +448,15 @@ function Component({ view }) {
                                                 key={index}
                                                 tag="b"
                                                 // active={index === active}
-                                                active={selectedId.some(items => items.id === el.id)}
+                                                active={selectedId.some(item => item.id === el.id)}
                                                 onClick={() => {
                                                     setCourier('');
-                                                    !selectedId.some(items => items.id === el.id) ?
-                                                    setSelectedId([
-                                                        ...selectedId,
-                                                        el
-                                                    ]) :
-                                                    setSelectedId(selectedId.filter(items => items.id !== el.id))
+                                                    !selectedId.some(item => item.id === el.id) ?
+                                                        setSelectedId([
+                                                            ...selectedId,
+                                                            el
+                                                        ]) :
+                                                        setSelectedId(selectedId.filter(item => item.id !== el.id))
                                                 }}
                                             >
                                                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -551,7 +551,12 @@ function Component({ view }) {
                         flexDirection: 'row',
                     }}>
                         <div>
-                <p>Undisbursed Amount For {selectedId.length === 0 ? (<b>{'All ' + toSentenceCase(type).replace(' ', '') + 's'}</b>) : (selectedId.length > 1 ? toSentenceCase(type).replace(' ', '') + 's' : toSentenceCase(type)).replace(' ', '') + ' :' }</p>
+                            <p>
+                                Undisbursed Amount For {selectedId.length === 0 ?
+                                (<b>{'All ' + toSentenceCase(type).replace(' ', '') + 's'}</b>) :
+                                (selectedId.length > 1 ? toSentenceCase(type).replace(' ', '') + 's' :
+                                toSentenceCase(type)).replace(' ', '') + ' :' }
+                            </p>
                             {selectedId && selectedId.map(el => <>
                                 <div
                                 style={{
