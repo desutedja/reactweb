@@ -47,8 +47,6 @@ function Component() {
         roomID, roomUniqueID, messages, 
         reloadList, lastMessageOnRoom, loading 
     } = useSelector(state => state.chat);
-    const adminID = (role === "sa" ? 'admin' : user.building_management_id);
-    const userID = (role === "sa" ? "centratama" : "management") + "-clink-" + adminID;
 
     let dispatch = useDispatch();
     let messageBottom = useRef();
@@ -78,12 +76,12 @@ function Component() {
             limit: 50
         }
 
-        // roomID && setLoadingMessages(true);
+        roomID && setLoadingMessages(true);
         roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
             .then(function (comments) {
                 // On success
                 dispatch(setMessages(comments.reverse()));
-                // setLoadingMessages(false);
+                setLoadingMessages(false);
                 messageBottom.current.scrollIntoView();
 
                 qiscus.readComment(roomID, room.last_comment_id);
@@ -93,7 +91,29 @@ function Component() {
                 // On error
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [qiscus, reloadList, room, roomID]);
+    }, [qiscus, room, roomID]);
+
+    useEffect(() => {
+        var options = {
+            // last_comment_id: 10,
+            // after: false,
+            limit: 50
+        }
+
+        roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
+            .then(function (comments) {
+                // On success
+                dispatch(setMessages(comments.reverse()));
+                messageBottom.current.scrollIntoView();
+
+                qiscus.readComment(roomID, room.last_comment_id);
+                qiscus.receiveComment(roomID, room.last_comment_id);
+            })
+            .catch(function (error) {
+                // On error
+            })
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [qiscus, reloadList]);
 
     useEffect(() => {
         /*
