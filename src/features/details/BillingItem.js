@@ -60,10 +60,10 @@ function Component({ view }) {
             {label: 'payment_date', vfmt: v => dateTimeFormatter(v) },
         ],
         'Payment Calculation': [
-            {label: 'previous_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
-            {label: 'recent_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
-            {label: '', lfmt: () => "Usage", vfmt: (v) => <>{unit.selected.recent_usage - unit.selected.previous_usage} {unit.selected.denom_unit}</> },
-            {label: 'price_unit', vfmt: v => <>{toMoney(v)}{unit.selected.denom_unit && ("/"+unit.selected.denom_unit)}</> },
+            {disabled: !unit.selected.denom_unit, label: 'previous_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
+            {disabled: !unit.selected.denom_unit, label: 'recent_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
+            {disabled: !unit.selected.denom_unit, label: '', lfmt: () => "Usage", vfmt: (v) => <>{unit.selected.recent_usage - unit.selected.previous_usage} {unit.selected.denom_unit}</> },
+            {label: 'price_unit', vfmt: v => <>{toMoney(v)}{unit.selected.denom_unit ? ("/"+unit.selected.denom_unit) : ' (fixed)'}</> },
             {label: 'subtotal', vfmt: v => toMoney(v)},
             {label: 'tax', vfmt: (v) => <>{toMoney(unit.selected.tax_amount)} ({v === "percentage" ? (unit.selected.tax_value + "%") : "fixed"})</>},
             //{label: 'tax_amount', vfmt: v => v ? toMoney(v) : '-'},
@@ -111,6 +111,7 @@ function Component({ view }) {
                         "total_payment": unit.selected.total_payment,
                         "additional_charge_amount": unit.selected.additional_charge_amount,
                     }));
+                    setToggle(!toggle);
                     setModalCash(false);
                 }}
                 toggle={ () => setModalCash(false) }
