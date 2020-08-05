@@ -31,6 +31,7 @@ const months = [
 
 function Component({ view }) {
     const [modal, setModal] = useState(false);
+    const [modalCash, setModalCash] = useState(false);
     const [toggle, setToggle] = useState(false);
 
     const [data, setData] = useState([]);
@@ -84,11 +85,29 @@ function Component({ view }) {
     }, [dispatch, unit.selected.id, toggle])
 
     const cashModalUp = useCallback(() => {
-        setModal(true);
+        setModalCash(true);
     }, [setModal])
 
     return (
         <>
+            <Modal 
+                disableHeader
+                isOpen={modalCash}
+                onClick={ () => {
+                    dispatch(payByCash({
+                        "id": unit.selected.id,
+                        "total": unit.selected.total,
+                        "penalty_amount": unit.selected.penalty_amount,
+                        "total_payment": unit.selected.total_payment,
+                        "additional_charge_amount": unit.selected.additional_charge_amount,
+                    }));
+                    setModalCash(false);
+                }}
+                toggle={ () => setModalCash(false) }
+                okLabel="Confirm"
+            >
+                Are you sure you want to set <b>{unit.selected.name}</b> as paid by cash?
+            </Modal>
             <Modal disableFooter isOpen={modal} 
                 toggle={() => setModal(false)}
                 title="Add Additional Charge"
@@ -135,15 +154,7 @@ function Component({ view }) {
                     <Detail view={view} type="Billing" data={unit.selected} labels={details}
                         editable={unit.selected.payment !== 'paid'}
                         renderButtons={() => ([
-                            unit.selected.payment !== "paid" && <Button label="Set as Paid" onClick={() => {
-                                dispatch(payByCash({
-                                    "id": unit.selected.id,
-                                    "total": unit.selected.total,
-                                    "penalty_amount": unit.selected.penalty_amount,
-                                    "total_payment": unit.selected.total_payment,
-                                    "additional_charge_amount": unit.selected.additional_charge_amount,
-                                }));
-                            }} />
+                            unit.selected.payment !== "paid" && <Button label="Set as Paid" onClick={() => cashModalUp()} />
                         ])}
                     />,
                     <Table
