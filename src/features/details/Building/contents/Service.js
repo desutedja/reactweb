@@ -57,6 +57,8 @@ function Component({ view }) {
             <Modal isOpen={addService} toggle={() => setAddService(false)}
                 title={edit ? "Edit Service" : "Add Service"} disableFooter={true}
             >
+                {edit && <p style={{ paddingRight: '10px', fontStyle: 'italic' }}>
+                    *Any changes in billing service will not affect billings that have been created from it</p>}
                 <Form
                     noContainer={true}
                     showCancel={true}
@@ -94,10 +96,10 @@ function Component({ view }) {
                     <Input label="Description" placeholder="Input service description"
                         inputValue={selectedRow.description} optional />
                     <Input label="Price Type" type="select" placeholder="Select pricing type (fixed or per unit usage)"
-                        inputValue={priceType ? priceType : selectedRow.price_type} options={[
-                            { value: 'unit', label: 'Unit' },
-                            { value: 'fixed', label: 'Fixed' },
-                        ]} setInputValue={setPriceType} optional />
+                        inputValue={priceType} options={[
+                        { value: 'unit', label: 'Unit' },
+                        { value: 'fixed', label: 'Fixed' },
+                    ]} setInputValue={setPriceType} optional />
                     <Input label="Unit Name" placeholder="Unit name, ex: kWh, m^3" name="denom_unit"
                         hidden={priceType === 'fixed' || priceType === ''} inputValue={selectedRow.denom_unit}
                         optional />
