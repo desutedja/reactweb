@@ -213,12 +213,12 @@ function Component() {
                         <Input {...props} label="End Date" type="date" />
 
                         <SectionSeparator title="Targetting" />
-                        <Input {...props} label="Target Building" name="target_building" type="radio" options={target_buildings}
+                        {auth.role === "sa" && <Input {...props} label="Target Building" name="target_building" type="radio" options={target_buildings}
                             defaultValue="allbuilding"
                             onChange={el => {
                                 el === 'allbuilding' && setFieldValue('building', [])
-                            }} />
-                        {values.target_building === "specificbuilding" &&
+                            }} />}
+                        {auth.role === "sa" && values.target_building === "specificbuilding" &&
                             <Input {...props} type="multiselect"
                                 label="Select Building(s)" name="building_list"
                                 defaultValue={values.building_list}
@@ -260,8 +260,9 @@ function Component() {
                         ]}
                             onChange={el => setOS(el)}
                         />
-                        <Input {...props} label="Priority" name="total_priority_score"
+                        <Input {...props} label="Weight" name="total_priority_score"
                             type="number"
+                            hint="This is calculated by setting above target parameters, override with higher number if you want the ads to be prioritized"
                             externalValue={score ? score : null}
                         />
 

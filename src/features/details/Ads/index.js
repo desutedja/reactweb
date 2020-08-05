@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useHistory, useRouteMatch, useParams } from 'react-router-dom';
 import moment from 'moment';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';
@@ -28,6 +28,8 @@ function Component({ view }) {
     let history = useHistory();
     let { url } = useRouteMatch();
     let { id } = useParams();
+
+    const { role } = useSelector(state => state.auth);
 
     const details = useMemo(() => {
         return {
@@ -58,7 +60,7 @@ function Component({ view }) {
             ],
             "Target Parameters": [
                 {
-                    label: 'buildings', lfmt: () => "Target Building", 
+                    disabled: role !== 'sa',  label: 'buildings', lfmt: () => "Target Building", 
                     vfmt: (v) => { return (v && v.length > 0) ? v.map(el => <Pill color="primary">{el.name}</Pill>) : "All" }
                 },
                 {
