@@ -11,7 +11,7 @@ import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
 import { 
     updateMessages, setMessages, 
-    setRoom, setRoomID, setRoomUniqueID, setRooms, setReloadList 
+    setRoom, setRoomID, setRoomUniqueID, setRooms 
 } from './slice';
 import { FiSend } from 'react-icons/fi';
 
@@ -47,7 +47,7 @@ function Component() {
         roomID, roomUniqueID, messages, 
         reloadList, lastMessageOnRoom, loading 
     } = useSelector(state => state.chat);
-    const adminID = (role === "sa" ? user.id : user.building_management_id);
+    const adminID = (role === "sa" ? 'admin' : user.building_management_id);
     const userID = (role === "sa" ? "centratama" : "management") + "-clink-" + adminID;
 
     let dispatch = useDispatch();
@@ -78,12 +78,12 @@ function Component() {
             limit: 50
         }
 
-        roomID && setLoadingMessages(true);
+        // roomID && setLoadingMessages(true);
         roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
             .then(function (comments) {
                 // On success
                 dispatch(setMessages(comments.reverse()));
-                setLoadingMessages(false);
+                // setLoadingMessages(false);
                 messageBottom.current.scrollIntoView();
 
                 qiscus.readComment(roomID, room.last_comment_id);
@@ -93,7 +93,7 @@ function Component() {
                 // On error
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [qiscus, room, roomID]);
+    }, [qiscus, reloadList, room, roomID]);
 
     useEffect(() => {
         /*
@@ -120,7 +120,7 @@ function Component() {
                 //dispatch(setRoom(rooms[0]));
                 //!roomID && dispatch(setRoomID(rooms[0].id));
                 !roomUniqueID && dispatch(setRoomUniqueID(rooms[0].unique_id));
-                dispatch(setReloadList(false));
+                // dispatch(setReloadList(false));
                 setLoadingRooms(false);
             })
             .catch(function (error) {
