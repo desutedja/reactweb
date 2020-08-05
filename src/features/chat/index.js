@@ -11,7 +11,7 @@ import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
 import { 
     updateMessages, setMessages, 
-    setRoom, setRoomID, setRoomUniqueID, setRooms, setReloadList 
+    setRoom, setRoomID, setRoomUniqueID, setRooms 
 } from './slice';
 import { FiSend } from 'react-icons/fi';
 
@@ -47,7 +47,7 @@ function Component() {
         roomID, roomUniqueID, messages, 
         reloadList, lastMessageOnRoom, loading 
     } = useSelector(state => state.chat);
-    const adminID = (role === "sa" ? user.id : user.building_management_id);
+    const adminID = (role === "sa" ? 'admin' : user.building_management_id);
     const userID = (role === "sa" ? "centratama" : "management") + "-clink-" + adminID;
 
     let dispatch = useDispatch();
@@ -78,12 +78,12 @@ function Component() {
             limit: 50
         }
 
-        roomID && setLoadingMessages(true);
+        // roomID && setLoadingMessages(true);
         roomID && qiscus.loadComments && qiscus.loadComments(roomID, options)
             .then(function (comments) {
                 // On success
                 dispatch(setMessages(comments.reverse()));
-                setLoadingMessages(false);
+                // setLoadingMessages(false);
                 messageBottom.current.scrollIntoView();
 
                 qiscus.readComment(roomID, room.last_comment_id);
@@ -93,7 +93,7 @@ function Component() {
                 // On error
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [qiscus, room, roomID]);
+    }, [qiscus, reloadList, room, roomID]);
 
     useEffect(() => {
         /*
@@ -120,7 +120,7 @@ function Component() {
                 //dispatch(setRoom(rooms[0]));
                 //!roomID && dispatch(setRoomID(rooms[0].id));
                 !roomUniqueID && dispatch(setRoomUniqueID(rooms[0].unique_id));
-                dispatch(setReloadList(false));
+                // dispatch(setReloadList(false));
                 setLoadingRooms(false);
             })
             .catch(function (error) {
@@ -180,18 +180,18 @@ function Component() {
                     <Loading loading={loadingMessages}>
                         {messages.length > 0 ? messages.map((el, index) =>
                             <div key={el.id} className={
-                                el.email === userID ?
+                                el.extras.name === user.firstname + ' ' + user.lastname ?
                                     "MessageContainer-own" : "MessageContainer"}>
-                                {index > 0 && messages[index - 1].email === el.email ?
+                                {index > 0 && messages[index - 1].extras.name === el.extras.name ?
                                     <div className="MessageAvatar" /> :
                                     <img alt="avatar" className="MessageAvatar" src={el.user_avatar_url} />}
                                 <div style={{
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    alignItems: el.email === userID ?
+                                    alignItems: el.extras.name === user.firstname + ' ' + user.lastname ?
                                         'flex-end' : 'flex-start',
                                 }}>
-                                    {index > 0 && messages[index - 1].email === el.email ?
+                                    {index > 0 && messages[index - 1].extras.name === el.extras.name ?
                                         null :
                                         <div className="MessageUsername" style={{ cursor: 'pointer' }} onClick={() => {
                                                 const userrole = el.email.split("-")[0]
@@ -207,19 +207,19 @@ function Component() {
                                                     history.push("/" + role + "/admin/" + userid)
                                                 }
                                         }}>
-                                            {el.username} 
-                                            ({el.email.split("-")[0]})
+                                            {el.username + ' '} 
+                                            ({el.email.split("-")[0] === 'centratama' ? el.extras.name : el.email.split("-")[0] })
                                         </div>}
                                     <div style={{
                                         display: 'flex',
-                                        flexDirection: el.email === userID ?
+                                        flexDirection: el.extras.name === user.firstname + ' ' + user.lastname ?
                                             'row-reverse' : 'row',
                                     }}>
                                         {/* if type is text */ }
 
                                         { el.type === 'text' &&
                                         <div className={
-                                            el.email === userID ?
+                                            el.extras.name === user.firstname + ' ' + user.lastname ?
                                             "Message-own" : "Message"}>
                                             {el.message}
                                         </div>}
@@ -229,7 +229,7 @@ function Component() {
                                             {
                                                 isImage(el.message.split(" ")[1]) ? 
                                                 <img alt="Attachment" src={el.message.split(" ")[1]} width="150" style={{ padding: '10px' }}/> :
-                                                <div className={el.email === userID ? "Message-own" : "Message"}>
+                                                <div className={el.extras.name === user.firstname + ' ' + user.lastname ? "Message-own" : "Message"}>
                                                     <TiAttachment /> <a href={el.message.split(" ")[1]}>Download Attachment</a>
                                                 </div>
                                             }

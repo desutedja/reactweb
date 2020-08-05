@@ -105,8 +105,9 @@ function Component({ role, children }) {
             AppId: 'fastel-sa-hkxoyooktyv',
             options: {
                 newMessagesCallback: message => {
+                    console.log(message);
                     dispatch(setReloadList());
-                    dispatch(setNotif({
+                    message[0].email !== userID && dispatch(setNotif({
                         title: "New Message",
                         message: message[0].username + ': ' + message[0].message,
                     }))
