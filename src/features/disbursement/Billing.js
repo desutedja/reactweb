@@ -82,6 +82,20 @@ function Component({ view }) {
         }))
     }, [dispatch]);
 
+    useEffect(() => {
+        const amount = data.reduce((sum, el) => {
+            return sum + el.base_price;
+        }, 0)
+        setAmount(amount)
+    }, [data])
+
+    useEffect(() => {
+        setDataFiltered(data.filter(el => {
+            if (!status) return true;
+            return status === 'disbursed' ? !!el.disbursement_date : !el.disbursement_date;
+        }))   
+    }, [data, status])
+
     const getSum = items => {
         return items.reduce((sum, el) => {
             return sum + el.selling_price
@@ -379,10 +393,9 @@ function Component({ view }) {
                                 loading={dataLoading}
                                 pageCount={dataPages}
                                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                                    setDataFiltered(data.filter(el => {
-                                        if (!status) return true;
-                                        return status === 'disbursed' ? !!el.disbursement_date : !el.disbursement_date;
-                                    }))
+                                    const searched = search.length > 0 ? data.filter(item => item.trx_code.toLowerCase().includes(search.toLowerCase())) : data;
+                                    setDataFiltered(searched)
+
                                     // setDataLoading(true);
                                     // dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit='
                                     //     + pageSize + '&page=' + (pageIndex + 1) + '&search=' + search
@@ -401,18 +414,18 @@ function Component({ view }) {
                                     //         setTotalItems(res.data.data.filtered_item);
                                     //         setDataLoading(false);
                                     // }))
-                                    dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit=9999&page=1&search='
-                                    + '&building_id=' + disbursement.items[active]?.building_id
-                                    + '&management_id=' + disbursement.items[active]?.id,
-                                    res => {
-                                        const undisburseItems = res.data.data.items.filter(item => !item.disbursement_date);
-                                        const amount = undisburseItems.reduce((sum, el) => {
-                                            return sum + el.base_price;
-                                        }, 0)
-                                        setAmount(amount)
-                                    }))
+                                    // dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit=9999&page=1&search='
+                                    // + '&building_id=' + disbursement.items[active]?.building_id
+                                    // + '&management_id=' + disbursement.items[active]?.id,
+                                    // res => {
+                                    //     const undisburseItems = res.data.data.items.filter(item => !item.disbursement_date);
+                                    //     const amount = undisburseItems.reduce((sum, el) => {
+                                    //         return sum + el.base_price;
+                                    //     }, 0)
+                                    //     setAmount(amount)
+                                    // }))
                                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                                }, [dispatch, refreshToggle, active, status, disbursedStart, disbursedEnd])}
+                                }, [dispatch, refreshToggle, active, status, disbursedStart, disbursedEnd, data])}
                                 filters={[
                                     ...status === 'disbursed' ? [{
                                         hidex: isRangeToday(disbursedStart, disbursedEnd),
