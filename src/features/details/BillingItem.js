@@ -34,6 +34,7 @@ function Component({ view }) {
     const [modalCash, setModalCash] = useState(false);
     const [toggle, setToggle] = useState(false);
 
+    const [dataDetails, setDataDetails] = useState({});
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [totalItems, setTotalItems] = useState('');
@@ -77,6 +78,7 @@ function Component({ view }) {
         setLoading(true);
         dispatch(get(endpointBilling + '/management/billing/detail/' +
             unit.selected.id, res => {
+                setDataDetails(res.data.data);
                 setLoading(false);
             }))
     }, [dispatch, unit.selected.id, toggle])
@@ -94,7 +96,7 @@ function Component({ view }) {
 
     const cashModalUp = useCallback(() => {
         setModalCash(true);
-    }, [setModal])
+    }, [])
 
     return (
         <>
@@ -160,7 +162,7 @@ function Component({ view }) {
                 loading={false}
                 labels={["Details", "Additional Charges"]}
                 contents={[
-                    <Detail view={view} type="Billing" data={unit.selected} labels={details}
+                    <Detail view={view} type="Billing" data={dataDetails} labels={details}
                         editable={unit.selected.payment !== 'paid'}
                         renderButtons={() => ([
                             unit.selected.payment !== "paid" && <Button label="Set as Paid" onClick={() => cashModalUp()} />
