@@ -344,8 +344,8 @@ function Component() {
             </div>
             {auth.role === 'bm' && <div className="row no-gutters">
                 <div className="col">
-                    <div className="Container flex-column">
-                        <div className="row mb-2">
+                    <div className="Container flex-column h-100">
+                        <div className="row mb-4">
                             <div className="col">
                                 <h5>Most Resolver This Month</h5>
                             </div>
@@ -353,7 +353,7 @@ function Component() {
                         <div className="row">
                             <div className="col">
                                 <ul className="list-stats">
-                                {taskData.task_resolver_last_month && taskData.task_resolver_this_month.map((resolver, i) => (
+                                    {taskData.task_resolver_this_month?.length > 0 ? taskData.task_resolver_this_month.map((resolver, i) => (
                                     <li className="row no-gutters align-items-center bread"
                                     onClick={() => {
                                         history.push('/' + auth.role + '/staff/' + resolver.assignee)
@@ -373,15 +373,17 @@ function Component() {
                                             {resolver.resolved_task}
                                         </div>
                                     </li>
-                                ))}
+                                    )) : <li className="text-center">
+                                        No resolver
+                                    </li>}
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div className="col">
-                    <div className="Container flex-column">
-                        <div className="row mb-2">
+                    <div className="Container flex-column h-100">
+                        <div className="row mb-4">
                             <div className="col">
                                 <h5>Most Resolver Last Month</h5>
                             </div>
@@ -389,7 +391,7 @@ function Component() {
                         <div className="row">
                             <div className="col">
                                 <ul className="list-stats">
-                                {taskData.task_resolver_this_month && taskData.task_resolver_last_month.map((resolver, i) => (
+                                    {taskData.task_resolver_last_month?.length > 0 ? taskData.task_resolver_last_month.map((resolver, i) => (
                                     <li className="row no-gutters bread"
                                     onClick={() => {
                                         history.push('/' + auth.role + '/staff/' + resolver.assignee)
@@ -410,7 +412,9 @@ function Component() {
                                             {resolver.resolved_task}
                                         </div>
                                     </li>
-                                ))}
+                                    )) : <li className="text-center">
+                                        No resolver
+                                    </li>}
                                 </ul>
                             </div>
                         </div>

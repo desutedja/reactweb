@@ -1,4 +1,4 @@
-import React, {  } from 'react';
+import React, { } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -8,7 +8,7 @@ import Details from '../../details/Building';
 
 function Component() {
     const { auth } = useSelector(state => state)
-    const buildingId = auth.user.building_management_id;
+    const buildingId = auth.user.building_id;
 
     let { path } = useRouteMatch();
 
@@ -16,9 +16,9 @@ function Component() {
         <Switch>
             {auth.role === 'sa' ? <Route exact path={path}>
                 <List />
-            </Route> : <Route exact path={path}> 
-                <Redirect exact from={path} to={`${path}/${buildingId}`} />
-            </Route>}
+            </Route> : <Route exact path={path}>
+                    <Redirect exact from={path} to={`${path}/${buildingId}`} />
+                </Route>}
             <Route path={`${path}/add`}>
                 <Add />
             </Route>
