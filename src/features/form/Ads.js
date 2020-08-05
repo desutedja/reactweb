@@ -135,17 +135,19 @@ function Component() {
             payload={selected.content_name ? {
                 ...adsPayload, ...selected,
                 gender: selected.gender ? selected.gender : 'A',
+                content_name: selected.duplicate ? "Duplicate of " + selected.content_name : selected.content_name,
+                duplicate: selected.duplicate,
                 occupation: selected.occupation ? selected.occupation : 'all',
                 os: selected.os ? selected.os : 'all',
                 start_date: selected.start_date.split('T')[0],
                 end_date: selected.end_date.split('T')[0],
-                target_building: selected.building_list && selected.building_list.length > 0 ? 'specificbuilding' : 'allbuilding',
-                building_list: selected.building_list && selected.building_list.map(el => 
-                    ({ label: el.building_name, value: el.building_id })),
+                target_building: selected.buildings && selected.buildings.length > 0 ? 'specificbuilding' : 'allbuilding',
+                building_list: selected.buildings && selected.buildings.length > 0 ? selected.buildings.map(el => 
+                    ({ label: el.name, value: el.id })) : [],
             } : adsPayload}
             schema={adsSchema}
             formatValues={values => {
-                const { schedules, ...ads } = values;
+                const { schedules, building_list, ...ads } = values;
 
                 return {
                     ads: {
@@ -156,12 +158,15 @@ function Component() {
                         start_date: ads.start_date + ' 00:00:00',
                         end_date: ads.end_date + ' 23:59:59',
                         default_priority_score: scoreDef,
-                        building_list: values.building_list.map(el => el.value),
                     },
+                    building_list: building_list.map(el => el.value),
                     schedules: schedules,
                 }
             }}
-            edit={data => dispatch(editAds(data, history, selected.id))}
+            edit={data =>  {
+                const { schedules, ads, building_list } = data;
+                dispatch(editAds({ads, building_list}, history, selected.id))
+            }}
             add={data => {
                 if (auth.role === 'bm') {
                     const dataBM = {

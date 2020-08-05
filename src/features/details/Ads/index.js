@@ -58,8 +58,8 @@ function Component({ view }) {
             ],
             "Target Parameters": [
                 {
-                    label: 'building_list', lfmt: () => "Target Building", 
-                    vfmt: (v) => { return (v && v.length > 0) ? v.map(el => <Pill color="primary">{el.name}</Pill>).join(", ") : "All" }
+                    label: 'buildings', lfmt: () => "Target Building", 
+                    vfmt: (v) => { return (v && v.length > 0) ? v.map(el => <Pill color="primary">{el.name}</Pill>) : "All" }
                 },
                 {
                     label: 'age_from', lfmt: () => "Target Age Range",
@@ -143,7 +143,7 @@ function Component({ view }) {
                                     icon={<FiCopy />}
                                     label="Duplicate"
                                     onClick={() => {
-                                        dispatch(setSelected({ ...data, id: null }));
+                                        dispatch(setSelected({ ...data, duplicate: true, id: null }));
                                         history.push(
                                             url.split('/').slice(0, -1).join('/') + "/add"
                                         )
