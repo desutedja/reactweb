@@ -196,7 +196,7 @@ function Component({ view }) {
                             }}>
                                 <CardBody>
                                     <CardTitle>Unit Information</CardTitle>
-                                    <Detail type="Billing" data={selected} labels={details} editable={false} />,
+                                    <Detail type="Billing" data={selected} labels={details} editable={false} />
                                 </CardBody>
                             </Card>
                         </Column>
@@ -211,13 +211,14 @@ function Component({ view }) {
                                         Summary {unit.items && unit.items.billing && unit.items.billing[active] ? 
                                             "for " + unit.items.billing[active].billing_month : ""}
                                     </CardTitle>
-                                    {(unit.items && unit.items.billing) ? <>
-                                    <ThreeColumn second="Subtotal" third={toMoney(unit.items.billing[active].group_amount)} />
-                                    <ThreeColumn second={"Penalty (" + (unit.items.billing[active].group_penalty_percentage) + "%)"}
-                                        third={<span style={{ color: 'red' }}>
-                                            {toMoney(unit.items.billing[active].group_penalty)}</span>} />
-                                    <ThreeColumn second="Total" 
-                                        third={<h4>{toMoney(unit.items.billing[active].total_group_amount)}</h4>}/></> : "-"}
+                                    {(unit.items && unit.items.billing.length > 0) ? <>
+                                        <ThreeColumn second="Subtotal" third={toMoney(unit.items.billing[active].group_amount)} />
+                                        <ThreeColumn second={"Penalty (" + (unit.items.billing[active].group_penalty_percentage) + "%)"}
+                                            third={<span style={{ color: 'red' }}>
+                                                {toMoney(unit.items.billing[active].group_penalty)}</span>} />
+                                        <ThreeColumn second="Total" 
+                                            third={<h4 className="m-0">{toMoney(unit.items.billing[active].total_group_amount)}</h4>}/>
+                                    </> : "-"}
                                     {/* JSON.stringify(unit.items, null, 4) */}
                                 </CardBody>
                             </Card>
