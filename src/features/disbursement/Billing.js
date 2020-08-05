@@ -311,7 +311,7 @@ function Component({ view }) {
                                             })
 
                                             setData(data);
-                                            setDataPages(res.data.data.total_pages);
+                                            setDataPages(res.data.data.filtered_page);
                                             setTotalItems(res.data.data.filtered_item);
                                             setDataLoading(false);
                                         }))
