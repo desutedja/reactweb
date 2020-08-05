@@ -13,18 +13,20 @@ import { get } from '../slice';
 
 import Template from './components/Template';
 import { setSelected } from '../slices/resident';
+import UploadModal from '../../components/UploadModal';
 
 function Component({ view }) {
 
     const [search, setSearch] = useState('');
 
-    const { auth } = useSelector(state => state);
+    const { role, user } = useSelector(state => state.auth);
 
     const [building, setBuilding] = useState('');
     const [buildingName, setBuildingName] = useState('');
     const [buildings, setBuildings] = useState('');
 
     const [limit, setLimit] = useState(5);
+    const [upload, setUpload] = useState(false);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -53,7 +55,7 @@ function Component({ view }) {
     }, [dispatch, search, limit]);
 
     useEffect(() => {
-        if (search.length ===  0) setLimit(5)
+        if (search.length === 0) setLimit(5)
     }, [search])
 
     const columns = [
@@ -61,7 +63,7 @@ function Component({ view }) {
         { Header: 'Unit ID', accessor: 'id' },
         {
             Header: 'Unit', accessor: row => <span className="Link"
-                onClick={() => dispatch(getBillingUnitDetails(row, history, url))} 
+                onClick={() => dispatch(getBillingUnitDetails(row, history, url))}
             ><b>{toSentenceCase(row.section_type) + ' '
                 + row.section_name + ' ' + row.number}</b></span>
         },
@@ -74,66 +76,71 @@ function Component({ view }) {
     ]
 
     return (
-        <Template
-            pagetitle="Billing List"
-            title='Unit'
-            columns={columns}
-            slice='billing'
-            getAction={getBillingUnit}
-            filterVars={[building]}
-            filters={auth.role === 'sa' ? [
-                {
-                    hidex: building === "",
-                    label: <p>Building: {building ? buildingName : "All"}</p>,
-                    delete: () => setBuilding(''),
-                    component: (toggleModal) =>
-                        <>
-                            <Input
-                                label="Search"
-                                compact
-                                icon={<FiSearch />}
-                                inputValue={search}
-                                setInputValue={setSearch}
-                            />
-                            <Filter
-                                data={buildings}
-                                onClick={(el) => {
-                                    if (!el.value) {
-                                        setLimit(limit + el.restTotal);
-                                        return;
-                                    }
-                                    setBuilding(el.value);
-                                    setBuildingName(el.label);
-                                    toggleModal(false);
-                                    setSearch("");
-                                    setLimit(5);
-                                }}
-                                onClickAll={() => {
-                                    setBuilding("");
-                                    setBuildingName("");
-                                    toggleModal(false);
-                                    setSearch("");
-                                    setLimit(5);
-                                }}
-                            />
-                        </>
-                },
-            ] : []}
-            actions={view ? null : [
-                <Button label="Upload Bulk" icon={<FiUpload />}
-                    onClick={() => dispatch(downloadBillingUnit(search, building))}
-                />,
-                <Button label="Download .csv" icon={<FiDownload />}
-                    onClick={() => dispatch(downloadBillingUnit(search, building))}
-                />,
-            ]}
-            onClickAddBilling={view ? null : row => {
-                dispatch(setSelected(row));
-                dispatch(setSelectedUnit({}));
-                dispatch(getBillingUnitDetails(row, history, url))
-                history.push(url + '/item/add');
-            }}
-        />
+        <>
+            <UploadModal open={upload} toggle={() => setUpload(false)}
+                templateLink={user.billing_bulk_template}
+            />
+            <Template
+                pagetitle="Billing List"
+                title='Unit'
+                columns={columns}
+                slice='billing'
+                getAction={getBillingUnit}
+                filterVars={[building]}
+                filters={role === 'sa' ? [
+                    {
+                        hidex: building === "",
+                        label: <p>Building: {building ? buildingName : "All"}</p>,
+                        delete: () => setBuilding(''),
+                        component: (toggleModal) =>
+                            <>
+                                <Input
+                                    label="Search"
+                                    compact
+                                    icon={<FiSearch />}
+                                    inputValue={search}
+                                    setInputValue={setSearch}
+                                />
+                                <Filter
+                                    data={buildings}
+                                    onClick={(el) => {
+                                        if (!el.value) {
+                                            setLimit(limit + el.restTotal);
+                                            return;
+                                        }
+                                        setBuilding(el.value);
+                                        setBuildingName(el.label);
+                                        toggleModal(false);
+                                        setSearch("");
+                                        setLimit(5);
+                                    }}
+                                    onClickAll={() => {
+                                        setBuilding("");
+                                        setBuildingName("");
+                                        toggleModal(false);
+                                        setSearch("");
+                                        setLimit(5);
+                                    }}
+                                />
+                            </>
+                    },
+                ] : []}
+                actions={view ? null : [
+                    <Button label="Upload Bulk" icon={<FiUpload />}
+                        onClick={() => setUpload(true)}
+                    />,
+                    <Button label="Download .csv" icon={<FiDownload />}
+                        onClick={() => dispatch(downloadBillingUnit(search, building))}
+                    />,
+                ]}
+                onClickAddBilling={view ? null : row => {
+                    dispatch(setSelected(row));
+                    dispatch(setSelectedUnit({}));
+                    dispatch(getBillingUnitDetails(row, history, url))
+                    history.push(url + '/item/add');
+                }}
+            />
+        </>
     )
 }
 

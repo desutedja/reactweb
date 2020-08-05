@@ -75,6 +75,14 @@ function Component({ view }) {
 
     useEffect(() => {
         setLoading(true);
+        dispatch(get(endpointBilling + '/management/billing/detail/' +
+            unit.selected.id, res => {
+                setLoading(false);
+            }))
+    }, [dispatch, unit.selected.id, toggle])
+
+    useEffect(() => {
+        setLoading(true);
         dispatch(get(endpointBilling + '/management/billing/additional-charge?id=' +
             unit.selected.id, res => {
                 setData(res.data.data);

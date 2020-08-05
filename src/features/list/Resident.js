@@ -15,7 +15,7 @@ import { getResident, setSelected, deleteResident } from '../slices/resident';
 import { toSentenceCase } from '../../utils';
 
 import Template from './components/Template';
-import { post } from '../slice';
+import { post, getFile } from '../slice';
 import { endpointResident, resident_statuses, resident_kyc_statuses } from '../../settings';
 
 const columns = [
@@ -53,7 +53,7 @@ const columns = [
 ]
 
 function Component({ view }) {
-    const { role } = useSelector(state => state.auth);
+    const { role, user } = useSelector(state => state.auth);
 
     const [loading, setLoading] = useState(false);
     const [bulk, setBulk] = useState(false);
@@ -135,14 +135,28 @@ function Component({ view }) {
                     </div>
                     :
                     <Loading loading={loading}>
-                        <input
-                            ref={fileInput}
-                            type="file"
-                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-                            onChange={e => {
-                                setFile(fileInput.current.files[0]);
-                            }}
-                        />
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'flex-start'
+                        }}>
+                            <input
+                                ref={fileInput}
+                                type="file"
+                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                onChange={e => {
+                                    setFile(fileInput.current.files[0]);
+                                }}
+                            />
+                            <button onClick={() => {
+                                setLoading(true);
+                                dispatch(getFile(user.resident_bulk_template, 'resident_template.xlsx', res => {
+                                    setLoading(false);
+                                }))
+                            }} style={{
+                                marginTop: 16
+                            }}>Download Template</button>
+                        </div>
                     </Loading>
                 }
             </Modal>
