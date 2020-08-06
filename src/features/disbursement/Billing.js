@@ -265,7 +265,8 @@ function Component({ view }) {
                             {disbursement.items.map((el, index) => <ListGroupItem
                                 key={index}
                                 onClick={() => {
-                                    if (!selectedManagement.some(item => item.management_id === el.management_id)) {
+                                    console.log(selectedManagement)
+                                    if (!selectedManagement.some(item => item.management_id === el.management_id && item.building_id === el.building_id)) {
                                         setSelectedManagement([
                                             ...selectedManagement,
                                             el
@@ -281,7 +282,7 @@ function Component({ view }) {
                                         }))
                                         return;
                                     }
-                                    setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id));
+                                    setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id && item.building_id !== el.building_id));
                                     setDataLoading(true);
                                     dispatch(get(`${endpointBilling}/management/billing/disbursement/list/transaction?limit=10&page=1&search=&building_id=${el.building_id}&management_id=${el.id}&date_min=${status === 'disbursed' ? disbursedStart : ''}&date_max=${status === 'disbursed' ? disbursedEnd : ''}`,
                                         res => {
@@ -293,7 +294,7 @@ function Component({ view }) {
                                         }
                                     ))
                                 }}
-                                active={selectedManagement.some(item => item.management_id === el.management_id)}
+                                active={selectedManagement.some(item => item.management_id === el.management_id && item.building_id === el.building_id)}
                                 action
                                 tag="a"
                                 href="#"
