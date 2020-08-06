@@ -75,6 +75,9 @@ export const getTask = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -118,6 +121,9 @@ export const getTaskDetails = (row, history) => dispatch => {
       dispatch(setSelected(res.data.data));
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 

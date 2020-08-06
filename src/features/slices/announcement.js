@@ -79,7 +79,11 @@ export const getAnnouncementDetails = (row, history, url) => dispatch => {
       history.push(url + '/' + row.id);
 
       dispatch(stopAsync())
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const createAnnouncement = (data, history, role) => dispatch => {
@@ -138,7 +142,11 @@ export const deleteAnnouncement = (row, history=null) => (dispatch, getState) =>
       }));
 
       dispatch(stopAsync())
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const publishAnnouncement = ( data, history, role) => dispatch => {

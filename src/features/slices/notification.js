@@ -63,6 +63,9 @@ export const getUnreadNotifications = () => dispatch => {
       dispatch(setUnreadCount(res.data.data));
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -74,6 +77,9 @@ export const getNotifications = () => dispatch => {
       dispatch(setNotificationData(res.data.data));
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -85,6 +91,9 @@ export const getNotificationDetails = (row) => dispatch => {
       dispatch(setSelected(res.data.data));
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 

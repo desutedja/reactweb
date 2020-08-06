@@ -76,6 +76,9 @@ export const getProduct = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -88,6 +91,9 @@ export const getProductDetails = (row, history, url) => dispatch => {
       history.push(url + '/details');
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -107,7 +113,7 @@ export const patchAdminFee = (data, item) => dispatch => {
       dispatch(refresh());
     },
     err => {
-
+      dispatch(stopAsync());
     }
   ))
 }

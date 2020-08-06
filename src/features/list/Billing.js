@@ -67,12 +67,12 @@ function Component({ view }) {
             ><b>{toSentenceCase(row.section_type) + ' '
                 + row.section_name + ' ' + row.number}</b></span>
         },
-        { Header: 'Building', accessor: 'building_name' },
+        { Header: 'Building', accessor: row => <a className="Link" href={"/" + role + "/building/" + row.building_id} >{row.building_name}</a> },
         { Header: 'Resident', accessor: row => row.resident_name ? row.resident_name : '-' },
-        { Header: 'Unpaid Amount', accessor: row => <b>{toMoney(row.unpaid_amount)}</b> },
-        { Header: 'Additional Charges', accessor: row => <b>{toMoney(row.additional_charge)}</b> },
-        { Header: 'Penalty', accessor: row => <b>{toMoney(row.billing_penalty)}</b> },
-        { Header: 'Total', accessor: row => <b>{toMoney(row.total)}</b> },
+        { Header: 'Unpaid Amount', accessor: row => toMoney(row.unpaid_amount) },
+        { Header: 'Additional Charges', accessor: row => toMoney(row.additional_charge) },
+        { Header: 'Penalty', accessor: row => toMoney(row.billing_penalty) },
+        { Header: 'Total Unpaid', accessor: row => <b>{toMoney(row.total)}</b> },
     ]
 
     return (
