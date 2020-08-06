@@ -306,9 +306,7 @@ function Component() {
                     }}>
                         <Input compact label="Send a message.." inputValue={message} setInputValue={setMessage} />
                         <Loading loading={qiscus ? (loadingSend || !qiscus.sendComment) : true} >
-                            <IconButton onClick={() => {
-                                uploadFile.current.click();
-                            }}>
+                            <IconButton>
                                 <input ref={uploadFile} type="file" style={{
                                     display: 'none'
                                 }}
@@ -331,7 +329,9 @@ function Component() {
                                         }))
                                     }}
                                 />
-                                <TiAttachment style={{ marginLeft: '10' }} size="30" />
+                                <TiAttachment onClick={() => {
+                                    uploadFile.current.click();
+                                }} style={{ marginLeft: '10' }} size="30" />
                             </IconButton>
                             <IconButton onClick={() => {
                                 sendMessage()
