@@ -64,6 +64,9 @@ export const getStaff = ( pageIndex, pageSize,search = '', role, building, shift
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -123,6 +126,9 @@ export const deleteStaff = (row, history) => (dispatch, getState) => {
       }));
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -135,6 +141,9 @@ export const getStaffDetails = (row,  history, url) => dispatch => {
       history.push(url + '/' + row.id);
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 

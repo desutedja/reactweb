@@ -87,7 +87,11 @@ os = '', gender = '', age_from = '', age_to = '', day = '') => dispatch => {
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const createAds = (data, history) => dispatch => {
@@ -144,7 +148,10 @@ export const deleteAds = (row, history) => (dispatch, getState) => {
       dispatch(refresh());
       dispatch(stopAsync())
     },
-    err => dispatch(stopAsync())))
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const getAdsDetails = (row, history, url) => dispatch => {
@@ -156,7 +163,11 @@ export const getAdsDetails = (row, history, url) => dispatch => {
       history.push(url + '/details');
 
       dispatch(stopAsync())
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const getAdsSchedule = (pageIndex, pageSize, search, row) => dispatch => {
@@ -172,7 +183,11 @@ export const getAdsSchedule = (pageIndex, pageSize, search, row) => dispatch => 
       dispatch(setScheduleData(res.data.data));
 
       dispatch(stopAsync());
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const createAdsSchedule = (data) => dispatch => {
@@ -205,7 +220,11 @@ export const deleteAdsSchedule = (row,) => dispatch => {
 
       dispatch(refresh());
       dispatch(stopAsync())
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const publishAds = (data, callback) => dispatch => {

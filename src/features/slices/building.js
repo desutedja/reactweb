@@ -141,7 +141,11 @@ export const getBuilding = ( pageIndex, pageSize, search = '', province, city, d
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const createBuilding = ( data, history) => dispatch => {
@@ -214,6 +218,9 @@ export const getBuildingDetails = (row,  history, url) => dispatch => {
       history.push(url + '/' + res.data.data.id);
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -230,6 +237,9 @@ export const getBuildingUnit = ( pageIndex, pageSize, search, row) => dispatch =
     res => {
       dispatch(setUnitData(res.data.data));
 
+      dispatch(stopAsync());
+    },
+    err => {
       dispatch(stopAsync());
     }))
 }
@@ -249,6 +259,9 @@ export const getBuildingUnitType = ( pageIndex, pageSize, search, row, unit_type
       dispatch(setUnitTypeData(res.data.data));
 
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -266,6 +279,9 @@ export const getBuildingSection = ( pageIndex, pageSize, search, row, section_ty
     res => {
       dispatch(setSectionData(res.data.data));
 
+      dispatch(stopAsync());
+    },
+    err => {
       dispatch(stopAsync());
     }))
 }
@@ -285,6 +301,9 @@ export const getBuildingService = ( pageIndex, pageSize, search, row, group = ""
       dispatch(setServiceData(res.data.data));
 
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -301,6 +320,9 @@ export const getBuildingManagement = ( pageIndex, pageSize, search, row) => disp
     res => {
       dispatch(setManagementData(res.data.data));
 
+      dispatch(stopAsync());
+    },
+    err => {
       dispatch(stopAsync());
     }))
 }

@@ -64,7 +64,11 @@ export const getManagement = (
       console.log(res.data.data)
 
       dispatch(stopAsync());
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const createManagement = ( data, history) => dispatch => {

@@ -68,6 +68,9 @@ export const getMerchant = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -80,6 +83,9 @@ export const getMerchantDetails = (row,  history, url) => dispatch => {
       history.push(url + '/details');
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -139,5 +145,8 @@ export const deleteMerchant = (row, history) => (dispatch, getState) => {
       }));
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
