@@ -6,14 +6,15 @@ import {
 import { FiPlus, FiSearch } from 'react-icons/fi';
 
 import Button from '../../components/Button';
+import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 import Link from '../../components/Link';
 import Building from '../../components/cells/Building';
-import { getBuilding, deleteBuilding, setSelected } from '../slices/building';
+import { getBuilding, deleteMultipleBuilding, deleteBuilding, setSelected } from '../slices/building';
 import { endpointResident } from '../../settings';
 import { get } from '../slice';
 
-import Template from './components/Template';
+import TemplateWithSelection from './components/TemplateWithSelection';
 
 const columns = [
     // { Header: 'ID', accessor: 'id' },
@@ -48,6 +49,9 @@ function Component({ view }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
+
+    const [ multiActionRows, setMultiActionRows ] = useState([]);
+    const [ confirmDelete, setConfirmDelete ] = useState(false);
 
     useEffect(() => {
         dispatch(get(endpointResident + '/geo/province',
@@ -186,13 +190,43 @@ function Component({ view }) {
     }
 
     return (
-        <Template
+        <>
+        <Modal
+            isOpen={confirmDelete}
+            disableHeader={true}
+            onClick={
+                () => {
+                    const data = multiActionRows.map(el => el.id)
+                    console.log(data);
+                    dispatch(deleteMultipleBuilding(data, history))
+                    setMultiActionRows([]);
+                    setConfirmDelete(false);
+                }
+            }
+            toggle={() => {
+                setConfirmDelete(false);
+                setMultiActionRows([]);
+            }}
+            okLabel={"Delete"}
+            cancelLabel={"Cancel"}
+        >
+            Are you sure you want to delete these buildings?
+            <p style={{ paddingTop: '10px' }}><ul>
+                {multiActionRows.map(el => 
+                    <li>{el.name}</li>
+                )}
+            </ul></p>
+        </Modal>
+        <TemplateWithSelection
             view={view}
             columns={columns}
             slice='building'
             getAction={getBuilding}
             deleteAction={deleteBuilding}
             filterVars={[province, city, district]}
+            selectAction={(selectedRows) => {
+                setMultiActionRows(selectedRows);
+            }}
             filters={[
                 {
                     label: <p>{district ? "District: " + districtName : "District: All"}</p>,
@@ -218,15 +252,28 @@ function Component({ view }) {
                     component: ModalComponent,
                 },
             ]}
+            renderActions={view ? null : (selectedRowIds, page) => {
+                return ([
+                    <>{Object.keys(selectedRowIds).length > 0 &&
+                    <Button color="danger"
+                        onClick={() => {
+                            console.log(selectedRowIds);
+                            setConfirmDelete(true);
+                        }}
+                        label="Delete"
+                    />}</>,
+                    <Button key="Add Building" label="Add Building" icon={<FiPlus />}
+                        onClick={() => {
+                            dispatch(setSelected({}));
+                            history.push(url + "/add");
+                        }}
+                    />
+                ])
+            }}
             actions={[
-                <Button key="Add Building" label="Add Building" icon={<FiPlus />}
-                    onClick={() => {
-                        dispatch(setSelected({}));
-                        history.push(url + "/add");
-                    }}
-                />
             ]}
         />
+        </>
     )
 }
 
