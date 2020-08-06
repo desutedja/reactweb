@@ -96,6 +96,9 @@ export const getResident = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -154,6 +157,9 @@ export const deleteResident = (row, history) => (dispatch, getState) => {
         message: 'Resident has been deleted.'
       }));
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -166,6 +172,9 @@ export const getResidentDetails = (row, history, url) => dispatch => {
       history.push(url + '/details');
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -184,6 +193,9 @@ export const getSubaccount = (pageIndex, pageSize, search, id) => dispatch => {
       console.log("->", res);
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }
   ))
 }
@@ -203,6 +215,9 @@ export const getResidentUnit = (pageIndex, pageSize, search, id) => dispatch => 
       dispatch(setUnitData(res.data.data));
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }
   ))
 }

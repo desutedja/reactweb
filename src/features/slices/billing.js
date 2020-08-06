@@ -114,7 +114,11 @@ export const getBillingUnit = (pageIndex, pageSize, search = '', building, unit)
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const downloadBillingUnit = (search = '', building) => dispatch => {
@@ -127,7 +131,11 @@ export const downloadBillingUnit = (search = '', building) => dispatch => {
     'billing_unit.csv',
     res => {
       dispatch(stopAsync());
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const getBillingSettlement = (pageIndex, pageSize, search = '', 
@@ -148,7 +156,11 @@ building, settled, start = '', end = '') => dispatch => {
       dispatch(setSettlement(res.data.data));
 
       dispatch(stopAsync());
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const downloadBillingSettlement = (search = '', building) => dispatch => {
@@ -161,7 +173,11 @@ export const downloadBillingSettlement = (search = '', building) => dispatch => 
     'billing_settlement.csv',
     res => {
       dispatch(stopAsync());
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const getBillingDisbursement = (pageIndex, pageSize, search = '', building, unit,) => dispatch => {
@@ -177,7 +193,11 @@ export const getBillingDisbursement = (pageIndex, pageSize, search = '', buildin
       dispatch(setDisbursement(res.data.data));
 
       dispatch(stopAsync());
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const getBillingUnitDetails = (row, history, url) => dispatch => {
@@ -200,7 +220,11 @@ export const getBillingUnitItem = (pageIndex, pageSize, search = '', selected, s
       dispatch(setUnit(res.data.data));
 
       dispatch(stopAsync());
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 
@@ -226,7 +250,8 @@ export const createBillingUnitItem = (data, selected, history, role) => dispatch
     },
     err => {
       dispatch(stopAsync());
-    }))
+    }
+    ))
 }
 
 export const editBillingUnitItem = (data, selected, history, id, role) => dispatch => {
@@ -247,7 +272,8 @@ export const editBillingUnitItem = (data, selected, history, id, role) => dispat
     },
     err => {
       dispatch(stopAsync());
-    }))
+    }
+    ))
 }
 
 export const deleteBillingUnitItem = (id,) => dispatch => {
@@ -262,13 +288,18 @@ export const deleteBillingUnitItem = (id,) => dispatch => {
 
       dispatch(refresh());
       dispatch(stopAsync())
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const payByCash = (data) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(post(billingEndpoint + '/cash', data, res => {
+  dispatch(post(billingEndpoint + '/cash', data,
+  res => {
     dispatch(setInfo({
       color: 'success',
       message: 'Billing has been set as paid by cash.'
@@ -276,5 +307,9 @@ export const payByCash = (data) => dispatch => {
 
     dispatch(setSelectedUnit(res.data.data));
     dispatch(stopAsync());
-  }))
+  },
+  err => {
+    dispatch(stopAsync());
+  }
+  ))
 }

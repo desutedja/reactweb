@@ -64,7 +64,11 @@ export const getAdmin = (
       console.log(res.data.data)
 
       dispatch(stopAsync());
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const createAdmin = ( data, history) => dispatch => {
@@ -122,7 +126,11 @@ export const deleteAdmin = (row, history, role) => (dispatch, getState) => {
       }));
 
       dispatch(stopAsync())
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export const getAdminDetails = (row,  history, url) => dispatch => {
@@ -134,7 +142,11 @@ export const getAdminDetails = (row,  history, url) => dispatch => {
       history.push(url + '/' + row.id);
 
       dispatch(stopAsync())
-    }))
+    },
+    err => {
+      dispatch(stopAsync());
+    }
+    ))
 }
 
 export default slice.reducer;

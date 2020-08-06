@@ -99,6 +99,9 @@ export const getTransaction = (
       dispatch(setData(res.data.data));
 
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -116,6 +119,9 @@ export const downloadTransaction = (status = '', statusPayment = '', type = ''
     'transaction_list.csv',
     res => {
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -130,6 +136,9 @@ export const getTransactionDetails = (trx_code, history, url) => dispatch => {
       history.push(url + '/' + trx_code);
 
       dispatch(stopAsync())
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -153,6 +162,9 @@ export const getTransactionSettlement = (
       dispatch(setSettlement(res.data.data));
 
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -165,6 +177,9 @@ export const downloadTransactionSettlement = (settlementStatus = '') => dispatch
     '&export=true',
     'transaction_settlement.csv',
     res => {
+      dispatch(stopAsync());
+    },
+    err => {
       dispatch(stopAsync());
     }))
 }
@@ -192,6 +207,9 @@ export const getTransactionDisbursement = (
       dispatch(setDisbursement(res.data.data));
 
       dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
     }))
 }
 
@@ -205,6 +223,9 @@ export const downloadTransactionDisbursement = (type, merchant = '', courier = '
     '&export=true',
     'transaction_disbursement.csv',
     res => {
+      dispatch(stopAsync());
+    },
+    err => {
       dispatch(stopAsync());
     }))
 }
