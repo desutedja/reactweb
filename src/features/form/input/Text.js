@@ -54,7 +54,7 @@ function TextInput({
                     placeholder={label}
                     // autoComplete={options ? "off" : ""}
                     onChange={e => {
-                        !options && onChange(e.target.value);
+                        onChange(e.target.value);
 
                         setValue(e.target.value);
                         handleChange(e);
