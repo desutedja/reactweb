@@ -55,56 +55,56 @@
   justify-content: space-between;
   margin-bottom: 8px;
   padding: 8px;
-  height: 100px;
+  min-height: 100px;
   border-bottom: 1px solid #f0f0f3;
   cursor: pointer;
 }
 
 .Room:hover {
-    background-color: #f0f0f3;
+  background-color: #f0f0f3;
 }
 
 .Room.selected {
-    background-color: #f0f0f3;
+  background-color: #f0f0f3;
 }
 
 .Room-left {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
 }
 
 .Room-right {
-    background-color: var(--primary-color);
-    color: white;
-    width: 20px;
-    display: flex;
-    justify-content: center;
-    border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
 }
 
 .Room-title {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .Room-name {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .Room-subtitle {
-    font-size: small;
+  font-size: small;
+  text-align: left;
 }
 
 .Room-message {
-    color: grey;
-    width: 240px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  color: grey;
+  width: 240px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .Room-unread {
-    
 }

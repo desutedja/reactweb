@@ -32,7 +32,7 @@ function Component({ view }) {
     const [destinationBank, setDestinationBank] = useState('');
     const [destinationAccount, setDestinationAccount] = useState('');
     const [status, setStatus] = useState('');
-
+    
     const [data, setData] = useState([]);
     const [dataFiltered, setDataFiltered] = useState([]);
     const [selected, setSelected] = useState([]);
@@ -40,6 +40,9 @@ function Component({ view }) {
     const [dataLoading, setDataLoading] = useState(false);
     const [dataPages, setDataPages] = useState('');
     const [totalItems, setTotalItems] = useState('');
+    const [tableSearch, setTableSearch] = useState('');
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(10);
 
     const today = moment().format("yyyy-MM-DD", 'day');
     const [disbursedStart, setDisbursedStart] = useState(today);
@@ -89,12 +92,28 @@ function Component({ view }) {
         setAmount(amount)
     }, [data])
 
+    
     useEffect(() => {
         setDataFiltered(data.filter(el => {
             if (!status) return true;
             return status === 'disbursed' ? !!el.disbursement_date : !el.disbursement_date;
         }))   
-    }, [data, status])
+    }, [data, status]);
+    
+    useEffect(() => {  
+        const searched = tableSearch.length > 0 ? data.filter(item => item.trx_code.toLowerCase().includes(tableSearch.toLowerCase())) : data;
+        setDataFiltered(searched);
+        setDataPages(Math.ceil(searched.length / limit))
+        setTotalItems(searched.length);
+    }, [data, limit, tableSearch]);
+    
+    useEffect(() => {
+        setDataPages(Math.ceil(data.length / limit));
+        const limited = data.slice(Number(limit) * Number(page), Number(limit) * (Number(page) + 1));
+        // console.log(limited)
+        setDataFiltered(limited);
+        setTotalItems(data.length)
+    }, [data, limit, page])
 
     const getSum = items => {
         return items.reduce((sum, el) => {
@@ -246,7 +265,7 @@ function Component({ view }) {
                             {disbursement.items.map((el, index) => <ListGroupItem
                                 key={index}
                                 onClick={() => {
-                                    if (!selectedManagement.some(item => item.management_id === el.management_id)) {
+                                    if (!selectedManagement.some(item => item.management_id === el.management_id && item.building_id === el.building_id)) {
                                         setSelectedManagement([
                                             ...selectedManagement,
                                             el
@@ -258,12 +277,6 @@ function Component({ view }) {
                                                     ...res.data.data.items,
                                                     ...data,
                                                 ]);
-                                                setDataFiltered([
-                                                    ...res.data.data.items,
-                                                    ...data,
-                                                ]);
-                                                setDataPages(res.data.data.filtered_page);
-                                                setTotalItems(res.data.data.filtered_item);
                                                 setDataLoading(false);
                                         }))
                                         return;
@@ -276,15 +289,11 @@ function Component({ view }) {
                                                 const isDuplicated = res.data.data.items.some(f => item.management_id === f.management_id);
                                                 return !isDuplicated;
                                             }))
-                                            setDataFiltered(data.filter(item => {
-                                                const isDuplicated = res.data.data.items.some(f => item.management_id === f.management_id);
-                                                return !isDuplicated;
-                                            }))
                                             setDataLoading(false);
                                         }
                                     ))
                                 }}
-                                active={selectedManagement.some(item => item.management_id === el.management_id)}
+                                active={selectedManagement.some(item => item.management_id === el.management_id && item.building_id === el.building_id)}
                                 action
                                 tag="a"
                                 href="#"
@@ -294,7 +303,8 @@ function Component({ view }) {
                                     <div>{el.building_name}</div>
                                 </div>
                             </ListGroupItem>)}
-                        </ListGroup></Card>}
+                        </ListGroup>
+                    </Card>}
                 </div>
                 <div className="col-12 col-md">
                     <div style={{
@@ -326,15 +336,11 @@ function Component({ view }) {
                                     <b>{el.management_name}</b>
                                     <FiXCircle
                                     onClick={() => {
-                                        setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id));
+                                        setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id && item.building_id !== el.building_id));
                                         setDataLoading(true);
                                         dispatch(get(`${endpointBilling}/management/billing/disbursement/list/transaction?limit=10&page=1&search=&building_id=${el.building_id}&management_id=${el.id}&date_min=${status === 'disbursed' ? disbursedStart : ''}&date_max=${status === 'disbursed' ? disbursedEnd : ''}`,
                                             res => {
                                                 setData(data.filter(item => {
-                                                    const isDuplicated = res.data.data.items.some(f => item.management_id === f.management_id);
-                                                    return !isDuplicated;
-                                                }))
-                                                setDataFiltered(data.filter(item => {
                                                     const isDuplicated = res.data.data.items.some(f => item.management_id === f.management_id);
                                                     return !isDuplicated;
                                                 }))
@@ -393,8 +399,9 @@ function Component({ view }) {
                                 loading={dataLoading}
                                 pageCount={dataPages}
                                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                                    const searched = search.length > 0 ? data.filter(item => item.trx_code.toLowerCase().includes(search.toLowerCase())) : data;
-                                    setDataFiltered(searched)
+                                    setTableSearch(search);
+                                    setLimit(pageSize);
+                                    setPage(pageIndex);
 
                                     // setDataLoading(true);
                                     // dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit='

@@ -13,7 +13,8 @@ import Tab from '../../components/Tab';
 import {
     updateMessages, setMessages,
     setRoom, setRoomID, setRoomUniqueID, setRooms,
-    getAdminChat
+    getAdminChat,
+    getPICBMChat
 } from './slice';
 import { FiSend } from 'react-icons/fi';
 
@@ -21,14 +22,14 @@ import './style.css';
 import { post } from '../slice';
 import { endpointAsset } from '../../settings';
 
-// eslint-disable-next-line no-unused-vars
 const topics = [
-    { label: "All", value: "merchant_trx,service,security,billing,personal" },
+    { label: "All", value: "merchant_trx,service,security,billing,personal,help" },
     { label: "Transaction", value: "merchant_trx" },
     { label: "Service", value: "service" },
     { label: "Security", value: "security" },
     { label: "Billing", value: "billing" },
     { label: "Direct", value: "personal" },
+    { label: "Help", value: "help" },
 ];
 
 function Component() {
@@ -47,6 +48,7 @@ function Component() {
     const [image, setImage] = useState('');
 
     const [participants, setParticipants] = useState([]);
+    const [topic, setTopic] = useState(topics[0]);
 
     const { user, role } = useSelector(state => state.auth);
     const { qiscus, room, rooms,
@@ -123,10 +125,10 @@ function Component() {
 
     useEffect(() => {
         
-        // if (role === "sa") 
-            // dispatch(getAdminChat('', 0, 50, ''));
-        // else
-            // dispatch(getPICBMChat(listTopic,listPageIndex, listPageSize, listSearch));
+        if (role === "sa") 
+            dispatch(getAdminChat(topic.value, 0, 50, ''));
+        else
+            dispatch(getPICBMChat(topic.value, 0, 50, ''));
         
 
         var params = {
