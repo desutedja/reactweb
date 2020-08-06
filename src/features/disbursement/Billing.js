@@ -265,7 +265,6 @@ function Component({ view }) {
                             {disbursement.items.map((el, index) => <ListGroupItem
                                 key={index}
                                 onClick={() => {
-                                    console.log(selectedManagement)
                                     if (!selectedManagement.some(item => item.management_id === el.management_id && item.building_id === el.building_id)) {
                                         setSelectedManagement([
                                             ...selectedManagement,
@@ -282,7 +281,7 @@ function Component({ view }) {
                                         }))
                                         return;
                                     }
-                                    setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id && item.building_id !== el.building_id));
+                                    setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id));
                                     setDataLoading(true);
                                     dispatch(get(`${endpointBilling}/management/billing/disbursement/list/transaction?limit=10&page=1&search=&building_id=${el.building_id}&management_id=${el.id}&date_min=${status === 'disbursed' ? disbursedStart : ''}&date_max=${status === 'disbursed' ? disbursedEnd : ''}`,
                                         res => {
@@ -304,7 +303,8 @@ function Component({ view }) {
                                     <div>{el.building_name}</div>
                                 </div>
                             </ListGroupItem>)}
-                        </ListGroup></Card>}
+                        </ListGroup>
+                    </Card>}
                 </div>
                 <div className="col-12 col-md">
                     <div style={{
@@ -336,7 +336,7 @@ function Component({ view }) {
                                     <b>{el.management_name}</b>
                                     <FiXCircle
                                     onClick={() => {
-                                        setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id));
+                                        setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id && item.building_id !== el.building_id));
                                         setDataLoading(true);
                                         dispatch(get(`${endpointBilling}/management/billing/disbursement/list/transaction?limit=10&page=1&search=&building_id=${el.building_id}&management_id=${el.id}&date_min=${status === 'disbursed' ? disbursedStart : ''}&date_max=${status === 'disbursed' ? disbursedEnd : ''}`,
                                             res => {
