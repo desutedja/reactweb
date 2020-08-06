@@ -130,6 +130,29 @@ export const deleteManagement = (row, history) => (dispatch, getState) => {
     }))
 }
 
+export const deleteMultipleManagement = (rows, history) => (dispatch, getState) => {
+    //dispatch(startAsync());
+
+  const { auth } = getState();
+
+  const queryarray = rows.map(el => 'management_id='+el).join('&');
+  console.log(queryarray);
+
+  dispatch(del(managementEndpoint + '?' + queryarray,
+    res => {
+      history && history.push('/' + auth.role + '/management');
+      
+      dispatch(refresh());
+
+      dispatch(setInfo({
+        color: 'success',
+        message: res.data.data,
+      }));
+
+      dispatch(stopAsync())
+    }))
+}
+
 export const getManagementDetails = (row,  history, url) => dispatch => {
   dispatch(startAsync());
 
