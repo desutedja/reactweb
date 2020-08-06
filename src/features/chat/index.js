@@ -12,7 +12,8 @@ import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
 import {
     updateMessages, setMessages,
-    setRoom, setRoomID, setRoomUniqueID, setRooms
+    setRoom, setRoomID, setRoomUniqueID, setRooms,
+    getAdminChat
 } from './slice';
 import { FiSend } from 'react-icons/fi';
 
@@ -121,12 +122,12 @@ function Component() {
     }, [qiscus, reloadList]);
 
     useEffect(() => {
-        /*
-        if (role === "sa") 
-            dispatch(getAdminChat(listTopic,listPageIndex, listPageSize, listSearch));
-        else
-            dispatch(getPICBMChat(listTopic,listPageIndex, listPageSize, listSearch));
-        */
+        
+        // if (role === "sa") 
+            // dispatch(getAdminChat('', 0, 50, ''));
+        // else
+            // dispatch(getPICBMChat(listTopic,listPageIndex, listPageSize, listSearch));
+        
 
         var params = {
             page: 1,
@@ -172,6 +173,8 @@ function Component() {
             merchant: null,
             building: user.building_name,
             management: user.management_name,
+            data_type: type === 'file_attachment' && 'image',
+            url: payload?.url,
         }).then(function (comment) {
             // On success
             dispatch(updateMessages([comment]));
@@ -306,13 +309,12 @@ function Component() {
                     }}>
                         <Input compact label="Send a message.." inputValue={message} setInputValue={setMessage} />
                         <Loading loading={qiscus ? (loadingSend || !qiscus.sendComment) : true} >
-                            <IconButton onClick={() => {
-                                uploadFile.current.click();
-                            }}>
+                            <IconButton>
                                 <input ref={uploadFile} type="file" style={{
                                     display: 'none'
                                 }}
                                     onChange={async () => {
+                                        setMessage('');
                                         let file = uploadFile.current.files[0];
 
                                         setMessage('Uploading file...');
@@ -322,16 +324,18 @@ function Component() {
                                         formData.append('file', file);
 
                                         dispatch(post(endpointAsset + '/file/upload', formData, res => {
-                                            sendMessage('[file] ' + res.data.data.url, 'file_attachment', {
+                                            sendMessage('[file] ' + res.data.data.url + ' [/file]', 'file_attachment', {
                                                 url: res.data.data.url,
                                             });
                                         }, err => {
-                                            setMessage('Upload failed, please try again.');
+                                            setMessage('');
                                             setLoadingSend(false);
                                         }))
                                     }}
                                 />
-                                <TiAttachment style={{ marginLeft: '10' }} size="30" />
+                                <TiAttachment onClick={() => {
+                                    uploadFile.current.click();
+                                }} style={{ marginLeft: '10' }} size="30" />
                             </IconButton>
                             <IconButton onClick={() => {
                                 sendMessage()

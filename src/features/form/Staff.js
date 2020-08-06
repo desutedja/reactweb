@@ -60,7 +60,6 @@ function Component() {
     const { loading, selected } = useSelector(state => state.staff);
     const { auth } = useSelector(state => state)
     const [bManagements, setBManagements] = useState([]);
-    const [search, setSearch] = useState('');
 
     const [districts, setDistricts] = useState([]);
     const [city, setCity] = useState("");
@@ -75,7 +74,7 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointAdmin + '/management/building' +
             '?limit=10&page=1' +
-            '&search=' + search, res => {
+            '&search=', res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({
@@ -85,7 +84,7 @@ function Component() {
 
                 setBManagements(formatted);
             }))
-    }, [dispatch, search]);
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(get(endpointResident + '/geo/province',
@@ -174,7 +173,6 @@ function Component() {
                             <Input {...props} label="Building Management"
                                 name="building_management_id"
                                 options={bManagements}
-                                onChange={el => setSearch(el)}
                             />
                             <Input {...props} label="Staff ID" />
                             <Input {...props} label="Status"
