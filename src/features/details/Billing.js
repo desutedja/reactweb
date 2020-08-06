@@ -218,7 +218,8 @@ function Component({ view }) {
                                                 "for " + unit.items.billing[active].billing_month : ""}
                                         </CardTitle>
                                         {(unit.items && unit.items.billing?.length > 0) ? <>
-                                            <ThreeColumn second="Subtotal" third={toMoney(unit.items.billing[active].group_amount)} />
+                                        <ThreeColumn second="Subtotal" third={toMoney(unit.items.billing[active].group_amount + 
+                                            unit.items.billing[active].group_additional_charge)} />
                                             <ThreeColumn second={"Penalty (" + (unit.items.billing[active].group_penalty_percentage) + "%)"}
                                                 third={<span style={{ color: 'red' }}>
                                                     {toMoney(unit.items.billing[active].group_penalty)}</span>} />

@@ -21,6 +21,22 @@ const URLOptional = Yup.string().matches(/\./, 'Invalid URL');
 const URLStrict = Yup.string().url('Invalid URL').required(defaultRequiredError);
 const URLStrictOptional = Yup.string().url('Invalid URL');
 
+function greaterThan(ref, msg) {
+    return this.test({
+        name: 'greaterThan',
+        exclusive: false,
+        message: msg || '${path} must be greater than ${reference}',
+        params: {
+            reference: ref.path
+        },
+        test: function(value) {
+            return value > this.resolve(ref); 
+        }
+    });
+}
+
+Yup.addMethod(Yup.string, 'greaterThan', greaterThan);
+
 export const managementSchema = Yup.object().shape({
     name: Text,
     name_legal: Text,
@@ -79,7 +95,7 @@ export const billingSchema = Yup.object().shape({
     service: Text,
     name: Text,
     previous_usage: Number,
-    recent_usage: Number,
+    recent_usage: Number.moreThan(Yup.ref('previous_usage')),
     month: Text,
     year: Text,
     remarks: Text,

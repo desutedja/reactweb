@@ -6,25 +6,28 @@ import { TiAttachment } from 'react-icons/ti';
 
 import moment from 'moment'
 import Input from '../../components/Input';
+import Modal from '../../components/Modal';
 import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
-import { 
-    updateMessages, setMessages, 
-    setRoom, setRoomID, setRoomUniqueID, setRooms 
+import {
+    updateMessages, setMessages,
+    setRoom, setRoomID, setRoomUniqueID, setRooms
 } from './slice';
 import { FiSend } from 'react-icons/fi';
 
 import './style.css';
+import { post } from '../slice';
+import { endpointAsset } from '../../settings';
 
 // eslint-disable-next-line no-unused-vars
 const topics = [
-    {label: "All", value:"merchant_trx,service,security,billing,personal"},
-    {label: "Transaction", value:"merchant_trx"},
-    {label: "Service", value:"service"},
-    {label: "Security", value:"security"},
-    {label: "Billing", value:"billing"},
-    {label: "Direct", value:"personal"},
+    { label: "All", value: "merchant_trx,service,security,billing,personal" },
+    { label: "Transaction", value: "merchant_trx" },
+    { label: "Service", value: "service" },
+    { label: "Security", value: "security" },
+    { label: "Billing", value: "billing" },
+    { label: "Direct", value: "personal" },
 ];
 
 function Component() {
@@ -35,17 +38,19 @@ function Component() {
     const [loadingRooms, setLoadingRooms] = useState(false);
 
     const history = useHistory();
+    const uploadFile = useRef();
 
     const [refresh, setRefresh] = useState(false);
     const [message, setMessage] = useState('');
-    const [messageType] = useState('');
+    const [preview, setPreview] = useState(false);
+    const [image, setImage] = useState('');
 
     const [participants, setParticipants] = useState([]);
 
     const { user, role } = useSelector(state => state.auth);
-    const { qiscus, room, rooms, 
-        roomID, roomUniqueID, messages, 
-        reloadList, lastMessageOnRoom, loading 
+    const { qiscus, room, rooms,
+        roomID, roomUniqueID, messages,
+        reloadList, lastMessageOnRoom, loading
     } = useSelector(state => state.chat);
 
     let dispatch = useDispatch();
@@ -152,68 +157,78 @@ function Component() {
 
     useEffect(() => {
         console.log("Last Message coming on room: ", lastMessageOnRoom)
-    },[lastMessageOnRoom]);
+    }, [lastMessageOnRoom]);
 
-    const sendMessage = () => {
-        if (message.length === 0) return;
+    const sendMessage = (text = '', type = '', payload) => {
+        const messageData = message ? message : text;
+
+        if (messageData.length === 0) return;
         setLoadingSend(true);
         qiscus.sendComment(
-            roomID, message, null, messageType, null, {
-                // extra data
-                name: user.firstname + ' ' + user.lastname,
-                role: role === 'sa' ? 'centratama' : 'staff_pic_bm',
-                merchant: null,
-                building: user.building_name,
-                management: user.management_name,
-            }).then(function (comment) {
-                // On success
-                dispatch(updateMessages([comment]));
-                setRefresh(!refresh);
-                setMessage('');
-                setLoadingSend(false);
-            })
+            roomID, messageData, null, type, payload, {
+            // extra data
+            name: user.firstname + ' ' + user.lastname,
+            role: role === 'sa' ? 'centratama' : 'staff_pic_bm',
+            merchant: null,
+            building: user.building_name,
+            management: user.management_name,
+        }).then(function (comment) {
+            // On success
+            dispatch(updateMessages([comment]));
+            setRefresh(!refresh);
+            setMessage('');
+            setLoadingSend(false);
+        })
     }
 
     function isImage(file) {
         const f = file.split(".")
         const ext = f[f.length - 1].toUpperCase()
-        return  ext === 'JPG' || ext === 'PNG' || ext === 'GIF' || ext === 'JPEG' || ext === 'TIFF' ||
-                ext === 'EPS';
+        return ext === 'JPG' || ext === 'PNG' || ext === 'GIF' || ext === 'JPEG' || ext === 'TIFF' ||
+            ext === 'EPS';
     }
 
     return (
-        <div style={{
-            display: 'flex',
-            height: '100%'
-        }}>
+        <>
+            <Modal disableFooter disableHeader isOpen={preview} toggle={() => setPreview(false)}>
+                <img src={image} alt='attachment' style={{
+                    maxHeight: 600,
+                    maxWidth: '100%',
+                    objectFit: 'cover',
+                }} />
+            </Modal>
             <div style={{
                 display: 'flex',
-                flexDirection: 'column',
-                flex: 2,
+                height: '100%'
             }}>
                 <div style={{
-                    flex: 1,
-                    paddingRight: 16,
-                    paddingLeft: 16,
-                    overflow: 'scroll',
-                }} >
-                    <Loading loading={loadingMessages}>
-                        {messages.length > 0 ? messages.map((el, index) =>
-                            <div key={el.id} className={
-                                el.extras.name === user.firstname + ' ' + user.lastname ?
-                                    "MessageContainer-own" : "MessageContainer"}>
-                                {index > 0 && messages[index - 1].extras.name === el.extras.name ?
-                                    <div className="MessageAvatar" /> :
-                                    <img alt="avatar" className="MessageAvatar" src={el.user_avatar_url} />}
-                                <div style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    alignItems: el.extras.name === user.firstname + ' ' + user.lastname ?
-                                        'flex-end' : 'flex-start',
-                                }}>
+                    display: 'flex',
+                    flexDirection: 'column',
+                    flex: 2,
+                }}>
+                    <div style={{
+                        flex: 1,
+                        paddingRight: 16,
+                        paddingLeft: 16,
+                        overflow: 'scroll',
+                    }} >
+                        <Loading loading={loadingMessages}>
+                            {messages.length > 0 ? messages.map((el, index) =>
+                                <div key={el.id} className={
+                                    el.extras.name === user.firstname + ' ' + user.lastname ?
+                                        "MessageContainer-own" : "MessageContainer"}>
                                     {index > 0 && messages[index - 1].extras.name === el.extras.name ?
-                                        null :
-                                        <div className="MessageUsername" style={{ cursor: 'pointer' }} onClick={() => {
+                                        <div className="MessageAvatar" /> :
+                                        <img alt="avatar" className="MessageAvatar" src={el.user_avatar_url} />}
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: el.extras.name === user.firstname + ' ' + user.lastname ?
+                                            'flex-end' : 'flex-start',
+                                    }}>
+                                        {index > 0 && messages[index - 1].extras.name === el.extras.name ?
+                                            null :
+                                            <div className="MessageUsername" style={{ cursor: 'pointer' }} onClick={() => {
                                                 const userrole = el.email.split("-")[0]
                                                 const userid = el.email.split("-")[2]
 
@@ -226,148 +241,181 @@ function Component() {
                                                 if (userrole === 'centratama') {
                                                     history.push("/" + role + "/admin/" + userid)
                                                 }
+                                            }}>
+                                                {el.username + ' '}
+                                            ({el.email.split("-")[0] === 'centratama' ? el.extras.name : el.email.split("-")[0]})
+                                        </div>}
+                                        <div style={{
+                                            display: 'flex',
+                                            flexDirection: el.extras.name === user.firstname + ' ' + user.lastname ?
+                                                'row-reverse' : 'row',
                                         }}>
-                                            {el.username + ' '} 
-                                            ({el.email.split("-")[0] === 'centratama' ? el.extras.name : el.email.split("-")[0] })
-                                        </div>}
-                                    <div style={{
-                                        display: 'flex',
-                                        flexDirection: el.extras.name === user.firstname + ' ' + user.lastname ?
-                                            'row-reverse' : 'row',
-                                    }}>
-                                        {/* if type is text */ }
+                                            {/* if type is text */}
 
-                                        { el.type === 'text' &&
-                                        <div className={
-                                            el.extras.name === user.firstname + ' ' + user.lastname ?
-                                            "Message-own" : "Message"}>
-                                            {el.message}
-                                        </div>}
+                                            {el.type === 'text' &&
+                                                <div className={
+                                                    el.extras.name === user.firstname + ' ' + user.lastname ?
+                                                        "Message-own" : "Message"}>
+                                                    {el.message}
+                                                </div>}
 
-                                        {el.type === 'file_attachment' &&
-                                        <div>
-                                            {
-                                                isImage(el.message.split(" ")[1]) ? 
-                                                <img alt="Attachment" src={el.message.split(" ")[1]} width="150" style={{ padding: '10px' }}/> :
-                                                <div className={el.extras.name === user.firstname + ' ' + user.lastname ? "Message-own" : "Message"}>
-                                                    <TiAttachment /> <a href={el.message.split(" ")[1]}>Download Attachment</a>
+                                            {el.type === 'file_attachment' &&
+                                                <div>
+                                                    {
+                                                        isImage(el.message.split(" ")[1]) ?
+                                                            <img
+                                                                onClick={() => {
+                                                                    setImage(el.message.split(" ")[1]);
+                                                                    setPreview(true);
+                                                                }}
+                                                                alt="Attachment" src={el.message.split(" ")[1]} width="150" style={{ padding: '10px' }} /> :
+                                                            <div className={el.extras.name === user.firstname + ' ' + user.lastname ? "Message-own" : "Message"}>
+                                                                <TiAttachment /> <a href={el.message.split(" ")[1]}>Download Attachment</a>
+                                                            </div>
+                                                    }
                                                 </div>
                                             }
+                                            <div className="MessageTime">
+                                                {moment.unix(el.unix_timestamp).fromNow()}
+                                            </div>
                                         </div>
-                                        }
-                                        <div className="MessageTime">
-                                            {moment.unix(el.unix_timestamp).fromNow()}
-                                        </div>
+                                        {messages[index + 1]?.username !== el.username &&
+                                            <div style={{
+                                                height: 12
+                                            }} />}
                                     </div>
-                                    {messages[index + 1]?.username !== el.username &&
-                                        <div style={{
-                                            height: 12
-                                        }} />}
                                 </div>
-                            </div>
-                        ): <h3 style={{
-                            color: 'grey',
-                            textAlign: 'center',
-                            marginTop: 48,
-                        }}>
-                            Please select a room to load messages.    
+                            ) : <h3 style={{
+                                color: 'grey',
+                                textAlign: 'center',
+                                marginTop: 48,
+                            }}>
+                                    Please select a room to load messages.
                         </h3>}
-                    </Loading>
-                    <div style={{ float: "left", clear: "both" }}
-                        ref={messageBottom}>
+                        </Loading>
+                        <div style={{ float: "left", clear: "both" }}
+                            ref={messageBottom}>
+                        </div>
                     </div>
-                </div>
-                <form className="Container" style={{
-                    flex: 'none',
-                    height: 80,
-                }} onSubmit={e => {
-                    e.preventDefault();
-                    sendMessage();
-                }}>
-                    <Input compact label="Send a message.." inputValue={message} setInputValue={setMessage} />
-                    <Loading loading={qiscus ? (loadingSend || !qiscus.sendComment) : true} >
-                        <IconButton onClick={() => {
-                            sendMessage()
-                        }}>
-                            <FiSend style={{ marginLeft: '10' }} size="30"/>
-                        </IconButton>
-                    </Loading>
-                </form>
-            </div>
-            <div className="Container" style={{
-                marginLeft: 16,
-                flexDirection: 'column',
-            }}>
-                <Tab
-                    labels={['Room List', 'Room Info']}
-                    contents={[
-                        <Loading loading={loading}>
-                            {rooms.map((el, index) => {
-                                const opt = JSON.parse(el.options);
+                    <form className="Container" style={{
+                        flex: 'none',
+                        height: 80,
+                    }} onSubmit={e => {
+                        e.preventDefault();
+                        sendMessage();
+                    }}>
+                        <Input compact label="Send a message.." inputValue={message} setInputValue={setMessage} />
+                        <Loading loading={qiscus ? (loadingSend || !qiscus.sendComment) : true} >
+                            <IconButton onClick={() => {
+                                uploadFile.current.click();
+                            }}>
+                                <input ref={uploadFile} type="file" style={{
+                                    display: 'none'
+                                }}
+                                    onChange={async () => {
+                                        let file = uploadFile.current.files[0];
 
-                                //console.log(opt)
-                                return (<div
-                                    className={"Room" + (el.id === roomID ? " selected" : "")}
-                                    onClick={el.id === roomID ? null : () => {
-                                        dispatch(setRoom(el));
-                                        dispatch(setRoomID(el.id));
-                                        dispatch(setRoomUniqueID(el.unique_id));
+                                        setMessage('Uploading file...');
+                                        setLoadingSend(true);
+
+                                        let formData = new FormData();
+                                        formData.append('file', file);
+
+                                        dispatch(post(endpointAsset + '/file/upload', formData, res => {
+                                            sendMessage('[file] ' + res.data.data.url, 'file_attachment', {
+                                                url: res.data.data.url,
+                                            });
+                                        }, err => {
+                                            setMessage('Upload failed, please try again.');
+                                            setLoadingSend(false);
+                                        }))
                                     }}
-                                >
-                                    <div className="Room-left">
-                                        <div className="Room-title">
-                                            <p className="Room-name">{el.last_comment.room_name}</p>
-                                            {opt && opt.ref_code &&
-                                               <p className="Room-subtitle">
-                                                Task Code: <a href={"/" + role + "/task/" + opt.task_id }>{opt.ref_code}</a>
-                                               </p>
+                                />
+                                <TiAttachment style={{ marginLeft: '10' }} size="30" />
+                            </IconButton>
+                            <IconButton onClick={() => {
+                                sendMessage()
+                            }}>
+                                <FiSend style={{ marginLeft: '10' }} size="30" />
+                            </IconButton>
+                        </Loading>
+                    </form>
+                </div>
+                <div className="Container" style={{
+                    marginLeft: 16,
+                    flexDirection: 'column',
+                }}>
+                    <Tab
+                        labels={['Room List', 'Room Info']}
+                        contents={[
+                            <Loading loading={loading}>
+                                {rooms.map((el, index) => {
+                                    const opt = JSON.parse(el.options);
+
+                                    //console.log(opt)
+                                    return (<div
+                                        className={"Room" + (el.id === roomID ? " selected" : "")}
+                                        onClick={el.id === roomID ? null : () => {
+                                            dispatch(setRoom(el));
+                                            dispatch(setRoomID(el.id));
+                                            dispatch(setRoomUniqueID(el.unique_id));
+                                        }}
+                                    >
+                                        <div className="Room-left">
+                                            <div className="Room-title">
+                                                <p className="Room-name">{el.last_comment.room_name}</p>
+                                                {opt && opt.ref_code &&
+                                                    <p className="Room-subtitle">
+                                                        Task Code: <a href={"/" + role + "/task/" + opt.task_id}>{opt.ref_code}</a>
+                                                    </p>
+                                                }
+                                            </div>
+                                            { /* TODO: get information about user in last_comment.extras */}
+                                            <p className="Room-message">{el.last_comment.username
+                                                + ': ' +
+                                                (el.last_comment.length > 20 ?
+                                                    el.last_comment.slice(0, 20) + '...'
+                                                    : el.last_comment_message)}
+                                                {" (" + moment.unix(el.last_comment.unix_timestamp).fromNow() + ")"} </p>
+                                        </div>
+                                        <div className="Room-right">
+                                            {!!el.count_notif &&
+                                                <p className="Room-unread">{el.count_notif}</p>
                                             }
                                         </div>
-                                        { /* TODO: get information about user in last_comment.extras */ }
-                                        <p className="Room-message">{el.last_comment.username
-                                            + ': ' +
-                                            (el.last_comment.length > 20 ?
-                                                el.last_comment.slice(0, 20) + '...'
-                                                : el.last_comment_message)} 
-                                                {" (" + moment.unix(el.last_comment.unix_timestamp).fromNow() + ")"} </p>
-                                    </div>
-                                    <div className="Room-right">
-                                        {!!el.count_notif &&
-                                            <p className="Room-unread">{el.count_notif}</p>
-                                        }
-                                    </div>
-                                </div>)
-                            })}
-                        </Loading>,
-                        <>
-                            <p style={{
-                                fontWeight: 'bold',
-                                marginBottom: 8,
-                            }}>Room</p>
-                            <p style={{
-                                marginBottom: 24,
-                            }}> QiscusID: {roomID}</p>
-                            <p style={{
-                                fontWeight: 'bold',
-                                marginBottom: 8,
-                            }}>Participants</p>
-                            <Loading loading={loadingParticipants}>
-                                {participants.map((el, index) =>
-                                    <div key={index} className="Participant">
-                                        <img alt="avatar" className="MessageAvatar" src={el.avatar_url} style={{
-                                            marginRight: 8,
-                                            marginBottom: 4,
-                                            borderRadius: 4,
-                                        }} />
-                                        {el.username}
-                                    </div>
-                                )}
-                            </Loading>
-                        </>,
-                    ]}
-                />
+                                    </div>)
+                                })}
+                            </Loading>,
+                            <>
+                                <p style={{
+                                    fontWeight: 'bold',
+                                    marginBottom: 8,
+                                }}>Room</p>
+                                <p style={{
+                                    marginBottom: 24,
+                                }}> QiscusID: {roomID}</p>
+                                <p style={{
+                                    fontWeight: 'bold',
+                                    marginBottom: 8,
+                                }}>Participants</p>
+                                <Loading loading={loadingParticipants}>
+                                    {participants.map((el, index) =>
+                                        <div key={index} className="Participant">
+                                            <img alt="avatar" className="MessageAvatar" src={el.avatar_url} style={{
+                                                marginRight: 8,
+                                                marginBottom: 4,
+                                                borderRadius: 4,
+                                            }} />
+                                            {el.username}
+                                        </div>
+                                    )}
+                                </Loading>
+                            </>,
+                        ]}
+                    />
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 

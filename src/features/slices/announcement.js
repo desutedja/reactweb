@@ -87,7 +87,7 @@ export const createAnnouncement = (data, history, role) => dispatch => {
 
   dispatch(post(announcementEndpoint, {...data, topic: "announcement"}, 
     res => {
-      history.push("/" + role + "/announcement");
+      history.push("/" + role + "/announcement/" + res.data.data.id);
 
       dispatch(setInfo({
         color: 'success',
@@ -108,7 +108,7 @@ export const editAnnouncement = ( data, history, id, role ) => dispatch => {
   dispatch(put(announcementEndpoint, { ...data, topic: "announcement", id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
-        history.push("/" + role + "/announcement/" + id);
+      history.push("/" + role + "/announcement/" + id);
 
       dispatch(setInfo({
         color: 'success',

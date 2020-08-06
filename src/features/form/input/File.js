@@ -58,7 +58,7 @@ function FileInput(props) {
             id={label}
             name="uploader"
             required={false}
-            onChange={async (e) => {
+            onChange={async () => {
                 let file = uploader.current.files[0];
 
                 setFieldValue(fixedName, 'Uploading file...');
