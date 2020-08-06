@@ -144,9 +144,22 @@ export const deleteMultipleManagement = (rows, history) => (dispatch, getState) 
       
       dispatch(refresh());
 
+      var message
+      if (res.data.data.success_count === 0) {
+          message = "Cannot delete managements because there are active buildings bound to the managements"
+      } else if (res.data.data.success_count < rows.length) {
+          message = "Management ID " + res.data.data.valid_ids + 
+              " has been deleted, some managements cannot be deleted because there are active buildings bound to those managements"
+      } else {
+          message = "All selected managements has been deleted"
+      }
+
+      const messagecolor = res.data.data.success_count === 0 ? "danger" : 
+            (res.data.data.success_count < rows.length ? "warning" : "success");
+
       dispatch(setInfo({
-        color: 'success',
-        message: res.data.data,
+        color: messagecolor,
+        message: message,
       }));
 
       dispatch(stopAsync())

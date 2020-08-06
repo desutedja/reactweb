@@ -35,6 +35,7 @@ export const slice = createSlice({
     },
     setInfoData: (state, action) => {
       state.info.type = action.payload.type;
+      state.info.color = action.payload.color;
       state.info.message = action.payload.message;
     },
     toggleDelete: (state, action) => {
