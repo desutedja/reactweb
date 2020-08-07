@@ -47,7 +47,7 @@ function Component({ view }) {
 
         return [
             { Header: 'ID', accessor: 'id' },
-            { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name, <>{row.service_name} - {row.group === 'ipl' ? 'IPL' : 'Non-IPL'}</>]} /> },
+            { Header: 'Name', accessor: row => <BillingItem id={row.id} items={[row.name, <>{row.service_name} - {row.group === 'ipl' ? 'IPL' : 'Non-IPL'}</>]} /> },
             {
                 Header: 'Total', accessor: row =>
                     <div style={{ display: 'block' }}>

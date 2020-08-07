@@ -1,22 +1,22 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory, useRouteMatch } from 'react-router-dom';
 import { getBillingUnitItemDetails } from '../../features/slices/billing';
 
-function BillingItem({ items, data }) {
+function BillingItem({ items, id }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
 
-    return <div style={{ display: "block" }} className="Item" onClick={() => {
-            dispatch(getBillingUnitItemDetails(data, history, url))
-        }}>
+    const { role } = useSelector(state => state.auth);
+
+    return <a style={{ display: "block" }} className="Item" href={"/" + role + "/billing/unit/item/details/" + id }>
         { items.map((el, i) =>
             <div key={i}>
                 {i === 0 ? <b>{el}</b> : <>{el}</>}
             </div>
         ) }
-    </div>
+    </a>
 }
 
 export default BillingItem;

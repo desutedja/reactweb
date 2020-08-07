@@ -10,6 +10,7 @@ import Pill from '../../components/Pill';
 import Detail from './components/Detail';
 import Template from './components/Template';
 import Table from '../../components/Table';
+import BillingItem from '../../components/cells/BillingItem';
 import { toMoney, toSentenceCase, dateTimeFormatter, dateFormatter } from '../../utils';
 
 function Component() {
@@ -23,7 +24,8 @@ function Component() {
     let dispatch = useDispatch();
 
     const columns = useMemo(() => ([
-        { Header: 'Name', accessor: 'name' },
+        { Header: 'ID', accessor: 'id' },
+        { Header: 'Name', accessor: row => <BillingItem items={[row.name, (row.service_name + " - " + (row.group === 'ipl' ? 'IPL' : 'Non-IPL'))]} id={row.id} /> },
         { Header: 'Group', accessor: 'group' },
         { Header: 'Usage (Recent - Previous)', 
             accessor: row => <>{row.recent_usage - row.previous_usage} ({row.recent_usage} - {row.previous_usage}) {row.denom_unit}</>},
@@ -49,6 +51,12 @@ function Component() {
             {disabled: data.info?.payment_method === 'cash',
                 label: 'payment_bank', lfmt: () => "Payment Method", vfmt: (v) => toSentenceCase(v) 
             },
+        ],
+        'Settlement': [
+
+        ],
+        'Disbursement': [
+
         ],
         'Unit': [
             'unit_number',
@@ -88,7 +96,9 @@ function Component() {
                                     <h3>
                                         { data.info?.penalty_fee > 0 ?
                                         <span>
-                                            Total: {toMoney(data.items?.reduce((sum, el) => sum + el.total, 0))} +  {toMoney(data.info?.penalty_fee)} (penalty) = <b style={{ color: 'blue' }}>{toMoney(data.info?.selling_price)}</b></span> :
+                                            Total: {toMoney(data.items?.reduce((sum, el) => sum + el.total, 0))} + 
+                                            {toMoney(data.info?.penalty_fee)} (penalty) = <b style={{ color: 'blue' }}>
+                                                {toMoney(data.info?.selling_price)}</b></span> :
                                         <>Total: <b style={{ color: 'blue' }}>{toMoney(data.items?.reduce((sum, el) => sum + el.total, 0))}</b></>
                                     }
 
