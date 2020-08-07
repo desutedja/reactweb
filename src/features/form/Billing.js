@@ -41,9 +41,14 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
 
+    const building = selectedItem.resident_building ? 
+          selectedItem.resident_building : selected.building_id;
+    const unit = selectedItem.resident_unit ?
+          selectedItem.resident_unit : selected.id;
+    const resident = selectedItem.resident_id ? 
+          selectedItem.resident_id : selected.resident_id;
+
     useEffect(() => {
-        const building = selectedItem.resident_building ? 
-            selectedItem.resident_building : selected.building_id;
 
         dispatch(get(endpointAdmin + '/building/service' +
             '?page=1' +
@@ -61,7 +66,6 @@ function Component() {
                     price_unit: el.price_unit,
                     unit: el.denom_unit,
                 })));
-                //selectedItem.id && console.log(selectedItem)
                 selectedItem.id && setService(items.find(el => el.id === selectedItem.service))
             }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -69,13 +73,13 @@ function Component() {
 
     useEffect(() => {
         service.price_type === 'unit' && dispatch(get(endpointBilling + '/management/billing/get_latest_usage_unit' +
-            '?unit_id=' + selectedItem.resident_unit + 
+            '?unit_id=' + unit + 
             '&service_id=' + service.value,
 
             res => {
                 setPrevious(res.data.data.recent_usage);
             }));
-    }, [dispatch, selectedItem, service])
+    }, [dispatch, unit, service])
 
     return (
         <Template
@@ -92,10 +96,9 @@ function Component() {
                 previous_usage: service.price_type === 'fixed' ? 0 : parseFloat(values.previous_usage),
                 recent_usage: service.price_type === 'fixed' ? 1 : parseFloat(values.recent_usage),
                 year: parseInt(values.year, 10),
-                resident_building: selectedItem.resident_building,
-                resident_unit: selectedItem.resident_unit,
-                resident_id: selectedItem.resident_id,
-                resident_name: selectedItem.resident_name,
+                resident_building: building,
+                resident_unit: unit,
+                resident_id: resident,
             })}
             edit={data => dispatch(editBillingUnitItem(data, selectedItem, history, role))}
             add={data => dispatch(createBillingUnitItem(data, selectedItem, history, role))}
