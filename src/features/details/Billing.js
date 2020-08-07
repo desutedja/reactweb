@@ -13,7 +13,7 @@ import Table from '../../components/Table';
 import { Card, CardTitle, CardBody } from 'reactstrap';
 import Filter from '../../components/Filter';
 import { dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dateFormatter } from '../../utils';
-import { getBillingUnitItem, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
+import { getBillingUnitItem, setSelectedItem, deleteBillingUnitItem } from '../slices/billing';
 import { ListGroupItem, ListGroup } from 'reactstrap';
 import Pill from '../../components/Pill';
 import { FiClock, FiPlus } from 'react-icons/fi';
@@ -81,8 +81,6 @@ function Component({ view }) {
     }, [role]);
 
     useEffect(() => {
-        console.log("selected => ");
-        console.log(selected);
         dispatch(getBillingUnitItem(0, 100, '',
             { id: selected.id, building_id: selected.building_id }, status));
     }, [dispatch, refreshToggle, selected, status])
@@ -111,7 +109,7 @@ function Component({ view }) {
                     display: 'flex',
                     marginTop: 16,
                 }}>
-                    <Column style={{ flex: 2 }}>
+                    <Column style={{ flex: 2, display: 'block' }}>
                         <Card className="Container" style={{
                             boxShadow: 'none',
                             flexDirection: 'column',
@@ -120,7 +118,7 @@ function Component({ view }) {
                                 <h5> Billing Month </h5>
                                 {view ? null : <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
                                     onClick={() => {
-                                        dispatch(setSelectedUnit({}));
+                                        dispatch(setSelectedItem({}));
                                         history.push(url + "/add");
                                     }}
                                 />}

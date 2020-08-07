@@ -8,7 +8,7 @@ import Template from './components/Template';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
-import { payByCash } from '../slices/billing';
+import { payByCash, setSelectedItem } from '../slices/billing';
 import { Formik, Form } from 'formik';
 import Input from '../form/input';
 import Pill from '../../components/Pill';
@@ -41,7 +41,7 @@ function Component({ view }) {
     const [pageCount, setPageCount] = useState('');
 
     const [loading, setLoading] = useState(false);
-    const [loadingDetails, setLoadingDetails] = useState(false);
+    const [loadingDetails, setLoadingDetails] = useState(true);
 
     const { unit, refreshToggle } = useSelector(state => state.billing);
 
@@ -84,6 +84,7 @@ function Component({ view }) {
         dispatch(get(endpointBilling + '/management/billing/detail/' +
             id, res => {
                 setDataDetails(res.data.data);
+                dispatch(setSelectedItem(res.data.data));
                 setLoadingDetails(false);
             }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
