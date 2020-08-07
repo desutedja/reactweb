@@ -636,4 +636,25 @@ export const deleteBuildingService = (row, ) => dispatch => {
     }))
 }
 
+export const deleteMultipleBuilding = (row, history) => dispatch => {
+  dispatch(startAsync());
+
+  const data = row.map(el => 'building_id=' + el).join('&');
+
+  dispatch(del(buildingEndpoint + '?' + data,
+    res => {
+      dispatch(refresh());
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Buildings have been deleted.'
+      }));
+
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    }))
+}
+
 export default slice.reducer;
