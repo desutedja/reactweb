@@ -149,7 +149,7 @@ function Component({ view }) {
                 okLabel="Yes"
                 onClick={() => {
                     setResolve(false);
-                    dispatch(resolveTask({ ...data, id: data.task_id }));
+                    dispatch(resolveTask([{ ...data, id: data.task_id }]));
                 }}
                 cancelLabel="No"
                 onClickSecondary={() => {
