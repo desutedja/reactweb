@@ -36,9 +36,11 @@ function Component({ view }) {
 
     const [dataDetails, setDataDetails] = useState({});
     const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [totalItems, setTotalItems] = useState('');
     const [pageCount, setPageCount] = useState('');
+
+    const [loading, setLoading] = useState(false);
+    const [loadingDetails, setLoadingDetails] = useState(false);
 
     const { unit } = useSelector(state => state.billing);
 
@@ -75,13 +77,14 @@ function Component({ view }) {
     }),[ unit.selected ]);
 
     useEffect(() => {
-        setLoading(true);
+        !dataDetails && setLoadingDetails(true);
         dispatch(get(endpointBilling + '/management/billing/detail/' +
             unit.selected.id, res => {
                 setDataDetails(res.data.data);
-                setLoading(false);
+                setLoadingDetails(false);
             }))
-    }, [dispatch, unit.selected.id, toggle])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, unit.selected, toggle])
 
     useEffect(() => {
         setLoading(true);
@@ -160,7 +163,7 @@ function Component({ view }) {
                 </Formik>
             </Modal>
             <Template
-                loading={false}
+                loading={loadingDetails}
                 labels={["Details", "Additional Charges"]}
                 contents={[
                     <Detail view={view} type="Billing" data={dataDetails} labels={details}
@@ -184,7 +187,7 @@ function Component({ view }) {
                                 () => {
                                     dispatch(post(endpointBilling
                                         + '/management/billing/additional-charge/delete', {
-                                        deleted: [row.id],
+                                        delete: [row.id],
                                     }, res => {
                                         setToggle(!toggle)
                                     }))
