@@ -43,7 +43,7 @@ function Component({ view }) {
     const [loading, setLoading] = useState(false);
     const [loadingDetails, setLoadingDetails] = useState(false);
 
-    const { unit } = useSelector(state => state.billing);
+    const { unit, refreshToggle } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
 
@@ -87,7 +87,7 @@ function Component({ view }) {
                 setLoadingDetails(false);
             }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, id, toggle])
+    }, [dispatch, id, toggle, refreshToggle])
 
     useEffect(() => {
         setLoading(true);
@@ -111,13 +111,12 @@ function Component({ view }) {
                 isOpen={modalCash}
                 onClick={ () => {
                     dispatch(payByCash({
-                        "id": id,
+                        "id": parseInt(id),
                         "total": dataDetails.total,
                         "penalty_amount": dataDetails.penalty_amount,
                         "total_payment": dataDetails.total_payment,
                         "additional_charge_amount": dataDetails.additional_charge_amount,
                     }));
-                    setToggle(!toggle);
                     setModalCash(false);
                 }}
                 toggle={ () => setModalCash(false) }

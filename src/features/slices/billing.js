@@ -305,7 +305,7 @@ export const payByCash = (data) => dispatch => {
       message: 'Billing has been set as paid by cash.'
     }));
 
-    dispatch(setSelectedUnit(res.data.data));
+    dispatch(refresh());
     dispatch(stopAsync());
   },
   err => {
