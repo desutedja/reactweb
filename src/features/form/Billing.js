@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory  } from 'react-router-dom';
 import { months, yearsOnRange, toMoney } from '../../utils';
 import { endpointAdmin, endpointBilling } from '../../settings';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
@@ -72,14 +72,23 @@ function Component() {
     }, [ selectedItem.id ]);
 
     useEffect(() => {
-        service.price_type === 'unit' && dispatch(get(endpointBilling + '/management/billing/get_latest_usage_unit' +
-            '?unit_id=' + unit + 
-            '&service_id=' + service.value,
+        if (service.price_type === 'unit') {
+            setPrevious('');
+            setRecent('');
+            dispatch(get(endpointBilling + '/management/billing/get_latest_usage_unit' +
+                '?unit_id=' + unit + 
+                '&service_id=' + service.value,
 
             res => {
                 setPrevious(res.data.data.recent_usage);
             }));
+        } else {
+            setPrevious(0);
+            setRecent(1);
+        }
     }, [dispatch, unit, service])
+
+    console.log(history.location.state);
 
     return (
         <Template
@@ -88,7 +97,8 @@ function Component() {
                 ...billingPayload, ...selectedItem,
             } : {
                 ...billingPayload,
-                year: moment().format("yyyy", "year") //default value to 2020 
+                month: history.location?.state?.month,
+                year: history.location?.state?.year || moment().format("yyyy", "year") //default value to this year
             }}
             schema={billingSchema}
             formatValues={values => ({
@@ -108,14 +118,6 @@ function Component() {
                 return (
                     <Form className="Form">
                         <Input {...props} label="Service" options={services} onChange={el => {
-                            console.log('changed');
-                            if (el.price_type === 'fixed') {
-                                setPrevious(0);
-                                setRecent(1);
-                            } else {
-                                setPrevious('');
-                                setRecent('');
-                            }
                             setService(el);
                         }} />
                         <div>
@@ -128,9 +130,9 @@ function Component() {
                         <Input {...props} label="Year" options={yearsOnRange(10)} />
                         <Input {...props} label="Name" placeholder="Billing description e.g. Electricity for July 2020" />
                         <Input {...props} label="Previous Usage" externalValue={previous} suffix={service.unit} 
-                            hidden={service.price_type==='fixed'}/>
+                            hidden={service.price_type ==='fixed' || service.price_type === ''}/>
                         <Input {...props} label="Recent Usage" externalValue={recent} suffix={service.unit} 
-                            hidden={service.price_type==='fixed'}/>
+                            hidden={service.price_type ==='fixed' || service.price_type === ''}/>
                         <Input {...props} label="Remarks" type="textarea" />
                         <SectionSeparator />
                         <SubmitButton loading={loading} errors={errors} />
