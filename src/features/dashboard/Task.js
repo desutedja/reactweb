@@ -99,7 +99,7 @@ function Component() {
             })
             const sosDataFormatted = sosDatas.map((data, i) => {
                 let month = months[data.time.split('-')[1] - 1].label;
-                if (!(sosDatas[i].time.split('-')[1] !== (sosDatas[i - 1] ? sosDatas[i - 1].time.split('-')[1] : sosDatas[i - 1]))) month = '';
+                // if (!(sosDatas[i].time.split('-')[1] !== (sosDatas[i - 1] ? sosDatas[i - 1].time.split('-')[1] : sosDatas[i - 1]))) month = '';
                 const date = data.time.split('-')[2];
                 return (
                     {

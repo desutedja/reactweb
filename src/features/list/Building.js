@@ -213,7 +213,7 @@ function Component({ view }) {
             Are you sure you want to delete these buildings?
             <p style={{ paddingTop: '10px' }}><ul>
                 {multiActionRows.map(el => 
-                    <li>{el.name}</li>
+                    <li>{el?.name ? el.name : 'nama'}</li>
                 )}
             </ul></p>
         </Modal>

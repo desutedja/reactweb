@@ -102,12 +102,14 @@ export const getResident = (
     }))
 }
 
-export const createResident = (data, history) => dispatch => {
+export const createResident = (data, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(post(residentEndpoint + '/register/parent', data,
     res => {
-      history.push("/sa/resident");
+      history.push('/' + auth.role + "/resident");
 
       dispatch(setInfo({
         color: 'success',
