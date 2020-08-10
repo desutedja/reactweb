@@ -139,9 +139,9 @@ function Component() {
                 const data = trxData ? trxData.filter(data => data.date.split(' ')[0] === date.split(' ')[0]) : [];
                 let month = moment(date).format('MMM') + ' ';
                 const d = moment(date).format('D');
-                if (trxData) {
-                    if (!(datesRange[i].split('-')[1] !== (datesRange[i - 1] ? datesRange[i - 1].split('-')[1] : datesRange[i - 1]))) month = '';
-                }
+                // if (trxData) {
+                //     if (!(datesRange[i].split('-')[1] !== (datesRange[i - 1] ? datesRange[i - 1].split('-')[1] : datesRange[i - 1]))) month = '';
+                // }
                 return ({
                     'Date': month + d,
                     'Amount Transaction': data.reduce((total, data) => {
@@ -174,7 +174,8 @@ function Component() {
             })
             setTrxDataFormatted(trxDatas)
         }
-    }, [range, trxData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [trxData]);
 
     const transactionsSummary = [
         { header: 'Orders', accessor: trxSumm.total_transaction_count },
