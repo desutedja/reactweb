@@ -39,7 +39,7 @@ function Component() {
                         <div className="row">
                             <div className="col"
                                 style={{
-                                    height: 300
+                                    height: 40 * adsData.length || 300
                                 }}
                             >
                                 <ResponsiveContainer width='100%'>
@@ -75,7 +75,7 @@ function Component() {
                         <div className="row">
                             <div className="col"
                                 style={{
-                                    height: 300
+                                    height: 40 * adsData.length || 300
                                 }}
                             >
                                 <ResponsiveContainer width='100%'>

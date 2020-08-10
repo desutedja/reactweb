@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory  } from 'react-router-dom';
 import { months, yearsOnRange, toMoney } from '../../utils';
 import { endpointAdmin, endpointBilling } from '../../settings';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
@@ -35,17 +35,24 @@ function Component() {
     const [service, setService] = useState({});
     const [services, setServices] = useState([]);
 
-    const { selected, unit, loading } = useSelector(state => state.billing);
+    const { selectedItem, selected, loading } = useSelector(state => state.billing);
     const { role } = useSelector(state => state.auth);
-    const selectedUnit = unit.selected;
 
     let dispatch = useDispatch();
     let history = useHistory();
 
+    const building = selectedItem.resident_building ? 
+          selectedItem.resident_building : selected.building_id;
+    const unit = selectedItem.resident_unit ?
+          selectedItem.resident_unit : selected.id;
+    const resident = selectedItem.resident_id ? 
+          selectedItem.resident_id : selected.resident_id;
+
     useEffect(() => {
+
         dispatch(get(endpointAdmin + '/building/service' +
             '?page=1' +
-            '&building_id=' + selected.building_id +
+            '&building_id=' + building + 
             '&search=' +
             '&limit=1000',
 
@@ -59,30 +66,39 @@ function Component() {
                     price_unit: el.price_unit,
                     unit: el.denom_unit,
                 })));
-                //unit.selected.id && console.log(unit.selected)
-                unit.selected.id && setService(items.find(el => el.id === unit.selected.service))
+                selectedItem.id && setService(items.find(el => el.id === selectedItem.service))
             }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ unit.selected.id ]);
+    }, [ selectedItem.id ]);
 
     useEffect(() => {
-        service.price_type === 'unit' && dispatch(get(endpointBilling + '/management/billing/get_latest_usage_unit' +
-            '?unit_id=' + selected.id + 
-            '&service_id=' + service.value,
+        if (service.price_type === 'unit') {
+            setPrevious('');
+            setRecent('');
+            dispatch(get(endpointBilling + '/management/billing/get_latest_usage_unit' +
+                '?unit_id=' + unit + 
+                '&service_id=' + service.value,
 
             res => {
                 setPrevious(res.data.data.recent_usage);
             }));
-    }, [dispatch, selected.building_id, selected.id, service])
+        } else {
+            setPrevious(0);
+            setRecent(1);
+        }
+    }, [dispatch, unit, service])
+
+    console.log(history.location.state);
 
     return (
         <Template
             slice="billing"
-            payload={unit.selected.id ? {
-                ...billingPayload, ...unit.selected,
+            payload={selectedItem.id ? {
+                ...billingPayload, ...selectedItem,
             } : {
                 ...billingPayload,
-                year: moment().format("yyyy", "year") //default value to 2020 
+                month: history.location?.state?.month,
+                year: history.location?.state?.year || moment().format("yyyy", "year") //default value to this year
             }}
             schema={billingSchema}
             formatValues={values => ({
@@ -90,27 +106,18 @@ function Component() {
                 previous_usage: service.price_type === 'fixed' ? 0 : parseFloat(values.previous_usage),
                 recent_usage: service.price_type === 'fixed' ? 1 : parseFloat(values.recent_usage),
                 year: parseInt(values.year, 10),
-                resident_building: selected.building_id,
-                resident_unit: selected.id,
-                resident_id: selected.resident_id,
-                resident_name: selected.resident_name,
+                resident_building: building,
+                resident_unit: unit,
+                resident_id: resident,
             })}
-            edit={data => dispatch(editBillingUnitItem(data, unit.selected, history, selectedUnit.id, role))}
-            add={data => dispatch(createBillingUnitItem(data, unit.selected, history, role))}
+            edit={data => dispatch(editBillingUnitItem(data, selectedItem, history, role))}
+            add={data => dispatch(createBillingUnitItem(data, selectedItem, history, role))}
             renderChild={props => {
                 const { setFieldValue, values, errors } = props;
 
                 return (
                     <Form className="Form">
                         <Input {...props} label="Service" options={services} onChange={el => {
-                            console.log('changed');
-                            if (el.price_type === 'fixed') {
-                                setPrevious(0);
-                                setRecent(1);
-                            } else {
-                                setPrevious('');
-                                setRecent('');
-                            }
                             setService(el);
                         }} />
                         <div>
@@ -122,8 +129,10 @@ function Component() {
                         <Input {...props} label="Month" options={months} />
                         <Input {...props} label="Year" options={yearsOnRange(10)} />
                         <Input {...props} label="Name" placeholder="Billing description e.g. Electricity for July 2020" />
-                        <Input {...props} label="Previous Usage" externalValue={previous} suffix={service.unit} hidden={service.price_type==='fixed'}/>
-                        <Input {...props} label="Recent Usage" externalValue={recent} suffix={service.unit} hidden={service.price_type==='fixed'}/>
+                        <Input {...props} label="Previous Usage" externalValue={previous} suffix={service.unit} 
+                            hidden={service.price_type ==='fixed' || service.price_type === ''}/>
+                        <Input {...props} label="Recent Usage" externalValue={recent} suffix={service.unit} 
+                            hidden={service.price_type ==='fixed' || service.price_type === ''}/>
                         <Input {...props} label="Remarks" type="textarea" />
                         <SectionSeparator />
                         <SubmitButton loading={loading} errors={errors} />
