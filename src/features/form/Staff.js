@@ -58,7 +58,7 @@ let staff_roles = [
 function Component() {
     const { banks } = useSelector(state => state.main);
     const { loading, selected } = useSelector(state => state.staff);
-    const { auth } = useSelector(state => state)
+    const { role, user } = useSelector(state => state.auth)
     const [bManagements, setBManagements] = useState([]);
 
     const [districts, setDistricts] = useState([]);
@@ -118,22 +118,23 @@ function Component() {
     }, [city, dispatch, selected.city]);
 
     useEffect(() => {
-        if (auth.role === 'bm') {
-            const blacklist_modules = auth.user.blacklist_modules;
+        if (role === 'bm') {
+            const blacklist_modules = user.blacklist_modules;
             const isSecurity = blacklist_modules.find(item => item.module === 'security') ? true : false;
             const isInternalCourier = blacklist_modules.find(item => item.module === 'internal_courier') ? true : false;
             const isTechnician = blacklist_modules.find(item => item.module === 'technician') ? true : false;
-    
+
             if (isTechnician) delete staff_roles[2];
             if (isInternalCourier) delete staff_roles[3];
             if (isSecurity) delete staff_roles[4];
         }
-    }, [auth])
+    }, [role, user])
 
     return (
         <Template
             slice="staff"
-            payload={selected.id ? {...staffPayload, ...selected,
+            payload={selected.id ? {
+                ...staffPayload, ...selected,
                 phone: selected.phone.slice(2),
                 on_centratama: parseInt(selected.on_centratama) ? selected.on_centratama + '' : '0',
                 staff_specialization: selected.staff_specialization ? selected.staff_specialization : '',
@@ -146,6 +147,8 @@ function Component() {
                 province: parseInt(values.province, 10),
                 city: parseInt(values.city, 10),
                 district: parseInt(values.district, 10),
+                building_management_id: values.building_management_id ?
+                    values.building_management_id : bManagements[0].value,
             })}
             edit={data => dispatch(editStaff(data, history, selected.id))}
             add={data => dispatch(createStaff(data, history))}
@@ -153,78 +156,78 @@ function Component() {
                 const { values, errors } = props;
 
                 return (<Form className="Form">
-                            {!selected.id && <Input {...props} label="Staff Role"
-                                options={staff_roles}
-                            />}
-                            {values['staff_role'] === "courier" && <Input {...props} label="On Centratama?"
-                                name="on_centratama"
-                                type="radio"
-                                options={[
-                                    { value: '1', label: 'Yes' },
-                                    { value: '0', label: 'No' },
-                                ]} />}
-                            {values['staff_role'] === "technician" && <Input {...props} label="Specialization"
-                                name="staff_specialization"
-                                options={[
-                                    { value: 'electricity', label: 'Electricity' },
-                                    { value: 'plumbing', label: 'Plumbing' },
-                                    { value: 'others', label: 'Others' },
-                                ]} />}
-                            <Input {...props} label="Building Management"
-                                name="building_management_id"
-                                options={bManagements}
-                            />
-                            <Input {...props} label="Staff ID" />
-                            <Input {...props} label="Status"
-                                type="radio"
-                                options={[
-                                    { value: 'active', label: 'Active' },
-                                    { value: 'inactive', label: 'Inactive' },
-                                ]}
-                            />
-                            <SectionSeparator />
+                    {!selected.id && <Input {...props} label="Staff Role"
+                        options={staff_roles}
+                    />}
+                    {values['staff_role'] === "courier" && <Input {...props} label="On Centratama?"
+                        name="on_centratama"
+                        type="radio"
+                        options={[
+                            { value: '1', label: 'Yes' },
+                            { value: '0', label: 'No' },
+                        ]} />}
+                    {values['staff_role'] === "technician" && <Input {...props} label="Specialization"
+                        name="staff_specialization"
+                        options={[
+                            { value: 'electricity', label: 'Electricity' },
+                            { value: 'plumbing', label: 'Plumbing' },
+                            { value: 'others', label: 'Others' },
+                        ]} />}
+                    {role === 'sa' && <Input {...props} label="Building Management"
+                        name="building_management_id"
+                        options={bManagements}
+                    />}
+                    <Input {...props} label="Staff ID" />
+                    <Input {...props} label="Status"
+                        type="radio"
+                        options={[
+                            { value: 'active', label: 'Active' },
+                            { value: 'inactive', label: 'Inactive' },
+                        ]}
+                    />
+                    <SectionSeparator />
 
-                            <Input {...props} label="Firstname" />
-                            <Input {...props} label="Lastname" />
-                            <Input {...props} label="Email" />
-                            <Input {...props} label="Phone" prefix="+62" />
+                    <Input {...props} label="Firstname" />
+                    <Input {...props} label="Lastname" />
+                    <Input {...props} label="Email" />
+                    <Input {...props} label="Phone" prefix="+62" />
 
-                            <SectionSeparator />
+                    <SectionSeparator />
 
-                            <Input {...props} label="Nationality" options={countries} />
-                            <Input {...props} label="Gender"
-                                type="radio"
-                                options={[
-                                    { value: 'P', label: 'Female' },
-                                    { value: 'L', label: 'Male' },
-                                ]}
-                            />
-                            <Input {...props}
-                                label="Marital Status"
-                                options={[
-                                    { value: 'single', label: 'Single' },
-                                    { value: 'married', label: 'Married' },
-                                    { value: 'divorce', label: 'Divorced' },
-                                    { value: 'other', label: 'Other' },
-                                ]}
-                            />
-                            <Input {...props} label="Address" type="textarea" />
-                            <Input {...props} label="Province" options={provinces}
-                                onChange={el => setProvince(el.value)}
-                            />
-                            {values.province && <Input {...props} label="City" options={cities}
-                                onChange={el => setCity(el.value)}
-                            />}
-                            {values.city && <Input {...props} label="District"
-                                options={districts} />}
+                    <Input {...props} label="Nationality" options={countries} />
+                    <Input {...props} label="Gender"
+                        type="radio"
+                        options={[
+                            { value: 'P', label: 'Female' },
+                            { value: 'L', label: 'Male' },
+                        ]}
+                    />
+                    <Input {...props}
+                        label="Marital Status"
+                        options={[
+                            { value: 'single', label: 'Single' },
+                            { value: 'married', label: 'Married' },
+                            { value: 'divorce', label: 'Divorced' },
+                            { value: 'other', label: 'Other' },
+                        ]}
+                    />
+                    <Input {...props} label="Address" type="textarea" />
+                    <Input {...props} label="Province" options={provinces}
+                        onChange={el => setProvince(el.value)}
+                    />
+                    {values.province && <Input {...props} label="City" options={cities}
+                        onChange={el => setCity(el.value)}
+                    />}
+                    {values.city && <Input {...props} label="District"
+                        options={districts} />}
 
-                            <SectionSeparator />
+                    <SectionSeparator />
 
-                            <Input {...props} label="Account Bank" optional options={banks} />
-                            <Input {...props} label="Account Number" optional />
-                            <Input {...props} label="Account Name" optional />
-                            <SubmitButton loading={loading} errors={errors} />
-                        </Form>
+                    <Input {...props} label="Account Bank" optional options={banks} />
+                    <Input {...props} label="Account Number" optional />
+                    <Input {...props} label="Account Name" optional />
+                    <SubmitButton loading={loading} errors={errors} />
+                </Form>
                 )
             }}
         />

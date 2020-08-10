@@ -128,7 +128,7 @@ export const staffSchema = Yup.object().shape({
     staff_role: Text,
     on_centratama: TextOptional,
     staff_specialization: TextOptional,
-    building_management_id: Text,
+    building_management_id: TextOptional,
     staff_id: Text,
     status: Text,
     firstname: Text,

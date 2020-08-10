@@ -14,7 +14,7 @@ import Pill from '../../components/Pill';
 import SubmitButton from '../form/components/SubmitButton';
 import { post, get, setConfirmDelete } from '../slice';
 import { endpointBilling } from '../../settings';
-import { toMoney, dateFormatter, dateTimeFormatter } from '../../utils';
+import { toMoney, dateFormatter, dateTimeFormatter, toSentenceCase } from '../../utils';
 import { FiPlus } from 'react-icons/fi';
 
 const columns = [
@@ -58,7 +58,7 @@ function Component({ view }) {
         'Payment Information': [
             {label: 'due_date', vfmt: v => dateFormatter(v) },
             'ref_code',
-            {label: 'payment', vfmt: v => <Pill color={v === "paid" ? "success": "secondary"}>{v}</Pill>},
+            {label: 'payment', vfmt: v => <Pill color={v === "paid" ? "success": "secondary"}>{toSentenceCase(v)}</Pill>},
             {label: 'payment_date', vfmt: v => dateTimeFormatter(v) },
         ],
         'Payment Calculation': [
