@@ -165,6 +165,8 @@ export const adsSchema = Yup.object().shape({
     occupation: Text,
     age_from: Number.min(10, 'Target age cannot be lower than 10.'),
     age_to: Number.max(85, "Target age cannot be more than 85."),
+    view_quota: Number.positive(),
+    click_quota: Number.positive(),
     os: Text,
     content_name: Text,
     content_type: Text,
