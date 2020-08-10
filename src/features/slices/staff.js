@@ -70,12 +70,14 @@ export const getStaff = ( pageIndex, pageSize,search = '', role, building, shift
     }))
 }
 
-export const createStaff = ( data, history) => dispatch => {
+export const createStaff = ( data, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(post(staffEndpoint + '/create', data, 
     res => {
-      history.push("/sa/staff");
+      history.push("/" + auth.role + "/staff");
 
       dispatch(setInfo({
         color: 'success',
