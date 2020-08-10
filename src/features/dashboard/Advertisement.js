@@ -9,7 +9,7 @@ import { useDispatch } from 'react-redux';
 import { toSentenceCase } from '../../utils';
 
 const CustomLabelList = (props) => {
-    const {x, y, stroke, value} = props;
+    const { x, y, stroke, value } = props;
     return (
         <text textAnchor="right" dy={20} dx={10} x={x} y={y} fill={stroke} >{value}</text>
     )
@@ -21,7 +21,7 @@ function Component() {
     let dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(get(endpointAds + '/management/ads/report/overview',  res => {
+        dispatch(get(endpointAds + '/management/ads/report/overview', res => {
             setAdsData(res.data.data);
         }))
     }, [dispatch]);
@@ -39,7 +39,7 @@ function Component() {
                         <div className="row">
                             <div className="col"
                                 style={{
-                                    height: 300
+                                    height: 40 * adsData.length || 300
                                 }}
                             >
                                 <ResponsiveContainer width='100%'>
@@ -47,14 +47,17 @@ function Component() {
                                         data={adsData}
                                         layout={'vertical'}
                                     >
-                                        <XAxis height={40} hide type="number" dy={10} tickLine={false} axisLine={false}/>
-                                        <YAxis width={123} tickFormatter={category => toSentenceCase(category)} yAxisId="category" type='category' dx={-10} dataKey="content_name" tickLine={false} axisLine={false}/>
+                                        <XAxis height={40} hide type="number" dy={10} tickLine={false} axisLine={false} />
+                                        <YAxis width={123}
+                                            tickFormatter={category => toSentenceCase(category.length > 10 ? category.slice(0, 10) + '...' : category)}
+                                            yAxisId="category" type='category' dx={-10} dataKey="content_name"
+                                            tickLine={false} axisLine={false} />
                                         <Tooltip />
                                         <Bar maxBarSize={30} yAxisId="category" radius={4}
                                             dataKey="total_actual_view" fill="#2ad170"
                                         >
                                             <LabelList dataKey="total_actual_view" stroke="white" position="insideRight"
-                                            content={<CustomLabelList/>} />
+                                                content={<CustomLabelList />} />
                                         </Bar>
                                     </BarChart>
                                 </ResponsiveContainer>
@@ -72,7 +75,7 @@ function Component() {
                         <div className="row">
                             <div className="col"
                                 style={{
-                                    height: 300
+                                    height: 40 * adsData.length || 300
                                 }}
                             >
                                 <ResponsiveContainer width='100%'>
@@ -80,12 +83,15 @@ function Component() {
                                         data={adsData}
                                         layout={'vertical'}
                                     >
-                                        <XAxis height={40} hide type="number" dy={10} tickLine={false} axisLine={false}/>
-                                        <YAxis width={123} tickFormatter={category => toSentenceCase(category)} yAxisId="category" type='category' dx={-10} dataKey="content_name" tickLine={false} axisLine={false}/>
+                                        <XAxis height={40} hide type="number" dy={10} tickLine={false} axisLine={false} />
+                                        <YAxis width={123}
+                                            tickFormatter={category => toSentenceCase(category.length > 10 ? category.slice(0, 10) + '...' : category)}
+                                            yAxisId="category" type='category' dx={-10} dataKey="content_name"
+                                            tickLine={false} axisLine={false} />
                                         <Tooltip />
-                                        <Bar maxBarSize={30} yAxisId="category" radius={4} dataKey="total_actual_click" fill="#f7b733">  
+                                        <Bar maxBarSize={30} yAxisId="category" radius={4} dataKey="total_actual_click" fill="#f7b733">
                                             <LabelList dataKey="total_actual_click" stroke="white" position="insideRight"
-                                                content={<CustomLabelList/>} />
+                                                content={<CustomLabelList />} />
                                         </Bar>
                                     </BarChart>
                                 </ResponsiveContainer>

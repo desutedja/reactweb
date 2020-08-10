@@ -242,7 +242,10 @@ function Component({ id, view }) {
                 onClick={addSubAccountStep === 3 ? submitSubAccount : addUnitBackFunction}
                 onClickSecondary={addSubBackFunction}
                 disablePrimary={addSubAccountStep !== 3}
-                toggle={() => setAddSubAccount(false)}
+                toggle={() => {
+                    setAddSubAccount(false);
+                    setResidents([]);
+                }}
             >
                 {addSubAccountStep === 1 && <>
                     <Input label="Search Resident Email or Name"

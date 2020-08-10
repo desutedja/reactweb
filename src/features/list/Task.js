@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { FiSearch, FiPlus } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiCheck } from 'react-icons/fi';
 import moment from 'moment';
 
 import Button from '../../components/Button';
@@ -20,7 +20,7 @@ import { endpointAdmin, endpointManagement, taskStatusColor } from '../../settin
 import { getTask, resolveTask, reassignTask, setSelected } from '../slices/task';
 import { get } from '../slice';
 
-import Template from './components/Template';
+import Template from './components/TemplateWithSelection';
 import DateRangeFilter from '../../components/DateRangeFilter';
 import { getBuildingUnit } from '../slices/building';
 
@@ -132,6 +132,9 @@ function Component({ view }) {
     const [units, setUnits] = useState([]);
     const [unitSearch, setUnitSearch] = useState('');
 
+    const [multiRows, setMultiRows] = useState([]);
+    const [confirmMultiResolve, setConfirmMultiResolve] = useState(false);
+
     useEffect(() => {
         history.location.state && history.location.state.type &&
             setType(history.location.state.type)
@@ -229,11 +232,36 @@ function Component({ view }) {
 
     return (
         <>
+        <Modal
+            isOpen={confirmMultiResolve}
+            disableHeader={true}
+            onClick={
+                () => {
+                    const data = multiRows.map(el => el)
+                    dispatch(resolveTask(data));
+                    setMultiRows([]);
+                    setConfirmMultiResolve(false);
+                }
+            }
+            toggle={() => {
+                setConfirmMultiResolve(false);
+                setMultiRows([]);
+            }}
+            okLabel={"Resolve All"}
+            cancelLabel={"Cancel"}
+        >
+            Are you sure you want to resolve these tasks?
+            <p style={{ paddingTop: '10px' }}><ul>
+                {multiRows.map(el => 
+                    <li>{el.ref_code} - {el.title}</li>
+                )}
+            </ul></p>
+        </Modal>
             <Modal isOpen={resolve} toggle={() => setResolve(false)} disableHeader
                 okLabel="Yes"
                 onClick={() => {
                     setResolve(false);
-                    dispatch(resolveTask(selectedRow));
+                    dispatch(resolveTask([selectedRow]));
                 }}
                 cancelLabel="No"
                 onClickSecondary={() => {
@@ -272,6 +300,9 @@ function Component({ view }) {
                 columns={columns}
                 slice='task'
                 getAction={getTask}
+                selectAction={ (selectedRows) => 
+                    setMultiRows(selectedRows.filter(el => el.status !== 'completed'))
+                }
                 filterVars={[type, prio, status, building, unit, createdStart, createdEnd,
                     ...status === 'completed' ? [resolvedStart, resolvedEnd] : []]}
                 filters={[
@@ -442,14 +473,23 @@ function Component({ view }) {
                             />
                     },
                 ]}
-                actions={view ? null : [
-                    role === 'bm' && <Button key="Add Task" label="Add Task" icon={<FiPlus />}
-                        onClick={() => {
-                            dispatch(setSelected({}));
-                            history.push(url + "/add")
-                        }}
-                    />
-                ]}
+                renderActions={view ? null : (selectedRowIds, page) => {
+                    return([
+                        <>{Object.keys(selectedRowIds).length > 0 &&
+                            <Button icon={<FiCheck />} color="success"
+                            onClick={() => {
+                                setConfirmMultiResolve(true);
+                            }}
+                            label="Resolve All"
+                        />}</>,
+                        role === 'bm' && <Button key="Add Task" label="Add Task" icon={<FiPlus />}
+                            onClick={() => {
+                                dispatch(setSelected({}));
+                                history.push(url + "/add")
+                            }}
+                        />
+                    ]);
+                }}
                 onClickResolve={view ? null : row => {
                     setRow(row);
                     setResolve(true);

@@ -13,7 +13,7 @@ import Table from '../../components/Table';
 import { Card, CardTitle, CardBody } from 'reactstrap';
 import Filter from '../../components/Filter';
 import { dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dateFormatter } from '../../utils';
-import { getBillingUnitItem, setSelectedUnit, deleteBillingUnitItem } from '../slices/billing';
+import { getBillingUnitItem, setSelectedItem, deleteBillingUnitItem } from '../slices/billing';
 import { ListGroupItem, ListGroup } from 'reactstrap';
 import Pill from '../../components/Pill';
 import { FiClock, FiPlus } from 'react-icons/fi';
@@ -27,17 +27,17 @@ const details =
 
 
 function Component({ view }) {
+    let dispatch = useDispatch();
+    let history = useHistory();
+    let { url } = useRouteMatch();
+
     const [status, setStatus] = useState('');
     const [items, setItems] = useState([]);
-    const [active, setActive] = useState(0);
+    const [active, setActive] = useState(history.location.state?.month_active || 0);
 
     const { role } = useSelector(state => state.auth);
 
     const { selected, loading, unit, refreshToggle } = useSelector(state => state.billing);
-
-    let dispatch = useDispatch();
-    let history = useHistory();
-    let { url } = useRouteMatch();
 
     const columns = useMemo(() => {
         function isLate(payment, due_date, payment_date) {
@@ -47,7 +47,8 @@ function Component({ view }) {
 
         return [
             { Header: 'ID', accessor: 'id' },
-            { Header: 'Name', accessor: row => <BillingItem data={row} items={[row.name, <>{row.service_name} - {row.group === 'ipl' ? 'IPL' : 'Non-IPL'}</>]} /> },
+            { Header: 'Name', accessor: row => 
+                <BillingItem id={row.id} items={[row.name, <>{row.service_name} - {row.group === 'ipl' ? 'IPL' : 'Non-IPL'}</>]} /> },
             {
                 Header: 'Total', accessor: row =>
                     <div style={{ display: 'block' }}>
@@ -81,8 +82,6 @@ function Component({ view }) {
     }, [role]);
 
     useEffect(() => {
-        console.log("selected => ");
-        console.log(selected);
         dispatch(getBillingUnitItem(0, 100, '',
             { id: selected.id, building_id: selected.building_id }, status));
     }, [dispatch, refreshToggle, selected, status])
@@ -111,19 +110,13 @@ function Component({ view }) {
                     display: 'flex',
                     marginTop: 16,
                 }}>
-                    <Column style={{ flex: 2 }}>
+                    <Column style={{ flex: 2, display: 'block' }}>
                         <Card className="Container" style={{
                             boxShadow: 'none',
                             flexDirection: 'column',
                         }}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }} >
                                 <h5> Billing Month </h5>
-                                {view ? null : <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
-                                    onClick={() => {
-                                        dispatch(setSelectedUnit({}));
-                                        history.push(url + "/add");
-                                    }}
-                                />}
                             </div>
                             <ListGroup>
                                 {unit?.items?.billing?.length > 0 ?
@@ -151,6 +144,10 @@ function Component({ view }) {
                                 marginRight: 16,
                                 boxShadow: 'none',
                             }}>
+                                <CardTitle>
+                                        <>Billing Items {unit.items && unit.items.billing && unit.items.billing[active] ?
+                                            "for " + unit.items.billing[active].billing_month : ""}</>
+                                </CardTitle>
                                 <Table
                                     columns={columns}
                                     data={items}
@@ -182,8 +179,18 @@ function Component({ view }) {
                                         },
                                     ]}
                                     actions={[
-                                        <>Billing Items {unit.items && unit.items.billing && unit.items.billing[active] ?
-                                            "for " + unit.items.billing[active].billing_month : ""}</>
+                                        <>{view ? null : <Button key="Add Billing" label="Add Billing" icon={<FiPlus />}
+                                            onClick={() => {
+                                                dispatch(setSelectedItem({}));
+                                                history.push({
+                                                    pathname:  url + "/add",
+                                                    state: { 
+                                                        year: parseInt(unit?.items?.billing[active].year),
+                                                        month: parseInt(unit?.items?.billing[active].month),
+                                                    }
+                                                });
+                                            }}
+                                        />}</>
                                     ]}
                                     deleteSelection={(selectedRows, rows) => {
                                         Object.keys(selectedRows).map(el => dispatch(deleteBillingUnitItem(

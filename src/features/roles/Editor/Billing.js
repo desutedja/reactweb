@@ -26,14 +26,14 @@ function Component() {
             <Route path={`${path}/unit/item/record/:trx_code`}>
                 <BillingRecord />
             </Route>
+            <Route path={`${path}/unit/item/details/edit`}>
+                <Add />
+            </Route>
+            <Route path={`${path}/unit/item/details/:id`}>
+                <DetailsItem />
+            </Route>
             <Route path={`${path}/unit/item/add`}>
                 <Add />
-            </Route>
-            <Route path={`${path}/unit/item/edit`}>
-                <Add />
-            </Route>
-            <Route path={`${path}/unit/item/details`}>
-                <DetailsItem />
             </Route>
             <Route path={`${path}/details/:trx_code`}>
                 <BillingRecord />

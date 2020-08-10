@@ -1,4 +1,6 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 
 import Detail from './components/Detail';
 import Template from './components/Template';
@@ -6,15 +8,14 @@ import Template from './components/Template';
 import Modal from '../../components/Modal';
 import Table from '../../components/Table';
 import Button from '../../components/Button';
-import { useSelector, useDispatch } from 'react-redux';
-import { payByCash } from '../slices/billing';
+import { payByCash, setSelectedItem } from '../slices/billing';
 import { Formik, Form } from 'formik';
 import Input from '../form/input';
 import Pill from '../../components/Pill';
 import SubmitButton from '../form/components/SubmitButton';
 import { post, get, setConfirmDelete } from '../slice';
 import { endpointBilling } from '../../settings';
-import { toMoney, dateFormatter, dateTimeFormatter } from '../../utils';
+import { toMoney, dateFormatter, dateTimeFormatter, toSentenceCase } from '../../utils';
 import { FiPlus } from 'react-icons/fi';
 
 const columns = [
@@ -40,17 +41,19 @@ function Component({ view }) {
     const [pageCount, setPageCount] = useState('');
 
     const [loading, setLoading] = useState(false);
-    const [loadingDetails, setLoadingDetails] = useState(false);
+    const [loadingDetails, setLoadingDetails] = useState(true);
 
-    const { unit } = useSelector(state => state.billing);
+    const { unit, refreshToggle } = useSelector(state => state.billing);
 
     let dispatch = useDispatch();
+
+    const { id } = useParams();
 
     const details = useMemo(() => (
     {
         'Information': [
             'created_on',
-            {label: 'month', vfmt: v => <>{months[v]} {unit.selected.year}</>},
+            {label: 'month', vfmt: v => <>{months[v]} {dataDetails.year}</>},
             {label: 'name', lfmt: () => "Billing Name", vfmt: v => v} ,
             {label: 'group', vfmt: (v) => v === 'ipl' ? "IPL" : "Non-IPL" },
             'service_name',
@@ -58,44 +61,45 @@ function Component({ view }) {
         'Payment Information': [
             {label: 'due_date', vfmt: v => dateFormatter(v) },
             'ref_code',
-            {label: 'payment', vfmt: v => <Pill color={v === "paid" ? "success": "secondary"}>{v}</Pill>},
+            {label: 'payment', vfmt: v => <Pill color={v === "paid" ? "success": "secondary"}>{toSentenceCase(v)}</Pill>},
             {label: 'payment_date', vfmt: v => dateTimeFormatter(v) },
         ],
         'Payment Calculation': [
-            {disabled: !unit.selected.denom_unit, label: 'previous_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
-            {disabled: !unit.selected.denom_unit, label: 'recent_usage', vfmt: (v) => <>{v} {unit.selected.denom_unit}</> },
-            {disabled: !unit.selected.denom_unit, label: '', lfmt: () => "Usage", vfmt: (v) => <>{unit.selected.recent_usage - unit.selected.previous_usage} {unit.selected.denom_unit}</> },
-            {label: 'price_unit', vfmt: v => <>{toMoney(v)}{unit.selected.denom_unit ? ("/"+unit.selected.denom_unit) : ' (fixed)'}</> },
+            {disabled: !dataDetails.denom_unit, label: 'previous_usage', vfmt: (v) => <>{v} {dataDetails.denom_unit}</> },
+            {disabled: !dataDetails.denom_unit, label: 'recent_usage', vfmt: (v) => <>{v} {dataDetails.denom_unit}</> },
+            {disabled: !dataDetails.denom_unit, label: '', lfmt: () => "Usage", vfmt: (v) => <>{dataDetails.recent_usage - dataDetails.previous_usage} {dataDetails.denom_unit}</> },
+            {label: 'price_unit', vfmt: v => <>{toMoney(v)}{dataDetails.denom_unit ? ("/"+dataDetails.denom_unit) : ' (fixed)'}</> },
             {label: 'subtotal', vfmt: v => toMoney(v)},
-            {label: 'tax', vfmt: (v) => <>{toMoney(unit.selected.tax_amount)} ({v === "percentage" ? (unit.selected.tax_value + "%") : "fixed"})</>},
+            {label: 'tax', vfmt: (v) => <>{toMoney(dataDetails.tax_amount)} ({v === "percentage" ? (dataDetails.tax_value + "%") : "fixed"})</>},
             //{label: 'tax_amount', vfmt: v => v ? toMoney(v) : '-'},
             //{label: 'tax_value',  vfmt: v => v ? toMoney(v) : '-'},
             {label: 'total', lfmt: () => "Subtotal After Tax", vfmt: v => toMoney(v)},
             {label: 'additional_charge_amount', vfmt: v => toMoney(v)},
             {label: 'total_amount', vfmt: v => toMoney(v)},
         ],
-    }),[ unit.selected ]);
+    }),[ dataDetails ]);
 
     useEffect(() => {
         !dataDetails && setLoadingDetails(true);
         dispatch(get(endpointBilling + '/management/billing/detail/' +
-            unit.selected.id, res => {
+            id, res => {
                 setDataDetails(res.data.data);
+                dispatch(setSelectedItem(res.data.data));
                 setLoadingDetails(false);
             }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, unit.selected, toggle])
+    }, [dispatch, id, toggle, refreshToggle])
 
     useEffect(() => {
         setLoading(true);
         dispatch(get(endpointBilling + '/management/billing/additional-charge?id=' +
-            unit.selected.id, res => {
+            id, res => {
                 setData(res.data.data);
                 setTotalItems(res.data.data.length);
                 setPageCount(1);
                 setLoading(false);
             }))
-    }, [dispatch, unit.selected.id, toggle])
+    }, [dispatch, id, toggle])
 
     const cashModalUp = useCallback(() => {
         setModalCash(true);
@@ -108,19 +112,18 @@ function Component({ view }) {
                 isOpen={modalCash}
                 onClick={ () => {
                     dispatch(payByCash({
-                        "id": unit.selected.id,
-                        "total": unit.selected.total,
-                        "penalty_amount": unit.selected.penalty_amount,
-                        "total_payment": unit.selected.total_payment,
-                        "additional_charge_amount": unit.selected.additional_charge_amount,
+                        "id": parseInt(id),
+                        "total": dataDetails.total,
+                        "penalty_amount": dataDetails.penalty_amount,
+                        "total_payment": dataDetails.total_payment,
+                        "additional_charge_amount": dataDetails.additional_charge_amount,
                     }));
-                    setToggle(!toggle);
                     setModalCash(false);
                 }}
                 toggle={ () => setModalCash(false) }
                 okLabel="Confirm"
             >
-                Are you sure you want to set <b>{unit.selected.name}</b> as paid by cash?
+                Are you sure you want to set <b>{dataDetails.name}</b> as paid by cash?
             </Modal>
             <Modal disableFooter 
                 isOpen={modal} 
@@ -136,7 +139,7 @@ function Component({ view }) {
                     onSubmit={(values) => {
                         const data = {
                             ...values,
-                            billing_id: unit.selected.id,
+                            billing_id: parseInt(id),
                             charge_price: parseInt(values.charge_price, 10),
                         }
 
@@ -163,13 +166,14 @@ function Component({ view }) {
                 </Formik>
             </Modal>
             <Template
+                title={id}
                 loading={loadingDetails}
                 labels={["Details", "Additional Charges"]}
                 contents={[
                     <Detail view={view} type="Billing" data={dataDetails} labels={details}
-                        editable={unit.selected.payment !== 'paid'}
+                        editable={dataDetails.payment !== 'paid'}
                         renderButtons={() => ([
-                            unit.selected.payment !== "paid" && <Button label="Set as Paid" onClick={() => cashModalUp()} />
+                            dataDetails.payment !== "paid" && <Button label="Set as Paid" onClick={() => cashModalUp()} />
                         ])}
                     />,
                     <Table
@@ -179,7 +183,7 @@ function Component({ view }) {
                         pageCount={pageCount}
                         data={data}
                         actions={view ? null : [
-                            unit.selected.payment !== 'paid' && <Button icon={<FiPlus />}
+                            dataDetails.payment !== 'paid' && <Button icon={<FiPlus />}
                             label="Add Additional Charge" onClick={() => setModal(true)} />,
                         ]}
                         onClickDelete={view ? null : row => {
