@@ -23,7 +23,6 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointAds + '/management/ads/report/overview',  res => {
             setAdsData(res.data.data);
-            console.log(res.data.data)
         }))
     }, [dispatch]);
 
