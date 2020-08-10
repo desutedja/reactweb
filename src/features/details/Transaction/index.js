@@ -228,11 +228,11 @@ function Component() {
                                                 second={<Pill color={data.payment_settled ? "success" : "secondary"}>
                                                     {data.payment_settled === 1 ? "Settled" : "Unsettled" }</Pill>} />
                                         </Row>
-                                        <Row>
+                                        {data.payment_settled && <Row>
                                             <TwoColumn 
                                                 first=" "
                                                 second={dateTimeFormatter(data.payment_settled_date)}/>
-                                        </Row>
+                                        </Row>}
                                     </CardBody>
                                 </Card>
                                 <Card style={{ marginBottom: '20px', width: '50%' }}>
@@ -244,11 +244,31 @@ function Component() {
                                                 second={<Pill color={data.disbursement_date ? "success" : "secondary"}>
                                                     {data.disbursement_date ? "Disbursed" : "Undisbursed" }</Pill>} />
                                         </Row>
+                                        {data.disbursement_date && <><Row>
+                                            <TwoColumn 
+                                                first="Destination Bank :"
+                                                second={data.transaction_merchant_disbursement[0]?.settled_bank?.toUpperCase()} />
+                                        </Row>
                                         <Row>
                                             <TwoColumn 
-                                                first=" "
-                                                second={dateTimeFormatter(data.disbursement_date)}/>
+                                                first="Destination Account :"
+                                                second={data.transaction_merchant_disbursement[0]?.settled_account_no} />
                                         </Row>
+                                        <Row>
+                                            <TwoColumn 
+                                                first="Destination Account Name :"
+                                                second={data.transaction_merchant_disbursement[0]?.settled_account_name} />
+                                        </Row>
+                                        <Row>
+                                            <TwoColumn 
+                                                first="Transfer Code :"
+                                                second={data.transaction_merchant_disbursement[0]?.settled_code} />
+                                        </Row>
+                                        <Row>
+                                            <TwoColumn 
+                                                first="Disbursed at :"
+                                                second={dateTimeFormatter(data.disbursement_date)}/>
+                                        </Row></>}
                                     </CardBody>
                                 </Card>
                             </Row>}
