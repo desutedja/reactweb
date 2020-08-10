@@ -23,6 +23,7 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointAds + '/management/ads/report/overview',  res => {
             setAdsData(res.data.data);
+            console.log(res.data.data)
         }))
     }, [dispatch]);
 
@@ -39,7 +40,7 @@ function Component() {
                         <div className="row">
                             <div className="col"
                                 style={{
-                                    height: 300
+                                    height: 40 * adsData.length || 300
                                 }}
                             >
                                 <ResponsiveContainer width='100%'>
@@ -72,7 +73,7 @@ function Component() {
                         <div className="row">
                             <div className="col"
                                 style={{
-                                    height: 300
+                                    height: 40 * adsData.length || 300
                                 }}
                             >
                                 <ResponsiveContainer width='100%'>
