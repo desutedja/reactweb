@@ -187,7 +187,7 @@ export const downloadTransactionSettlement = (settlementStatus = '') => dispatch
 export const getTransactionDisbursement = (
   pageIndex, pageSize,
   search = '', type, merchant = '', courier = '',
-  disbursementStatus = '', start, end
+  disbursementStatus = '', start, end, s_start, s_end,
 ) => dispatch => {
 
   dispatch(startAsync());
@@ -199,10 +199,11 @@ export const getTransactionDisbursement = (
     '&limit=' + pageSize +
     '&sort_field=created_on&sort_type=DESC' +
     '&search=' + search +
+    '&disbursement_status=' + disbursementStatus +
     '&disbursed_start_date=' + start + 'T00:00:00' +
     '&disbursed_end_date=' + end + 'T23:59:59' +
-    '&disbursement_status=' + disbursementStatus,
-
+    '&settlement_start_date=' + s_start + 'T00:00:00' +
+    '&settlement_end_date=' + s_end + 'T23:59:59',
     res => {
       dispatch(setDisbursement(res.data.data));
 

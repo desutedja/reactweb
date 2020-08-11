@@ -613,6 +613,7 @@ function Component({ view }) {
                         boxShadow: 'none',
                     }}>
                         <Table
+                            filterExpanded={true}
                             onSelection={(selectedRows) => {
                                 console.log(selectedRows);
                                 setSelected(selectedRows.filter(el => el && !el.disbursement_date));
@@ -627,12 +628,13 @@ function Component({ view }) {
                                 dispatch(getTransactionDisbursement(pageIndex, pageSize, search,
                                     type, merchant, courier, status.value,
                                     ...(status.value === 'disbursed' ? [disbursedStart, disbursedEnd] : [today, today]),
+                                    settledStart, settledEnd,
                                 ));
                                 // eslint-disable-next-line react-hooks/exhaustive-deps
-                            }, [dispatch, refreshToggle, merchant, courier, type, disbursedStart, disbursedEnd, status])}
+                            }, [dispatch, refreshToggle, merchant, courier, type, disbursedStart, disbursedEnd, settledStart, settledEnd, status])}
                             filters={[
                                 {
-                                    hidex: isRangeToday(disbursedStart, disbursedEnd),
+                                    hidex: isRangeToday(settledStart, settledEnd),
                                     label: "Settlement Date: ",
                                     delete: () => { setSettledStart(today); setSettledEnd(today) },
                                     value: isRangeToday(settledStart, settledEnd) ? 'Today' :
