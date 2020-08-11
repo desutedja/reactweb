@@ -149,7 +149,7 @@ function Component({
                 isOpen={modalOpen}
                 toggle={() => { toggleModal(false) }}
             >
-                {(filters.length > 0 && filters[activeFilter].component) ?
+                {(filters.length > 0 && filters[activeFilter]) ?
                     filters[activeFilter].component(toggleModal) : null}
             </Modal>
             <Modal
