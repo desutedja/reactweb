@@ -58,7 +58,7 @@ function Component({ view }) {
     useEffect(() => {
         dispatch(get(endpointMerchant + '/admin/categories?name=' + search, res => {
             let data = res.data.data;
-            let formatted = data.map(el => ({ label: el.name, value: el.id }));
+            let formatted = data.map(el => ({ label: el.name, value: el.name }));
             let limited = formatted.slice(0, limit);
             
             const restTotal = formatted.length - limited.length;
