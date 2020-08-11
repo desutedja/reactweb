@@ -49,6 +49,8 @@ function Component({ view }) {
     const [totalItems, setTotalItems] = useState('');
 
     const today = moment().format("yyyy-MM-DD", 'day');
+    const [settledStart, setSettledStart] = useState(today);
+    const [settledEnd, setSettledEnd] = useState(today);
     const [disbursedStart, setDisbursedStart] = useState(today);
     const [disbursedEnd, setDisbursedEnd] = useState(today);
 
@@ -389,8 +391,10 @@ function Component({ view }) {
                                     dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit='
                                         + pageSize + '&page=' + (pageIndex + 1) + '&search=' + search
                                         + '&management_id=' + selectedManagement.map(item => item.id).join(',')
-                                        + '&date_min=' + (status === 'disbursed' ? disbursedStart : '')
-                                        + '&date_max=' + (status === 'disbursed' ? disbursedEnd : ''),
+                                        + '&disbursement_date_min=' + (status === 'disbursed' ? disbursedStart : '')
+                                        + '&disbursement_date_max=' + (status === 'disbursed' ? disbursedEnd : '')
+                                        + '&settlement_date_min=' + settledStart
+                                        + '&settlement_date_max=' + settledEnd,
                                         res => {
                                             const data = res.data.data.items
                                             .filter(el => {
@@ -407,8 +411,28 @@ function Component({ view }) {
                                     res => {
                                         setAmount(res.data.data.undisburse_amount);
                                     }))
-                                }, [dispatch, selectedManagement, status, disbursedStart, disbursedEnd])}
+                                }, [dispatch, selectedManagement, status, disbursedStart, disbursedEnd, settledStart, settledEnd])}
                                 filters={[
+                                    {
+                                        hidex: isRangeToday(disbursedStart, disbursedEnd),
+                                        label: "Settlement Date: ",
+                                        delete: () => { setSettledStart(today); setSettledEnd(today) },
+                                        value: isRangeToday(settledStart, settledEnd) ? 'Today' :
+                                            moment(settledStart).format('DD-MM-yyyy') + ' - '
+                                            + moment(settledEnd).format('DD-MM-yyyy')
+                                        ,
+                                        component: (toggleModal) =>
+                                            <DateRangeFilter
+                                                title='Settled Date'
+                                                startDate={settledStart}
+                                                endDate={settledEnd}
+                                                onApply={(start, end) => {
+                                                    setSettledStart(start);
+                                                    setSettledEnd(end);
+                                                    toggleModal();
+                                                }} />
+                                    }
+                                    ,
                                     ...status === 'disbursed' ? [{
                                         hidex: isRangeToday(disbursedStart, disbursedEnd),
                                         label: "Disbursed Date: ",

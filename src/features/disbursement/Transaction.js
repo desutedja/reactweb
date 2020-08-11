@@ -51,6 +51,8 @@ function Component({ view }) {
     const [couriers, setCouriers] = useState([]);
 
     const today = moment().format("yyyy-MM-DD", 'day');
+    const [settledStart, setSettledStart] = useState(today);
+    const [settledEnd, setSettledEnd] = useState(today);
     const [disbursedStart, setDisbursedStart] = useState(today);
     const [disbursedEnd, setDisbursedEnd] = useState(today);
 
@@ -629,10 +631,27 @@ function Component({ view }) {
                                     ...(status.value === 'disbursed' ? [disbursedStart, disbursedEnd] : [today, today]),
                                 ));
                                 // eslint-disable-next-line react-hooks/exhaustive-deps
-                            }, [dispatch, refreshToggle, merchant, courier, type,
-                                disbursedStart, disbursedEnd, status
-                            ])}
+                            }, [dispatch, refreshToggle, merchant, courier, type, disbursedStart, disbursedEnd, status])}
                             filters={[
+                                {
+                                    hidex: isRangeToday(disbursedStart, disbursedEnd),
+                                    label: "Settlement Date: ",
+                                    delete: () => { setSettledStart(today); setSettledEnd(today) },
+                                    value: isRangeToday(settledStart, settledEnd) ? 'Today' :
+                                        moment(settledStart).format('DD-MM-yyyy') + ' - '
+                                        + moment(settledEnd).format('DD-MM-yyyy')
+                                    ,
+                                    component: (toggleModal) =>
+                                        <DateRangeFilter
+                                            title='Settled Date'
+                                            startDate={settledStart}
+                                            endDate={settledEnd}
+                                            onApply={(start, end) => {
+                                                setSettledStart(start);
+                                                setSettledEnd(end);
+                                                toggleModal();
+                                            }} />
+                                },
                                 ...status.value === 'disbursed' ? [{
                                     hidex: isRangeToday(disbursedStart, disbursedEnd),
                                     label: "Disbursed Date: ",
