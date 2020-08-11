@@ -5,6 +5,7 @@ import Add from '../../form/BM/Announcement';
 import Details from '../../details/Announcement';
 
 import List from '../../list/Announcement';
+import View from '../../details/Announcement/View';
 
 function Component() {
     let { path } = useRouteMatch();
@@ -20,8 +21,11 @@ function Component() {
             <Route path={`${path}/edit`}>
                 <Add />
             </Route>
-            <Route path={`${path}/:id`}>
+            <Route exact path={`${path}/:id`}>
                 <Details />
+            </Route>
+            <Route path={`${path}/:id/view`}>
+                <View />
             </Route>
         </Switch>
     )

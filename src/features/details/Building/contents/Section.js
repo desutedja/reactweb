@@ -10,9 +10,10 @@ import Input from '../../../../components/Input';
 import Filter from '../../../../components/Filter';
 
 import {
-    getBuildingSection,createBuildingSection, 
+    getBuildingSection, createBuildingSection,
     deleteBuildingSection, editBuildingSection,
 } from '../../../slices/building';
+import { setConfirmDelete } from '../../../slice';
 
 const sectionTypes = [
     { label: 'Tower', value: 'tower' },
@@ -35,7 +36,7 @@ function Component({ view = false }) {
     const [sectionType, setSectionType] = useState('');
     const [sectionName, setSectionName] = useState('');
 
-    
+
     const { selected, section, loading, refreshToggle } = useSelector(state => state.building);
 
     let dispatch = useDispatch();
@@ -46,13 +47,13 @@ function Component({ view = false }) {
                 okLabel={edit ? "Save" : "Add"}
                 onClick={() => {
                     edit ?
-                        dispatch(editBuildingSection( {
+                        dispatch(editBuildingSection({
                             "building_id": selected.id,
                             "section_type": sectionType ? sectionType : selectedRow.section_type,
                             "section_name": sectionName ? sectionName : selectedRow.section_name,
                         }, selectedRow.id))
                         :
-                        dispatch(createBuildingSection( {
+                        dispatch(createBuildingSection({
                             "building_id": selected.id,
                             "section_type": sectionType ? sectionType : selectedRow.section_type,
                             "section_name": sectionName ? sectionName : selectedRow.section_name,
@@ -89,7 +90,7 @@ function Component({ view = false }) {
                 pageCount={section.total_pages}
                 totalItems={section.items.length}
                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                    dispatch(getBuildingSection( pageIndex, pageSize, search, selected, sTypeFilter.value));
+                    dispatch(getBuildingSection(pageIndex, pageSize, search, selected, sTypeFilter.value));
                     // eslint-disable-next-line react-hooks/exhaustive-deps
                 }, [dispatch, refreshToggle, sTypeFilter, selected])}
                 filters={[
@@ -124,7 +125,10 @@ function Component({ view = false }) {
                     />
                 ]}
                 onClickDelete={view ? null : row => {
-                    dispatch(deleteBuildingSection(row, ))
+                    dispatch(setConfirmDelete("Are you sure to delete this item?",
+                        () => dispatch(deleteBuildingSection(row))
+                    )
+                    )
                 }}
                 onClickEdit={view ? null : row => {
                     setRow(row);
