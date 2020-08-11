@@ -22,6 +22,9 @@ const adsPayload = {
     start_date: moment().format('YYYY-MM-DD'),
     end_date: moment().format('YYYY-MM-DD'),
 
+    click_quota: null,
+    view_quota: null,
+
     gender: "A",
     occupation: "all",
     age_from: 10,
@@ -211,6 +214,10 @@ function Component() {
                         }
                         <Input {...props} label="Start Date" type="date" />
                         <Input {...props} label="End Date" type="date" />
+
+                        <SectionSeparator title="Impression Quota" />
+                        <Input {...props} label="View Quota" type="number" />
+                        <Input {...props} label="Click Quota" type="number" />
 
                         <SectionSeparator title="Targetting" />
                         {auth.role === "sa" && <Input {...props} label="Target Building" name="target_building" type="radio" options={target_buildings}

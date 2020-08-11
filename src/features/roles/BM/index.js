@@ -5,6 +5,7 @@ import {
 import {
     RiStore2Line, RiTaskLine,
     RiBuilding2Line, RiCustomerService2Line,
+    RiAdvertisementLine,
 } from "react-icons/ri";
 import { Redirect, Route } from 'react-router-dom';
 
@@ -74,7 +75,7 @@ const modules = [
         component: <Task />,
     },
     {
-        icon: <FiRss className="MenuItem-icon" />,
+        icon: <RiAdvertisementLine className="MenuItem-icon" />,
         label: "Advertisement",
         path: "/advertisement",
         component: <Ads />,

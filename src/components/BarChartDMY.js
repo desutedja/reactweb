@@ -14,9 +14,9 @@ import {
 import ClinkLoader from '../components/ClinkLoader';
 
 export default ({
-  dataChart,
-  loading,
-  range,
+  dataChart = [],
+  loading = false,
+  range = 'dtd',
   setRange,
   barClick,
   lineClick,
@@ -82,13 +82,15 @@ export default ({
                 dx={-10} dataKey={dataY[0] && dataY[0]}
                 tickFormatter={el => el && el.toString().length > 3 ?
                   (el + '').slice(0, -3) + 'k' : el}
+                // tickFormatter={el => el && el.toString().length > 3 ?
+                //   'Rp ' + ((el + '').slice(0, -3) + 'k') : 'Rp ' + el}
                 axisLine={false} tickLine={false}
               />
               {dataY?.length > 0 && <YAxis orientation="right"
                 width={90} dx={10} dataKey={dataY[1] && dataY[1]} axisLine={false} tickLine={false}
               />}
               <Tooltip />
-              <Legend />
+              {dataY?.length > 1 && <Legend />}
               <CartesianGrid vertical={false} stroke="#ddd" dataKey={dataY[0] && dataY[0]} />
               <Bar radius={4} dataKey={dataY[0] && dataY[0]} fill="#004e92" 
               yAxisId="right" maxBarSize={70} className="cursor-pointer"

@@ -4,9 +4,11 @@ import moment from 'moment';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Button from '../../../components/Button';
+import Popover from '../../../components/Popover';
 import Modal from '../../../components/Modal';
 import Pill from '../../../components/Pill';
 import { FiSearch, FiCopy, FiArrowUpCircle, FiBell, FiMessageSquare } from 'react-icons/fi';
+import { FaInfoCircle } from 'react-icons/fa';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
@@ -40,9 +42,10 @@ function Component({ view }) {
                 { label: 'created_by', lfmt: () => "Created By", vfmt: (v) => v > 0 ? data.bm_ad_building_name : "Centratama" },
                 { label: 'modified_on', lfmt: () => 'Last Modified', vfmt: (v) => dateTimeFormatter(v, "-") },
                 {
-                    label: 'media', vfmt: (v) => toSentenceCase(v) + (v === 'apps' ?
-                        " (Would appear in advertisement details page inside Apps when advertisement is clicked) " :
-                        " (Would redirect to URL in a webview screen when advertisement is clicked)")
+                    label: 'media', vfmt: (v) => <><span>{toSentenceCase(v)}</span>
+                                <Popover id={v} item={<FaInfoCircle />} title={"Information"} content={(v === 'apps' ?
+                                "Would appear in advertisement details page inside Apps when advertisement is clicked" :
+                                    "Would redirect to URL in a webview screen when advertisement is clicked")} /></>
                 },
                 'content_type',
                 //{ disabled: data.content_type === 'video',
@@ -83,8 +86,8 @@ function Component({ view }) {
                 { label: 'total_priority_score', lfmt: () => "Total Weight", vfmt: (v) => v },
             ],
             "Statistics": [
-                'total_actual_click',
-                'total_actual_view',
+                {label: 'total_actual_click', vfmt: (v) => data.click_quota ? <>{v + " out of " + data.click_quota}</> : v },
+                {label: 'total_actual_view', vfmt: (v) => data.view_quota ? <>{v + " out of " + data.view_quota}</> : v },
                 'total_repeated_click',
                 'total_repeated_view',
             ],
