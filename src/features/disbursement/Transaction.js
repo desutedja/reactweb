@@ -199,20 +199,17 @@ function Component({ view }) {
                 disabledOk={transferCode.length === 0}
                 onClick={() => {
                     if (!transferCode) return;
-                    const currentDate = moment().format() // already ISO format
                     const trx_codes = selected.map(el => el.trx_code)
                     const ref_codes = selected.map(el => el.ref_code)
                     const dataDisburse = type === 'merchant' ? {
                         trx_codes,
                         merchant_id: Number(merchant),
                         amount: getSum(selected),
-                        disbursed_on: currentDate,
                         disbursed_code: transferCode
                     } : {
                             trx_codes: ref_codes,
                             courier_id: Number(courier),
                             amount: getSum(selected),
-                            disbursed_on: currentDate,
                             disbursed_code: transferCode
                         }
 
@@ -615,6 +612,7 @@ function Component({ view }) {
                     }}>
                         <Table
                             onSelection={(selectedRows) => {
+                                console.log(selectedRows);
                                 setSelected(selectedRows.filter(el => el && !el.disbursement_date));
                             }}
                             noContainer={true}

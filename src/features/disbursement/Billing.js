@@ -53,7 +53,7 @@ function Component({ view }) {
     const [disbursedEnd, setDisbursedEnd] = useState(today);
 
     const { disbursement, refreshToggle, loading } = useSelector(state => state.billing);
-    const { banks } = useSelector(state => state.main);
+    //const { banks } = useSelector(state => state.main);
 
     const { role } = useSelector(state => state.auth);
 
@@ -112,17 +112,17 @@ function Component({ view }) {
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
                 disabledOk={transferCode.length === 0 ||
-                    destinationBank.length === 0 ||
-                    destinationAccount.length === 0 ||
+                    //destinationBank.length === 0 ||
+                    //destinationAccount.length === 0 ||
                     selected.length === 0
                 }
                 onClick={() => {
-                    if (!transferCode || !destinationBank || !destinationAccount) return;
+                    if (!transferCode /*|| !destinationBank || !destinationAccount*/) return;
                     const dataDisbursement = {
                         trx_code: selected.map(el => el.trx_code),
                         disbursement_transfer_code: transferCode,
-                        disbursement_destination_bank: destinationBank.replace('BANK ', '').replace(' ', '_').toLowerCase(),
-                        disbursement_destination_account: destinationAccount,
+                        //disbursement_destination_bank: destinationBank.replace('BANK ', '').replace(' ', '_').toLowerCase(),
+                        //disbursement_destination_account: destinationAccount,
                     }
                     dispatch(post(endpointBilling + '/management/billing/disbursement/flag',
                         dataDisbursement,
@@ -136,7 +136,7 @@ function Component({ view }) {
                         }))
                 }}
             >
-                <div>
+                <div style={{ marginBottom: 32 }}>
                     <Input
                         type="text"
                         label="Transfer Code"
@@ -146,6 +146,7 @@ function Component({ view }) {
                         noMargin={true}
                     />
                 </div>
+                {/*
                 <div>
                     <Input
                         type="select"
@@ -168,7 +169,7 @@ function Component({ view }) {
                         setInputValue={setDestinationAccount}
                         noMargin={true}
                     />
-                </div>
+                </div> */}
                 <div style={{
                     minHeight: 300,
                 }}>
