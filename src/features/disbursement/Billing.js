@@ -13,7 +13,7 @@ import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
-import { toMoney, dateTimeFormatterCell, toSentenceCase, isRangeToday } from '../../utils';
+import { toMoney, dateTimeFormatterCell, toSentenceCase, isRangeToday, monthStart, monthEnd, isRangeThisMonth } from '../../utils';
 import { getBillingDisbursement, refresh } from '../slices/billing';
 import { endpointBilling } from '../../settings';
 import { get, post, getFile } from '../slice';
@@ -49,13 +49,12 @@ function Component({ view }) {
     const [totalItems, setTotalItems] = useState('');
 
     const today = moment().format("yyyy-MM-DD", 'day');
-    const [settledStart, setSettledStart] = useState(today);
-    const [settledEnd, setSettledEnd] = useState(today);
+    const [settledStart, setSettledStart] = useState(monthStart());
+    const [settledEnd, setSettledEnd] = useState(monthEnd());
     const [disbursedStart, setDisbursedStart] = useState(today);
     const [disbursedEnd, setDisbursedEnd] = useState(today);
 
     const { disbursement, refreshToggle, loading } = useSelector(state => state.billing);
-    //const { banks } = useSelector(state => state.main);
 
     const { role } = useSelector(state => state.auth);
 
@@ -81,22 +80,17 @@ function Component({ view }) {
 
     let dispatch = useDispatch();
 
+    /*
     useEffect(() => {
         dispatch(getBillingDisbursement(0, 1000, searchValue, filter));
     }, [dispatch, filter, searchValue]);
+    */
 
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
             setInfo(res.data.data);
         }))
     }, [dispatch]);
-
-    // useEffect(() => {
-    //     const amount = data.reduce((sum, el) => {
-    //         return sum + el.base_price;
-    //     }, 0)
-    //     setAmount(amount)
-    // }, [data])
 
     const getSum = items => {
         return items.reduce((sum, el) => {
@@ -114,17 +108,13 @@ function Component({ view }) {
                 title="Disbursement Selection"
                 okLabel="Flag as Disbursed"
                 disabledOk={transferCode.length === 0 ||
-                    //destinationBank.length === 0 ||
-                    //destinationAccount.length === 0 ||
                     selected.length === 0
                 }
                 onClick={() => {
-                    if (!transferCode /*|| !destinationBank || !destinationAccount*/) return;
+                    if (!transferCode) return;
                     const dataDisbursement = {
                         trx_code: selected.map(el => el.trx_code),
                         disbursement_transfer_code: transferCode,
-                        //disbursement_destination_bank: destinationBank.replace('BANK ', '').replace(' ', '_').toLowerCase(),
-                        //disbursement_destination_account: destinationAccount,
                     }
                     dispatch(post(endpointBilling + '/management/billing/disbursement/flag',
                         dataDisbursement,
@@ -148,30 +138,6 @@ function Component({ view }) {
                         noMargin={true}
                     />
                 </div>
-                {/*
-                <div>
-                    <Input
-                        type="select"
-                        label="Bank Name"
-                        placeholder="Input bank name"
-                        options={banks}
-                        inputValue={destinationBank}
-                        setInputValue={setDestinationBank}
-                        noMargin={true}
-                    />
-                </div>
-                <div style={{
-                    marginBottom: 32,
-                }}>
-                    <Input
-                        type="text"
-                        label="Bank Account"
-                        placeholder="Input bank account"
-                        inputValue={destinationAccount}
-                        setInputValue={setDestinationAccount}
-                        noMargin={true}
-                    />
-                </div> */}
                 <div style={{
                     minHeight: 300,
                 }}>
@@ -366,9 +332,12 @@ function Component({ view }) {
                                     }} />}
                                 <Button label="Download .csv" icon={<FiDownload />}
                                     onClick={() => dispatch(getFile(endpointBilling + '/management/billing/disbursement/list/transaction'
-                                        + '?building_id=' + selectedManagement.map(item => item.id).join(',')
-                                        + '&date_min=' + (status === 'disbursed' ? disbursedStart : '')
-                                        + '&date_max=' + (status === 'disbursed' ? disbursedEnd : '')
+                                        + '?management_id=' + selectedManagement.map(item => item.id).join(',')
+                                        + '&disbursement_date_min=' + (status === 'disbursed' ? disbursedStart : '')
+                                        + '&disbursement_date_max=' + (status === 'disbursed' ? disbursedEnd : '')
+                                        + '&settlement_date_min=' + settledStart
+                                        + '&settlement_date_max=' + settledEnd
+                                        + '&filter=' + status
                                         + '&export=true',
                                         'billing_disbursement.csv',
                                         res => {}))}
@@ -387,7 +356,6 @@ function Component({ view }) {
                                 loading={dataLoading}
                                 pageCount={dataPages}
                                 fetchData={useCallback((pageIndex, pageSize, search) => {
-
                                     setDataLoading(true);
                                     dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit='
                                         + pageSize + '&page=' + (pageIndex + 1) + '&search=' + search
@@ -395,13 +363,10 @@ function Component({ view }) {
                                         + '&disbursement_date_min=' + (status === 'disbursed' ? disbursedStart : '')
                                         + '&disbursement_date_max=' + (status === 'disbursed' ? disbursedEnd : '')
                                         + '&settlement_date_min=' + settledStart
-                                        + '&settlement_date_max=' + settledEnd,
+                                        + '&settlement_date_max=' + settledEnd
+                                        + '&filter=' + status,
                                         res => {
                                             const data = res.data.data.items
-                                            .filter(el => {
-                                                if (!status) return true;
-                                                return status === 'disbursed' ? !!el.disbursement_date : !el.disbursement_date;
-                                            })
                                             setData(data);
                                             setDataPages(res.data.data.filtered_page);
                                             setTotalItems(res.data.data.filtered_item);
@@ -415,11 +380,10 @@ function Component({ view }) {
                                 }, [dispatch, selectedManagement, status, disbursedStart, disbursedEnd, settledStart, settledEnd])}
                                 filters={[
                                     {
-                                        hidex: isRangeToday(disbursedStart, disbursedEnd),
+                                        hidex: isRangeThisMonth(settledStart, settledEnd),
                                         label: "Settlement Date: ",
-                                        delete: () => { setSettledStart(today); setSettledEnd(today) },
-                                        value: isRangeToday(settledStart, settledEnd) ? 'Today' :
-                                            moment(settledStart).format('DD-MM-yyyy') + ' - '
+                                        delete: () => { setSettledStart(monthStart()); setSettledEnd(monthEnd()) },
+                                        value: moment(settledStart).format('DD-MM-yyyy') + ' - '
                                             + moment(settledEnd).format('DD-MM-yyyy')
                                         ,
                                         component: (toggleModal) =>
