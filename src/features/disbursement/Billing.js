@@ -18,7 +18,7 @@ import { getBillingDisbursement, refresh } from '../slices/billing';
 import { endpointBilling } from '../../settings';
 import { get, post, getFile } from '../slice';
 import MyButton from '../../components/Button';
-import { FiDownload, FiCheck, FiXCircle, FiSearch } from 'react-icons/fi';
+import { FiDownload, FiAlertCircle, FiCheck, FiXCircle, FiSearch } from 'react-icons/fi';
 import DateRangeFilter from '../../components/DateRangeFilter';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
@@ -269,6 +269,8 @@ function Component({ view }) {
                                 <div style={{ display: 'block' }}>
                                     <div><b>{el.management_name} <span style={{ color: "red" }}>{el.status === 'inactive' ? '(Inactive)' : ''}</span></b></div>
                                     <div>{el.building_name}</div>
+                                    {!el.settlement_account_name || !el.settlement_account_no || !el.settlement_bank && 
+                                    <div style={{ color: 'red' }}><FiAlertCircle /> Settlement account information not set</div>}
                                 </div>
                             </ListGroupItem>) : !loading && <div className="w-100 text-center">No Courier found</div>}
                         </ListGroup>
