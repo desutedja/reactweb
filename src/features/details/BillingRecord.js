@@ -52,17 +52,22 @@ function Component() {
                 label: 'payment_bank', lfmt: () => "Payment Method", vfmt: (v) => toSentenceCase(v) 
             },
         ],
-        'Settlement': [
-
-        ],
-        'Disbursement': [
-
-        ],
         'Unit': [
             'unit_number',
             'section_name',
             'building_name',
             'management_name',
+        ],
+        'Settlement': [
+            {label: 'payment_settled', lfmt: () => "Status", vmft: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Settled" : "Unsettled"}</Pill>},
+            {label: 'payment_settled_date', lfmt: () => "Settlement Date", vmft: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Settled" : "Unsettled"}</Pill>},
+        ],
+        'Disbursement': [
+            {label: 'disbursement_date', lfmt: () => "Status", vfmt: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Disbursed" : "Undisbursed"}</Pill>},
+            {label: 'disbursement_date', vfmt: (v) => dateTimeFormatter(v) },
+            {label: 'disbursement_destination_bank', lfmt: () => "Destination Bank"},
+            {label: 'disbursement_destination_account', lfmt: () => "Destination Account" },
+            {label: 'disbursement_transfer_code', lfmt: () => "Transfer Code" },
         ],
     }), [data]);
 
