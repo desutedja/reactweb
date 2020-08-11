@@ -15,6 +15,7 @@ import { endpointBilling, endpointManagement } from '../../settings';
 import './style.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { get } from '../slice';
+import { setNotificationData } from '../slices/notification';
 
 import CardList from '../../components/CardList';
 import BarChartDMY from '../../components/BarChartDMY';
@@ -67,6 +68,13 @@ function Component() {
             setStaffData(res.data.data);
         }))
     }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(get(endpointManagement + '/admin/notification', res => {
+            dispatch(setNotificationData(res.data.data));
+        },
+        err => console.log(err.response)));
+    }, [dispatch])
 
     useEffect(() => {
         if (auth.role === 'bm') {
