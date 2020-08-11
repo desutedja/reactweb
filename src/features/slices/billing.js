@@ -189,18 +189,18 @@ export const downloadBillingSettlement = (search = '', building) => dispatch => 
     ))
 }
 
-export const getBillingDisbursement = (pageIndex, pageSize, search = '', building, unit, ) => dispatch => {
+export const getBillingDisbursement = (pageIndex, pageSize, search = '', filter = '' ) => dispatch => {
     dispatch(startAsync());
 
     dispatch(get(billingEndpoint + '/disbursement/list/management' +
         '?page=' + (pageIndex + 1) +
         '&limit=' + pageSize +
         '&sort_field=created_on&sort_type=DESC' +
-        '&search=' + search,
+        '&search=' + search + 
+        '&filter=' + filter,
 
         res => {
             dispatch(setDisbursement(res.data.data));
-
             dispatch(stopAsync());
         },
         err => {

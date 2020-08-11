@@ -157,7 +157,6 @@ function Component({ view }) {
                 '&extra=disbursement',
                 res => {
                     setMerchants(res.data.data.items);
-                    setMerchant(res.data.data.items[active].id);
                     setLoadingMerchant(false);
                 },
                 err => {
@@ -171,7 +170,6 @@ function Component({ view }) {
                 '&search=' + searchValue,
                 res => {
                     setCouriers(res.data.data.items);
-                    setCourier(res.data.data.items[active].id);
                     setLoadingCourier(false);
                 },
                 err => {
@@ -476,7 +474,7 @@ function Component({ view }) {
                                     {!loadingMerchant && merchants.length !== 0 && merchants.length >= limit && (
                                         <div className="btn w-100 text-primary"
                                             onClick={() => setLimit(limit + 10)}
-                                        >load 10 more</div>
+                                        >load more</div>
                                     )}
                                 </>,
                                 <>

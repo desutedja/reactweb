@@ -2,6 +2,7 @@ import React, { useMemo, useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import AnimatedNumber from "animated-number-react";
+import ClinkLoader from '../../components/ClinkLoader';
 import moment from 'moment';
 
 import { Card, ListGroup, ListGroupItem } from 'reactstrap';
@@ -17,10 +18,15 @@ import { getBillingDisbursement, refresh } from '../slices/billing';
 import { endpointBilling } from '../../settings';
 import { get, post, getFile } from '../slice';
 import MyButton from '../../components/Button';
-import { FiDownload, FiCheck, FiXCircle } from 'react-icons/fi';
+import { FiDownload, FiCheck, FiXCircle, FiSearch } from 'react-icons/fi';
 import DateRangeFilter from '../../components/DateRangeFilter';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
+
+const filtersDisbursement = [
+    { label: 'Disbursed Only', value: 'disbursed' },
+    { label: 'Undisbursed Only', value: 'undisbursed' },
+]
 
 
 function Component({ view }) {
@@ -33,8 +39,10 @@ function Component({ view }) {
     const [destinationAccount, setDestinationAccount] = useState('');
     const [status, setStatus] = useState('');
     
+    const [searchValue, setSearchValue] = useState('');
     const [data, setData] = useState([]);
     const [dataFiltered, setDataFiltered] = useState([]);
+    const [filter, setFilter] = useState('');
     const [selected, setSelected] = useState([]);
     const [selectedManagement, setSelectedManagement] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
@@ -48,7 +56,7 @@ function Component({ view }) {
     const [disbursedStart, setDisbursedStart] = useState(today);
     const [disbursedEnd, setDisbursedEnd] = useState(today);
 
-    const { disbursement, refreshToggle } = useSelector(state => state.billing);
+    const { disbursement, refreshToggle, loading } = useSelector(state => state.billing);
     const { banks } = useSelector(state => state.main);
 
     const { role } = useSelector(state => state.auth);
@@ -76,8 +84,8 @@ function Component({ view }) {
     let dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getBillingDisbursement(0, 1000, ''));
-    }, [dispatch]);
+        dispatch(getBillingDisbursement(0, 1000, searchValue, filter));
+    }, [dispatch, filter, searchValue]);
 
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
@@ -259,39 +267,47 @@ function Component({ view }) {
             </div>
             <div className="row no-gutters">
                 <div className="col-12 col-md-5 col-lg-3">
-                    {disbursement.items.length > 0 && <Card className="Container" style={{ boxShadow: 'none' }} >
+                    <Card className="Container" style={{ boxShadow: 'none' }} >
+                        <div className="row no-gutters align-items-center mb-4">
+                            <div className="col">
+                                <h5 style={{
+                                    marginBottom: 0,
+                                    minWidth: 100
+                                }}>Select Management</h5>
+                            </div>
+                            <div className="col-auto">
+                                <select style={{
+                                    borderRadius: '4px',
+                                    border: '1px solid silver',
+                                    padding: '6px 4px'
+                                }}
+                                    onChange={e => {
+                                        setFilter(e.target.value)
+                                    }}
+                                >
+                                    <option selected={true} value="">All</option>
+                                    {filtersDisbursement.map(item => (
+                                        <option selected={item.value === filter} value={item.value}>{item.label}</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+                        <InputSearch value={searchValue} onChange={e => setSearchValue(e.target.value)} />
+                            {loading && <div className="w-100 py-5 d-flex justify-content-center">
+                                <ClinkLoader />
+                            </div>}
                         <ListGroup>
-                            <h5 style={{ marginBottom: 16 }}>Select Management</h5>
-                            {disbursement.items.map((el, index) => <ListGroupItem
+                            {!loading && disbursement.items.length > 0 ? disbursement.items.map((el, index) => <ListGroupItem
                                 key={index}
                                 onClick={() => {
-                                    if (!selectedManagement.some(item => item.management_id === el.management_id && item.building_id === el.building_id)) {
+                                    if (!selectedManagement.some(item => item.management_id === el.management_id)) {
                                         setSelectedManagement([
                                             ...selectedManagement,
                                             el
                                         ])
-                                        setDataLoading(true);
-                                        dispatch(get(`${endpointBilling}/management/billing/disbursement/list/transaction?limit=10&page=1&search=&building_id=${el.building_id}&management_id=${el.id}&date_min=${status === 'disbursed' ? disbursedStart : ''}&date_max=${status === 'disbursed' ? disbursedEnd : ''}`,
-                                            res => {
-                                                setData([
-                                                    ...res.data.data.items,
-                                                    ...data,
-                                                ]);
-                                                setDataLoading(false);
-                                        }))
                                         return;
                                     }
                                     setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id));
-                                    setDataLoading(true);
-                                    dispatch(get(`${endpointBilling}/management/billing/disbursement/list/transaction?limit=10&page=1&search=&building_id=${el.building_id}&management_id=${el.id}&date_min=${status === 'disbursed' ? disbursedStart : ''}&date_max=${status === 'disbursed' ? disbursedEnd : ''}`,
-                                        res => {
-                                            setData(data.filter(item => {
-                                                const isDuplicated = res.data.data.items.some(f => item.management_id === f.management_id);
-                                                return !isDuplicated;
-                                            }))
-                                            setDataLoading(false);
-                                        }
-                                    ))
                                 }}
                                 active={selectedManagement.some(item => item.management_id === el.management_id && item.building_id === el.building_id)}
                                 action
@@ -302,9 +318,9 @@ function Component({ view }) {
                                     <div><b>{el.management_name}</b></div>
                                     <div>{el.building_name}</div>
                                 </div>
-                            </ListGroupItem>)}
+                            </ListGroupItem>) : <div className="w-100 text-center">No Courier found</div>}
                         </ListGroup>
-                    </Card>}
+                    </Card>
                 </div>
                 <div className="col-12 col-md">
                     <div style={{
@@ -336,17 +352,7 @@ function Component({ view }) {
                                     <b>{el.management_name}</b>
                                     <FiXCircle
                                     onClick={() => {
-                                        setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id && item.building_id !== el.building_id));
-                                        setDataLoading(true);
-                                        dispatch(get(`${endpointBilling}/management/billing/disbursement/list/transaction?limit=10&page=1&search=&building_id=${el.building_id}&management_id=${el.id}&date_min=${status === 'disbursed' ? disbursedStart : ''}&date_max=${status === 'disbursed' ? disbursedEnd : ''}`,
-                                            res => {
-                                                setData(data.filter(item => {
-                                                    const isDuplicated = res.data.data.items.some(f => item.management_id === f.management_id);
-                                                    return !isDuplicated;
-                                                }))
-                                                setDataLoading(false);
-                                            }
-                                        ))
+                                        setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id));
                                     }}
                                     style={{
                                         position: 'absolute',
@@ -498,3 +504,10 @@ function Component({ view }) {
 }
 
 export default Component;
+
+const InputSearch = (props) => (
+    <div className="search-input mb-3">
+        <label htmlFor="search"><FiSearch /></label>
+        <input className="py-2" {...props} id="search" type="text" placeholder="Search" />
+    </div>
+)
