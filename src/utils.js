@@ -190,3 +190,11 @@ export function isRangeThisMonth(start, end) {
         && (end === moment().endOf('month').format('yyyy-MM-DD'));
 
 }
+
+export function monthStart() {
+    return moment().startOf('month').format('yyyy-MM-DD');
+}
+
+export function monthEnd() {
+    return moment().endOf('month').format('yyyy-MM-DD');
+}
