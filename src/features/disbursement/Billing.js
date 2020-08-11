@@ -269,7 +269,11 @@ function Component({ view }) {
                             {loading && <div className="w-100 py-5 d-flex justify-content-center">
                                 <ClinkLoader />
                             </div>}
-                        <ListGroup>
+                        <ListGroup
+                            style={{
+                                border: 'none'
+                            }}
+                        >
                             {!loading && disbursement.items.length > 0 ? disbursement.items.map((el, index) => <ListGroupItem
                                 key={index}
                                 onClick={() => {
@@ -291,7 +295,7 @@ function Component({ view }) {
                                     <div><b>{el.management_name}</b></div>
                                     <div>{el.building_name}</div>
                                 </div>
-                            </ListGroupItem>) : <div className="w-100 text-center">No Courier found</div>}
+                            </ListGroupItem>) : !loading && <div className="w-100 text-center">No Courier found</div>}
                         </ListGroup>
                     </Card>
                 </div>
@@ -305,39 +309,41 @@ function Component({ view }) {
                             justifyContent: 'space-between',
                             flexDirection: 'row',
                         }}>
-                            <div className="d-flex flex-column justify-content-center align-items-center">
+                            <div className="d-flex flex-column justify-content-center">
                                 <p>
                                     Undisbursed Amount For {selectedManagement.length > 0 ? <b>Management:</b> :
                                     <b>All Managements</b>}
                                 </p>
-                                {selectedManagement && selectedManagement.map(el => <>
-                                <div
-                                style={{
-                                    position: 'relative',
-                                    display: 'inline-block',
-                                    backgroundColor: '#d9d9d9',
-                                    borderRadius: 80,
-                                    paddingLeft: 6,
-                                    paddingRight: 6 + 18,
-                                    marginRight: 6,
-                                    marginBottom: 4
-                                }}
-                                >
-                                    <b>{el.management_name}</b>
-                                    <FiXCircle
-                                    onClick={() => {
-                                        setSelectedManagement(selectedManagement.filter(item => item.id !== el.id));
-                                    }}
-                                    style={{
-                                        position: 'absolute',
-                                        top: '50%',
-                                        right: 6,
-                                        transform: 'translateY(-50%)',
-                                        cursor: 'pointer'
-                                    }}
-                                    />
-                                </div>  
-                            </>)}
+                                <div className="d-flex w-100 flex-wrap">
+                                    {selectedManagement && selectedManagement.map(el => <>
+                                        <div
+                                        style={{
+                                            position: 'relative',
+                                            display: 'inline-block',
+                                            backgroundColor: '#d9d9d9',
+                                            borderRadius: 80,
+                                            paddingLeft: 6,
+                                            paddingRight: 6 + 18,
+                                            marginRight: 6,
+                                            marginBottom: 4
+                                        }}
+                                        >
+                                            <b>{el.management_name}</b>
+                                            <FiXCircle
+                                            onClick={() => {
+                                                setSelectedManagement(selectedManagement.filter(item => item.id !== el.id));
+                                            }}
+                                            style={{
+                                                position: 'absolute',
+                                                top: '50%',
+                                                right: 6,
+                                                transform: 'translateY(-50%)',
+                                                cursor: 'pointer'
+                                            }}
+                                            />
+                                        </div>  
+                                    </>)}
+                                </div>
                             </div>
                             <div style={{
                                 display: 'flex',
@@ -396,15 +402,10 @@ function Component({ view }) {
                                             setTotalItems(res.data.data.filtered_item);
                                             setDataLoading(false);
                                     }))
-                                    dispatch(get(endpointBilling + '/management/billing/disbursement/management/amount',
+                                    dispatch(get(endpointBilling + '/management/billing/disbursement/management/amount'
+                                    + '?management_id=' + selectedManagement.map(item => item.id).join(','),
                                     res => {
-                                        // const undisburseItems = res.data.data.items.filter(item => !item.disbursement_date);
-                                        // const amount = undisburseItems.reduce((sum, el) => {
-                                        //     return sum + el.base_price;
-                                        // }, 0)
-                                        // setAmount(amount)
                                         setAmount(res.data.data.undisburse_amount);
-                                        console.log(res.data.data);
                                     }))
                                 }, [dispatch, selectedManagement, status, disbursedStart, disbursedEnd])}
                                 filters={[
