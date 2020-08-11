@@ -93,6 +93,8 @@ function AppRoute() {
       <div className="App scroller" id="App">
         <Switch>
           <Redirect exact from="/" to={"/" + role} />
+          {role === 'bm' && <Redirect from="/sa" to={"/bm"} />}
+          {role === 'sa' && <Redirect from="/bm" to={"/sa"} />}
           {/* superadmin routes */}
           <Route path="/sa/login">
             <Login role="sa" />
@@ -127,7 +129,7 @@ function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-          <AppRoute />
+        <AppRoute />
       </PersistGate>
     </Provider>
   );
