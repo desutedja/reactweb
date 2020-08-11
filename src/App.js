@@ -85,40 +85,49 @@ function OTPRoute({ children, ...other }) {
   );
 }
 
+function AppRoute() {
+  const { role } = useSelector((state) => state.auth);
+
+  return (
+    <Router>
+      <div className="App scroller" id="App">
+        <Switch>
+          <Redirect exact from="/" to={"/" + role} />
+          {/* superadmin routes */}
+          <Route path="/sa/login">
+            <Login role="sa" />
+          </Route>
+          <OTPRoute path="/sa/otp">
+            <OTP role="sa" />
+          </OTPRoute>
+          <MainRoute path="/sa">
+            <SA />
+          </MainRoute>
+          {/* bm routes */}
+          <Route path="/bm/login">
+            <Login role="bm" />
+          </Route>
+          <OTPRoute path="/bm/otp">
+            <OTP role="bm" />
+          </OTPRoute>
+          <MainRoute path="/bm">
+            <BM />
+          </MainRoute>
+          <Route path="*">
+            <NotFound />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
+
+  )
+}
+
 function App() {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <Router>
-          <div className="App scroller" id="App">
-            <Switch>
-              <Redirect exact from="/" to={"/sa"} />
-              {/* superadmin routes */}
-              <Route path="/sa/login">
-                <Login role="sa" />
-              </Route>
-              <OTPRoute path="/sa/otp">
-                <OTP role="sa" />
-              </OTPRoute>
-              <MainRoute path="/sa">
-                <SA />
-              </MainRoute>
-              {/* bm routes */}
-              <Route path="/bm/login">
-                <Login role="bm" />
-              </Route>
-              <OTPRoute path="/bm/otp">
-                <OTP role="bm" />
-              </OTPRoute>
-              <MainRoute path="/bm">
-                <BM />
-              </MainRoute>
-              <Route path="*">
-                <NotFound />
-              </Route>
-            </Switch>
-          </div>
-        </Router>
+          <AppRoute />
       </PersistGate>
     </Provider>
   );

@@ -1,6 +1,6 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { endpointAdmin } from '../../settings';
-import { get,  } from '../slice';
+import { get, } from '../slice';
 
 const chatEndpoint = endpointAdmin + '/chat';
 
@@ -87,10 +87,10 @@ export const getAdminChat = (
     '&page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search,
-    
+
     res => {
-      // dispatch(setRooms(res.data.data.items));
-        console.log(res.data.data.items)
+      dispatch(setRooms(res.data.data.items));
+      console.log(res.data.data.items)
 
       dispatch(stopAsync());
     },
@@ -111,9 +111,9 @@ export const getPICBMChat = (
     '&page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&search=' + search,
-    
+
     res => {
-      // dispatch(setRooms(res.data.data.items));
+      dispatch(setRooms(res.data.data.items));
       console.log(res.data.data.items)
 
       dispatch(stopAsync());
