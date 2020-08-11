@@ -25,7 +25,8 @@ function Component() {
 
     const columns = useMemo(() => ([
         { Header: 'ID', accessor: 'id' },
-        { Header: 'Name', accessor: row => <BillingItem items={[row.name, (row.service_name + " - " + (row.group === 'ipl' ? 'IPL' : 'Non-IPL'))]} id={row.id} /> },
+        { Header: 'Name', accessor: row => 
+            <BillingItem items={[row.name, (row.service_name + " - " + (row.group === 'ipl' ? 'IPL' : 'Non-IPL'))]} id={row.id} /> },
         { Header: 'Group', accessor: 'group' },
         { Header: 'Usage (Recent - Previous)', 
             accessor: row => <>{row.recent_usage - row.previous_usage} ({row.recent_usage} - {row.previous_usage}) {row.denom_unit}</>},
@@ -36,6 +37,29 @@ function Component() {
         { Header: 'Tax', accessor: row => row.tax === "percentage" ? row.tax_value + "%" : toMoney(row.tax_amount) },
         { Header: 'Total', accessor: row => toMoney(row.total) },
     ]),[data]);
+
+    const detailscash = useMemo(() => (
+    {
+        'Payment': [
+            {label: 'trx_code', lfmt: () => "Ref Code", vfmt: (v) => v},
+            'paid_by', 
+            {label: 'payment_date', lfmt: () => "Payment Date", vfmt: (v) => 
+                dateTimeFormatter(v)
+            },
+            {label: 'payment_method', lfmt: () => "Via", vfmt: (v) => 
+                v === 'cash' ? <Pill color="warning">Payment by Cash</Pill> : <Pill color="success">Payment via apps</Pill>
+            },
+            {disabled: data.info?.payment_method === 'cash',
+                label: 'payment_bank', lfmt: () => "Payment Method", vfmt: (v) => toSentenceCase(v) 
+            },
+        ],
+        'Unit': [
+            'unit_number',
+            'section_name',
+            'building_name',
+            'management_name',
+        ],
+    }), [data]);
 
     const details = useMemo(() => (
     {
@@ -59,11 +83,14 @@ function Component() {
             'management_name',
         ],
         'Settlement': [
-            {label: 'payment_settled', lfmt: () => "Status", vmft: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Settled" : "Unsettled"}</Pill>},
-            {label: 'payment_settled_date', lfmt: () => "Settlement Date", vmft: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Settled" : "Unsettled"}</Pill>},
+            {label: 'payment_settled', lfmt: () => "Status", vfmt: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Settled" : "Unsettled"}</Pill>},
+            {label: 'payment_settled_date', lfmt: () => "Settlement Date", 
+                vfmt: (v) => dateTimeFormatter(v) },
         ],
         'Disbursement': [
-            {label: 'disbursement_date', lfmt: () => "Status", vfmt: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Disbursed" : "Undisbursed"}</Pill>},
+            {label: '', lfmt: () => "Status", 
+                vfmt: () => <Pill color={data.info?.disbursement_date ? "success" : "secondary"}>
+                    {data.info?.disbursement_date ? "Disbursed" : "Undisbursed"}</Pill>},
             {label: 'disbursement_date', vfmt: (v) => dateTimeFormatter(v) },
             {label: 'disbursement_destination_bank', lfmt: () => "Destination Bank"},
             {label: 'disbursement_destination_account', lfmt: () => "Destination Account" },
@@ -91,7 +118,8 @@ function Component() {
                     <>
                     <Card style={{ marginBottom: 20 }}>
                         <CardBody style={{ padding: 30 }}>
-                            <div><Detail horizontal data={data.info} labels={details} editable={false} /></div>
+                            <div><Detail horizontal data={data.info} 
+                                labels={data.info?.payment_method === 'cash' ? detailscash : details} editable={false} /></div>
                         </CardBody>
                     </Card>
                     <Card>

@@ -44,6 +44,7 @@ function Component({ view }) {
     const [loadingDetails, setLoadingDetails] = useState(true);
 
     const { unit, refreshToggle } = useSelector(state => state.billing);
+    const { role } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
 
@@ -60,7 +61,7 @@ function Component({ view }) {
         ],
         'Payment Information': [
             {label: 'due_date', vfmt: v => dateFormatter(v) },
-            'ref_code',
+            {label: 'ref_code', vfmt: v => <a className="Link" href={"/" + role + "/billing/unit/item/record/" + v}>{v}</a> },
             {label: 'payment', vfmt: v => <Pill color={v === "paid" ? "success": "secondary"}>{toSentenceCase(v)}</Pill>},
             {label: 'payment_date', vfmt: v => dateTimeFormatter(v) },
         ],
@@ -108,7 +109,7 @@ function Component({ view }) {
     return (
         <>
             <Modal 
-                disableHeader
+                title="Set as paid by cash"
                 isOpen={modalCash}
                 onClick={ () => {
                     dispatch(payByCash({
@@ -123,6 +124,14 @@ function Component({ view }) {
                 toggle={ () => setModalCash(false) }
                 okLabel="Confirm"
             >
+                <ul>
+                    <li>Subtotal  : {toMoney(dataDetails.total)}</li>
+                    <li>Tax : {toMoney(dataDetails.tax_amount)}</li>
+                    <li>Additional Charges : {toMoney(dataDetails.additional_charges)}</li>
+                    {/*<li>Penalty : {toMoney(dataDetails.penalty_amount)}</li> */}
+                    <li><b>Total Amount : {toMoney(dataDetails.total_amount)}</b></li>
+                </ul>
+
                 Are you sure you want to set <b>{dataDetails.name}</b> as paid by cash?
             </Modal>
             <Modal disableFooter 
@@ -166,6 +175,7 @@ function Component({ view }) {
                 </Formik>
             </Modal>
             <Template
+                pagetitle="Billing Details"
                 title={id}
                 loading={loadingDetails}
                 labels={["Details", "Additional Charges"]}
