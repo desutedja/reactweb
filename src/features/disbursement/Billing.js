@@ -41,16 +41,12 @@ function Component({ view }) {
     
     const [searchValue, setSearchValue] = useState('');
     const [data, setData] = useState([]);
-    const [dataFiltered, setDataFiltered] = useState([]);
     const [filter, setFilter] = useState('');
     const [selected, setSelected] = useState([]);
     const [selectedManagement, setSelectedManagement] = useState([]);
     const [dataLoading, setDataLoading] = useState(false);
     const [dataPages, setDataPages] = useState('');
     const [totalItems, setTotalItems] = useState('');
-    const [tableSearch, setTableSearch] = useState('');
-    const [page, setPage] = useState(1);
-    const [limit, setLimit] = useState(10);
 
     const today = moment().format("yyyy-MM-DD", 'day');
     const [disbursedStart, setDisbursedStart] = useState(today);
@@ -99,29 +95,6 @@ function Component({ view }) {
         }, 0)
         setAmount(amount)
     }, [data])
-
-    
-    useEffect(() => {
-        setDataFiltered(data.filter(el => {
-            if (!status) return true;
-            return status === 'disbursed' ? !!el.disbursement_date : !el.disbursement_date;
-        }))   
-    }, [data, status]);
-    
-    useEffect(() => {  
-        const searched = tableSearch.length > 0 ? data.filter(item => item.trx_code.toLowerCase().includes(tableSearch.toLowerCase())) : data;
-        setDataFiltered(searched);
-        setDataPages(Math.ceil(searched.length / limit))
-        setTotalItems(searched.length);
-    }, [data, limit, tableSearch]);
-    
-    useEffect(() => {
-        setDataPages(Math.ceil(data.length / limit));
-        const limited = data.slice(Number(limit) * Number(page), Number(limit) * (Number(page) + 1));
-        // console.log(limited)
-        setDataFiltered(limited);
-        setTotalItems(data.length)
-    }, [data, limit, page])
 
     const getSum = items => {
         return items.reduce((sum, el) => {
@@ -334,7 +307,8 @@ function Component({ view }) {
                         }}>
                             <div className="d-flex-inline flex-column justify-content-center">
                                 <p>
-                                    Undisbursed Amount For <b>Management:</b>
+                                    Undisbursed Amount For {selectedManagement.length > 0 ? <b>Management:</b> :
+                                    <b>All Managements</b>}
                                 </p>
                                 {selectedManagement && selectedManagement.map(el => <>
                                 <div
@@ -400,33 +374,29 @@ function Component({ view }) {
                                 }}
                                 noContainer={true}
                                 columns={columns}
-                                data={dataFiltered || []}
+                                data={data || []}
                                 totalItems={totalItems}
                                 loading={dataLoading}
                                 pageCount={dataPages}
                                 fetchData={useCallback((pageIndex, pageSize, search) => {
-                                    setTableSearch(search);
-                                    setLimit(pageSize);
-                                    setPage(pageIndex);
 
-                                    // setDataLoading(true);
-                                    // dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit='
-                                    //     + pageSize + '&page=' + (pageIndex + 1) + '&search=' + search
-                                    //     + '&building_id=' + disbursement.items[active]?.building_id
-                                    //     + '&management_id=' + disbursement.items[active]?.id
-                                    //     + '&date_min=' + (status === 'disbursed' ? disbursedStart : '')
-                                    //     + '&date_max=' + (status === 'disbursed' ? disbursedEnd : ''),
-                                    //     res => {
-                                    //         const data = res.data.data.items
-                                    //         .filter(el => {
-                                    //             if (!status) return true;
-                                    //             return status === 'disbursed' ? !!el.disbursement_date : !el.disbursement_date;
-                                    //         })
-                                    //         setData(data);
-                                    //         setDataPages(res.data.data.filtered_page);
-                                    //         setTotalItems(res.data.data.filtered_item);
-                                    //         setDataLoading(false);
-                                    // }))
+                                    setDataLoading(true);
+                                    dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit='
+                                        + pageSize + '&page=' + (pageIndex + 1) + '&search=' + search
+                                        + '&management_id=' + selectedManagement.map(item => item.management_id).join(',')
+                                        + '&date_min=' + (status === 'disbursed' ? disbursedStart : '')
+                                        + '&date_max=' + (status === 'disbursed' ? disbursedEnd : ''),
+                                        res => {
+                                            const data = res.data.data.items
+                                            .filter(el => {
+                                                if (!status) return true;
+                                                return status === 'disbursed' ? !!el.disbursement_date : !el.disbursement_date;
+                                            })
+                                            setData(data);
+                                            setDataPages(res.data.data.filtered_page);
+                                            setTotalItems(res.data.data.filtered_item);
+                                            setDataLoading(false);
+                                    }))
                                     // dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit=9999&page=1&search='
                                     // + '&building_id=' + disbursement.items[active]?.building_id
                                     // + '&management_id=' + disbursement.items[active]?.id,
@@ -437,8 +407,7 @@ function Component({ view }) {
                                     //     }, 0)
                                     //     setAmount(amount)
                                     // }))
-                                    // eslint-disable-next-line react-hooks/exhaustive-deps
-                                }, [dispatch, refreshToggle, active, status, disbursedStart, disbursedEnd, data])}
+                                }, [dispatch, selectedManagement, status, disbursedStart, disbursedEnd])}
                                 filters={[
                                     ...status === 'disbursed' ? [{
                                         hidex: isRangeToday(disbursedStart, disbursedEnd),
