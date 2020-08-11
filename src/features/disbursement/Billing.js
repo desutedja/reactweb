@@ -89,12 +89,12 @@ function Component({ view }) {
         }))
     }, [dispatch]);
 
-    useEffect(() => {
-        const amount = data.reduce((sum, el) => {
-            return sum + el.base_price;
-        }, 0)
-        setAmount(amount)
-    }, [data])
+    // useEffect(() => {
+    //     const amount = data.reduce((sum, el) => {
+    //         return sum + el.base_price;
+    //     }, 0)
+    //     setAmount(amount)
+    // }, [data])
 
     const getSum = items => {
         return items.reduce((sum, el) => {
@@ -273,16 +273,16 @@ function Component({ view }) {
                             {!loading && disbursement.items.length > 0 ? disbursement.items.map((el, index) => <ListGroupItem
                                 key={index}
                                 onClick={() => {
-                                    if (!selectedManagement.some(item => item.management_id === el.management_id)) {
+                                    if (!selectedManagement.some(item => item.id === el.id)) {
                                         setSelectedManagement([
                                             ...selectedManagement,
                                             el
                                         ])
                                         return;
                                     }
-                                    setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id));
+                                    setSelectedManagement(selectedManagement.filter(item => item.id !== el.id));
                                 }}
-                                active={selectedManagement.some(item => item.management_id === el.management_id && item.building_id === el.building_id)}
+                                active={selectedManagement.some(item => item.id === el.id)}
                                 action
                                 tag="a"
                                 href="#"
@@ -305,7 +305,7 @@ function Component({ view }) {
                             justifyContent: 'space-between',
                             flexDirection: 'row',
                         }}>
-                            <div className="d-flex-inline flex-column justify-content-center">
+                            <div className="d-flex flex-column justify-content-center align-items-center">
                                 <p>
                                     Undisbursed Amount For {selectedManagement.length > 0 ? <b>Management:</b> :
                                     <b>All Managements</b>}
@@ -326,7 +326,7 @@ function Component({ view }) {
                                     <b>{el.management_name}</b>
                                     <FiXCircle
                                     onClick={() => {
-                                        setSelectedManagement(selectedManagement.filter(item => item.management_id !== el.management_id));
+                                        setSelectedManagement(selectedManagement.filter(item => item.id !== el.id));
                                     }}
                                     style={{
                                         position: 'absolute',
@@ -357,8 +357,7 @@ function Component({ view }) {
                                     }} />}
                                 <Button label="Download .csv" icon={<FiDownload />}
                                     onClick={() => dispatch(getFile(endpointBilling + '/management/billing/disbursement/list/transaction'
-                                        + '?building_id=' + disbursement.items[active]?.building_id
-                                        + '&management_id=' + disbursement.items[active]?.id
+                                        + '?building_id=' + selectedManagement.map(item => item.id).join(',')
                                         + '&date_min=' + (status === 'disbursed' ? disbursedStart : '')
                                         + '&date_max=' + (status === 'disbursed' ? disbursedEnd : '')
                                         + '&export=true',
@@ -383,7 +382,7 @@ function Component({ view }) {
                                     setDataLoading(true);
                                     dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit='
                                         + pageSize + '&page=' + (pageIndex + 1) + '&search=' + search
-                                        + '&management_id=' + selectedManagement.map(item => item.management_id).join(',')
+                                        + '&management_id=' + selectedManagement.map(item => item.id).join(',')
                                         + '&date_min=' + (status === 'disbursed' ? disbursedStart : '')
                                         + '&date_max=' + (status === 'disbursed' ? disbursedEnd : ''),
                                         res => {
@@ -397,16 +396,16 @@ function Component({ view }) {
                                             setTotalItems(res.data.data.filtered_item);
                                             setDataLoading(false);
                                     }))
-                                    // dispatch(get(endpointBilling + '/management/billing/disbursement/list/transaction?limit=9999&page=1&search='
-                                    // + '&building_id=' + disbursement.items[active]?.building_id
-                                    // + '&management_id=' + disbursement.items[active]?.id,
-                                    // res => {
-                                    //     const undisburseItems = res.data.data.items.filter(item => !item.disbursement_date);
-                                    //     const amount = undisburseItems.reduce((sum, el) => {
-                                    //         return sum + el.base_price;
-                                    //     }, 0)
-                                    //     setAmount(amount)
-                                    // }))
+                                    dispatch(get(endpointBilling + '/management/billing/disbursement/management/amount',
+                                    res => {
+                                        // const undisburseItems = res.data.data.items.filter(item => !item.disbursement_date);
+                                        // const amount = undisburseItems.reduce((sum, el) => {
+                                        //     return sum + el.base_price;
+                                        // }, 0)
+                                        // setAmount(amount)
+                                        setAmount(res.data.data.undisburse_amount);
+                                        console.log(res.data.data);
+                                    }))
                                 }, [dispatch, selectedManagement, status, disbursedStart, disbursedEnd])}
                                 filters={[
                                     ...status === 'disbursed' ? [{
