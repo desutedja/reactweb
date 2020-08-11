@@ -6,7 +6,7 @@ import { get, setConfirmDelete } from '../slice';
 import Detail from './components/Detail';
 import Template from './components/Template';
 import { endpointAdmin } from '../../settings';
-import { deleteAdmin } from '../slices/admin';
+import { deleteAdmin, setSelected } from '../slices/admin';
 
 const details =
 {
@@ -23,6 +23,7 @@ function AdminDetails() {
     useEffect(() => {
         dispatch(get(endpointAdmin + '/centratama/details/' + id, res => {
             setData(res.data.data);
+            dispatch(setSelected(res.data.data));
         }))
     }, [dispatch, id])
 
