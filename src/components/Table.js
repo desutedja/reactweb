@@ -26,6 +26,7 @@ function Table({
     loading,
     pageCount: controlledPageCount,
     actions = [],
+    filterExpanded=false,
     onClickChat,
     onClickReassign,
     onClickResolve,
@@ -87,7 +88,7 @@ function Table({
 
     const [activeFilter, setFilter] = useState(0);
     const [modalOpen, toggleModal] = useState(false);
-    const [filter, toggleFilter] = useState(false);
+    const [filter, toggleFilter] = useState(filterExpanded);
 
     const [sortField, setSortField] = useState('created_on');
     const [sortFieldInput, setSortFieldInput] = useState(sortField);

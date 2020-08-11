@@ -54,6 +54,8 @@ function Component({ view }) {
     const [disbursedStart, setDisbursedStart] = useState(today);
     const [disbursedEnd, setDisbursedEnd] = useState(today);
 
+    const [refreshTable, setRefreshTable] = useState(false);
+
     const { disbursement, refreshToggle, loading } = useSelector(state => state.billing);
 
     const { role } = useSelector(state => state.auth);
@@ -63,7 +65,12 @@ function Component({ view }) {
             Header: 'Billing Refcode', accessor: row =>
                 <Link href="#" className="Link" to={"/" + role + "/billing/disbursement/" + row.trx_code}>{row.trx_code}</Link>
         },
-        // { Header: 'Unit', accessor: 'number' },
+        { Header: 'Management', accessor: row => <>
+                                                <div style={{ display: 'block' }}>
+                                                    <div>{row.management_name}</div>
+                                                    <div>{row.building_name}</div>
+                                                </div>
+                                                </>},
         { Header: 'Amount', accessor: row => toMoney(row.selling_price) },
         {
             Header: 'Status', accessor: row =>
@@ -80,11 +87,9 @@ function Component({ view }) {
 
     let dispatch = useDispatch();
 
-    /*
     useEffect(() => {
         dispatch(getBillingDisbursement(0, 1000, searchValue, filter));
     }, [dispatch, filter, searchValue]);
-    */
 
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
@@ -120,6 +125,7 @@ function Component({ view }) {
                         dataDisbursement,
                         res => {
                             dispatch(refresh());
+                            setRefreshTable(!refreshTable);
                             setModal(false);
                             // console.log(res)
                         },
@@ -261,7 +267,7 @@ function Component({ view }) {
                                 href="#"
                             >
                                 <div style={{ display: 'block' }}>
-                                    <div><b>{el.management_name}</b></div>
+                                    <div><b>{el.management_name} <span style={{ color: "red" }}>{el.status === 'inactive' ? '(Inactive)' : ''}</span></b></div>
                                     <div>{el.building_name}</div>
                                 </div>
                             </ListGroupItem>) : !loading && <div className="w-100 text-center">No Courier found</div>}
@@ -349,6 +355,7 @@ function Component({ view }) {
                                 onSelection={(selectedRows) => {
                                     setSelected(selectedRows.filter(el => el && !el.disbursement_date));
                                 }}
+                                filterExpanded={true}
                                 noContainer={true}
                                 columns={columns}
                                 data={data || []}
@@ -377,7 +384,7 @@ function Component({ view }) {
                                     res => {
                                         setAmount(res.data.data.undisburse_amount);
                                     }))
-                                }, [dispatch, selectedManagement, status, disbursedStart, disbursedEnd, settledStart, settledEnd])}
+                                }, [dispatch, selectedManagement, status, disbursedStart, disbursedEnd, settledStart, settledEnd, refreshTable])}
                                 filters={[
                                     {
                                         hidex: isRangeThisMonth(settledStart, settledEnd),
