@@ -52,7 +52,7 @@ function TextInput({
                         borderBottomRightRadius: suffix && 0,
                     }}
                     placeholder={label}
-                    autoComplete={options ? "off" : ""}
+                    autoComplete={options ? "new-password" : ""}
                     onChange={e => {
                         onChange(e.target.value);
 
