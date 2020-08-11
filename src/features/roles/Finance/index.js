@@ -29,6 +29,7 @@ const menu = [
         label: "Transaction",
         path: "/transaction",
         subpaths: [
+            '/list',
             '/settlement',
             '/disbursement',
         ],
