@@ -26,7 +26,7 @@ function Component() {
             columns={columns}
             slice="admin"
             getAction={getAdmin}
-            deleteAction={deleteAdmin}
+            // deleteAction={deleteAdmin}
             actions={[
                 <Button key="Add" label="Add" icon={<FiPlus />}
                     onClick={() => {

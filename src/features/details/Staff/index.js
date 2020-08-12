@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Detail from '../components/Detail';
 import Template from '../components/Template';
@@ -12,6 +12,7 @@ import { endpointManagement } from '../../../settings';
 import { deleteStaff, setSelected } from '../../slices/staff';
 
 function Component({ view }) {
+    const { auth } = useSelector(state => state);
     const [data, setData] = useState({});
 
     let dispatch = useDispatch();
@@ -70,9 +71,17 @@ function Component({ view }) {
             labels={["Details"]}
             contents={[
                 <Detail view={view} data={data} labels={details}
-                    onDelete={() => dispatch(setConfirmDelete("Are you sure to delete this item?",
-                        () => dispatch(deleteStaff(data, history))
-                    ))}
+                    onDelete={
+                        auth?.role && auth.role === 'bm' ? auth.user.id === data.id ? false : (
+                            () => dispatch(setConfirmDelete("Are you sure to delete this item?",
+                                () => dispatch(deleteStaff(data, history))
+                            ))
+                        ) : (
+                            () => dispatch(setConfirmDelete("Are you sure to delete this item?",
+                                () => dispatch(deleteStaff(data, history))
+                            ))
+                        )
+                    }
                 />,
             ]}
         />

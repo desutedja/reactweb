@@ -63,9 +63,7 @@ function Component({ view }) {
     const [shift, setShift] = useState('');
     const [shiftLabel, setShiftLabel] = useState('');
 
-    const [building,
-         setBuilding
-    ] = useState('');
+    const [building, setBuilding ] = useState('');
     const [buildings, setBuildings] = useState('');
     const [buildingLabel, setBuildingLabel] = useState('');
 
@@ -204,7 +202,7 @@ function Component({ view }) {
                     }}
                 />
             ]}
-            deleteAction={deleteStaff}
+            // deleteAction={deleteStaff}
         />
     )
 }
