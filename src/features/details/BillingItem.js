@@ -76,6 +76,8 @@ function Component({ view }) {
             //{label: 'tax_value',  vfmt: v => v ? toMoney(v) : '-'},
             {label: 'total', lfmt: () => "Subtotal After Tax", vfmt: v => toMoney(v)},
             {label: 'additional_charge_amount', vfmt: v => toMoney(v)},
+            {label: 'billing_penalty_amount', lfmt: () => dataDetails.payment === 'paid' ? "Paid Due Penalty" : "Due Penalty", 
+                vfmt: v => dataDetails.payment === 'paid' ? toMoney(dataDetails.billing_record_penalty) : <>{toMoney(v)} ({dataDetails.penalty_fee}%)</>},
             {label: 'total_amount', vfmt: v => toMoney(v)},
         ],
     }),[ dataDetails ]);
@@ -115,8 +117,8 @@ function Component({ view }) {
                     dispatch(payByCash({
                         "id": parseInt(id),
                         "total": dataDetails.total,
-                        "penalty_amount": dataDetails.penalty_amount,
-                        "total_payment": dataDetails.total_payment,
+                        "penalty_amount": dataDetails.billing_penalty_amount,
+                        "total_payment": dataDetails.total_amount,
                         "additional_charge_amount": dataDetails.additional_charge_amount,
                     }));
                     setModalCash(false);
@@ -128,7 +130,7 @@ function Component({ view }) {
                     <li>Subtotal  : {toMoney(dataDetails.total)}</li>
                     <li>Tax : {toMoney(dataDetails.tax_amount)}</li>
                     <li>Additional Charges : {toMoney(dataDetails.additional_charges)}</li>
-                    {/*<li>Penalty : {toMoney(dataDetails.penalty_amount)}</li> */}
+                    <li>Due Penalty : {toMoney(dataDetails.billing_penalty_amount)}</li>
                     <li><b>Total Amount : {toMoney(dataDetails.total_amount)}</b></li>
                 </ul>
 
