@@ -365,7 +365,43 @@ function Component({ view }) {
                                             } icon={<FiUserPlus />} label="Assign Staff" />
                                         </CardFooter>}
                                     </Card>
-                                </Column>
+                                    { data.task_type === 'delivery' && <Card style={{ marginRight: '20px' }}>
+                                        <CardBody>
+                                            <CardTitle><h5>Disbursement</h5></CardTitle>
+                                            <Row>
+                                                <TwoColumn 
+                                                    first="Status :"
+                                                    second={<Pill color={data.disbursement_details?.id ? "success" : "secondary"}>
+                                                        {data.disbursement_details?.id ? "Disbursed" : "Undisbursed" }</Pill>} />
+                                            </Row>
+                                            { data.disbursement_details?.id && <><Row>
+                                                <TwoColumn 
+                                                    first="Destination Bank :"
+                                                    second={data.disbursement_details?.settled_bank?.toUpperCase()} />
+                                            </Row>
+                                            <Row>
+                                                <TwoColumn 
+                                                    first="Destination Account :"
+                                                    second={data.disbursement_details?.settled_account_no} />
+                                            </Row>
+                                            <Row>
+                                                <TwoColumn 
+                                                    first="Destination Account Name :"
+                                                    second={data.disbursement_details?.settled_account_name} />
+                                            </Row>
+                                            <Row>
+                                                <TwoColumn 
+                                                    first="Transfer Code :"
+                                                    second={data.disbursement_details?.settled_code} />
+                                            </Row>
+                                            <Row>
+                                                <TwoColumn 
+                                                    first="Disbursed at :"
+                                                    second={dateTimeFormatter(data.disbursement_details?.created_on)}/>
+                                            </Row></>}
+                                        </CardBody>
+                                    </Card>}
+                                    </Column>
                             </Row>
                         </Column>
                     </>,
