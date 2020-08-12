@@ -11,7 +11,7 @@ import Column from '../../../components/Column';
 import ThreeColumn from '../../../components/ThreeColumn';
 import TwoColumn from '../../../components/TwoColumn';
 import Pill from '../../../components/Pill';
-import { dateTimeFormatter, toSentenceCase, task } from '../../../utils';
+import { dateTimeFormatter, toSentenceCase, task, toMoney } from '../../../utils';
 import { MdChatBubble, MdLocationOn } from 'react-icons/md';
 import { FiSearch, FiCheck, FiMapPin, FiUserPlus } from 'react-icons/fi';
 
@@ -355,6 +355,7 @@ function Component({ view }) {
                                                         <b>Assigned by</b>
                                                         <div>{data.assigned_by ? data.assigned_by : "Automatic Assignment"}</div>
                                                         <div>{dateTimeFormatter(data.assigned_on)}</div>
+                                                        {data.task_type === 'delivery' && <div><b>Fee : {toMoney(data.assignee_fee)}</b></div>}
                                                     </div></> : <div style={{ color: 'rgba(0, 0, 0, 0.345)' }} >
                                                         <i>No Assigned Staff Yet</i></div>}
                                             </Row>
@@ -374,7 +375,8 @@ function Component({ view }) {
                                                     second={<Pill color={data.disbursement_details?.id ? "success" : "secondary"}>
                                                         {data.disbursement_details?.id ? "Disbursed" : "Undisbursed" }</Pill>} />
                                             </Row>
-                                            { data.disbursement_details?.id && <><Row>
+                                            { data.disbursement_details?.id && <>
+                                            <Row>
                                                 <TwoColumn 
                                                     first="Destination Bank :"
                                                     second={data.disbursement_details?.settled_bank?.toUpperCase()} />
