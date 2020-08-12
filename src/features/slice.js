@@ -154,7 +154,7 @@ export const getFile = (
 
   Axios.get(link, {
     headers: auth.headers,
-    responseType: 'blob',
+    responseType: 'arraybuffer',
   })
     .then(res => {
       // console.log(res);
