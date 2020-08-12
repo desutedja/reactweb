@@ -167,12 +167,14 @@ export const createBuilding = ( data, history) => dispatch => {
     }))
 }
 
-export const editBuilding = ( data, history, id) => dispatch => {
+export const editBuilding = ( data, history, id, role) => dispatch => {
   dispatch(startAsync());
 
   dispatch(put(buildingEndpoint, { ...data, id: id }, 
     res => {
       dispatch(setSelected(res.data.data));
+      console.log(history)
+      role === 'bm' ? history.push('/' + role + '/settings') :
       history.push(`${id}`);
 
       dispatch(setInfo({

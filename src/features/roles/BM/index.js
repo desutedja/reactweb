@@ -1,20 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import {
-    FiHome, FiUsers, FiZap, FiRss, FiVolume2, FiBarChart2
+    FiEdit, FiUsers, FiZap, FiVolume2, FiBarChart2
 } from "react-icons/fi";
 import {
-    RiStore2Line, RiTaskLine,
+    RiTaskLine,
     RiBuilding2Line, RiCustomerService2Line,
     RiAdvertisementLine,
 } from "react-icons/ri";
 import { Redirect, Route } from 'react-router-dom';
 
 import Template from '../components/Template';
+import Button from '../../../components/Button';
+import Modal from '../../../components/Modal';
+import Form from '../../../components/Form';
+import Input from '../../../components/Input';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { endpointAdmin } from '../../../settings';
 import { get } from '../../slice';
-import { setSelected } from '../../slices/building';
+import { setSelected, editBuildingManagement } from '../../slices/building';
 
 import Dashboard from './Dashboard';
 import Ads from './Ads';
@@ -24,7 +28,7 @@ import Building from './Building';
 import Resident from './Resident';
 import Staff from './Staff';
 import Task from './Task';
-import Settings from '../../details/components/Detail';
+import Details from '../../details/components/Detail';
 import Chat from '../../chat';
 
 
@@ -93,13 +97,17 @@ const labels = {
     'Address': ['address', 'district_name', 'city_name', 'province_name', 'zipcode'],
     'Others': ['max_units', 'max_floors', 'max_sections'],
 }
+const picBmLabels = {
+    'Fees': ['billing_published', 'billing_duedate', 'penalty_fee']
+}
 
-function Component() {
+export default () => {
     const dispatch = useDispatch();
     const { auth } = useSelector(state => state);
     const id = auth.user.building_id;
     const { blacklist_modules } = useSelector(state => state.auth.user);
     const [data, setData] = useState({})
+    const [dataBM, setDataBM] = useState({})
     const [menus, setMenus] = useState(modules || []);
 
     useEffect(() => {
@@ -120,6 +128,19 @@ function Component() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    useEffect(() => {
+        dispatch(get(endpointAdmin + '/management/building/details/' + auth.user.building_management_id,
+            res => {
+                console.log('CEK', res.data.data)
+                setDataBM(res.data.data)
+            },
+            err => {
+                console.log('ERR', err)
+            }
+        ))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     return (
         <Template role="bm">
             <Redirect exact from={"/bm"} to={"/bm" + menus[0].path} />
@@ -136,12 +157,111 @@ function Component() {
                 <Chat />
             </Route>
             <Route path={"/bm/settings"}>
-                <div className="Container">
-                    <Settings editPath="building/edit" labels={labels} data={data} />
+                <div className="Container flex-column scroller">
+                    <Details editPath="building/edit" labels={labels} data={data} />
+                    <FeesSetting
+                    labels={picBmLabels}
+                    data={dataBM}
+                    />
                 </div>
             </Route>
         </Template>
     )
 }
 
-export default Component;
+const dateArray = (() => {
+    const array = Array(31).fill({});
+
+    return array.map((el, index) => ({
+        label: index + 1 + '',
+        value: index + 1 + '',
+    }))
+})()
+
+const FeesSetting = ({data, labels}) => {
+    const {auth} = useSelector(state => state);
+    const [modalFees, setModalFees] = useState(false);
+    
+    const dispatch = useDispatch();
+
+    return (
+        <>
+            <Modal
+            disableFooter={true}
+            isOpen={modalFees}
+            title="Edit Fees"
+            toggle={() => setModalFees(false)}
+            >
+                <Form
+                    noContainer={true}
+                    showCancel={true}
+                    onCancel={() => {
+                        setModalFees(false)
+                    }}
+                    onSubmit={dataRef => {
+                        const finalData = {
+                            building_id: auth.user.building_id,
+                            management_id: auth.user.management_id,
+                            ...dataRef
+                        }
+                        dispatch(editBuildingManagement(finalData, data.id))
+                        setModalFees(false)
+                    }}>
+                    <Input label="Billing Published (Date)" name="billing_published" type="select"
+                        options={dateArray}
+                        inputValue={data.billing_published}
+                    />
+                    <Input label="Billing Due (Date)" name="billing_duedate" type="select"
+                        options={dateArray}
+                        inputValue={data.billing_duedate} />
+                    <Input label="Penalty Fee" type="number" addons="%"
+                        inputValue={data.penalty_fee} />
+                </Form>
+            </Modal>
+            <div className="row mt-4">
+                <div className="col">
+                    {Object.keys(labels).map((group, i) =>
+                        <div key={i} style={{
+                            marginBottom: 16,
+                            marginRight: 30,
+                        }}>
+                            <div style={{
+                                color: 'grey',
+                                borderBottom: '1px solid silver',
+                                width: 200,
+                                marginBottom: 8,
+                                marginLeft: 4
+                            }}
+                            >
+                                {group}
+                            </div>
+                            {labels[group].map((el, i) => {
+                                return !el.disabled ?
+                                    <div className="row no-gutters" style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
+                                        <div className="col-auto" flex={3} style={{
+                                            fontWeight: 'bold',
+                                            textAlign: 'left',
+                                            minWidth: 200,
+                                            textTransform: 'capitalize'
+                                        }}>
+                                            {el.replace('_', ' ')}
+                                        </div>
+                                        <div className="col" flex={9} style={{ fontWeight: 'normal' }}>
+                                            {el === 'penalty_fee' ? (data[el] + ' %') : ('Day ' + data[el])}
+                                        </div>
+                                    </div> : null;
+                            })}
+                        </div>
+                    )}
+                </div>
+                <div className="col-auto d-flex flex-column">
+                    <Button icon={<FiEdit />} label="Edit"
+                    onClick={() => {
+                        setModalFees(true);
+                    }}
+                    />
+                </div>
+            </div>
+        </>
+    )
+}

@@ -42,6 +42,7 @@ const buildingPayload = {
 }
 
 function Component() {
+    const { auth } = useSelector(state => state)
     const [modal, setModal] = useState(false);
     const [districts, setDistricts] = useState([]);
 
@@ -112,7 +113,7 @@ function Component() {
                 lat: parseFloat(values.lat),
                 long: parseFloat(values.long),
             })}
-            edit={data => dispatch(editBuilding(data, history, selected.id))}
+            edit={data => dispatch(editBuilding(data, history, selected.id, auth.role))}
             add={data => dispatch(createBuilding(data, history))}
             renderChild={props => {
                 const { setFieldValue, values, errors } = props;
