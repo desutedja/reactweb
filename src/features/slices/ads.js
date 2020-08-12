@@ -94,12 +94,14 @@ os = '', gender = '', age_from = '', age_to = '', day = '') => dispatch => {
     ))
 }
 
-export const createAds = (data, history) => dispatch => {
+export const createAds = (data, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(post(adsEndpoint, data,
     res => {
-      history.push("/sa/advertisement");
+      history.push("/" + auth.role + "/advertisement");
 
       dispatch(setInfo({
         color: 'success',
@@ -118,7 +120,7 @@ export const editAds = (data, history, id) => dispatch => {
   dispatch(put(adsEndpoint, data,
     res => {
       // dispatch(setSelected(res.data.data));
-      history.push("/sa/advertisement/" + id);
+      history.push(id);
 
       dispatch(setInfo({
         color: 'success',
