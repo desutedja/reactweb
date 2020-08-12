@@ -272,7 +272,7 @@ function Component({ view }) {
                                     {(!el.settlement_account_name || !el.settlement_account_no || !el.settlement_bank) && 
                                     <div style={{ color: 'red' }}><FiAlertCircle /> Disbursement account information not set</div>}
                                 </div>
-                            </ListGroupItem>) : !loading && <div className="w-100 text-center">No Courier found</div>}
+                            </ListGroupItem>) : !loading && <div className="w-100 text-center">No Management found</div>}
                         </ListGroup>
                     </Card>
                 </div>
