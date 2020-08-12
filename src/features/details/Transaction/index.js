@@ -244,7 +244,7 @@ function Component() {
                                                 second={<Pill color={data.disbursement_date ? "success" : "secondary"}>
                                                     {data.disbursement_date ? "Disbursed" : "Undisbursed" }</Pill>} />
                                         </Row>
-                                        {data.disbursement_date && <><Row>
+                                        {data.disbursement_date && data.transaction_merchant_disbursement?.length > 0 && <><Row>
                                             <TwoColumn 
                                                 first="Destination Bank :"
                                                 second={data.transaction_merchant_disbursement[0]?.settled_bank?.toUpperCase()} />
