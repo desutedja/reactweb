@@ -97,7 +97,7 @@ const labels = {
 function Component() {
     const dispatch = useDispatch();
     const { auth } = useSelector(state => state);
-    const id = auth.user.building_management_id;
+    const id = auth.user.building_id;
     const { blacklist_modules } = useSelector(state => state.auth.user);
     const [data, setData] = useState({})
     const [menus, setMenus] = useState(modules || []);
