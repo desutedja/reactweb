@@ -117,6 +117,7 @@ function Component({ view }) {
                     dispatch(payByCash({
                         "id": parseInt(id),
                         "total": dataDetails.total,
+                        "penalty_fee": dataDetails.penalty_fee,
                         "penalty_amount": dataDetails.billing_penalty_amount,
                         "total_payment": dataDetails.total_amount,
                         "additional_charge_amount": dataDetails.additional_charge_amount,
