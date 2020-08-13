@@ -114,8 +114,8 @@ function Component() {
     return (
         <Template
             slice="resident"
-            payload={state.email ? {
-                email: state.email,
+            payload={state?.email ? {
+                email: state?.email,
             } : selected.id ? {
                 ...residentPayload, ...selected,
                 phone: selected.phone.slice(2),
@@ -127,7 +127,7 @@ function Component() {
                 phone: '62' + values.phone,
                 birth_date: values.birth_date ? values.birth_date + ' 00:00:00' : null,
             })}
-            edit={data => state.email ? dispatch(createResident(data, history)) :
+            edit={data => state?.email ? dispatch(createResident(data, history)) :
                 dispatch(editResident(data, history, selected.id))}
             add={data => dispatch(createResident(data, history))}
             renderChild={props => {
