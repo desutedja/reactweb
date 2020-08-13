@@ -12,15 +12,15 @@ import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
 import {
     updateMessages, setMessages,
-    setRoom, setRoomID, setRoomUniqueID, setRooms,
+    setRoom, setRoomID,
     getAdminChat,
     getPICBMChat
 } from './slice';
 import { FiSend } from 'react-icons/fi';
 
 import './style.css';
-import { post } from '../slice';
-import { endpointAsset } from '../../settings';
+import { post, get } from '../slice';
+import { endpointAsset, endpointAdmin } from '../../settings';
 
 const topics = [
     { label: "All", value: "merchant_trx,service,security,billing,personal,help" },
@@ -36,8 +36,6 @@ function Component() {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
     const [loadingParticipants, setLoadingParticipants] = useState(false);
-    // eslint-disable-next-line no-unused-vars
-    const [loadingRooms, setLoadingRooms] = useState(false);
 
     const history = useHistory();
     const uploadFile = useRef();
@@ -52,8 +50,8 @@ function Component() {
 
     const { user, role } = useSelector(state => state.auth);
     const { qiscus, room, rooms,
-        roomID, roomUniqueID, messages,
-        reloadList, lastMessageOnRoom, loading
+        roomID, messages, loadingRooms,
+        reloadList, lastMessageOnRoom,
     } = useSelector(state => state.chat);
 
     let dispatch = useDispatch();
@@ -63,19 +61,14 @@ function Component() {
         !!messages.length && messageBottom.current.scrollIntoView({ behavior: 'smooth' });
     }, [messages])
 
-    // useEffect(() => {
-    //     setLoadingParticipants(true);
-    //     roomUniqueID && qiscus.getParticipants && qiscus.getParticipants(roomUniqueID)
-    //         .then(function (participants) {
-    //             // Do something with participants
-    //             console.log("participants", participants);
-    //             setParticipants(participants.participants);
-    //             setLoadingParticipants(false);
-    //         })
-    //         .catch(function (error) {
-    //             // Do something if error occured
-    //         })
-    // }, [qiscus, roomUniqueID]);
+    useEffect(() => {
+        setLoadingParticipants(true);
+
+        dispatch(get(endpointAdmin + '/chat/get_participant/' + roomID, res => {
+            setParticipants(res.data.data);
+            setLoadingParticipants(false);
+        }))
+    }, [dispatch, roomID]);
 
     useEffect(() => {
         var options = {
@@ -128,26 +121,6 @@ function Component() {
             dispatch(getAdminChat(topic.value, 0, 50, ''));
         else
             dispatch(getPICBMChat(topic.value, 0, 50, ''));
-
-
-        var params = {
-            page: 1,
-            limit: 100,
-            show_participants: false,
-            show_empty: false
-        }
-
-        // setLoadingRooms(true);
-        qiscus && qiscus.loadRoomList && qiscus.loadRoomList(params)
-            .then(function (rooms) {
-                // On success
-                // dispatch(setRooms(rooms));
-                // !roomUniqueID && dispatch(setRoomUniqueID(rooms[0].unique_id));
-                // setLoadingRooms(false);
-            })
-            .catch(function (error) {
-                // On error
-            })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, reloadList, qiscus]);
 
@@ -162,9 +135,6 @@ function Component() {
         setLoadingSend(true);
         qiscus.sendComment(
             roomID, messageData, null, type, payload, {
-            // extra data
-            // name: user.firstname + ' ' + user.lastname,
-            // role: role === 'sa' ? 'centratama' : 'staff_pic_bm',
             sender_user: {
                 name: user.firstname + ' ' + user.lastname,
                 role: role === 'sa' ? 'centratama' : 'staff_pic_bm',
@@ -356,11 +326,18 @@ function Component() {
                 <div className="Container" style={{
                     marginLeft: 16,
                     flexDirection: 'column',
+                    position: 'relative',
                 }}>
                     <Tab
                         labels={['Room List', 'Room Info']}
                         contents={[
-                            <Loading loading={false}>
+                            <>
+                                <Loading loading={loadingRooms} style={{
+                                    position: 'absolute',
+                                    right: 0,
+                                    left: 0,
+                                    backgroundColor: '#fffa'
+                                }} />
                                 {rooms.map((el, index) => {
                                     const opt = el.room_options ? JSON.parse(el.room_options) : {};
 
@@ -396,7 +373,7 @@ function Component() {
                                         </div>
                                     </div>)
                                 })}
-                            </Loading>,
+                            </>,
                             <>
                                 <p style={{
                                     fontWeight: 'bold',

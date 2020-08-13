@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import SectionSeparator from '../../components/SectionSeparator';
@@ -64,6 +64,7 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
+    let { state } = useLocation();
 
     useEffect(() => {
         dispatch(get(endpointResident + '/geo/province',
@@ -113,7 +114,9 @@ function Component() {
     return (
         <Template
             slice="resident"
-            payload={selected.id ? {
+            payload={state.email ? {
+                email: state.email,
+            } : selected.id ? {
                 ...residentPayload, ...selected,
                 phone: selected.phone.slice(2),
                 birth_date: selected.birth_date?.split('T')[0],
@@ -124,7 +127,8 @@ function Component() {
                 phone: '62' + values.phone,
                 birth_date: values.birth_date ? values.birth_date + ' 00:00:00' : null,
             })}
-            edit={data => dispatch(editResident(data, history, selected.id))}
+            edit={data => state.email ? dispatch(createResident(data, history)) :
+                dispatch(editResident(data, history, selected.id))}
             add={data => dispatch(createResident(data, history))}
             renderChild={props => {
                 const { values, errors } = props;

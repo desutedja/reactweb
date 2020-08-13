@@ -185,8 +185,8 @@ function Component({ view }) {
                                                 history.push({
                                                     pathname:  url + "/add",
                                                     state: { 
-                                                        year: parseInt(unit?.items?.billing[active].year),
-                                                        month: parseInt(unit?.items?.billing[active].month),
+                                                        year: parseInt(unit?.items?.billing[active]?.year),
+                                                        month: parseInt(unit?.items?.billing[active]?.month),
                                                     }
                                                 });
                                             }}

@@ -148,7 +148,7 @@ function Component() {
                 city: parseInt(values.city, 10),
                 district: parseInt(values.district, 10),
                 building_management_id: values.building_management_id ?
-                    values.building_management_id : bManagements[0].value,
+                    values.building_management_id : user.building_management_id,
             })}
             edit={data => dispatch(editStaff(data, history, selected.id))}
             add={data => dispatch(createStaff(data, history))}

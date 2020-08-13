@@ -9,6 +9,7 @@ export const slice = createSlice({
   initialState: {
     qiscus: null,
     loading: false,
+    loadingRooms: false,
     source: 'Task',
     room: '',
     roomID: '',
@@ -26,6 +27,12 @@ export const slice = createSlice({
     },
     stopAsync: (state) => {
       state.loading = false;
+    },
+    startLoadRooms: (state) => {
+      state.loadingRooms = true;
+    },
+    stopLoadRooms: (state) => {
+      state.loadingRooms = false;
     },
     setRoomID: (state, action) => {
       state.roomID = action.payload;
@@ -63,6 +70,8 @@ export const slice = createSlice({
 export const {
   startAsync,
   stopAsync,
+  startLoadRooms,
+  stopLoadRooms,
   setRoomID,
   setRoomUniqueID,
   setQiscus,
@@ -78,9 +87,9 @@ export const {
 export const getAdminChat = (
   topic,
   pageIndex, pageSize,
-  search = '',
+  search = '', rooms
 ) => dispatch => {
-  dispatch(startAsync());
+  dispatch(startLoadRooms());
 
   dispatch(get(chatEndpoint + "/admin" +
     '?topic=' + topic +
@@ -92,19 +101,19 @@ export const getAdminChat = (
       dispatch(setRooms(res.data.data.items));
       console.log(res.data.data.items)
 
-      dispatch(stopAsync());
+      dispatch(stopLoadRooms());
     },
     err => {
-      dispatch(stopAsync());
+      dispatch(stopLoadRooms());
     }))
 }
 
 export const getPICBMChat = (
   topic,
   pageIndex, pageSize,
-  search = '',
+  search = '', rooms
 ) => dispatch => {
-  dispatch(startAsync());
+  dispatch(startLoadRooms());
 
   dispatch(get(chatEndpoint + "/staff" +
     '?topic=' + topic +
@@ -116,10 +125,10 @@ export const getPICBMChat = (
       dispatch(setRooms(res.data.data.items));
       console.log(res.data.data.items)
 
-      dispatch(stopAsync());
+      dispatch(stopLoadRooms());
     },
     err => {
-      dispatch(stopAsync());
+      dispatch(stopLoadRooms());
     }))
 }
 

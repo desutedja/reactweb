@@ -20,7 +20,8 @@ import {
     refresh
 } from '../../../slices/resident';
 import { endpointAdmin, endpointResident } from '../../../../settings';
-import { get } from '../../../slice';
+import { get, post } from '../../../slice';
+import Loading from '../../../../components/Loading';
 
 const columnsUnit = [
     { Header: "ID", accessor: "unit_id" },
@@ -66,6 +67,9 @@ function Component({ id, view }) {
     const { selected } = useSelector(state => state.building);
     const { role } = useSelector(state => state.auth);
 
+    const [email, setEmail] = useState('');
+    const [checking, setChecking] = useState('');
+    const [found, setFound] = useState(true);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -191,18 +195,11 @@ function Component({ id, view }) {
         )
     }
 
-    function SubAccountListItem(resident, itemOnClick) {
-        return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div><Resident id={resident.value.id} data={resident.value} /></div>
-                <div><Button label="Select" key={resident.value.id} onClick={
-                    () => itemOnClick(resident)
-                } /></div>
-                </div>
-    }
-
     function AddSubAccountNotFound() {
         return (<div style={{ margin: "20px 0" }} ><p align="center">No resident with specified name or email is found. </p>
-            <span onClick={() => history.push({ pathname: removeLastFromPath(path) + '/add' })}
+            <span onClick={() => history.push({ pathname: removeLastFromPath(path) + '/add', state: {
+                email
+            } })}
                 className="Link">Please register here.</span></div>)
     }
 
@@ -248,13 +245,13 @@ function Component({ id, view }) {
                 }}
             >
                 {addSubAccountStep === 1 && <>
-                    <Input label="Search Resident Email or Name"
+                    {/* <Input label="Search Resident Email or Name"
                         compact
                         fullwidth
                         icon={<FiSearch />}
                         inputValue={search} setInputValue={setSearch}
-                    />
-                    <Filter
+                    /> */}
+                    {/* <Filter
                         data={residents.map(el => {
                             return { label: el.firstname + ' ' + el.lastname, value: el };
                         })}
@@ -264,7 +261,44 @@ function Component({ id, view }) {
                             setSubAccount(el.value);
                             setAddSubAccountStep(2);
                         }}
+                    /> */}
+                    <Input label="Email"
+                        placeholder={"Input Resident Email"} type="email"
+                        compact
+                        inputValue={email}
+                        setInputValue={setEmail}
                     />
+                    <Loading loading={checking}>
+                        <button
+                            style={{
+                                marginTop: 12
+                            }}
+                            type="button"
+                            onClick={() => {
+                                setChecking(true);
+                                dispatch(post(endpointResident + '/management/resident/check', {
+                                    email: email
+                                },
+                                res => {
+                                    setChecking(false);
+
+                                    let data = res.data.data;
+
+                                    if (data.id) {
+                                        setSubAccount(data);
+                                        setAddSubAccountStep(2);
+                                    } else {
+                                        setFound(false);
+                                    }
+                                },
+                                ))
+                            }}
+                            disabled={!email}
+                        >
+                            Check
+                        </button>
+                    </Loading>
+                    {!found && <AddSubAccountNotFound />}
                 </>}
                 {addSubAccountStep === 2 && <>
                     <Resident id={subAccount.id} data={subAccount} onClick={() => { }} />
@@ -280,14 +314,14 @@ function Component({ id, view }) {
                 </>}
                 {addSubAccountStep === 3 && <>
                     <Resident id={subAccount.id} data={subAccount} onClick={() => { }} />
-                    <Input fullwidth type="button" label={"Sub Account Ownership Status"} inputValue={ownershipStatus.label} onClick={() => {}} />
+                    <Input fullwidth type="button" label={"Sub Account Ownership Status"} inputValue={ownershipStatus.label} onClick={() => { }} />
                 </>}
             </Modal>
             <Modal
                 isOpen={addUnit}
                 title={"Add Unit"}
                 subtitle={"Register unit as a main resident"}
-                disableFooter={role === 'bm' ? addUnitStep === 1 || 2 : addUnitStep === 1}
+                disableFooter={role === 'bm' ? addUnitStep === 2 : addUnitStep === 1}
                 okLabel={addUnitStep !== 3 ? "Back" : "Add Unit"}
                 cancelLabel={"Back"}
                 onClick={addUnitStep === 3 ? submitFunction : addUnitBackFunction}

@@ -1,11 +1,10 @@
 import React from 'react';
-import MoonLoader from "react-spinners/MoonLoader";
 import ClinkLoader from "./ClinkLoader";
 
-function Loading({ loading, size=null, children=null }) {
+function Loading({ loading, size=null, children=null, style = {} }) {
     return (
         loading ? (
-            <div className="Spinner">
+            <div className="Spinner" style={style}>
                 <ClinkLoader />
             </div>
         ) : children
