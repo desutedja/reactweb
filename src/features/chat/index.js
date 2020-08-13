@@ -22,6 +22,13 @@ import './style.css';
 import { post, get } from '../slice';
 import { endpointAsset, endpointAdmin } from '../../settings';
 
+const topics = [
+    { label: "All", value: "merchant_trx,service,security,billing,personal,help" },
+    { label: "Service", value: "service" },
+    { label: "Security", value: "security" },
+    { label: "Billing", value: "billing" },
+];
+
 function Component() {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
@@ -44,18 +51,7 @@ function Component() {
         reloadList, lastMessageOnRoom,
     } = useSelector(state => state.chat);
 
-    const topics = useMemo(() => {
-        return role === 'sa' ? [
-            { label: "All", value: "merchant_trx,service,security,billing,personal,help" },
-            { label: "Help", value: "help" },
 
-        ] : [
-                { label: "All", value: "merchant_trx,service,security,billing,personal,help" },
-                { label: "Service", value: "service" },
-                { label: "Security", value: "security" },
-                { label: "Billing", value: "billing" },
-            ];
-    }, [role])
     const [topic, setTopic] = useState(topics[0]);
 
     let dispatch = useDispatch();
@@ -355,11 +351,11 @@ function Component() {
                                     <Input compact label="Search title" inputValue={search}
                                         setInputValue={setSearch}
                                     />
-                                    <Input type="select" compact options={topics} label="Topic"
+                                    {role === 'bm' && <Input type="select" compact options={topics} label="Topic"
                                         inputValue={topic.value} setInputValue={value => {
                                             setTopic(topics.find(el => el.value === value));
                                         }}
-                                    />
+                                    />}
                                 </div>
                                 {rooms.map((el, index) => {
                                     const opt = el.room_options ? JSON.parse(el.room_options) : {};
