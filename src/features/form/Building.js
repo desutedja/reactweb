@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import GoogleMapReact from 'google-map-react';
+import PlacesAutocomplete, {
+    geocodeByAddress,
+    geocodeByPlaceId,
+    getLatLng
+} from 'react-places-autocomplete';
 import { FiMapPin } from 'react-icons/fi';
 
 import SectionSeparator from '../../components/SectionSeparator';
@@ -46,6 +51,9 @@ function Component() {
     const [modal, setModal] = useState(false);
     const [districts, setDistricts] = useState([]);
 
+    const [address, setAddress] = useState('');
+    const [center, setCenter] = useState(null);
+
     const [city, setCity] = useState("");
     const [cities, setCities] = useState([]);
 
@@ -54,6 +62,7 @@ function Component() {
 
     const { selected, loading } = useSelector(state => state.building);
     const { role } = useSelector(state => state.auth);
+
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -123,10 +132,76 @@ function Component() {
                         <Modal isOpen={modal} toggle={() => {
                             setModal(false);
                         }} onClick={() => setModal(false)} okLabel={"Select"}>
-                            <div style={{ height: '40rem', width: '100%' }}>
+                            <PlacesAutocomplete
+                            value={address}
+                            onChange={value => setAddress(value)}
+                            onSelect={value => {
+                                setAddress(value)
+                                geocodeByAddress(value)
+                                    .then(results => getLatLng(results[0]))
+                                    .then(latLng => setCenter(latLng))
+                                    .catch(error => console.error('Error', error));
+                            }}
+                            >
+                            {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                                <div className="mb-3"
+                                style={{
+                                    position: 'relative'
+                                }}
+                                >
+                                    <input
+                                    {...getInputProps({
+                                        placeholder: 'Search Places ...',
+                                        className: 'w-100'
+                                    })}
+                                    />
+                                    <div className="autocomplete-dropdown-container w-100"
+                                    style={{
+                                        position: 'absolute',
+                                        top: '100%',
+                                        zIndex: '1',
+                                        borderRadius: '4px',
+                                        overflow: 'auto'
+                                    }}
+                                    >
+                                    {loading && <div className="p-3" style={{backgroundColor: 'white'}}>Loading...</div>}
+                                    {suggestions.map(suggestion => {
+                                        const className = (suggestion.active
+                                        ? 'suggestion-item--active'
+                                        : 'suggestion-item') + ' p-3';
+                                        // inline style for demonstration purpose
+                                        const style = suggestion.active
+                                        ? {
+                                            backgroundColor: '#fafafa',
+                                            cursor: 'pointer'
+                                        }
+                                        : {
+                                            backgroundColor: '#ffffff',
+                                            cursor: 'pointer'
+                                        };
+                                        return (
+                                        <div
+                                            {...getSuggestionItemProps(suggestion, {
+                                            className,
+                                            style,
+                                            })}
+                                        >
+                                            <span>{suggestion.description}</span>
+                                        </div>
+                                        );
+                                    })}
+                                    </div>
+                                </div>
+                            )}
+                            </PlacesAutocomplete>
+                            <div style={{ height: '40rem', width: '100%', position: 'relative' }}>
                                 <GoogleMapReact
                                     bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
                                     defaultCenter={{
+                                        lat: -6.2107863,
+                                        lng: 106.8137977,
+                                    }}
+                                    center={center || {
                                         lat: -6.2107863,
                                         lng: 106.8137977,
                                     }}
@@ -134,21 +209,27 @@ function Component() {
                                     onClick={({ x, y, lat, lng, event }) => {
                                         setFieldValue('lat', lat);
                                         setFieldValue('long', lng);
+                                        setCenter({
+                                            lat, lng
+                                        })
                                         console.log(lat, lng);
                                     }}
-                                    onChange={({ center }) => {
+                                    onChange={({center}) => {
                                         setFieldValue('lat', center.lat);
                                         setFieldValue('long', center.lng);
+                                        setAddress('')
                                         console.log(center.lat, center.lng);
                                     }}
                                 >
-                                    <div style={{
-                                        position: 'absolute',
-                                        transform: 'translate(-50%, -50%)'
-                                    }}>
-                                        <FiMapPin size={40} color="dodgerblue" />
-                                    </div>
                                 </GoogleMapReact>
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)'
+                                }}>
+                                    <FiMapPin size={40} color="dodgerblue" />
+                                </div>
                             </div>
                         </Modal>
 
