@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 
@@ -22,16 +22,6 @@ import './style.css';
 import { post, get } from '../slice';
 import { endpointAsset, endpointAdmin } from '../../settings';
 
-const topics = [
-    { label: "All", value: "merchant_trx,service,security,billing,personal,help" },
-    { label: "Transaction", value: "merchant_trx" },
-    { label: "Service", value: "service" },
-    { label: "Security", value: "security" },
-    { label: "Billing", value: "billing" },
-    { label: "Direct", value: "personal" },
-    { label: "Help", value: "help" },
-];
-
 function Component() {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
@@ -44,15 +34,29 @@ function Component() {
     const [message, setMessage] = useState('');
     const [preview, setPreview] = useState(false);
     const [image, setImage] = useState('');
+    const [search, setSearch] = useState('');
 
     const [participants, setParticipants] = useState([]);
-    const [topic, setTopic] = useState(topics[0]);
 
     const { user, role } = useSelector(state => state.auth);
     const { qiscus, room, rooms,
         roomID, messages, loadingRooms,
         reloadList, lastMessageOnRoom,
     } = useSelector(state => state.chat);
+
+    const topics = useMemo(() => {
+        return role === 'sa' ? [
+            { label: "All", value: "merchant_trx,service,security,billing,personal,help" },
+            { label: "Help", value: "help" },
+
+        ] : [
+                { label: "All", value: "merchant_trx,service,security,billing,personal,help" },
+                { label: "Service", value: "service" },
+                { label: "Security", value: "security" },
+                { label: "Billing", value: "billing" },
+            ];
+    }, [role])
+    const [topic, setTopic] = useState(topics[0]);
 
     let dispatch = useDispatch();
     let messageBottom = useRef();
@@ -117,12 +121,19 @@ function Component() {
     }, [qiscus, reloadList]);
 
     useEffect(() => {
-        if (role === "sa")
-            dispatch(getAdminChat(topic.value, 0, 50, ''));
-        else
-            dispatch(getPICBMChat(topic.value, 0, 50, ''));
+        let searchRoom = setTimeout(() => {
+            if (role === "sa")
+                dispatch(getAdminChat(topic.value, 0, 50, search));
+            else
+                dispatch(getPICBMChat(topic.value, 0, 50, search));
+        }, 1000);
+
+        return () => {
+            clearTimeout(searchRoom);
+        }
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [dispatch, reloadList, qiscus]);
+    }, [dispatch, reloadList, topic, search]);
 
     useEffect(() => {
         console.log("Last Message coming on room: ", lastMessageOnRoom)
@@ -338,6 +349,18 @@ function Component() {
                                     left: 0,
                                     backgroundColor: '#fffa'
                                 }} />
+                                <div style={{
+                                    marginBottom: 12
+                                }}>
+                                    <Input compact label="Search title" inputValue={search}
+                                        setInputValue={setSearch}
+                                    />
+                                    <Input type="select" compact options={topics} label="Topic"
+                                        inputValue={topic.value} setInputValue={value => {
+                                            setTopic(topics.find(el => el.value === value));
+                                        }}
+                                    />
+                                </div>
                                 {rooms.map((el, index) => {
                                     const opt = el.room_options ? JSON.parse(el.room_options) : {};
 
