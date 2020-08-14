@@ -198,3 +198,7 @@ export function monthStart() {
 export function monthEnd() {
     return moment().endOf('month').format('yyyy-MM-DD');
 }
+
+export function ageFromBirthdate(birthdate) {
+    return moment().diff(moment(birthdate), 'year');
+}

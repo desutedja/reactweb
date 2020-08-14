@@ -8,7 +8,7 @@ import Breadcrumb from '../../../components/Breadcrumb';
 import { setConfirmDelete } from '../../slice';
 
 function Component({ view = false, columns, slice, title = '', getAction, filterVars = [],
-    filters = [], actions = [], deleteAction, sortBy, pagetitle, ...props }) {
+    filters = [], actions = [], deleteAction, sortBy, pagetitle, withSelection = false, filterExpanded = false,...props }) {
 
     const {
         loading,
@@ -18,7 +18,6 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
         refreshToggle
     } = useSelector(state => state[slice]);
 
-
     let dispatch = useDispatch();
 
     return (
@@ -27,6 +26,7 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
             <Breadcrumb title={title} />
             <div className="Container">
                 <Table
+                    filterExpanded={filterExpanded}
                     totalItems={total_items}
                     columns={columns}
                     data={items}

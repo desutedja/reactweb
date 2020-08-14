@@ -16,7 +16,7 @@ import { toSentenceCase } from '../../utils';
 
 import Template from './components/Template';
 import { post, getFile } from '../slice';
-import { endpointResident, resident_statuses, resident_kyc_statuses } from '../../settings';
+import { endpointResident, resident_statuses, resident_kyc_statuses, kyccolor } from '../../settings';
 
 const columns = [
     {
@@ -45,7 +45,7 @@ const columns = [
     { Header: "Phone", accessor: "phone", sorting: 'phone' },
     {
         Header: "KYC Status", accessor: row => row.status_kyc ?
-            <Pill color="primary">{toSentenceCase(row.status_kyc)}</Pill>
+            <Pill color={kyccolor[row.status_kyc]}>{toSentenceCase(row.status_kyc)}</Pill>
             :
             <Pill color="secondary">None</Pill>,
         sorting: 'status_kyc',

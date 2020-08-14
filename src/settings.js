@@ -23,6 +23,14 @@ export const taskStatusColor = {
     'completed': 'success',
 }
 
+export const kyccolor = {
+    '': 'secondary',
+    'none' : 'secondary',
+    'submitted' : 'primary',
+    'rejected' : 'danger',
+    'accepted': 'success',
+};
+
 export const trx_status = [
     { label: 'requested', value: 'requested' },
     { label: 'ask_resident', value: 'ask_resident' },
@@ -32,7 +40,6 @@ export const trx_status = [
     { label: 'accepted', value: 'accepted' },
     { label: 'canceled', value: 'canceled' },
     { label: 'expired', value: 'expired' },
-    { label: 'paid', value: 'paid' },
     { label: 'on_delivery', value: 'on_delivery' },
     { label: 'delivered', value: 'delivered' },
     { label: 'completed', value: 'completed' },
