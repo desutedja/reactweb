@@ -7,15 +7,20 @@ import Detail from '../components/Detail';
 import Template from '../components/Template';
 
 import Modal from '../../../components/Modal';
+import Pill from '../../../components/Pill';
 
 import Unit from './contents/Unit';
 import { useParams, useHistory } from 'react-router-dom';
+import { dateFormatter, toSentenceCase, ageFromBirthdate } from '../../../utils';
 import { get } from '../../slice';
-import { endpointResident } from '../../../settings';
+import { endpointResident, kyccolor } from '../../../settings';
 import { deleteResident, setSelected } from '../../slices/resident';
 
 const details = {
-    'Profile': ['created_on', 'gender', 'birthplace', 'birth_date', 'nationality', 'marital_status', 'status_kyc'],
+    'Profile': ['created_on', 'gender', 'birthplace', 
+        { label: 'birth_date', lfmt: () => "Birthdate", vfmt: (v) => { return <>{dateFormatter(v)} {v && <span>({ageFromBirthdate(v)} years old)</span>}</> }}, 
+            'nationality', 'marital_status', 
+            { label: 'status_kyc', vfmt: (v) => <Pill color={kyccolor[v]}>{v ? toSentenceCase(v) : "None" }</Pill>}, 'occupation' ],
     'Address': ['address', 'district_name', 'city_name', 'province_name'],
     'Bank Account': ['account_name', 'account_no', 'account_bank'],
 };
