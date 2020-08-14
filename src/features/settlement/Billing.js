@@ -115,7 +115,7 @@ function Component({ view }) {
     }, [search])
 
     useEffect(() => {
-        dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
+        dispatch(get(endpointBilling + '/management/billing/statistic', res => {
             setInfo(res.data.data);
         }))
     }, [dispatch]);
@@ -276,7 +276,7 @@ function Component({ view }) {
                             marginRight: 16,
                         }}>
                             Unsettled Amount</div>
-                        <AnimatedNumber className="BigNumber" value={info.unsettled_amount}
+                        <AnimatedNumber className="BigNumber" value={info.total_unsettle_amount}
                             formatValue={formatValue}
                         />
                     </div>
@@ -295,7 +295,7 @@ function Component({ view }) {
                             marginRight: 16,
                         }}>
                             Settled Amount</div>
-                        <AnimatedNumber className="BigNumber" value={info.settled_amount}
+                        <AnimatedNumber className="BigNumber" value={info.total_settle_amount}
                             formatValue={formatValue}
                         />
                     </div>

@@ -92,7 +92,7 @@ function Component({ view }) {
     }, [dispatch, filter, searchValue]);
 
     useEffect(() => {
-        dispatch(get(endpointBilling + '/management/billing/settlement/info', res => {
+        dispatch(get(endpointBilling + '/management/billing/statistic', res => {
             setInfo(res.data.data);
         }))
     }, [dispatch]);
@@ -188,7 +188,7 @@ function Component({ view }) {
                             marginRight: 16,
                         }}>
                             Undisbursed Amount</div>
-                        <AnimatedNumber className="BigNumber" value={info.undisbursed_amount}
+                        <AnimatedNumber className="BigNumber" value={info.total_undisburse_amount}
                             formatValue={formatValue}
                         />
                     </div>
@@ -207,7 +207,7 @@ function Component({ view }) {
                             marginRight: 16,
                         }}>
                             Disbursed Amount</div>
-                        <AnimatedNumber className="BigNumber" value={info.disbursed_amount}
+                        <AnimatedNumber className="BigNumber" value={info.total_disburse_amount}
                             formatValue={formatValue}
                         />
                     </div>
