@@ -115,7 +115,7 @@ function Component() {
         <Template
             slice="resident"
             payload={state?.email ? {
-                email: state?.email,
+                email: state.email,
             } : selected.id ? {
                 ...residentPayload, ...selected,
                 phone: selected.phone.slice(2),
