@@ -132,95 +132,95 @@ function Component() {
                             setModal(false);
                         }} onClick={() => setModal(false)} okLabel={"Select"}>
                             <PlacesAutocomplete
-                            value={address}
-                            onChange={value => setAddress(value)}
-                            onSelect={value => {
-                                setAddress(value)
-                                geocodeByAddress(value)
-                                    .then(results => getLatLng(results[0]))
-                                    .then(latLng => setCenter(latLng))
-                                    .catch(error => console.error('Error', error));
-                            }}
-                            >
-                            {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
-                                <div className="mb-3"
-                                style={{
-                                    position: 'relative'
+                                value={address}
+                                onChange={value => setAddress(value)}
+                                onSelect={value => {
+                                    setAddress(value)
+                                    geocodeByAddress(value)
+                                        .then(results => getLatLng(results[0]))
+                                        .then(latLng => setCenter(latLng))
+                                        .catch(error => console.error('Error', error));
                                 }}
-                                >
-                                    <input
-                                    {...getInputProps({
-                                        placeholder: 'Search Places ...',
-                                        className: 'w-100'
-                                    })}
-                                    />
-                                    <div className="autocomplete-dropdown-container w-100"
-                                    style={{
-                                        position: 'absolute',
-                                        top: '100%',
-                                        zIndex: '1',
-                                        borderRadius: '4px',
-                                        overflow: 'auto'
-                                    }}
+                            >
+                                {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+                                    <div className="mb-3"
+                                        style={{
+                                            position: 'relative'
+                                        }}
                                     >
-                                    {loading && <div className="p-3" style={{backgroundColor: 'white'}}>Loading...</div>}
-                                    {suggestions.map(suggestion => {
-                                        const className = (suggestion.active
-                                        ? 'suggestion-item--active'
-                                        : 'suggestion-item') + ' p-3';
-                                        // inline style for demonstration purpose
-                                        const style = suggestion.active
-                                        ? {
-                                            backgroundColor: '#fafafa',
-                                            cursor: 'pointer'
-                                        }
-                                        : {
-                                            backgroundColor: '#ffffff',
-                                            cursor: 'pointer'
-                                        };
-                                        return (
-                                        <div
-                                            {...getSuggestionItemProps(suggestion, {
-                                            className,
-                                            style,
+                                        <input
+                                            {...getInputProps({
+                                                placeholder: 'Search Places ...',
+                                                className: 'w-100'
                                             })}
+                                        />
+                                        <div className="autocomplete-dropdown-container w-100"
+                                            style={{
+                                                position: 'absolute',
+                                                top: '100%',
+                                                zIndex: '1',
+                                                borderRadius: '4px',
+                                                overflow: 'auto'
+                                            }}
                                         >
-                                            <span>{suggestion.description}</span>
+                                            {loading && <div className="p-3" style={{ backgroundColor: 'white' }}>Loading...</div>}
+                                            {suggestions.map(suggestion => {
+                                                const className = (suggestion.active
+                                                    ? 'suggestion-item--active'
+                                                    : 'suggestion-item') + ' p-3';
+                                                // inline style for demonstration purpose
+                                                const style = suggestion.active
+                                                    ? {
+                                                        backgroundColor: '#fafafa',
+                                                        cursor: 'pointer'
+                                                    }
+                                                    : {
+                                                        backgroundColor: '#ffffff',
+                                                        cursor: 'pointer'
+                                                    };
+                                                return (
+                                                    <div
+                                                        {...getSuggestionItemProps(suggestion, {
+                                                            className,
+                                                            style,
+                                                        })}
+                                                    >
+                                                        <span>{suggestion.description}</span>
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
-                                        );
-                                    })}
                                     </div>
-                                </div>
-                            )}
+                                )}
                             </PlacesAutocomplete>
                             <div style={{ height: '40rem', width: '100%', position: 'relative' }}>
                                 <GoogleMap
-                                mapContainerStyle={{
-                                    width: '100%',
-                                    height: '100%',
-                                }}
-                                center={center || {
-                                    lat: -6.2107863,
-                                    lng: 106.8137977,
-                                }}
-                                zoom={12}
-                                onClick={({latLng}) => {
-                                    setCenter({
-                                        lat: latLng.lat(),
-                                        lng: latLng.lng()
-                                    })
-                                    setFieldValue('lat', latLng.lat());
-                                    setFieldValue('long', latLng.lng());
-                                }}
-                                onUnmount={({center}) => {
-                                    setCenter({
-                                        lat: center.lat(),
-                                        lng: center.lng()
-                                    })
-                                    setFieldValue('lat', center.lat());
-                                    setFieldValue('long', center.lng());
-                                }}
-                                clickableIcons
+                                    mapContainerStyle={{
+                                        width: '100%',
+                                        height: '100%',
+                                    }}
+                                    center={center || {
+                                        lat: -6.2107863,
+                                        lng: 106.8137977,
+                                    }}
+                                    zoom={12}
+                                    onClick={({ latLng }) => {
+                                        setCenter({
+                                            lat: latLng.lat(),
+                                            lng: latLng.lng()
+                                        })
+                                        setFieldValue('lat', latLng.lat());
+                                        setFieldValue('long', latLng.lng());
+                                    }}
+                                    onUnmount={({ center }) => {
+                                        setCenter({
+                                            lat: center.lat(),
+                                            lng: center.lng()
+                                        })
+                                        setFieldValue('lat', center.lat());
+                                        setFieldValue('long', center.lng());
+                                    }}
+                                    clickableIcons
                                 >
                                 </GoogleMap>
                                 <div style={{
@@ -230,9 +230,9 @@ function Component() {
                                     transform: 'translate(-50%, -50%)'
                                 }}>
                                     <FiMapPin size={40} color="dodgerblue"
-                                    style={{
-                                        transform: 'translateY(-50%)'
-                                    }}
+                                        style={{
+                                            transform: 'translateY(-50%)'
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -242,12 +242,12 @@ function Component() {
                         <Input {...props} label="Building Name" name="name" disabled={role === 'bm'} />
                         <Input {...props} label="Legal Name" disabled={role === 'bm'} />
                         <Input {...props} label="Site ID" name="code_name" disabled={role === 'bm'} />
-                        <Input {...props} label="Max Units" placeholder="Input max units" 
+                        <Input {...props} label="Max Units" placeholder="Input max units"
                             hint="Maximum unit that can be registered on this Building" />
                         <Input {...props} label="Max Floors" placeholder="Input max floors"
-                            hint="Maximum floor that can be registered on each section"/>
-                        <Input {...props} label="Max Sections" 
-                            hint="Maximum section (Tower/Wing) that can be registered on this Building"/>
+                            hint="Maximum floor that can be registered on each section" />
+                        <Input {...props} label="Max Sections"
+                            hint="Maximum section (Tower/Wing) that can be registered on this Building" />
                         <Input {...props} label="Website" />
                         <Input {...props} label="Logo" type="file" />
                         <SectionSeparator />

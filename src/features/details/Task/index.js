@@ -2,31 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useHistory } from 'react-router-dom';
 import { Timeline, TimelineItem, TimelineSeparator, TimelineConnector, TimelineContent, TimelineDot } from '@material-ui/lab';
-import GoogleMapReact from 'google-map-react';
 
 import Row from '../../../components/Row';
 import Resident from '../../../components/cells/Resident';
 import Staff from '../../../components/cells/Staff';
 import Column from '../../../components/Column';
-import ThreeColumn from '../../../components/ThreeColumn';
 import TwoColumn from '../../../components/TwoColumn';
 import Pill from '../../../components/Pill';
-import { dateTimeFormatter, toSentenceCase, task, toMoney } from '../../../utils';
-import { MdChatBubble, MdLocationOn } from 'react-icons/md';
-import { FiSearch, FiCheck, FiMapPin, FiUserPlus } from 'react-icons/fi';
+import { dateTimeFormatter, toSentenceCase, toMoney } from '../../../utils';
+import { MdChatBubble } from 'react-icons/md';
+import { FiCheck, FiUserPlus } from 'react-icons/fi';
 
 import Button from '../../../components/Button';
-import Input from '../../../components/Input';
 import Filter from '../../../components/Filter';
-import Details from '../components/Detail';
 import Modal from '../../../components/Modal';
 import Template from '../components/Template';
 
-import { Card, CardHeader, CardFooter, CardTitle, CardBody, CardLink } from 'reactstrap';
+import { Card, CardHeader, CardFooter, CardTitle, CardBody } from 'reactstrap';
 
 import { useParams } from 'react-router-dom';
 import { get } from '../../slice';
-import { getTask, resolveTask, reassignTask, setSelected } from '../../slices/task';
+import { resolveTask, reassignTask, setSelected } from '../../slices/task';
 import { endpointTask, endpointManagement, taskPriorityColor, taskStatusColor } from '../../../settings';
 
 const attachments = [
@@ -39,18 +35,20 @@ const attachments = [
 
 function Component({ view }) {
     const [modal, setModal] = useState(false);
-    const [mapModal, setMapModal] = useState(false);
+    // const [mapModal, setMapModal] = useState(false);
     const [historyModal, setHistoryModal] = useState(false);
     const [image, setImage] = useState('');
     const [data, setData] = useState({});
-    const [lat, setLat] = useState(0.000);
-    const [long, setLong] = useState(0.000);
+    // const [lat, setLat] = useState(0.000);
+    // const [long, setLong] = useState(0.000);
 
     const [assign, setAssign] = useState(false);
     const [resolve, setResolve] = useState(false);
     const [staff, setStaff] = useState({});
     const [staffs, setStaffs] = useState([]);
-    const [search, setSearch] = useState('');
+    const [search, 
+        // setSearch
+    ] = useState('');
 
     const history = useHistory();
 
@@ -120,21 +118,18 @@ function Component({ view }) {
                     maxWidth: '100%',
                 }} />
             </Modal>
-            <Modal disableFooter disableHeader isOpen={mapModal} toggle={() => setMapModal(false)}>
+            {/* <Modal disableFooter disableHeader isOpen={mapModal} toggle={() => setMapModal(false)}>
                 <div style={{ height: '40rem', width: '100%' }}>
-                    <GoogleMapReact
-                        bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
-                        defaultCenter={{
+                    <GoogleMap
+                        mapContainerStyle={{
+                            width: '100%',
+                            height: '100%',
+                        }}
+                        center={{
                             lat: -6.2107863,
                             lng: 106.8137977,
                         }}
                         zoom={18}
-                        onClick={({ x, y, lat, lng, event }) => {
-                            console.log(lat, lng);
-                        }}
-                        onChange={({ center }) => {
-                            console.log(center.lat, center.lng);
-                        }}
                     >
                         <div style={{
                             position: 'absolute',
@@ -142,9 +137,9 @@ function Component({ view }) {
                         }}>
                             <FiMapPin size={40} color="dodgerblue" />
                         </div>
-                    </GoogleMapReact>
+                    </GoogleMap>
                 </div>
-            </Modal>
+            </Modal> */}
             <Modal isOpen={resolve} toggle={() => setResolve(false)} disableHeader
                 okLabel="Yes"
                 onClick={() => {
@@ -158,27 +153,27 @@ function Component({ view }) {
             >
                 Are you sure you want to resolve this task?
             </Modal>
-            <Modal 
+            <Modal
                 title="Assign Staff"
                 subtitle="Choose eligible staffs to assign for this task"
-                isOpen={assign} 
-                toggle={() => setAssign(false)} 
+                isOpen={assign}
+                toggle={() => setAssign(false)}
                 cancelLabel="Cancel"
                 onClickSecondary={() => {
                     setStaff({});
                     setAssign(false);
                 }}
             >
-                    <Filter data={staff.value ? [staff] : staffs} onClick={
-                        el => {
-                            dispatch(reassignTask({
-                                "task_id": parseInt(data.task_id),
-                                "assignee_id": el.value,
-                            })); 
-                            setStaff({});
-                            setAssign(false)
-                        }
-                    } />
+                <Filter data={staff.value ? [staff] : staffs} onClick={
+                    el => {
+                        dispatch(reassignTask({
+                            "task_id": parseInt(data.task_id),
+                            "assignee_id": el.value,
+                        }));
+                        setStaff({});
+                        setAssign(false)
+                    }
+                } />
                 {staffs.length === 0 && <p style={{
                     fontStyle: 'italic'
                 }}>No elligible staff found.</p>}
@@ -219,14 +214,14 @@ function Component({ view }) {
                                                 </div>
                                             </div>
                                         </CardBody>
-                                        { role === "bm" && <CardFooter>
+                                        {role === "bm" && <CardFooter>
                                             <div style={{ textAlign: 'right', padding: '5px' }}>
                                                 <Link to={"/" + role + "/chat/" + data.ref_code} onClick={() => {
                                                     dispatch(setSelected(data));
                                                     history.push("/" + role + "/chat");
                                                 }}><MdChatBubble size="17" /> Go to chatroom</Link>
                                             </div>
-                                        </CardFooter> }
+                                        </CardFooter>}
                                     </Card>
                                     <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                         <CardBody>
@@ -270,7 +265,7 @@ function Component({ view }) {
                                                             </Row>
                                                             <hr />
                                                             <Row>
-                                                                { el.attachments > 0 && 
+                                                                {el.attachments > 0 &&
                                                                     attachments.map(key =>
                                                                         el[key] && <img src={el[key]} alt='attachment'
                                                                             onClick={() => {
@@ -281,7 +276,7 @@ function Component({ view }) {
                                                                                 height: 80,
                                                                                 aspectRatio: 1
                                                                             }}
-                                                                        /> 
+                                                                        />
                                                                     )}
                                                             </Row>
                                                         </>
@@ -303,7 +298,7 @@ function Component({ view }) {
                                             } />
                                             <div><Pill color={taskStatusColor[data.status]}>{toSentenceCase(data.status)}</Pill></div>
                                         </CardBody>
-                                        {view ? null : (data.status != 'completed' && data.status != 'canceled') &&
+                                        {view ? null : (data.status !== 'completed' && data.status !== 'canceled') &&
                                             <CardFooter style={{ textAlign: "right" }}>
                                                 <Button onClick={
                                                     () => setResolve(true)
@@ -312,13 +307,15 @@ function Component({ view }) {
                                     </Card>
                                     <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                         <CardBody>
-                                            <TwoColumn first={<h5>Requester</h5>} second={
-                                                data.priority === "emergency" && <div><Link to="#" onClick={() => {
-                                                    setMapModal(true);
-                                                    setLat(data.r_lat);
-                                                    setLong(data.r_long);
-                                                }}><MdLocationOn size="15" /> Last Location</Link></div>
-                                            } />
+                                            <TwoColumn first={<h5>Requester</h5>} 
+                                            // second={
+                                            //     data.priority === "emergency" && <div><Link to="#" onClick={() => {
+                                            //         setMapModal(true);
+                                            //         setLat(data.r_lat);
+                                            //         setLong(data.r_long);
+                                            //     }}><MdLocationOn size="15" /> Last Location</Link></div>
+                                            // } 
+                                            />
                                             <Row>
                                                 <div style={{ width: '50%', borderRight: '1px solid rgba(0,0,0,0.125)' }}>
                                                     <Resident id={data.requester}
@@ -366,44 +363,44 @@ function Component({ view }) {
                                             } icon={<FiUserPlus />} label="Assign Staff" />
                                         </CardFooter>}
                                     </Card>
-                                    { data.task_type === 'delivery' && <Card style={{ marginRight: '20px' }}>
+                                    {data.task_type === 'delivery' && <Card style={{ marginRight: '20px' }}>
                                         <CardBody>
                                             <CardTitle><h5>Disbursement</h5></CardTitle>
                                             <Row>
-                                                <TwoColumn 
+                                                <TwoColumn
                                                     first="Status :"
                                                     second={<Pill color={data.disbursement_details?.id ? "success" : "secondary"}>
-                                                        {data.disbursement_details?.id ? "Disbursed" : "Undisbursed" }</Pill>} />
+                                                        {data.disbursement_details?.id ? "Disbursed" : "Undisbursed"}</Pill>} />
                                             </Row>
-                                            { data.disbursement_details?.id && <>
-                                            <Row>
-                                                <TwoColumn 
-                                                    first="Destination Bank :"
-                                                    second={data.disbursement_details?.settled_bank?.toUpperCase()} />
-                                            </Row>
-                                            <Row>
-                                                <TwoColumn 
-                                                    first="Destination Account :"
-                                                    second={data.disbursement_details?.settled_account_no} />
-                                            </Row>
-                                            <Row>
-                                                <TwoColumn 
-                                                    first="Destination Account Name :"
-                                                    second={data.disbursement_details?.settled_account_name} />
-                                            </Row>
-                                            <Row>
-                                                <TwoColumn 
-                                                    first="Transfer Code :"
-                                                    second={data.disbursement_details?.settled_code} />
-                                            </Row>
-                                            <Row>
-                                                <TwoColumn 
-                                                    first="Disbursed at :"
-                                                    second={dateTimeFormatter(data.disbursement_details?.created_on)}/>
-                                            </Row></>}
+                                            {data.disbursement_details?.id && <>
+                                                <Row>
+                                                    <TwoColumn
+                                                        first="Destination Bank :"
+                                                        second={data.disbursement_details?.settled_bank?.toUpperCase()} />
+                                                </Row>
+                                                <Row>
+                                                    <TwoColumn
+                                                        first="Destination Account :"
+                                                        second={data.disbursement_details?.settled_account_no} />
+                                                </Row>
+                                                <Row>
+                                                    <TwoColumn
+                                                        first="Destination Account Name :"
+                                                        second={data.disbursement_details?.settled_account_name} />
+                                                </Row>
+                                                <Row>
+                                                    <TwoColumn
+                                                        first="Transfer Code :"
+                                                        second={data.disbursement_details?.settled_code} />
+                                                </Row>
+                                                <Row>
+                                                    <TwoColumn
+                                                        first="Disbursed at :"
+                                                        second={dateTimeFormatter(data.disbursement_details?.created_on)} />
+                                                </Row></>}
                                         </CardBody>
                                     </Card>}
-                                    </Column>
+                                </Column>
                             </Row>
                         </Column>
                     </>,
