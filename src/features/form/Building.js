@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import GoogleMapReact from 'google-map-react';
+import { GoogleMap } from '@react-google-maps/api';
 import PlacesAutocomplete, {
     geocodeByAddress,
-    geocodeByPlaceId,
     getLatLng
 } from 'react-places-autocomplete';
 import { FiMapPin } from 'react-icons/fi';
@@ -195,40 +194,46 @@ function Component() {
                             )}
                             </PlacesAutocomplete>
                             <div style={{ height: '40rem', width: '100%', position: 'relative' }}>
-                                <GoogleMapReact
-                                    bootstrapURLKeys={{ key: 'AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8' }}
-                                    defaultCenter={{
-                                        lat: -6.2107863,
-                                        lng: 106.8137977,
-                                    }}
-                                    center={center || {
-                                        lat: -6.2107863,
-                                        lng: 106.8137977,
-                                    }}
-                                    zoom={12}
-                                    onClick={({ x, y, lat, lng, event }) => {
-                                        setFieldValue('lat', lat);
-                                        setFieldValue('long', lng);
-                                        setCenter({
-                                            lat, lng
-                                        })
-                                        console.log(lat, lng);
-                                    }}
-                                    onChange={({center}) => {
-                                        setFieldValue('lat', center.lat);
-                                        setFieldValue('long', center.lng);
-                                        setAddress('')
-                                        console.log(center.lat, center.lng);
-                                    }}
+                                <GoogleMap
+                                mapContainerStyle={{
+                                    width: '100%',
+                                    height: '100%',
+                                }}
+                                center={center || {
+                                    lat: -6.2107863,
+                                    lng: 106.8137977,
+                                }}
+                                zoom={12}
+                                onClick={({latLng}) => {
+                                    setCenter({
+                                        lat: latLng.lat(),
+                                        lng: latLng.lng()
+                                    })
+                                    setFieldValue('lat', latLng.lat());
+                                    setFieldValue('long', latLng.lng());
+                                }}
+                                onUnmount={({center}) => {
+                                    setCenter({
+                                        lat: center.lat(),
+                                        lng: center.lng()
+                                    })
+                                    setFieldValue('lat', center.lat());
+                                    setFieldValue('long', center.lng());
+                                }}
+                                clickableIcons
                                 >
-                                </GoogleMapReact>
+                                </GoogleMap>
                                 <div style={{
                                     position: 'absolute',
                                     top: '50%',
                                     left: '50%',
                                     transform: 'translate(-50%, -50%)'
                                 }}>
-                                    <FiMapPin size={40} color="dodgerblue" />
+                                    <FiMapPin size={40} color="dodgerblue"
+                                    style={{
+                                        transform: 'translateY(-50%)'
+                                    }}
+                                    />
                                 </div>
                             </div>
                         </Modal>
