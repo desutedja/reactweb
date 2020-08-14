@@ -77,7 +77,7 @@ function Component({ view }) {
             {label: 'total', lfmt: () => "Subtotal After Tax", vfmt: v => toMoney(v)},
             {label: 'additional_charge_amount', vfmt: v => toMoney(v)},
             {label: 'billing_penalty_amount', lfmt: () => dataDetails.payment === 'paid' ? "Paid Due Penalty" : "Due Penalty", 
-                vfmt: v => dataDetails.payment === 'paid' ? toMoney(dataDetails.billing_record_penalty) : <>{toMoney(v)} ({dataDetails.penalty_fee}%)</>},
+                vfmt: v => <>{toMoney(v)} ({dataDetails.payment === 'paid' ? dataDetails.billing_record_penalty : dataDetails.penalty_fee}%)</> },
             {label: 'total_amount', vfmt: v => toMoney(v)},
         ],
     }),[ dataDetails ]);
