@@ -103,7 +103,7 @@ const picBmLabels = {
 
 export default () => {
     const dispatch = useDispatch();
-    const { auth } = useSelector(state => state);
+    const { auth, building } = useSelector(state => state);
     const id = auth.user.building_id;
     const { blacklist_modules } = useSelector(state => state.auth.user);
     const [data, setData] = useState({})
@@ -125,21 +125,18 @@ export default () => {
             setData(res.data.data);
             dispatch(setSelected(res.data.data));
         }))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [dispatch, id])
 
     useEffect(() => {
         dispatch(get(endpointAdmin + '/management/building/details/' + auth.user.building_management_id,
             res => {
-                console.log('CEK', res.data.data)
                 setDataBM(res.data.data)
             },
             err => {
                 console.log('ERR', err)
             }
         ))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [auth.user.building_management_id, dispatch, building.refreshToggle])
 
     return (
         <Template role="bm">
