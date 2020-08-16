@@ -47,11 +47,17 @@ const buildingPayload = {
 
 function Component() {
     const { auth } = useSelector(state => state)
+    const { selected, loading } = useSelector(state => state.building);
+    const { role } = useSelector(state => state.auth);
+    
     const [modal, setModal] = useState(false);
     const [districts, setDistricts] = useState([]);
 
     const [address, setAddress] = useState('');
-    const [center, setCenter] = useState(null);
+    const [center, setCenter] = useState(selected?.lat ? ({
+        lat: selected.lat,
+        lng: selected.long
+    }) : null);
 
     const [city, setCity] = useState("");
     const [cities, setCities] = useState([]);
@@ -59,8 +65,6 @@ function Component() {
     const [province, setProvince] = useState("");
     const [provinces, setProvinces] = useState([]);
 
-    const { selected, loading } = useSelector(state => state.building);
-    const { role } = useSelector(state => state.auth);
 
 
     let dispatch = useDispatch();

@@ -125,7 +125,7 @@ export default () => {
             setData(res.data.data);
             dispatch(setSelected(res.data.data));
         }))
-    }, [dispatch, id])
+    }, [dispatch, id, building.refreshToggle])
 
     useEffect(() => {
         dispatch(get(endpointAdmin + '/management/building/details/' + auth.user.building_management_id,
