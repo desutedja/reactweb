@@ -203,11 +203,11 @@ function Component({ view }) {
                                             Summary 
                                             <hr/>
                                         </CardTitle>
-                                        <ThreeColumn second="Subtotal" third={toMoney(data?.items?.group_amount)} />
-                                            <ThreeColumn second={"Penalty"}
+                                        <ThreeColumn first="Subtotal" third={toMoney(data?.items?.group_amount)} />
+                                            <ThreeColumn first={"Penalty"}
                                                 third={<span style={{ color: 'red' }}>
                                                     {toMoney(data?.items?.group_penalty)}</span>} />
-                                            <ThreeColumn second="Total"
+                                            <ThreeColumn first="Total"
                                                 third={<h4 className="m-0">{toMoney(data?.items?.total_group_amount)}</h4>} />
                                     </CardBody>
                                 </Card>
