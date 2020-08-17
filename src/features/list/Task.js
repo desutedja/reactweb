@@ -296,6 +296,7 @@ function Component({ view }) {
                 }}>No elligible staff found.</p>}
             </Modal>
             <Template
+                filterExpanded={history.location.state}
                 view={view}
                 columns={columns}
                 slice='task'

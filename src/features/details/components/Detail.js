@@ -77,7 +77,7 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
                         marginBottom: 16,
                         marginRight: 30,
                     }}>
-                        <div style={{
+                        {group !== '' && <div style={{
                             color: 'grey',
                             borderBottom: '1px solid silver',
                             width: 200,
@@ -85,7 +85,7 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
                             marginLeft: 4,
                         }}>
                             {group}
-                        </div>
+                        </div>}
                         {labels[group].map((el, i) => {
                             return !el.disabled ?
                                 <div className="row no-gutters" style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >

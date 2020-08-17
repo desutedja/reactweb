@@ -242,7 +242,8 @@ export const createBillingUnitItem = (data, selected, history, role) => dispatch
 
     dispatch(post(billingEndpoint, data,
         res => {
-            history.push('/' + role + '/billing/unit/item');
+            const _res = res.data.data;
+            history.push('/' + role + '/billing/unit/' + _res.resident_unit + '/' + _res.id);
 
             dispatch(setInfo({
                 color: 'success',
@@ -263,7 +264,8 @@ export const editBillingUnitItem = (data, selectedItem, history, role) => dispat
 
     dispatch(put(billingEndpoint, { ...data, id: selectedItem.id },
         res => {
-            history.push('/' + role + '/billing/unit/item/details/' + selectedItem.id);
+            const _res = res.data.data;
+            history.push('/' + role + '/billing/unit/' + _res.resident_unit + '/' + _res.id);
 
             dispatch(setInfo({
                 color: 'success',
@@ -279,11 +281,13 @@ export const editBillingUnitItem = (data, selectedItem, history, role) => dispat
     ))
 }
 
-export const deleteBillingUnitItem = (id, ) => dispatch => {
+export const deleteBillingUnitItem = (id, unitid, history, role) => dispatch => {
     dispatch(startAsync());
 
     dispatch(del(billingEndpoint + '/' + id,
         res => {
+            history.push('/' + role + '/billing/unit/' + unitid);
+
             dispatch(setInfo({
                 color: 'success',
                 message: 'Billing has been deleted.'

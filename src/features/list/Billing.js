@@ -63,9 +63,11 @@ function Component({ view }) {
         { Header: 'Unit ID', accessor: 'id' },
         {
             Header: 'Unit', accessor: row => <span className="Link"
-                onClick={() => 
-                    dispatch(getBillingUnitDetails(row, history, url))
-                }>
+                onClick={() => {
+                //                    dispatch(getBillingUnitDetails(row, history, url))
+                    dispatch(setSelected(row));
+                    history.push("/" + role + "/billing/unit/" + row.id)
+                }}>
             <b>{toSentenceCase(row.section_type) + ' ' + row.section_name + ' ' + row.number}</b></span>
         },
         { Header: 'Building', accessor: row => <a className="Link" href={"/" + role + "/building/" + row.building_id} >{row.building_name}</a> },
@@ -82,7 +84,7 @@ function Component({ view }) {
                 templateLink={user.billing_bulk_template}
             />
             <Template
-                pagetitle="Billing List"
+                pagetitle="Unit Billing List"
                 title='Unit'
                 columns={columns}
                 slice='billing'

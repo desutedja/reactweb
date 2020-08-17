@@ -32,10 +32,11 @@ function Component() {
     const [previous, setPrevious] = useState('');
     const [recent, setRecent] = useState('');
 
-    const [service, setService] = useState({});
+    const { selectedItem, selected, loading } = useSelector(state => state.billing);
+
+    const [service, setService] = useState(selectedItem?.denom_unit ? { price_type : 'unit' } : {});
     const [services, setServices] = useState([]);
 
-    const { selectedItem, selected, loading } = useSelector(state => state.billing);
     const { role } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
@@ -49,7 +50,6 @@ function Component() {
           selectedItem.resident_id : selected.resident_id;
 
     useEffect(() => {
-
         dispatch(get(endpointAdmin + '/building/service' +
             '?page=1' +
             '&building_id=' + building + 
@@ -58,35 +58,27 @@ function Component() {
 
             res => {
                 const { items } = res.data.data;
-                setServices(items.map(el => ({
+                const _services = items.map(el => ({
                     label: el.name,
                     value: el.id,
                     price_type: el.price_type,
                     price_fixed: el.price_fixed,
                     price_unit: el.price_unit,
                     unit: el.denom_unit,
-                })));
-                selectedItem.id && setService(items.find(el => el.id === selectedItem.service))
+                }))
+                setServices(_services);
+                const _service = _services.find(el => el.value === selectedItem.service)
+                selectedItem.id && setService(_service)
             }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [ selectedItem.id ]);
 
     useEffect(() => {
-        if (service.price_type === 'unit') {
-            setPrevious('');
-            setRecent('');
-            dispatch(get(endpointBilling + '/management/billing/get_latest_usage_unit' +
-                '?unit_id=' + unit + 
-                '&service_id=' + service.value,
-
-            res => {
-                setPrevious(res.data.data.recent_usage);
-            }));
-        } else {
+        if (service.price_type === 'fixed') {
             setPrevious(0);
             setRecent(1);
         }
-    }, [dispatch, unit, service])
+    }, [dispatch, unit, service, selectedItem.id])
 
     console.log(history.location.state);
 
@@ -123,7 +115,7 @@ function Component() {
                         <div>
                             <div>Pricing Type : {service.price_type}</div>
                             <div>Price : {toMoney(service.price_type === 'fixed' ? 
-                                service.price_fixed : service.price_unit)} {service.price_type === 'unit' && <span>/{service.unit}</span>}</div>
+                                service.price_fixed : service.price_unit)}{service.price_type === 'unit' && <span>/{service.unit}</span>}</div>
                         </div>
                         <SectionSeparator />
                         <Input {...props} label="Month" options={months} />

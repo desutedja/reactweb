@@ -91,3 +91,5 @@ export const task_types = [
     {label: 'Service', value: 'service'},
     {label: 'Security', value: 'security'}
 ]
+
+export const nulldate = '0001-01-01T00:00:00Z';

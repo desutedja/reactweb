@@ -6,6 +6,7 @@ const Text = Yup.string().required(defaultRequiredError);
 const TextOptional = Yup.string().nullable();
 
 const Number = Yup.number("This value shoud be number.").required(defaultRequiredError);
+const NumberOptional = Yup.number("This value should be number").nullable();
 
 const Phone = Yup.string()
     .matches(/^(0*[1-9][0-9]*(\.[0-9]*)?|0*\.[0-9]*[1-9][0-9]*)$/, "Phone number should not contain unnecesarry characters.")
@@ -165,8 +166,8 @@ export const adsSchema = Yup.object().shape({
     occupation: Text,
     age_from: Number.min(10, 'Target age cannot be lower than 10.'),
     age_to: Number.max(85, "Target age cannot be more than 85."),
-    view_quota: Number.positive(),
-    click_quota: Number.positive(),
+    view_quota: NumberOptional.positive("This value should be positive"),
+    click_quota: NumberOptional.positive("This value should be positive"),
     os: Text,
     content_name: Text,
     content_type: Text,

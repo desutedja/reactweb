@@ -55,15 +55,17 @@ function Component({ view }) {
         'Information': [
             'created_on',
             {label: 'month', vfmt: v => <>{months[v]} {dataDetails.year}</>},
-            {label: 'name', lfmt: () => "Billing Name", vfmt: v => v} ,
             {label: 'group', vfmt: (v) => v === 'ipl' ? "IPL" : "Non-IPL" },
+            {label: 'name', lfmt: () => "Billing Name", vfmt: v => v} ,
             'service_name',
+            {label: 'remarks', lfmt: () => "Billing Description", vfmt: v => v} ,
         ],
         'Payment Information': [
             {label: 'due_date', vfmt: v => dateFormatter(v) },
-            {label: 'ref_code', vfmt: v => <a className="Link" href={"/" + role + "/billing/unit/item/record/" + v}>{v}</a> },
             {label: 'payment', vfmt: v => <Pill color={v === "paid" ? "success": "secondary"}>{toSentenceCase(v)}</Pill>},
-            {label: 'payment_date', vfmt: v => dateTimeFormatter(v) },
+            {disabled: dataDetails.payment == 'unpaid', label: 'payment_date', vfmt: v => dateTimeFormatter(v) },
+            {disabled: dataDetails.payment == 'unpaid', 
+                label: 'ref_code', vfmt: v => v ? <a className="Link" href={"/" + role + "/billing/unit/item/record/" + v}>{v}</a> : "-" },
         ],
         'Payment Calculation': [
             {disabled: !dataDetails.denom_unit, label: 'previous_usage', vfmt: (v) => <>{v} {dataDetails.denom_unit}</> },

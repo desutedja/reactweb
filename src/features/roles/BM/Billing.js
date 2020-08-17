@@ -3,6 +3,7 @@ import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 
 import Add from '../../form/Billing';
 import Details from '../../details/Billing';
+import Detailsv2 from '../../details/Billingv2';
 import DetailsItem from '../../details/BillingItem';
 import Settlement from '../../settlement/Billing';
 import BillingRecord from '../../details/BillingRecord';
@@ -25,17 +26,17 @@ function Component() {
             <Route path={`${path}/unit/item/record/:trx_code`}>
                 <BillingRecord />
             </Route>
-            <Route path={`${path}/unit/item/details/edit`}>
+            <Route path={`${path}/unit/:unitid/edit`}>
                 <Add />
             </Route>
-            <Route path={`${path}/unit/item/details/:id`}>
+            <Route path={`${path}/unit/:unitid/add`}>
+                <Add />
+            </Route>
+            <Route path={`${path}/unit/:unitid/:id`}>
                 <DetailsItem />
             </Route>
-            <Route path={`${path}/unit/item/add`}>
-                <Add />
-            </Route>
-            <Route path={`${path}/unit/item`}>
-                <Details />
+            <Route path={`${path}/unit/:unitid`}>
+                <Detailsv2 />
             </Route>
             <Route path={`${path}/settlement/:trx_code`}>
                 <BillingRecord />

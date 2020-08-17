@@ -13,13 +13,15 @@ import Tab from '../../../components/Tab';
 import Breadcrumb from '../../../components/Breadcrumb';
 
 function Component({image, title, website, phone, merchant, transparent=false,
-    email, labels, contents, activeTab, imageTitle = '', loading = true }) {
+    email, labels, contents, activeTab, pagetitle= '',  imageTitle = '', loading = true }) {
 
     const [imgLoading, setImgLoading] = useState(true);
 
     return (
+        <>
+        <h2 style={{ marginLeft: '16px' }}>{pagetitle}</h2>
+        <Breadcrumb title={title ? title : 'Details'} />
         <Loading loading={loading}>
-            <Breadcrumb title={title ? title : 'Details'} />
             <div style={{
                 display: 'flex',
                 flex: 1,
@@ -89,6 +91,7 @@ function Component({image, title, website, phone, merchant, transparent=false,
                 </div>
             </div>
         </Loading>
+        </>
     )
 }
 

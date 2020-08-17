@@ -61,6 +61,22 @@ export const yearsOnRange = (range) => {
     return arrYears;
 }
 
+export const monthsArr = [
+     '',
+     'January' ,
+     'February' ,
+     'March' ,
+     'April' ,
+     'May' ,
+     'June' ,
+     'July' ,
+     'August' ,
+     'September' ,
+     'October' ,
+     'November' ,
+     'December' ,
+];
+
 export const months = [
     { value: 1, label: 'January' },
     { value: 2, label: 'February' },
