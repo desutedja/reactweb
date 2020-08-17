@@ -174,14 +174,14 @@ export const editBuilding = ( data, history, id, role) => dispatch => {
     res => {
       dispatch(setSelected(res.data.data));
       console.log(history)
-      role === 'bm' ? history.push('/' + role + '/settings') :
-      history.push(`${id}`);
+      role === 'bm' ? history && history.push('/' + role + '/settings') :
+      history && history.push(`${id}`);
 
       dispatch(setInfo({
         color: 'success',
         message: 'Building has been updated.'
       }));
-
+      dispatch(refresh());
       dispatch(stopAsync());
     },
     err => {

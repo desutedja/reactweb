@@ -56,13 +56,19 @@ const merchantPayload = {
 }
 
 function Component() {
+  const { banks } = useSelector((state) => state.main);
+  const { loading, selected } = useSelector((state) => state.merchant);
+
   const [modal, setModal] = useState(false);
 
   const [inBuildings, setBuildings] = useState([]);
   const [categories, setCategories] = useState([]);
 
   const [address, setAddress] = useState('');
-  const [center, setCenter] = useState(null);
+  const [center, setCenter] = useState(selected?.lat ? ({
+    lat: selected.lat,
+    lng: selected.long
+  }) : null);
 
   const [districts, setDistricts] = useState([]);
 
@@ -72,8 +78,6 @@ function Component() {
   const [province, setProvince] = useState("");
   const [provinces, setProvinces] = useState([]);
 
-  const { banks } = useSelector((state) => state.main);
-  const { loading, selected } = useSelector((state) => state.merchant);
 
   let dispatch = useDispatch();
   let history = useHistory();
