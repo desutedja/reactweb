@@ -132,7 +132,7 @@ function Component({ view }) {
                 <ul>
                     <li>Subtotal  : {toMoney(dataDetails.total)}</li>
                     <li>Tax : {toMoney(dataDetails.tax_amount)}</li>
-                    <li>Additional Charges : {toMoney(dataDetails.additional_charges)}</li>
+                    <li>Additional Charges : {toMoney(dataDetails.additional_charge_amount)}</li>
                     <li>Due Penalty : {toMoney(dataDetails.billing_penalty_amount)}</li>
                     <li><b>Total Amount : {toMoney(dataDetails.total_amount)}</b></li>
                 </ul>
