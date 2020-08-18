@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import { endpointAds } from '../../settings';
-import { get, post, put, del } from '../slice';
+import { get, post, put, del, patch } from '../slice';
 import { setInfo } from '../slice';
 
 const adsEndpoint = endpointAds + '/management/ads';
@@ -196,6 +196,24 @@ export const createAdsSchedule = (data) => dispatch => {
   dispatch(startAsync());
 
   dispatch(post(adsEndpoint + '/schedule', data,
+    res => {
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Advertisement schedule has been added.'
+      }));
+
+      dispatch(refresh());
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    }))
+}
+
+export const editAdsSchedule = (data) => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(patch(adsEndpoint + '/schedule', data,
     res => {
       dispatch(setInfo({
         color: 'success',
