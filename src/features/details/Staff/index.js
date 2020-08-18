@@ -42,7 +42,7 @@ function Component({ view }) {
             ],
             'Management': [
                 'management_name',
-                { label: 'staff_id', lfmt: () => "Staff ID" },
+                { label: 'staff_id', lfmt: () => "Identity No" },
                 { label: 'staff_role', lfmt: () => "Staff Role", vfmt: (v) => staffRoleFormatter(v) },
                 {
                     disabled: data.staff_role !== "Technician",

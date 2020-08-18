@@ -7,9 +7,10 @@ import Table from '../../../../components/Table';
 import Modal from '../../../../components/Modal';
 import Form from '../../../../components/Form';
 import Input from '../../../../components/Input';
-import { getAdsSchedule, deleteAdsSchedule, createAdsSchedule } from '../../../slices/ads';
+import { getAdsSchedule, editAdsSchedule } from '../../../slices/ads';
 import { daysLabel, days } from '../../../../utils';
-import { setConfirmDelete } from '../../../slice';
+import { setConfirmDelete, post } from '../../../slice';
+import { endpointAds } from '../../../../settings';
 
 const columns = [
     { Header: "Day", accessor: row => days[row.day - 1] },
@@ -18,7 +19,8 @@ const columns = [
 ]
 
 function Component({ view }) {
-    const [addSchedule, setAddSchedule] = useState(false);
+    const [edit, setEdit] = useState(false);
+    const [editing, setEditing] = useState('');
     const [allDay, setAllDay] = useState(false);
 
     const { selected, loading, schedule, refreshToggle } = useSelector(state => state.ads);
@@ -33,8 +35,8 @@ function Component({ view }) {
 
     return (
         <div>
-            <Modal isOpen={addSchedule} disableFooter={true} toggle={() => setAddSchedule(false)}>
-                Add Schedule
+            <Modal isOpen={edit} disableFooter={true} toggle={() => setEdit(false)}>
+                Edit Schedule
                 <Form
                     noContainer={true}
                     onSubmit={data => {
@@ -42,17 +44,19 @@ function Component({ view }) {
                             data.hour_from = '00:00:00';
                             data.hour_to = '23:59:59';
                         }
-                        dispatch(createAdsSchedule({ ...data, adv_id: selected.id }))
-                        setAddSchedule(false);
+                        dispatch(editAdsSchedule({ ...data, id: editing.int }))
+                        setEdit(false);
+                        setAllDay(false);
                     }}
                 >
-                    <Input label="Day" type="select" options={daysLabel} />
+                    <Input label="Day" type="select" options={daysLabel} inputValue={editing.day} />
                     <div class="form-check mt-4">
-                        <input type="checkbox" class="form-check-input" id="all-day" value={allDay} onChange={e => setAllDay(e.target.checked)} />
+                        <input type="checkbox" class="form-check-input" id="all-day"
+                            onChange={e => setAllDay(e.target.checked)} />
                         <label class="form-check-label m-0 cursor-pointer" for="all-day"><strong>All Day</strong></label>
                     </div>
-                    <Input disabled={allDay} label="Hour From" type="time" />
-                    <Input disabled={allDay} label="Hour To" type="time" />
+                    <Input disabled={allDay} label="Hour From" type="time" inputValue={allDay ? '00:00:00' : editing.hour_from} />
+                    <Input disabled={allDay} label="Hour To" type="time" inputValue={allDay ? '23:59:59' : editing.hour_to} />
                 </Form>
             </Modal>
             <Table
@@ -63,16 +67,10 @@ function Component({ view }) {
                 pageCount={schedule.total_pages}
                 fetchData={fetchData}
                 filters={[]}
-                actions={view ? null : [
-                    <Button key="Add" label="Add" icon={<FiPlus />}
-                        onClick={() => setAddSchedule(true)}
-                    />
-                ]}
-                onClickDelete={view ? null : row =>
-                    dispatch(setConfirmDelete("Are you sure to delete this item?",
-                        () => dispatch(deleteAdsSchedule(row))
-                    ))
-                }
+                onClickEdit={view ? null : row => {
+                    setEditing(row);
+                    setEdit(true);
+                }}
             />
         </div>
     )
