@@ -48,7 +48,7 @@ function Component({ view }) {
 
     let dispatch = useDispatch();
 
-    const { id } = useParams();
+    const { unitid, id } = useParams();
 
     const details = useMemo(() => (
     {
@@ -65,7 +65,7 @@ function Component({ view }) {
             {label: 'payment', vfmt: v => <Pill color={v === "paid" ? "success": "secondary"}>{toSentenceCase(v)}</Pill>},
             {disabled: dataDetails.payment == 'unpaid', label: 'payment_date', vfmt: v => dateTimeFormatter(v) },
             {disabled: dataDetails.payment == 'unpaid', 
-                label: 'ref_code', vfmt: v => v ? <a className="Link" href={"/" + role + "/billing/unit/item/record/" + v}>{v}</a> : "-" },
+                label: 'ref_code', vfmt: v => v ? <a className="Link" href={"/" + role + "/billing/unit/" + unitid + "/record/" + v}>{v}</a> : "-" },
         ],
         'Payment Calculation': [
             {disabled: !dataDetails.denom_unit, label: 'previous_usage', vfmt: (v) => <>{v} {dataDetails.denom_unit}</> },

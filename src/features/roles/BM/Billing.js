@@ -22,8 +22,8 @@ function Component() {
             <Route path={`${path}/edit`}>
                 <Add />
             </Route>
-            <Redirect exact from={`${path}/unit/item/record`} to={`${path}/unit/item`} />
-            <Route path={`${path}/unit/item/record/:trx_code`}>
+            <Redirect exact from={`${path}/unit/:unitid/record`} to={`${path}/unit/:unitid`} />
+            <Route path={`${path}/unit/:unitid/record/:trx_code`}>
                 <BillingRecord />
             </Route>
             <Route path={`${path}/unit/:unitid/edit`}>

@@ -9,6 +9,7 @@ import { endpointBilling } from '../../settings';
 import { get } from '../slice';
 import ThreeColumn from '../../components/ThreeColumn';
 import Button from '../../components/Button';
+import Popover from '../../components/Popover';
 import Input from '../../components/Input';
 import Row from '../../components/Row';
 import Column from '../../components/Column';
@@ -44,6 +45,7 @@ function Component({ view }) {
     const [data, setData] = useState({items: []});
     const [items, setItems] = useState([]);
     const [active, setActive] = useState(-1);
+    const [info, setInfo] = useState('');
 
     const [loading, setLoading] = useState(true);
 
@@ -72,7 +74,9 @@ function Component({ view }) {
             { Header: 'Due Penalty', accessor: row => toMoney(row.billing_penalty_amount) },
             {
                 Header: 'Ref Code', accessor: row => row.ref_code ?
-                    <a class="Link" href={"/" + role + "/billing/unit/item/record/" + row.ref_code}>{toEllipsis(row.ref_code, 10)}</a> : '-'
+                <Popover item={<a class="Link" href={"/" + role + "/billing/unit/" + unitid + "/record/" + row.ref_code}>
+                    {toEllipsis(row.ref_code, 10)}
+                </a>} title={row.ref_code} placement="top"/> : '-'
             },
             {
                 Header: 'Payment', accessor: row =>
@@ -99,21 +103,17 @@ function Component({ view }) {
             '?page=1&limit=999999&unit_id=' + unitid +
             '&search=' + search, 
             res => {
-                setBmonths(res.data.data.items);
+                setBmonths(res.data.data.billing_months?.items);
+                setInfo(res.data.data.info);
             }))
     }, [dispatch, search, unitid])
-
-    useEffect(() => {
-        console.log(selected)
-        // eslint-disable-next-line react-hooks/exhaustive-deps 
-     }, [])
 
     return (
         <Template transparent
             pagetitle="Unit Billing Details"
-            title={(role === "sa" ? toSentenceCase(selected.building_name) + ", " : "") +
-                toSentenceCase(selected.section_type) + " " +
-                toSentenceCase(selected.section_name) + " " + selected.number}
+            title={(role === "sa" ? toSentenceCase(info?.building_name) + ", " : "") +
+                toSentenceCase(info?.section_type) + " " +
+                toSentenceCase(info?.section_name) + " " + info?.number}
             loading={false}
             labels={[]}
             contents={[
@@ -188,7 +188,7 @@ function Component({ view }) {
                                             Unit Information
                                             <hr/>
                                         </CardTitle>
-                                        <Detail type="Billing" data={selected} labels={details} editable={false} />
+                                        <Detail type="Billing" data={info || {}} labels={details} editable={false} />
                                     </CardBody>
                                 </Card>
                             </Column>
@@ -203,11 +203,11 @@ function Component({ view }) {
                                             Summary 
                                             <hr/>
                                         </CardTitle>
-                                        <ThreeColumn first="Subtotal" third={toMoney(data?.items?.group_amount)} />
-                                            <ThreeColumn first={"Penalty"}
+                                        <ThreeColumn second="Subtotal" third={toMoney(data?.items?.group_amount)} />
+                                            <ThreeColumn second={"Penalty"}
                                                 third={<span style={{ color: 'red' }}>
                                                     {toMoney(data?.items?.group_penalty)}</span>} />
-                                            <ThreeColumn first="Total"
+                                            <ThreeColumn second="Total"
                                                 third={<h4 className="m-0">{toMoney(data?.items?.total_group_amount)}</h4>} />
                                     </CardBody>
                                 </Card>

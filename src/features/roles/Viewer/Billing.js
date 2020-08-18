@@ -16,7 +16,11 @@ function Component() {
     return (
         <Switch>
             <Redirect exact from={path} to={`${path}/unit`} />
-            <Route path={`${path}/unit/item/record/:trx_code`}>
+            <Route exact path={`${path}/unit`}>
+                <List />
+            </Route>
+            <Redirect exact from={`${path}/unit/:unitid/record`} to={`${path}/unit/:unitid`} />
+            <Route path={`${path}/unit/:unitid/record/:trx_code`}>
                 <BillingRecord view />
             </Route>
             <Route path={`${path}/details/:trx_code`}>

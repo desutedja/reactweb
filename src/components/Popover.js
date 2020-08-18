@@ -12,16 +12,16 @@ function Component({ id, placement, item, title, content }) {
         {item}
       </span>
       <Popover
-        placement={item.placement}
+        placement={placement}
         isOpen={popoverOpen}
         target={"Popover-" + id}
         toggle={toggle}
         trigger="hover"
       >
         <PopoverHeader>{title}</PopoverHeader>
-        <PopoverBody>
+        {content && <PopoverBody>
             {content}
-        </PopoverBody>
+        </PopoverBody>}
       </Popover>
     </span>
   );

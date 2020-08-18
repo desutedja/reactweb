@@ -26,7 +26,8 @@ function Component() {
     const columns = useMemo(() => ([
         { Header: 'ID', accessor: 'id' },
         { Header: 'Name', accessor: row => 
-            <BillingItem items={[row.name, (row.service_name + " - " + (row.group === 'ipl' ? 'IPL' : 'Non-IPL'))]} id={row.id} /> },
+        <BillingItem items={[row.name, (row.service_name + " - " + (row.group === 'ipl' ? 'IPL' : 'Non-IPL'))]} 
+                unitid={row.resident_unit} id={row.id} /> },
         { Header: 'Group', accessor: 'group' },
         { Header: 'Usage (Recent - Previous)', 
             accessor: row => <>{row.recent_usage - row.previous_usage} ({row.recent_usage} - {row.previous_usage}) {row.denom_unit}</>},
@@ -130,7 +131,7 @@ function Component() {
                                         { data.info?.penalty_fee > 0 ?
                                         <span>
                                             Total: {toMoney(data.items?.reduce((sum, el) => sum + el.total, 0))} + 
-                                            {toMoney(data.info?.penalty_fee)} (penalty) = <b style={{ color: 'blue' }}>
+                                            {toMoney(data.info?.penalty_amount)} (penalty) = <b style={{ color: 'blue' }}>
                                                 {toMoney(data.info?.selling_price)}</b></span> :
                                         <>Total: <b style={{ color: 'blue' }}>{toMoney(data.items?.reduce((sum, el) => sum + el.total, 0))}</b></>
                                     }
