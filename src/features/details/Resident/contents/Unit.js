@@ -43,6 +43,7 @@ function Component({ id, view }) {
 
     const [addSubAccount, setAddSubAccount] = useState(false);
     const [addSubAccountStep, setAddSubAccountStep] = useState(false);
+    // eslint-disable-next-line no-unused-vars
     const [residents, setResidents] = useState([]);
     const [subAccount, setSubAccount] = useState({});
     const [ownershipStatus, setOwnershipStatus] = useState('');

@@ -46,15 +46,15 @@ function Component() {
     const [trxSumm, setTrxSumm] = useState({});
 
     const [successData, setSuccessData] = useState([]);
-    const [successType, setSuccessType] = useState('year');
+    const [successType] = useState('year');
 
     const [failedData, setFailedData] = useState([]);
-    const [failedType, setFailedType] = useState('year');
+    const [failedType] = useState('year');
 
     const [merchantInfo, setMerchantInfo] = useState({});
 
     const [orderData, setOrderData] = useState([]);
-    const [orderType, setOrderType] = useState('year');
+    const [orderType] = useState('year');
 
     useEffect(() => {
         dispatch(get(endpointMerchant + '/admin/categories',

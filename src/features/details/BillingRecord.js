@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { post, get } from '../slice';
+import { get } from '../slice';
 import { endpointBilling } from '../../settings';
 import moment from 'moment';
 
@@ -16,10 +16,7 @@ import { toMoney, toSentenceCase, dateTimeFormatter, dateFormatter } from '../..
 function Component() {
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
-    const [totalItems, setTotalItems] = useState('');
-    const [pageCount, setPageCount] = useState('');
 
-    const { unit } = useSelector(state => state.billing);
     let { trx_code } = useParams();
     let dispatch = useDispatch();
 

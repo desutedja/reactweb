@@ -6,7 +6,7 @@ import moment from 'moment';
 import SectionSeparator from '../../components/SectionSeparator';
 import { editAds, createAds } from '../slices/ads';
 import { get } from '../slice';
-import { endpointAdmin, endpointMerchant } from '../../settings';
+import { endpointAdmin } from '../../settings';
 
 import Template from "./components/TemplateWithFormik";
 import { Form, FieldArray, Field } from 'formik';
@@ -102,6 +102,7 @@ function Component() {
     const { selected, loading } = useSelector(state => state.ads);
 
     const [buildings, setBuildings] = useState([]);
+    // eslint-disable-next-line no-unused-vars
     const [selectedBuildings, setSelectedBuildings] = useState(selected.building ? selected.building : []);
     const [searchbuilding, setSearchbuilding] = useState('');
 
@@ -167,6 +168,7 @@ function Component() {
                 }
             }}
             edit={data =>  {
+                // eslint-disable-next-line no-unused-vars
                 const { schedules, ads, building_list } = data;
                 dispatch(editAds({ads, building_list}, history, selected.id))
             }}

@@ -5,7 +5,6 @@ import {
     FiShoppingCart,
     FiZap,
     FiVolume2,
-    FiRss,
     FiBriefcase,
     FiShoppingBag,
 } from "react-icons/fi";

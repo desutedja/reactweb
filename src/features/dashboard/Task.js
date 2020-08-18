@@ -8,11 +8,7 @@ import { RiTaskLine, RiFileExcelLine, RiFileChartLine } from 'react-icons/ri';
 
 import { getSOS } from './slice';
 import { 
-    Bar,
-    Line,
-    // Area,
-    XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, ResponsiveContainer, Cell, ComposedChart, 
-    // AreaChart
+    Bar, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, ResponsiveContainer, Cell, ComposedChart, 
 } from 'recharts';
 import { getDatesRange, months } from '../../utils';
 import { endpointTask } from '../../settings';

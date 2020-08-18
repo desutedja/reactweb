@@ -4,7 +4,7 @@ import SectionSeparator from '../../components/SectionSeparator';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory  } from 'react-router-dom';
 import { months, yearsOnRange, toMoney } from '../../utils';
-import { endpointAdmin, endpointBilling } from '../../settings';
+import { endpointAdmin } from '../../settings';
 import { createBillingUnitItem, editBillingUnitItem } from '../slices/billing';
 import { get } from '../slice';
 
@@ -105,7 +105,7 @@ function Component() {
             edit={data => dispatch(editBillingUnitItem(data, selectedItem, history, role))}
             add={data => dispatch(createBillingUnitItem(data, selectedItem, history, role))}
             renderChild={props => {
-                const { setFieldValue, values, errors } = props;
+                const { errors } = props;
 
                 return (
                     <Form className="Form">

@@ -32,7 +32,6 @@ const tabs = [
 
 function Component({ view }) {
     const [info, setInfo] = useState({});
-    const [active, setActive] = useState(null);
     const [selectedId, setSelectedId] = useState([]);
     const [selected, setSelected] = useState([]);
     const [limit, setLimit] = useState(5);

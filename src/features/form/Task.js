@@ -45,8 +45,8 @@ export default function Component() {
     useEffect(() => {
         const condition = new RegExp(unitValue.toString())
         setUnits(unit.items.filter(u => (
-                condition.test(u.section_type + ' ' + u.number) ||
-                condition.test(u.section_type + ' ' + u.section_name + ' ' + u.number)
+                condition.test(u.section_type + ' No. ' + u.number) ||
+                condition.test(u.section_type + ' ' + u.section_name + 'Floor' + u.floor + ' No. ' + u.number)
             )
         ));
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,7 +87,7 @@ export default function Component() {
                                         ...taskData,
                                         building_unit_id: Number(el.id)
                                     })
-                                    setUnitValue(el.section_type + ' ' + el.section_name + ' ' + el.number)
+                                    setUnitValue(el.section_type + ' ' + el.section_name + ' Floor ' + el.floor + ' No. ' + el.number)
                                 }}
                             />
                             <Radio
@@ -224,7 +224,7 @@ const SelectOption = ({
                                 className="no-list selectable px-3 py-2"
                                 onClick={() => optionClick && optionClick(el)}
                             >
-                                {el.section_type + ' ' + el.section_name + ' ' + el.number}
+                                {el.section_type + ' ' + el.section_name + ' Floor ' + el.floor + ' No. ' + el.number}
                             </li>
                         )) : (
                             <li

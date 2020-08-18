@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 import React, { useCallback, useMemo, useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
@@ -43,7 +44,7 @@ function Component({ view }) {
     const [loading, setLoading] = useState(false);
     const [loadingDetails, setLoadingDetails] = useState(true);
 
-    const { unit, refreshToggle } = useSelector(state => state.billing);
+    const { refreshToggle } = useSelector(state => state.billing);
     const { role } = useSelector(state => state.auth);
 
     let dispatch = useDispatch();
@@ -82,7 +83,8 @@ function Component({ view }) {
                 vfmt: v => <>{toMoney(v)} ({dataDetails.payment === 'paid' ? dataDetails.billing_record_penalty : dataDetails.penalty_fee}%)</> },
             {label: 'total_amount', vfmt: v => toMoney(v)},
         ],
-    }),[ dataDetails ]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }), [dataDetails]);
 
     useEffect(() => {
         !dataDetails && setLoadingDetails(true);

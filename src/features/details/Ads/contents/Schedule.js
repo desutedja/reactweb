@@ -1,16 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FiPlus, FiTrash } from 'react-icons/fi';
 
-import Button from '../../../../components/Button';
 import Table from '../../../../components/Table';
 import Modal from '../../../../components/Modal';
 import Form from '../../../../components/Form';
 import Input from '../../../../components/Input';
 import { getAdsSchedule, editAdsSchedule } from '../../../slices/ads';
-import { daysLabel, days } from '../../../../utils';
-import { setConfirmDelete, post } from '../../../slice';
-import { endpointAds } from '../../../../settings';
+import { days } from '../../../../utils';
 
 const columns = [
     { Header: "Day", accessor: row => days[row.day - 1] },

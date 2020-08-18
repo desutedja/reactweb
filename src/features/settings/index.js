@@ -207,9 +207,6 @@ function Settings() {
                                         color: 'success',
                                         message: 'Item has been deleted.'
                                     }))
-                                },
-                                err => {
-                                    console.log(err)
                                 }))
                                 setRefresh(!refresh);
                             }))

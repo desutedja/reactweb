@@ -1,10 +1,8 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
-import { getTaskDetails } from '../../features/slices/task';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 function Component({ items, id, data }) {
-    let dispatch = useDispatch();
 
     const { role } = useSelector(state => state.auth);
 

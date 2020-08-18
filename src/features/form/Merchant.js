@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { GoogleMap } from '@react-google-maps/api';
 import PlacesAutocomplete, {
   geocodeByAddress,
-  geocodeByPlaceId,
   getLatLng
 } from 'react-places-autocomplete';
 

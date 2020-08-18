@@ -1,12 +1,7 @@
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useHistory, useRouteMatch } from 'react-router-dom';
-import { getBillingUnitItemDetails } from '../../features/slices/billing';
+import { useSelector } from 'react-redux';
 
 function BillingItem({ items, unitid, id }) {
-    let dispatch = useDispatch();
-    let history = useHistory();
-    let { url } = useRouteMatch();
 
     const { role } = useSelector(state => state.auth);
 

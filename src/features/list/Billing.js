@@ -6,7 +6,7 @@ import { FiSearch, FiDownload, FiUpload } from 'react-icons/fi';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Button from '../../components/Button';
-import { getBillingUnit, getBillingUnitDetails, downloadBillingUnit, setSelectedItem } from '../slices/billing';
+import { getBillingUnit, downloadBillingUnit, setSelectedItem } from '../slices/billing';
 import { endpointAdmin } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
 import { get } from '../slice';

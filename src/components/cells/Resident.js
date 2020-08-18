@@ -1,12 +1,11 @@
 import React, {  } from 'react';
 import { useSelector } from 'react-redux';
 import Avatar from 'react-avatar';
-import { useRouteMatch, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import './style.css';
 
 function Component({ id, data = {}, compact=false, onClick=null }) {
-    let { path } = useRouteMatch();
 
     const { role } = useSelector(state => state.auth);
 
