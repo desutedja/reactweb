@@ -17,7 +17,7 @@ import Table from '../../components/Table';
 import { Card, CardTitle, CardBody } from 'reactstrap';
 import Filter from '../../components/Filter';
 import { dateTimeFormatterCell, toMoney, toEllipsis, toSentenceCase, dateFormatter, monthsArr} from '../../utils';
-import { getBillingUnitItem, setSelectedItem, deleteBillingUnitItem } from '../slices/billing';
+import { getBillingUnitItem, setSelectedItem, deleteBillingUnitItem, setSelected} from '../slices/billing';
 import { ListGroupItem, ListGroup } from 'reactstrap';
 import Pill from '../../components/Pill';
 import { FiSearch, FiClock, FiPlus } from 'react-icons/fi';
@@ -105,6 +105,7 @@ function Component({ view }) {
             res => {
                 setBmonths(res.data.data.billing_months?.items);
                 setInfo(res.data.data.info);
+                dispatch(setSelected(res.data.data.info));
             }))
     }, [dispatch, search, unitid])
 

@@ -64,8 +64,6 @@ function Component({ view }) {
         {
             Header: 'Unit', accessor: row => <span className="Link"
                 onClick={() => {
-                //                    dispatch(getBillingUnitDetails(row, history, url))
-                    dispatch(setSelected(row));
                     history.push("/" + role + "/billing/unit/" + row.id)
                 }}>
             <b>{toSentenceCase(row.section_type) + ' ' + row.section_name + ' ' + row.number}</b></span>
@@ -139,8 +137,7 @@ function Component({ view }) {
                 onClickAddBilling={view ? null : row => {
                     dispatch(setSelected(row));
                     dispatch(setSelectedItem({}));
-                    dispatch(getBillingUnitDetails(row, history, url))
-                    history.push(url + '/item/add');
+                    history.push(url + '/'+ row.id +'/add');
                 }}
             />
         </>
