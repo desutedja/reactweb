@@ -22,6 +22,7 @@ function Component({ view }) {
     const [edit, setEdit] = useState(false);
     const [editing, setEditing] = useState('');
     const [allDay, setAllDay] = useState(false);
+    const [none, setNone] = useState(false);
 
     const { selected, loading, schedule, refreshToggle } = useSelector(state => state.ads);
 
@@ -49,14 +50,42 @@ function Component({ view }) {
                         setAllDay(false);
                     }}
                 >
-                    <Input label="Day" type="select" options={daysLabel} inputValue={editing.day} />
-                    <div class="form-check mt-4">
-                        <input type="checkbox" class="form-check-input" id="all-day"
-                            onChange={e => setAllDay(e.target.checked)} />
-                        <label class="form-check-label m-0 cursor-pointer" for="all-day"><strong>All Day</strong></label>
+                    {/* <input type="checkbox" class="form-check-input" id="all-day"
+                        onChange={e => setAllDay(e.target.checked)} />
+                    <label class="form-check-label m-0 cursor-pointer" for="all-day"><strong>All Day</strong></label> */}
+                    <Input disabled={allDay || none} label="Hour From" type="time" 
+                        inputValue={allDay ? '00:00:00' : none ? '00:00:00' : editing.hour_from}
+                    />
+                    <Input disabled={allDay || none} label="Hour To" type="time" 
+                        inputValue={allDay ? '23:59:59' : none ? '00:00:00' : editing.hour_to}
+                    />
+                    <div style={{
+                        display: 'flex',
+                        marginTop: 16,
+                    }}>
+                        <button
+                            type="button"
+                            style={{
+                                marginRight: 16
+                            }}
+                            onClick={() => {
+                                setAllDay(!allDay)
+                            }}
+                        >
+                            {allDay ? 'Disable' : 'Set'} All Day
+                        </button>
+                        <button
+                            type="button"
+                            style={{
+                                marginRight: 16
+                            }}
+                            onClick={() => {
+                                setNone(!none)
+                            }}
+                        >
+                            {none ? 'Disable' : 'Set'} None
+                        </button>
                     </div>
-                    <Input disabled={allDay} label="Hour From" type="time" inputValue={allDay ? '00:00:00' : editing.hour_from} />
-                    <Input disabled={allDay} label="Hour To" type="time" inputValue={allDay ? '23:59:59' : editing.hour_to} />
                 </Form>
             </Modal>
             <Table
