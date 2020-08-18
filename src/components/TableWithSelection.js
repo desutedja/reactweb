@@ -18,6 +18,9 @@ import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from
 import { toSentenceCase } from '../utils';
 
 function Component({
+    expander = true,
+    pagination = true,
+    tableAction = true,
     columns,
     data,
     totalItems,
@@ -66,6 +69,7 @@ function Component({
         usePagination,
         useRowSelect,
         hooks => {
+            expander ? 
             hooks.visibleColumns.push(columns => {
                 return [
                     {
@@ -94,6 +98,27 @@ function Component({
                                     {row.isExpanded ? <FaCaretDown /> : <FaCaretRight />}
                                 </span>
                             ),
+                    },
+                    ...columns,
+                ]
+            }) :
+            hooks.visibleColumns.push(columns => {
+                return [
+                    {
+                        id: 'selection',
+                        Header: ({ getToggleAllRowsSelectedProps }) => (
+                            <div>
+                                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+                            </div>
+                        ),
+                        Cell: ({ row }) => {
+                            // console.log(row.getToggleRowSelectedProps())
+                            return (
+                                <div >
+                                    <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+                                </div>
+                            )
+                        }
                     },
                     ...columns,
                 ]
@@ -173,7 +198,7 @@ function Component({
                     { label: 'Descending', value: 'DESC' },
                 ]} inputValue={sortType} setInputValue={setSortTypeInput} />
             </Modal>
-            <div className="TableAction">
+            {tableAction && <div className="TableAction">
                 <div style={{
                     display: 'flex',
                 }}>
@@ -222,7 +247,7 @@ function Component({
                         />
                     </div>
                 </div>
-            </div>
+            </div>}
             {filters.length > 0 && <div className={"FilterContainer" + (filter ? ' down' : '')}>
                 {filters.map((el, index) => !el.hidden &&
                     <FilterButton
@@ -372,7 +397,7 @@ function Component({
                     }
                 </table>
             </div>
-            <div className="Pagination">
+            {pagination && <div className="Pagination">
                 <div className="Pagination-range">
                     <p><b>{totalItems} Results</b></p>
                     <p style={{
@@ -427,7 +452,7 @@ function Component({
                         <FiChevronsRight />
                     </IconButton>
                 </div>
-            </div>
+            </div>}
         </div>
     )
 }

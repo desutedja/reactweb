@@ -270,8 +270,6 @@ function Component({ view }) {
                     />
                 ])
             }}
-            actions={[
-            ]}
         />
         </>
     )

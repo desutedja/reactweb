@@ -18,6 +18,10 @@ import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from
 import { toSentenceCase } from '../utils';
 
 function Table({
+    noSearch = false,
+    expander = true,
+    tableAction = true,
+    pagination = true,
     columns,
     data,
     totalItems,
@@ -64,6 +68,7 @@ function Table({
         useExpanded,
         usePagination,
         hooks => {
+            expander ?
             hooks.visibleColumns.push(columns => {
                 return [
                     {
@@ -77,6 +82,11 @@ function Table({
                                 </span>
                             ),
                     },
+                    ...columns,
+                ]
+            }) :
+            hooks.visibleColumns.push(columns => {
+                return [
                     ...columns,
                 ]
             })
@@ -147,7 +157,7 @@ function Table({
                     { label: 'Descending', value: 'DESC' },
                 ]} inputValue={sortType} setInputValue={setSortTypeInput} />
             </Modal>
-            <div className="TableAction">
+            {tableAction && <div className="TableAction">
                 <div style={{
                     display: 'flex',
                 }}>
@@ -185,7 +195,7 @@ function Table({
                         }}>Sort by: {toSentenceCase(sortField)}</b>
                         {sortType === 'DESC' ? <FiArrowDown /> : <FiArrowUp />}
                     </div>}
-                    <div className="TableSearch d-flex align-items-center">
+                    {!noSearch && <div className="TableSearch d-flex align-items-center">
                         <Input
                             label="Search"
                             compact
@@ -194,9 +204,9 @@ function Table({
                             inputValue={search}
                             setInputValue={setSearch}
                         />
-                    </div>
+                    </div>}
                 </div>
-            </div>
+            </div>}
             {filters.length > 0 && <div className={"FilterContainer" + (filter ? ' down' : '')}>
                 {filters.map((el, index) => !el.hidden &&
                     <FilterButton
@@ -225,9 +235,9 @@ function Table({
                     }
                     <thead>
                         {headerGroups.map((headerGroup, i) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    <th {...column.getHeaderProps()}><div className="TableHeader">
+                            <tr {...headerGroup.getHeaderGroupProps()} key={i}>
+                                {headerGroup.headers.map((column, i) => (
+                                    <th {...column.getHeaderProps()} key={i}><div className="TableHeader">
                                         {column.render('Header')}
                                         {column.isSorted
                                             ? column.isSortedDesc
@@ -297,11 +307,11 @@ function Table({
 
                                 return (
                                     <>
-                                        <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
+                                        <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} key={i}>
 
-                                            {row.cells.map(cell => {
+                                            {row.cells.map((cell, i) => {
                                                 return (
-                                                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                                    <td {...cell.getCellProps()} key={i}>{cell.render("Cell")}</td>
                                                 );
                                             })}
 
@@ -346,7 +356,7 @@ function Table({
                     }
                 </table>
             </div>
-            <div className="Pagination">
+            {pagination && <div className="Pagination">
                 <div className="Pagination-range">
                     <p><b>{totalItems} Results</b></p>
                     <p style={{
@@ -401,7 +411,7 @@ function Table({
                         <FiChevronsRight />
                     </IconButton>
                 </div>
-            </div>
+            </div>}
         </div>
     )
 }

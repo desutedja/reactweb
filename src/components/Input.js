@@ -111,13 +111,12 @@ function Component({
                             rows={rows}
                             value={value}
                             onChange={(e) => {
-                                // console.log(e.target.value)
                                 setValue(e.target.value);
                                 setInputValue && setInputValue(e.target.value);
                             }}
                             onClick={onClick}
                         >
-                            {(!inputValue || placeholder) && <option value="">{placeholder == null ? label : placeholder}</option>}
+                            {(!inputValue || placeholder || label) && <option value="">{placeholder == null ? label : placeholder}</option>}
                             {options.map(el =>
                                 <option key={el.value} value={el.value}>{el.label}</option>
                             )}
@@ -164,6 +163,7 @@ function Component({
                     />
                 </div>}
                 <input
+                    className="w-100"
                     type="url"
                     id={label}
                     name={name ? name : label.toLowerCase().replace(/ /g, '_')}
@@ -178,6 +178,7 @@ function Component({
                     onClick={onClick}
                 />
                 <input
+                    className="w-100"
                     ref={uploader}
                     accept="image/*"
                     type="file"

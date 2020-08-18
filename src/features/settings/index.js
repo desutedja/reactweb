@@ -1,12 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { get } from '../slice';
+import { get, del, setConfirmDelete, setInfo } from '../slice';
+import { FiPlus } from 'react-icons/fi'
 
-import { endpointAdmin } from '../../settings';
+import { endpointAdmin, endpointMerchant } from '../../settings';
+import { toSentenceCase } from '../../utils';
 import Breadcrumb from '../../components/Breadcrumb';
 import Loading from '../../components/Loading';
 import PGFee from './PGFee';
 import AdminFee from './AdminFee';
+import Tab from '../../components/Tab';
+import Table from '../../components/Table';
+import CellCategory from '../../components/cells/Category';
+import ModalCategory from './Category';
+import Button from '../../components/Button';
+
+const columns = [
+    { Header: 'Icon', accessor: row => <CellCategory data={row} /> },
+    { Header: 'Name', accessor: 'name' },
+    { Header: 'Type', accessor: row => toSentenceCase(row.type) }
+]
 
 function Settings() {
     const [data, setData] = useState({});
@@ -19,6 +32,9 @@ function Settings() {
     const [pgData, setPGData] = useState({});
     const [admin, setAdmin] = useState(false);
     const [adminData, setAdminData] = useState('');
+    const [categories, setCategories] = useState([]);
+    const [categoryData, setCategoryData] = useState({});
+    const [modalCategory, setModalCategory] = useState(false);
 
     let dispatch = useDispatch();
 
@@ -30,6 +46,21 @@ function Settings() {
         }))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refresh]);
+
+    useEffect(() => {
+        setLoading(true)
+        dispatch(get(endpointMerchant + '/admin/categories',
+        res => {
+            console.log(res.data)
+            setCategories(res.data.data);
+            setLoading(false);
+        },
+        err => {
+            console.log(err.response);
+            setLoading(false);
+        }))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [refresh])
 
     const toggle = () => {
         setRefresh(!refresh);
@@ -110,45 +141,90 @@ function Settings() {
             />
             <Breadcrumb />
             <div className="Container">
-                <div style={{
-                    display: 'flex',
-                    flex: 1,
-                    flexDirection: 'column',
-                    overflow: 'auto',
-                }}>
-                    <div className="Settings-item" style={{
-                        marginBottom: 16,
+                <Tab
+                labels={['Fees', 'Categories']}
+                contents={[
+                <>
+                    <div style={{
+                        display: 'flex',
+                        flex: 1,
+                        flexDirection: 'column',
+                        overflow: 'auto',
                     }}>
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
+                        <div className="Settings-item" style={{
+                            marginBottom: 16,
                         }}>
-                            <p style={{
-                                fontWeight: 'bold',
-                                marginRight: 8,
-                            }}>Admin Fee</p>
-                            <p style={{
-                                marginRight: 16,
-                            }}>{data.admin_fee} %</p>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}>
+                                <p style={{
+                                    fontWeight: 'bold',
+                                    marginRight: 8,
+                                }}>Admin Fee</p>
+                                <p style={{
+                                    marginRight: 16,
+                                }}>{data.admin_fee} %</p>
+                            </div>
+                            <button onClick={() => {
+                                setAdmin(true);
+                                setAdminData(data.admin_fee);
+                                setTitle('Admin Fee');
+                            }}>Change</button>
                         </div>
-                        <button onClick={() => {
-                            setAdmin(true);
-                            setAdminData(data.admin_fee);
-                            setTitle('Admin Fee');
-                        }}>Change</button>
+                        <p style={{
+                            fontWeight: 'bold',
+                            marginRight: 8,
+                            marginBottom: 8,
+                            paddingLeft: 8,
+                            fontSize: '1.2rem',
+                        }}>PG Fee</p>
+                        {data.id && data.payment_gateway_methods.map(el => {
+                            return <Item key={el.id} data={el} />
+                        })}
                     </div>
-                    <p style={{
-                        fontWeight: 'bold',
-                        marginRight: 8,
-                        marginBottom: 8,
-                        paddingLeft: 8,
-                        fontSize: '1.2rem',
-                    }}>PG Fee</p>
-                    {data.id && data.payment_gateway_methods.map(el => {
-                        return <Item key={el.id} data={el} />
-                    })}
-                </div>
-                <Loading loading={loading} />
+                    <Loading loading={loading} />
+                </>,
+                <>        
+                    <ModalCategory
+                        title={title}
+                        toggleRefresh={toggle}
+                        modal={modalCategory}
+                        toggleModal={() => setModalCategory(false)}
+                        data={categoryData}
+                    />
+                    <Table
+                        expander={false}
+                        noSearch={true}
+                        pagination={false}
+                        columns={columns}
+                        data={categories}
+                        onClickDelete={ row => {
+                            dispatch(setConfirmDelete("Are you sure to delete this item?", () => {
+                                dispatch(del(endpointMerchant + '/admin/categories/' + row.id))
+                                dispatch(setInfo({
+                                    color: 'success',
+                                    message: 'Item has been deleted.'
+                                }))
+                                setRefresh(!refresh);
+                            }))
+                        }}
+                        onClickEdit={row => {
+                            setCategoryData(row);
+                            setModalCategory(true);
+                            setTitle('Edit Category');
+                        }}
+                        renderActions={() => [
+                            <Button key="Add Category" label="Add Category" icon={<FiPlus />}
+                                onClick={() => {
+                                    setModalCategory(true);
+                                    setTitle('Add Category');
+                                }}
+                            />
+                        ]}
+                    />
+                </>
+                ]}/>
             </div>
         </>
     )
