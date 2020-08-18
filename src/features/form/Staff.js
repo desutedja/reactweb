@@ -177,7 +177,7 @@ function Component() {
                         name="building_management_id"
                         options={bManagements}
                     />}
-                    <Input {...props} label="Staff ID" />
+                    <Input {...props} label="Identity No" placeholder="KTP/SIM/Passport" />
                     <Input {...props} label="Status"
                         type="radio"
                         options={[
