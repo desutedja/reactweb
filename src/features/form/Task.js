@@ -36,7 +36,6 @@ export default function Component() {
         title: '',
         description: '',
         priority: 'low',
-        
         // integer
         building_unit_id: '',
         task_type: '',

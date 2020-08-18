@@ -194,14 +194,7 @@ function Component({ view }) {
             }))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, search, selectedRow]);
-
-    useEffect(() => {
-        console.log(history)
-        console.log('LOG', status, statusLabel)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [status])
-
-
+    
     useEffect(() => {
         building && dispatch(get(endpointAdmin + '/building/unit' +
             '?page=1' +

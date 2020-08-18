@@ -13,7 +13,7 @@ function Component() {
 
     const { role, user } = useSelector(state => state.auth);
     const row = {
-        id: user.building_management_id
+        id: user.building_id
     }
     let { path } = useRouteMatch();
 
