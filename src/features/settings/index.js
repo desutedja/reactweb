@@ -142,7 +142,7 @@ function Settings() {
             <Breadcrumb />
             <div className="Container">
                 <Tab
-                labels={['Fees', 'Categories']}
+                labels={['Fees', 'Merchant Categories']}
                 contents={[
                 <>
                     <div style={{
@@ -201,10 +201,15 @@ function Settings() {
                         data={categories}
                         onClickDelete={ row => {
                             dispatch(setConfirmDelete("Are you sure to delete this item?", () => {
-                                dispatch(del(endpointMerchant + '/admin/categories/' + row.id))
-                                dispatch(setInfo({
-                                    color: 'success',
-                                    message: 'Item has been deleted.'
+                                dispatch(del(endpointMerchant + '/admin/categories/' + row.id,
+                                res => {
+                                    dispatch(setInfo({
+                                        color: 'success',
+                                        message: 'Item has been deleted.'
+                                    }))
+                                },
+                                err => {
+                                    console.log(err)
                                 }))
                                 setRefresh(!refresh);
                             }))
