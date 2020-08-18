@@ -216,8 +216,8 @@ function Component() {
                         <Input {...props} label="End Date" type="date" />
 
                         <SectionSeparator title="Impression Quota" />
-                        <Input {...props} label="View Quota" type="number" />
-                        <Input {...props} label="Click Quota" type="number" />
+                        <Input {...props} optional label="View Quota" type="number" />
+                        <Input {...props}  optional label="Click Quota" type="number" />
 
                         <SectionSeparator title="Targetting" />
                         {auth.role === "sa" && <Input {...props} label="Target Building" name="target_building" type="radio" options={target_buildings}
