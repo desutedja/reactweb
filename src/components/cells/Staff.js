@@ -1,4 +1,5 @@
 import React, { } from 'react';
+import { useSelector } from 'react-redux';
 import Avatar from 'react-avatar';
 import { Link } from 'react-router-dom';
 
@@ -7,8 +8,10 @@ import { staffRoleFormatter, toSentenceCase } from '../../utils';
 
 function Component({ id, data = {}, compact = false }) {
 
+    const { role } = useSelector(state => state.auth);
+
     return (
-        <Link to={'staff/' + id} className={!compact ? "Item" : "Item-compact"}>
+        <Link to={'/' + role + '/staff/' + id} className={!compact ? "Item" : "Item-compact"}>
             <Avatar className="Item-avatar" size="40" src={data.photo}
                 name={data.firstname + ' ' + data.lastname} round
                 email={data.photo ? null : data.email} />
