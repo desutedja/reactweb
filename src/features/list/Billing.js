@@ -86,13 +86,13 @@ function Component({ view }) {
                 <ListGroupItem color="danger">{result.main_billings_failed} billings failed to create.</ListGroupItem>
             </ListGroup>
             <ListGroup>
-                <p>Showing up to 10 result: </p>
+                <p>Showing up to 100 result: </p>
                 {result.main_billings?.map((el, index) => {
                     /* only show up to 10 rows */
-                    return <>{index < 10 && <ListGroupItem color={(!el.row_error && !el.column_error) ? "success" : "danger"}>
+                    return <>{index < 100 && <ListGroupItem color={(!el.row_error && !el.column_error) ? "success" : "danger"}>
                         {(!el.row_error && !el.column_error) ? 
-                        <>{el.row_number}: <b>{el.data?.name}</b> for unit ID <b>{el.data?.resident_unit}</b> was created <b>(ID: {el.data?.id})</b>.</> :
-                            <>{el.row_number}: {el.row_error && <>{el.row_error},</>} {el.column_error && el.column_error.map(k => k.column_name + " " + k.error_message )}</>}
+                        <>Row {el.row_number}: <b>{el.data?.name}</b> for unit ID <b>{el.data?.resident_unit}</b> was created <b>(ID: {el.data?.id})</b>.</> :
+                            <>Row {el.row_number}: {el.row_error && <>{el.row_error},</>} {el.column_error && el.column_error.map(k => k.column_name + " " + k.error_message )}</>}
                         </ListGroupItem>}</>
                 })}
             </ListGroup>
@@ -102,13 +102,13 @@ function Component({ view }) {
                 <ListGroupItem color="success">{result.additional_charges_success} additional charges successfully created.</ListGroupItem>
                 <ListGroupItem color="danger">{result.additional_charges_failed} additional charges failed to create.</ListGroupItem>
             </ListGroup>
-                <p>Showing up to 10 result: </p>
+                <p>Showing up to 100 result: </p>
                 {result.additional_charges?.map((el, index) => {
                     /* only show up to 10 rows */
-                    return <>{index < 10 && <ListGroupItem color={(!el.row_error && !el.column_error) ? "success" : "danger"}>
+                    return <>{index < 100 && <ListGroupItem color={(!el.row_error && !el.column_error) ? "success" : "danger"}>
                         {(!el.row_error && !el.column_error) ? 
-                            <>{el.row_number}: <b>{el.data?.charge_name}</b> for billing ID <b>{el.data?.billing_id}</b> was created.</> :
-                                <>{el.row_number}: {el.row_error && <>{el.row_error},</>} {el.column_error && el.column_error.map(k => k.column_name + " " + k.error_message )}</>}
+                            <>Row {el.row_number}: <b>{el.data?.charge_name}</b> for billing ID <b>{el.data?.billing_id}</b> was created.</> :
+                                <>Row {el.row_number}: {el.row_error && <>{el.row_error},</>} {el.column_error && el.column_error.map(k => k.column_name + " " + k.error_message )}</>}
                         </ListGroupItem>}</>
                 })}
         </>
