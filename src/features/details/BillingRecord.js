@@ -45,10 +45,7 @@ function Component() {
                 dateTimeFormatter(v)
             },
             {label: 'payment_method', lfmt: () => "Via", vfmt: (v) => 
-                v === 'cash' ? <Pill color="warning">Payment by Cash</Pill> : <Pill color="success">Payment via apps</Pill>
-            },
-            {disabled: data.info?.payment_method === 'cash',
-                label: 'payment_bank', lfmt: () => "Payment Method", vfmt: (v) => toSentenceCase(v) 
+                <Pill color="warning">Payment by Cash</Pill>
             },
         ],
         'Unit': [
@@ -71,7 +68,8 @@ function Component() {
                 v === 'cash' ? <Pill color="warning">Payment by Cash</Pill> : <Pill color="success">Payment via apps</Pill>
             },
             {disabled: data.info?.payment_method === 'cash',
-                label: 'payment_bank', lfmt: () => "Payment Method", vfmt: (v) => toSentenceCase(v) 
+                label: 'payment_method', lfmt: () => "Payment Method", 
+                    vfmt: (v) => toSentenceCase(v) + (data.info?.payment_bank ? "- " + toSentenceCase(data.info?.payment_bank) : "")
             },
         ],
         'Unit': [
@@ -80,13 +78,11 @@ function Component() {
             'building_name',
             'management_name',
         ],
-        'Settlement': [
-            {label: 'payment_settled', lfmt: () => "Status", vfmt: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Settled" : "Unsettled"}</Pill>},
+        'Disbursement': [
+            {label: 'payment_settled', lfmt: () => "Settlement", vfmt: (v) => <Pill color={v ? "success" : "secondary"}>{v ? "Settled" : "Unsettled"}</Pill>},
             {label: 'payment_settled_date', lfmt: () => "Settlement Date", 
                 vfmt: (v) => dateTimeFormatter(v) },
-        ],
-        'Disbursement': [
-            {label: '', lfmt: () => "Status", 
+            {label: '', lfmt: () => "Disbursement", 
                 vfmt: () => <Pill color={data.info?.disbursement_date ? "success" : "secondary"}>
                     {data.info?.disbursement_date ? "Disbursed" : "Undisbursed"}</Pill>},
             {label: 'disbursement_date', vfmt: (v) => dateTimeFormatter(v) },
