@@ -66,7 +66,6 @@ export default function ({title, toggleRefresh, modal, toggleModal, data}) {
             isOpen={modal}
             toggle={() => {
                 toggleModal();
-                clearData();
             }}
             okLabel="Confirm"
             onClick={() => {
@@ -74,7 +73,6 @@ export default function ({title, toggleRefresh, modal, toggleModal, data}) {
             }}
             onClickSecondary={() => {
                 toggleModal();
-                clearData()
             }}
         >
             <Input label="Icon" type="file" inputValue={icon} setInputValue={setIcon}/>
