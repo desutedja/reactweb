@@ -62,6 +62,10 @@ function Settings() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [refresh])
 
+    useEffect(() => {
+        if (!modalCategory) setCategoryData({})
+    }, [modalCategory])
+
     const toggle = () => {
         setRefresh(!refresh);
     }
