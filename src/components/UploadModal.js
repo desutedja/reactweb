@@ -5,19 +5,35 @@ import Loading from './Loading';
 import { useDispatch } from 'react-redux';
 import { getFile, post } from '../features/slice';
 
-const UploadModal = ({ open, toggle, templateLink, uploadLink, uploadDataName, uploadFile, filename = 'template.xlsx' }) => {
+const UploadModal = ({ open, toggle, templateLink, uploadLink, uploadDataName, uploadFile, resultComponent = '', filename = 'template.xlsx' }) => {
     const fileInput = useRef();
     const [fileUpload, setFileUpload] = useState('');
-    const [result, setResult] = useState();
+    const [result, setResult] = useState('');
     const [loading, setLoading] = useState(false);
+    const [openRes, setOpenRes] = useState(false);
 
     let dispatch = useDispatch();
 
     return (
+        <>
+        {resultComponent &&<Modal
+            title={"Result"}
+            isOpen={openRes}
+            toggle={() => {
+                setOpenRes(false);
+            }}
+            okLabel={"Close"}
+            disableSecondary={true}
+            onClick={() => {
+                setOpenRes(false);
+            }}
+        >
+            { resultComponent(result) }
+        </Modal>}
         <Modal
             isOpen={open}
             toggle={() => {
-                setResult();
+                setResult('');
                 toggle();
             }}
             title="Upload Bulk"
@@ -38,18 +54,14 @@ const UploadModal = ({ open, toggle, templateLink, uploadLink, uploadDataName, u
                         console.log(res.data.data);
                         setResult(res.data.data);
                         setLoading(false);
-                        toggle();
+                        resultComponent ? setOpenRes(true) : toggle();
                     }, err => {
+                        setResult('');
                         setLoading(false);
                         toggle();
                     }))
                 }}
         >
-            {/* {result ?
-                <div style={{ maxHeight: '600px', overflow: 'scroll' }} >
-                    {JSON.stringify(result)}
-                </div>
-                : */}
                 <Loading loading={loading}>
                     <div style={{
                         display: 'flex',
@@ -73,8 +85,8 @@ const UploadModal = ({ open, toggle, templateLink, uploadLink, uploadDataName, u
                         }}>Download Template</button>
                     </div>
                 </Loading>
-            {/* } */}
         </Modal>
+        </>
     )
 }
 

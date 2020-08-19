@@ -6,6 +6,7 @@ import { FiSearch, FiDownload, FiUpload } from 'react-icons/fi';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Button from '../../components/Button';
+import { ListGroup, ListGroupItem } from 'reactstrap';
 import { getBillingUnit, downloadBillingUnit, setSelectedItem } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
@@ -76,6 +77,43 @@ function Component({ view }) {
         { Header: 'Total Unpaid', accessor: row => <b>{toMoney(row.total)}</b> },
     ]
 
+    function uploadResult(result) {
+        return <>
+            <div><h5>Total of {result.main_billings_total} billings was read</h5></div>
+            <hr/>
+            <ListGroup style={{ marginBottom: '20px' }}>
+                <ListGroupItem color="success">{result.main_billings_success} billings successfully created.</ListGroupItem>
+                <ListGroupItem color="danger">{result.main_billings_failed} billings failed to create.</ListGroupItem>
+            </ListGroup>
+            <ListGroup>
+                <p>Showing up to 10 result: </p>
+                {result.main_billings?.map((el, index) => {
+                    /* only show up to 10 rows */
+                    return <>{index < 10 && <ListGroupItem color={(!el.row_error && !el.column_error) ? "success" : "danger"}>
+                        {(!el.row_error && !el.column_error) ? 
+                        <>{el.row_number}: <b>{el.data?.name}</b> for unit ID <b>{el.data?.resident_unit}</b> was created <b>(ID: {el.data?.id})</b>.</> :
+                            <>{el.row_number}: {el.row_error}</>}
+                        </ListGroupItem>}</>
+                })}
+            </ListGroup>
+            <div style={{ marginTop: '20px' }}><h5>Total of {result.additional_charges_total} additional charges was read</h5></div>
+            <hr/>
+            <ListGroup style={{ marginBottom: '20px' }}>
+                <ListGroupItem color="success">{result.additional_charges_success} additional charges successfully created.</ListGroupItem>
+                <ListGroupItem color="danger">{result.additional_charges_failed} additional charges failed to create.</ListGroupItem>
+            </ListGroup>
+                <p>Showing up to 10 result: </p>
+                {result.additional_charges?.map((el, index) => {
+                    /* only show up to 10 rows */
+                    return <>{index < 10 && <ListGroupItem color={(!el.row_error && !el.column_error) ? "success" : "danger"}>
+                        {(!el.row_error && !el.column_error) ? 
+                            <>{el.row_number}: <b>{el.data?.charge_name}</b> for billing ID <b>{el.data?.billing_id}</b> was created.</> :
+                            <>{el.row_number}: {el.row_error}</>}
+                        </ListGroupItem>}</>
+                })}
+        </>
+    }
+
     return (
         <>
             <UploadModal open={upload} toggle={() => setUpload(false)}
@@ -83,6 +121,7 @@ function Component({ view }) {
                 filename='billing_unit_template.xlsx'
                 uploadLink={endpointBilling + '/management/billing/upload'}
                 uploadDataName='file_upload'
+                resultComponent={uploadResult}
             />
             <Template
                 pagetitle="Unit Billing List"
