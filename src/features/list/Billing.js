@@ -7,9 +7,9 @@ import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Button from '../../components/Button';
 import { getBillingUnit, downloadBillingUnit, setSelectedItem } from '../slices/billing';
-import { endpointAdmin } from '../../settings';
+import { endpointAdmin, endpointBilling } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
-import { get } from '../slice';
+import { get, post } from '../slice';
 
 import Template from './components/Template';
 import { setSelected } from '../slices/resident';
@@ -80,6 +80,9 @@ function Component({ view }) {
         <>
             <UploadModal open={upload} toggle={() => setUpload(false)}
                 templateLink={user.billing_bulk_template}
+                filename='billing_unit_template.xlsx'
+                uploadLink={endpointBilling + '/management/billing/upload'}
+                uploadDataName='file_upload'
             />
             <Template
                 pagetitle="Unit Billing List"
@@ -87,7 +90,7 @@ function Component({ view }) {
                 columns={columns}
                 slice='billing'
                 getAction={getBillingUnit}
-                filterVars={[building]}
+                filterVars={[building, upload]}
                 filters={role === 'sa' ? [
                     {
                         hidex: building === "",
