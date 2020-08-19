@@ -92,7 +92,7 @@ function Component({ view }) {
                     return <>{index < 10 && <ListGroupItem color={(!el.row_error && !el.column_error) ? "success" : "danger"}>
                         {(!el.row_error && !el.column_error) ? 
                         <>{el.row_number}: <b>{el.data?.name}</b> for unit ID <b>{el.data?.resident_unit}</b> was created <b>(ID: {el.data?.id})</b>.</> :
-                            <>{el.row_number}: {el.row_error}</>}
+                            <>{el.row_number}: {el.row_error && <>{el.row_error},</>} {el.column_error && el.column_error.map(k => k.column_name + " " + k.error_message )}</>}
                         </ListGroupItem>}</>
                 })}
             </ListGroup>
@@ -108,7 +108,7 @@ function Component({ view }) {
                     return <>{index < 10 && <ListGroupItem color={(!el.row_error && !el.column_error) ? "success" : "danger"}>
                         {(!el.row_error && !el.column_error) ? 
                             <>{el.row_number}: <b>{el.data?.charge_name}</b> for billing ID <b>{el.data?.billing_id}</b> was created.</> :
-                            <>{el.row_number}: {el.row_error}</>}
+                                <>{el.row_number}: {el.row_error && <>{el.row_error},</>} {el.column_error && el.column_error.map(k => k.column_name + " " + k.error_message )}</>}
                         </ListGroupItem>}</>
                 })}
         </>
