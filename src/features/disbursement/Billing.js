@@ -286,7 +286,7 @@ function Component({ view }) {
                             justifyContent: 'space-between',
                             flexDirection: 'row',
                         }}>
-                            <div className="d-flex flex-column justify-content-center">
+                            <div className="d-flex flex-column justify-content-center" style={{ flex: 7 }}>
                                 <p>
                                     Undisbursed Amount For {selectedManagement.length > 0 ? <b>Management:</b> :
                                     <b>All Managements</b>}
@@ -302,10 +302,11 @@ function Component({ view }) {
                                             paddingLeft: 6,
                                             paddingRight: 6 + 18,
                                             marginRight: 6,
-                                            marginBottom: 4
+                                            marginBottom: 4,
+                                            marginTop: 8,
                                         }}
                                         >
-                                            <b>{el.management_name}</b>
+                                            <>{el.management_name}</>
                                             <FiXCircle
                                             onClick={() => {
                                                 setSelectedManagement(selectedManagement.filter(item => item.id !== el.id));
