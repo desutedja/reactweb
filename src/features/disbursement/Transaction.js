@@ -66,8 +66,8 @@ function Component({ view }) {
     }
 
     const filtersDisbursement = [
-        { label: 'Disbursed Only', value: 'disbursed' },
-        { label: 'Undisbursed Only', value: 'undisbursed' },
+        { label: 'Disbursed', value: 'disbursed' },
+        { label: 'Undisbursed', value: 'undisbursed' },
     ]
 
     const filterStatus = [
@@ -459,9 +459,9 @@ function Component({ view }) {
                                                     <div>{el.name}</div>
                                                     <div style={{ display: 'flex' }}>
                                                         { /* <Pill color="success">{el.disbursed_count}</Pill> */}
-                                                        <Pill color={el.undisbursed_count > 0 ? "warning" : "light"}>
+                                                        {el.undisbursed_count > 0 && <Pill color={"warning"}>
                                                             {el.undisbursed_count}
-                                                        </Pill>
+                                                        </Pill>}
                                                     </div>
                                                 </div>
                                             </ListGroupItem>)}
@@ -546,7 +546,7 @@ function Component({ view }) {
                         boxShadow: 'none',
                         flexDirection: 'row',
                     }}>
-                        <div>
+                        <div style={{ flex: 6 }}>
                             <p>
                                 Undisbursed Amount For {selectedId.length === 0 ?
                                 (<b>{'All ' + toSentenceCase(type).replace(' ', '') + 's'}</b>) :
@@ -563,10 +563,11 @@ function Component({ view }) {
                                     paddingLeft: 6,
                                     paddingRight: 6 + 18,
                                     marginRight: 6,
-                                    marginBottom: 4
+                                    marginBottom: 4,
+                                    marginTop: 10,
                                 }}
                                 >
-                                    <b>{type === "merchant" ? el.name : el.firstname + " " + el.lastname}</b>
+                                    <>{type === "merchant" ? el.name : el.firstname + " " + el.lastname}</>
                                     <FiXCircle
                                     onClick={() => {
                                         setSelectedId(selectedId.filter(items => items.id !== el.id))
