@@ -3,44 +3,65 @@ import React, { useState, useRef } from 'react';
 import Modal from './Modal';
 import Loading from './Loading';
 import { useDispatch } from 'react-redux';
-import { getFile } from '../features/slice';
+import { getFile, post } from '../features/slice';
 
-const UploadModal = ({ open, toggle, templateLink }) => {
+const UploadModal = ({ open, toggle, templateLink, uploadLink, uploadDataName, uploadFile, resultComponent = '', filename = 'template.xlsx' }) => {
     const fileInput = useRef();
-    const [uploadResult, setUploadResult] = useState(false);
     const [fileUpload, setFileUpload] = useState('');
+    const [result, setResult] = useState('');
     const [loading, setLoading] = useState(false);
+    const [openRes, setOpenRes] = useState(false);
 
     let dispatch = useDispatch();
 
     return (
+        <>
+        {resultComponent &&<Modal
+            title={"Result"}
+            isOpen={openRes}
+            toggle={() => {
+                setOpenRes(false);
+            }}
+            okLabel={"Close"}
+            disableSecondary={true}
+            onClick={() => {
+                setOpenRes(false);
+            }}
+        >
+            { resultComponent(result) }
+        </Modal>}
         <Modal
             isOpen={open}
             toggle={() => {
-                setUploadResult();
+                setResult('');
                 toggle();
             }}
             title="Upload Bulk"
             okLabel={"Submit"}
             disablePrimary={loading || !fileUpload}
             disableSecondary={loading}
-            onClick={uploadResult ?
+            onClick={result ?
                 () => {
-                    console.log(uploadResult)
+                    console.log(result)
                 }
                 :
                 () => {
+                    setLoading(true);
                     let formData = new FormData();
-                    formData.append('file', fileUpload);
+                    formData.append(uploadDataName, fileUpload);
 
-                    console.log(formData)
+                    dispatch(post(uploadLink, formData, res => {
+                        console.log(res.data.data);
+                        setResult(res.data.data);
+                        setLoading(false);
+                        resultComponent ? setOpenRes(true) : toggle();
+                    }, err => {
+                        setResult('');
+                        setLoading(false);
+                        toggle();
+                    }))
                 }}
         >
-            {uploadResult ?
-                <div style={{ maxHeight: '600px', overflow: 'scroll' }} >
-
-                </div>
-                :
                 <Loading loading={loading}>
                     <div style={{
                         display: 'flex',
@@ -56,7 +77,7 @@ const UploadModal = ({ open, toggle, templateLink }) => {
                         />
                         <button onClick={() => {
                             setLoading(true);
-                            dispatch(getFile(templateLink, 'template.xlsx', res => {
+                            dispatch(getFile(templateLink, filename, res => {
                                 setLoading(false);
                             }))
                         }} style={{
@@ -64,8 +85,8 @@ const UploadModal = ({ open, toggle, templateLink }) => {
                         }}>Download Template</button>
                     </div>
                 </Loading>
-            }
         </Modal>
+        </>
     )
 }
 

@@ -7,8 +7,12 @@ import Button from '../../../../components/Button';
 import Modal from '../../../../components/Modal';
 import Input from '../../../../components/Input';
 import { toSentenceCase } from '../../../../utils';
-import { deleteBuildingUnit, getBuildingUnit, editBuildingUnit, createBuildingUnit, getBuildingSection, getBuildingUnitType } from '../../../slices/building';
+import {
+    deleteBuildingUnit, getBuildingUnit, editBuildingUnit,
+    createBuildingUnit, getBuildingSection, getBuildingUnitType,
+} from '../../../slices/building';
 import UploadModal from '../../../../components/UploadModal';
+import { endpointAdmin } from '../../../../settings';
 
 const columnsUnit = [
     { Header: "ID", accessor: "id" },
@@ -49,6 +53,9 @@ function Component({ view }) {
         <>
             <UploadModal open={upload} toggle={() => setUpload(false)}
                 templateLink={user.unit_bulk_template}
+                filename='building_unit_template.xlsx'
+                uploadLink={endpointAdmin + '/management/building/bulk_unit'}
+                uploadDataName='unit'
             />
             <Modal disableFooter={false} okLabel={edit ? "Save" : "Add"} title={edit ? "Edit Unit" : "Add Unit"}
                 isOpen={addUnit} toggle={() => setAddUnit(false)}
@@ -118,7 +125,7 @@ function Component({ view }) {
                 fetchData={useCallback((pageIndex, pageSize, search) =>
                     dispatch(getBuildingUnit(pageIndex, pageSize, search, selected)),
                     // eslint-disable-next-line react-hooks/exhaustive-deps
-                    [dispatch, selected, refreshToggle])}
+                    [dispatch, selected, refreshToggle, upload])}
                 filters={[]}
                 actions={view ? null : [
                     <Button key="Add Unit" label="Add Unit" icon={<FiPlus />}
