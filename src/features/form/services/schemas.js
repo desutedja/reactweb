@@ -130,7 +130,7 @@ export const staffSchema = Yup.object().shape({
     on_centratama: TextOptional,
     staff_specialization: TextOptional,
     building_management_id: TextOptional,
-    staff_id: Text,
+    staff_id: TextOptional,
     status: Text,
     firstname: Text,
     lastname: Text,
