@@ -252,8 +252,8 @@ function Settings() {
                                         color: 'success',
                                         message: 'Item has been deleted.'
                                     }))
+                                    setRefresh(!refresh);
                                 }))
-                                setRefresh(!refresh);
                             }))
                         }}
                         onClickEdit={row => {
@@ -288,16 +288,16 @@ function Settings() {
                     columns={columnsDepartments}
                     data={departments}
                     onClickDelete={ row => {
-                        // dispatch(setConfirmDelete("Are you sure to delete this item?", () => {
-                        //     dispatch(del(endpointMerchant + '/admin/categories/' + row.id,
-                        //     res => {
-                        //         dispatch(setInfo({
-                        //             color: 'success',
-                        //             message: 'Item has been deleted.'
-                        //         }))
-                        //     }))
-                        //     setRefresh(!refresh);
-                        // }))
+                        dispatch(setConfirmDelete("Are you sure to delete this item?", () => {
+                            dispatch(del(endpointManagement + '/admin/department/' + row.id,
+                            res => {
+                                dispatch(setInfo({
+                                    color: 'success',
+                                    message: 'Item has been deleted.'
+                                }))
+                                setRefresh(!refresh);
+                            }))
+                        }))
                     }}
                     onClickEdit={row => {
                         setDepartmentData(row);
