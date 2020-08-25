@@ -7,11 +7,6 @@ function Breadcrumb({ title }) {
     let history = useHistory();
     let location = useLocation();
 
-    useEffect(() => {
-        console.log(location.pathname)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
     return (
         <div className="Breadcrumb">
             {location.pathname.split('/').length === 3 ?

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
-    FiEdit, FiUsers, FiZap, FiVolume2, FiBarChart2
+    FiEdit, FiUsers, FiZap, FiVolume2,
+    FiBarChart2, FiPlus
 } from "react-icons/fi";
 import {
     RiTaskLine,
@@ -14,10 +15,12 @@ import Button from '../../../components/Button';
 import Modal from '../../../components/Modal';
 import Form from '../../../components/Form';
 import Input from '../../../components/Input';
+import Table from '../../../components/Table';
+import Tab from '../../../components/Tab';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { endpointAdmin } from '../../../settings';
-import { get } from '../../slice';
+import { endpointAdmin, endpointManagement, toSentenceCase } from '../../../settings';
+import { get, setConfirmDelete } from '../../slice';
 import { setSelected, editBuildingManagement } from '../../slices/building';
 
 import Dashboard from './Dashboard';
@@ -31,6 +34,10 @@ import Task from './Task';
 import Details from '../../details/components/Detail';
 import Chat from '../../chat';
 
+const columns = [
+    { Header: 'ID', accessor: row => row.id },
+    { Header: 'Department Name', accessor: row => row.department_name },
+];
 
 const modules = [
     {
@@ -106,9 +113,20 @@ export default () => {
     const { auth, building } = useSelector(state => state);
     const id = auth.user.building_id;
     const { blacklist_modules } = useSelector(state => state.auth.user);
+
+    const [departments, setDepartments] = useState([]);
     const [data, setData] = useState({})
     const [dataBM, setDataBM] = useState({})
     const [menus, setMenus] = useState(modules || []);
+
+    useEffect(() => {
+        dispatch(get(endpointManagement + '/admin/department',
+        res => {
+            setDepartments(res.data.data);
+            console.log(res.data.data)
+        }
+        ))
+    }, [dispatch])
 
     useEffect(() => {
         const modulesLabel = blacklist_modules?.map(module => module.module);
@@ -154,11 +172,54 @@ export default () => {
                 <Chat />
             </Route>
             <Route path={"/bm/settings"}>
-                <div className="Container flex-column scroller">
-                    <Details editPath="building/edit" labels={labels} data={data} />
-                    <FeesSetting
-                    labels={picBmLabels}
-                    data={dataBM}
+                <div className="Container flex-column pr-3">
+                    <Tab
+                        labels={['General', 'Departements']}
+                        contents={[
+                            <>
+                                <div className="scroller-y pr-4">
+                                    <Details editPath="building/edit" labels={labels} data={data} />
+                                    <FeesSetting
+                                    labels={picBmLabels}
+                                    data={dataBM}
+                                    />
+                                </div>
+                            </>,
+                            <>
+                                <Table
+                                    expander={false}
+                                    noSearch={true}
+                                    pagination={false}
+                                    columns={columns}
+                                    data={departments}
+                                    onClickDelete={ row => {
+                                        // dispatch(setConfirmDelete("Are you sure to delete this item?", () => {
+                                        //     dispatch(del(endpointMerchant + '/admin/categories/' + row.id,
+                                        //     res => {
+                                        //         dispatch(setInfo({
+                                        //             color: 'success',
+                                        //             message: 'Item has been deleted.'
+                                        //         }))
+                                        //     }))
+                                        //     setRefresh(!refresh);
+                                        // }))
+                                    }}
+                                    onClickEdit={row => {
+                                        // setCategoryData(row);
+                                        // setModalCategory(true);
+                                        // setTitle('Edit Category');
+                                    }}
+                                    renderActions={() => [
+                                        <Button key="Add Department" label="Add Department" icon={<FiPlus />}
+                                            onClick={() => {
+                                                // setModalCategory(true);
+                                                // setTitle('Add Category');
+                                            }}
+                                        />
+                                    ]}
+                                />
+                            </>
+                        ]}
                     />
                 </div>
             </Route>
