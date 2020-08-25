@@ -235,12 +235,14 @@ export default () => {
                                     data={departments}
                                     onClickDelete={ row => {
                                         dispatch(setConfirmDelete("Are you sure to delete this item?", () => {
+                                            setLoading(true);
                                             dispatch(del(endpointManagement + '/admin/department/' + row.id,
                                             res => {
                                                 dispatch(setInfo({
                                                     color: 'success',
                                                     message: 'Item has been deleted.'
                                                 }))
+                                                setLoading(false);
                                                 setRefresh(!refresh);
                                             }))
                                         }))
