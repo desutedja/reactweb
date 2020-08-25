@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import { ResponsiveContainer, XAxis, YAxis, Tooltip, BarChart, Bar, LabelList } from 'recharts';
 import { endpointAds } from '../../settings';
@@ -16,9 +18,13 @@ const CustomLabelList = (props) => {
 }
 
 function Component() {
+    const { auth } = useSelector(state => state);
+    const role = auth.role;
+
     const [adsData, setAdsData] = useState([]);
 
     let dispatch = useDispatch();
+    const history = useHistory();
 
     useEffect(() => {
         dispatch(get(endpointAds + '/management/ads/report/overview', res => {
@@ -53,8 +59,10 @@ function Component() {
                                             yAxisId="category" type='category' dx={-10} dataKey="content_name"
                                             tickLine={false} axisLine={false} />
                                         <Tooltip />
-                                        <Bar maxBarSize={30} yAxisId="category" radius={4}
-                                            dataKey="total_actual_view" fill="#2ad170"
+                                        <Bar maxBarSize={30} yAxisId="category" radius={4} className="cursor-pointer"
+                                            dataKey="total_actual_view" fill="#2ad170" onClick={({id}) => {
+                                                history.push('/' + role + '/advertisement/' + id)
+                                            }}
                                         >
                                             <LabelList dataKey="total_actual_view" stroke="white" position="insideRight"
                                                 content={<CustomLabelList />} />
@@ -87,9 +95,14 @@ function Component() {
                                         <YAxis width={123}
                                             tickFormatter={category => toSentenceCase(category.length > 10 ? category.slice(0, 10) + '...' : category)}
                                             yAxisId="category" type='category' dx={-10} dataKey="content_name"
-                                            tickLine={false} axisLine={false} />
+                                            tickLine={false} axisLine={false}/>
                                         <Tooltip />
-                                        <Bar maxBarSize={30} yAxisId="category" radius={4} dataKey="total_actual_click" fill="#f7b733">
+                                        <Bar
+                                            maxBarSize={30} yAxisId="category" radius={4} className="cursor-pointer"
+                                            dataKey="total_actual_click" fill="#f7b733" onClick={({id}) => {
+                                                history.push('/' + role + '/advertisement/' + id)
+                                            }}
+                                        >
                                             <LabelList dataKey="total_actual_click" stroke="white" position="insideRight"
                                                 content={<CustomLabelList />} />
                                         </Bar>
