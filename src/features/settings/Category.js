@@ -8,7 +8,10 @@ import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 import {FiChevronDown} from 'react-icons/fi'
 
-export default function ({title, toggleRefresh, modal, toggleModal, data}) {
+export default function ({
+    title, toggleRefresh, modal,
+    toggleModal, data, toggleLoading
+}) {
 
     let dispatch = useDispatch();
 
@@ -37,12 +40,13 @@ export default function ({title, toggleRefresh, modal, toggleModal, data}) {
             name, type: type.toLowerCase(), icon
         }
         if (title === 'Add Category') {
-            console.log(addSubmit)
+            toggleLoading(true);
             dispatch(post(endpointMerchant + '/admin/categories', addSubmit, res => {
                 toggleRefresh();
                 dispatch(setInfo({
                     message: 'Category has been created'
                 }))
+                toggleLoading(false);
             }))
             toggleModal();
             clearData();
@@ -50,11 +54,13 @@ export default function ({title, toggleRefresh, modal, toggleModal, data}) {
         }
         console.log(addSubmit)
         dispatch(patch(endpointMerchant + '/admin/categories', editSubmit, res => {
+            toggleLoading(true);
             toggleRefresh();
             dispatch(setInfo({
                 color: 'success',
                 message: 'Category has been edited.'
             }))
+            toggleLoading(false);
         }))
         toggleModal();
         clearData();

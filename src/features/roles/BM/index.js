@@ -16,11 +16,12 @@ import Modal from '../../../components/Modal';
 import Form from '../../../components/Form';
 import Input from '../../../components/Input';
 import Table from '../../../components/Table';
+import ModalDepartment from '../../../features/settings/Department';
 import Tab from '../../../components/Tab';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { endpointAdmin, endpointManagement, toSentenceCase } from '../../../settings';
-import { get, setConfirmDelete } from '../../slice';
+import { endpointAdmin, endpointManagement } from '../../../settings';
+import { get, del, setInfo, setConfirmDelete } from '../../slice';
 import { setSelected, editBuildingManagement } from '../../slices/building';
 
 import Dashboard from './Dashboard';
@@ -115,18 +116,43 @@ export default () => {
     const { blacklist_modules } = useSelector(state => state.auth.user);
 
     const [departments, setDepartments] = useState([]);
+    const [refresh, setRefresh] = useState(true);
     const [data, setData] = useState({})
     const [dataBM, setDataBM] = useState({})
     const [menus, setMenus] = useState(modules || []);
+    const [loading, setLoading] = useState(false);
+    const [modalDepartment, setModalDepartment] = useState(false);
+    const [departmentData, setDepartmentData] = useState({});
+    const [title, setTitle] = useState('');
+    const [picBmList, setPicBmList] = useState([]);
+
+    const toggle = () => {
+        setRefresh(!refresh);
+    }
 
     useEffect(() => {
+        dispatch(get(endpointAdmin + '/management/building?page=1&limit=9999',
+        res => {
+            const formatted = res.data.data.items.map(el => ({
+                label: 'BM ID ' + el.id + ' (' + el.building_name + ' - ' + el.management_name + ')',
+                value: el.id
+            }))
+            setPicBmList(formatted);
+        }
+        ))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
+    useEffect(() => {
+        setLoading(true);
         dispatch(get(endpointManagement + '/admin/department',
         res => {
             setDepartments(res.data.data);
-            console.log(res.data.data)
+            setLoading(false);
         }
         ))
-    }, [dispatch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [refresh])
 
     useEffect(() => {
         const modulesLabel = blacklist_modules?.map(module => module.module);
@@ -155,6 +181,11 @@ export default () => {
             }
         ))
     }, [auth.user.building_management_id, dispatch, building.refreshToggle])
+
+    
+    useEffect(() => {
+        if (!modalDepartment) setDepartmentData({});
+    }, [modalDepartment]);
 
     return (
         <Template role="bm">
@@ -186,34 +217,44 @@ export default () => {
                                 </div>
                             </>,
                             <>
+                                <ModalDepartment
+                                    title={title}
+                                    toggleRefresh={toggle}
+                                    modal={modalDepartment}
+                                    toggleModal={() => setModalDepartment(false)}
+                                    toggleLoading={setLoading}
+                                    data={departmentData}
+                                    picBmList={picBmList}
+                                />
                                 <Table
                                     expander={false}
                                     noSearch={true}
                                     pagination={false}
                                     columns={columns}
+                                    loading={loading}
                                     data={departments}
                                     onClickDelete={ row => {
-                                        // dispatch(setConfirmDelete("Are you sure to delete this item?", () => {
-                                        //     dispatch(del(endpointMerchant + '/admin/categories/' + row.id,
-                                        //     res => {
-                                        //         dispatch(setInfo({
-                                        //             color: 'success',
-                                        //             message: 'Item has been deleted.'
-                                        //         }))
-                                        //     }))
-                                        //     setRefresh(!refresh);
-                                        // }))
+                                        dispatch(setConfirmDelete("Are you sure to delete this item?", () => {
+                                            dispatch(del(endpointManagement + '/admin/department/' + row.id,
+                                            res => {
+                                                dispatch(setInfo({
+                                                    color: 'success',
+                                                    message: 'Item has been deleted.'
+                                                }))
+                                                setRefresh(!refresh);
+                                            }))
+                                        }))
                                     }}
                                     onClickEdit={row => {
-                                        // setCategoryData(row);
-                                        // setModalCategory(true);
-                                        // setTitle('Edit Category');
+                                        setDepartmentData(row);
+                                        setModalDepartment(true);
+                                        setTitle('Edit Department');
                                     }}
                                     renderActions={() => [
                                         <Button key="Add Department" label="Add Department" icon={<FiPlus />}
                                             onClick={() => {
-                                                // setModalCategory(true);
-                                                // setTitle('Add Category');
+                                                setModalDepartment(true);
+                                                setTitle('Add Department');
                                             }}
                                         />
                                     ]}

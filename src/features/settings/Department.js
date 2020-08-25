@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { post, patch, setInfo } from '../slice';
 
 import { endpointManagement } from '../../settings';
-import { toSentenceCase } from '../../utils';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
-import {FiChevronDown} from 'react-icons/fi'
 
-export default function ({title, toggleRefresh, modal, toggleModal, data, picBmList}) {
+export default function ({
+    title, toggleRefresh, modal,
+    toggleModal, data, picBmList, toggleLoading
+}) {
+    const { auth } = useSelector(state => state);
 
     let dispatch = useDispatch();
 
@@ -18,7 +20,11 @@ export default function ({title, toggleRefresh, modal, toggleModal, data, picBmL
     useEffect(() => {
         setDepartmentName(data.department_name);
         setBmId(data.bm_id);
-    }, [data, modal])
+        if (auth.role === 'bm') {
+            const bmId = auth.user.building_management_id;
+            setBmId(bmId);
+        }
+    }, [auth, data, modal])
 
     const clearData = () => {
         setDepartmentName('');
@@ -36,22 +42,26 @@ export default function ({title, toggleRefresh, modal, toggleModal, data, picBmL
             bm_id: Number(bmId)
         }
         if (title === 'Add Department') {
+            toggleLoading(true);
             dispatch(post(endpointManagement + '/admin/department', addSubmit, res => {
                 toggleRefresh();
                 dispatch(setInfo({
                     message: 'Department has been created'
                 }))
+                toggleLoading(false);
             }))
             toggleModal();
             clearData();
             return;
         }
+        toggleLoading(true);
         dispatch(patch(endpointManagement + '/admin/department', editSubmit, res => {
             toggleRefresh();
             dispatch(setInfo({
                 color: 'success',
                 message: 'Department has been edited.'
             }))
+            toggleLoading(false);
         }))
         toggleModal();
         clearData();
@@ -75,7 +85,7 @@ export default function ({title, toggleRefresh, modal, toggleModal, data, picBmL
             }}
         >
             <Input label="Name" inputValue={departmentName} setInputValue={setDepartmentName}/>
-            <Input disabled={title === 'Edit Department'} label="PIC BM" type="select" options={picBmList} inputValue={bmId} setInputValue={setBmId}/>
+            {auth.role === 'sa' && <Input disabled={title === 'Edit Department'} label="PIC BM" type="select" options={picBmList} inputValue={bmId} setInputValue={setBmId}/>}
         </Modal>
     )
 }

@@ -235,6 +235,7 @@ function Settings() {
                         toggleRefresh={toggle}
                         modal={modalCategory}
                         toggleModal={() => setModalCategory(false)}
+                        toggleLoading={setLoading}
                         data={categoryData}
                     />
                     <Table
@@ -277,6 +278,7 @@ function Settings() {
                         toggleRefresh={toggle}
                         modal={modalDepartment}
                         toggleModal={() => setModalDepartment(false)}
+                        toggleLoading={setLoading}
                         data={departmentData}
                         picBmList={picBmList}
                     />
