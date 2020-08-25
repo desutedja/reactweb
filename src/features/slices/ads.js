@@ -114,13 +114,13 @@ export const createAds = (data, history) => (dispatch, getState) => {
     }))
 }
 
-export const editAds = (data, history, id) => dispatch => {
+export const editAds = (data, history, id, role) => dispatch => {
   dispatch(startAsync());
 
   dispatch(put(adsEndpoint, data,
     res => {
       // dispatch(setSelected(res.data.data));
-      history.push(id);
+      history.push("/" + role + "/advertisement/" + id);
 
       dispatch(setInfo({
         color: 'success',

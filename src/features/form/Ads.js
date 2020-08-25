@@ -100,6 +100,7 @@ function Component() {
     const [os, setOS] = useState('all');
 
     const { selected, loading } = useSelector(state => state.ads);
+    const { role } = useSelector(state => state.auth);
 
     const [buildings, setBuildings] = useState([]);
     // eslint-disable-next-line no-unused-vars
@@ -170,7 +171,7 @@ function Component() {
             edit={data =>  {
                 // eslint-disable-next-line no-unused-vars
                 const { schedules, ads, building_list } = data;
-                dispatch(editAds({ads, building_list}, history, selected.id))
+                dispatch(editAds({ads, building_list}, history, selected.id, role))
             }}
             add={data => {
                 if (auth.role === 'bm') {
