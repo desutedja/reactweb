@@ -52,14 +52,31 @@ function Component() {
                                     <BarChart
                                         data={adsData}
                                         layout={'vertical'}
+                                        onClick={props => {
+                                            if (!props) return;
+                                            const idAds = props.activePayload[0].payload.id
+                                            history.push('/' + role + '/advertisement/' + idAds)
+                                        }}
                                     >
-                                        <XAxis height={40} hide type="number" dy={10} tickLine={false} axisLine={false} />
-                                        <YAxis width={123}
-                                            tickFormatter={category => toSentenceCase(category.length > 10 ? category.slice(0, 10) + '...' : category)}
+                                        <XAxis
+                                            height={40} hide type="number" dy={10}
+                                            tickLine={false} axisLine={false}
+                                        />
+                                        <YAxis
+                                            width={123} tickFormatter={category => (
+                                                toSentenceCase(category.length > 10 ?
+                                                category.slice(0, 10) + '...' : category)
+                                            )} className="cursor-pointer"
                                             yAxisId="category" type='category' dx={-10} dataKey="content_name"
-                                            tickLine={false} axisLine={false} />
+                                            tickLine={false} axisLine={false} onClick={props => {
+                                                if (!props) return;
+                                                const idAds = adsData[props.index].id;
+                                                history.push('/' + role + '/advertisement/' + idAds)
+                                            }}
+                                        />
                                         <Tooltip />
-                                        <Bar maxBarSize={30} yAxisId="category" radius={4} className="cursor-pointer"
+                                        <Bar
+                                            maxBarSize={30} yAxisId="category" radius={4} className="cursor-pointer"
                                             dataKey="total_actual_view" fill="#2ad170" onClick={({id}) => {
                                                 history.push('/' + role + '/advertisement/' + id)
                                             }}
@@ -90,12 +107,22 @@ function Component() {
                                     <BarChart
                                         data={adsData}
                                         layout={'vertical'}
+                                        onClick={props => {
+                                            if (!props) return;
+                                            const idAds = props.activePayload[0].payload.id
+                                            history.push('/' + role + '/advertisement/' + idAds)
+                                        }}
                                     >
                                         <XAxis height={40} hide type="number" dy={10} tickLine={false} axisLine={false} />
                                         <YAxis width={123}
-                                            tickFormatter={category => toSentenceCase(category.length > 10 ? category.slice(0, 10) + '...' : category)}
+                                            tickFormatter={category => toSentenceCase(category.length > 10 ?
+                                            category.slice(0, 10) + '...' : category)} className="cursor-pointer"
                                             yAxisId="category" type='category' dx={-10} dataKey="content_name"
-                                            tickLine={false} axisLine={false}/>
+                                            tickLine={false} axisLine={false} onClick={props => {
+                                                if (!props) return;
+                                                const idAds = adsData[props.index].id;
+                                                history.push('/' + role + '/advertisement/' + idAds)
+                                            }}/>
                                         <Tooltip />
                                         <Bar
                                             maxBarSize={30} yAxisId="category" radius={4} className="cursor-pointer"
