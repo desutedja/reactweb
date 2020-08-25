@@ -52,6 +52,11 @@ function Component() {
                                     <BarChart
                                         data={adsData}
                                         layout={'vertical'}
+                                        onClick={props => {
+                                            if (!props) return;
+                                            const idAds = props.activePayload[0].payload.id
+                                            history.push('/' + role + '/advertisement/' + idAds)
+                                        }}
                                     >
                                         <XAxis height={40} hide type="number" dy={10} tickLine={false} axisLine={false} />
                                         <YAxis width={123}
@@ -90,6 +95,11 @@ function Component() {
                                     <BarChart
                                         data={adsData}
                                         layout={'vertical'}
+                                        onClick={props => {
+                                            if (!props) return;
+                                            const idAds = props.activePayload[0].payload.id
+                                            history.push('/' + role + '/advertisement/' + idAds)
+                                        }}
                                     >
                                         <XAxis height={40} hide type="number" dy={10} tickLine={false} axisLine={false} />
                                         <YAxis width={123}
