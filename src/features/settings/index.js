@@ -83,7 +83,6 @@ function Settings() {
                 value: el.id
             }))
             setPicBmList(formatted);
-            console.log(res.data.data.items)
         }
         ))
     // eslint-disable-next-line react-hooks/exhaustive-deps

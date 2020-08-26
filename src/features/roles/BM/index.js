@@ -34,11 +34,11 @@ import Staff from './Staff';
 import Task from './Task';
 import Details from '../../details/components/Detail';
 import Chat from '../../chat';
-import { toSentenceCase } from '../utils';
+import { toSentenceCase } from '../../../utils';
 
 const columns = [
     { Header: 'ID', accessor: row => row.id },
-    { Header: 'Department Name', accessor: row => row.department_name },
+    { Header: 'Department Name', accessor: 'department_name' },
     { Header: 'Department Type', accessor: row => toSentenceCase(row.department_type) },
 ];
 
@@ -149,7 +149,7 @@ export default () => {
         setLoading(true);
         dispatch(get(endpointManagement + '/admin/department',
         res => {
-            setDepartments(res.data.data || []);
+            setDepartments(res.data.data);
             setLoading(false);
         }
         ))
