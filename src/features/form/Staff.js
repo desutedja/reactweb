@@ -154,6 +154,7 @@ function Component() {
             add={data => dispatch(createStaff(data, history))}
             renderChild={props => {
                 const { values, errors } = props;
+                console.log(props)
 
                 return (<Form className="Form">
                     {!selected.id && <Input {...props} label="Staff Role"
@@ -177,7 +178,7 @@ function Component() {
                         name="building_management_id"
                         options={bManagements}
                     />}
-                    <Input {...props} label="Identity No" placeholder="KTP/SIM/Passport" />
+                    <Input {...props} label="Staff Id" placeholder="KTP/SIM/Passport" />
                     <Input {...props} label="Status"
                         type="radio"
                         options={[

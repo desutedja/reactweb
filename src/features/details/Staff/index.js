@@ -50,6 +50,7 @@ function Component({ view }) {
                 },
             ],
             'Bank Account': ['account_name', 'account_number', 'account_bank'],
+            'Departments': []
         }
     }, [data]);
 

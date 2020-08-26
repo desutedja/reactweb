@@ -1,7 +1,7 @@
 import React from 'react';
 import { toSentenceCase } from '../utils';
 
-function Component({ data, onClick, onClickAll, customComponent=null,  altDataComponent=null}) {
+function Component({ data, onClick, onClickAll, customComponent=null,  altDataComponent=null, defaultValue = 'All'}) {
     return (
         <div className="Filter">
             <div className="List">
@@ -10,7 +10,7 @@ function Component({ data, onClick, onClickAll, customComponent=null,  altDataCo
                     className="ListItem"
                     onClick={onClickAll}
                 >
-                    All
+                    {defaultValue}
                 </button>}
                 {data && data.map(el => {
                     return ( !customComponent ?
