@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-
 import { TiAttachment } from 'react-icons/ti';
 
 import moment from 'moment'
+import Button from '../../components/Button';
 import Input from '../../components/Input';
 import Modal from '../../components/Modal';
 import Loading from '../../components/Loading';
@@ -44,6 +44,7 @@ function Component() {
     const [search, setSearch] = useState('');
 
     const [participants, setParticipants] = useState([]);
+    const [imageSend, setImageSend] = useState('');
 
     const { user, role } = useSelector(state => state.auth);
     const { qiscus, room, rooms,
@@ -136,6 +137,16 @@ function Component() {
     }, [lastMessageOnRoom]);
 
     const sendMessage = (text = '', type = '', payload) => {
+        // sendMessage('[file] ' + res.data.data.url + ' [/file]', 'file_attachment', {
+        //     url: res.data.data.url,
+        // });
+
+        text = '[file] ' + imageSend + ' [/file]';
+        type = 'file_attachment';
+        payload = {
+            url: imageSend,
+        };
+
         const messageData = message ? message : text;
 
         if (messageData.length === 0) return;
@@ -151,11 +162,13 @@ function Component() {
             management: user.management_name,
             data_type: type === 'file_attachment' && 'image',
             url: payload?.url,
+            message: message,
         }).then(function (comment) {
             // On success
             dispatch(updateMessages([comment]));
             setRefresh(!refresh);
             setMessage('');
+            setImageSend('');
             setLoadingSend(false);
         })
     }
@@ -249,12 +262,24 @@ function Component() {
                                                     <div>
                                                         {
                                                             isImage(el.message.split(" ")[1]) ?
-                                                                <img
-                                                                    onClick={() => {
-                                                                        setImage(el.message.split(" ")[1]);
-                                                                        setPreview(true);
-                                                                    }}
-                                                                    alt="Attachment" src={el.message.split(" ")[1]} width="150" style={{ padding: '10px' }} /> :
+                                                                <div className={currentName === ownName ?
+                                                                    "Message-own" : "Message"} style={{
+                                                                        flexDirection: 'column',
+                                                                    }}>
+                                                                    <img
+                                                                        onClick={() => {
+                                                                            setImage(el.message.split(" ")[1]);
+                                                                            setPreview(true);
+                                                                        }}
+                                                                        alt="Attachment" src={el.message.split(" ")[1]}
+                                                                        width="150" style={{ 
+                                                                            paddingTop: 10,
+                                                                            paddingBottom: 10,
+                                                                        }}
+                                                                    />
+                                                                    <div>{el.extras.message}</div>
+                                                                </div>
+                                                                :
                                                                 <div className={currentName === ownName ? "Message-own" : "Message"}>
                                                                     <TiAttachment /> <a href={el.message.split(" ")[1]}>Download Attachment</a>
                                                                 </div>
@@ -287,47 +312,62 @@ function Component() {
                     </div>
                     <form className="Container" style={{
                         flex: 'none',
-                        height: 80,
+                        flexDirection: 'column',
                     }} onSubmit={e => {
                         e.preventDefault();
-                        sendMessage();
+                        // sendMessage();
                     }}>
-                        <Input compact label="Send a message.." inputValue={message} setInputValue={setMessage} />
-                        <Loading loading={qiscus ? (loadingSend || !qiscus.sendComment) : true} >
-                            <IconButton>
-                                <input ref={uploadFile} type="file" style={{
-                                    display: 'none'
-                                }}
-                                    onChange={async () => {
-                                        setMessage('');
-                                        let file = uploadFile.current.files[0];
-
-                                        setMessage('Uploading file...');
-                                        setLoadingSend(true);
-
-                                        let formData = new FormData();
-                                        formData.append('file', file);
-
-                                        dispatch(post(endpointAsset + '/file/upload', formData, res => {
-                                            sendMessage('[file] ' + res.data.data.url + ' [/file]', 'file_attachment', {
-                                                url: res.data.data.url,
-                                            });
-                                        }, err => {
-                                            setMessage('');
-                                            setLoadingSend(false);
-                                        }))
+                        {imageSend && <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}>
+                            <img alt="Attachment" src={imageSend}
+                                width="150" style={{ padding: '10px' }} />
+                            <Button label="Cancel" color="danger" onClick={() => {
+                                setImageSend('');
+                            }} />
+                        </div>}
+                        <div style={{
+                            display: 'flex',
+                        }}>
+                            <Input compact label="Send a message.." inputValue={message} setInputValue={setMessage} />
+                            <Loading loading={qiscus ? (loadingSend || !qiscus.sendComment) : true} >
+                                <IconButton>
+                                    <input ref={uploadFile} type="file" style={{
+                                        display: 'none'
                                     }}
-                                />
-                                <TiAttachment onClick={() => {
-                                    uploadFile.current.click();
-                                }} style={{ marginLeft: '10' }} size="30" />
-                            </IconButton>
-                            <IconButton onClick={() => {
-                                sendMessage()
-                            }}>
-                                <FiSend style={{ marginLeft: '10' }} size="30" />
-                            </IconButton>
-                        </Loading>
+                                        onChange={async () => {
+                                            // setMessage('');
+                                            let file = uploadFile.current.files[0];
+
+                                            // setMessage('Uploading file...');
+                                            setLoadingSend(true);
+
+                                            let formData = new FormData();
+                                            formData.append('file', file);
+
+                                            dispatch(post(endpointAsset + '/file/upload', formData, res => {
+                                                setLoadingSend(false);
+                                                setImageSend(res.data.data.url)
+                                            }, err => {
+                                                // setMessage('');
+                                                setLoadingSend(false);
+                                            }))
+                                        }}
+                                    />
+                                    <TiAttachment onClick={() => {
+                                        uploadFile.current.click();
+                                    }} style={{ marginLeft: '10' }} size="30" />
+                                </IconButton>
+                                <IconButton onClick={() => {
+                                    sendMessage()
+                                }}>
+                                    <FiSend style={{ marginLeft: '10' }} size="30" />
+                                </IconButton>
+                            </Loading>
+                        </div>
+
                     </form>
                 </div>
                 <div className="Container" style={{
