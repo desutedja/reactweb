@@ -11,8 +11,8 @@ function Component() {
     return (
         <div>
             <Card style= {{ width: "500px" }}>
-                {selected.content_video && <ReactPlayer style={{ maxWidth: "500px" }} url={selected.content_video} alt="Ads Content"/>}
-                {selected.content_image && <CardImg src={selected.content_image} alt="Ads Content"/>}
+                {selected.content_type === "video" && selected.content_video && <ReactPlayer style={{ maxWidth: "500px" }} url={selected.content_video} alt="Ads Content"/>}
+                {selected.content_type === "image" && selected.content_image && <CardImg src={selected.content_image} alt="Ads Content"/>}
                 <CardBody>
                     <CardTitle><h4>{selected.content_name}</h4></CardTitle>
                     <CardSubtitle></CardSubtitle>
