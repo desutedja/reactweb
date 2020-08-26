@@ -10,6 +10,7 @@ import Modal from '../../components/Modal';
 import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
+import Task from '../../components/cells/Task';
 import {
     updateMessages, setMessages,
     setRoom, setRoomID,
@@ -21,6 +22,7 @@ import { FiSend } from 'react-icons/fi';
 import './style.css';
 import { post, get } from '../slice';
 import { endpointAsset, endpointAdmin } from '../../settings';
+import { RiTaskLine } from 'react-icons/ri';
 
 const topics = [
     { label: "All", value: "merchant_trx,service,security,billing,personal,help" },
@@ -137,10 +139,6 @@ function Component() {
     }, [lastMessageOnRoom]);
 
     const sendMessage = (text = '', type = '', payload) => {
-        // sendMessage('[file] ' + res.data.data.url + ' [/file]', 'file_attachment', {
-        //     url: res.data.data.url,
-        // });
-
         text = '[file] ' + imageSend + ' [/file]';
         type = 'file_attachment';
         payload = {
@@ -252,11 +250,22 @@ function Component() {
                                                 {/* if type is text */}
 
                                                 {el.type === 'text' &&
-                                                    <div className={
-                                                        currentName === ownName ?
-                                                            "Message-own" : "Message"}>
-                                                        {el.message}
-                                                    </div>}
+                                                    <div>
+                                                        {el.extras.task_id &&
+                                                            <div className={currentName === ownName ? "Message-own" : "Message"}>
+                                                                <RiTaskLine />
+                                                                <Task
+                                                                    id={el.extras.task_id} data={el.extras}
+                                                                    items={[el.extras.title, <small>{el.extras.ref_code}</small>]}
+                                                                />
+                                                            </div>}
+                                                        <div className={
+                                                            currentName === ownName ?
+                                                                "Message-own" : "Message"}>
+                                                            {el.message}
+                                                        </div>
+                                                    </div>
+                                                }
 
                                                 {el.type === 'file_attachment' &&
                                                     <div>
@@ -272,7 +281,7 @@ function Component() {
                                                                             setPreview(true);
                                                                         }}
                                                                         alt="Attachment" src={el.message.split(" ")[1]}
-                                                                        width="150" style={{ 
+                                                                        width="150" style={{
                                                                             paddingTop: 10,
                                                                             paddingBottom: 10,
                                                                         }}
