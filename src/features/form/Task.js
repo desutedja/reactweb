@@ -62,7 +62,14 @@ export default function Component() {
             task_type === 'service' ? setTypeDepartment('service') : setTypeDepartment('security')
             return;
         }
-    }, [taskData])
+    }, [taskData]);
+
+    useEffect(() => {
+        if (initialMount.current) {
+            initialMount.current = false;
+        }
+        setDepartment('');
+    }, [taskData.task_type]);
 
     useEffect(() => {
         if (initialMount.current) {

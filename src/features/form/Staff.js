@@ -85,10 +85,24 @@ function Component() {
             initialMount.current = false;
             return;
         }
-        if (bmId && typeDepartment) {
+        if (role === 'sa') {
+            if (bmId && typeDepartment) {
+                dispatch(get(endpointManagement + '/admin/department?' +
+                'bm_id=' + bmId +
+                '&type=' + typeDepartment,
+                res => {
+                    const formatted = res.data.data.map(el => ({
+                        label: el.department_name, value: el.id
+                    }))
+                    setDepartments(formatted || []);
+                }
+                ))
+            }
+            return;
+        }
+        if (typeDepartment) {
             dispatch(get(endpointManagement + '/admin/department?' +
-            'bm_id=' + bmId +
-            '&type=' + typeDepartment,
+            'type=' + typeDepartment,
             res => {
                 const formatted = res.data.data.map(el => ({
                     label: el.department_name, value: el.id
@@ -97,6 +111,7 @@ function Component() {
             }
             ))
         }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [bmId, typeDepartment])
 
@@ -217,9 +232,9 @@ function Component() {
                     />}
                     {(values['staff_role'] === "technician" || values['staff_role'] === "security" || values['staff_role'] === "pic_bm") && <Input {...props}
                         type="multiselect" label="Select Department(s)"
-                        name="department_ids" defaultValue={values.departments.map(el => ({
+                        name="department_ids" defaultValue={values.departments ? values.departments.map(el => ({
                             label: el.department_name, value: el.id
-                        }))}
+                        })) : []}
                         placeholder="Start typing department name to add" options={departments}
                         onChange={(e, value) => {
                             setSelectedDepartment(value);
