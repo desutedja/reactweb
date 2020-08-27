@@ -93,7 +93,6 @@ function Component() {
                 const formatted = res.data.data.map(el => ({
                     label: el.department_name, value: el.id
                 }))
-                console.log(formatted);
                 setDepartments(formatted || []);
             }
             ))
@@ -217,7 +216,7 @@ function Component() {
                         options={bManagements}
                     />}
                     {(values['staff_role'] === "technician" || values['staff_role'] === "security" || values['staff_role'] === "pic_bm") && <Input {...props}
-                        type="multiselect" label="Departments"
+                        type="multiselect" label="Select Department(s)"
                         name="department_ids" defaultValue={values.departments_ids}
                         placeholder="Start typing department name to add" options={departments}
                         onChange={(e, value) => {
