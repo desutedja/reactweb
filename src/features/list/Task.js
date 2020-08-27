@@ -34,9 +34,9 @@ const columns = [
         Header: "Created On", accessor: row => dateTimeFormatterCell(row.created_on)
     },
     {
-        Header: "Type", accessor: row => row.task_type === "service" ? <>{toSentenceCase(row.task_type) +
-            (row.task_specialization ? ("- " + row.task_specialization) : "")}</> :
-            toSentenceCase(row.task_type)
+        Header: "Department", accessor: row => row.task_type === "service" ? <>{toSentenceCase(row.task_type) +
+            (row.department_name ? ("- " + row.department_name) : "")}</> :
+            toSentenceCase(row.task_type) + (row.department_name ? ("- " + row.department_name) : "")
     },
     {
         Header: "Priority", accessor: row =>
