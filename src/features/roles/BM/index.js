@@ -149,7 +149,7 @@ export default () => {
         setLoading(true);
         dispatch(get(endpointManagement + '/admin/department',
         res => {
-            setDepartments(res.data.data);
+            setDepartments(res.data.data || []);
             setLoading(false);
         }
         ))

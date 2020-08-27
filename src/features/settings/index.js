@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { get, del, setConfirmDelete, setInfo } from '../slice';
 import { FiPlus } from 'react-icons/fi'
 
@@ -15,7 +15,6 @@ import CellCategory from '../../components/cells/Category';
 import ModalCategory from './Category';
 import ModalDepartment from './Department';
 import Button from '../../components/Button';
-import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 
 const columnsMerchantCategories = [
@@ -343,6 +342,7 @@ function Settings() {
                                 </>
                         },
                     ]}
+                    filterExpanded={true}
                     renderActions={() => [
                         <Button key="Add Department" label="Add Department" icon={<FiPlus />}
                             onClick={() => {
