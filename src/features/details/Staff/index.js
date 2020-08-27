@@ -6,10 +6,17 @@ import Template from '../components/Template';
 
 import { useParams, useHistory } from 'react-router-dom';
 import { get, setConfirmDelete } from '../../slice';
-import Pill from '../../../components/Pill'
+import Pill from '../../../components/Pill';
+import Table from '../../../components/Table';
 import { dateTimeFormatter, toSentenceCase, staffRoleFormatter } from '../../../utils';
 import { endpointManagement } from '../../../settings';
 import { deleteStaff, setSelected } from '../../slices/staff';
+
+const columnsDepartments = [
+    { Header: 'ID', accessor: row => row.id },
+    { Header: 'Department Name', accessor: 'department_name' },
+    { Header: 'Department Type', accessor: row => toSentenceCase(row.department_type) }
+]
 
 function Component({ view }) {
     const { auth } = useSelector(state => state);
@@ -50,7 +57,6 @@ function Component({ view }) {
                 },
             ],
             'Bank Account': ['account_name', 'account_number', 'account_bank'],
-            'Departments': []
         }
     }, [data]);
 
@@ -71,19 +77,39 @@ function Component({ view }) {
             loading={!data.id}
             labels={["Details"]}
             contents={[
-                <Detail view={view} data={data} labels={details}
-                    onDelete={
-                        auth?.role && auth.role === 'bm' ? auth.user.id === data.id ? false : (
-                            () => dispatch(setConfirmDelete("Are you sure to delete this item?",
-                                () => dispatch(deleteStaff(data, history))
-                            ))
-                        ) : (
-                            () => dispatch(setConfirmDelete("Are you sure to delete this item?",
-                                () => dispatch(deleteStaff(data, history))
-                            ))
-                        )
-                    }
-                />,
+                <>
+                    <Detail view={view} data={data} labels={details}
+                        onDelete={
+                            auth?.role && auth.role === 'bm' ? auth.user.id === data.id ? false : (
+                                () => dispatch(setConfirmDelete("Are you sure to delete this item?",
+                                    () => dispatch(deleteStaff(data, history))
+                                ))
+                            ) : (
+                                () => dispatch(setConfirmDelete("Are you sure to delete this item?",
+                                    () => dispatch(deleteStaff(data, history))
+                                ))
+                            )
+                        }
+                    />
+                    <div
+                    style={{
+                        color: 'grey',
+                        borderBottom: '1px solid silver',
+                        width: 200,
+                        marginBottom: 8,
+                        marginLeft: 4,
+                    }}
+                    >
+                       Departments 
+                    </div>
+                    <Table
+                        expander={false}
+                        noSearch={true}
+                        pagination={false}
+                        columns={columnsDepartments}
+                        data={data.departments}
+                    />
+                </>,
             ]}
         />
     )

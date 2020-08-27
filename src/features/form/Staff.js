@@ -217,7 +217,9 @@ function Component() {
                     />}
                     {(values['staff_role'] === "technician" || values['staff_role'] === "security" || values['staff_role'] === "pic_bm") && <Input {...props}
                         type="multiselect" label="Select Department(s)"
-                        name="department_ids" defaultValue={values.departments_ids}
+                        name="department_ids" defaultValue={values.departments.map(el => ({
+                            label: el.department_name, value: el.id
+                        }))}
                         placeholder="Start typing department name to add" options={departments}
                         onChange={(e, value) => {
                             setSelectedDepartment(value);
