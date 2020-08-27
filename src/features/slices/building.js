@@ -226,7 +226,7 @@ export const getBuildingDetails = (row,  history, url) => dispatch => {
     }))
 }
 
-export const getBuildingUnit = ( pageIndex, pageSize, search, row) => dispatch => {
+export const getBuildingUnit = ( pageIndex, pageSize, search, row, hasResident = false) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(buildingEndpoint + '/unit' +
@@ -234,7 +234,8 @@ export const getBuildingUnit = ( pageIndex, pageSize, search, row) => dispatch =
     '&building_id=' + row.id +
     '&search=' + search +
     '&sort_field=created_on&sort_type=DESC' +
-    '&limit=' + pageSize,
+    '&limit=' + pageSize +
+    (hasResident ? '&has_resident=true' : ''),
     
     res => {
       dispatch(setUnitData(res.data.data));

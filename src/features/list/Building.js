@@ -17,7 +17,7 @@ import { get } from '../slice';
 import TemplateWithSelection from './components/TemplateWithSelection';
 
 const columns = [
-    // { Header: 'ID', accessor: 'id' },
+    { Header: 'ID', accessor: 'id' },
     { Header: 'Name', accessor: row => <Building id={row.id} data={row} /> },
     { Header: 'Legal Name', accessor: 'legal_name' },
     { Header: 'Site ID', accessor: 'code_name' },

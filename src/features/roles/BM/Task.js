@@ -18,7 +18,8 @@ function Component() {
     let { path } = useRouteMatch();
 
     useEffect(() => {
-        dispatch(getBuildingUnit(0, 100, '', row));
+        dispatch(getBuildingUnit(0, 100, '', row, true));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
