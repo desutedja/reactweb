@@ -140,7 +140,7 @@ function Component() {
 
     const sendMessage = (text = '', type = '', payload) => {
         text = '[file] ' + imageSend + ' [/file]';
-        type = 'file_attachment';
+        type = imageSend ? 'file_attachment' : '';
         payload = {
             url: imageSend,
         };
@@ -324,7 +324,7 @@ function Component() {
                         flexDirection: 'column',
                     }} onSubmit={e => {
                         e.preventDefault();
-                        // sendMessage();
+                        message && sendMessage();
                     }}>
                         {imageSend && <div style={{
                             display: 'flex',
