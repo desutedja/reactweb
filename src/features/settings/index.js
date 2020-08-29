@@ -78,7 +78,7 @@ function Settings() {
         dispatch(get(endpointAdmin + '/management/building?page=1&limit=9999',
         res => {
             const formatted = res.data.data.items.map(el => ({
-                label: 'BM ID ' + el.id + ' (' + el.building_name + ' - ' + el.management_name + ')',
+                label: 'BM ID ' + el.id + ' (' + el.building_name + ' by ' + el.management_name + ')',
                 value: el.id
             }))
             setPicBmList(formatted);
