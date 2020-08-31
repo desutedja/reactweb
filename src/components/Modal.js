@@ -30,7 +30,13 @@ function Component({
                     {children}
                 </ModalBody>
                 {!disableFooter && (<ModalFooter>
-                    {!disablePrimary && <Button disabled={disabledOk} color={btnDanger ? "danger" : "primary"} onClick={onClick}>{okLabel}</Button>}
+                    {!disablePrimary && <button
+                        disabled={disabledOk}
+                        className={btnDanger ? "danger" : "Button"}
+                        // color={btnDanger ? "danger" : "primary"}
+                        onClick={onClick}>
+                            {okLabel}
+                        </button>}
                     {' '}
                     {!disableSecondary &&
                         <Button color="secondary" onClick={onClickSecondary !== null ? onClickSecondary : toggle}>

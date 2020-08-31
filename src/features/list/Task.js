@@ -186,9 +186,11 @@ function Component({ view }) {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({
-                    label: el.firstname + ' ' + el.lastname,
+                    label: el.firstname + ' ' + el.lastname + (el.departments.length > 0 ? ' (' + el.departments[0].department_name + ') ' : ''),
                     value: el.id
                 }));
+
+                console.log(formatted)
 
                 setStaffs(formatted);
             }))

@@ -220,7 +220,7 @@ export default function Component() {
                             />
                             <div className="row no-gutters">
                                 <div className="col-12 col-sm-3 col-md-4 col-lg-3 offset-sm-9 offset-md-8 offset-lg-9 no-gutters">
-                                    <button className="btn btn-primary w-100">Add Task</button>
+                                    <button className="Button w-100">Add Task</button>
                                 </div>
                             </div>
                         </form>
