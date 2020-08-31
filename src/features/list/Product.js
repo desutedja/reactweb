@@ -21,7 +21,7 @@ const columns = [
     {
         Header: 'Product', accessor: row => <Product id={row.id} data={row} merchantName={row.merchant_name}/>
     },
-    { Header: 'Selling Price', accessor: row => {
+    { Header: 'Display Price', accessor: row => {
         return row.discount_fee > 0 ? <div style={{ display: 'block' }} >
             <div style={{ textDecoration: 'line-through' }} >{toMoney(row.total_selling_price)}</div>
             <div>{toMoney(row.total_selling_price - row.discount_price)}</div>

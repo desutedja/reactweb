@@ -17,7 +17,7 @@ function Component({ view }) {
     const { product } = useSelector(state => state);
     const data = product.selected;
     // const [data, setData] = useState(product.selected || {});
-    
+
     const [modal, setModal] = useState(false);
     const [image, setImage] = useState('');
 
@@ -43,23 +43,35 @@ function Component({ view }) {
             //"promoted_until",
         ],
         "Specification": [
-            { label: "measurement_standard", lfmt: () => "Measurement Type", 
-                vfmt: (v) => v === "yes" ? "Standard Measurement" : "Nonstandard Measurement" },
-            { disabled: data.measurement_standard === "no", label: "length", lfmt: () => "Dimension", vfmt: () =>
-              data.length + " cm x " + data.width + " cm x " + data.height + " cm" },
-            { disabled: data.measurement_standard === "no", label: "weight", lfmt: () => "Weight", 
-                vfmt: (v) => (v + " gram") },
-            { disabled: data.measurement_standard === "yes", lfmt: () => "Unit of Measurement", vfmt: (v) => v,
-                label: "measurement_unit" },
+            {
+                label: "measurement_standard", lfmt: () => "Measurement Type",
+                vfmt: (v) => v === "yes" ? "Standard Measurement" : "Nonstandard Measurement"
+            },
+            {
+                disabled: data.measurement_standard === "no", label: "length", lfmt: () => "Dimension", vfmt: () =>
+                    data.length + " cm x " + data.width + " cm x " + data.height + " cm"
+            },
+            {
+                disabled: data.measurement_standard === "no", label: "weight", lfmt: () => "Weight",
+                vfmt: (v) => (v + " gram")
+            },
+            {
+                disabled: data.measurement_standard === "yes", lfmt: () => "Unit of Measurement", vfmt: (v) => v,
+                label: "measurement_unit"
+            },
         ],
         "Pricing": [
             { label: "base_price", lfmt: () => "Base Price", vfmt: (val) => toMoney(val) },
             { label: "selling_price", lfmt: () => "Selling Price", vfmt: (val) => toMoney(val) },
-            { label: "total_selling_price", lfmt: (el) => "Display Price", vfmt: (val) => toMoney(val) },
             { label: "admin_fee", lfmt: (el) => "Admin Fee", vfmt: (val) => val + "%" },
             { label: "discount_fee", lfmt: (el) => "Discount", vfmt: (val) => val + "%" },
+            {
+                label: "total_selling_price", lfmt: (el) => "Display Price", vfmt: (val) => data.discount_fee > 0 ?
+                    toMoney(data.total_selling_price - data.discount_price)
+                    : toMoney(data.total_selling_price),
+            },
         ],
-    }), [ data ]);
+    }), [data]);
 
     useEffect(() => {
         dispatch(get(endpointMerchant + '/admin/items?id=' + id, res => {
@@ -80,10 +92,10 @@ function Component({ view }) {
 
     return (
         <>
-            <Modal 
+            <Modal
                 isOpen={confirmChangeStatus}
                 disableHeader={true}
-                onClick={ () => {
+                onClick={() => {
                     const dataInput = {
                         merchant_id: data.merchant_id,
                         item_id: data.id,
@@ -171,11 +183,11 @@ function Component({ view }) {
                                 setAdminFee(data.admin_fee);
                                 setDiscFee(data.discount_fee);
                             }} />,
-                        <Button label={data.status === 'blocked' ? "Unblock Product" : "Block Product"} 
-                            color={data.status === 'blocked' ? 'success' : 'danger'}
-                            onClick={() => 
-                                setConfirmChangeStatus(true)
-                            } />,
+                            <Button label={data.status === 'blocked' ? "Unblock Product" : "Block Product"}
+                                color={data.status === 'blocked' ? 'success' : 'danger'}
+                                onClick={() =>
+                                    setConfirmChangeStatus(true)
+                                } />,
                         ]}
                     />,
                     <div style={{
