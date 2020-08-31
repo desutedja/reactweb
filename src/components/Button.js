@@ -2,6 +2,7 @@ import React from 'react';
 import { Button } from 'reactstrap';
 
 function MyButton({ icon, label, onClick, selected, color, disabled }) {
+
     return (
         <Button
             className="Button"
@@ -12,6 +13,7 @@ function MyButton({ icon, label, onClick, selected, color, disabled }) {
                 marginRight: 4,
                 marginLeft: 4,
                 marginBottom: 8,
+                backgroundColor: color ? '' : '#244091',
             }}
             type="submit"
         >
