@@ -2,7 +2,7 @@ import React, { } from 'react';
 import { useRouteMatch, Switch, Route, Redirect } from 'react-router-dom';
 
 import Task from '../../dashboard/Task';
-import Billing from '../../dashboard/Billing';
+import Billing from '../../dashboard/Building';
 import Advertisement from '../../dashboard/Advertisement';
 
 function Component() {

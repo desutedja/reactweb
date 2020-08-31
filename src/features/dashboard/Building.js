@@ -329,7 +329,7 @@ function Component() {
                                 <AnimatedNumber className="BigNumber white" value={staffData.num_of_resident || '0'}
                                     formatValue={formatValue}
                                 />
-                                <p>Resident</p>
+                                <p className="white">Resident</p>
                             </div>
                         </div>
                     </div>
@@ -353,7 +353,7 @@ function Component() {
                                 <AnimatedNumber className="BigNumber white" value={staffData.num_of_technician || '0'}
                                     formatValue={formatValue}
                                 />
-                                <p>Technician</p>
+                                <p className="white">Technician</p>
                             </div>
                         </div>
                     </div>}
@@ -376,7 +376,7 @@ function Component() {
                                 <AnimatedNumber className="BigNumber white" value={staffData.num_of_security || '0'}
                                     formatValue={formatValue}
                                 />
-                                <p>Security</p>
+                                <p className="white">Security</p>
                             </div>
                         </div>
                     </div>}
@@ -400,7 +400,7 @@ function Component() {
                                     / staffData.num_of_courier || '0'}
                                     formatValue={formatValue}
                                 />
-                                <p>Courier</p>
+                                <p className="white">Courier</p>
                             </div>
                         </div>
                     </div>}
@@ -422,7 +422,7 @@ function Component() {
                                     / staffData.num_of_building || '0'}
                                     formatValue={formatValue}
                                 />
-                                <p className="text-nowrap">Building Manager</p>
+                                <p className="text-nowrap white">Building Manager</p>
                             </div>
                         </div>
                     </div>
@@ -446,7 +446,7 @@ function Component() {
                                     / staffData.num_of_building || '0'}
                                     formatValue={formatValue}
                                 />
-                                <p className="text-nowrap">General Manager</p>
+                                <p className="text-nowrap white">General Manager</p>
                             </div>
                         </div>
                     </div>

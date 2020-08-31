@@ -82,7 +82,6 @@ function TextInput({
                             key={el.value}
                             className="Input-optionItem"
                             onClick={() => {
-                                console.log('clicked');
                                 // setValue(el.value);
                                 setFieldValue(fixedName, el.label);
                                 setFieldValue(name, el.value);

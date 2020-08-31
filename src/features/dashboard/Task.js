@@ -266,7 +266,7 @@ function Component() {
                                         <YAxis axisLine={false} tickLine={false} width={40} dx={-10} dataKey="SOS" />
                                         <Tooltip />
                                         <CartesianGrid vertical={false} stroke="#ddd" dataKey="Time" />
-                                        <Bar className="cursor-pointer" onClick={() => {history.push('/' + auth.role + '/task')}} radius={4} dataKey="SOS" fill="rgb(237, 64, 87)" maxBarSize={80} />
+                                        <Bar className="cursor-pointer" onClick={() => {history.push('/' + auth.role + '/task')}} radius={4} dataKey="SOS" fill="#e12029" maxBarSize={80} />
                                     </ComposedChart>
                                 </ResponsiveContainer>
                             </div>

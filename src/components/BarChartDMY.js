@@ -36,19 +36,19 @@ export default ({
                   display: 'flex',
               }}>
                   <div
-                      className={range === 'dtd' ? "GroupActive color-5" : "Group"}
+                      className={range === 'dtd' ? "GroupActive color-5" : "Group blue"}
                       onClick={() => setRange('dtd') }
                   >
                       DTD
                   </div>
                   <div
-                      className={range === 'mtd' ? "GroupActive color-5" : "Group"}
+                      className={range === 'mtd' ? "GroupActive color-5" : "Group blue"}
                       onClick={() => setRange('mtd')}
                   >
                       MTD
                   </div>
                   <div
-                      className={range === 'ytd' ? "GroupActive color-5" : "Group"}
+                      className={range === 'ytd' ? "GroupActive color-5" : "Group blue"}
                       onClick={() => setRange('ytd')}
                   >
                       YTD

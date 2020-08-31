@@ -1,5 +1,5 @@
 .Button {
-  background-color: var(--primary-color);
+  background-color: var(--primary-color)!important;
   min-width: 100px;
   /* max-width: 100px; */
   min-height: 2.4rem;
@@ -9,6 +9,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: .2s;
+}
+.Button:hover {
+  background-color: var(--secondary-color)!important;
 }
 
 .Button.Secondary {
@@ -191,6 +195,11 @@
 
 .Group:hover {
   background-color: var(--primary-color);
+  color: white;
+}
+
+.Group.blue:hover {
+  background-color: #244091 !important;
   color: white;
 }
 
@@ -471,4 +480,9 @@ input[type="button"]:disabled {
 
 .list-modal-hover.on {
   display: block;
+}
+
+.primary-color {
+  background-color: var(--primary-color);
+  color: white;
 }

@@ -91,6 +91,14 @@
   flex: 1;
 }
 
+.Input-container select option:hover,
+.Input-container select option:active,
+.Input-container select option:checked,
+.Input-container select option:focus {
+  background: var(--primary-color);
+  color: white;
+}
+
 .InputIcon {
   position: absolute;
   right: 8px;
@@ -145,7 +153,7 @@
 }
 
 .Input-optionItem:hover {
-  background-color: dodgerblue;
+  background-color: var(--primary-color);
   color: white;
 }
 

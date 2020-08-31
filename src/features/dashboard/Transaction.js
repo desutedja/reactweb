@@ -226,7 +226,7 @@ function Component() {
                             </div>
                             <div>
                                 <AnimatedNumber
-                                    className="BigNumber blue"
+                                    className="BigNumber"
                                     value={merchantInfo.active_merchant}
                                     formatValue={formatValue}
                                 />
@@ -238,7 +238,7 @@ function Component() {
                             </div>
                             <div>
                                 <AnimatedNumber
-                                    className="BigNumber blue"
+                                    className="BigNumber"
                                     value={merchantInfo.inactive_merchant}
                                     formatValue={formatValue}
                                 />
@@ -250,7 +250,7 @@ function Component() {
                             </div>
                             <div>
                                 <AnimatedNumber
-                                    className="BigNumber blue"
+                                    className="BigNumber"
                                     value={merchantInfo.total_merchant}
                                     formatValue={formatValue}
                                 />

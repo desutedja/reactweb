@@ -15,8 +15,9 @@
   align-items: center;
 }
 
-.Item:hover {
-    background-color: #f3f3fa;
+.Item:hover, .Item:hover * {
+  color: var(--primary-color);
+  background-color: #f3f3fa;
 }
 
 .Item-avatar {
