@@ -11,8 +11,8 @@ function MultiSelectInput({
 
     const onValueChange = (e, val) => {
         onChange(e, val);
-        setFieldValue(name, val);
-        setFieldValue(fixedName, val);
+        setFieldValue && setFieldValue(name, val);
+        setFieldValue && setFieldValue(fixedName, val);
     }
 
     const {

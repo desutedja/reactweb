@@ -34,9 +34,9 @@ const columns = [
         Header: "Created On", accessor: row => dateTimeFormatterCell(row.created_on)
     },
     {
-        Header: "Type", accessor: row => row.task_type === "service" ? <>{toSentenceCase(row.task_type) +
-            (row.task_specialization ? ("- " + row.task_specialization) : "")}</> :
-            toSentenceCase(row.task_type)
+        Header: "Department", accessor: row => row.task_type === "service" ? <>{toSentenceCase(row.task_type) +
+            (row.department_name ? ("- " + row.department_name) : "")}</> :
+            toSentenceCase(row.task_type) + (row.department_name ? ("- " + row.department_name) : "")
     },
     {
         Header: "Priority", accessor: row =>
@@ -186,9 +186,11 @@ function Component({ view }) {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({
-                    label: el.firstname + ' ' + el.lastname,
+                    label: el.firstname + ' ' + el.lastname + (el.departments.length > 0 ? ' (' + el.departments[0].department_name + ') ' : ''),
                     value: el.id
                 }));
+
+                console.log(formatted)
 
                 setStaffs(formatted);
             }))

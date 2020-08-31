@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
 import { get, del, setConfirmDelete, setInfo } from '../slice';
 import { FiPlus } from 'react-icons/fi'
 
@@ -15,7 +15,6 @@ import CellCategory from '../../components/cells/Category';
 import ModalCategory from './Category';
 import ModalDepartment from './Department';
 import Button from '../../components/Button';
-import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 
 const columnsMerchantCategories = [
@@ -26,11 +25,13 @@ const columnsMerchantCategories = [
 
 const columnsDepartments = [
     { Header: 'ID', accessor: row => row.id },
-    { Header: 'Department Name', accessor: row => row.department_name },
-    { Header: 'BM ID', accessor: row => row.bm_id },
+    { Header: 'Department Name', accessor: 'department_name' },
+    { Header: 'Department Type', accessor: row => toSentenceCase(row.department_type) },
+    { Header: 'BM ID', accessor: 'bm_id' },
 ]
 
 function Settings() {
+    const initialMount = useRef(true);
 
     const [data, setData] = useState({});
     const [id, setID] = useState({});
@@ -55,10 +56,18 @@ function Settings() {
     let dispatch = useDispatch();
 
     useEffect(() => {
+        if (initialMount.current) {
+            initialMount.current = false;
+            return;
+        }
+        if (picBmLabel === 'None' || '') {
+            setDepartments([]);
+            return;
+        }
         setLoading(true);
         dispatch(get(endpointManagement + '/admin/department?bm_id=' + picBm,
         res => {
-            setDepartments(res.data.data);
+            setDepartments(res.data.data || []);
             setLoading(false);
         }
         ))
@@ -69,7 +78,7 @@ function Settings() {
         dispatch(get(endpointAdmin + '/management/building?page=1&limit=9999',
         res => {
             const formatted = res.data.data.items.map(el => ({
-                label: 'BM ID ' + el.id + ' (' + el.building_name + ' - ' + el.management_name + ')',
+                label: 'BM ID ' + el.id + ' (' + el.building_name + ' by ' + el.management_name + ')',
                 value: el.id
             }))
             setPicBmList(formatted);
@@ -312,11 +321,12 @@ function Settings() {
                         {
                             hidex: picBm === "",
                             label: "PIC BM: ",
-                            value: picBm ? picBmLabel : "All",
+                            value: picBm ? picBmLabel : "None",
                             delete: () => { setPicBm(''); },
                             component: (toggleModal) =>
                                 <>
                                     <Filter
+                                        defaultValue="None"
                                         data={picBmList}
                                         onClick={(el) => {
                                             setPicBm(el.value);
@@ -332,6 +342,7 @@ function Settings() {
                                 </>
                         },
                     ]}
+                    filterExpanded={true}
                     renderActions={() => [
                         <Button key="Add Department" label="Add Department" icon={<FiPlus />}
                             onClick={() => {

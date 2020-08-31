@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import SectionSeparator from '../../components/SectionSeparator';
 import { editStaff, createStaff } from '../slices/staff';
-import { endpointResident, endpointAdmin } from '../../settings';
+import { endpointResident, endpointAdmin, endpointManagement } from '../../settings';
 import { get } from '../slice';
 import Template from './components/TemplateWithFormik';
 import countries from '../../countries';
@@ -56,10 +56,15 @@ let staff_roles = [
 ];
 
 function Component() {
+    const initialMount = useRef(true);
     const { banks } = useSelector(state => state.main);
     const { loading, selected } = useSelector(state => state.staff);
     const { role, user } = useSelector(state => state.auth)
     const [bManagements, setBManagements] = useState([]);
+    const [bmId, setBmId] = useState('');
+    const [departments, setDepartments] = useState([]);
+    const [typeDepartment, setTypeDepartment] = useState('');
+    const [selectedDepartment, setSelectedDepartment] = useState([]);
 
     const [districts, setDistricts] = useState([]);
     const [city, setCity] = useState("");
@@ -70,6 +75,45 @@ function Component() {
 
     let dispatch = useDispatch();
     let history = useHistory();
+
+    useEffect(() => {
+        console.log(selectedDepartment)
+    }, [selectedDepartment])
+
+    useEffect(() => {
+        if (initialMount.current) {
+            initialMount.current = false;
+            return;
+        }
+        if (role === 'sa') {
+            if (bmId && typeDepartment) {
+                dispatch(get(endpointManagement + '/admin/department?' +
+                'bm_id=' + bmId +
+                '&type=' + typeDepartment,
+                res => {
+                    const formatted = res.data.data.map(el => ({
+                        label: el.department_name, value: el.id
+                    }))
+                    setDepartments(formatted || []);
+                }
+                ))
+            }
+            return;
+        }
+        if (typeDepartment) {
+            dispatch(get(endpointManagement + '/admin/department?' +
+            'type=' + typeDepartment,
+            res => {
+                const formatted = res.data.data.map(el => ({
+                    label: el.department_name, value: el.id
+                }))
+                setDepartments(formatted || []);
+            }
+            ))
+        }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [bmId, typeDepartment])
 
     useEffect(() => {
         dispatch(get(endpointAdmin + '/management/building' +
@@ -150,10 +194,19 @@ function Component() {
                 building_management_id: values.building_management_id ?
                     values.building_management_id : user.building_management_id,
             })}
-            edit={data => dispatch(editStaff(data, history, selected.id))}
-            add={data => dispatch(createStaff(data, history))}
+            edit={data => {
+                delete data[undefined]
+                dispatch(editStaff(data, history, selected.id))
+            }}
+            add={data => {
+                delete data[undefined]
+                dispatch(createStaff(data, history))
+            }}
             renderChild={props => {
                 const { values, errors } = props;
+                if (values.building_management_id) setBmId(values.building_management_id);
+                if (values.staff_role === 'technician' || values.staff_role === 'pic_bm') setTypeDepartment('service');
+                if (values.staff_role === 'security') setTypeDepartment('security');
 
                 return (<Form className="Form">
                     {!selected.id && <Input {...props} label="Staff Role"
@@ -166,18 +219,28 @@ function Component() {
                             { value: '1', label: 'Yes' },
                             { value: '0', label: 'No' },
                         ]} />}
-                    {values['staff_role'] === "technician" && <Input {...props} label="Specialization"
+                    {/* {values['staff_role'] === "technician" && <Input {...props} label="Specialization"
                         name="staff_specialization"
                         options={[
                             { value: 'electricity', label: 'Electricity' },
                             { value: 'plumbing', label: 'Plumbing' },
                             { value: 'others', label: 'Others' },
-                        ]} />}
+                        ]} />} */}
                     {role === 'sa' && <Input {...props} label="Building Management"
                         name="building_management_id"
                         options={bManagements}
                     />}
-                    <Input {...props} label="Identity No" placeholder="KTP/SIM/Passport" />
+                    {(values['staff_role'] === "technician" || values['staff_role'] === "security" || values['staff_role'] === "pic_bm") && <Input {...props}
+                        type="multiselect" label="Select Department(s)"
+                        name="department_ids" defaultValue={values.departments ? values.departments.map(el => ({
+                            label: el.department_name, value: el.id
+                        })) : []}
+                        placeholder="Start typing department name to add" options={departments}
+                        onChange={(e, value) => {
+                            setSelectedDepartment(value);
+                        }}
+                    />}
+                    <Input {...props} label="Staff Id" placeholder="KTP/SIM/Passport" />
                     <Input {...props} label="Status"
                         type="radio"
                         options={[

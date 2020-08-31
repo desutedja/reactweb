@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { post } from '../slice';
+import { post, get } from '../slice';
 import { refresh } from '../slices/task';
-import { task_types, endpointTask } from '../../settings';
+import { task_types, endpointTask, endpointManagement } from '../../settings';
 import { toSentenceCase } from '../../utils';
 import { FiChevronDown } from 'react-icons/fi';
+import Input from './input';
 
 import Breadcrumb from '../../components/Breadcrumb';
 
@@ -22,24 +23,27 @@ const task_priorities = [
 ]
 
 export default function Component() {
+    const initialMount = useRef(true);
     const history = useHistory();
     const dispatch = useDispatch();
 
     const { path } = useRouteMatch();
     const { unit } = useSelector(state => state.building);
+    const { auth } = useSelector(state => state);
 
-    //! must contain integer!
     const [unitValue, setUnitValue] = useState('');
-
     const [units, setUnits] = useState(unit.items || []);
+    const [departments, setDepartments] = useState([]);
+    const [department, setDepartment] = useState('');
+    const [typeDepartment, setTypeDepartment] = useState('');
     const [taskData, setTaskData] = useState({
         title: '',
         description: '',
         priority: 'low',
-        // integer
         building_unit_id: '',
         task_type: '',
-        category: ''
+        category: null,
+        department_id: '',
     })
 
     useEffect(() => {
@@ -50,7 +54,42 @@ export default function Component() {
             )
         ));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [unitValue])
+    }, [unitValue]);
+
+    useEffect(() => {
+        const {task_type} = taskData;
+        if (task_type) {
+            task_type === 'service' ? setTypeDepartment('service') : setTypeDepartment('security')
+            return;
+        }
+    }, [taskData]);
+
+    useEffect(() => {
+        if (initialMount.current) {
+            initialMount.current = false;
+        }
+        setDepartment('');
+    }, [taskData.task_type]);
+
+    useEffect(() => {
+        if (initialMount.current) {
+            initialMount.current = false;
+        }
+        if (typeDepartment) {
+            // const bmId = auth.user.building_management_id;
+            dispatch(get(endpointManagement + '/admin/department?' +
+            // 'bm_id=' + bmId +
+            'type=' + typeDepartment,
+            res => {
+                const formatted = res.data.data.map(el => ({
+                    label: el.department_name, value: el.id
+                }))
+                setDepartments(formatted || []);
+            }
+            ))
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [auth.user.building_management_id, typeDepartment])
 
     return (
         <>
@@ -107,7 +146,7 @@ export default function Component() {
                                     })
                                 }}
                             />
-                            {taskData.task_type === 'service' && <Radio
+                            {/* {taskData.task_type === 'service' && <Radio
                                 className="mb-4"
                                 label="Category"
                                 options={task_categories}
@@ -116,6 +155,24 @@ export default function Component() {
                                         ...taskData,
                                         category: el.value
                                     })
+                                }}
+                            />} */}
+                            {taskData.task_type && <SelectOption
+                                className="mb-4"
+                                label="Select Department"
+                                placeholder="Select Department"
+                                options={departments}
+                                value={department}
+                                searchable={false}
+                                onChange={e => {
+                                    setDepartment(e.target.value)
+                                }}
+                                optionClick={el => {
+                                    setTaskData({
+                                        ...taskData,
+                                        department_id: Number(el.value)
+                                    })
+                                    setDepartment(el.label)
                                 }}
                             />}
                             <RadioBox
@@ -163,7 +220,7 @@ export default function Component() {
                             />
                             <div className="row no-gutters">
                                 <div className="col-12 col-sm-3 col-md-4 col-lg-3 offset-sm-9 offset-md-8 offset-lg-9 no-gutters">
-                                    <button className="btn btn-primary w-100">Add Task</button>
+                                    <button className="Button w-100">Add Task</button>
                                 </div>
                             </div>
                         </form>
@@ -187,7 +244,7 @@ const MultipleUpload = ({
 
 const SelectOption = ({
     className, options, label = '',
-    optionClick = null, ...rest
+    optionClick = null, searchable = true, ...rest
 }) => {
     const [dropDown, setDropDown] = useState(false);
     return (
@@ -224,7 +281,9 @@ const SelectOption = ({
                                 className="no-list selectable px-3 py-2"
                                 onClick={() => optionClick && optionClick(el)}
                             >
-                                {el.section_type + ' ' + el.section_name + ' Floor ' + el.floor + ' No. ' + el.number}
+                                {searchable ?
+                                (el.section_type + ' ' + el.section_name + ' Floor ' + el.floor + ' No. ' + el.number) :
+                                el.label}
                             </li>
                         )) : (
                             <li

@@ -2,11 +2,12 @@
   /* --primary-color: #999;
   --secondary-color: #bbb;
   --accent-color: #ddd; */
-  --primary-color: #2f78e9;
-  /* --primary-color: rgba(5, 83, 149, 1); */
+  /* --primary-color: #2f78e9; */
+  --primary-color: #244091;
+  /* --secondary-color: #244091; */
   --secondary-color: rgba(0, 116, 255, 1);
   --primary-yellow-color: rgba(250, 219, 8, 1);
-  --accent-color: rgba(0, 197, 255, 1);
+  --accent-color: #2f78e9;
   --light-black: #838383;
   font-size: 12px;
   font-family: "Noto Sans", sans-serif;

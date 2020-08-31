@@ -45,7 +45,7 @@ function Component({ children, onSubmit, loading, isModal=false, showSubmit = tr
                 {!isModal && showSubmit && <div className="Form-control" style={{ justifyContent: 'right', flexDirection: 'row-reverse' }} >
                     <Loading loading={loading}>
                         {showCancel && <div className="btn btn-secondary mb-2 mt-1 ml-3" onClick={onCancel}>Cancel</div>}
-                        <Button label="Submit" className="btn btn-primary ml-2"/>    
+                        <Button label="Submit" className="Button ml-2"/>    
                     </Loading>
                 </div>}
             </Form>

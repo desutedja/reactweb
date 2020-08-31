@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { post, patch, setInfo } from '../slice';
 
-import { endpointManagement } from '../../settings';
+import { endpointManagement, task_types } from '../../settings';
 import Modal from '../../components/Modal';
 import Input from '../../components/Input';
 
@@ -15,6 +15,7 @@ export default function ({
     let dispatch = useDispatch();
 
     const [departmentName, setDepartmentName] = useState('');
+    const [departmentType, setDepartmentType] = useState('');
     const [bmId, setBmId] = useState(null);
 
     useEffect(() => {
@@ -39,7 +40,8 @@ export default function ({
         }
         const addSubmit = {
             department_name: departmentName,
-            bm_id: Number(bmId)
+            bm_id: Number(bmId),
+            department_type: departmentType
         }
         if (title === 'Add Department') {
             toggleLoading(true);
@@ -84,8 +86,20 @@ export default function ({
                 clearData();
             }}
         >
-            <Input label="Name" inputValue={departmentName} setInputValue={setDepartmentName}/>
-            {auth.role === 'sa' && <Input disabled={title === 'Edit Department'} label="PIC BM" type="select" options={picBmList} inputValue={bmId} setInputValue={setBmId}/>}
+            <Input
+                label="Department Name" inputValue={departmentName}
+                setInputValue={setDepartmentName}
+            />
+            <Input
+                label="Department Type" inputValue={departmentType}
+                type="select" options={task_types} setInputValue={setDepartmentType}
+                disabled={title === 'Edit Department'}
+            />
+            {auth.role === 'sa' && <Input
+                disabled={title === 'Edit Department'}
+                label="PIC BM" type="select" options={picBmList}
+                inputValue={bmId} setInputValue={setBmId}
+            />}
         </Modal>
     )
 }
