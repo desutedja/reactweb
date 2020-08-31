@@ -179,7 +179,7 @@ function Component({ view }) {
             selectedRow.task_type === 'service' ? 'technician' : 'courier';
 
         assign && (!search || search.length >= 1) && dispatch(get(endpointManagement + '/admin/staff/list' +
-            '?limit=5&page=1&max_ongoing_task=1' +
+            '?limit=5&page=1&max_ongoing_task=1' + (selectedRow?.department_id ? '&department_id=' + selectedRow.department_id : '') +
             '&staff_role=' + staffRole + "&status=active" +
             (selectedRow.priority === "emergency" ? '&is_ongoing_emergency=true' : '') +
             '&search=' + search, res => {
