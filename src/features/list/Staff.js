@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useRouteMatch, useHistory } from 'react-router-dom';
+import { useRouteMatch, useHistory, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {  FiPlus } from 'react-icons/fi';
 
@@ -17,6 +17,28 @@ import { get } from '../slice';
 
 import Template from './components/Template';
 
+const ListDepartment = ({data}) => {
+    const history = useHistory();
+    const { role } = useSelector(state => state.auth);
+    const [modalHover, setModalHover] = useState(false);
+    return (
+        <div className="modal-hover">
+            <button onClick={() => history.push('/' + role + '/staff/' + data.id)} className="ml-2"
+                onMouseEnter={() => setModalHover(true)}
+                onMouseLeave={() => setModalHover(false)}
+            >See Departments</button>
+            <div className={"list-modal-hover" + (modalHover ? ' on' : '')}
+                onMouseEnter={() => setModalHover(true)}
+                onMouseLeave={() => setModalHover(false)}
+            >
+                {data.departments.map((item, i) => <div className="p-3">
+                    {(i + 1) + '. ' + item.department_name + ' (' + item.department_type + ')'}
+                </div>)}
+            </div>
+        </div>
+    )
+}
+
 const columns = [
     {
         Header: "Staff",
@@ -26,6 +48,9 @@ const columns = [
     { Header: "Building", accessor: "building_name" },
     {
         Header: "Management", accessor: "management_name" 
+    },
+    {
+        Header: "Departments", accessor: row => row.departments.length > 0 ? <ListDepartment data={row} /> : (<center>-</center>)
     },
     {
         Header: "Available", accessor: row =>

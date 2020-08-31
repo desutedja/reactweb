@@ -61,7 +61,7 @@
 }
 
 .Filter {
-  overflow: hidden;
+  /* overflow: hidden; */
   width: 100%;
   text-align: center;
 }
@@ -71,7 +71,7 @@
   flex-direction: column;
   align-items: center;
   /* max-height: 200px; */
-  overflow-y: hidden;
+  /* overflow-y: hidden; */
   margin-top: 4px;
   margin-bottom: 4px;
   /* width: calc(100% + 15px); */
@@ -451,4 +451,24 @@ input[type="button"]:disabled {
 
 .border-right-light {
   border-right: 0.9px solid rgba(255, 255, 255, 0.486);
+}
+
+.modal-hover {
+  position: relative;
+}
+
+.list-modal-hover {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  z-index: 9999;
+  border-radius: 3px;
+  background-color: white;
+  border: 1px solid var(--primary-color);
+  display: none;
+  min-width: 250px;
+}
+
+.list-modal-hover.on {
+  display: block;
 }

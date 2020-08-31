@@ -179,14 +179,14 @@ function Component({ view }) {
             selectedRow.task_type === 'service' ? 'technician' : 'courier';
 
         assign && (!search || search.length >= 1) && dispatch(get(endpointManagement + '/admin/staff/list' +
-            '?limit=5&page=1&max_ongoing_task=1' +
+            '?limit=5&page=1&max_ongoing_task=1' + (selectedRow?.department_id ? '&department_id=' + selectedRow.department_id : '') +
             '&staff_role=' + staffRole + "&status=active" +
             (selectedRow.priority === "emergency" ? '&is_ongoing_emergency=true' : '') +
             '&search=' + search, res => {
                 let data = res.data.data.items;
 
                 let formatted = data.map(el => ({
-                    label: el.firstname + ' ' + el.lastname + (el.departments.length > 0 ? ' (' + el.departments[0].department_name + ') ' : ''),
+                    label: el.departments.length > 0 ? <ListFilter data={el} /> : el.firstname + ' ' + el.lastname,
                     value: el.id
                 }));
 
@@ -196,7 +196,7 @@ function Component({ view }) {
             }))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, search, selectedRow]);
-    
+
     useEffect(() => {
         building && dispatch(get(endpointAdmin + '/building/unit' +
             '?page=1' +
@@ -504,3 +504,24 @@ function Component({ view }) {
 }
 
 export default Component;
+
+const ListFilter = ({data}) => {
+    const [modalHover, setModalHover] = useState(false);
+    return (
+        <div className="modal-hover">
+            {data.firstname + ' ' + data.lastname}
+            <button className="ml-2"
+                onMouseEnter={() => setModalHover(true)}
+                onMouseLeave={() => setModalHover(false)}
+            >See Departments</button>
+            <div className={"list-modal-hover text-left" + (modalHover ? ' on' : '')}
+                onMouseEnter={() => setModalHover(true)}
+                onMouseLeave={() => setModalHover(false)}
+            >
+                {data.departments.map((item, i) => <div className="p-3">
+                    {(i + 1) + '. ' + item.department_name + ' (' + item.department_type + ')'}
+                </div>)}
+            </div>
+        </div>
+    )
+}
