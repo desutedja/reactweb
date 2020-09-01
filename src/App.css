@@ -319,10 +319,11 @@
   position: relative;
   left: -12px;
   top: -8px;
-  background-color: crimson;
-  color: white;
+  background-color: white;
+  color: crimson;
   padding: 0 6px;
   border-radius: 50%;
+  border: 1px solid crimson;
 }
 
 .Toast {
