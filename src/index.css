@@ -2,7 +2,7 @@
   --primary-color: #e12029;
   /* --primary-color: #244091; */
   /* --primary-color: #2f78e9; */
-  --secondary-color: #e44437;
+  --secondary-color: #838383;
   /* --secondary-color: rgba(0, 116, 255, 1); */
   --primary-yellow-color: rgba(250, 219, 8, 1);
   --accent-color: #e75f49;
@@ -15,6 +15,16 @@
   /* background-color: rgba(245, 245, 245, 1); */
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none;
+}
+
+.list-group-item.active {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white !important;
+}
+
+.list-group-item.active * {
+  color: white !important;
 }
 
 .scroller-y {

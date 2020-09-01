@@ -69,6 +69,7 @@ function Component({ view }) {
         <>
         <Modal 
             isOpen={confirmDelete}
+            btnDanger
             disableHeader={true}
             onClick={
               () => dispatch(deleteMerchant(data, history))

@@ -127,8 +127,7 @@ function Component({ view = false }) {
                 onClickDelete={view ? null : row => {
                     dispatch(setConfirmDelete("Are you sure to delete this item?",
                         () => dispatch(deleteBuildingSection(row))
-                    )
-                    )
+                    ))
                 }}
                 onClickEdit={view ? null : row => {
                     setRow(row);

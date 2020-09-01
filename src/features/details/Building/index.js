@@ -67,6 +67,7 @@ function Component({ view }) {
             <Modal
                 isOpen={confirmDelete}
                 disableHeader={true}
+                btnDanger
                 onClick={
                     () => dispatch(deleteBuilding(data, history))
                 }

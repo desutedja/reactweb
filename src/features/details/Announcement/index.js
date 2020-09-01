@@ -96,6 +96,7 @@ function Component({ view }) {
             <Modal
                 isOpen={confirmDelete}
                 disableHeader={true}
+                btnDanger
                 onClick={
                     () => dispatch(deleteAnnouncement(data, history))
                 }
@@ -130,7 +131,7 @@ function Component({ view }) {
                                         });
                                         dispatch(setSelected({ ...data, duplicate: true }));
                                     }} />,
-                                <Button color="danger" icon={<FiTrash />} label="Delete"
+                                <Button color="Danger" icon={<FiTrash />} label="Delete"
                                     onClick={() => setConfirmDelete(true)} />,
                             ]}
                         /></div>

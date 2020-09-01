@@ -341,7 +341,7 @@ function Component({
                                     (onClickDelete ? {
                                         name: "Delete",
                                         onClick: () => onClickDelete(row.original),
-                                        color: "danger",
+                                        color: "Danger",
                                         icon: <FiTrash />,
                                     } : ""),
                                 ].filter(x => x !== "")

@@ -194,6 +194,7 @@ function Component({ view }) {
         <Modal
             isOpen={confirmDelete}
             disableHeader={true}
+            btnDanger
             onClick={
                 () => {
                     const data = multiActionRows.map(el => el.id)
@@ -255,7 +256,7 @@ function Component({ view }) {
             renderActions={view ? null : (selectedRowIds, page) => {
                 return ([
                     <>{Object.keys(selectedRowIds).length > 0 &&
-                    <Button color="danger"
+                    <Button color="Danger"
                         onClick={() => {
                             console.log(selectedRowIds);
                             setConfirmDelete(true);
