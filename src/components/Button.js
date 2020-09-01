@@ -6,7 +6,7 @@ function MyButton({ icon, label, onClick, selected, color, disabled }) {
     return (
         <Button
             className="Button"
-            color={disabled ? 'secondary' : color ? color : "primary"}
+            // color={disabled ? 'secondary' : color ? color : "primary"}
             disabled={disabled}
             onClick={onClick}
             style={{

@@ -1,13 +1,12 @@
 :root {
-  /* --primary-color: #999;
-  --secondary-color: #bbb;
-  --accent-color: #ddd; */
+  --primary-color: #e12029;
+  /* --primary-color: #244091; */
   /* --primary-color: #2f78e9; */
-  --primary-color: #244091;
-  /* --secondary-color: #244091; */
-  --secondary-color: rgba(0, 116, 255, 1);
+  --secondary-color: #e44437;
+  /* --secondary-color: rgba(0, 116, 255, 1); */
   --primary-yellow-color: rgba(250, 219, 8, 1);
-  --accent-color: #2f78e9;
+  --accent-color: #e75f49;
+  /* --accent-color: #2f78e9; */
   --light-black: #838383;
   font-size: 12px;
   font-family: "Noto Sans", sans-serif;
@@ -92,14 +91,13 @@ label {
 p,
 a {
   margin: 0;
-  /* margin-left: 4px; */
-  /* margin-right: 4px; */
   text-align: justify;
-}
-
-a {
   text-decoration: none;
   color: #212529;
+}
+a:hover {
+  color: var(--primary-color);
+  text-decoration: none;
 }
 
 button {
@@ -288,12 +286,13 @@ form {
 }
 
 .Link {
-  color: dodgerblue;
+  color: var(--primary-color);
   cursor: pointer;
 }
 
 .Link:hover {
-  text-decoration: underline;
+  color: var(--primary-color);
+  text-decoration: none;
 }
 
 .p-relative {
