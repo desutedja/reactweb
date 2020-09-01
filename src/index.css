@@ -27,6 +27,10 @@
   color: white !important;
 }
 
+.badge-primary {
+  background-color: var(--primary-color);
+}
+
 .scroller-y {
   overflow-y: auto;
   overflow-x: hidden;
