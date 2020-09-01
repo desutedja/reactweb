@@ -11,14 +11,17 @@
   justify-content: center;
   transition: .2s;
 }
-.Button:hover {
-  background-color: var(--secondary-color)!important;
-}
 
 .Button.Secondary {
-  background-color: white;
-  color: var(--primary-color);
-  border: 1px solid var(--primary-color);
+  background-color: white !important;
+  color: var(--primary-color) !important;
+  border: 1px solid var(--primary-color) !important;
+}
+
+.Button.Danger {
+  background-color: white !important;
+  color: var(--primary-color) !important;
+  border: 1px solid var(--primary-color) !important;
 }
 
 .Button.selected {
@@ -47,9 +50,9 @@
 }
 
 .Button.inactive {
-  color: grey;
-  cursor: default;
-  background-color: silver;
+  color: grey !important;
+  cursor: default !important;
+  background-color: silver !important;
 }
 
 .IconButton.inactive:hover {
@@ -448,7 +451,7 @@ input[type="button"]:disabled {
 }
 
 .switch-on label {
-  background-color: #3a81ec;
+  background-color: var(--primary-color);
   color: white;
   box-shadow: 0 4px 0 #bbbbbb;
 }

@@ -147,7 +147,7 @@ function Component({ view }) {
                 contents={[
                     <div style={{ display: "flex" }}>
                         <div style={{ marginRight: "20px" }}><Content /></div>
-                        <Detail 
+                        <Detail
                             editable={!(role === 'sa' && data.bm_ad_building_id > 0)}
                             view={view} type="Advertisement" data={data} labels={details}
                             onDelete={() => dispatch(setConfirmDelete("Are you sure to delete this item?",

@@ -5,7 +5,7 @@ function MyButton({ icon, label, onClick, selected, color, disabled }) {
 
     return (
         <Button
-            className="Button"
+            className={'Button ' + (disabled ? 'inactive' : color ? color : '')}
             // color={disabled ? 'secondary' : color ? color : "primary"}
             disabled={disabled}
             onClick={onClick}

@@ -124,9 +124,9 @@ function Component() {
                                         { data.info?.penalty_fee > 0 ?
                                         <span>
                                             Total: {toMoney(data.items?.reduce((sum, el) => sum + el.total, 0))} + 
-                                            {toMoney(data.info?.penalty_amount)} (penalty) = <b style={{ color: 'blue' }}>
+                                            {toMoney(data.info?.penalty_amount)} (penalty) = <b style={{ color: '#e12029' }}>
                                                 {toMoney(data.info?.selling_price)}</b></span> :
-                                        <>Total: <b style={{ color: 'blue' }}>{toMoney(data.items?.reduce((sum, el) => sum + el.total, 0))}</b></>
+                                        <>Total: <b style={{ color: '#e12029' }}>{toMoney(data.items?.reduce((sum, el) => sum + el.total, 0))}</b></>
                                     }
 
                                     </h3>

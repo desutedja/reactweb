@@ -44,6 +44,7 @@ function Component({ view }) {
         <>
         <Modal 
             isOpen={confirmDelete}
+            btnDanger
             disableHeader={true}
             onClick={
               () =>  dispatch(deleteResident(data, history))

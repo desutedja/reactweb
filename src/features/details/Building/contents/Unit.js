@@ -11,6 +11,7 @@ import {
     deleteBuildingUnit, getBuildingUnit, editBuildingUnit,
     createBuildingUnit, getBuildingSection, getBuildingUnitType,
 } from '../../../slices/building';
+import { setConfirmDelete } from '../../../slice';
 import UploadModal from '../../../../components/UploadModal';
 import { endpointAdmin } from '../../../../settings';
 
@@ -145,7 +146,10 @@ function Component({ view }) {
                     />,
                 ]}
                 onClickDelete={view ? null : row => {
-                    dispatch(deleteBuildingUnit(row,))
+                    dispatch(setConfirmDelete("Are you sure to delete this item?",
+                        () => dispatch(deleteBuildingUnit(row,))
+
+                    ))
                 }}
                 onClickEdit={view ? null : row => {
                     setRow(row);

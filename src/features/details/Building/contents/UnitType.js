@@ -10,6 +10,7 @@ import Input from '../../../../components/Input';
 import Filter from '../../../../components/Filter';
 import { getBuildingUnitType, getBuildingSection, editBuildingUnitType, 
     createBuildingUnitType, deleteBuildingUnitType } from '../../../slices/building';
+import { setConfirmDelete } from '../../../slice';
 
 const unitTypes = [
     { label: 'Studio', value: 'studio' },
@@ -149,9 +150,9 @@ function Component({ view }) {
                     />
                 ]}
                 onClickDelete={view ? null : row => {
-                    // setRow(row);
-                    dispatch(deleteBuildingUnitType(row, ))
-                    // setConfirm(true);
+                    dispatch(setConfirmDelete("Are you sure to delete this item?",
+                        () => dispatch(deleteBuildingUnitType(row, ))
+                    ))
                 }}
                 onClickEdit={view ? null : row => {
                     setRow(row);

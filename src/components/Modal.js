@@ -32,7 +32,7 @@ function Component({
                 {!disableFooter && (<ModalFooter>
                     {!disablePrimary && <button
                         disabled={disabledOk}
-                        className={btnDanger ? "danger" : "Button"}
+                        className={btnDanger ? "Button Danger" : "Button"}
                         // color={btnDanger ? "danger" : "primary"}
                         onClick={onClick}>
                             {okLabel}

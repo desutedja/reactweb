@@ -208,6 +208,7 @@ function Component({ id, view }) {
         <>
             <Modal
                 isOpen={confirmDelete}
+                btnDanger
                 disableHeader={true}
                 onClick={deleteSub}
                 toggle={() => setConfirmDelete(false)}
@@ -218,13 +219,13 @@ function Component({ id, view }) {
             </Modal>
             <Modal
                 isOpen={confirmDeleteUnit}
+                btnDanger
                 disableHeader={true}
                 onClick={() => {
                     dispatch(deleteUnit(delUnit));
                     setConfirmDeleteUnit(false);
                 }}
                 toggle={() => setConfirmDeleteUnit(false)}
-                btnDanger={true}
                 okLabel={"Delete"}
                 cancelLabel={"Cancel"}
             >

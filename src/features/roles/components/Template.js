@@ -182,6 +182,7 @@ function Component({ role, children }) {
             </Toast>}
             <Modal
                 isOpen={confirmDelete.modal}
+                btnDanger
                 toggle={() => dispatch(setConfirmDelete())}
                 disableHeader
                 okLabel="Confirm"

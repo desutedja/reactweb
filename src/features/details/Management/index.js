@@ -35,6 +35,7 @@ function Component({ view }) {
         <>
         <Modal 
             isOpen={confirmDelete}
+            btnDanger
             disableHeader={true}
             onClick={
               () =>  dispatch(deleteManagement(data, history))
