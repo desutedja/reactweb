@@ -320,3 +320,7 @@ form {
 .cursor-pointer * {
   cursor: pointer;
 }
+
+.btn-secondary {
+  border: none;
+}
