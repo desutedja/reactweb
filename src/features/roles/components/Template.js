@@ -27,8 +27,9 @@ import { endpointResident, endpointManagement, endpointAdmin } from '../../../se
 
 const Qiscus = new QiscusSDKCore();
 
-const clinkLogo = require("../../../assets/clink_logo.png");
-const clinkLogoSmall = require("../../../assets/clink_logo_small.png");
+// const clinkLogo = require("../../../assets/clink_logo.png");
+const clinkLogo = require("../../../assets/yipy-logo-color.png");
+const clinkLogoSmall = require("../../../assets/yipy-logo-color.png");
 
 function Component({ role, children }) {
     const [menuWide, setMenuWide] = useState(false);

@@ -4,11 +4,12 @@
 }
 
 .Logo-main {
-  width: 120px;
+  width: 100px;
 }
 
 .Logo-main-small {
-  width: 24px;
+  /* width: 24px; */
+  width: 40px;
 }
 
 .Column {

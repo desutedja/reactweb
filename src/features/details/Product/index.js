@@ -94,6 +94,7 @@ function Component({ view }) {
         <>
             <Modal
                 isOpen={confirmChangeStatus}
+                btnDanger
                 disableHeader={true}
                 onClick={() => {
                     const dataInput = {
@@ -183,11 +184,11 @@ function Component({ view }) {
                                 setAdminFee(data.admin_fee);
                                 setDiscFee(data.discount_fee);
                             }} />,
-                            <Button label={data.status === 'blocked' ? "Unblock Product" : "Block Product"}
-                                color={data.status === 'blocked' ? 'success' : 'danger'}
-                                onClick={() =>
-                                    setConfirmChangeStatus(true)
-                                } />,
+                        <Button label={data.status === 'blocked' ? "Unblock Product" : "Block Product"} 
+                            color={data.status === 'blocked' ? 'inactive' : 'Danger'}
+                            onClick={() => 
+                                setConfirmChangeStatus(true)
+                            } />,
                         ]}
                     />,
                     <div style={{
