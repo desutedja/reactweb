@@ -207,7 +207,7 @@ export default () => {
             <Route path={"/bm/settings"}>
                 <div className="Container flex-column pr-3">
                     <Tab
-                        labels={['General', 'Departements']}
+                        labels={['General', 'Departments']}
                         contents={[
                             <>
                                 <div className="scroller-y pr-4">
