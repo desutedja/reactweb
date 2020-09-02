@@ -139,7 +139,7 @@ function Component() {
     }, [lastMessageOnRoom]);
 
     const sendMessage = (text = '', type = '', payload) => {
-        text = '[file] ' + imageSend + ' [/file]';
+        text = imageSend ? '[file] ' + imageSend + ' [/file]' : '';
         type = imageSend ? 'file_attachment' : '';
         payload = {
             url: imageSend,
