@@ -77,11 +77,11 @@ function Component() {
                                         <Tooltip />
                                         <Bar
                                             maxBarSize={30} yAxisId="category" radius={4} className="cursor-pointer"
-                                            dataKey="total_actual_view" fill="#2ad170" onClick={({id}) => {
+                                            dataKey="total_repeated_view" fill="#2ad170" onClick={({id}) => {
                                                 history.push('/' + role + '/advertisement/' + id)
                                             }}
                                         >
-                                            <LabelList dataKey="total_actual_view" stroke="white" position="insideRight"
+                                            <LabelList dataKey="total_repeated_view" stroke="white" position="insideRight"
                                                 content={<CustomLabelList />} />
                                         </Bar>
                                     </BarChart>
@@ -126,11 +126,11 @@ function Component() {
                                         <Tooltip />
                                         <Bar
                                             maxBarSize={30} yAxisId="category" radius={4} className="cursor-pointer"
-                                            dataKey="total_actual_click" fill="#f7b733" onClick={({id}) => {
+                                            dataKey="total_repeated_click" fill="#f7b733" onClick={({id}) => {
                                                 history.push('/' + role + '/advertisement/' + id)
                                             }}
                                         >
-                                            <LabelList dataKey="total_actual_click" stroke="white" position="insideRight"
+                                            <LabelList dataKey="total_repeated_click" stroke="white" position="insideRight"
                                                 content={<CustomLabelList />} />
                                         </Bar>
                                     </BarChart>
