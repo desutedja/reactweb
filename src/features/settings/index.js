@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { get, del, setConfirmDelete, setInfo } from '../slice';
-import { FiPlus } from 'react-icons/fi'
+import { FiPlus, FiSearch } from 'react-icons/fi'
 
 import { endpointAdmin, endpointMerchant, endpointManagement } from '../../settings';
 import { toSentenceCase } from '../../utils';
@@ -15,6 +15,7 @@ import CellCategory from '../../components/cells/Category';
 import ModalCategory from './Category';
 import ModalDepartment from './Department';
 import Button from '../../components/Button';
+import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 
 const columnsMerchantCategories = [
@@ -50,8 +51,11 @@ function Settings() {
     const [departmentData, setDepartmentData] = useState({});
     const [modalDepartment, setModalDepartment] = useState(false);
     const [picBmList, setPicBmList] = useState([]);
+    const [picBmListFiltered, setPicBmListFiltered] = useState([]);
+    const [limit, setLimit] = useState(5);
     const [picBm, setPicBm] = useState('');
     const [picBmLabel, setPicBmLabel] = useState('');
+    const [searchBm, setSearchBm] = useState('');
 
     let dispatch = useDispatch();
 
@@ -85,7 +89,27 @@ function Settings() {
         }
         ))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        if (initialMount.current) {
+            initialMount.current = false;
+            return;
+        }
+        const searched = picBmList.filter(el => el.label.toLowerCase().includes(searchBm.toLowerCase()));
+        let limited = searched.slice(0, limit);
+        const restTotal = searched.length - limited.length;
+        const valueLimit = 5;
+
+        if (limited.length < searched.length) {
+            limited.push({
+                name: 'load ' + (restTotal > valueLimit ? valueLimit : restTotal) + ' more',
+                className: 'load-more',
+                restTotal: restTotal > valueLimit ? valueLimit : restTotal
+            })
+        }
+        setPicBmListFiltered(limited);
+    }, [limit, picBmList, searchBm]);
 
     useEffect(() => {
         setLoading(true);
@@ -325,18 +349,31 @@ function Settings() {
                             delete: () => { setPicBm(''); },
                             component: (toggleModal) =>
                                 <>
+                                    <Input
+                                        label="Search"
+                                        compact
+                                        icon={<FiSearch />}
+                                        inputValue={searchBm}
+                                        setInputValue={setSearchBm}
+                                    />
                                     <Filter
                                         defaultValue="None"
-                                        data={picBmList}
+                                        data={picBmListFiltered}
                                         onClick={(el) => {
+                                            if (el.className === 'load-more') {
+                                                setLimit(limit + el.restTotal);
+                                                return;
+                                            }
                                             setPicBm(el.value);
                                             setPicBmLabel(el.label);
                                             toggleModal(false);
+                                            setLimit(5);
                                         }}
                                         onClickAll={() => {
                                             setPicBm("");
                                             setPicBmLabel("");
                                             toggleModal(false);
+                                            setLimit(5);
                                         }}
                                     />
                                 </>
