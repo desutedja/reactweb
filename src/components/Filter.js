@@ -19,7 +19,7 @@ function Component({ data, onClick, onClickAll, customComponent=null,  altDataCo
                             className={el.className === 'load-more' ? "ListItem load-more" : "ListItem"}
                             onClick={() => onClick(el)}
                         >
-                            {el.label ? el.label : toSentenceCase(el)}
+                            {el.label ? el.label : el.name ? el.name : toSentenceCase(el)}
                         </button> : customComponent(el, onClick)
                     );
                 })}

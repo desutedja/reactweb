@@ -17,6 +17,10 @@
   scrollbar-width: none;
 }
 
+.text-primary {
+  color: var(--primary-color)!important;
+}
+
 .list-group-item.active {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
