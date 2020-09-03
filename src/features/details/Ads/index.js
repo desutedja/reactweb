@@ -86,10 +86,10 @@ function Component({ view }) {
                 { label: 'total_priority_score', lfmt: () => "Total Weight", vfmt: (v) => v },
             ],
             "Statistics": [
-                {label: 'total_actual_click', vfmt: (v) => data.click_quota ? <>{v + " out of " + data.click_quota}</> : v },
-                {label: 'total_actual_view', vfmt: (v) => data.view_quota ? <>{v + " out of " + data.view_quota}</> : v },
-                'total_repeated_click',
-                'total_repeated_view',
+                'total_actual_click',
+                'total_actual_view',
+                {label: 'total_repeated_click', vfmt: (v) => data.click_quota ? <>{v + " out of " + data.click_quota}</> : v },
+                {label: 'total_repeated_view', vfmt: (v) => data.view_quota ? <>{v + " out of " + data.view_quota}</> : v },
             ],
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
