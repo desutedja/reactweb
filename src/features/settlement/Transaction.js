@@ -203,7 +203,7 @@ function Component({ view }) {
                         />
                         <button onClick={() => {
                             setLoadingUpload(true);
-                            dispatch(getFile(templateLink, 'billing_settlement_template.xlsx', res => {
+                            dispatch(getFile(templateLink, 'billing_settlement_template.csv', res => {
                                 setLoadingUpload(false);
                             }, err => {
                                 setLoadingUpload(false);
