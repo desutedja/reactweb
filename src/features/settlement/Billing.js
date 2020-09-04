@@ -17,7 +17,7 @@ import Pill from '../../components/Pill';
 import { getBillingSettlement, downloadBillingSettlement, refresh } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
 import { toMoney, dateTimeFormatterCell, isRangeToday, toSentenceCase } from '../../utils';
-import { get, post } from '../slice';
+import { get, post, getFile } from '../slice';
 import DateRangeFilter from '../../components/DateRangeFilter';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
@@ -26,6 +26,7 @@ function Component({ view }) {
 
     const { auth } = useSelector(state => state);
     const { loading, settlement, refreshToggle } = useSelector(state => state.billing);
+    const templateLink = auth.user.settlement_bulk_template;
 
     const [search, setSearch] = useState('');
     const [limit, setLimit] = useState(5);
@@ -207,12 +208,23 @@ function Component({ view }) {
                     :
                     <Loading loading={loadingUpload}>
                         <input
+                            className="d-block"
                             ref={fileInput}
                             type="file"
                             onChange={e => {
                                 setFileUpload(fileInput.current.files[0]);
                             }}
                         />
+                        <button onClick={() => {
+                            setLoadingUpload(true);
+                            dispatch(getFile(templateLink, 'billing_settlement_template.csv', res => {
+                                setLoadingUpload(false);
+                            }, err => {
+                                setLoadingUpload(false);
+                            }))
+                        }} style={{
+                            marginTop: 16
+                        }}>Download Template</button>
                     </Loading>
                 }
             </Modal>

@@ -17,7 +17,7 @@ import { trxStatusColor } from '../../settings';
 import { isRangeToday, toMoney, dateTimeFormatterCell, toSentenceCase } from '../../utils';
 import { endpointTransaction } from '../../settings';
 import Pill from '../../components/Pill';
-import { get, post } from '../slice';
+import { get, post, getFile } from '../slice';
 import MyButton from '../../components/Button';
 import Transaction from '../../components/cells/Transaction';
 import Merchant from '../../components/cells/Merchant';
@@ -63,7 +63,8 @@ const formatValue = (value) => toMoney(value.toFixed(0));
 
 function Component({ view }) {
     const [info, setInfo] = useState({});
-    // const [inputValue, setInputValue] = useState('');
+    const { auth } = useSelector(state => state);
+    const templateLink = auth.user.settlement_bulk_template;
 
     const { loading, settlement, refreshToggle } = useSelector(state => state.transaction);
 
@@ -195,10 +196,21 @@ function Component({ view }) {
                         <input
                             ref={fileInput}
                             type="file"
+                            className="d-block"
                             onChange={e => {
                                 setFileUpload(fileInput.current.files[0]);
                             }}
                         />
+                        <button onClick={() => {
+                            setLoadingUpload(true);
+                            dispatch(getFile(templateLink, 'billing_settlement_template.csv', res => {
+                                setLoadingUpload(false);
+                            }, err => {
+                                setLoadingUpload(false);
+                            }))
+                        }} style={{
+                            marginTop: 16
+                        }}>Download Template</button>
                     </Loading>
                 }
             </Modal>
