@@ -62,12 +62,13 @@ export const login = (role, email, actionState) => dispatch => {
     + '/validate_user', {
     user_account: email,
   }, res => {
-    const { setStep, setUserId } = actionState
+    const { setStep, setUserId, setEmailUser } = actionState
     dispatch(loginSuccess(email));
     dispatch(setRole(role));
 
     setStep && setStep(2);
     setUserId && setUserId(res.data.data.id);
+    setEmailUser && setEmailUser(res.data.data.email);
   }, (err) => {
     console.log('GAGAL LOGIN', err);
     dispatch(stopAsync());
@@ -95,7 +96,7 @@ export const otpCheck = (role, email, otp, history) => dispatch => {
   }))
 }
 
-export const sendOtp = (role, userId, method, history) => dispatch => {
+export const sendOtp = (role, userId, method, email, history) => dispatch => {
   dispatch(startAsync());
   dispatch(post(endpointAdmin + '/auth/' + (role === 'sa' ? 'centratama' : 'management')
     + '/send_otp', {
@@ -103,7 +104,7 @@ export const sendOtp = (role, userId, method, history) => dispatch => {
     method
   }, res => {
     dispatch(stopAsync());
-    history && history.push("/" + role + "/otp", {method, userId});
+    history && history.push("/" + role + "/otp", {method, userId, email});
   }, (err) => {
     dispatch(stopAsync());
     console.log("Failed", err);

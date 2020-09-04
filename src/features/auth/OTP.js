@@ -20,11 +20,9 @@ function Page({ role }) {
     const { alert, title, content } = useSelector(state => state.main);
     const { auth } = useSelector(state => state);
 
-    const email = useSelector(state => state.auth.email);
-
     const dispatch = useDispatch();
     const history = useHistory();
-    const { method = '...', userId } = history?.location?.state ? history.location.state : null;
+    const { method = '...', userId, email } = history?.location?.state ? history.location.state : null;
 
     useEffect(() => {
         let timer = setInterval(() => setTick(tick - 1), 1000);

@@ -10,6 +10,7 @@ import ClinkLoader from '../../components/ClinkLoader';
 
 function Page({ role }) {
     const [email, setEmail] = useState("");
+    const [emailUser, setEmailUser] = useState('');
     const [step, setStep] = useState(1);
     const [userId, setUserId] = useState(null);
 
@@ -46,7 +47,7 @@ function Page({ role }) {
                     <form className="Column w-100"
                     onSubmit={(e) => {
                         e.preventDefault();
-                        dispatch(login(role, email, {setStep, setUserId}));
+                        dispatch(login(role, email, {setStep, setUserId, setEmailUser}));
                     }}>
                         {/* <label className="Auth-label" htmlFor="email">Email or Handphone Number</label> */}
                         <input
@@ -67,14 +68,14 @@ function Page({ role }) {
                         label="Sent OTP via Email"
                         className="w-100 py-2 mx-0"
                         onClick={() => {
-                            dispatch(sendOtp(role, userId, 'email', history));
+                            dispatch(sendOtp(role, userId, 'email', emailUser, history));
                         }}
                     />
                     <Button
                         label="Sent OTP via SMS"
                         className="w-100 py-2 mx-0"
                         onClick={() => {
-                            dispatch(sendOtp(role, userId, 'sms', history));
+                            dispatch(sendOtp(role, userId, 'sms', emailUser, history));
                         }}
                     />
                     <Button
