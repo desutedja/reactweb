@@ -62,7 +62,7 @@ function Page({ role }) {
                         />
                     </form>
                 </> :
-                <div>
+                <div className="w-100">
                     <Button
                         label="Sent OTP via Email"
                         className="w-100 py-2 mx-0"
