@@ -1,11 +1,10 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 
-function MyButton({ icon, label, onClick, selected, color, disabled }) {
+function MyButton({ icon, label, onClick, selected, color, disabled, className}) {
     return (
         <Button
-            className={'Button ' + (disabled ? 'inactive' : color ? color : '')}
-            // color={disabled ? 'secondary' : color ? color : "primary"}
+            className={('Button ' + (disabled ? 'inactive' : color ? color : '')) + (className ? ' ' + className : '')}
             disabled={disabled}
             onClick={onClick}
             style={{

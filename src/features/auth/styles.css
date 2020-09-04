@@ -3,10 +3,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* background-color: #e75f49; */
 }
 
 .Auth-center {
   background-color: #ffffff;
+  min-width: 360px;
   /* width: 40%; */
   /* height: 30vh; */
   padding: 32px;
@@ -23,11 +25,11 @@
 .Auth-label {
   font-size: 1.2rem;
   font-weight: bold;
-  text-align: center;
+  text-align: left;
 }
 
 .Auth-input {
-  font-size: 1.6rem;
-  margin: 20px;
-  text-align: center;
+  /* font-size: 1.3rem; */
+  /* margin: 20px; */
+  text-align: left;
 }
