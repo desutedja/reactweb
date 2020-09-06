@@ -1,3 +1,5 @@
+
+
 export const endpointBase = 'https://centratama.okbabe.technology';
 
 export const endpointAsset = endpointBase + '/clink-assets';
@@ -11,6 +13,8 @@ export const endpointTransaction = endpointBase + '/clink-transaction';
 export const endpointAds = endpointBase + '/clink-advertisement';
 
 export const mainColor = '#2f78e9';
+
+export const defaultRole = process.env.REACT_APP_DEFAULT_ROLE || 'sa';
 
 export const taskStatusColor = {
     'created': 'light',
