@@ -7,7 +7,6 @@ import {
 } from "react-router-dom";
 import { PersistGate } from "redux-persist/integration/react";
 import { Provider, useSelector } from "react-redux";
-import { defaultRole } from "./settings";
 
 import "./App.css";
 import "./features/auth/styles.css";
@@ -87,31 +86,35 @@ function OTPRoute({ children, ...other }) {
 }
 
 function AppRoute() {
+  const { role } = useSelector((state) => state.auth);
+
   return (
     <Router>
       <div className="App scroller" id="App">
         <Switch>
-          <Redirect exact from="/" to={"/" + defaultRole } />
+          <Redirect exact from="/" to={"/" + role} />
+          {role === 'bm' && <Redirect from="/sa" to={"/bm"} />}
+          {role === 'sa' && <Redirect from="/bm" to={"/sa"} />}
           {/* superadmin routes */}
-          { defaultRole === 'sa' && <Route path="/sa/login">
+          <Route path="/sa/login">
             <Login role="sa" />
-          </Route>}
-          { defaultRole === 'sa' && <OTPRoute path="/sa/otp">
+          </Route>
+          <OTPRoute path="/sa/otp">
             <OTP role="sa" />
-          </OTPRoute>}
-          { defaultRole === 'sa' && <MainRoute path="/sa">
-             <SA />
-          </MainRoute> }
+          </OTPRoute>
+          <MainRoute path="/sa">
+            <SA />
+          </MainRoute>
           {/* bm routes */}
-          { defaultRole === 'bm' && <Route path="/bm/login">
+          <Route path="/bm/login">
             <Login role="bm" />
-          </Route>}
-          { defaultRole === 'bm' && <OTPRoute path="/bm/otp">
+          </Route>
+          <OTPRoute path="/bm/otp">
             <OTP role="bm" />
-          </OTPRoute>}
-          { defaultRole === 'bm' && <MainRoute path="/bm">
+          </OTPRoute>
+          <MainRoute path="/bm">
             <BM />
-          </MainRoute>}
+          </MainRoute>
           <Route path="*">
             <NotFound />
           </Route>
