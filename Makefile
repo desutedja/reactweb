@@ -8,7 +8,7 @@ endpoint:
 	chmod +x replace_endpoint.sh
 	ENDPOINT_BASE=${BASE} ENDPOINT_PREFIX=${PREFIX} ./replace_endpoint.sh
 
-npmbuild:
+npmbuild: endpoint
 	rm -rf build build-sa build-bm
 	REACT_APP_DEFAULT_ROLE=sa npm run build
 	mv build build-sa
@@ -18,7 +18,7 @@ npmbuild:
 build: npmbuild
 	docker build -t ${REPO} .
 
-push:
+push: 
 	docker push ${REPO} 
 
 start: 

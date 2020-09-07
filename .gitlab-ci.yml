@@ -1,15 +1,27 @@
 image: node:14.4.0
 
-before_script:
-  - npm i -g firebase-tools
+stages:
+  - deploy
+  - build
 
 cache:
   paths:
   - node_modules/
   - .yarn
 
-deploy:
+build:
+  only: 
+    - master
   script:
+    - npm install
+    - make build
+    - make push
+
+deploy:
+  only: 
+    - development
+  script:
+    - npm i -g firebase-tools
     - export CI=false
     - yarn install
     - yarn deploy
