@@ -1,0 +1,10 @@
+export const _endpointBase = 'https://api.yipy.id';
+export const _endpointAsset = _endpointBase + '/yipy-assets';
+export const _endpointAdmin = _endpointBase + '/yipy-admin';
+export const _endpointBilling = _endpointBase + '/yipy-billing';
+export const _endpointResident = _endpointBase + '/yipy-resident';
+export const _endpointManagement = _endpointBase + '/yipy-management';
+export const _endpointTask = _endpointBase + '/yipy-task';
+export const _endpointMerchant = _endpointBase + '/yipy-merchant';
+export const _endpointTransaction = _endpointBase + '/yipy-transaction';
+export const _endpointAds = _endpointBase + '/yipy-advertisement';

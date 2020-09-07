@@ -1,5 +1,12 @@
-TAG=latest
-REPO=registry.gitlab.com/clink1/building-management-apps-web/adminweb:${TAG}
+TAG = latest
+REPO = registry.gitlab.com/clink1/building-management-apps-web/adminweb:${TAG}
+
+BASE ?= api.yipy.id
+PREFIX ?= yipy
+
+endpoint: 
+	chmod +x replace_endpoint.sh
+	ENDPOINT_BASE=${BASE} ENDPOINT_PREFIX=${PREFIX} ./replace_endpoint.sh
 
 npmbuild:
 	rm -rf build build-sa build-bm
@@ -23,4 +30,4 @@ test:
 	docker stop appsweb; docker rm appsweb;
 	docker run -dt -p 80:80 --name appsweb appsweb:latest
 
-.PHONY: build
+.PHONY: build endpoint npmbuild push start test
