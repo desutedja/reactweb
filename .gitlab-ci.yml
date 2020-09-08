@@ -12,7 +12,7 @@ cache:
 build:
   stage: build
   only: 
-    - master
+    - clink-master
   script:
     - export CI=false
     - npm install
@@ -22,7 +22,7 @@ build:
 deploy:
   stage: deploy
   only: 
-    - development
+    - master
   script:
     - npm i -g firebase-tools
     - export CI=false
