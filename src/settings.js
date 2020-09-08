@@ -1,16 +1,31 @@
-export const endpointBase = 'https://centratama.okbabe.technology';
+import { 
+    _endpointBase, 
+    _endpointAsset,
+    _endpointAdmin, 
+    _endpointBilling, 
+    _endpointResident,
+    _endpointManagement,
+    _endpointTask,
+    _endpointMerchant,
+    _endpointTransaction,
+    _endpointAds
+} from "./endpoints"
 
-export const endpointAsset = endpointBase + '/clink-assets';
-export const endpointAdmin = endpointBase + '/clink-admin';
-export const endpointBilling = endpointBase + '/clink-billing';
-export const endpointResident = endpointBase + '/clink-resident';
-export const endpointManagement = endpointBase + '/clink-management';
-export const endpointTask = endpointBase + '/clink-task';
-export const endpointMerchant = endpointBase + '/clink-merchant';
-export const endpointTransaction = endpointBase + '/clink-transaction';
-export const endpointAds = endpointBase + '/clink-advertisement';
+export const  endpointBase = _endpointBase;
+
+export const  endpointAsset = _endpointAsset;
+export const  endpointAdmin = _endpointAdmin;
+export const  endpointBilling = _endpointBilling;
+export const  endpointResident = _endpointResident;
+export const  endpointManagement = _endpointManagement;
+export const  endpointTask = _endpointTask;
+export const  endpointMerchant = _endpointMerchant;
+export const  endpointTransaction = _endpointTransaction;
+export const  endpointAds = _endpointAds;
 
 export const mainColor = '#2f78e9';
+
+export const defaultRole = process.env.REACT_APP_DEFAULT_ROLE || 'sa';
 
 export const taskStatusColor = {
     'created': 'light',
