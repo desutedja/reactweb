@@ -15,7 +15,7 @@ npmbuild: endpoint
 	REACT_APP_DEFAULT_ROLE=bm npm run build
 	mv build build-bm
 
-build: npmbuild
+build: 
 	docker build -t ${REPO} .
 
 push: 

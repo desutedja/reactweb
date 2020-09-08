@@ -1,7 +1,7 @@
 image: node:14.4.0
 
-before_script:
-  - npm i -g firebase-tools
+services:
+    docker:19.03.12-dind
 
 stages:
   - deploy
@@ -15,7 +15,7 @@ cache:
 build:
   stage: build
   only: 
-    - clink-master
+    - master
   script:
     - export CI=false
     - npm install
@@ -24,8 +24,7 @@ build:
 
 deploy:
   stage: deploy
-  only: 
-    - master
+  when: manual
   script:
     - npm i -g firebase-tools
     - export CI=false
