@@ -55,18 +55,22 @@ export const {
   logout
 } = slice.actions;
 
-export const login = (role, email, history) => dispatch => {
+export const login = (role, email, actionState) => dispatch => {
   dispatch(startAsync());
 
   dispatch(post(endpointAdmin + '/auth/' + (role === 'sa' ? 'centratama' : 'management')
-    + '/login', {
-    email: email,
+    + '/validate_user', {
+    user_account: email,
   }, res => {
+    const { setStep, setUserId, setEmailUser } = actionState
     dispatch(loginSuccess(email));
     dispatch(setRole(role));
 
-    history && history.push("/" + role + "/otp");
-  }, () => {
+    setStep && setStep(2);
+    setUserId && setUserId(res.data.data.id);
+    setEmailUser && setEmailUser(res.data.data.email);
+  }, (err) => {
+    console.log('GAGAL LOGIN', err);
     dispatch(stopAsync());
   }))
 }
@@ -84,11 +88,27 @@ export const otpCheck = (role, email, otp, history) => dispatch => {
     dispatch(setRole(role));
     dispatch(otpSuccess({...res.data.data, role: role}));
 
-    history.push("/" + role);
+    history && history.push("/" + role);
   }, () => {
     dispatch(stopAsync());
   }, () => {
 
+  }))
+}
+
+export const sendOtp = (role, userId, method, email, history) => dispatch => {
+  dispatch(startAsync());
+  dispatch(post(endpointAdmin + '/auth/' + (role === 'sa' ? 'centratama' : 'management')
+    + '/send_otp', {
+    user_id: Number(userId),
+    method
+  }, res => {
+    dispatch(stopAsync());
+    history && history.push("/" + role + "/otp", {method, userId, email});
+  }, (err) => {
+    dispatch(stopAsync());
+    console.log("Failed", err);
+  }, () => {
   }))
 }
 
