@@ -138,9 +138,9 @@ function Component({ view }) {
                 disableSecondary={loading}
                 onClick={uploadResult ?
                     () => {
-                        const trx_codes = uploadResult.valid_transactions.map(el => el.trx_code)
+                        const trx_code = uploadResult.valid_transactions.map(el => el.trx_code)
                         const dataSettle = {
-                            trx_codes,
+                            trx_code,
                         }
                         dispatch(post(endpointBilling + '/management/billing/settlement', dataSettle, res => {
                             setSettleModal(false);
