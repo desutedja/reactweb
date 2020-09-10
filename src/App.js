@@ -103,13 +103,13 @@ function AppRoute() {
              <SA />
           </MainRoute> }
           {/* bm routes */}
-          { defaultRole === 'bm' && <Route path="/bm/login">
+          { defaultRole === 'sa' && <Route path="/bm/login">
             <Login role="bm" />
           </Route>}
-          { defaultRole === 'bm' && <OTPRoute path="/bm/otp">
+          { defaultRole === 'sa' && <OTPRoute path="/bm/otp">
             <OTP role="bm" />
           </OTPRoute>}
-          { defaultRole === 'bm' && <MainRoute path="/bm">
+          { defaultRole === 'sa' && <MainRoute path="/bm">
             <BM />
           </MainRoute>}
           <Route path="*">

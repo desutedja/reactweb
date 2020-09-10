@@ -136,7 +136,7 @@ export const downloadBillingUnit = (search = '', building) => dispatch => {
     dispatch(getFile(billingEndpoint + '/unit' +
         '?search=' + search +
         '&resident_building=' + building +
-        '&export=true',
+        '&export=true&limit=9999',
         'billing_unit.csv',
         res => {
             dispatch(stopAsync());
