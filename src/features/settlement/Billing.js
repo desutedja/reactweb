@@ -146,7 +146,7 @@ function Component({ view }) {
                             setSettleModal(false);
                             dispatch(refresh());
                             dispatch(setInfo({
-                                message: trx_codes.length + ' billing' + (trx_codes.length > 0 ? 's' : '') + ' was marked as settled',
+                                message: trx_code.length + ' billing' + (trx_code.length > 0 ? 's' : '') + ' was marked as settled',
                             }))
                         }))
                         setUploadResult('');
