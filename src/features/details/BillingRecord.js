@@ -39,14 +39,10 @@ function Component() {
     const detailscash = useMemo(() => (
     {
         'Payment': [
-            {label: 'trx_code', lfmt: () => "Ref Code", vfmt: (v) => v},
+            { label: 'trx_code', lfmt: () => "Ref Code", vfmt: (v) => v },
             'paid_by', 
-            {label: 'payment_date', lfmt: () => "Payment Date", vfmt: (v) => 
-                dateTimeFormatter(v)
-            },
-            {label: 'payment_method', lfmt: () => "Via", vfmt: (v) => 
-                <Pill color="warning">Payment by Cash</Pill>
-            },
+            { label: 'payment_date', lfmt: () => "Payment Date", vfmt: (v) => dateTimeFormatter(v) },
+            { label: 'payment_method', lfmt: () => "Via", vfmt: (v) => <Pill color="warning">Payment by Cash</Pill> },
         ],
         'Unit': [
             'unit_number',
@@ -83,8 +79,8 @@ function Component() {
             {label: 'payment_settled_date', lfmt: () => "Settlement Date", 
                 vfmt: (v) => dateTimeFormatter(v) },
             {label: '', lfmt: () => "Disbursement", 
-                vfmt: () => <Pill color={data.info?.disbursement_date ? "success" : "secondary"}>
-                    {data.info?.disbursement_date ? "Disbursed" : "Undisbursed"}</Pill>},
+                vfmt: (v) => <Pill color={!data.info?.disbursement_date || data.info?.disbursement_date === '0001-01-01T00:00:00Z' ? "secondary" : "success"}>
+                    {!data.info?.disbursement_date || data.info?.disbursement_date === '0001-01-01T00:00:00Z' ? "Undisbursed" : "Disbursed"}</Pill>},
             {label: 'disbursement_date', vfmt: (v) => dateTimeFormatter(v) },
             {label: 'disbursement_destination_bank', lfmt: () => "Destination Bank"},
             {label: 'disbursement_destination_account', lfmt: () => "Destination Account" },
