@@ -5,14 +5,14 @@ import "firebase/messaging";
 // Set the configuration for your app
 // TODO: Replace with your app's config object
 const firebaseConfig = {
-    apiKey: "AIzaSyB2COXmiUjYMi651In_irBIHaKnT17L_X8",
-    authDomain: "clink-e9290.firebaseapp.com",
-    databaseURL: "https://clink-e9290.firebaseio.com",
-    projectId: "clink-e9290",
-    storageBucket: "clink-e9290.appspot.com",
-    messagingSenderId: "10663666241",
-    appId: "1:10663666241:web:f3a844afac4e2025a6dcc0",
-    measurementId: "G-78NJPGG8W4"
+    apiKey: "AIzaSyAVj5THZKxYGzI8t9B2r-gEqRyyGKn82Kk",
+    authDomain: "centratama-group-bm.firebaseapp.com",
+    databaseURL: "https://centratama-group-bm.firebaseio.com",
+    projectId: "centratama-group-bm",
+    storageBucket: "centratama-group-bm.appspot.com",
+    messagingSenderId: "953791710611",
+    appId: "1:953791710611:web:13de4c4f06af196bd65466",
+    measurementId: "G-M082DYCMHC"
 };
 firebase.initializeApp(firebaseConfig);
 
@@ -23,6 +23,6 @@ export const storageRef = storage.ref();
 // cloud messaging
 const messaging = firebase.messaging();
 messaging.usePublicVapidKey(
-    "BBYd0Bmgda_E_LK9o6QGDUWMeu7ixgUfTGo1TQ9_CwwxiqZng9kwK6sjqOs5znq5QMQHDW8DITGSpDCzp_1CuEU"
+    "BN1Y76p50tWwgq45KSIFWgSOvdUCm0XF1eW6B9W17QLceZrdBBssy2PSBh074cGDjf2JKFRuq1Vr7sL4leya0EQ"
 );
 export { messaging } 
