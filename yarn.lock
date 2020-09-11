@@ -9808,7 +9808,7 @@ q@^1.1.2:
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
 
-qiscus-sdk-core@^2.9.5, qiscus-sdk-core@^2.9.9:
+qiscus-sdk-core@^2.9.5:
   version "2.9.11"
   resolved "https://registry.yarnpkg.com/qiscus-sdk-core/-/qiscus-sdk-core-2.9.11.tgz#748cea08509be66f8fdbc2b275f221eeeeb941d2"
   integrity sha512-zlMK9WKZNTbB0chheySd1xbj3OEyzY8nCs5eJLDJk9OWwNJ1Snd/mRzWe930pa37XNLMSxAfrIqaX6Y+45LF/Q==
@@ -9821,6 +9821,22 @@ qiscus-sdk-core@^2.9.5, qiscus-sdk-core@^2.9.9:
     mitt "^1.2.0"
     mqtt "^3.0.0"
     qiscus-sdk-core "^2.9.5"
+    superagent "^3.6.3"
+
+qiscus-sdk-core@^2.9.7:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/qiscus-sdk-core/-/qiscus-sdk-core-2.10.0.tgz#0c99aec682b38c620290613a6e9dd736fbe23360"
+  integrity sha512-LBj6+BUNN6lsgvP4/Q1lPBNyQpVnx5aXKvNTU5svRc3yuxoXRi/zg5eDJMxwNhOvY69wMY7ipQ0ar+uuC/WF1Q==
+  dependencies:
+    "@babel/runtime" "^7.8.4"
+    date-fns "^1.30.1"
+    is_js "^0.9.0"
+    lodash.debounce "^4.0.8"
+    lodash.throttle "^4.1.1"
+    mitt "^1.2.0"
+    mqtt "^3.0.0"
+    qiscus-sdk-core "^2.9.5"
+    store "^2.0.12"
     superagent "^3.6.3"
 
 qs@6.7.0:
@@ -11295,6 +11311,11 @@ stealthy-require@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stealthy-require/-/stealthy-require-1.1.1.tgz#35b09875b4ff49f26a777e509b3090a3226bf24b"
   integrity sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
+
+store@^2.0.12:
+  version "2.0.12"
+  resolved "https://registry.yarnpkg.com/store/-/store-2.0.12.tgz#8c534e2a0b831f72b75fc5f1119857c44ef5d593"
+  integrity sha1-jFNOKguDH3K3X8XxEZhXxE711ZM=
 
 stream-browserify@^2.0.1:
   version "2.0.2"
