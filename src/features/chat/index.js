@@ -120,7 +120,7 @@ function Component() {
                 dispatch(setMessages(comments.reverse()));
                 messageBottom.current.scrollIntoView();
 
-                console.log(comments[0].message);
+                console.log('LastMessageId:', comments[comments.length - 1].id, comments[comments.length - 1].message);
                 console.log('RoomId: ', Number(roomID));
 
                 qiscus.readComment(Number(roomID), comments[comments.length - 1].id);
