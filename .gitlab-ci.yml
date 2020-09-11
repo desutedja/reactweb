@@ -14,8 +14,9 @@ cache:
 
 build:
   stage: build
-  only: 
-    - master
+ # only: 
+ #   - master
+  when: manual
   script:
     - export CI=false
     - npm install
