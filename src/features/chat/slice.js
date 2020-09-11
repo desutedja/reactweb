@@ -123,7 +123,6 @@ export const getPICBMChat = (
 
     res => {
       dispatch(setRooms(res.data.data.items));
-      console.log(res.data.data.items)
 
       dispatch(stopLoadRooms());
     },

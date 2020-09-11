@@ -15,7 +15,7 @@ import {
     updateMessages, setMessages,
     setRoom, setRoomID,
     getAdminChat,
-    getPICBMChat
+    getPICBMChat, setReloadList
 } from './slice';
 import { FiSend } from 'react-icons/fi';
 
@@ -35,6 +35,7 @@ function Component() {
     const [loadingMessages, setLoadingMessages] = useState(false);
     const [loadingSend, setLoadingSend] = useState(false);
     const [loadingParticipants, setLoadingParticipants] = useState(false);
+    const [lastCommentId, setLastCommentId] = useState(null);
 
     const history = useHistory();
     const uploadFile = useRef();
@@ -51,7 +52,7 @@ function Component() {
     const { user, role } = useSelector(state => state.auth);
     const { qiscus, room, rooms,
         roomID, messages, loadingRooms,
-        reloadList, lastMessageOnRoom,
+        reloadList, lastMessageOnRoom
     } = useSelector(state => state.chat);
 
 
@@ -87,15 +88,24 @@ function Component() {
                 dispatch(setMessages(comments.reverse()));
                 setLoadingMessages(false);
                 messageBottom.current.scrollIntoView();
+                
+                setLastCommentId(comments[comments.length - 1].id);
 
-                qiscus.readComment(roomID, room.last_comment_id);
-                qiscus.receiveComment(roomID, room.last_comment_id);
+                qiscus.readComment(Number(roomID), comments[comments.length - 1].id);
+                qiscus.receiveComment(Number(roomID), comments[comments.length - 1].id);
             })
             .catch(function (error) {
                 // On error
             })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [qiscus, room, roomID]);
+
+    useEffect(() => {
+        if (lastCommentId) {
+            qiscus.readComment(Number(roomID), lastCommentId);
+            qiscus.receiveComment(Number(roomID), lastCommentId);
+        }
+    }, [lastCommentId, qiscus, roomID])
 
     useEffect(() => {
         var options = {
@@ -110,8 +120,11 @@ function Component() {
                 dispatch(setMessages(comments.reverse()));
                 messageBottom.current.scrollIntoView();
 
-                qiscus.readComment(roomID, room.last_comment_id);
-                qiscus.receiveComment(roomID, room.last_comment_id);
+                console.log(comments[0].message);
+                console.log('RoomId: ', Number(roomID));
+
+                qiscus.readComment(Number(roomID), comments[comments.length - 1].id);
+                qiscus.receiveComment(Number(roomID), comments[comments.length - 1].id);
             })
             .catch(function (error) {
                 // On error
@@ -415,6 +428,8 @@ function Component() {
                                             dispatch(setRoom(el));
                                             dispatch(setRoomID(el.room_id));
                                             // dispatch(setRoomUniqueID(el.unique_id));
+                                            if (Number(el.unread_message) === 0) return;
+                                            dispatch(setReloadList());
                                         }}
                                     >
                                         <div className="Room-left">

@@ -106,16 +106,19 @@ function Component({ role, children }) {
             AppId: 'fastel-sa-hkxoyooktyv',
             options: {
                 newMessagesCallback: message => {
-                    console.log(message);
+                    console.log('NEW MESSAGE', message);
                     dispatch(setReloadList());
                     message[0].email !== userID && dispatch(setNotif({
                         title: "New Message",
                         message: message[0].username + ': ' + message[0].message,
                     }))
                 },
+                commentDeliveredCallback: data => {
+                    console.log('DELIVERED CALLBACK', data);
+                },
                 commentReadCallback: function (data) {
                     // On comment has been read by user
-                    console.log('read callback', data)
+                    console.log('READ CALLBACK', data);
                 },
                 loginErrorCallback: function (err) {
                     console.log(err);
@@ -137,8 +140,7 @@ function Component({ role, children }) {
                     'https://avatars.dicebear.com/api/male/' + user.email + '.svg', user)
             }
         }).catch(err => {
-            console.log("Qiscus init failed");
-            console.log(err)
+            console.log("Qiscus init failed", err);
         })
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
