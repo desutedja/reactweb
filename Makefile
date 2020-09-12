@@ -1,4 +1,4 @@
-TAG = latest
+TAG ?= latest
 REPO = registry.gitlab.com/clink1/building-management-apps-web/adminweb:${TAG}
 
 BASE ?= api.yipy.id

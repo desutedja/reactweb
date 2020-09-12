@@ -20,8 +20,21 @@ build:
   script:
     - export CI=false
     - npm install
+    - export TAG=$(git show --format=%h -q)-$(date "+%j%H%M%S") # give detailed versioning
+    - make npmbuild
     - make build
     - make push
+    - VERSIONING_REPO=gitlab.com/clink1/a-versioning-repo
+    - TMP_GIT_DIR=/tmp/temp-$(date "+%j%H%M%S")
+    - git clone https://$GIT_PUSH_USERNAME:$GIT_PUSH_ACCESS_TOKEN@$VERSIONING_REPO.git $TMP_GIT_DIR
+    - git -C $TMP_GIT_DIR remote set-url origin https://$GIT_PUSH_USERNAME:$GIT_PUSH_ACCESS_TOKEN@$VERSIONING_REPO.git
+    - sed -i 's;'$PROJECT_NAME'.*;'$PROJECT_NAME='"'$VERSION'";g' $TMP_GIT_DIR/latest.txt
+    - git -C $TMP_GIT_DIR add $TMP_GIT_DIR
+    - git -C $TMP_GIT_DIR commit -m "Update $PROJECT_NAME latest - $VERSION"
+    - git config --global user.email "gitlab-runner@yipy.id"
+    - git config --global user.name "Gitlab Runner"
+    - git -C $TMP_GIT_DIR push origin master
+    - rm -rf $TMP_GIT_DIR
 
 deploy:
   stage: deploy
