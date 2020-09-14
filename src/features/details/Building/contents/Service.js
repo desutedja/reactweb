@@ -67,14 +67,19 @@ function Component({ view }) {
                         setEdit(false);
                     }}
                     onSubmit={(data) => {
+                        let dataSubmit = data;
+                        if (!data.tax_value) dataSubmit = {
+                            ...data,
+                            tax_value: 0
+                        }
                         edit ?
                             dispatch(editBuildingService({
                                 building_id: selected.id, 
                                 building_name: selected.name,
-                                ...data,
-                            }, selectedRow.id)) :
+                                ...dataSubmit,
+                            }, selectedRow.id)) : 
                             dispatch(createBuildingService({
-                                ...data,
+                                ...dataSubmit,
                                 building_id: selected.id
                             }));
 
