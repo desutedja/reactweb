@@ -205,14 +205,24 @@ function Component({ role, children }) {
                 disableHeader
                 disableFooter
             >
-                <p className="NotificationModal-title">Notifications</p>
+                <p className="NotificationModal-title pb-3">Notifications</p>
                 <Loading loading={loadingNotif}>
                     {items.length === 0 && <div className="NotificationModal-empty">
                         No notifications.
                     </div>}
                     <div style={{ height: '1000px', overflow: 'scroll' }} >
                         {items.length > 0 && items.map(el =>
-                            <div class="Container" style={{ margin: '10px 0px', padding: '14px', display: 'flex', cursor: 'pointer' }}
+                            <div class="Container" style={{
+                                margin: 0,
+                                padding: '14px',
+                                display: 'flex',
+                                cursor: 'pointer',
+                                maxHeight: '150px',
+                                boxShadow: 'none',
+                                borderRadius: '0',
+                                borderBottom: '1px solid #EAF0F5',
+                                borderTop: '1px solid #EAF0F5'
+                            }}
                                 onClick={() => {
                                     if (el.topic === 'announcement') {
                                         history.push('/' + role + '/announcement/' + el.id + '/view');
@@ -225,7 +235,7 @@ function Component({ role, children }) {
                                 {el.image && <div
                                     style={{
                                         backgroundColor: 'grey',
-                                        width: el.image ? '140px' : '0px',
+                                        minWidth: el.image ? '140px' : '0px',
                                         borderRadius: '4px',
                                         marginRight: '15px',
                                         color: 'white',
@@ -235,13 +245,14 @@ function Component({ role, children }) {
                                     <img src={el.image} alt=""
                                         style={{
                                             position: 'absolute',
+                                            width: '100%',
                                             top: '50%',
                                             left: '50%',
                                             transform: 'translateY(-50%) translateX(-50%)'
                                         }}
                                     />
                                 </div>}
-                                <div style={{ textAlign: 'left' }} >
+                                <div style={{ textAlign: 'left', overflow: 'hidden' }} >
                                     <b>{el.title}</b>
                                     <p style={{ margin: '8px 0px' }}>
                                         <span style={{
@@ -252,7 +263,9 @@ function Component({ role, children }) {
                                         </span>
                                         {dateTimeFormatter(el.created_on)}
                                     </p>
+                                    <p>
                                     {parser(el.description)}
+                                    </p>
                                 </div>
                             </div>
                         )
