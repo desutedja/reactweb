@@ -68,9 +68,10 @@ function Component({ view }) {
                     }}
                     onSubmit={(data) => {
                         let dataSubmit = data;
-                        if (!data.tax_value) dataSubmit = {
+                        if (!data.tax_value || !data.tax_amount) dataSubmit = {
                             ...data,
-                            tax_value: 0
+                            tax_value: isNaN(data.tax_value) ? 0 : data.tax_value,
+                            tax_amount: isNaN(data.tax_amount) ? 0 : data.tax_amount
                         }
                         edit ?
                             dispatch(editBuildingService({
