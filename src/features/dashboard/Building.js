@@ -60,6 +60,7 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/statistic', res => {
             setBillingData(res.data.data);
+            console.log('BILLING DATA: ', res.data.data)
         }))
     }, [dispatch]);
 
@@ -285,7 +286,7 @@ function Component() {
                             padding: 16,
                         }}>
                             <div>Unsettled Amount Billing</div>
-                            <AnimatedNumber className="BigNumber" value={billingData.total_unsettled_amount}
+                            <AnimatedNumber className="BigNumber" value={billingData.total_unsettle_amount}
                                 formatValue={formatValuetoMoney}
                             />
                         </div>
