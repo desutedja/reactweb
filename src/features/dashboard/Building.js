@@ -60,7 +60,6 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointBilling + '/management/billing/statistic', res => {
             setBillingData(res.data.data);
-            console.log('BILLING DATA: ', res.data.data)
         }))
     }, [dispatch]);
 
