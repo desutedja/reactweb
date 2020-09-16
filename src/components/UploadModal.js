@@ -5,7 +5,16 @@ import Loading from './Loading';
 import { useDispatch } from 'react-redux';
 import { getFile, post } from '../features/slice';
 
-const UploadModal = ({ open, toggle, templateLink, uploadLink, uploadDataName, uploadFile, resultComponent = '', filename = 'template.xlsx' }) => {
+const UploadModal = ({
+    open,
+    toggle,
+    templateLink,
+    uploadLink,
+    uploadDataName,
+    uploadFile,
+    resultComponent = '',
+    filename = 'template.xlsx'
+}) => {
     const fileInput = useRef();
     const [fileUpload, setFileUpload] = useState('');
     const [result, setResult] = useState('');
@@ -54,7 +63,11 @@ const UploadModal = ({ open, toggle, templateLink, uploadLink, uploadDataName, u
                         console.log(res.data.data);
                         setResult(res.data.data);
                         setLoading(false);
-                        resultComponent ? setOpenRes(true) : toggle();
+                        if (resultComponent) {
+                            setOpenRes(true)
+                        }
+                        toggle();
+                        // resultComponent ? setOpenRes(true) : toggle();
                     }, err => {
                         setResult('');
                         setLoading(false);
