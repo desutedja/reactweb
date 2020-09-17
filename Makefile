@@ -1,8 +1,10 @@
-TAG ?= latest
+TAG ?= devel-cent
 REPO = registry.gitlab.com/clink1/building-management-apps-web/adminweb:${TAG}
 
-BASE ?= api.yipy.id
-PREFIX ?= yipy
+BASE ?= ec2-13-212-124-249.ap-southeast-1.compute.amazonaws.com
+PREFIX ?= 
+# BASE ?= api.yipy.id
+# PREFIX ?= yipy
 
 endpoint: 
 	chmod +x replace_endpoint.sh
