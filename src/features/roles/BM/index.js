@@ -201,6 +201,9 @@ export default () => {
             >
                 {el.component}
             </Route>)}
+            <Route path={"/bm/chat/:rf"}>
+                <Chat />
+            </Route>
             <Route path={"/bm/chat"}>
                 <Chat />
             </Route>

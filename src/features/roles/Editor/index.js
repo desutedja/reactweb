@@ -145,6 +145,9 @@ function Component() {
             >
                 {el.component}
             </Route>)}
+            <Route path={"/sa/chat/:rf"}>
+                <Chat />
+            </Route>
             <Route path={"/sa/chat"}>
                 <Chat />
             </Route>

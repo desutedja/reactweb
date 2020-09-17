@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { TiAttachment } from 'react-icons/ti';
 
 import moment from 'moment'
@@ -11,6 +11,7 @@ import Loading from '../../components/Loading';
 import IconButton from '../../components/IconButton';
 import Tab from '../../components/Tab';
 import Task from '../../components/cells/Task';
+import Pill from '../../components/Pill';
 import {
     updateMessages, setMessages,
     setRoom, setRoomID,
@@ -23,6 +24,7 @@ import './style.css';
 import { post, get } from '../slice';
 import { endpointAsset, endpointAdmin } from '../../settings';
 import { RiTaskLine } from 'react-icons/ri';
+import { toSentenceCase } from '../../utils';
 
 const topics = [
     { label: "All", value: "merchant_trx,service,security,billing,personal,help" },
@@ -37,6 +39,7 @@ function Component() {
     const [loadingParticipants, setLoadingParticipants] = useState(false);
     const [lastCommentId, setLastCommentId] = useState(null);
 
+    const params = useParams();
     const history = useHistory();
     const uploadFile = useRef();
 
@@ -44,7 +47,7 @@ function Component() {
     const [message, setMessage] = useState('');
     const [preview, setPreview] = useState(false);
     const [image, setImage] = useState('');
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState(params?.rf ? params.rf : '');
 
     const [participants, setParticipants] = useState([]);
     const [imageSend, setImageSend] = useState('');
@@ -135,9 +138,9 @@ function Component() {
     useEffect(() => {
         let searchRoom = setTimeout(() => {
             if (role === "sa")
-                dispatch(getAdminChat(topic.value, 0, 50, search));
+                dispatch(getAdminChat(topic.value, 0, 50, params?.rf || search));
             else
-                dispatch(getPICBMChat(topic.value, 0, 50, search));
+                dispatch(getPICBMChat(topic.value, 0, 50, params?.rf || search));
         }, 1000);
 
         return () => {
@@ -146,10 +149,6 @@ function Component() {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, reloadList, topic, search]);
-
-    useEffect(() => {
-        console.log("Last Message coming on room: ", lastMessageOnRoom)
-    }, [lastMessageOnRoom]);
 
     const sendMessage = (text = '', type = '', payload) => {
         text = imageSend ? '[file] ' + imageSend + ' [/file]' : '';
@@ -413,7 +412,7 @@ function Component() {
                                     <Input compact label="Search title" inputValue={search}
                                         setInputValue={setSearch}
                                     />
-                                    {role === 'bm' && <Input type="select" compact options={topics} label="Topic"
+                                    {role === 'bm' && <Input type="select" compact options={topics}
                                         inputValue={topic.value} setInputValue={value => {
                                             setTopic(topics.find(el => el.value === value));
                                         }}
@@ -442,12 +441,16 @@ function Component() {
                                                 }
                                             </div>
                                             { /* TODO: get information about user in last_comment.extras */}
-                                            <p className="Room-message">{el.last_message_user
-                                                + ': ' +
+                                            <p className="Room-message">
+                                            {
+                                                el.last_message_user + (el.last_message ? ': ' +
                                                 (el.last_message?.length > 20 ?
-                                                    el.last_message?.slice(0, 20) + '...'
-                                                    : el.last_message)}
-                                                {" (" + moment.unix(el.last_message_timestamp).fromNow() + ")"} </p>
+                                                    el.last_message?.slice(0, 20) + '...' : el.last_message) : '') +
+                                                    (el.last_message_timestamp === 0 ?
+                                                        '' : " (" + moment.unix(el.last_message_timestamp).fromNow() + ")")
+                                            }
+                                            </p>
+                                            <Pill color="success">{toSentenceCase(el.topic)}</Pill>
                                         </div>
                                         <div className="Room-right">
                                             {el.unread_message !== '0' &&

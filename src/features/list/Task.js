@@ -496,7 +496,7 @@ function Component({ view }) {
                 }}
                 onClickChat={view ? null : role === 'sa' ? null : row => {
                     dispatch(setSelected(row));
-                    history.push("chat");
+                    history.push("chat/" + row.ref_code);
                 }}
             />
         </>
