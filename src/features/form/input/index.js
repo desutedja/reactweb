@@ -11,7 +11,6 @@ function Input({ optional = false, ...props }) {
         label = "", actionlabels = {}, compact, type = "text", hidden, name, hint=''
     } = props;
     const fixedName = name ? name : label.toLowerCase().replace(/ /g, '_');
-    console.log(props)
 
     //extract non input props to reduce warnings, there should be other ways lol but at this point, whatevs
     const { isSubmitting, isValidating, submitCount, initialValues, initialErrors, initialTouched,

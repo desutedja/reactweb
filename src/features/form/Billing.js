@@ -80,8 +80,6 @@ function Component() {
         }
     }, [dispatch, unit, service, selectedItem.id])
 
-    console.log(history.location.state);
-
     return (
         <Template
             slice="billing"

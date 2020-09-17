@@ -7,13 +7,12 @@ import Input from '../../components/Input';
 import Filter from '../../components/Filter';
 import Button from '../../components/Button';
 import { ListGroup, ListGroupItem } from 'reactstrap';
-import { getBillingUnit, downloadBillingUnit, setSelectedItem } from '../slices/billing';
+import { getBillingUnit, downloadBillingUnit, setSelectedItem, setSelected } from '../slices/billing';
 import { endpointAdmin, endpointBilling } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
 import { get, post } from '../slice';
 
 import Template from './components/Template';
-import { setSelected } from '../slices/resident';
 import UploadModal from '../../components/UploadModal';
 
 function Component({ view }) {
