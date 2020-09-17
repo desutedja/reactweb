@@ -1,12 +1,11 @@
-import {createSlice} from '@reduxjs/toolkit';
-import { endpointMerchant } from '../../settings';
-import { get, post, del, patch, setInfo } from '../slice';
+import { createSlice } from "@reduxjs/toolkit";
+import { endpointMerchant } from "../../settings";
+import { get, post, del, patch, setInfo } from "../slice";
 
-
-const merchantEndpoint = endpointMerchant + '/admin';
+const merchantEndpoint = endpointMerchant + "/admin";
 
 export const slice = createSlice({
-  name: 'merchant',
+  name: "merchant",
   initialState: {
     loading: false,
     items: [],
@@ -51,102 +50,139 @@ export const {
 export default slice.reducer;
 
 export const getMerchant = (
-   pageIndex, pageSize,
-  search = '', type, category
-) => dispatch => {
+  pageIndex,
+  pageSize,
+  search = "",
+  type,
+  category
+) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(merchantEndpoint + '/list' +
-    '?page=' + (pageIndex + 1) +
-    '&limit=' + pageSize +
-    '&type=' + type +
-    '&category=' + category +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&search=' + search,
-    
-    res => {
-      dispatch(setData(res.data.data));
+  dispatch(
+    get(
+      merchantEndpoint +
+        "/list" +
+        "?page=" +
+        (pageIndex + 1) +
+        "&limit=" +
+        pageSize +
+        "&type=" +
+        type +
+        "&category=" +
+        category +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&search=" +
+        search,
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+      (res) => {
+        dispatch(setData(res.data.data));
 
-export const getMerchantDetails = (row,  history, url) => dispatch => {
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const getMerchantDetails = (row, history, url) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(merchantEndpoint + '?id=' + row.id, 
-    res => {
-      dispatch(setSelected(res.data.data));
-      history.push(url + '/details');
+  dispatch(
+    get(
+      merchantEndpoint + "?id=" + row.id,
+      (res) => {
+        dispatch(setSelected(res.data.data));
+        history.push(url + "/details");
 
-      dispatch(stopAsync())
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const createMerchant = ( data, history) => dispatch => {
+export const createMerchant = (data, history) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(post(merchantEndpoint , data, 
-    res => {
-      history.push("/sa/merchant");
+  dispatch(
+    post(
+      merchantEndpoint,
+      data,
+      (res) => {
+        history.push("/sa/merchant");
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Merchant has been created.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Merchant has been created.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const editMerchant = ( data, history, id) => dispatch => {
+export const editMerchant = (data, history, id) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(patch(merchantEndpoint, { ...data, id: id }, 
-    res => {
-      dispatch(setSelected(res.data.data));
-      history.push("/sa/merchant/" + id);
+  dispatch(
+    patch(
+      merchantEndpoint,
+      { ...data, id: id },
+      (res) => {
+        dispatch(setSelected(res.data.data));
+        history.push("/sa/merchant/" + id);
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Merchant has been updated.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Merchant has been updated.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
 export const deleteMerchant = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
 
   const { auth } = getState();
 
-  dispatch(del(merchantEndpoint + '?id=' + row.id, 
-    res => {
-      history && history.push('/' + auth.role + '/merchant');
+  dispatch(
+    del(
+      merchantEndpoint + "?id=" + row.id,
+      (res) => {
+        history && history.push("/" + auth.role + "/merchant");
 
-      dispatch(refresh());
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Merchant has been deleted.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Merchant has been deleted.",
+          })
+        );
 
-      dispatch(stopAsync())
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
