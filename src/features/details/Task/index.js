@@ -316,15 +316,31 @@ function Component({ view }) {
                                             //     }}><MdLocationOn size="15" /> Last Location</Link></div>
                                             // } 
                                             />
-                                            <Row>
-                                                <div style={{ width: '50%', borderRight: '1px solid rgba(0,0,0,0.125)' }}>
+                                            <div className="row no-gutters flex-wrap" style={{position: 'relative'}}>
+                                                <div
+                                                className="col-12 col-lg-6"
+                                                style={{
+                                                    textOverflow: 'ellipsis',
+                                                    overflow: 'hidden'
+                                                }}>
                                                     <Resident id={data.requester}
                                                         data={{
                                                             id: data.requester, photo: data.resident_photo, firstname: data.requester_name,
                                                             lastname: '', email: data.requester_phone
                                                         }} />
                                                 </div>
-                                                <div style={{ width: '50%', paddingLeft: '10px' }}>
+                                                <span
+                                                className="border-right h-100 d-none d-lg-block"
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: '50%',
+                                                    transform: 'translateX(-50%)'
+                                                }}
+                                                ></span>
+                                                <div
+                                                className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3"
+                                                >
                                                     <b>Location</b>
                                                     <div>{data.requester_section_type + " " +
                                                         data.requester_section_name + " " +
@@ -333,29 +349,45 @@ function Component({ view }) {
                                                         <div>{data.requester_building_name}</div>
                                                     </div>
                                                 </div>
-                                            </Row>
+                                            </div>
                                         </CardBody>
                                     </Card>
                                     <Card style={{ marginRight: '20px', marginBottom: '20px' }}>
                                         <CardBody>
                                             <h5>Assignee</h5>
-                                            <Row>
+                                            <div className="row no-gutters flex-wrap" style={{position: 'relative'}}>
                                                 {data.assignee ? <>
-                                                    <div style={{ width: '40%', borderRight: '1px solid rgba(0,0,0,0.125)' }}>
+                                                    <div
+                                                    className="col-12 col-lg-6"
+                                                    style={{
+                                                        textOverflow: 'ellipsis',
+                                                        overflow: 'hidden'
+                                                    }}>
                                                         <Staff id={data.assignee}
                                                             data={{
                                                                 photo: data.assignee_photo, firstname: data.assignee_name,
                                                                 lastname: '', staff_role: data.assignee_role
                                                             }} />
                                                     </div>
-                                                    <div style={{ width: '70%', paddingLeft: '10px' }}>
+                                                    <span
+                                                    className="border-right h-100 d-none d-lg-block"
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: 0,
+                                                        left: '50%',
+                                                        transform: 'translateX(-50%)'
+                                                    }}
+                                                    ></span>
+                                                    <div
+                                                    className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3"
+                                                    >
                                                         <b>Assigned by</b>
                                                         <div>{data.assigned_by ? data.assigned_by : "Automatic Assignment"}</div>
                                                         <div>{dateTimeFormatter(data.assigned_on)}</div>
                                                         {data.task_type === 'delivery' && <div><b>Fee : {toMoney(data.assignee_fee)}</b></div>}
                                                     </div></> : <div style={{ color: 'rgba(0, 0, 0, 0.345)' }} >
                                                         <i>No Assigned Staff Yet</i></div>}
-                                            </Row>
+                                            </div>
                                         </CardBody>
                                         {view ? null : (data.status === "rejected" || data.status === "created") && <CardFooter style={{ textAlign: "right" }}>
                                             <Button onClick={
