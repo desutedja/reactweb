@@ -442,7 +442,9 @@ function Component({ view }) {
                                 label="Upload Settlement"
                             />,
                             <Button label="Download .csv" icon={<FiDownload />}
-                                onClick={() => dispatch(downloadBillingSettlement(search, building))}
+                                onClick={() => dispatch(downloadBillingSettlement(
+                                    search, building, settled, ...(settled === '1' ? [settlementStart, settlementEnd] : [])
+                                    ))}
                             />
                         ])
                     }}

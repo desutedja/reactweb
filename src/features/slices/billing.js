@@ -172,11 +172,14 @@ export const getBillingSettlement = (pageIndex, pageSize, search = '',
     ))
 }
 
-export const downloadBillingSettlement = (search = '', building) => dispatch => {
+export const downloadBillingSettlement = (search = '', building = '', status = '', dateMin = '', dateMax = '') => dispatch => {
     dispatch(startAsync());
 
     dispatch(getFile(billingEndpoint + '/settlement' +
         '?building_id=' + building +
+        '&payment_settled=' + status +
+        '&date_min=' + dateMin +
+        '&date_max=' + dateMax +
         '&search=' + search +
         '&export=true',
         'billing_settlement.csv',
