@@ -218,7 +218,7 @@ function Component({ view }) {
                                             <div style={{ textAlign: 'right', padding: '5px' }}>
                                                 <Link to={"/" + role + "/chat/" + data.ref_code} onClick={() => {
                                                     dispatch(setSelected(data));
-                                                    history.push("/" + role + "/chat");
+                                                    history.push("/" + role + "/chat/" + data.ref_code);
                                                 }}><MdChatBubble size="17" /> Go to chatroom</Link>
                                             </div>
                                         </CardFooter>}
