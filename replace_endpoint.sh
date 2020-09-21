@@ -19,7 +19,7 @@
 
 export TEMPLATE=`cat <<EOF
 const root = '${ENDPOINT_PREFIX}';
-export const _endpointBase = 'https://${ENDPOINT_BASE}';
+export const _endpointBase = 'http://${ENDPOINT_BASE}';
 
 export const _endpointAsset = _endpointBase + ":" + root + "6012";
 export const _endpointAdmin = _endpointBase + ":" + root + "6001";

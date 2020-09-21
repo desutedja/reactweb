@@ -1,6 +1,5 @@
-const root = "";
-export const _endpointBase =
-  "http://ec2-13-212-124-249.ap-southeast-1.compute.amazonaws.com";
+const root = '';
+export const _endpointBase = 'http://ec2-13-212-124-249.ap-southeast-1.compute.amazonaws.com';
 
 export const _endpointAsset = _endpointBase + ":" + root + "6012";
 export const _endpointAdmin = _endpointBase + ":" + root + "6001";
