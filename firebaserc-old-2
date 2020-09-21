@@ -1,15 +1,12 @@
 {
   "projects": {
-    "default": "yipy-dev-dashboard"
+    "default": "yipy-dev-admin"
   },
   "targets": {
     "yipy-dev-dashboard": {
       "hosting": {
         "build-sa": [
           "yipy-dev-admin"
-        ],
-        "build-bm": [
-          "yipy-dev-management"
         ]
       }
     }
