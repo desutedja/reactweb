@@ -323,7 +323,7 @@ function Component() {
                       <Row>
                         <div
                           style={{
-                            width: "40%",
+                            width: "50%",
                             borderRight: "1px solid rgba(0,0,0,0.125)",
                           }}
                         >
@@ -337,7 +337,7 @@ function Component() {
                             }}
                           />
                         </div>
-                        <div style={{ width: "70%", paddingLeft: "10px" }}>
+                        <div style={{ width: "50%", paddingLeft: "10px" }}>
                           <b>Address</b>
                           <div>{data.resident_address}</div>
                           <div>{data.resident_building_unit_id}</div>
@@ -476,7 +476,7 @@ function Component() {
                             }
                           />
                         </Row>
-                        {data.payment_settled && (
+                        {data.payment_settled === 1 && (
                           <Row>
                             <TwoColumn
                               first=" "
