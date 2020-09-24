@@ -395,12 +395,17 @@ function Component() {
                 {parseInt(values.free_deliv) === 1 && (
                   <Input
                     {...props}
-                    label="Free Delivery Min"
+                    label="Free Delivery Minimum"
                     name="free_deliv_min"
                   />
                 )}
                 {parseInt(values.free_deliv) === 1 && (
-                  <Input {...props} label="Courier Fee" name="courier_fee" />
+                  <Input
+                    {...props}
+                    label="Courier Fee"
+                    sublabel="If the order is less than minimum order"
+                    name="courier_fee"
+                  />
                 )}
               </>
             )}

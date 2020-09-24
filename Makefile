@@ -1,8 +1,8 @@
-TAG ?= devel-cent
+TAG ?= b9fef8b-2209202002
 REPO = registry.gitlab.com/clink1/building-management-apps-web/adminweb:${TAG}
 
-# BASE ?= ec2-13-212-124-249.ap-southeast-1.compute.amazonaws.com
-# PREFIX ?= 
+# BASE ?= api.yipy.id
+# PREFIX ?= yipy
 BASE ?= api-dev.yipy.id
 PREFIX ?= yipy
 

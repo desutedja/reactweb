@@ -19,7 +19,8 @@ import Column from "../../../components/Column";
 import Template from "../components/Template";
 import ThreeColumn from "../../../components/ThreeColumn";
 import TwoColumn from "../../../components/TwoColumn";
-import { FiArrowUpRight, FiCalendar } from "react-icons/fi";
+import { FiArrowUpRight, FiCalendar, FiAlertCircle } from "react-icons/fi";
+import Button from "../../../components/Button";
 
 import { Card, CardFooter, CardTitle, CardBody } from "reactstrap";
 
@@ -28,28 +29,48 @@ import Pill from "../../../components/Pill";
 // import Orders from './contents/Orders';
 import { useParams } from "react-router-dom";
 import { get } from "../../slice";
-import { setSelected } from "../../slices/transaction";
+import { completedTransaction, setSelected } from "../../slices/transaction";
 import { endpointTransaction } from "../../../settings";
 import { toMoney, dateTimeFormatter, toSentenceCase } from "../../../utils";
+import { Form } from "formik";
+import { Input } from "@material-ui/core";
 
 function Component() {
   const [data, setData] = useState({});
+  const [completed, setCompleted] = useState(false);
+  const [commentError, setCommentError] = useState(false);
+  const [ratingError, setRatingError] = useState(false);
+  const [completeReview, setCompleteReview] = useState({
+    transaction_id: "",
+    rating: 0,
+    comment: "",
+  });
 
   let dispatch = useDispatch();
   let { id } = useParams();
 
   const [history, setHistory] = useState(false);
   const { role } = useSelector((state) => state.auth);
+  const { refreshToggle } = useSelector((state) => state.transaction);
 
   useEffect(() => {
     dispatch(
       get(endpointTransaction + "/admin/transaction/" + id, (res) => {
         setData(res.data.data);
         dispatch(setSelected(res.data.data));
+        if (
+          res.data.data.status === "delivered" ||
+          res.data.data.status === "paid"
+        ) {
+          setCompleteReview({
+            ...completeReview,
+            transaction_id: res.data.data.id.toString(),
+          });
+        }
         console.log(res.data.data);
       })
     );
-  }, [dispatch, id]);
+  }, [dispatch, id, refreshToggle]);
 
   return (
     <>
@@ -78,6 +99,89 @@ function Component() {
               </TimelineItem>
             ))}
         </Timeline>
+      </Modal>
+
+      <Modal
+        width="750px"
+        isOpen={completed}
+        toggle={() => setCompleted(false)}
+        title={`Set Transaction as Completed`}
+        okLabel="Yes"
+        onClick={() => {
+          setCommentError(completeReview.comment === "" ? true : false);
+          setRatingError(completeReview.rating === 0 ? true : false);
+          console.log(completeReview);
+          if (completeReview.rating > 0 && completeReview.comment.length > 0) {
+            dispatch(completedTransaction([completeReview]));
+          }
+          setCompleted(false);
+        }}
+        cancelLabel="No"
+        onClickSecondary={() => {
+          setCompleted(false);
+        }}
+      >
+        <Row>
+          <Column flex={1}>Transaction Code</Column>
+          <Column flex={0.5}>:</Column>
+          <Column flex={2}>{data.trx_code}</Column>
+        </Row>
+        <Row>
+          <Column flex={1}>Rating</Column>
+          <Column flex={0.5}>:</Column>
+          <Column flex={2}>
+            <Rating
+              value={completeReview.rating}
+              size="large"
+              onChange={(_, value) => {
+                setCompleteReview({
+                  ...completeReview,
+                  rating: value,
+                });
+                setRatingError(value <= 0 ? true : false);
+              }}
+            ></Rating>
+          </Column>
+        </Row>
+        <Row>
+          <Column flex={1}>Comment</Column>
+          <Column flex={0.5}>:</Column>
+          <Column flex={2}>
+            <Input
+              style={{
+                fontFamily: "Noto Sans, sans-serif",
+                fontSize: 14,
+              }}
+              multiline
+              value={completeReview.comment}
+              error={ratingError}
+              onChange={(e) => {
+                setCompleteReview({
+                  ...completeReview,
+                  comment: e.target.value,
+                });
+                setCommentError(e.target.value.length <= 0 ? true : false);
+              }}
+            />
+          </Column>
+        </Row>
+        {(ratingError || commentError) && (
+          <Row>
+            <div
+              className="Input-error"
+              style={{
+                marginTop: 16,
+              }}
+            >
+              <FiAlertCircle
+                style={{
+                  marginRight: 4,
+                }}
+              />
+              Your form is incomplete or there are some errors in your form.
+            </div>
+          </Row>
+        )}
       </Modal>
       <Template
         transparent
@@ -365,6 +469,17 @@ function Component() {
                       </div>
                       <Pill>{toSentenceCase(data.status)}</Pill>
                     </CardBody>
+
+                    {(data.status === "delivered" || data.status === "paid") &&
+                      completed === false && (
+                        <CardFooter style={{ textAlign: "right" }}>
+                          <Button
+                            onClick={() => setCompleted(true)}
+                            // icon={<FiCheck />}
+                            label="Set As Completed"
+                          />
+                        </CardFooter>
+                      )}
                   </Card>
                 </Row>
                 <Row>
