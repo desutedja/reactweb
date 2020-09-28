@@ -125,7 +125,7 @@ function Component({ view }) {
                         display: 'flex',
                     }}>
                         <img style={{ height: "35px", top: "45px", left: "30px", position: "absolute" }}
-                            src={require('../../../assets/clink_logo.png')} alt="clinklogo" />
+                            src={require('../../../assets/yipy-logo-color.png')} alt="clinklogo" />
                         <FiMessageSquare size="45" style={{ top: "45px", position: "absolute", right: "140px" }}
                         />
                         <FiBell size="45" style={{ top: "45px", position: "absolute", right: "45px" }}
