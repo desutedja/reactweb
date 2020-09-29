@@ -1,10 +1,20 @@
-TAG ?= b9fef8b-2209202002
-REPO = registry.gitlab.com/clink1/building-management-apps-web/adminweb:${TAG}
+# TAG ?= b9fef8b-2209202002
+# export TAG=$(git show --format=%h -q)-$(date "+%j%H%M%S")
+export ENV?=development
+export REPO=registry.gitlab.com/clink1/building-management-apps-web/adminweb:${TAG}
 
 # BASE ?= api.yipy.id
 # PREFIX ?= yipy
-BASE ?= api-dev.yipy.id
-PREFIX ?= yipy
+# BASE ?= api-dev.yipy.id
+# PREFIX ?= yipy
+
+ifeq (${ENV},production)
+BASE = api.yipy.id
+PREFIX = yipy
+else
+BASE = api-dev.yipy.id
+PREFIX = yipy
+endif
 
 endpoint: 
 	chmod +x replace_endpoint.sh
