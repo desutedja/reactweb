@@ -9,6 +9,7 @@ import Editor from "./Editor";
 function Input({ optional = false, ...props }) {
   const {
     label = "",
+    sublabel = "",
     actionlabels = {},
     compact,
     type = "text",
@@ -87,9 +88,11 @@ function Input({ optional = false, ...props }) {
         <>
           <div style={{ display: "flex" }}>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <label className="Input-label" htmlFor={label}>
-                {label}
-              </label>
+              <div>
+                <label className="Input-label" htmlFor={label}>
+                  {label}
+                </label>
+              </div>
               {optional && (
                 <span
                   style={{
@@ -101,6 +104,13 @@ function Input({ optional = false, ...props }) {
                 </span>
               )}
             </div>
+            {sublabel !== "" && (
+              <div>
+                <label className="Input-sublabel" htmlFor={label}>
+                  {sublabel}
+                </label>
+              </div>
+            )}
             {Object.keys(actionlabels).map((action) => (
               // eslint-disable-next-line jsx-a11y/anchor-is-valid
               <a

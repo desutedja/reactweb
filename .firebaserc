@@ -5,11 +5,11 @@
   "targets": {
     "yipy-dev-dashboard": {
       "hosting": {
-        "build-sa": [
-          "yipy-dev-admin"
-        ],
         "build-bm": [
           "yipy-dev-management"
+        ],
+        "build-sa": [
+          "yipy-dev-admin"
         ]
       }
     }

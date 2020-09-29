@@ -111,6 +111,12 @@
   font-weight: bold;
 }
 
+.Input-sublabel {
+  margin-left: 4px;
+  color: grey;
+  font-style: italic;
+}
+
 .Input-prefix,
 .Input-suffix {
   border-radius: 4px 0px 0px 4px;
