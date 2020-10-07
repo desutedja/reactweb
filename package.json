@@ -46,7 +46,8 @@
     "yup": "^0.29.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "REACT_APP_DEFAULT_ROLE=sa react-scripts start",
+    "start-bm": "REACT_APP_DEFAULT_ROLE=bm react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --silent",
     "eject": "react-scripts eject",
