@@ -110,7 +110,7 @@ const columns = [
         <div>
           <div>
             <span style={{ fontSize: 12 }}>
-              {additionalStlSts !== null && "Main:"}
+              {additionalStlSts !== null && "Main: "}
             </span>
             {mainPill}
           </div>
@@ -167,11 +167,13 @@ function Component({ view }) {
 
   const getSum = (items, additionalItem) => {
     let mainSum = items.reduce((sum, el) => {
-      return (
-        sum +
-        (el.payment_amount - el.payment_charge) +
-        (el.additional_payment_amount - el.additional_payment_charge)
-      );
+      const main = el.payment_settled_date
+        ? 0
+        : el.payment_amount - el.payment_charge;
+      const add = el.additional_payment_settled_date
+        ? 0
+        : el.additional_payment_amount - el.additional_payment_charge;
+      return sum + add + main;
     }, 0);
     return mainSum;
   };
@@ -382,6 +384,7 @@ function Component({ view }) {
         onClick={() => {
           const currentDate = new Date().toISOString();
           const trx_codes = selected.map((el) => el.trx_code);
+          console.log(trx_codes);
           const dataSettle = {
             trx_codes,
             amount: getSum(selected),
@@ -451,29 +454,31 @@ function Component({ view }) {
             return (
               <div key={el.id}>
                 {stlAdditionalItem}
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                    padding: 8,
-                    marginBottom: 4,
-                    border: "1px solid silver",
-                    borderRadius: 4,
-                  }}
-                >
-                  <div>
-                    <div>Trx Code</div>
-                    {el.trx_code}
-                  </div>
+                {!el.payment_settled_date && (
                   <div
                     style={{
-                      fontWeight: "bold",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      padding: 8,
+                      marginBottom: 4,
+                      border: "1px solid silver",
+                      borderRadius: 4,
                     }}
                   >
-                    {toMoney(el.payment_amount - el.payment_charge)}
+                    <div>
+                      <div>Trx Code</div>
+                      {el.trx_code}
+                    </div>
+                    <div
+                      style={{
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {toMoney(el.payment_amount - el.payment_charge)}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             );
           })}
@@ -643,7 +648,12 @@ function Component({ view }) {
           totalItems={settlement.total_items}
           onSelection={(selectedRows) => {
             setSelected(
-              selectedRows.filter((el) => el && !el.payment_settled_date)
+              selectedRows.filter((el) => {
+                if (el.additional_trx_code !== null) {
+                  return el && !el.additional_payment_settled_date;
+                }
+                return el && !el.payment_settled_date;
+              })
             );
           }}
           columns={columns}

@@ -558,6 +558,24 @@ function Component() {
                           second="Subtotal"
                           third={toMoney(data.service_additional_price)}
                         />
+                        <ThreeColumn
+                          second="PG Fee"
+                          third={
+                            data.additional_payment_charge === 0
+                              ? toMoney(
+                                  data.additional_payment_amount -
+                                    data.service_additional_price
+                                )
+                              : toMoney(data.additional_payment_charge)
+                          }
+                        />
+                        <ThreeColumn
+                          second={<b>Total Paid Amount</b>}
+                          third={
+                            <b>{toMoney(data.additional_payment_amount)}</b>
+                          }
+                        />
+                        <hr />
                       </CardBody>
                     </Card>
                   </Row>

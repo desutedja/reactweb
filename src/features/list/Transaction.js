@@ -31,7 +31,11 @@ const columns = [
   {
     Header: "Trx Code",
     accessor: (row) => (
-      <Transaction items={[row.trx_code]} trxcode={row.trx_code} />
+      <Transaction
+        items={[row.trx_code]}
+        trxcode={row.trx_code}
+        additionalTrxCode={row.additional_trx_code}
+      />
     ),
   },
   { Header: "Type", accessor: (row) => toSentenceCase(row.type) },
