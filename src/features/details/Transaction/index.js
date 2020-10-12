@@ -388,31 +388,97 @@ function Component() {
                     )}
                   </CardFooter>
                 </Card>
-                {data.status === "completed" && (
-                  <Card style={{ marginRight: "20px" }}>
+
+                {data.additional_trx_code !== null && (
+                  <Card style={{ marginBottom: "20px", marginRight: "20px" }}>
                     <CardBody>
-                      <div
+                      <Row
                         style={{
-                          display: "flex",
                           justifyContent: "space-between",
+                          alignItems: "bottom",
                         }}
                       >
                         <CardTitle>
-                          <h5>Transaction Rating</h5>
+                          <h5>Add On Transaction</h5>
+                          Transaction Code : {data.additional_trx_code}
                         </CardTitle>
-                      </div>
-                      <Rating
-                        name="rating_transaction"
-                        value={data.rating}
-                        readOnly
+                        <div style={{ display: "block", textAlign: "right" }}>
+                          <Pill
+                            color={
+                              data.additional_trx_status === "paid"
+                                ? "success"
+                                : "secondary"
+                            }
+                          >
+                            {toSentenceCase(data.additional_trx_status)}
+                          </Pill>
+                          {data.additional_trx_status === "paid" && (
+                            <div style={{ paddingTop: "5px" }}>
+                              via{" "}
+                              {toSentenceCase(data.additional_payment_method)} (
+                              {data.additional_payment_bank.toUpperCase()})
+                            </div>
+                          )}
+                        </div>
+                      </Row>
+                      {data.addons &&
+                        data.addons.length > 0 &&
+                        data.addons.map((el, index) => {
+                          return (
+                            <div
+                              style={{
+                                borderBottom: "1px solid rgba(0, 0, 0, 0.125)",
+                                padding: "10px 0px",
+                              }}
+                            >
+                              <ThreeColumn
+                                noborder={false}
+                                first={
+                                  <Product
+                                    disabled
+                                    noThumbnail
+                                    id={`${el.item_name}-${index}`}
+                                    data={{
+                                      id: `${el.item_name}-${index}`,
+                                      thumbnails: null,
+                                      name: el.item_name,
+                                      merchant_name: data.merchant_name,
+                                    }}
+                                  />
+                                }
+                                third={toMoney(el.item_price)}
+                              />
+                              <div>
+                                {el.remarks && (
+                                  <div style={{ padding: "0px 10px" }}>
+                                    <small>Note: {el.remarks}</small>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      <ThreeColumn
+                        noborder={false}
+                        second="Subtotal"
+                        third={toMoney(data.service_additional_price)}
                       />
-                      <div>
-                        {data.rating_comment ? (
-                          data.rating_comment
-                        ) : (
-                          <i>No rating comment</i>
-                        )}
-                      </div>
+                      <ThreeColumn
+                        second="PG Fee"
+                        third={
+                          data.additional_payment_charge === 0
+                            ? toMoney(
+                                data.additional_payment_amount -
+                                  data.service_additional_price
+                              )
+                            : toMoney(data.additional_payment_charge)
+                        }
+                      />
+                      <ThreeColumn
+                        second={<b>Total Paid Amount</b>}
+                        third={<b>{toMoney(data.additional_payment_amount)}</b>}
+                      />
+                      <hr />
                     </CardBody>
                   </Card>
                 )}
@@ -482,184 +548,119 @@ function Component() {
                       )}
                   </Card>
                 </Row>
-                {data.additional_trx_code !== null && (
+
+                {data.status === "completed" && (
+                  <Card style={{ marginBottom: "20px" }}>
+                    <CardBody>
+                      <div
+                        style={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <CardTitle>
+                          <h5>Transaction Rating</h5>
+                        </CardTitle>
+                      </div>
+                      <Rating
+                        name="rating_transaction"
+                        value={data.rating}
+                        readOnly
+                      />
+                      <div>
+                        {data.rating_comment ? (
+                          data.rating_comment
+                        ) : (
+                          <i>No rating comment</i>
+                        )}
+                      </div>
+                    </CardBody>
+                  </Card>
+                )}
+                {data.type === "goods" && (
                   <Row>
                     <Card style={{ marginBottom: "20px", width: "100%" }}>
                       <CardBody>
-                        <Row
-                          style={{
-                            justifyContent: "space-between",
-                            alignItems: "bottom",
-                          }}
-                        >
-                          <CardTitle>
-                            <h5>Add On Transaction</h5>
-                            Transaction Code : {data.additional_trx_code}
-                          </CardTitle>
-                          <div style={{ display: "block", textAlign: "right" }}>
-                            <Pill
-                              color={
-                                data.additional_trx_status === "paid"
-                                  ? "success"
-                                  : "secondary"
-                              }
-                            >
-                              {toSentenceCase(data.additional_trx_status)}
-                            </Pill>
-                            {data.additional_trx_status === "paid" && (
-                              <div style={{ paddingTop: "5px" }}>
-                                via{" "}
-                                {toSentenceCase(data.additional_payment_method)}{" "}
-                                ({data.additional_payment_bank.toUpperCase()})
-                              </div>
+                        <CardTitle>
+                          <h5>Delivery Information</h5>
+                        </CardTitle>
+                        <Row>
+                          <div
+                            style={{
+                              width: "30%",
+                              borderRight: "1px solid rgba(0,0,0,0.125)",
+                            }}
+                          >
+                            <b>Method</b>
+                            <div>{data.courier_provider}</div>
+                          </div>
+                          <div
+                            style={{
+                              width: "30%",
+                              borderRight: "1px solid rgba(0,0,0,0.125)",
+                              paddingLeft: "10px",
+                            }}
+                          >
+                            <b>External Courier</b>
+                            <div>
+                              Type :{" "}
+                              {data.delivery_type !== "internal"
+                                ? data.delivery_type
+                                : "-"}
+                            </div>
+                            <div>
+                              Tracking Code :{" "}
+                              {data.courier_tracking_code || "-"}
+                            </div>
+                            <div>
+                              Courier Name : {data.courier_external_name || "-"}
+                            </div>
+                            <div>
+                              Courier Phone :{" "}
+                              {data.courier_external_phone || "-"}
+                            </div>
+                            <div>
+                              Courier Status :{" "}
+                              {data.courier_external_status || "-"}
+                            </div>
+                          </div>
+                          <div style={{ width: "30%", paddingLeft: "10px" }}>
+                            <b>Internal Courier</b>
+                            {data.courier_internal_id ? (
+                              <>
+                                <div>
+                                  {" "}
+                                  Task ID :
+                                  <a
+                                    class="Link"
+                                    href={"/" + role + "/task/" + data.task_id}
+                                  >
+                                    {" "}
+                                    {data.task_id}
+                                    <FiArrowUpRight size="17" />{" "}
+                                  </a>
+                                </div>
+                                <div> Assignee : </div>
+                                <Staff
+                                  id={data.courier_internal_id}
+                                  data={{
+                                    firstname: data.courier_internal_name,
+                                    lastname: "",
+                                    email: data.courier_internal_email,
+                                    phone: data.courier_internal_phone,
+                                    staff_role: "courier",
+                                  }}
+                                />
+                              </>
+                            ) : (
+                              <div>-</div>
                             )}
                           </div>
                         </Row>
-                        {data.addons &&
-                          data.addons.length > 0 &&
-                          data.addons.map((el, index) => {
-                            return (
-                              <div
-                                style={{
-                                  borderBottom:
-                                    "1px solid rgba(0, 0, 0, 0.125)",
-                                  padding: "10px 0px",
-                                }}
-                              >
-                                <ThreeColumn
-                                  noborder={false}
-                                  first={
-                                    <Product
-                                      disabled
-                                      noThumbnail
-                                      id={`${el.item_name}-${index}`}
-                                      data={{
-                                        id: `${el.item_name}-${index}`,
-                                        thumbnails: null,
-                                        name: el.item_name,
-                                        merchant_name: data.merchant_name,
-                                      }}
-                                    />
-                                  }
-                                  third={toMoney(el.item_price)}
-                                />
-                                <div>
-                                  {el.remarks && (
-                                    <div style={{ padding: "0px 10px" }}>
-                                      <small>Note: {el.remarks}</small>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
-                        <ThreeColumn
-                          noborder={false}
-                          second="Subtotal"
-                          third={toMoney(data.service_additional_price)}
-                        />
-                        <ThreeColumn
-                          second="PG Fee"
-                          third={
-                            data.additional_payment_charge === 0
-                              ? toMoney(
-                                  data.additional_payment_amount -
-                                    data.service_additional_price
-                                )
-                              : toMoney(data.additional_payment_charge)
-                          }
-                        />
-                        <ThreeColumn
-                          second={<b>Total Paid Amount</b>}
-                          third={
-                            <b>{toMoney(data.additional_payment_amount)}</b>
-                          }
-                        />
-                        <hr />
                       </CardBody>
                     </Card>
                   </Row>
                 )}
-                <Row>
-                  <Card style={{ marginBottom: "20px", width: "100%" }}>
-                    <CardBody>
-                      <CardTitle>
-                        <h5>Delivery Information</h5>
-                      </CardTitle>
-                      <Row>
-                        <div
-                          style={{
-                            width: "30%",
-                            borderRight: "1px solid rgba(0,0,0,0.125)",
-                          }}
-                        >
-                          <b>Method</b>
-                          <div>{data.courier_provider}</div>
-                        </div>
-                        <div
-                          style={{
-                            width: "30%",
-                            borderRight: "1px solid rgba(0,0,0,0.125)",
-                            paddingLeft: "10px",
-                          }}
-                        >
-                          <b>External Courier</b>
-                          <div>
-                            Type :{" "}
-                            {data.delivery_type !== "internal"
-                              ? data.delivery_type
-                              : "-"}
-                          </div>
-                          <div>
-                            Tracking Code : {data.courier_tracking_code || "-"}
-                          </div>
-                          <div>
-                            Courier Name : {data.courier_external_name || "-"}
-                          </div>
-                          <div>
-                            Courier Phone : {data.courier_external_phone || "-"}
-                          </div>
-                          <div>
-                            Courier Status :{" "}
-                            {data.courier_external_status || "-"}
-                          </div>
-                        </div>
-                        <div style={{ width: "30%", paddingLeft: "10px" }}>
-                          <b>Internal Courier</b>
-                          {data.courier_internal_id ? (
-                            <>
-                              <div>
-                                {" "}
-                                Task ID :
-                                <a
-                                  class="Link"
-                                  href={"/" + role + "/task/" + data.task_id}
-                                >
-                                  {" "}
-                                  {data.task_id}
-                                  <FiArrowUpRight size="17" />{" "}
-                                </a>
-                              </div>
-                              <div> Assignee : </div>
-                              <Staff
-                                id={data.courier_internal_id}
-                                data={{
-                                  firstname: data.courier_internal_name,
-                                  lastname: "",
-                                  email: data.courier_internal_email,
-                                  phone: data.courier_internal_phone,
-                                  staff_role: "courier",
-                                }}
-                              />
-                            </>
-                          ) : (
-                            <div>-</div>
-                          )}
-                        </div>
-                      </Row>
-                    </CardBody>
-                  </Card>
-                </Row>
                 {data.payment === "paid" && data.status === "completed" && (
                   <Row style={{ justifyContent: "space-between" }}>
                     <Card

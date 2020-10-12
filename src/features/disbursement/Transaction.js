@@ -337,30 +337,66 @@ function Component({ view }) {
         >
           {type === "merchant" &&
             selected.map((el) => {
-              return (
-                <div
-                  key={el.id}
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    width: "100%",
-                    padding: 12,
-                    marginBottom: 8,
-                    borderRadius: 6,
-                    border: "1px solid rgba(0, 0, 0, .3",
-                    backgroundColor: "white",
-                  }}
-                >
-                  <div>
-                    <div>Trx Code</div>
-                    {el.trx_code}
-                  </div>
+              const additional = el.additional_trx_code !== null ? true : false;
+              let additionalData = {},
+                dsbAdditionalItem = null;
+              if (additional) {
+                additionalData = {
+                  service_additional_price: el.service_additional_price,
+                  trx_code: el.additional_trx_code,
+                };
+                dsbAdditionalItem = (
                   <div
                     style={{
-                      fontWeight: "bold",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      padding: 8,
+                      marginBottom: 4,
+                      border: "1px solid silver",
+                      borderRadius: 4,
                     }}
                   >
-                    {toMoney(el.total_selling_price)}
+                    <div>
+                      <div>Trx Code</div>
+                      {additionalData.trx_code}
+                    </div>
+                    <div
+                      style={{
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {toMoney(additionalData.service_additional_price)}
+                    </div>
+                  </div>
+                );
+              }
+              return (
+                <div key={el.id}>
+                  {dsbAdditionalItem}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      padding: 12,
+                      marginBottom: 8,
+                      borderRadius: 6,
+                      border: "1px solid rgba(0, 0, 0, .3",
+                      backgroundColor: "white",
+                    }}
+                  >
+                    <div>
+                      <div>Trx Code</div>
+                      {el.trx_code}
+                    </div>
+                    <div
+                      style={{
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {toMoney(el.total_selling_price)}
+                    </div>
                   </div>
                 </div>
               );

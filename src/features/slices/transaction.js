@@ -1,6 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { endpointTransaction } from "../../settings";
-import { get, post, getFile, setInfo } from "../slice";
+import {
+  createSlice
+} from "@reduxjs/toolkit";
+import {
+  endpointTransaction
+} from "../../settings";
+import {
+  get,
+  post,
+  getFile,
+  setInfo
+} from "../slice";
 
 const transactionEndpoint = endpointTransaction + "/admin/transaction";
 
@@ -100,26 +109,26 @@ export const getTransaction = (
   dispatch(
     get(
       transactionEndpoint +
-        "/list" +
-        "?page=" +
-        (pageIndex + 1) +
-        "&limit=" +
-        pageSize +
-        "&status=" +
-        status +
-        "&payment_status=" +
-        statusPayment +
-        "&trx_type=" +
-        type +
-        "&sort_field=created_on&sort_type=DESC" +
-        "&start_date=" +
-        start +
-        "T00:00:00" +
-        "&end_date=" +
-        end +
-        "T23:59:59" +
-        "&search=" +
-        search,
+      "/list" +
+      "?page=" +
+      (pageIndex + 1) +
+      "&limit=" +
+      pageSize +
+      "&status=" +
+      status +
+      "&payment_status=" +
+      statusPayment +
+      "&trx_type=" +
+      type +
+      "&sort_field=created_on&sort_type=DESC" +
+      "&start_date=" +
+      start +
+      "T00:00:00" +
+      "&end_date=" +
+      end +
+      "T23:59:59" +
+      "&search=" +
+      search,
 
       (res) => {
         dispatch(setData(res.data.data));
@@ -143,16 +152,16 @@ export const downloadTransaction = (
   dispatch(
     getFile(
       transactionEndpoint +
-        "/list" +
-        "?status=" +
-        status +
-        "&payment_status=" +
-        statusPayment +
-        "&trx_type=" +
-        type +
-        "&sort_field=created_on" +
-        "&sort_type=DESC" +
-        "&export=true",
+      "/list" +
+      "?status=" +
+      status +
+      "&payment_status=" +
+      statusPayment +
+      "&trx_type=" +
+      type +
+      "&sort_field=created_on" +
+      "&sort_type=DESC" +
+      "&export=true",
       "transaction_list.csv",
       (res) => {
         dispatch(stopAsync());
@@ -198,23 +207,23 @@ export const getTransactionSettlement = (
   dispatch(
     get(
       transactionEndpoint +
-        "/list" +
-        "?page=" +
-        (pageIndex + 1) +
-        "&limit=" +
-        pageSize +
-        "&settlement_status=" +
-        settlementStatus +
-        "&status=completed" +
-        "&sort_field=created_on&sort_type=DESC" +
-        "&settlement_start_date=" +
-        start +
-        "T00:00:00" +
-        "&settlement_end_date=" +
-        end +
-        "T23:59:59" +
-        "&search=" +
-        search,
+      "/list" +
+      "?page=" +
+      (pageIndex + 1) +
+      "&limit=" +
+      pageSize +
+      "&settlement_status=" +
+      settlementStatus +
+      "&status=completed" +
+      "&sort_field=created_on&sort_type=DESC" +
+      "&settlement_start_date=" +
+      start +
+      "T00:00:00" +
+      "&settlement_end_date=" +
+      end +
+      "T23:59:59" +
+      "&search=" +
+      search,
 
       (res) => {
         dispatch(setSettlement(res.data.data));
@@ -236,11 +245,11 @@ export const downloadTransactionSettlement = (settlementStatus = "") => (
   dispatch(
     getFile(
       transactionEndpoint +
-        "/list" +
-        "?settlement_status=" +
-        settlementStatus +
-        "&status=completed" +
-        "&export=true",
+      "/list" +
+      "?settlement_status=" +
+      settlementStatus +
+      "&status=completed" +
+      "&export=true",
       "transaction_settlement.csv",
       (res) => {
         dispatch(stopAsync());
@@ -270,34 +279,34 @@ export const getTransactionDisbursement = (
   dispatch(
     get(
       endpointTransaction +
-        "/admin/disbursement/" +
-        type +
-        "?page=" +
-        (pageIndex + 1) +
-        "&limit=" +
-        pageSize +
-        (type === "merchant"
-          ? "&merchant_id=" + merchant
-          : "&courier_id=" + courier) +
-        "&limit=" +
-        pageSize +
-        "&sort_field=created_on&sort_type=DESC" +
-        "&search=" +
-        search +
-        "&disbursement_status=" +
-        disbursementStatus +
-        "&disbursed_start_date=" +
-        start +
-        "T00:00:00" +
-        "&disbursed_end_date=" +
-        end +
-        "T23:59:59" +
-        "&settlement_start_date=" +
-        s_start +
-        "T00:00:00" +
-        "&settlement_end_date=" +
-        s_end +
-        "T23:59:59",
+      "/admin/disbursement/" +
+      type +
+      "?page=" +
+      (pageIndex + 1) +
+      "&limit=" +
+      pageSize +
+      (type === "merchant" ?
+        "&merchant_id=" + merchant :
+        "&courier_id=" + courier) +
+      "&limit=" +
+      pageSize +
+      "&sort_field=created_on&sort_type=DESC" +
+      "&search=" +
+      search +
+      "&disbursement_status=" +
+      disbursementStatus +
+      "&disbursed_start_date=" +
+      start +
+      "T00:00:00" +
+      "&disbursed_end_date=" +
+      end +
+      "T23:59:59" +
+      "&settlement_start_date=" +
+      s_start +
+      "T00:00:00" +
+      "&settlement_end_date=" +
+      s_end +
+      "T23:59:59",
       (res) => {
         dispatch(setDisbursement(res.data.data));
 
@@ -320,13 +329,13 @@ export const downloadTransactionDisbursement = (
   dispatch(
     getFile(
       endpointTransaction +
-        "/admin/disbursement/" +
-        type +
-        "?merchant_id=" +
-        merchant +
-        "&courier_id=" +
-        courier +
-        "&export=true",
+      "/admin/disbursement/" +
+      type +
+      "?merchant_id=" +
+      merchant +
+      "&courier_id=" +
+      courier +
+      "&export=true",
       "transaction_disbursement.csv",
       (res) => {
         dispatch(stopAsync());
@@ -387,8 +396,13 @@ export const completedTransaction = (data) => (dispatch) => {
           }
         }
 
-        dispatch(setInfo({ message: message, color: color }));
-        setTimeout(() => dispatch(setInfo({ message: "" })), 5000);
+        dispatch(setInfo({
+          message: message,
+          color: color
+        }));
+        setTimeout(() => dispatch(setInfo({
+          message: ""
+        })), 5000);
       },
       (err) => {
         dispatch(stopAsync());
