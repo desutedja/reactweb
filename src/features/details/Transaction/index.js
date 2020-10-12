@@ -216,7 +216,7 @@ function Component() {
                         {data.payment === "paid" && (
                           <div style={{ paddingTop: "5px" }}>
                             via {toSentenceCase(data.payment_method)} (
-                            {data.payment_bank})
+                            {data.payment_bank.toUpperCase()})
                           </div>
                         )}
                       </div>
@@ -482,6 +482,86 @@ function Component() {
                       )}
                   </Card>
                 </Row>
+                {data.additional_trx_code !== null && (
+                  <Row>
+                    <Card style={{ marginBottom: "20px", width: "100%" }}>
+                      <CardBody>
+                        <Row
+                          style={{
+                            justifyContent: "space-between",
+                            alignItems: "bottom",
+                          }}
+                        >
+                          <CardTitle>
+                            <h5>Add On Transaction</h5>
+                            Transaction Code : {data.additional_trx_code}
+                          </CardTitle>
+                          <div style={{ display: "block", textAlign: "right" }}>
+                            <Pill
+                              color={
+                                data.additional_trx_status === "paid"
+                                  ? "success"
+                                  : "secondary"
+                              }
+                            >
+                              {toSentenceCase(data.additional_trx_status)}
+                            </Pill>
+                            {data.additional_trx_status === "paid" && (
+                              <div style={{ paddingTop: "5px" }}>
+                                via{" "}
+                                {toSentenceCase(data.additional_payment_method)}{" "}
+                                ({data.additional_payment_bank.toUpperCase()})
+                              </div>
+                            )}
+                          </div>
+                        </Row>
+                        {data.addons &&
+                          data.addons.length > 0 &&
+                          data.addons.map((el, index) => {
+                            return (
+                              <div
+                                style={{
+                                  borderBottom:
+                                    "1px solid rgba(0, 0, 0, 0.125)",
+                                  padding: "10px 0px",
+                                }}
+                              >
+                                <ThreeColumn
+                                  noborder={false}
+                                  first={
+                                    <Product
+                                      disabled
+                                      noThumbnail
+                                      id={`${el.item_name}-${index}`}
+                                      data={{
+                                        id: `${el.item_name}-${index}`,
+                                        thumbnails: null,
+                                        name: el.item_name,
+                                        merchant_name: data.merchant_name,
+                                      }}
+                                    />
+                                  }
+                                  third={toMoney(el.item_price)}
+                                />
+                                <div>
+                                  {el.remarks && (
+                                    <div style={{ padding: "0px 10px" }}>
+                                      <small>Note: {el.remarks}</small>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        <ThreeColumn
+                          noborder={false}
+                          second="Subtotal"
+                          third={toMoney(data.service_additional_price)}
+                        />
+                      </CardBody>
+                    </Card>
+                  </Row>
+                )}
                 <Row>
                   <Card style={{ marginBottom: "20px", width: "100%" }}>
                     <CardBody>
