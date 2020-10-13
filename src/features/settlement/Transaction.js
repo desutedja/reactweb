@@ -220,11 +220,21 @@ function Component({ view }) {
           uploadResult
             ? () => {
                 const currentDate = new Date().toISOString();
-                const trx_codes = uploadResult.valid_transactions.map(
-                  (el) => el.trx_code
-                );
+                const trx_codes = [],
+                  additional_trx_codes = [];
+                uploadResult.valid_transactions.map((el) => {
+                  if (!el.additional_trx) {
+                    trx_codes.push(el.trx_code);
+                  }
+                });
+                uploadResult.valid_transactions.map((el) => {
+                  if (el.additional_trx) {
+                    additional_trx_codes.push(el.additional_trx_code);
+                  }
+                });
                 const dataSettle = {
                   trx_codes,
+                  additional_trx_codes,
                   amount: getSum(selected),
                   settled_on: currentDate,
                 };
@@ -299,15 +309,23 @@ function Component({ view }) {
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <div>Trx Code</div>{" "}
+                    <div>Trx Code</div>
                     <b>
-                      Value: {toMoney(el.payment_amount - el.payment_charge)}
+                      Value:{" "}
+                      {el.additional_trx
+                        ? toMoney(
+                            el.additional_payment_amount -
+                              el.additional_payment_charge
+                          )
+                        : toMoney(el.payment_amount - el.payment_charge)}
                     </b>
                   </div>
                   <div
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <div>{el.trx_code}</div>{" "}
+                    <div>
+                      {el.additional_trx ? el.additional_trx_code : el.trx_code}
+                    </div>
                     <b>From Xendit: {toMoney(el.xendit_amount)}</b>
                   </div>
                   {el.payment_amount - el.payment_charge !==
@@ -383,10 +401,20 @@ function Component({ view }) {
         okLabel="Flag as Settled"
         onClick={() => {
           const currentDate = new Date().toISOString();
-          const trx_codes = selected.map((el) => el.trx_code);
+          const trx_codes = [],
+            additional_trx_codes = [];
+          selected.map((el) => {
+            if (el.payment_settled === 0) {
+              trx_codes.push(el.trx_code);
+            }
+            if (el.additional_trx_code !== null) {
+              additional_trx_codes.push(el.additional_trx_code);
+            }
+          });
           console.log(trx_codes);
           const dataSettle = {
             trx_codes,
+            additional_trx_codes,
             amount: getSum(selected),
             settled_on: currentDate,
           };
@@ -416,7 +444,11 @@ function Component({ view }) {
           }}
         >
           {selected.map((el) => {
-            const additional = el.additional_trx_code !== null ? true : false;
+            const additional =
+              el.additional_trx_code !== null &&
+              el.additional_payment_settled != 1
+                ? true
+                : false;
             let additionalData = {},
               stlAdditionalItem = null;
             if (additional) {
@@ -649,7 +681,10 @@ function Component({ view }) {
           onSelection={(selectedRows) => {
             setSelected(
               selectedRows.filter((el) => {
-                if (el.additional_trx_code !== null) {
+                if (
+                  el.additional_trx_code !== null &&
+                  el.payment_settled != 0
+                ) {
                   return el && !el.additional_payment_settled_date;
                 }
                 return el && !el.payment_settled_date;
