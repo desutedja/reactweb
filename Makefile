@@ -1,7 +1,7 @@
-# TAG ?= b9fef8b-2209202002
-# export TAG=$(git show --format=%h -q)-$(date "+%j%H%M%S")
+# VERSION ?= b9fef8b-2209202002
+# export VERSION=$(git show --format=%h -q)-$(date "+%j%H%M%S")
 export ENV?=development
-export REPO=registry.gitlab.com/clink1/building-management-apps-web/adminweb:${TAG}
+export REPO=registry.gitlab.com/clink1/building-management-apps-web/adminweb:${VERSION}
 
 # BASE ?= api.yipy.id
 # PREFIX ?= yipy
@@ -41,5 +41,9 @@ test:
 	docker build -t appsweb .
 	docker stop appsweb; docker rm appsweb;
 	docker run -dt -p 80:80 --name appsweb appsweb:latest
+
+deploy-dev:
+	firebase deploy --only hosting:yipy-dev-management
+	firebase deploy --only hosting:yipy-dev-admin
 
 .PHONY: build endpoint npmbuild push start test
