@@ -31,7 +31,7 @@ const announcementPayload = {
 const roles = [
   { value: "resident", label: "Resident" },
   { value: "management", label: "Building Management PIC & GM" },
-  { value: "staff", label: "Building Staff (Courier, Security, Technician)" },
+  { value: "staff", label: "Building Staff (Security, Technician)" },
   // TODO : need to reactivate if staff courier is already implemented on business operational
   // { value: 'staff_courier', label: 'Staff Courier Only' },
   { value: "staff_security", label: "Staff Security Only" },
