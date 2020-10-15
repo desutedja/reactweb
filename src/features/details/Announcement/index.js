@@ -145,7 +145,7 @@ function Component({ view }) {
         Are you sure you want to delete this announcement?
       </Modal>
       <Modal
-        width="700px"
+        width="900px"
         isOpen={impression}
         disableSecondary
         title="Announcement Impression"

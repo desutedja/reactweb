@@ -2,6 +2,7 @@ import React from "react";
 import parse from "html-react-parser";
 import Table from "../../../../components/Table";
 import { useSelector } from "react-redux";
+import { dateTimeFormatter } from "../../../../utils";
 
 function Component({ data }) {
   const selected = useSelector((state) => state.announcement.selected);
@@ -32,6 +33,14 @@ function Component({ data }) {
       Header: "Open Count",
       accessor: (row) => (
         <span style={{ alignContent: "center" }}>{row.open_count}</span>
+      ),
+    },
+    {
+      Header: "First Open",
+      accessor: (row) => (
+        <span style={{ alignContent: "center" }}>
+          {dateTimeFormatter(row.created_on, "-")}
+        </span>
       ),
     },
   ];
