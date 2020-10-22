@@ -11,6 +11,7 @@ import {
   setInfo
 } from "../slice";
 
+import moment from "moment";
 const transactionEndpoint = endpointTransaction + "/admin/transaction";
 
 export const slice = createSlice({
@@ -325,7 +326,7 @@ export const downloadTransactionDisbursement = (
   courier = ""
 ) => (dispatch) => {
   dispatch(startAsync());
-
+  const now = moment().format(`DDMMyyyy${parseInt(Math.random()*100000)}`)
   dispatch(
     getFile(
       endpointTransaction +
@@ -336,7 +337,7 @@ export const downloadTransactionDisbursement = (
       "&courier_id=" +
       courier +
       "&export=true",
-      "transaction_disbursement.csv",
+      `disbursement-${now.toString()}.xlsx`,
       (res) => {
         dispatch(stopAsync());
       },

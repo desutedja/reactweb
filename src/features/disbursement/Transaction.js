@@ -891,7 +891,7 @@ function Component({ view }) {
                 />
               )}
               <Button
-                label="Download .csv"
+                label="Download XLSX"
                 icon={<FiDownload />}
                 onClick={() => {
                   dispatch(
