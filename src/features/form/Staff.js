@@ -55,7 +55,7 @@ let staff_roles = [
   { value: "gm_bm", label: "GM BM" },
   { value: "pic_bm", label: "PIC BM" },
   { value: "technician", label: "Technician" },
-  //   { value: 'courier', label: 'Courier' }, //TODO need to reactivate when internal courier is implemented
+  { value: "courier", label: "Courier" },
   { value: "security", label: "Security" },
 ];
 
