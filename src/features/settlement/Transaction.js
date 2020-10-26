@@ -551,11 +551,13 @@ function Component({ view }) {
             >
               Settled Amount
             </div>
-            <AnimatedNumber
-              className="BigNumber"
-              value={info.total_settled_transaction_amount}
-              formatValue={formatValue}
-            />
+            <div>
+              <AnimatedNumber
+                className="BigNumber"
+                value={info.total_settled_transaction_amount}
+                formatValue={formatValue}
+              />
+            </div>
           </div>
           <div
             style={{
@@ -571,11 +573,13 @@ function Component({ view }) {
             >
               Unsettled Amount
             </div>
-            <AnimatedNumber
-              className="BigNumber"
-              value={info.total_unsettled_transaction_amount}
-              formatValue={formatValue}
-            />
+            <div>
+              <AnimatedNumber
+                className="BigNumber"
+                value={info.total_unsettled_transaction_amount}
+                formatValue={formatValue}
+              />
+            </div>
           </div>
         </div>
         <div
@@ -599,11 +603,13 @@ function Component({ view }) {
             >
               Merchant Disbursed Amount
             </div>
-            <AnimatedNumber
-              className="BigNumber"
-              value={info.total_merchant_disbursed_transaction_amount}
-              formatValue={formatValue}
-            />
+            <div>
+              <AnimatedNumber
+                className="BigNumber"
+                value={info.total_merchant_disbursed_transaction_amount}
+                formatValue={formatValue}
+              />
+            </div>
           </div>
           <div
             style={{
@@ -619,11 +625,13 @@ function Component({ view }) {
             >
               Merchant Undisbursed Amount
             </div>
-            <AnimatedNumber
-              className="BigNumber"
-              value={info.total_merchant_undisbursed_transaction_amount}
-              formatValue={formatValue}
-            />
+            <div>
+              <AnimatedNumber
+                className="BigNumber"
+                value={info.total_merchant_undisbursed_transaction_amount}
+                formatValue={formatValue}
+              />
+            </div>
           </div>
         </div>
         <div
@@ -647,11 +655,13 @@ function Component({ view }) {
             >
               Courier Disbursed Amount
             </div>
-            <AnimatedNumber
-              className="BigNumber"
-              value={info.total_courier_disbursed_transaction_amount}
-              formatValue={formatValue}
-            />
+            <div>
+              <AnimatedNumber
+                className="BigNumber"
+                value={info.total_courier_disbursed_transaction_amount}
+                formatValue={formatValue}
+              />
+            </div>
           </div>
           <div
             style={{
@@ -667,11 +677,13 @@ function Component({ view }) {
             >
               Courier Undisbursed Amount
             </div>
-            <AnimatedNumber
-              className="BigNumber"
-              value={info.total_courier_undisbursed_transaction_amount}
-              formatValue={formatValue}
-            />
+            <div>
+              <AnimatedNumber
+                className="BigNumber"
+                value={info.total_courier_undisbursed_transaction_amount}
+                formatValue={formatValue}
+              />
+            </div>
           </div>
         </div>
       </div>
