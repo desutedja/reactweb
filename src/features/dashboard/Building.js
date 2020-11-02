@@ -625,12 +625,10 @@ function Component() {
               >
                 <AnimatedNumber
                   className="BigNumber white"
-                  value={
-                    staffData.num_of_unit / staffData.num_of_building || "0"
-                  }
+                  value={staffData.num_of_pic_bm || "0"}
                   formatValue={formatValue}
                 />
-                <p className="text-nowrap white">Building Manager</p>
+                <p className="text-nowrap white">BM Admin</p>
               </div>
             </div>
           </div>
@@ -660,12 +658,10 @@ function Component() {
               >
                 <AnimatedNumber
                   className="BigNumber white"
-                  value={
-                    staffData.num_of_unit / staffData.num_of_building || "0"
-                  }
+                  value={staffData.num_of_gm_bm || "0"}
                   formatValue={formatValue}
                 />
-                <p className="text-nowrap white">General Manager</p>
+                <p className="text-nowrap white">BM Manager</p>
               </div>
             </div>
           </div>
