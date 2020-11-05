@@ -18,8 +18,11 @@ function MultiSelectTable({
 
   const onValueChange = (e, val) => {
     onChange(e, val);
-    if (val.length > 0 && typeof val[val.length - 1].access === "undefined") {
-      val[val.length - 1].access = {
+    if (
+      val.length > 0 &&
+      typeof val[val.length - 1].privilege === "undefined"
+    ) {
+      val[val.length - 1].privilege = {
         read: true,
         create: true,
         update: true,
@@ -97,40 +100,40 @@ function MultiSelectTable({
           type="checkbox"
           onClick={() => {
             let newValues = value;
-            newValues[index].access.read = !option.access.read;
-            setFieldValue("access", newValues);
+            newValues[index].privilege.read = !option.privilege.read;
+            setFieldValue("module_access", newValues);
           }}
-          checked={option.access.read}
+          checked={option.privilege.read}
         ></Field>
         <Field
           name={`${option.value}`}
           type="checkbox"
           onClick={() => {
             let newValues = value;
-            newValues[index].access.create = !option.access.create;
-            setFieldValue("access", newValues);
+            newValues[index].privilege.create = !option.privilege.create;
+            setFieldValue("module_access", newValues);
           }}
-          checked={option.access.create}
+          checked={option.privilege.create}
         />
         <Field
           name={`${option.value}`}
           type="checkbox"
           onClick={() => {
             let newValues = value;
-            newValues[index].access.update = !option.access.update;
-            setFieldValue("access", newValues);
+            newValues[index].privilege.update = !option.privilege.update;
+            setFieldValue("module_access", newValues);
           }}
-          checked={option.access.update}
+          checked={option.privilege.update}
         />
         <Field
           name={`${option.value}`}
           type="checkbox"
           onClick={() => {
             let newValues = value;
-            newValues[index].access.delete = !option.access.delete;
-            setFieldValue("access", newValues);
+            newValues[index].privilege.delete = !option.privilege.delete;
+            setFieldValue("module_access", newValues);
           }}
-          checked={option.access.delete}
+          checked={option.privilege.delete}
         />
         <p
           style={{
@@ -149,13 +152,13 @@ function MultiSelectTable({
           }}
           onClick={() => {
             let newValues = value;
-            newValues[index].access = {
+            newValues[index].privilege = {
               read: true,
               create: true,
               update: true,
               delete: true,
             };
-            setFieldValue(`access`, newValues);
+            setFieldValue(`module_access`, newValues);
           }}
         >
           All
@@ -167,13 +170,13 @@ function MultiSelectTable({
           }}
           onClick={() => {
             let newValues = value;
-            newValues[index].access = {
+            newValues[index].privilege = {
               read: false,
               create: false,
               update: false,
               delete: false,
             };
-            setFieldValue(`access`, newValues);
+            setFieldValue(`module_access`, newValues);
           }}
         >
           None
@@ -210,7 +213,7 @@ function MultiSelectTable({
           </ul>
           <div>
             <FieldArray
-              name="access"
+              name="privilege"
               render={(arrayHelpers) => (
                 <div
                   className="Input"

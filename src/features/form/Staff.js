@@ -363,8 +363,8 @@ function Component() {
                 type="radio"
                 name="web_access"
                 options={[
-                  { value: "y", label: "Yes" },
-                  { value: "n", label: "No" },
+                  { value: "y", label: "Yes", id: "y_admin" },
+                  { value: "n", label: "No", id: "n_admin" },
                 ]}
               />
             )}
@@ -383,7 +383,7 @@ function Component() {
                 {...props}
                 type="multiselecttable"
                 label="Select Module(s)"
-                name="access"
+                name="module_access"
                 defaultValue={
                   []
                   // values.module
