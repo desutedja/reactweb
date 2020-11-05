@@ -161,7 +161,7 @@ function Component() {
     dispatch(
       get(endpointAdmin + "/modules/available/" + bmId, (res) => {
         let formatted = res.data.data.module_detail.map((el) => ({
-          label: toSentenceCase(el.access.split("_").join(" ")),
+          label: toSentenceCase(el.access.replace("_", " ")),
           value: el.access,
           id: el.access_id,
           type: toSentenceCase(el.access_type),
@@ -385,13 +385,38 @@ function Component() {
                 label="Select Module(s)"
                 name="module_access"
                 defaultValue={
-                  []
-                  // values.module
-                  //   ? values.module.map((el) => ({
-                  //       label: el.department_name,
-                  //       value: el.id,
-                  //     }))
-                  //   : []
+                  values.module_access
+                    ? values.module_access.map((el) => {
+                        console.log(el);
+                        let fullValue = ["create", "read", "update", "delete"];
+                        let inclPrivArr = fullValue;
+                        if (typeof el.access_privilege === "string") {
+                          inclPrivArr = el.access_privilege.split(",");
+                        }
+                        let privilege = {};
+                        inclPrivArr.map((priv) => {
+                          privilege[priv] = true;
+                        });
+                        if (inclPrivArr.length !== fullValue.length) {
+                          let exclPrivArr = fullValue.filter(
+                            (x) => inclPrivArr.indexOf(x) === -1
+                          );
+                          exclPrivArr.map((priv) => {
+                            privilege[priv] = false;
+                          });
+                        }
+                        if (typeof el.access != "undefined") {
+                          let values = {
+                            label: toSentenceCase(el.access.replace("_", " ")),
+                            value: el.access,
+                            id: el.access_id,
+                            type: toSentenceCase(el.access_type),
+                            privilege,
+                          };
+                          return values;
+                        }
+                      })
+                    : []
                 }
                 placeholder="Start typing module access name to add"
                 options={module}
