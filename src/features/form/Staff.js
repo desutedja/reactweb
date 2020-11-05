@@ -17,6 +17,7 @@ import { Form } from "formik";
 import Input from "./input";
 import { staffSchema } from "./services/schemas";
 import SubmitButton from "./components/SubmitButton";
+import { toSentenceCase } from "../../utils";
 
 const staffPayload = {
   staff_role: "",
@@ -76,6 +77,8 @@ function Component() {
 
   const [province, setProvince] = useState("");
   const [provinces, setProvinces] = useState([]);
+  const [module, setModule] = useState([]);
+  const [selectedModule, setSelectedModule] = useState([]);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -83,6 +86,10 @@ function Component() {
   useEffect(() => {
     console.log(selectedDepartment);
   }, [selectedDepartment]);
+
+  useEffect(() => {
+    console.log(selectedModule);
+  }, [selectedModule]);
 
   useEffect(() => {
     if (initialMount.current) {
@@ -149,6 +156,21 @@ function Component() {
       )
     );
   }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(
+      get(endpointAdmin + "/modules/available/" + bmId, (res) => {
+        let formatted = res.data.data.module_detail.map((el) => ({
+          label: toSentenceCase(el.access.split("_").join(" ")),
+          value: el.access,
+          id: el.access_id,
+          type: toSentenceCase(el.access_type),
+        }));
+        setModule(formatted);
+        console.log(formatted);
+      })
+    );
+  }, [bmId]);
 
   useEffect(() => {
     dispatch(
@@ -264,6 +286,7 @@ function Component() {
       }}
       add={(data) => {
         delete data[undefined];
+        console.log(data);
         dispatch(createStaff(data, history));
       }}
       renderChild={(props) => {
@@ -329,6 +352,51 @@ function Component() {
                 options={departments}
                 onChange={(e, value) => {
                   setSelectedDepartment(value);
+                }}
+              />
+            )}
+            {(values["staff_role"] === "pic_bm" ||
+              values["staff_role"] === "gm_bm") && (
+              <Input
+                {...props}
+                label="Web Admin Access"
+                type="radio"
+                name="web_access"
+                options={[
+                  { value: "y", label: "Yes" },
+                  { value: "n", label: "No" },
+                ]}
+              />
+            )}
+            <Input
+              {...props}
+              label="Resident Chat Access"
+              type="radio"
+              name="chat_access"
+              options={[
+                { value: "y", label: "Yes" },
+                { value: "n", label: "No" },
+              ]}
+            />
+            {module.length > 0 && (
+              <Input
+                {...props}
+                type="multiselecttable"
+                label="Select Module(s)"
+                name="access"
+                defaultValue={
+                  []
+                  // values.module
+                  //   ? values.module.map((el) => ({
+                  //       label: el.department_name,
+                  //       value: el.id,
+                  //     }))
+                  //   : []
+                }
+                placeholder="Start typing module access name to add"
+                options={module}
+                onChange={(e, value) => {
+                  setSelectedModule(value);
                 }}
               />
             )}

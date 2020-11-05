@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-function Component({className = '', title = ''}) {
-    return (
-        <div className={'SectionSeparator ' + className}>
-            <h5>{title}</h5>
-        </div>
-    )
+function Component({ className = "", title = "", style }) {
+  return (
+    <div style={style} className={"SectionSeparator " + className}>
+      <h5>{title}</h5>
+    </div>
+  );
 }
 
 export default Component;
