@@ -72,7 +72,7 @@ function MultiSelectTable({
         }}
       >
         <FiX
-          enableBackground
+          enableBackground="#e12029"
           onClick={onDelete}
           style={{
             marginRight: 16,

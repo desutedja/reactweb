@@ -30,18 +30,22 @@ function Component() {
           if (!read) {
             setRead(true);
           }
+          break;
         case "create":
           if (!create) {
             setCreate(true);
           }
+          break;
         case "update":
           if (!update) {
             setUpdate(true);
           }
+          break;
         case "delete":
           if (!del) {
             setDel(true);
           }
+          break;
       }
     });
   }

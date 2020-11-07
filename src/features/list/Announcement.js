@@ -27,6 +27,7 @@ const cons = [
 
 function Component({ view, canAdd, canUpdate, canDelete }) {
   const [con, setCon] = useState("");
+  console.log(canAdd);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -123,9 +124,10 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
         },
       ]}
       actions={
-        view && canAdd
+        view
           ? null
-          : [
+          : canAdd
+          ? [
               <Button
                 key="Add Announcement"
                 label="Add Announcement"
@@ -136,6 +138,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
                 }}
               />,
             ]
+          : null
       }
     />
   );

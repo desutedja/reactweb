@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { post } from "../slice";
 import { endpointAdmin } from "../../settings";
-import { toSentenceCase } from "../../utils";
+import { setModuleAccess, toSentenceCase } from "../../utils";
 
 export const slice = createSlice({
   name: "auth",
@@ -47,6 +47,7 @@ export const slice = createSlice({
     },
     logout: (state) => {
       state.isAuthenticated = false;
+      state.access = {};
     },
   },
 });
@@ -110,44 +111,45 @@ export const otpCheck = (role, email, otp, history) => (dispatch) => {
         dispatch(otpSuccess({ ...res.data.data, role: role }));
 
         const { active_module_detail } = res.data.data;
-        const filteredActiveModule = active_module_detail.filter(
-          (el) => el.access_type === "web"
-        );
-        const dashboardModule = [],
-          nonDashboardModule = [];
-        const activeModule = filteredActiveModule?.map((mod) => {
-          let type =
-            mod.access.split("_")[0] === "dashboard"
-              ? mod.access.split("_")[0]
-              : "not_dashboard";
-          let value =
-            mod.access.split("_")[0] === "dashboard"
-              ? mod.access.split("_")[1]
-              : mod.access;
-          let privilege = mod.access_privilege.split(",");
-          let mods = {
-            baseLabel: toSentenceCase(mod.access.replace("_", " ")),
-            label: toSentenceCase(value),
-            baseValue: mod.access,
-            value,
-            type,
-            privilege,
-          };
-          if (type === "dashboard") {
-            mods.path = `/${mods.type}`;
-            mods.subpath = `/${mods.value}`;
-            dashboardModule.push(mods);
-          } else {
-            mods.path = `/${mods.value}`;
-            mods.subpath = ``;
-            nonDashboardModule.push(mods);
-          }
-          return mods;
-        });
-        const access = {
-          mapped: { dashboard: dashboardModule, normal: nonDashboardModule },
-          unmapped: activeModule,
-        };
+        let access = setModuleAccess(active_module_detail);
+        // const filteredActiveModule = active_module_detail.filter(
+        //   (el) => el.access_type === "web"
+        // );
+        // const dashboardModule = [],
+        //   nonDashboardModule = [];
+        // const activeModule = filteredActiveModule?.map((mod) => {
+        //   let type =
+        //     mod.access.split("_")[0] === "dashboard"
+        //       ? mod.access.split("_")[0]
+        //       : "not_dashboard";
+        //   let value =
+        //     mod.access.split("_")[0] === "dashboard"
+        //       ? mod.access.split("_")[1]
+        //       : mod.access;
+        //   let privilege = mod.access_privilege.split(",");
+        //   let mods = {
+        //     baseLabel: toSentenceCase(mod.access.replace("_", " ")),
+        //     label: toSentenceCase(value),
+        //     baseValue: mod.access,
+        //     value,
+        //     type,
+        //     privilege,
+        //   };
+        //   if (type === "dashboard") {
+        //     mods.path = `/${mods.type}`;
+        //     mods.subpath = `/${mods.value}`;
+        //     dashboardModule.push(mods);
+        //   } else {
+        //     mods.path = `/${mods.value}`;
+        //     mods.subpath = ``;
+        //     nonDashboardModule.push(mods);
+        //   }
+        //   return mods;
+        // });
+        // const access = {
+        //   mapped: { dashboard: dashboardModule, normal: nonDashboardModule },
+        //   unmapped: activeModule,
+        // };
         dispatch(setAccess(access));
         history && history.push("/" + role);
       },
