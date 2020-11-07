@@ -64,7 +64,13 @@ function Input({ optional = false, ...props }) {
       case "multiselect":
         return <MultiSelectInput name={fixedName} {...inputProps} />;
       case "multiselecttable":
-        return <MultiSelectTable name={fixedName} {...inputProps} />;
+        return (
+          <MultiSelectTable
+            name={fixedName}
+            {...inputProps}
+            resetForm={resetForm}
+          />
+        );
       case "radio":
         return <RadioInput name={fixedName} {...inputProps} />;
       case "file":

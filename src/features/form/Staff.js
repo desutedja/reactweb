@@ -65,6 +65,7 @@ function Component() {
   const { banks } = useSelector((state) => state.main);
   const { loading, selected } = useSelector((state) => state.staff);
   const { role, user } = useSelector((state) => state.auth);
+  const [staffRole, setStaffRole] = useState("");
   const [bManagements, setBManagements] = useState([]);
   const [bmId, setBmId] = useState("");
   const [departments, setDepartments] = useState([]);
@@ -158,19 +159,25 @@ function Component() {
   }, [dispatch]);
 
   useEffect(() => {
+    if (bmId === "") {
+      return;
+    }
     dispatch(
-      get(endpointAdmin + "/modules/available/" + bmId, (res) => {
-        let formatted = res.data.data.module_detail.map((el) => ({
-          label: toSentenceCase(el.access.replace("_", " ")),
-          value: el.access,
-          id: el.access_id,
-          type: toSentenceCase(el.access_type),
-        }));
-        setModule(formatted);
-        console.log(formatted);
-      })
+      get(
+        endpointAdmin + "/modules/available/" + bmId + "?role=" + staffRole,
+        (res) => {
+          let formatted = res.data.data.module_detail.map((el) => ({
+            label: toSentenceCase(el.access.replace("_", " ")),
+            value: el.access,
+            id: el.access_id,
+            type: toSentenceCase(el.access_type),
+          }));
+          console.log(formatted);
+          setModule(formatted);
+        }
+      )
     );
-  }, [bmId]);
+  }, [bmId, staffRole]);
 
   useEffect(() => {
     dispatch(
@@ -290,9 +297,13 @@ function Component() {
         dispatch(createStaff(data, history));
       }}
       renderChild={(props) => {
-        const { values, errors } = props;
+        const { values, errors, setFieldValue } = props;
         if (values.building_management_id)
           setBmId(values.building_management_id);
+
+        if (values.staff_role) {
+          setStaffRole(values.staff_role);
+        }
         if (
           values.staff_role === "technician" ||
           values.staff_role === "pic_bm"
@@ -303,7 +314,14 @@ function Component() {
         return (
           <Form className="Form">
             {!selected.id && (
-              <Input {...props} label="Staff Role" options={staff_roles} />
+              <Input
+                {...props}
+                label="Staff Role"
+                options={staff_roles}
+                onChange={(val) => {
+                  setStaffRole(val.value);
+                }}
+              />
             )}
             {values["staff_role"] === "courier" && (
               <Input
@@ -387,7 +405,6 @@ function Component() {
                 defaultValue={
                   values.module_access
                     ? values.module_access.map((el) => {
-                        console.log(el);
                         let fullValue = ["create", "read", "update", "delete"];
                         let inclPrivArr = fullValue;
                         if (typeof el.access_privilege === "string") {

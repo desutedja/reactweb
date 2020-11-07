@@ -14,10 +14,11 @@ function MultiSelectTable({
   onChange = () => {},
   ...props
 }) {
-  const { setFieldValue, name, fixedName } = props;
+  const { setFieldValue, name, fixedName, values } = props;
 
   const onValueChange = (e, val) => {
     onChange(e, val);
+    console.log(val);
     if (
       val.length > 0 &&
       typeof val[val.length - 1].privilege === "undefined"
