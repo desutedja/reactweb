@@ -159,6 +159,7 @@ function Component() {
   }, [dispatch]);
 
   useEffect(() => {
+    console.log(bmId, typeof bmId);
     if (bmId === "") {
       return;
     }

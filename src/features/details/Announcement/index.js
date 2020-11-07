@@ -21,7 +21,7 @@ import Impression from "./contents/Impression";
 import { get } from "../../slice";
 import { endpointAdmin } from "../../../settings";
 
-function Component({ view }) {
+function Component({ view, canUpdate }) {
   const [data, setData] = useState({});
 
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -175,7 +175,7 @@ function Component({ view }) {
               type="Announcement"
               data={data}
               labels={details}
-              editable={data.publish === 0}
+              editable={canUpdate && data.publish === 0}
               renderButtons={() => [
                 <Loading size={10} loading={publishing && data.publish === 0}>
                   <Button

@@ -130,7 +130,7 @@ export default () => {
   const { auth, building } = useSelector((state) => state);
   const id = auth.user.building_id;
   const { blacklist_modules } = useSelector((state) => state.auth.user);
-
+  const activeModuleAccess = useSelector((state) => state.auth.access);
   const [departments, setDepartments] = useState([]);
   const [refresh, setRefresh] = useState(true);
   const [data, setData] = useState({});
@@ -179,23 +179,31 @@ export default () => {
 
   useEffect(() => {
     const modulesLabel = blacklist_modules?.map((module) => module.module);
+    console.log(activeModuleAccess);
+    const dashboardMenu = activeModuleAccess.mapped.dashboard;
+    const normalMenu = activeModuleAccess.mapped.normal;
     const modulesFilter = menus.filter((menu) => {
-      const truthy = modulesLabel?.some(
-        (label) => label === menu.label.toLowerCase()
+      if (menu.path == "/dashboard") {
+        if (dashboardMenu.length === 0) {
+          return false;
+        }
+        return true;
+      }
+      const truthy = normalMenu?.some(
+        (moduleAcc) => moduleAcc.path === menu.path
       );
-      return !truthy;
+      console.log(menu, !truthy);
+      return truthy;
     });
     const filteredModule = [];
-    console.log(modulesFilter);
     modulesFilter.map((item) => {
-      if (typeof item.subpaths !== "undefined") {
+      if (item.path === "/dashboard" && typeof item.subpaths !== "undefined") {
         if (item.subpaths.length > 0) {
           item.subpaths = item.subpaths.filter((el) => {
-            const truthy = modulesLabel?.some(
-              (label) => `/${label}` === el.toLowerCase()
+            const truthy = dashboardMenu?.some(
+              (moduleAcc) => moduleAcc.subpath === el
             );
-            console.log(truthy);
-            return !truthy;
+            return truthy;
           });
         }
       }
