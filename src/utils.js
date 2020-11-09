@@ -212,11 +212,18 @@ export function toEllipsis(value, limit) {
 }
 
 export function staffRoleFormatter(role) {
-  return role === "pic_bm"
-    ? "BM Admin "
-    : role === "gm_bm"
-    ? "BM Manager "
-    : toSentenceCase(role);
+  switch (role) {
+    case "pic_bm":
+      return "BM Admin";
+    case "gm_bm":
+      return "BM Manager";
+    case "technician":
+      return "Service Staff";
+    case "security":
+      return "Security Staff";
+    default:
+      return toSentenceCase(`${role} staff`);
+  }
 }
 
 export function isToday(momentDate) {

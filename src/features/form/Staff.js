@@ -159,8 +159,8 @@ function Component() {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log(bmId, typeof bmId);
-    if (bmId === "") {
+    console.log(bmId, staffRole);
+    if (bmId === "" && staffRole === "") {
       return;
     }
     dispatch(
@@ -299,8 +299,12 @@ function Component() {
       }}
       renderChild={(props) => {
         const { values, errors, setFieldValue } = props;
-        if (values.building_management_id)
+        console.log(values.building_management_id);
+        if (values.building_management_id !== "") {
           setBmId(values.building_management_id);
+        } else if (user.building_management_id != null) {
+          setFieldValue("building_management_id", user.building_management_id);
+        }
 
         if (values.staff_role) {
           setStaffRole(values.staff_role);
@@ -311,6 +315,7 @@ function Component() {
         )
           setTypeDepartment("service");
         if (values.staff_role === "security") setTypeDepartment("security");
+        if (values.staff_role === "gm_bm") setTypeDepartment("all");
 
         return (
           <Form className="Form">
