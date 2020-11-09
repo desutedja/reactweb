@@ -17,7 +17,10 @@ function Component() {
   const [create, setCreate] = useState(false);
   const [update, setUpdate] = useState(false);
   const [del, setDel] = useState(false);
-  if (activeModuleAccess.unmapped.length > 0) {
+  if (
+    typeof activeModuleAccess.unmapped !== "undefined" &&
+    activeModuleAccess.unmapped.length > 0
+  ) {
     let access = activeModuleAccess.unmapped.filter((item) => {
       return item.value == page;
     });

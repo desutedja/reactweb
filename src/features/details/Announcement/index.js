@@ -21,7 +21,7 @@ import Impression from "./contents/Impression";
 import { get } from "../../slice";
 import { endpointAdmin } from "../../../settings";
 
-function Component({ view, canUpdate }) {
+function Component({ view, canUpdate, canDelete, canAdd }) {
   const [data, setData] = useState({});
 
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -180,12 +180,14 @@ function Component({ view, canUpdate }) {
               }
               renderButtons={() => [
                 <Loading size={10} loading={publishing && data.publish === 0}>
-                  <Button
-                    label="Publish"
-                    icon={<FiArrowUpCircle />}
-                    disabled={data.publish === 1}
-                    onClick={publishCb}
-                  />
+                  {(role === "bm" ? canUpdate : true) && (
+                    <Button
+                      label="Publish"
+                      icon={<FiArrowUpCircle />}
+                      disabled={data.publish === 1}
+                      onClick={publishCb}
+                    />
+                  )}
                 </Loading>,
                 <Button
                   label="Preview"
@@ -201,22 +203,27 @@ function Component({ view, canUpdate }) {
                     setImpression(true);
                   }}
                 />,
-                <Button
-                  label="Duplicate"
-                  icon={<FiCopy />}
-                  onClick={() => {
-                    history.push({
-                      pathname: url.split("/").slice(0, -1).join("/") + "/add",
-                    });
-                    dispatch(setSelected({ ...data, duplicate: true }));
-                  }}
-                />,
-                <Button
-                  color="Danger"
-                  icon={<FiTrash />}
-                  label="Delete"
-                  onClick={() => setConfirmDelete(true)}
-                />,
+                (role === "bm" ? canAdd : true) ? (
+                  <Button
+                    label="Duplicate"
+                    icon={<FiCopy />}
+                    onClick={() => {
+                      history.push({
+                        pathname:
+                          url.split("/").slice(0, -1).join("/") + "/add",
+                      });
+                      dispatch(setSelected({ ...data, duplicate: true }));
+                    }}
+                  />
+                ) : null,
+                (role === "bm" ? canDelete : true) ? (
+                  <Button
+                    color="Danger"
+                    icon={<FiTrash />}
+                    label="Delete"
+                    onClick={() => setConfirmDelete(true)}
+                  />
+                ) : null,
               ]}
             />
           </div>,

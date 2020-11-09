@@ -14,6 +14,7 @@ export const slice = createSlice({
     user: {},
     headers: {},
     access: {},
+    relogin: false,
   },
   reducers: {
     startAsync: (state) => {
@@ -49,6 +50,9 @@ export const slice = createSlice({
       state.isAuthenticated = false;
       state.access = {};
     },
+    setRelogin: (state) => {
+      state.relogin = true;
+    },
   },
 });
 
@@ -60,6 +64,7 @@ export const {
   setRole,
   setAccess,
   logout,
+  setRelogin,
 } = slice.actions;
 
 export const login = (role, email, actionState) => (dispatch) => {
@@ -109,6 +114,7 @@ export const otpCheck = (role, email, otp, history) => (dispatch) => {
       (res) => {
         dispatch(setRole(role));
         dispatch(otpSuccess({ ...res.data.data, role: role }));
+        dispatch(setRelogin());
         if (role === "bm") {
           const { active_module_detail } = res.data.data;
           console.log(active_module_detail);

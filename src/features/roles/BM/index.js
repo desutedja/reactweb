@@ -28,6 +28,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { endpointAdmin, endpointManagement } from "../../../settings";
 import { get, del, setInfo, setConfirmDelete } from "../../slice";
 import { setSelected, editBuildingManagement } from "../../slices/building";
+import { logout, setRelogin } from "../../auth/slice";
 
 import Dashboard from "./Dashboard";
 import Ads from "./Ads";
@@ -147,6 +148,11 @@ export default () => {
   };
 
   useEffect(() => {
+    console.log("sudah logout kah anda?", auth.relogin);
+    if (!auth.relogin) {
+      dispatch(setRelogin());
+      dispatch(logout());
+    }
     dispatch(
       get(endpointAdmin + "/management/building?page=1&limit=9999", (res) => {
         const formatted = res.data.data.items.map((el) => ({
@@ -179,7 +185,9 @@ export default () => {
 
   useEffect(() => {
     const modulesLabel = blacklist_modules?.map((module) => module.module);
-    console.log(activeModuleAccess);
+    if (typeof activeModuleAccess.mapped === "undefined") {
+      return null;
+    }
     const dashboardMenu = activeModuleAccess.mapped.dashboard;
     const normalMenu = activeModuleAccess.mapped.normal;
     const modulesFilter = menus.filter((menu) => {
@@ -212,7 +220,7 @@ export default () => {
     console.log(filteredModule);
     setMenus(filteredModule);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blacklist_modules]);
+  }, [activeModuleAccess]);
 
   useEffect(() => {
     dispatch(
