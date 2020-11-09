@@ -206,10 +206,10 @@ function MultiSelectTable({
                   style={{ display: "flex" }}
                   {...getOptionProps({ index, option })}
                 >
-                  <div>
-                    <span>{option.label}</span>
-                    <span style={{ textAlign: "right" }}>{option.type}</span>
-                  </div>
+                  <span>{option.label}</span>
+                  <span style={{ textAlign: "right", marginRight: 10 }}>
+                    {option.type}
+                  </span>
 
                   <FiCheck size="20" />
                 </li>

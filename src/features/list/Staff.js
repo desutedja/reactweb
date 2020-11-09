@@ -103,11 +103,11 @@ const columns = [
 ];
 
 const roles = [
-  { label: "GM BM", value: "gm_bm" },
-  { label: "PIC BM", value: "pic_bm" },
-  { label: "Technician", value: "technician" },
+  { label: "BM Manager", value: "gm_bm" },
+  { label: "BM Admin", value: "pic_bm" },
+  { label: "Service Staff", value: "technician" },
   { label: "Courier", value: "courier" },
-  { label: "Security", value: "security" },
+  { label: "Security Staff", value: "security" },
 ];
 
 const shifts = [

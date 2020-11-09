@@ -213,9 +213,9 @@ export function toEllipsis(value, limit) {
 
 export function staffRoleFormatter(role) {
   return role === "pic_bm"
-    ? "PIC BM "
+    ? "BM Admin "
     : role === "gm_bm"
-    ? "GM BM "
+    ? "BM Manager "
     : toSentenceCase(role);
 }
 

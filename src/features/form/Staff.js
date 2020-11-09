@@ -53,11 +53,11 @@ const staffPayload = {
 };
 
 let staff_roles = [
-  { value: "gm_bm", label: "GM BM" },
-  { value: "pic_bm", label: "PIC BM" },
-  { value: "technician", label: "Technician" },
-  { value: "courier", label: "Courier" },
-  { value: "security", label: "Security" },
+  { value: "gm_bm", label: "BM Manager" },
+  { value: "pic_bm", label: "BM Admin" },
+  { value: "technician", label: "Service Staff" },
+  { value: "courier", label: "Courier Staff" },
+  { value: "security", label: "Security Staff" },
 ];
 
 function Component() {
@@ -351,29 +351,29 @@ function Component() {
                 options={bManagements}
               />
             )}
-            {(values["staff_role"] === "technician" ||
+            {/* {(values["staff_role"] === "technician" ||
               values["staff_role"] === "security" ||
-              values["staff_role"] === "pic_bm") && (
-              <Input
-                {...props}
-                type="multiselect"
-                label="Select Department(s)"
-                name="department_ids"
-                defaultValue={
-                  values.departments
-                    ? values.departments.map((el) => ({
-                        label: el.department_name,
-                        value: el.id,
-                      }))
-                    : []
-                }
-                placeholder="Start typing department name to add"
-                options={departments}
-                onChange={(e, value) => {
-                  setSelectedDepartment(value);
-                }}
-              />
-            )}
+              values["staff_role"] === "pic_bm") && ( */}
+            <Input
+              {...props}
+              type="multiselect"
+              label="Select Department(s)"
+              name="department_ids"
+              defaultValue={
+                values.departments
+                  ? values.departments.map((el) => ({
+                      label: el.department_name,
+                      value: el.id,
+                    }))
+                  : []
+              }
+              placeholder="Start typing department name to add"
+              options={departments}
+              onChange={(e, value) => {
+                setSelectedDepartment(value);
+              }}
+            />
+            {/* )} */}
             {(values["staff_role"] === "pic_bm" ||
               values["staff_role"] === "gm_bm") && (
               <Input
