@@ -56,24 +56,13 @@ function Component() {
     <Switch>
       <Redirect exact from={path} to={`${path}/unit`} />
       {read && (
-        <Route
-          exact
-          path={`${path}/unit`}
-          canAdd={create}
-          canUpdate={update}
-          canDelete={del}
-        >
-          <List />
+        <Route exact path={`${path}/unit`}>
+          <List canAdd={create} canUpdate={update} canDelete={del} />
         </Route>
       )}
       {update && (
-        <Route
-          path={`${path}/edit`}
-          canAdd={create}
-          canUpdate={update}
-          canDelete={del}
-        >
-          <Add />
+        <Route path={`${path}/edit`}>
+          <Add canAdd={create} canUpdate={update} canDelete={del} />
         </Route>
       )}
       <Redirect

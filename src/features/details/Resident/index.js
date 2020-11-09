@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Detail from "../components/Detail";
 import Template from "../components/Template";
@@ -52,6 +52,7 @@ const details = {
 function Component({ view, canAdd, canUpdate, canDelete }) {
   const [data, setData] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const { role } = useSelector((state) => state.auth);
 
   let dispatch = useDispatch();
   let { id } = useParams();
@@ -94,12 +95,18 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
             view={view}
             data={data}
             labels={details}
-            onDelete={!canDelete ? undefined : () => setConfirmDelete(true)}
+            onDelete={
+              role === "bm"
+                ? !canDelete
+                : false
+                ? undefined
+                : () => setConfirmDelete(true)
+            }
           />,
           <Unit
-            canAdd={canAdd}
-            canDelete={canDelete}
-            canUpdate={canUpdate}
+            canAdd={role === "bm" ? canAdd : true}
+            canDelete={role === "bm" ? canDelete : true}
+            canUpdate={role === "bm" ? canUpdate : true}
             view={view}
             id={id}
           />,

@@ -222,7 +222,7 @@ function Component({ view, canAdd }) {
         actions={
           view
             ? null
-            : !canAdd
+            : (role === "bm" ? !canAdd : false)
             ? null
             : [
                 <Button

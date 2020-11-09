@@ -27,7 +27,6 @@ const cons = [
 
 function Component({ view, canAdd, canUpdate, canDelete }) {
   const [con, setCon] = useState("");
-  console.log(canAdd);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -98,7 +97,9 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
       columns={columns}
       slice="announcement"
       getAction={getAnnoucement}
-      deleteAction={canDelete ? deleteAnnouncement : undefined}
+      deleteAction={
+        (role === "bm" ? canDelete : true) ? deleteAnnouncement : undefined
+      }
       filterVars={[con]}
       filters={[
         {
@@ -126,7 +127,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
       actions={
         view
           ? null
-          : canAdd
+          : (role === "bm" ? canAdd : true)
           ? [
               <Button
                 key="Add Announcement"

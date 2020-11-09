@@ -463,7 +463,7 @@ function Component({ view, canAdd, canUpdate }) {
                   ]}
                   actions={[
                     <>
-                      {view ? null : !canAdd ? null : (
+                      {view ? null : role === "bm" && !canAdd ? null : (
                         <Button
                           key="Add Billing"
                           label="Add Billing"

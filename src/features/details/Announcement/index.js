@@ -175,7 +175,9 @@ function Component({ view, canUpdate }) {
               type="Announcement"
               data={data}
               labels={details}
-              editable={canUpdate && data.publish === 0}
+              editable={
+                (role === "bm" ? canUpdate : true) && data.publish === 0
+              }
               renderButtons={() => [
                 <Loading size={10} loading={publishing && data.publish === 0}>
                   <Button

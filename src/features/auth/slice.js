@@ -110,8 +110,11 @@ export const otpCheck = (role, email, otp, history) => (dispatch) => {
         dispatch(setRole(role));
         dispatch(otpSuccess({ ...res.data.data, role: role }));
 
-        const { active_module_detail } = res.data.data;
-        let access = setModuleAccess(active_module_detail);
+        if (role === "bm") {
+          dispatch(setAccess(access));
+          const { active_module_detail } = res.data.data;
+          let access = setModuleAccess(active_module_detail);
+        }
         // const filteredActiveModule = active_module_detail.filter(
         //   (el) => el.access_type === "web"
         // );
@@ -150,7 +153,6 @@ export const otpCheck = (role, email, otp, history) => (dispatch) => {
         //   mapped: { dashboard: dashboardModule, normal: nonDashboardModule },
         //   unmapped: activeModule,
         // };
-        dispatch(setAccess(access));
         history && history.push("/" + role);
       },
       () => {

@@ -303,7 +303,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
       actions={
         view
           ? null
-          : !canAdd
+          : role === "bm" && !canAdd
           ? null
           : [
               <Button

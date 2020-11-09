@@ -280,13 +280,13 @@ function Component({ view, canAdd }) {
           view
             ? null
             : [
-                canAdd ? (
+                role === "bm" && !canAdd ? null : (
                   <Button
                     label="Upload Bulk"
                     icon={<FiUpload />}
                     onClick={() => setUpload(true)}
                   />
-                ) : null,
+                ),
                 <Button
                   label="Download .csv"
                   icon={<FiDownload />}
@@ -299,13 +299,13 @@ function Component({ view, canAdd }) {
         onClickAddBilling={
           view
             ? null
-            : canAdd
-            ? (row) => {
+            : role === "bm" && !canAdd
+            ? null
+            : (row) => {
                 dispatch(setSelected(row));
                 dispatch(setSelectedItem({}));
                 history.push(url + "/" + row.id + "/add");
               }
-            : null
         }
       />
     </>

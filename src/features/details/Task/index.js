@@ -415,7 +415,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     </CardBody>
                     {view
                       ? null
-                      : canUpdate
+                      : (role === "bm" ? canUpdate : true)
                       ? data.status !== "completed" &&
                         data.status !== "canceled" && (
                           <CardFooter style={{ textAlign: "right" }}>
@@ -545,8 +545,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     </CardBody>
                     {view ? null : (data.status === "rejected" ||
                         data.status === "created") &&
-                      canAdd &&
-                      canUpdate ? (
+                      (role === "bm" ? canUpdate && canAdd : true) ? (
                       <CardFooter style={{ textAlign: "right" }}>
                         <Button
                           onClick={() => setAssign(true)}

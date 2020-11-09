@@ -323,7 +323,10 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             type="Billing"
             data={dataDetails}
             labels={details}
-            editable={dataDetails.payment !== "paid" && canUpdate}
+            editable={
+              dataDetails.payment !== "paid" &&
+              (role === "bm" ? canUpdate : true)
+            }
             renderButtons={() => [
               dataDetails.payment !== "paid" && (
                 <Button label="Set as Paid" onClick={() => cashModalUp()} />
@@ -340,7 +343,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               view
                 ? null
                 : [
-                    dataDetails.payment !== "paid" && canUpdate && canAdd && (
+                    dataDetails.payment !== "paid" &&
+                    (role === "bm" ? !canUpdate && !canAdd : true) ? null : (
                       <Button
                         icon={<FiPlus />}
                         label="Add Additional Charge"
@@ -352,7 +356,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             onClickDelete={
               view
                 ? null
-                : !canDelete
+                : role === "bm" && !canDelete
                 ? null
                 : (row) => {
                     dispatch(

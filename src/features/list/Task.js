@@ -662,18 +662,19 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
             : (selectedRowIds, page) => {
                 return [
                   <>
-                    {Object.keys(selectedRowIds).length > 0 && canUpdate && (
-                      <Button
-                        icon={<FiCheck />}
-                        color="success"
-                        onClick={() => {
-                          setConfirmMultiResolve(true);
-                        }}
-                        label="Resolve All"
-                      />
-                    )}
+                    {Object.keys(selectedRowIds).length > 0 &&
+                      (role === "bm" ? canUpdate : true) && (
+                        <Button
+                          icon={<FiCheck />}
+                          color="success"
+                          onClick={() => {
+                            setConfirmMultiResolve(true);
+                          }}
+                          label="Resolve All"
+                        />
+                      )}
                   </>,
-                  role === "bm" && canAdd && (
+                  role === "bm" && (role === "bm" ? canAdd : false) && (
                     <Button
                       key="Add Task"
                       label="Add Task"
@@ -690,7 +691,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
         onClickResolve={
           view
             ? null
-            : canUpdate
+            : (role === "bm" ? canUpdate : true)
             ? (row) => {
                 setRow(row);
                 setResolve(true);
