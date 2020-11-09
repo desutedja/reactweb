@@ -303,7 +303,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
       actions={
         view
           ? null
-          : role === "bm" && !canAdd
+          : (auth.role === "bm" ? !canAdd : false)
           ? null
           : [
               <Button

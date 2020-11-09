@@ -109,11 +109,11 @@ export const otpCheck = (role, email, otp, history) => (dispatch) => {
       (res) => {
         dispatch(setRole(role));
         dispatch(otpSuccess({ ...res.data.data, role: role }));
-
         if (role === "bm") {
-          dispatch(setAccess(access));
           const { active_module_detail } = res.data.data;
+          console.log(active_module_detail);
           let access = setModuleAccess(active_module_detail);
+          dispatch(setAccess(access));
         }
         // const filteredActiveModule = active_module_detail.filter(
         //   (el) => el.access_type === "web"
