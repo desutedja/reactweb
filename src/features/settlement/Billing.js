@@ -22,7 +22,7 @@ import DateRangeFilter from '../../components/DateRangeFilter';
 
 const formatValue = (value) => toMoney(value.toFixed(0));
 
-function Component({ view }) {
+function Component({ view, canUpdate, canDelete, canAdd }) {
 
     const { auth } = useSelector(state => state);
     const { loading, settlement, refreshToggle } = useSelector(state => state.billing);

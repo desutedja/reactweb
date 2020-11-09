@@ -102,10 +102,10 @@ function Component() {
         <Detailsv2 canAdd={create} />
       </Route>
       <Route path={`${path}/settlement/:trx_code`}>
-        <BillingRecord />
+        <BillingRecord canUpdate={update} canAdd={create} canDelete={del} />
       </Route>
       <Route path={`${path}/settlement`}>
-        <Settlement />
+        <Settlement canUpdate={update} canAdd={create} canDelete={del} />
       </Route>
     </Switch>
   );

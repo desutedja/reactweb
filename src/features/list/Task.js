@@ -152,7 +152,7 @@ const prios = [
   { label: "Low", value: "low" },
 ];
 
-function Component({ view }) {
+function Component({ view, canAdd, canUpdate, canDelete }) {
   let dispatch = useDispatch();
   let history = useHistory();
   let { url } = useRouteMatch();
@@ -662,7 +662,7 @@ function Component({ view }) {
             : (selectedRowIds, page) => {
                 return [
                   <>
-                    {Object.keys(selectedRowIds).length > 0 && (
+                    {Object.keys(selectedRowIds).length > 0 && canUpdate && (
                       <Button
                         icon={<FiCheck />}
                         color="success"
@@ -673,7 +673,7 @@ function Component({ view }) {
                       />
                     )}
                   </>,
-                  role === "bm" && (
+                  role === "bm" && canAdd && (
                     <Button
                       key="Add Task"
                       label="Add Task"
@@ -690,10 +690,12 @@ function Component({ view }) {
         onClickResolve={
           view
             ? null
-            : (row) => {
+            : canUpdate
+            ? (row) => {
                 setRow(row);
                 setResolve(true);
               }
+            : undefined
         }
         onClickReassign={
           view
