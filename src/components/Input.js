@@ -3,6 +3,7 @@ import { FiChevronDown, FiX } from "react-icons/fi";
 import MoonLoader from "react-spinners/MoonLoader";
 // import ComboBox from './ComboBox';
 import { rangeNumber } from "../utils";
+import Editor from "../features/form/input/Editor";
 
 import { storageRef } from "../firebase";
 
@@ -186,6 +187,9 @@ function Component({
                         }
                         id={typeof el.id == "undefined" ? el.label : el.id}
                         value={el.value}
+                        onClick={(event) =>
+                          setInputValue && setInputValue(event.target.value)
+                        }
                         checked
                       />
                     ) : (
@@ -196,6 +200,9 @@ function Component({
                           name ? name : label.toLowerCase().replace(/ /g, "_")
                         }
                         id={typeof el.id == "undefined" ? el.label : el.id}
+                        onClick={(event) =>
+                          setInputValue && setInputValue(event.target.value)
+                        }
                         value={el.value}
                       />
                     )}
@@ -267,6 +274,23 @@ function Component({
               onClick={onClick}
             />
           </div>
+        );
+      case "editor":
+        return (
+          <Editor name={name ? name : label.toLowerCase().replace(/ /g, "_")} />
+          // <Editor
+          //   type={type}
+          //   id={label}
+          //   name={name ? name : label.toLowerCase().replace(/ /g, "_")}
+          //   required={!optional}
+          //   placeholder={label}
+          //   rows={rows}
+          //   value={inputValue === "" ? "" : value}
+          //   onChange={(e) => {
+          //     setValue(e.target.value);
+          //     setInputValue && setInputValue(e.target.value);
+          //   }}
+          // />
         );
       case "time":
         return (

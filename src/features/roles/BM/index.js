@@ -646,11 +646,14 @@ const AutoAnswerSetting = ({ data, labels }) => {
   const { auth } = useSelector((state) => state);
   const [modalAutoAnswer, setModalAutoAnswer] = useState(false);
   const { selected, loading } = useSelector((state) => state.building);
+  const [autoAnswer, setAutoAnswer] = useState(null);
 
   let history = useHistory();
 
   const dispatch = useDispatch();
-  console.log(data);
+  if (typeof data.auto_answer != "undefined" && autoAnswer === null) {
+    setAutoAnswer(data.auto_answer);
+  }
   return (
     <>
       <Modal
@@ -667,6 +670,11 @@ const AutoAnswerSetting = ({ data, labels }) => {
           }}
           onSubmit={(dataRef) => {
             const finalData = { ...data, ...dataRef };
+            finalData.auto_answer = autoAnswer;
+            if (finalData.auto_answer == "n") {
+              finalData.auto_answer_text = " ";
+            }
+            console.log(finalData);
             dispatch(editBuilding(finalData, history, selected.id, auth.role));
             setModalAutoAnswer(false);
           }}
@@ -675,13 +683,16 @@ const AutoAnswerSetting = ({ data, labels }) => {
             label="Auto Answer"
             type="radio"
             name="auto_assign"
-            inputValue={data.auto_answer}
+            inputValue={autoAnswer}
+            setInputValue={(val) => {
+              setAutoAnswer(val);
+            }}
             options={[
               { value: "y", label: "Yes" },
               { value: "n", label: "No" },
             ]}
           />
-          {data.auto_answer === "y" && (
+          {autoAnswer === "y" && (
             <Input
               label="Auto Answer Text"
               type="textarea"
@@ -739,7 +750,9 @@ const AutoAnswerSetting = ({ data, labels }) => {
                         ? data[el] === "y"
                           ? "Yes"
                           : "No"
-                        : "" + data[el]}
+                        : data[el] === " " || data[el] === ""
+                        ? "-"
+                        : data[el]}
                     </div>
                   </div>
                 ) : null;
