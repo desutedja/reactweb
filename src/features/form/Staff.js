@@ -18,6 +18,7 @@ import Input from "./input";
 import { staffSchema } from "./services/schemas";
 import SubmitButton from "./components/SubmitButton";
 import { toSentenceCase } from "../../utils";
+import Module from "../details/Building/contents/Module";
 
 const staffPayload = {
   staff_role: "",
@@ -79,6 +80,7 @@ function Component() {
   const [province, setProvince] = useState("");
   const [provinces, setProvinces] = useState([]);
   const [module, setModule] = useState([]);
+  const [moduleAccess, setModuleAccess] = useState([]);
   const [selectedModule, setSelectedModule] = useState([]);
 
   let dispatch = useDispatch();
@@ -173,8 +175,8 @@ function Component() {
             id: el.access_id,
             type: toSentenceCase(el.access_type),
           }));
-          console.log(formatted);
-          setModule(formatted);
+          setModule([]);
+          setModule([...formatted]);
         }
       )
     );
@@ -299,7 +301,12 @@ function Component() {
       }}
       renderChild={(props) => {
         const { values, errors, setFieldValue } = props;
-        console.log(values.building_management_id);
+        // if (
+        //   moduleAccess.length > 0 &&
+        //   typeof values.module_access === "undefined"
+        // ) {
+        //   setFieldValue("module_access", moduleAccess);
+        // }
         if (values.building_management_id !== "") {
           setBmId(values.building_management_id);
         } else if (user.building_management_id != null) {
@@ -403,51 +410,67 @@ function Component() {
               ]}
             />
             {module.length > 0 && (
-              <Input
-                {...props}
-                type="multiselecttable"
-                label="Select Module(s)"
-                name="module_access"
-                defaultValue={
-                  values.module_access
-                    ? values.module_access.map((el) => {
-                        let fullValue = ["create", "read", "update", "delete"];
-                        let inclPrivArr = fullValue;
-                        if (typeof el.access_privilege === "string") {
-                          inclPrivArr = el.access_privilege.split(",");
-                        }
-                        let privilege = {};
-                        inclPrivArr.map((priv) => {
-                          privilege[priv] = true;
-                        });
-                        if (inclPrivArr.length !== fullValue.length) {
-                          let exclPrivArr = fullValue.filter(
-                            (x) => inclPrivArr.indexOf(x) === -1
-                          );
-                          exclPrivArr.map((priv) => {
-                            privilege[priv] = false;
-                          });
-                        }
-                        if (typeof el.access != "undefined") {
-                          let values = {
-                            label: toSentenceCase(el.access.replace("_", " ")),
-                            value: el.access,
-                            id: el.access_id,
-                            type: toSentenceCase(el.access_type),
-                            privilege,
-                          };
-                          return values;
-                        }
-                      })
-                    : []
-                }
-                placeholder="Start typing module access name to add"
-                options={module}
-                onChange={(e, value) => {
-                  setSelectedModule(value);
-                }}
+              <ModuleTable
+                options={[...module]}
+                values={values.module_access}
+                setFieldValue={(value) => setFieldValue("module_access", value)}
               />
             )}
+            {
+              // module.length > 0 &&
+              //   module.map(
+              //     (el) => {
+              //       let radio = [
+              //         { value: "read", label: "Yes" },
+              //         { value: "n", label: "No" },
+              //       ]
+              //       console.log(el);
+              //     }
+              // <Input
+              //   {...props}
+              //   type="multiselecttable"
+              //   label="Select Module(s)"
+              //   name="module_access"
+              //   // defaultValue={moduleAccess}
+              //   // values.module_access
+              //   //   ? values.module_access.map((el) => {
+              //   //       let fullValue = ["create", "read", "update", "delete"];
+              //   //       let inclPrivArr = fullValue;
+              //   //       if (typeof el.access_privilege === "string") {
+              //   //         inclPrivArr = el.access_privilege.split(",");
+              //   //       }
+              //   //       let privilege = {};
+              //   //       inclPrivArr.map((priv) => {
+              //   //         privilege[priv] = true;
+              //   //       });
+              //   //       if (inclPrivArr.length !== fullValue.length) {
+              //   //         let exclPrivArr = fullValue.filter(
+              //   //           (x) => inclPrivArr.indexOf(x) === -1
+              //   //         );
+              //   //         exclPrivArr.map((priv) => {
+              //   //           privilege[priv] = false;
+              //   //         });
+              //   //       }
+              //   //       if (typeof el.access != "undefined") {
+              //   //         let values = {
+              //   //           label: toSentenceCase(el.access.replace("_", " ")),
+              //   //           value: el.access,
+              //   //           id: el.access_id,
+              //   //           type: toSentenceCase(el.access_type),
+              //   //           privilege,
+              //   //         };
+              //   //         return values;
+              //   //       }
+              //   //     })
+              //   //   : []
+              //   // }
+              //   placeholder="Start typing module access name to add"
+              //   options={module}
+              //   onChange={(e, value) => {
+              //     setSelectedModule(value);
+              //   }}
+              // />
+            }
             <Input {...props} label="Staff Id" placeholder="KTP/SIM/Passport" />
             <Input
               {...props}
@@ -518,5 +541,246 @@ function Component() {
     />
   );
 }
+
+const ModuleTable = ({ options, setFieldValue, values }) => {
+  const [moduleAccess, setModuleAccess] = useState([]);
+  const [merged, setMerged] = useState(false);
+
+  useEffect(() => {
+    if (moduleAccess.length === 0) {
+      console.log(options);
+      const newData = [...options];
+      newData.map((item) => {
+        item.privilege = {
+          read: true,
+          create: true,
+          update: true,
+          delete: true,
+        };
+        return item;
+      });
+      setModuleAccess(newData);
+      setFieldValue(newData);
+    }
+  }, [options]);
+
+  useEffect(() => {}, [moduleAccess]);
+  useEffect(() => {
+    console.log(values);
+    if (typeof values === "undefined") {
+      return;
+    }
+    let formatted = values.map((el) => {
+      let fullValue = ["create", "read", "update", "delete"];
+      let inclPrivArr = fullValue;
+      if (typeof el.access_privilege === "string") {
+        inclPrivArr = el.access_privilege.split(",");
+      }
+      let privilege = {};
+      inclPrivArr.map((priv) => {
+        privilege[priv] = true;
+      });
+      if (inclPrivArr.length !== fullValue.length) {
+        let exclPrivArr = fullValue.filter(
+          (x) => inclPrivArr.indexOf(x) === -1
+        );
+        exclPrivArr.map((priv) => {
+          privilege[priv] = false;
+        });
+      }
+      if (typeof el.access !== "undefined") {
+        let value = {
+          label: toSentenceCase(el.access.replace("_", " ")),
+          value: el.access,
+          id: el.access_id,
+          type: toSentenceCase(el.access_type),
+          privilege,
+        };
+        return value;
+      } else {
+        return el;
+      }
+    });
+    if (merged) {
+      return;
+    }
+    let merge = formatted.concat(moduleAccess);
+    merge = [...new Set([...formatted, ...moduleAccess])];
+    console.log(merge, "merged");
+    // let merge = moduleAccess.concat(formatted);
+    // merge = merge.filter((item, index) => {
+    //   return merge.indexOf(item) !== index;
+    // });
+    setModuleAccess([...merge]);
+    setFieldValue([...merge]);
+    setMerged(true);
+  }, [values]);
+
+  const [readAll, setReadAll] = useState(true);
+  const [createAll, setCreateAll] = useState(true);
+  const [updateAll, setUpdateAll] = useState(true);
+  const [deleteAll, setDeleteAll] = useState(true);
+
+  const handleChange = (index, privilege, value) => {
+    const mod = [...moduleAccess];
+    mod[index].privilege[privilege] = value;
+    setModuleAccess([...mod]);
+    setFieldValue(mod);
+  };
+
+  const setAll = (privilege) => {
+    const mod = moduleAccess.map((el) => {
+      let value = true;
+      switch (privilege) {
+        case "read":
+          value = !readAll;
+          setReadAll(value);
+          break;
+        case "create":
+          value = !createAll;
+          setCreateAll(value);
+          break;
+        case "update":
+          value = !updateAll;
+          setUpdateAll(value);
+          break;
+        case "delete":
+          value = !deleteAll;
+          setDeleteAll(value);
+          break;
+      }
+      el.privilege[privilege] = value;
+      return el;
+    });
+    console.log(mod);
+    setModuleAccess([...mod]);
+    setFieldValue(mod);
+  };
+
+  const setIndex = (index, value) => {
+    const mod = [...moduleAccess];
+    mod[index].privilege.read = value;
+    mod[index].privilege.create = value;
+    mod[index].privilege.update = value;
+    mod[index].privilege.delete = value;
+    setModuleAccess([...mod]);
+    setFieldValue(mod);
+  };
+
+  return (
+    <>
+      <div class="Input" style={{ marginBottom: 0 }}>
+        <label class="Input-label">Access Module</label>
+      </div>
+      <div class="css-table">
+        <div class="css-table-header">
+          <div style={{ width: "20%", height: 50, verticalAlign: "middle" }}>
+            Module
+          </div>
+          <div
+            style={{ width: "10%", verticalAlign: "middle", cursor: "pointer" }}
+            onClick={() => setAll("read")}
+          >
+            Read
+          </div>
+          <div
+            style={{ width: "10%", verticalAlign: "middle", cursor: "pointer" }}
+            onClick={() => setAll("create")}
+          >
+            Create
+          </div>
+          <div
+            style={{ width: "10%", verticalAlign: "middle", cursor: "pointer" }}
+            onClick={() => setAll("update")}
+          >
+            Update
+          </div>
+          <div
+            style={{ width: "10%", verticalAlign: "middle", cursor: "pointer" }}
+            onClick={() => setAll("delete")}
+          >
+            Delete
+          </div>
+          <div style={{ width: "10%", verticalAlign: "middle" }}>Type</div>
+          <div style={{ width: "25%" }}></div>
+        </div>
+
+        <div class="css-table-body">
+          {moduleAccess.length > 0 &&
+            moduleAccess.map((el, index) => {
+              return (
+                <div key={index} class="css-table-row">
+                  <div style={{ textAlign: "left" }}>{el.label}</div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      checked={el.privilege.read ? true : false}
+                      onChange={() => {
+                        handleChange(index, "read", !el.privilege.read);
+                      }}
+                      // checked={moduleAccess[index].privilege.read}
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="create"
+                      onChange={() =>
+                        handleChange(index, "create", !el.privilege.create)
+                      }
+                      checked={el.privilege.create}
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="update"
+                      onChange={() =>
+                        handleChange(index, "update", !el.privilege.update)
+                      }
+                      checked={el.privilege.update}
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="checkbox"
+                      value="delete"
+                      onChange={() =>
+                        handleChange(index, "delete", !el.privilege.delete)
+                      }
+                      checked={el.privilege.delete}
+                    />
+                  </div>
+                  <div>
+                    <span>{el.type}</span>
+                  </div>
+                  <div>
+                    <button
+                      type="button"
+                      style={{}}
+                      onClick={() => {
+                        setIndex(index, true);
+                      }}
+                    >
+                      All
+                    </button>
+                    <button
+                      type="button"
+                      style={{ marginLeft: 10 }}
+                      onClick={() => {
+                        setIndex(index, false);
+                      }}
+                    >
+                      None
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+    </>
+  );
+};
 
 export default Component;

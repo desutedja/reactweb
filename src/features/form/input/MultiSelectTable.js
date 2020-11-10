@@ -15,6 +15,7 @@ function MultiSelectTable({
   ...props
 }) {
   const { setFieldValue, name, fixedName, values } = props;
+  setFieldValue("module_access", options);
 
   const onValueChange = (e, val) => {
     onChange(e, val);
@@ -72,12 +73,12 @@ function MultiSelectTable({
         }}
       >
         <FiX
-          enableBackground="#e12029"
-          onClick={onDelete}
+          // enableBackground="#e12029"
+          // onClick={onDelete}
           style={{
-            marginRight: 16,
-            backgroundColor: "#e12029",
-            color: "#ffffff",
+            marginRight: 12,
+            backgroundColor: "transparent",
+            color: "transparent",
             fontSize: 12,
             borderRadius: 20,
             width: 20,

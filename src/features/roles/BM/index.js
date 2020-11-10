@@ -13,7 +13,8 @@ import {
   RiCustomerService2Line,
   RiAdvertisementLine,
 } from "react-icons/ri";
-import { Redirect, Route, useHistory } from "react-router-dom";
+import parser from "html-react-parser";
+import { Redirect, Route, useHistory, Link } from "react-router-dom";
 
 import Template from "../components/Template";
 import Button from "../../../components/Button";
@@ -24,6 +25,7 @@ import Table from "../../../components/Table";
 import ModalDepartment from "../../../features/settings/Department";
 import Tab from "../../../components/Tab";
 import { useSelector, useDispatch } from "react-redux";
+import AutoAnswer from "../../form/AutoAnswer";
 
 import { endpointAdmin, endpointManagement } from "../../../settings";
 import { get, del, setInfo, setConfirmDelete } from "../../slice";
@@ -138,7 +140,12 @@ const autoAssignLabel = {
   ],
 };
 const autoAnswerLabel = {
-  Auto_Answer: ["auto_answer", "auto_answer_text"],
+  Auto_Answer: [
+    "auto_answer",
+    "auto_answer_from",
+    "auto_answer_text",
+    "auto_answer_image",
+  ],
 };
 
 export default () => {
@@ -368,6 +375,9 @@ export default () => {
             ]}
           />
         </div>
+      </Route>
+      <Route path={"/bm/auto-answer"}>
+        <AutoAnswer />
       </Route>
     </Template>
   );
@@ -642,6 +652,24 @@ const AutoAssignSetting = ({ data, labels }) => {
   );
 };
 
+const RenderAutoAnswer = ({ data, el }) => {
+  let text = data[el];
+  if (el === "auto_answer") {
+    text = data[el] === "y" ? "Active" : "Inactive";
+  } else if (el === "auto_answer_image") {
+    text = <img src={data[el]} style={{ width: 150 }} />;
+  } else if (data[el] === " " || data[el] === "") {
+    text = "-";
+  }
+  return (
+    <div className="col" flex={9} style={{ fontWeight: "normal" }}>
+      {el === "auto_answer_text"
+        ? parser(typeof data[el] === "undefined" ? "" : data[el])
+        : text}
+    </div>
+  );
+};
+
 const AutoAnswerSetting = ({ data, labels }) => {
   const { auth } = useSelector((state) => state);
   const [modalAutoAnswer, setModalAutoAnswer] = useState(false);
@@ -741,19 +769,13 @@ const AutoAnswerSetting = ({ data, labels }) => {
                     >
                       {el.replace(/_/g, " ")}
                     </div>
-                    <div
+                    <RenderAutoAnswer data={data} el={el} />
+                    {/* <div
                       className="col"
                       flex={9}
                       style={{ fontWeight: "normal" }}
                     >
-                      {el === "auto_answer"
-                        ? data[el] === "y"
-                          ? "Yes"
-                          : "No"
-                        : data[el] === " " || data[el] === ""
-                        ? "-"
-                        : data[el]}
-                    </div>
+                    </div> */}
                   </div>
                 ) : null;
               })}
@@ -764,10 +786,20 @@ const AutoAnswerSetting = ({ data, labels }) => {
           <Button
             icon={<FiEdit />}
             label="Edit"
-            onClick={() => {
-              setModalAutoAnswer(true);
-            }}
+            onClick={() => history.push({ pathname: "auto-answer" })}
           />
+          {/* <Link>
+            <Button
+              icon={<FiEdit />}
+              label="Edit"
+              onClick={() => {
+                history.push({
+                  pathname: "settings/auto-answer",
+                });
+              }}
+              // state: data,
+            />
+          </Link> */}
         </div>
       </div>
     </>
