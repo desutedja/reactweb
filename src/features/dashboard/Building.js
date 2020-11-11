@@ -638,7 +638,7 @@ function Component() {
               onClick={() => {
                 history.push("/" + auth.role + "/staff", {
                   role: "gm_bm",
-                  roleLabel: "GM BM",
+                  roleLabel: "BM Manager",
                 });
               }}
             >

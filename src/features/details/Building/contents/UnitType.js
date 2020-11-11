@@ -52,7 +52,7 @@ const columnsUnitType = [
   },
 ];
 
-function Component({ view }) {
+function Component({ view, canUpdate, canDelete, canAdd }) {
   const [selectedRow, setRow] = useState({});
   const [edit, setEdit] = useState(false);
   const [addUnitType, setAddUnitType] = useState(false);
@@ -200,7 +200,8 @@ function Component({ view }) {
         actions={
           view
             ? null
-            : [
+            : canAdd
+            ? [
                 <Button
                   key="Add Unit Type"
                   label="Add Unit Type"
@@ -215,26 +216,31 @@ function Component({ view }) {
                   }}
                 />,
               ]
+            : null
         }
         onClickDelete={
           view
             ? null
-            : (row) => {
+            : canDelete
+            ? (row) => {
                 dispatch(
                   setConfirmDelete("Are you sure to delete this item?", () =>
                     dispatch(deleteBuildingUnitType(row))
                   )
                 );
               }
+            : undefined
         }
         onClickEdit={
           view
             ? null
-            : (row) => {
+            : canUpdate
+            ? (row) => {
                 setRow(row);
                 setEdit(true);
                 setAddUnitType(true);
               }
+            : null
         }
       />
     </>

@@ -5,6 +5,7 @@ import MultiSelectInput from "./MultiSelect";
 import RadioInput from "./Radio";
 import FileInput from "./File";
 import Editor from "./Editor";
+import MultiSelectTable from "./MultiSelectTable";
 
 function Input({ optional = false, ...props }) {
   const {
@@ -62,6 +63,14 @@ function Input({ optional = false, ...props }) {
         return <Editor name={fixedName} {...inputProps} />;
       case "multiselect":
         return <MultiSelectInput name={fixedName} {...inputProps} />;
+      case "multiselecttable":
+        return (
+          <MultiSelectTable
+            name={fixedName}
+            {...inputProps}
+            resetForm={resetForm}
+          />
+        );
       case "radio":
         return <RadioInput name={fixedName} {...inputProps} />;
       case "file":
@@ -81,6 +90,7 @@ function Input({ optional = false, ...props }) {
         (type === "textarea" ? " textarea" : "") +
         (type === "select" ? " select" : "") +
         (type === "multiselect" ? " multiselect" : "") +
+        (type === "multiselecttable" ? " multiselecttable" : "") +
         (hidden ? " hidden" : "")
       }
     >

@@ -212,11 +212,18 @@ export function toEllipsis(value, limit) {
 }
 
 export function staffRoleFormatter(role) {
-  return role === "pic_bm"
-    ? "PIC BM "
-    : role === "gm_bm"
-    ? "GM BM "
-    : toSentenceCase(role);
+  switch (role) {
+    case "pic_bm":
+      return "BM Admin";
+    case "gm_bm":
+      return "BM Manager";
+    case "technician":
+      return "Service Staff";
+    case "security":
+      return "Security Staff";
+    default:
+      return toSentenceCase(`${role} staff`);
+  }
 }
 
 export function isToday(momentDate) {
@@ -245,4 +252,46 @@ export function monthEnd() {
 
 export function ageFromBirthdate(birthdate) {
   return moment().diff(moment(birthdate), "year");
+}
+
+export function setModuleAccess(active_module_detail) {
+  const filteredActiveModule = active_module_detail.filter(
+    (el) => el.access_type === "web"
+  );
+  const dashboardModule = [],
+    nonDashboardModule = [];
+  const activeModule = filteredActiveModule?.map((mod) => {
+    let type =
+      mod.access.split("_")[0] === "dashboard"
+        ? mod.access.split("_")[0]
+        : "not_dashboard";
+    let value =
+      mod.access.split("_")[0] === "dashboard"
+        ? mod.access.split("_")[1]
+        : mod.access;
+    let privilege = mod.access_privilege.split(",");
+    let mods = {
+      baseLabel: toSentenceCase(mod.access.replace("_", " ")),
+      label: toSentenceCase(value),
+      baseValue: mod.access,
+      value,
+      type,
+      privilege,
+    };
+    if (type === "dashboard") {
+      mods.path = `/${mods.type}`;
+      mods.subpath = `/${mods.value}`;
+      dashboardModule.push(mods);
+    } else {
+      mods.path = `/${mods.value}`;
+      mods.subpath = ``;
+      nonDashboardModule.push(mods);
+    }
+    return mods;
+  });
+  const access = {
+    mapped: { dashboard: dashboardModule, normal: nonDashboardModule },
+    unmapped: activeModule,
+  };
+  return access;
 }

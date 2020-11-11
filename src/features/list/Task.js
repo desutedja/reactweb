@@ -152,7 +152,7 @@ const prios = [
   { label: "Low", value: "low" },
 ];
 
-function Component({ view }) {
+function Component({ view, canAdd, canUpdate, canDelete }) {
   let dispatch = useDispatch();
   let history = useHistory();
   let { url } = useRouteMatch();
@@ -662,18 +662,19 @@ function Component({ view }) {
             : (selectedRowIds, page) => {
                 return [
                   <>
-                    {Object.keys(selectedRowIds).length > 0 && (
-                      <Button
-                        icon={<FiCheck />}
-                        color="success"
-                        onClick={() => {
-                          setConfirmMultiResolve(true);
-                        }}
-                        label="Resolve All"
-                      />
-                    )}
+                    {Object.keys(selectedRowIds).length > 0 &&
+                      (role === "bm" ? canUpdate : true) && (
+                        <Button
+                          icon={<FiCheck />}
+                          color="success"
+                          onClick={() => {
+                            setConfirmMultiResolve(true);
+                          }}
+                          label="Resolve All"
+                        />
+                      )}
                   </>,
-                  role === "bm" && (
+                  role === "bm" && (role === "bm" ? canAdd : false) && (
                     <Button
                       key="Add Task"
                       label="Add Task"
@@ -690,10 +691,12 @@ function Component({ view }) {
         onClickResolve={
           view
             ? null
-            : (row) => {
+            : (role === "bm" ? canUpdate : true)
+            ? (row) => {
                 setRow(row);
                 setResolve(true);
               }
+            : undefined
         }
         onClickReassign={
           view

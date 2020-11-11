@@ -13,7 +13,8 @@ import {
   RiCustomerService2Line,
   RiAdvertisementLine,
 } from "react-icons/ri";
-import { Redirect, Route } from "react-router-dom";
+import parser from "html-react-parser";
+import { Redirect, Route, useHistory, Link } from "react-router-dom";
 
 import Template from "../components/Template";
 import Button from "../../../components/Button";
@@ -24,10 +25,16 @@ import Table from "../../../components/Table";
 import ModalDepartment from "../../../features/settings/Department";
 import Tab from "../../../components/Tab";
 import { useSelector, useDispatch } from "react-redux";
+import AutoAnswer from "../../form/AutoAnswer";
 
 import { endpointAdmin, endpointManagement } from "../../../settings";
 import { get, del, setInfo, setConfirmDelete } from "../../slice";
-import { setSelected, editBuildingManagement } from "../../slices/building";
+import {
+  setSelected,
+  editBuildingManagement,
+  editBuilding,
+} from "../../slices/building";
+import { logout, setRelogin } from "../../auth/slice";
 
 import Dashboard from "./Dashboard";
 import Ads from "./Ads";
@@ -124,13 +131,29 @@ const labels = {
 const picBmLabels = {
   Fees: ["billing_published", "billing_duedate", "penalty_fee"],
 };
+const autoAssignLabel = {
+  Auto_Assign: [
+    "auto_assign",
+    "auto_assign_limit",
+    "auto_assign_schedule",
+    "auto_assign_schedule_day",
+  ],
+};
+const autoAnswerLabel = {
+  Auto_Answer: [
+    "auto_answer",
+    "auto_answer_from",
+    "auto_answer_text",
+    "auto_answer_image",
+  ],
+};
 
 export default () => {
   const dispatch = useDispatch();
   const { auth, building } = useSelector((state) => state);
   const id = auth.user.building_id;
   const { blacklist_modules } = useSelector((state) => state.auth.user);
-
+  const activeModuleAccess = useSelector((state) => state.auth.access);
   const [departments, setDepartments] = useState([]);
   const [refresh, setRefresh] = useState(true);
   const [data, setData] = useState({});
@@ -147,6 +170,11 @@ export default () => {
   };
 
   useEffect(() => {
+    console.log("sudah logout kah anda?", auth.relogin);
+    if (!auth.relogin) {
+      dispatch(setRelogin());
+      dispatch(logout());
+    }
     dispatch(
       get(endpointAdmin + "/management/building?page=1&limit=9999", (res) => {
         const formatted = res.data.data.items.map((el) => ({
@@ -179,23 +207,33 @@ export default () => {
 
   useEffect(() => {
     const modulesLabel = blacklist_modules?.map((module) => module.module);
+    if (typeof activeModuleAccess.mapped === "undefined") {
+      return null;
+    }
+    const dashboardMenu = activeModuleAccess.mapped.dashboard;
+    const normalMenu = activeModuleAccess.mapped.normal;
     const modulesFilter = menus.filter((menu) => {
-      const truthy = modulesLabel?.some(
-        (label) => label === menu.label.toLowerCase()
+      if (menu.path == "/dashboard") {
+        if (dashboardMenu.length === 0) {
+          return false;
+        }
+        return true;
+      }
+      const truthy = normalMenu?.some(
+        (moduleAcc) => moduleAcc.path === menu.path
       );
-      return !truthy;
+      console.log(menu, !truthy);
+      return truthy;
     });
     const filteredModule = [];
-    console.log(modulesFilter);
     modulesFilter.map((item) => {
-      if (typeof item.subpaths !== "undefined") {
+      if (item.path === "/dashboard" && typeof item.subpaths !== "undefined") {
         if (item.subpaths.length > 0) {
           item.subpaths = item.subpaths.filter((el) => {
-            const truthy = modulesLabel?.some(
-              (label) => `/${label}` === el.toLowerCase()
+            const truthy = dashboardMenu?.some(
+              (moduleAcc) => moduleAcc.subpath === el
             );
-            console.log(truthy);
-            return !truthy;
+            return truthy;
           });
         }
       }
@@ -204,7 +242,7 @@ export default () => {
     console.log(filteredModule);
     setMenus(filteredModule);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [blacklist_modules]);
+  }, [activeModuleAccess]);
 
   useEffect(() => {
     dispatch(
@@ -268,6 +306,8 @@ export default () => {
                     data={data}
                   />
                   <FeesSetting labels={picBmLabels} data={dataBM} />
+                  <AutoAssignSetting labels={autoAssignLabel} data={dataBM} />
+                  <AutoAnswerSetting labels={autoAnswerLabel} data={data} />
                 </div>
               </>,
               <>
@@ -335,6 +375,9 @@ export default () => {
             ]}
           />
         </div>
+      </Route>
+      <Route path={"/bm/auto-answer"}>
+        <AutoAnswer />
       </Route>
     </Template>
   );
@@ -464,6 +507,299 @@ const FeesSetting = ({ data, labels }) => {
               setModalFees(true);
             }}
           />
+        </div>
+      </div>
+    </>
+  );
+};
+
+const AutoAssignSetting = ({ data, labels }) => {
+  const { auth } = useSelector((state) => state);
+  const [modalAutoAssign, setModalAutoAssign] = useState(false);
+
+  const dispatch = useDispatch();
+  console.log(data);
+  return (
+    <>
+      <Modal
+        disableFooter={true}
+        isOpen={modalAutoAssign}
+        title="Edit Auto Assign"
+        toggle={() => setModalAutoAssign(false)}
+      >
+        <Form
+          noContainer={true}
+          showCancel={true}
+          onCancel={() => {
+            setModalAutoAssign(false);
+          }}
+          onSubmit={(dataRef) => {
+            const finalData = {
+              building_id: auth.user.building_id,
+              management_id: auth.user.management_id,
+              ...dataRef,
+            };
+            dispatch(editBuildingManagement(finalData, data.id));
+            setModalAutoAssign(false);
+          }}
+        >
+          <Input
+            label="Auto Assign"
+            type="radio"
+            name="auto_assign"
+            inputValue={data.auto_assign}
+            options={[
+              { value: "y", label: "Yes", id: "y_assign" },
+              { value: "n", label: "No", id: "n_assign" },
+            ]}
+          />
+          <Input
+            label="Task Assignment Limit"
+            type="number"
+            addons="task(s)"
+            inputValue={data.auto_assign_limit}
+          />
+          <Input
+            label="Schedule Next Auto Assign"
+            type="radio"
+            name="auto_assign_schedule"
+            inputValue={data.auto_assign_schedule}
+            options={[
+              { value: "y", label: "Yes", id: "y_schedule" },
+              { value: "n", label: "No", id: "n_schedule" },
+            ]}
+          />
+          <Input
+            label="Schedule Next Auto Assign Day"
+            type="number"
+            addons="day(s)"
+            inputValue={data.auto_assign_schedule_day}
+          />
+        </Form>
+      </Modal>
+      <div className="row mt-4">
+        <div className="col">
+          {Object.keys(labels).map((group, i) => (
+            <div
+              key={i}
+              style={{
+                marginBottom: 16,
+                marginRight: 30,
+              }}
+            >
+              <div
+                style={{
+                  color: "grey",
+                  borderBottom: "1px solid silver",
+                  width: 200,
+                  marginBottom: 8,
+                  marginLeft: 4,
+                }}
+              >
+                {group.replace(/_/g, " ")}
+              </div>
+              {labels[group].map((el, i) => {
+                return !el.disabled ? (
+                  <div
+                    className="row no-gutters"
+                    style={{ padding: "4px", alignItems: "flex-start" }}
+                    key={i}
+                  >
+                    <div
+                      className="col-auto"
+                      flex={3}
+                      style={{
+                        fontWeight: "bold",
+                        textAlign: "left",
+                        minWidth: 200,
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {el == "auto_assign_limit"
+                        ? "Task Assignment Limit"
+                        : el.replace(/_/g, " ")}
+                    </div>
+                    <div
+                      className="col"
+                      flex={9}
+                      style={{ fontWeight: "normal" }}
+                    >
+                      {el === "auto_assign" || el === "auto_assign_schedule"
+                        ? data[el] === "y"
+                          ? "Yes"
+                          : "No"
+                        : el === "auto_assign_limit"
+                        ? data[el]
+                        : "Day " + data[el]}
+                    </div>
+                  </div>
+                ) : null;
+              })}
+            </div>
+          ))}
+        </div>
+        <div className="col-auto d-flex flex-column">
+          <Button
+            icon={<FiEdit />}
+            label="Edit"
+            onClick={() => {
+              setModalAutoAssign(true);
+            }}
+          />
+        </div>
+      </div>
+    </>
+  );
+};
+
+const RenderAutoAnswer = ({ data, el }) => {
+  let text = data[el];
+  if (el === "auto_answer") {
+    text = data[el] === "y" ? "Active" : "Inactive";
+  } else if (el === "auto_answer_image") {
+    text = <img src={data[el]} style={{ width: 150 }} />;
+  } else if (data[el] === " " || data[el] === "") {
+    text = "-";
+  }
+  return (
+    <div className="col" flex={9} style={{ fontWeight: "normal" }}>
+      {el === "auto_answer_text"
+        ? parser(typeof data[el] === "undefined" ? "" : data[el])
+        : text}
+    </div>
+  );
+};
+
+const AutoAnswerSetting = ({ data, labels }) => {
+  const { auth } = useSelector((state) => state);
+  const [modalAutoAnswer, setModalAutoAnswer] = useState(false);
+  const { selected, loading } = useSelector((state) => state.building);
+  const [autoAnswer, setAutoAnswer] = useState(null);
+
+  let history = useHistory();
+
+  const dispatch = useDispatch();
+  if (typeof data.auto_answer != "undefined" && autoAnswer === null) {
+    setAutoAnswer(data.auto_answer);
+  }
+  return (
+    <>
+      <Modal
+        disableFooter={true}
+        isOpen={modalAutoAnswer}
+        title="Edit Fees"
+        toggle={() => setModalAutoAnswer(false)}
+      >
+        <Form
+          noContainer={true}
+          showCancel={true}
+          onCancel={() => {
+            setModalAutoAnswer(false);
+          }}
+          onSubmit={(dataRef) => {
+            const finalData = { ...data, ...dataRef };
+            finalData.auto_answer = autoAnswer;
+            if (finalData.auto_answer == "n") {
+              finalData.auto_answer_text = " ";
+            }
+            console.log(finalData);
+            dispatch(editBuilding(finalData, history, selected.id, auth.role));
+            setModalAutoAnswer(false);
+          }}
+        >
+          <Input
+            label="Auto Answer"
+            type="radio"
+            name="auto_assign"
+            inputValue={autoAnswer}
+            setInputValue={(val) => {
+              setAutoAnswer(val);
+            }}
+            options={[
+              { value: "y", label: "Yes" },
+              { value: "n", label: "No" },
+            ]}
+          />
+          {autoAnswer === "y" && (
+            <Input
+              label="Auto Answer Text"
+              type="textarea"
+              inputValue={data.auto_answer_text}
+            />
+          )}
+        </Form>
+      </Modal>
+      <div className="row mt-4">
+        <div className="col">
+          {Object.keys(labels).map((group, i) => (
+            <div
+              key={i}
+              style={{
+                marginBottom: 16,
+                marginRight: 30,
+              }}
+            >
+              <div
+                style={{
+                  color: "grey",
+                  borderBottom: "1px solid silver",
+                  width: 200,
+                  marginBottom: 8,
+                  marginLeft: 4,
+                }}
+              >
+                {group.replace(/_/g, " ")}
+              </div>
+              {labels[group].map((el, i) => {
+                return !el.disabled ? (
+                  <div
+                    className="row no-gutters"
+                    style={{ padding: "4px", alignItems: "flex-start" }}
+                    key={i}
+                  >
+                    <div
+                      className="col-auto"
+                      flex={3}
+                      style={{
+                        fontWeight: "bold",
+                        textAlign: "left",
+                        minWidth: 200,
+                        textTransform: "capitalize",
+                      }}
+                    >
+                      {el.replace(/_/g, " ")}
+                    </div>
+                    <RenderAutoAnswer data={data} el={el} />
+                    {/* <div
+                      className="col"
+                      flex={9}
+                      style={{ fontWeight: "normal" }}
+                    >
+                    </div> */}
+                  </div>
+                ) : null;
+              })}
+            </div>
+          ))}
+        </div>
+        <div className="col-auto d-flex flex-column">
+          <Button
+            icon={<FiEdit />}
+            label="Edit"
+            onClick={() => history.push({ pathname: "auto-answer" })}
+          />
+          {/* <Link>
+            <Button
+              icon={<FiEdit />}
+              label="Edit"
+              onClick={() => {
+                history.push({
+                  pathname: "settings/auto-answer",
+                });
+              }}
+              // state: data,
+            />
+          </Link> */}
         </div>
       </div>
     </>

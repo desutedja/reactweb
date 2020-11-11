@@ -71,7 +71,7 @@ const columns = [
   },
 ];
 
-function Component({ view }) {
+function Component({ view, canAdd }) {
   const { role, user } = useSelector((state) => state.auth);
 
   const [loading, setLoading] = useState(false);
@@ -221,6 +221,8 @@ function Component({ view }) {
         getAction={getResident}
         actions={
           view
+            ? null
+            : (role === "bm" ? !canAdd : false)
             ? null
             : [
                 <Button
