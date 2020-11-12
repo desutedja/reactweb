@@ -17,6 +17,7 @@ import billing from "./features/slices/billing";
 import staff from "./features/slices/staff";
 import task from "./features/slices/task";
 import merchant from "./features/slices/merchant";
+import vouchers from "./features/slices/vouchers";
 import product from "./features/slices/product";
 import transaction from "./features/slices/transaction";
 import ads from "./features/slices/ads";
@@ -47,6 +48,7 @@ const reducers = combineReducers({
   chat,
   admin,
   notification,
+  vouchers,
 });
 
 const persistConfig = {

@@ -43,7 +43,6 @@ test:
 	docker run -dt -p 80:80 --name appsweb appsweb:latest
 
 deploy-dev:
-	firebase deploy --only hosting:yipy-dev-management
-	firebase deploy --only hosting:yipy-dev-admin
+	firebase deploy
 
 .PHONY: build endpoint npmbuild push start test
