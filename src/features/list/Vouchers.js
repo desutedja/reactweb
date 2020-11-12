@@ -10,11 +10,7 @@ import Pill from "../../components/Pill";
 import Tile from "../../components/Tile";
 // import { getMerchant, setSelected, deleteMerchant } from "../slices/merchant";
 import { toSentenceCase, dateTimeFormatterCell, toMoney } from "../../utils";
-import {
-  merchant_types,
-  endpointMerchant,
-  endpointAdmin,
-} from "../../settings";
+import { endpointAdmin } from "../../settings";
 import { get } from "../slice";
 
 import Template from "./components/Template";
@@ -205,8 +201,8 @@ function Component({ view }) {
           ? null
           : [
               <Button
-                key="Add Merchant"
-                label="Add Merchant"
+                key="Add Voucher"
+                label="Add Voucher"
                 icon={<FiPlus />}
                 onClick={() => {
                   dispatch(setSelected({}));

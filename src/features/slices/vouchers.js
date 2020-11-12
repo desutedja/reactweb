@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { endpointAdmin } from "../../settings";
-import { get, post, del, patch, setInfo } from "../slice";
+import { get, post, del, patch, setInfo, put } from "../slice";
 
 const voucherEndpoint = endpointAdmin + "/centratama/vouchers";
 
@@ -169,6 +169,37 @@ export const deleteVoucher = (row, history) => (dispatch, getState) => {
       (res) => {
         history && history.push("/" + auth.role + "/merchant");
 
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Merchant has been deleted.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const distributeVoucher = (id, voucherId, history) => (
+  dispatch,
+  getState
+) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    patch(
+      voucherEndpoint + "/distribute/" + id,
+      (res) => {
+        history && history.push("/" + auth.role + "/vouchers/" + voucherId);
         dispatch(refresh());
 
         dispatch(

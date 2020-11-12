@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Button from "../../../components/Button";
 import { FiCheck } from "react-icons/fi";
@@ -9,9 +9,9 @@ import Modal from "../../../components/Modal";
 import { useHistory, useParams } from "react-router-dom";
 import { get } from "../../slice";
 import { endpointAdmin } from "../../../settings";
-import { setSelected, deleteMerchant } from "../../slices/merchant";
 import { toMoney, toSentenceCase } from "../../../utils";
 import Table from "../../../components/Table";
+import { distributeVoucher, setSelected } from "../../slices/vouchers";
 
 const columnsCategories = [
   { Header: "ID", accessor: (row) => row.category_id },
@@ -19,44 +19,6 @@ const columnsCategories = [
   {
     Header: "Limit",
     accessor: "limit",
-  },
-];
-const columnsCodes = [
-  { Header: "ID", accessor: (row) => row.id },
-  { Header: "Voucher Code", accessor: "voucher_code" },
-  {
-    Header: "Usage",
-    accessor: (row) => {
-      const sum = row.categories.reduce((a, b) => a + (b.usage || 0), 0);
-      // row.categories;
-      return sum;
-    },
-  },
-  {
-    Header: "Limit",
-    accessor: (row) => {
-      const sum = row.categories.reduce((a, b) => a + (b.limit || 0), 0);
-      // row.categories;
-      return sum;
-    },
-  },
-  {
-    Header: "Distributed",
-    accessor: (row) => {
-      return row.distributed === "y" ? "Yes" : "No";
-    },
-  },
-  {
-    Header: "Distribute",
-    accessor: (row) => {
-      return (
-        <Button
-          disabled={row.distributed === "y" ? true : false}
-          icon={<FiCheck />}
-          label="Distribute Check"
-        />
-      );
-    },
   },
 ];
 const info = {
@@ -105,12 +67,57 @@ const voucherCodes = {
 function Component({ view }) {
   const [data, setData] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [confirmDistribute, setConfirmDistribute] = useState(false);
+  const [voucherCodeId, setVoucherCodeId] = useState(null);
   const [categories, setCategories] = useState([]);
   const [codes, setCodes] = useState([]);
+  const { loading, refreshToggle } = useSelector((state) => state.vouchers);
 
   let dispatch = useDispatch();
   let history = useHistory();
   let { id } = useParams();
+  const columnsCodes = [
+    { Header: "ID", accessor: (row) => row.id },
+    { Header: "Voucher Code", accessor: "voucher_code" },
+    {
+      Header: "Usage",
+      accessor: (row) => {
+        const sum = row.categories.reduce((a, b) => a + (b.usage || 0), 0);
+        // row.categories;
+        return sum;
+      },
+    },
+    {
+      Header: "Limit",
+      accessor: (row) => {
+        const sum = row.categories.reduce((a, b) => a + (b.limit || 0), 0);
+        // row.categories;
+        return sum;
+      },
+    },
+    {
+      Header: "Distributed",
+      accessor: (row) => {
+        return row.distributed === "y" ? "Yes" : "No";
+      },
+    },
+    {
+      Header: "Distribute",
+      accessor: (row) => {
+        return (
+          <Button
+            disabled={row.distributed === "y" ? true : false}
+            icon={<FiCheck />}
+            label="Distribute Voucher"
+            onClick={() => {
+              setVoucherCodeId(row.id);
+              setConfirmDistribute(true);
+            }}
+          />
+        );
+      },
+    },
+  ];
 
   useEffect(() => {
     dispatch(
@@ -122,7 +129,7 @@ function Component({ view }) {
         const newCats = [];
         for (var i = 0; i < cats.length; i++) {
           const el = cats[i];
-          const check = newCats.filter((i) => i.id === el.category_id);
+          const check = newCats.filter((x) => x.category_id === el.category_id);
           if (check.length > 0) {
             break;
           }
@@ -141,22 +148,27 @@ function Component({ view }) {
         setCodes(newCods);
       })
     );
-  }, [id, dispatch]);
+  }, [dispatch, refreshToggle]);
 
-  useEffect(() => {}, [codes]);
+  useEffect(() => {
+    console.log(codes);
+  }, [codes]);
 
   return (
     <>
       <Modal
-        isOpen={confirmDelete}
+        isOpen={confirmDistribute}
         btnDanger
         disableHeader={true}
-        onClick={() => dispatch(deleteMerchant(data, history))}
-        toggle={() => setConfirmDelete(false)}
-        okLabel={"Delete"}
+        onClick={() => {
+          dispatch(distributeVoucher(voucherCodeId, id, history));
+          setConfirmDistribute(false);
+        }}
+        toggle={() => setConfirmDistribute(false)}
+        okLabel={"Distribute"}
         cancelLabel={"Cancel"}
       >
-        Are you sure you want to delete merchant <b>{data.name}</b>?
+        Are you sure you want to distribute this voucher code?
       </Modal>
       <Template
         // image={data.logo || "placeholder"}

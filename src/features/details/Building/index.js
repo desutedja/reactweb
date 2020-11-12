@@ -99,9 +99,9 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
     />,
     <Module
       view={view}
-      canUpdate={auth.role == "bm" ? canUpdate : true}
-      canAdd={auth.role == "bm" ? canAdd : true}
-      canDelete={auth.role == "bm" ? canDelete : true}
+      canUpdate={auth.role === "bm" ? canUpdate : true}
+      canAdd={auth.role === "bm" ? canAdd : true}
+      canDelete={auth.role === "bm" ? canDelete : true}
     />,
   ];
   const contentsBM = [
