@@ -28,7 +28,8 @@ const columnsSection = [
   { Header: "Type", accessor: (row) => toSentenceCase(row.section_type) },
 ];
 
-function Component({ view = false, canUpdate, canDelete, canAdd }) {
+function Component({ view = false, canUpdate, canDelete, canAdd }, props) {
+  console.log(props);
   const [selectedRow, setRow] = useState({});
   const [edit, setEdit] = useState(false);
 
@@ -164,7 +165,7 @@ function Component({ view = false, canUpdate, canDelete, canAdd }) {
         actions={
           view
             ? null
-            : canUpdate
+            : canAdd
             ? [
                 <Button
                   key="Add Section"
@@ -198,11 +199,13 @@ function Component({ view = false, canUpdate, canDelete, canAdd }) {
         onClickEdit={
           view
             ? null
-            : canUpdate ? (row) => {
+            : canUpdate
+            ? (row) => {
                 setRow(row);
                 setEdit(true);
                 setAddSection(true);
-              } : null
+              }
+            : null
         }
       />
     </>
