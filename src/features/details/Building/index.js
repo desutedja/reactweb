@@ -49,6 +49,7 @@ const tabsBM = ["Section", "Unit Type", "Unit", "Billing Service"];
 function Component({ view, canUpdate, canAdd, canDelete }) {
   const [data, setData] = useState({});
   const { auth } = useSelector((state) => state);
+  console.log(auth.role, canAdd, canUpdate, canDelete);
 
   const [confirmDelete, setConfirmDelete] = useState(false);
 
@@ -62,36 +63,39 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
       data={data}
       labels={labels}
       onDelete={() => setConfirmDelete(true)}
+      canUpdate={auth.role === "bm" ? canUpdate : true}
+      canAdd={auth.role === "bm" ? canAdd : true}
+      canDelete={auth.role === "bm" ? canDelete : true}
     />,
     <Section
       view={view}
-      canUpdate={auth.role == "bm" ? canUpdate : true}
-      canAdd={auth.role == "bm" ? canAdd : true}
-      canDelete={auth.role == "bm" ? canDelete : true}
+      canUpdate={auth.role === "bm" ? canUpdate : true}
+      canAdd={auth.role === "bm" ? canAdd : true}
+      canDelete={auth.role === "bm" ? canDelete : true}
     />,
     <UnitType
       view={view}
-      canUpdate={auth.role == "bm" ? canUpdate : true}
-      canAdd={auth.role == "bm" ? canAdd : true}
-      canDelete={auth.role == "bm" ? canDelete : true}
+      canUpdate={auth.role === "bm" ? canUpdate : true}
+      canAdd={auth.role === "bm" ? canAdd : true}
+      canDelete={auth.role === "bm" ? canDelete : true}
     />,
     <Unit
       view={view}
-      canUpdate={auth.role == "bm" ? canUpdate : true}
-      canAdd={auth.role == "bm" ? canAdd : true}
-      canDelete={auth.role == "bm" ? canDelete : true}
+      canUpdate={auth.role === "bm" ? canUpdate : true}
+      canAdd={auth.role === "bm" ? canAdd : true}
+      canDelete={auth.role === "bm" ? canDelete : true}
     />,
     <Service
       view={view}
-      canUpdate={auth.role == "bm" ? canUpdate : true}
-      canAdd={auth.role == "bm" ? canAdd : true}
-      canDelete={auth.role == "bm" ? canDelete : true}
+      canUpdate={auth.role === "bm" ? canUpdate : true}
+      canAdd={auth.role === "bm" ? canAdd : true}
+      canDelete={auth.role === "bm" ? canDelete : true}
     />,
     <Management
       view={view}
-      canUpdate={auth.role == "bm" ? canUpdate : true}
-      canAdd={auth.role == "bm" ? canAdd : true}
-      canDelete={auth.role == "bm" ? canDelete : true}
+      canUpdate={auth.role === "bm" ? canUpdate : true}
+      canAdd={auth.role === "bm" ? canAdd : true}
+      canDelete={auth.role === "bm" ? canDelete : true}
     />,
     <Module
       view={view}
@@ -100,7 +104,28 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
       canDelete={auth.role == "bm" ? canDelete : true}
     />,
   ];
-  const contentsBM = [<Section />, <UnitType />, <Unit />, <Service />];
+  const contentsBM = [
+    <Section
+      canUpdate={auth.role === "bm" ? canUpdate : true}
+      canAdd={auth.role === "bm" ? canAdd : true}
+      canDelete={auth.role === "bm" ? canDelete : true}
+    />,
+    <UnitType
+      canUpdate={auth.role === "bm" ? canUpdate : true}
+      canAdd={auth.role === "bm" ? canAdd : true}
+      canDelete={auth.role === "bm" ? canDelete : true}
+    />,
+    <Unit
+      canUpdate={auth.role === "bm" ? canUpdate : true}
+      canAdd={auth.role === "bm" ? canAdd : true}
+      canDelete={auth.role === "bm" ? canDelete : true}
+    />,
+    <Service
+      canUpdate={auth.role === "bm" ? canUpdate : true}
+      canAdd={auth.role === "bm" ? canAdd : true}
+      canDelete={auth.role === "bm" ? canDelete : true}
+    />,
+  ];
 
   useEffect(() => {
     dispatch(
@@ -125,6 +150,9 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         Are you sure you want to delete building <b>{data.name}</b>?
       </Modal>
       <Template
+        canUpdate={auth.role === "bm" ? canUpdate : true}
+        canAdd={auth.role === "bm" ? canAdd : true}
+        canDelete={auth.role === "bm" ? canDelete : true}
         activeTab={history.location.state ? history.location.state.tab : 0}
         image={auth.role === "sa" && data.logo}
         title={data.name}
