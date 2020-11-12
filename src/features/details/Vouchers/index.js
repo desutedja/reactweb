@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+import Button from "../../../components/Button";
+import { FiCheck } from "react-icons/fi";
 import Detail from "../components/Detail";
 import Template from "../components/Template";
 import Modal from "../../../components/Modal";
@@ -8,69 +10,103 @@ import { useHistory, useParams } from "react-router-dom";
 import { get } from "../../slice";
 import { endpointAdmin } from "../../../settings";
 import { setSelected, deleteMerchant } from "../../slices/merchant";
-import { toMoney } from "../../../utils";
+import { toMoney, toSentenceCase } from "../../../utils";
+import Table from "../../../components/Table";
 
+const columnsCategories = [
+  { Header: "ID", accessor: (row) => row.category_id },
+  { Header: "Category Name", accessor: "category_name" },
+  {
+    Header: "Limit",
+    accessor: "limit",
+  },
+];
+const columnsCodes = [
+  { Header: "ID", accessor: (row) => row.id },
+  { Header: "Voucher Code", accessor: "voucher_code" },
+  {
+    Header: "Usage",
+    accessor: (row) => {
+      const sum = row.categories.reduce((a, b) => a + (b.usage || 0), 0);
+      // row.categories;
+      return sum;
+    },
+  },
+  {
+    Header: "Limit",
+    accessor: (row) => {
+      const sum = row.categories.reduce((a, b) => a + (b.limit || 0), 0);
+      // row.categories;
+      return sum;
+    },
+  },
+  {
+    Header: "Distributed",
+    accessor: (row) => {
+      return row.distributed === "y" ? "Yes" : "No";
+    },
+  },
+  {
+    Header: "Distribute",
+    accessor: (row) => {
+      return (
+        <Button
+          disabled={row.distributed === "y" ? true : false}
+          icon={<FiCheck />}
+          label="Distribute Check"
+        />
+      );
+    },
+  },
+];
 const info = {
   Information: [
     "id",
-    "name",
-    "description",
-    "created_on",
-    "type",
-    "legal",
-    "category",
     {
-      label: "building_list",
+      label: "prefix",
+      lfmt: (v) => "Campaign Name ",
       vfmt: (v) => {
-        return v.map((el, i) => el.name + (i === v.length - 1 ? "" : ", "));
-      },
-    },
-    "address",
-    "district_name",
-    "city_name",
-    "province_name",
-    "lat",
-    "long",
-    {
-      label: "free_deliv",
-      lfmt: (v) => "Next Day Delivery",
-      vfmt: (v) => {
-        return parseInt(v) === 1 ? "Yes" : "No";
+        return v;
       },
     },
     {
-      label: "free_deliv_min",
-      lfmt: (v) => "Next Day Delivery Min ",
+      label: "discount_type",
+      lfmt: (v) => "Discount Type",
       vfmt: (v) => {
-        if (v === 0) return "-";
+        return toSentenceCase(v);
+      },
+    },
+    {
+      label: "discount",
+      lfmt: (v) => "Discount",
+      vfmt: (v) => {
+        if (v < 100) {
+          return `${v} %`;
+        }
         return toMoney(v);
       },
     },
     {
-      label: "courier_fee",
+      label: "building_name",
+      lfmt: (v) => "Target Building",
       vfmt: (v) => {
-        if (v === 0) return "-";
-        return toMoney(v);
+        return toSentenceCase(v);
       },
     },
-    "open_at",
-    "closed_at",
-    "status",
-    "status_updated",
+    "total_voucher_codes",
+    "total_distributed",
   ],
 };
 
-const pic = {
-  Information: ["pic_name", "pic_phone", "pic_mail"],
-};
-
-const account = {
-  Information: ["account_bank", "account_no", "account_name"],
+const voucherCodes = {
+  Information: ["copic_name", "pic_phone", "pic_mail"],
 };
 
 function Component({ view }) {
   const [data, setData] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [codes, setCodes] = useState([]);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -82,9 +118,32 @@ function Component({ view }) {
         // res.data.data.free_deliv = res.data.data.free_deliv.toString();
         setData(res.data.data);
         dispatch(setSelected(res.data.data));
+        const cats = res.data.data.categories;
+        const newCats = [];
+        for (var i = 0; i < cats.length; i++) {
+          const el = cats[i];
+          const check = newCats.filter((i) => i.id === el.category_id);
+          if (check.length > 0) {
+            break;
+          }
+          newCats.push(el);
+        }
+        setCategories(newCats);
+
+        const cods = res.data.data.codes;
+        const newCods = [];
+        cods.map((el) => {
+          const item = { ...el, categories: [] };
+          const catego = cats.filter((i) => i.voucher_code_id === el.id);
+          item.categories = catego;
+          newCods.push(item);
+        });
+        setCodes(newCods);
       })
     );
   }, [id, dispatch]);
+
+  useEffect(() => {}, [codes]);
 
   return (
     <>
@@ -100,22 +159,70 @@ function Component({ view }) {
         Are you sure you want to delete merchant <b>{data.name}</b>?
       </Modal>
       <Template
-        image={data.logo || "placeholder"}
+        // image={data.logo || "placeholder"}
         title={data.name}
         phone={data.phone}
         loading={!data.id}
-        labels={["Details", "Contact Person", "Bank Account"]}
+        labels={["Details", "Voucher Codes"]}
         contents={[
-          <Detail
-            view={view}
-            data={data}
-            labels={info}
-            onDelete={() => setConfirmDelete(true)}
-          />,
-          <Detail view={view} data={data} labels={pic} />,
-          <Detail view={view} data={data} labels={account} />,
+          <>
+            <Detail
+              view={view}
+              data={data}
+              labels={info}
+              editable={false}
+              // onDelete={() => setConfirmDelete(true)}
+            />
+            {categories.length > 0 && (
+              <>
+                <div
+                  style={{
+                    color: "grey",
+                    borderBottom: "1px solid silver",
+                    width: 200,
+                    marginBottom: 8,
+                    marginLeft: 4,
+                  }}
+                >
+                  Category
+                </div>
+                <Table
+                  expander={false}
+                  noSearch={true}
+                  pagination={false}
+                  columns={columnsCategories}
+                  data={categories}
+                />
+              </>
+            )}
+          </>,
+          <>
+            {codes.length > 0 && (
+              <>
+                <div
+                  style={{
+                    color: "grey",
+                    borderBottom: "1px solid silver",
+                    width: 200,
+                    marginBottom: 8,
+                    marginLeft: 4,
+                  }}
+                >
+                  Voucher Codes
+                </div>
+                <Table
+                  expander={false}
+                  noSearch={true}
+                  pagination={false}
+                  columns={columnsCodes}
+                  data={codes}
+                />
+              </>
+            )}
+          </>,
+          // <Detail view={view} data={data} labels={voucherCodes} />,
         ]}
-      />
+      ></Template>
     </>
   );
 }
