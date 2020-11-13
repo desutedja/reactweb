@@ -320,6 +320,14 @@ function Component() {
                       third={toMoney(data.payment_charge)}
                     />
                     <ThreeColumn
+                      second="Voucher Code"
+                      third={data.voucher_code}
+                    />
+                    <ThreeColumn
+                      second="Total Voucher Discount"
+                      third={toMoney(data.total_voucher_discount)}
+                    />
+                    <ThreeColumn
                       second={<b>Total Paid Amount</b>}
                       third={<b>{toMoney(data.payment_amount)}</b>}
                     />
