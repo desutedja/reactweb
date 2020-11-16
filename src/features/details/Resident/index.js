@@ -67,6 +67,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
     );
   }, [dispatch, id]);
 
+  console.log(canDelete);
   return (
     <>
       <Modal
@@ -97,7 +98,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
             labels={details}
             onDelete={
               role === "bm"
-                ? !canDelete
+                ? canDelete
                 : false
                 ? undefined
                 : () => setConfirmDelete(true)
