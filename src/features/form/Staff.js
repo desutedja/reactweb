@@ -324,6 +324,18 @@ function Component() {
         if (values.staff_role === "security") setTypeDepartment("security");
         if (values.staff_role === "gm_bm") setTypeDepartment("all");
 
+        if (
+          values.departments.length > 0 &&
+          typeof values.department_ids === "undefined"
+        ) {
+          const departmentIDs = values.departments.map((el) => ({
+            label: el.department_name,
+            value: el.id,
+          }));
+          console.log(values.department_ids);
+          setSelectedDepartment(departmentIDs);
+          setFieldValue("department_ids", departmentIDs);
+        }
         return (
           <Form className="Form">
             {!selected.id && (
