@@ -325,6 +325,7 @@ function Component() {
         if (values.staff_role === "gm_bm") setTypeDepartment("all");
 
         if (
+          typeof values.departments != "undefined" &&
           values.departments.length > 0 &&
           typeof values.department_ids === "undefined"
         ) {
