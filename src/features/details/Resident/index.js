@@ -67,7 +67,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
     );
   }, [dispatch, id]);
 
-  console.log(canDelete);
+  console.log(role, canDelete);
   return (
     <>
       <Modal
@@ -96,13 +96,16 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
             view={view}
             data={data}
             labels={details}
-            onDelete={
-              role === "bm"
-                ? canDelete
-                : false
-                ? undefined
-                : () => setConfirmDelete(true)
-            }
+            onDelete={() => {
+              if (role === "bm") {
+                if (canDelete) {
+                  return setConfirmDelete(true);
+                } else {
+                  return undefined;
+                }
+              }
+              return setConfirmDelete(true);
+            }}
           />,
           <Unit
             canAdd={role === "bm" ? canAdd : true}
