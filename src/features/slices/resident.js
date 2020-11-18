@@ -1,11 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { endpointResident } from '../../settings';
-import { get, post, del, put, setInfo } from '../slice';
+import { createSlice } from "@reduxjs/toolkit";
+import { endpointResident } from "../../settings";
+import { get, post, del, put, setInfo } from "../slice";
 
-const residentEndpoint = endpointResident + '/management/resident';
+const residentEndpoint = endpointResident + "/management/resident";
 
 export const slice = createSlice({
-  name: 'resident',
+  name: "resident",
   initialState: {
     loading: false,
     items: [],
@@ -78,236 +78,323 @@ export const {
 } = slice.actions;
 
 export const getResident = (
-  pageIndex, pageSize,
-  search = '', status = '', kyc = ''
-) => dispatch => {
+  pageIndex,
+  pageSize,
+  search = "",
+  status = "",
+  kyc = "",
+  online = "",
+  onboarding = ""
+) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(residentEndpoint + '/read' +
-    '?page=' + (pageIndex + 1) +
-    '&limit=' + pageSize +
-    '&search=' + search +
-    '&kyc=' + kyc +
-    '&status=' + status +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&status=',
+  dispatch(
+    get(
+      residentEndpoint +
+        "/read" +
+        "?page=" +
+        (pageIndex + 1) +
+        "&limit=" +
+        pageSize +
+        "&search=" +
+        search +
+        "&kyc=" +
+        kyc +
+        "&status=" +
+        status +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&online=" +
+        online +
+        "&onboarding=" +
+        onboarding,
+      (res) => {
+        dispatch(setData(res.data.data));
 
-    res => {
-      dispatch(setData(res.data.data));
-
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
 export const createResident = (data, history) => (dispatch, getState) => {
   dispatch(startAsync());
 
   const { auth } = getState();
 
-  dispatch(post(residentEndpoint + '/register/parent', data,
-    res => {
-      // history.push('/' + auth.role + "/resident");
-      history.push(`${res.data.data.id}`);
+  dispatch(
+    post(
+      residentEndpoint + "/register/parent",
+      data,
+      (res) => {
+        // history.push('/' + auth.role + "/resident");
+        history.push(`${res.data.data.id}`);
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Resident has been created.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Resident has been created.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const editResident = (data, history, id) => dispatch => {
+export const editResident = (data, history, id) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(put(residentEndpoint + '/edit', { ...data, id: id },
-    res => {
-      dispatch(setSelected(res.data.data));
-      history.push(`${id}`);
+  dispatch(
+    put(
+      residentEndpoint + "/edit",
+      { ...data, id: id },
+      (res) => {
+        dispatch(setSelected(res.data.data));
+        history.push(`${id}`);
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Resident has been edited.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Resident has been edited.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
 export const deleteResident = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
 
   const { auth } = getState();
 
-  dispatch(del(residentEndpoint + '/delete/' + row.id,
-    res => {
-      history && history.push('/' + auth.role + '/resident');
+  dispatch(
+    del(
+      residentEndpoint + "/delete/" + row.id,
+      (res) => {
+        history && history.push("/" + auth.role + "/resident");
 
-      dispatch(refresh());
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Resident has been deleted.'
-      }));
-      dispatch(stopAsync())
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Resident has been deleted.",
+          })
+        );
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const getResidentDetails = (row, history, url) => dispatch => {
+export const getResidentDetails = (row, history, url) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(residentEndpoint + '/detail/' + row.id,
-    res => {
-      dispatch(setSelected(res.data.data));
-      history.push(url + '/details');
+  dispatch(
+    get(
+      residentEndpoint + "/detail/" + row.id,
+      (res) => {
+        dispatch(setSelected(res.data.data));
+        history.push(url + "/details");
 
-      dispatch(stopAsync())
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const getSubaccount = (pageIndex, pageSize, search, id) => dispatch => {
+export const getSubaccount = (pageIndex, pageSize, search, id) => (
+  dispatch
+) => {
   dispatch(startAsync());
 
-  dispatch(get(residentEndpoint + '/subaccount' +
-    '?page=' + (pageIndex + 1) +
-    '&id=' + id +
-    '&limit=' + pageSize +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&search=' + search,
+  dispatch(
+    get(
+      residentEndpoint +
+        "/subaccount" +
+        "?page=" +
+        (pageIndex + 1) +
+        "&id=" +
+        id +
+        "&limit=" +
+        pageSize +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&search=" +
+        search,
 
-    res => {
-      dispatch(setSubaccountData(res.data.data));
-      console.log("->", res);
+      (res) => {
+        dispatch(setSubaccountData(res.data.data));
+        console.log("->", res);
 
-      dispatch(stopAsync())
-    },
-    err => {
-      dispatch(stopAsync());
-    }
-  ))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const getResidentUnit = (pageIndex, pageSize, search, id) => dispatch => {
+export const getResidentUnit = (pageIndex, pageSize, search, id) => (
+  dispatch
+) => {
   dispatch(startAsync());
 
-  dispatch(get(residentEndpoint + '/unit' +
-    '?page=' + (pageIndex + 1) +
-    '&id=' + id +
-    '&limit=' + pageSize +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&search=' + search,
+  dispatch(
+    get(
+      residentEndpoint +
+        "/unit" +
+        "?page=" +
+        (pageIndex + 1) +
+        "&id=" +
+        id +
+        "&limit=" +
+        pageSize +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&search=" +
+        search,
 
-    res => {
-      console.log(res.data.data);
-      dispatch(setUnitData(res.data.data));
+      (res) => {
+        console.log(res.data.data);
+        dispatch(setUnitData(res.data.data));
 
-      dispatch(stopAsync())
-    },
-    err => {
-      dispatch(stopAsync());
-    }
-  ))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const addResidentUnit = (data) => dispatch => {
+export const addResidentUnit = (data) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(post(residentEndpoint + '/add_unit', data,
-    res => {
-      dispatch(refresh());
+  dispatch(
+    post(
+      residentEndpoint + "/add_unit",
+      data,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Resident unit has been created.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Resident unit has been created.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const addSubaccount = (data) => dispatch => {
+export const addSubaccount = (data) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(post(residentEndpoint + '/add_unit', data,
-    res => {
-      dispatch(refresh());
+  dispatch(
+    post(
+      residentEndpoint + "/add_unit",
+      data,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Resident subaccount has been created.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Resident subaccount has been created.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const deleteUnit = data => dispatch => {
+export const deleteUnit = (data) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(put(residentEndpoint + '/delete_unit_sub', data,
-    res => {
-      dispatch(refresh());
+  dispatch(
+    put(
+      residentEndpoint + "/delete_unit_sub",
+      data,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Resident unit has been deleted.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Resident unit has been deleted.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }
-  ))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const deleteSubaccount = (unit, parent, owner) => dispatch => {
+export const deleteSubaccount = (unit, parent, owner) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(put(residentEndpoint + '/delete_unit_sub',
-    {
-      "delete": [
-        {
-          "unit_id": unit,
-          "owner_id": owner
-        }
-      ]
-    },
-    res => {
-      dispatch(refresh());
+  dispatch(
+    put(
+      residentEndpoint + "/delete_unit_sub",
+      {
+        delete: [
+          {
+            unit_id: unit,
+            owner_id: owner,
+          },
+        ],
+      },
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Resident subaacount has been deleted.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Resident subaacount has been deleted.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
 export default slice.reducer;

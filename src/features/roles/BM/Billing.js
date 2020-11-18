@@ -25,7 +25,6 @@ function Component() {
     let access = activeModuleAccess.unmapped.filter((item) => {
       return item.value == page;
     });
-    console.log(access);
     if (access.length > 0) {
       access = access[0].privilege;
     }

@@ -538,7 +538,6 @@ const AutoAssignSetting = ({ data, labels }) => {
               auto_assign_schedule_day: dataRef.schedule_next_auto_assign_day,
               ...dataRef,
             };
-            console.log(finalData);
             dispatch(editBuildingManagement(finalData, data.id));
             setModalAutoAssign(false);
           }}

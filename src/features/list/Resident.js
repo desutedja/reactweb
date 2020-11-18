@@ -20,7 +20,9 @@ import {
   endpointResident,
   resident_statuses,
   resident_kyc_statuses,
+  online_status,
   kyccolor,
+  onboarding_status,
 } from "../../settings";
 
 const columns = [
@@ -46,6 +48,15 @@ const columns = [
       </Pill>
     ),
     sorting: "onboarding",
+  },
+  {
+    Header: "Online",
+    accessor: (row) => (
+      <Pill color={row.online === "yes" ? "success" : "secondary"}>
+        {toSentenceCase(row.online)}
+      </Pill>
+    ),
+    sorting: "online",
   },
   {
     Header: "Email",
@@ -84,6 +95,10 @@ function Component({ view, canAdd }) {
   const [statusLabel, setStatusLabel] = useState("");
   const [KYCStatus, setKYCStatus] = useState("");
   const [KYCStatusLabel, setKYCStatusLabel] = useState("");
+  const [onlineStatus, setOnlineStatus] = useState("");
+  const [onlineStatusLabel, setOnlineStatusLabel] = useState("");
+  const [onboardingStatus, setOnboardingStatus] = useState("");
+  const [onboardingStatusLabel, setOnboardingStatusLabel] = useState("");
 
   let fileInput = useRef();
 
@@ -245,7 +260,7 @@ function Component({ view, canAdd }) {
               ]
         }
         deleteAction={view ? null : role === "sa" && deleteResident}
-        filterVars={[status, KYCStatus]}
+        filterVars={[status, KYCStatus, onlineStatus, onboardingStatus]}
         filters={[
           {
             hidex: status === "",
@@ -292,6 +307,62 @@ function Component({ view, canAdd }) {
                 onClick={(el) => {
                   setKYCStatus(el.value);
                   setKYCStatusLabel(el.label);
+                  toggleModal(false);
+                }}
+              />
+            ),
+          },
+          {
+            hidex: onlineStatus === "",
+            label: (
+              <p>
+                {onlineStatus
+                  ? "Online : " + onlineStatusLabel
+                  : "Online : All"}
+              </p>
+            ),
+            delete: () => {
+              setOnlineStatus("");
+            },
+            component: (toggleModal) => (
+              <Filter
+                data={online_status}
+                onClickAll={() => {
+                  setOnlineStatus("");
+                  setOnlineStatusLabel("");
+                  toggleModal(false);
+                }}
+                onClick={(el) => {
+                  setOnlineStatus(el.value);
+                  setOnlineStatusLabel(el.label);
+                  toggleModal(false);
+                }}
+              />
+            ),
+          },
+          {
+            hidex: onboardingStatus === "",
+            label: (
+              <p>
+                {onboardingStatus
+                  ? "Onboarding : " + onboardingStatusLabel
+                  : "Onboarding : All"}
+              </p>
+            ),
+            delete: () => {
+              setOnboardingStatus("");
+            },
+            component: (toggleModal) => (
+              <Filter
+                data={onboarding_status}
+                onClickAll={() => {
+                  setOnboardingStatus("");
+                  setOnboardingStatusLabel("");
+                  toggleModal(false);
+                }}
+                onClick={(el) => {
+                  setOnboardingStatus(el.value);
+                  setOnboardingStatusLabel(el.label);
                   toggleModal(false);
                 }}
               />
