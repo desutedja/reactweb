@@ -222,7 +222,6 @@ export default () => {
       const truthy = normalMenu?.some(
         (moduleAcc) => moduleAcc.path === menu.path
       );
-      console.log(menu, !truthy);
       return truthy;
     });
     const filteredModule = [];
@@ -239,7 +238,6 @@ export default () => {
       }
       filteredModule.push(item);
     });
-    console.log(filteredModule);
     setMenus(filteredModule);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeModuleAccess]);
@@ -518,7 +516,6 @@ const AutoAssignSetting = ({ data, labels }) => {
   const [modalAutoAssign, setModalAutoAssign] = useState(false);
 
   const dispatch = useDispatch();
-  console.log(data);
   return (
     <>
       <Modal
@@ -537,8 +534,11 @@ const AutoAssignSetting = ({ data, labels }) => {
             const finalData = {
               building_id: auth.user.building_id,
               management_id: auth.user.management_id,
+              auto_assign_limit: dataRef.task_assignment_limit,
+              auto_assign_schedule_day: dataRef.schedule_next_auto_assign_day,
               ...dataRef,
             };
+            console.log(finalData);
             dispatch(editBuildingManagement(finalData, data.id));
             setModalAutoAssign(false);
           }}
@@ -702,7 +702,6 @@ const AutoAnswerSetting = ({ data, labels }) => {
             if (finalData.auto_answer == "n") {
               finalData.auto_answer_text = " ";
             }
-            console.log(finalData);
             dispatch(editBuilding(finalData, history, selected.id, auth.role));
             setModalAutoAnswer(false);
           }}
