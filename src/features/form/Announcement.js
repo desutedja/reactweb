@@ -147,7 +147,7 @@ function Component() {
               toSentenceCase(el.section_type) +
               " " +
               toSentenceCase(el.section_name) +
-              ", Room " +
+              ", Unit " +
               el.number,
             value: el.id,
           }));

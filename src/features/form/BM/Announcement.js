@@ -15,6 +15,7 @@ import { Form } from "formik";
 import { announcementSchema } from "../services/schemas";
 import SubmitButton from "../components/SubmitButton";
 import moment from "moment";
+import { toSentenceCase } from "../../../utils";
 
 const announcementPayload = {
   title: "",
@@ -48,6 +49,10 @@ function Component() {
   const { selected, loading } = useSelector((state) => state.announcement);
   const { user } = useSelector((state) => state.auth);
 
+  const [selectedSections, setSelectedSections] = useState([]);
+  const [sections, setSections] = useState([]);
+  const [searchSection, setSearchSection] = useState("");
+
   const [units, setUnits] = useState([]);
   const [searchUnit, setSearchUnit] = useState("");
 
@@ -55,28 +60,64 @@ function Component() {
   let history = useHistory();
 
   useEffect(() => {
+    let queryString =
+      "/building/unit?building_id=" +
+      user.building_id +
+      "&limit=5&page=1" +
+      "&search=" +
+      searchUnit;
+    if (selectedSections.length > 0) {
+      let sectArr = [];
+      selectedSections.map((item) => sectArr.push(item.value));
+      let sectJoin = sectArr.join(",");
+      console.log(sectJoin);
+      queryString += `&building_section=${sectJoin}`;
+    }
     searchUnit.length > 1 &&
       dispatch(
-        get(
-          endpointAdmin +
-            "/building/unit?building_id=" +
-            user.building_id +
-            "&limit=5&page=1" +
-            "&search=" +
-            searchUnit,
-          (res) => {
-            let data = res.data.data.items;
+        get(endpointAdmin + queryString, (res) => {
+          let data = res.data.data.items;
 
-            let formatted = data.map((el) => ({
-              label: "Room " + el.number + ", Section: " + el.section_name,
-              value: el.id,
-            }));
+          let formatted = data.map((el) => ({
+            label:
+              toSentenceCase(el.section_type) +
+              " " +
+              toSentenceCase(el.section_name) +
+              ", Unit " +
+              el.number,
+            value: el.id,
+          }));
 
-            setUnits(formatted);
-          }
-        )
+          setUnits(formatted);
+        })
       );
   }, [dispatch, searchUnit, user.building_id]);
+
+  //section search
+  useEffect(() => {
+    dispatch(
+      get(
+        endpointAdmin +
+          "/building/section?building_id=" +
+          user.building_id +
+          "&limit=5&page=1" +
+          "&search=" +
+          searchSection,
+        (res) => {
+          let data = res.data.data.items;
+
+          let formatted = data.map((el) => ({
+            label: `${toSentenceCase(el.section_type)} ${toSentenceCase(
+              el.section_name
+            )}`,
+            value: el.id,
+          }));
+
+          setSections(formatted);
+        }
+      )
+    );
+  }, [dispatch, searchSection, user]);
 
   const payload = selected.id
     ? {
@@ -117,6 +158,14 @@ function Component() {
             label: "Room " + el.number + ", Section: " + el.section_name,
             value: el.building_unit_id,
           })),
+        building_section:
+          selected.building_section &&
+          selected.building_section.map((el) => ({
+            label: `${toSentenceCase(el.section_type)} ${toSentenceCase(
+              el.section_name
+            )}`,
+            value: el.building_section_id,
+          })),
       }
     : {
         ...announcementPayload,
@@ -140,6 +189,13 @@ function Component() {
                   building_id: values.building[0].value,
                   building_unit_id: el.value,
                 })),
+          building_section:
+            values.consumer_role !== "resident" || values.building.length !== 1
+              ? []
+              : values.building_section.map((el) => ({
+                  building_id: values.building[0].value,
+                  building_section_id: el.value,
+                })),
           merchant:
             values.consumer_role === "merchant"
               ? values.merchant.map((el) => el.value)
@@ -158,12 +214,6 @@ function Component() {
 
           return (
             <Form className="Form">
-              <Input
-                {...props}
-                label="Title"
-                placeholder="Input Announcement Title"
-                name="title"
-              />
               <Input
                 {...props}
                 type="select"
@@ -186,6 +236,32 @@ function Component() {
                   <Input
                     {...props}
                     type="multiselect"
+                    label="Select Section(s)"
+                    name="building_section"
+                    onInputChange={(e, value) =>
+                      value === "" ? setSections([]) : setSearchSection(value)
+                    }
+                    defaultValue={values.building_section}
+                    hint={
+                      "Selecting section is only valid when consumer is resident and not selecting any unit on below form.  " +
+                      "Not specifying section means targeting the announcement for all resident on all section."
+                    }
+                    placeholder="Start typing room number to add"
+                    options={sections}
+                    onChange={(e, value) => {
+                      // if there's change in selected buildings, clear units
+                      //   if (value !== selectedSections) {
+                      //     setFieldValue("building_unit", []);
+                      //   }
+                      setSelectedSections(value);
+                    }}
+                  />
+                )}
+              {values.consumer_role === "resident" &&
+                values.target_unit === "specificunit" && (
+                  <Input
+                    {...props}
+                    type="multiselect"
                     label="Select Unit(s)"
                     name="building_unit"
                     onInputChange={(e, value) =>
@@ -196,6 +272,12 @@ function Component() {
                     options={units}
                   />
                 )}
+              <Input
+                {...props}
+                label="Title"
+                placeholder="Input Announcement Title"
+                name="title"
+              />
               <Input
                 {...props}
                 type="file"

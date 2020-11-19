@@ -100,6 +100,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                   <Pill color="primary">
                     {toSentenceCase(el.section_type) +
                       toSentenceCase(el.section_name) +
+                      ", Unit " +
                       toSentenceCase(el.number)}
                   </Pill>
                 ))
