@@ -79,11 +79,23 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
               : "All",
         },
         {
+          label: "section",
+          disabled: data.consumer_role !== "resident",
+          lfmt: () => "Target Section",
+          vfmt: (v) =>
+            v && v.length > 0
+              ? v.map((el) => <Pill color="primary">{toSentenceCase(el)}</Pill>)
+              : "All",
+        },
+        {
           label: "building_unit",
           disabled: data.consumer_role !== "resident",
           lfmt: () => "Target Unit",
-          vfmt: (v) =>
-            v && v.length > 0
+          vfmt: (v) => {
+            if (data.section !== null) {
+              return "All Within the Section";
+            }
+            return v && v.length > 0
               ? v.map((el) => (
                   <Pill color="primary">
                     {toSentenceCase(el.section_type) +
@@ -91,7 +103,8 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                       toSentenceCase(el.number)}
                   </Pill>
                 ))
-              : "All",
+              : "All";
+          },
         },
         {
           label: "merchant",
