@@ -23,6 +23,8 @@ import Editor from "./features/roles/Editor";
 import MerchantAcquisition from "./features/roles/MerchantAcquisition";
 import Viewer from "./features/roles/Viewer";
 import Finance from "./features/roles/Finance";
+import VASSales from "./features/roles/VASSales";
+import VASAdvertiser from "./features/roles/VASAdvertiser";
 import BM from "./features/roles/BM";
 
 import { store, persistor } from "./store";
@@ -31,10 +33,18 @@ function SA({ children, ...other }) {
   const { user } = useSelector((state) => state.auth);
 
   switch (user.group) {
-    case 'merchant_acquisition': return <MerchantAcquisition />
-    case 'viewer': return <Viewer />
-    case 'finance': return <Finance />
-    default: return <Editor />
+    case "merchant_acquisition":
+      return <MerchantAcquisition />;
+    case "viewer":
+      return <Viewer />;
+    case "finance":
+      return <Finance />;
+    case "vas_sales":
+      return <VASSales />;
+    case "vas_advertiser":
+      return <VASAdvertiser />;
+    default:
+      return <Editor />;
   }
 }
 
@@ -50,13 +60,13 @@ function MainRoute({ children, ...other }) {
         isAuthenticated ? (
           children
         ) : (
-            <Redirect
-              to={{
-                pathname: path + "/login",
-                state: { from: location },
-              }}
-            />
-          )
+          <Redirect
+            to={{
+              pathname: path + "/login",
+              state: { from: location },
+            }}
+          />
+        )
       }
     />
   );
@@ -74,13 +84,13 @@ function OTPRoute({ children, ...other }) {
         email ? (
           children
         ) : (
-            <Redirect
-              to={{
-                pathname: path + "/login",
-                state: { from: location },
-              }}
-            />
-          )
+          <Redirect
+            to={{
+              pathname: path + "/login",
+              state: { from: location },
+            }}
+          />
+        )
       }
     />
   );
@@ -91,35 +101,46 @@ function AppRoute() {
     <Router>
       <div className="App scroller" id="App">
         <Switch>
-          <Redirect exact from="/" to={"/" + defaultRole } />
+          <Redirect exact from="/" to={"/" + defaultRole} />
           {/* superadmin routes */}
-          { defaultRole === 'sa' && <Route path="/sa/login">
-            <Login role="sa" />
-          </Route>}
-          { defaultRole === 'sa' && <OTPRoute path="/sa/otp">
-            <OTP role="sa" />
-          </OTPRoute>}
-          { defaultRole === 'sa' && <MainRoute path="/sa">
-             <SA />
-          </MainRoute> }
+          {defaultRole === "sa" && (
+            <Route path="/sa/login">
+              <Login role="sa" />
+            </Route>
+          )}
+          {defaultRole === "sa" && (
+            <OTPRoute path="/sa/otp">
+              <OTP role="sa" />
+            </OTPRoute>
+          )}
+          {defaultRole === "sa" && (
+            <MainRoute path="/sa">
+              <SA />
+            </MainRoute>
+          )}
           {/* bm routes */}
-          { defaultRole === 'bm' && <Route path="/bm/login">
-            <Login role="bm" />
-          </Route>}
-          { defaultRole === 'bm' && <OTPRoute path="/bm/otp">
-            <OTP role="bm" />
-          </OTPRoute>}
-          { defaultRole === 'bm' && <MainRoute path="/bm">
-            <BM />
-          </MainRoute>}
+          {defaultRole === "bm" && (
+            <Route path="/bm/login">
+              <Login role="bm" />
+            </Route>
+          )}
+          {defaultRole === "bm" && (
+            <OTPRoute path="/bm/otp">
+              <OTP role="bm" />
+            </OTPRoute>
+          )}
+          {defaultRole === "bm" && (
+            <MainRoute path="/bm">
+              <BM />
+            </MainRoute>
+          )}
           <Route path="*">
             <NotFound />
           </Route>
         </Switch>
       </div>
     </Router>
-
-  )
+  );
 }
 
 function App() {
