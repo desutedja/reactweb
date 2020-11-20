@@ -21,9 +21,28 @@ const adminPayload = {
   status_label: "",
 };
 
+const editorOptions = [
+  { value: "editor", label: "Editor" },
+  { value: "viewer", label: "Viewer" },
+  {
+    value: "merchant_acquisition",
+    label: "Merchant Acquisition",
+  },
+  { value: "finance", label: "Finance" },
+  { value: "vas_sales", label: "VAS Sales" },
+  { value: "vas_advertiser", label: "VAS Advertiser" },
+];
+
+const vasSalesOptions = [
+  { value: "vas_sales", label: "VAS Sales" },
+  { value: "vas_advertiser", label: "VAS Advertiser" },
+];
+
 function AdminForm() {
   const { selected, loading } = useSelector((state) => state.admin);
+  const { user } = useSelector((state) => state.auth);
 
+  const { group } = user;
   let dispatch = useDispatch();
   let history = useHistory();
 
@@ -58,17 +77,7 @@ function AdminForm() {
             <Input
               {...props}
               label="Group"
-              options={[
-                { value: "editor", label: "Editor" },
-                { value: "viewer", label: "Viewer" },
-                {
-                  value: "merchant_acquisition",
-                  label: "Merchant Acquisition",
-                },
-                { value: "finance", label: "Finance" },
-                { value: "vas_sales", label: "VAS Sales" },
-                { value: "vas_advertiser", label: "VAS Advertiser" },
-              ]}
+              options={group == "editor" ? editorOptions : vasSalesOptions}
             />
             <Input
               {...props}

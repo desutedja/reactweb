@@ -15,7 +15,8 @@
 
 .SectionSeparator {
   width: 100%;
-  max-width: 600px;
+  max-width: calc(100% / 1.7 - 16px);
+  min-width: calc(100% / 1.7 - 16px);
   height: 32px;
   margin-top: 24px;
   margin-bottom: 16px;

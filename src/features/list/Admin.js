@@ -1,11 +1,11 @@
 import React from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
 import Template from "./components/Template";
-import { getAdmin, setSelected } from "../slices/admin";
+import { getAdmin, setSelected, getAdminVasSales } from "../slices/admin";
 import Admin from "../../components/cells/Admin";
 import { toSentenceCase } from "../../utils";
 
@@ -31,12 +31,15 @@ function Component() {
   let dispatch = useDispatch();
   let history = useHistory();
   let { url } = useRouteMatch();
+  const { user } = useSelector((state) => state.auth);
+
+  const { group } = user;
 
   return (
     <Template
       columns={columns}
       slice="admin"
-      getAction={getAdmin}
+      getAction={group === "vas_sales" ? getAdminVasSales : getAdmin}
       actions={[
         <Button
           key="Add"

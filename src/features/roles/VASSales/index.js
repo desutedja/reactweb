@@ -1,9 +1,11 @@
 import React from "react";
 import { FiBarChart2 } from "react-icons/fi";
+import { FaIdBadge } from "react-icons/fa";
 import { RiAdvertisementLine } from "react-icons/ri";
 
 import Dashboard from "./Dashboard";
 import Ads from "./Ads";
+import Admin from "./Admin";
 
 import Settings from "../../settings";
 
@@ -23,6 +25,12 @@ const menu = [
     label: "Advertisement",
     path: "/advertisement",
     component: <Ads />,
+  },
+  {
+    icon: <FaIdBadge className="MenuItem-icon" />,
+    label: "Admin",
+    path: "/admin",
+    component: <Admin />,
   },
 ];
 

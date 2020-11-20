@@ -1,13 +1,13 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
-import { endpointAds } from '../../settings';
-import { get, post, put, del, patch } from '../slice';
-import { setInfo } from '../slice';
+import { endpointAds } from "../../settings";
+import { get, post, put, del, patch } from "../slice";
+import { setInfo } from "../slice";
 
-const adsEndpoint = endpointAds + '/management/ads';
+const adsEndpoint = endpointAds + "/management/ads";
 
 export const slice = createSlice({
-  name: 'ads',
+  name: "ads",
   initialState: {
     loading: false,
     items: [],
@@ -54,7 +54,7 @@ export const slice = createSlice({
     },
     publish: (state) => {
       state.selected.published = 1;
-    }
+    },
   },
 });
 
@@ -65,206 +65,288 @@ export const {
   setSelected,
   refresh,
   setScheduleData,
-  publish
+  publish,
 } = slice.actions;
 
-export const getAds = (pageIndex, pageSize, search = '', sortField, sortType,
-os = '', gender = '', age_from = '', age_to = '', day = '') => dispatch => {
+export const getAds = (
+  pageIndex,
+  pageSize,
+  search = "",
+  sortField,
+  sortType,
+  os = "",
+  gender = "",
+  age_from = "",
+  age_to = "",
+  day = ""
+) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(adsEndpoint +
-    '?page=' + (pageIndex + 1) +
-    '&limit=' + pageSize +
-    '&search=' + search +
-    '&sort_field=' + sortField + '&sort_type=' + sortType +
-    '&age_from=' + age_from +
-    '&age_to=' + age_to +
-    '&os=' + os +
-    '&gender=' + gender +
-    '&day=' + day,
+  dispatch(
+    get(
+      adsEndpoint +
+        "?page=" +
+        (pageIndex + 1) +
+        "&limit=" +
+        pageSize +
+        "&search=" +
+        search +
+        "&sort_field=" +
+        sortField +
+        "&sort_type=" +
+        sortType +
+        "&age_from=" +
+        age_from +
+        "&age_to=" +
+        age_to +
+        "&os=" +
+        os +
+        "&gender=" +
+        gender +
+        "&day=" +
+        day,
 
-    res => {
-      dispatch(setData(res.data.data));
+      (res) => {
+        dispatch(setData(res.data.data));
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }
-    ))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
 export const createAds = (data, history) => (dispatch, getState) => {
   dispatch(startAsync());
 
   const { auth } = getState();
 
-  dispatch(post(adsEndpoint, data,
-    res => {
-      history.push("/" + auth.role + "/advertisement");
+  dispatch(
+    post(
+      adsEndpoint,
+      data,
+      (res) => {
+        history.push("/" + auth.role + "/advertisement");
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Advertisement has been created.'
-      }));
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Advertisement has been created.",
+          })
+        );
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const editAds = (data, history, id, role) => dispatch => {
+export const editAds = (data, history, id, role) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(put(adsEndpoint, data,
-    res => {
-      // dispatch(setSelected(res.data.data));
-      history.push("/" + role + "/advertisement/" + id);
+  dispatch(
+    put(
+      adsEndpoint,
+      data,
+      (res) => {
+        // dispatch(setSelected(res.data.data));
+        history.push("/" + role + "/advertisement/" + id);
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Advertisement has been updated.'
-      }));
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Advertisement has been updated.",
+          })
+        );
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
 export const deleteAds = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
 
   const { auth } = getState();
 
-  dispatch(del(adsEndpoint + '/' + row.id,
-    res => {
-      history && history.push('/' + auth.role + '/advertisement');
+  dispatch(
+    del(
+      adsEndpoint + "/" + row.id,
+      (res) => {
+        history && history.push("/" + auth.role + "/advertisement");
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Advertisement has been deleted.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Advertisement has been deleted.",
+          })
+        );
 
-      dispatch(refresh());
-      dispatch(stopAsync())
-    },
-    err => {
-      dispatch(stopAsync());
-    }
-    ))
-}
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const getAdsDetails = (row, history, url) => dispatch => {
+export const getAdsDetails = (row, history, url) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(adsEndpoint + '/' + row.id,
-    res => {
-      dispatch(setSelected(res.data.data));
-      history.push(url + '/details');
+  dispatch(
+    get(
+      adsEndpoint + "/" + row.id,
+      (res) => {
+        dispatch(setSelected(res.data.data));
+        history.push(url + "/details");
 
-      dispatch(stopAsync())
-    },
-    err => {
-      dispatch(stopAsync());
-    }
-    ))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const getAdsSchedule = (pageIndex, pageSize, search, row) => dispatch => {
+export const getAdsSchedule = (pageIndex, pageSize, search, row) => (
+  dispatch
+) => {
   dispatch(startAsync());
 
-  dispatch(get(adsEndpoint + '/schedule/' + row.id +
-    '?page=' + (pageIndex + 1) +
-    '&search=' + search +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&limit=' + pageSize,
+  dispatch(
+    get(
+      adsEndpoint +
+        "/schedule/" +
+        row.id +
+        "?page=" +
+        (pageIndex + 1) +
+        "&search=" +
+        search +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&limit=" +
+        pageSize,
 
-    res => {
-      dispatch(setScheduleData(res.data.data));
+      (res) => {
+        dispatch(setScheduleData(res.data.data));
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }
-    ))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const createAdsSchedule = (data) => dispatch => {
+export const createAdsSchedule = (data) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(post(adsEndpoint + '/schedule', data,
-    res => {
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Advertisement schedule has been added.'
-      }));
+  dispatch(
+    post(
+      adsEndpoint + "/schedule",
+      data,
+      (res) => {
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Advertisement schedule has been added.",
+          })
+        );
 
-      dispatch(refresh());
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const editAdsSchedule = (data) => dispatch => {
+export const editAdsSchedule = (data) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(patch(adsEndpoint + '/schedule', data,
-    res => {
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Advertisement schedule has been added.'
-      }));
+  dispatch(
+    patch(
+      adsEndpoint + "/schedule",
+      data,
+      (res) => {
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Advertisement schedule has been added.",
+          })
+        );
 
-      dispatch(refresh());
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const deleteAdsSchedule = (row,) => dispatch => {
+export const deleteAdsSchedule = (row) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(del(adsEndpoint + '/schedule/' + row.int,
-    res => {
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Advertisement schedule has been deleted.'
-      }));
+  dispatch(
+    del(
+      adsEndpoint + "/schedule/" + row.int,
+      (res) => {
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Advertisement schedule has been deleted.",
+          })
+        );
 
-      dispatch(refresh());
-      dispatch(stopAsync())
-    },
-    err => {
-      dispatch(stopAsync());
-    }
-    ))
-}
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const publishAds = (data, callback) => dispatch => {
+export const publishAds = (data, callback) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(post(adsEndpoint + '/change_status', { advertisement_id: data.id, status: 'publish', }, 
-    res => {
-      dispatch(publish());
+  dispatch(
+    post(
+      adsEndpoint + "/change_status",
+      { advertisement_id: data.id, status: "publish" },
+      (res) => {
+        dispatch(publish());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Advertisement published.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Advertisement published.",
+          })
+        );
 
-      dispatch(stopAsync());
-      callback();
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+        callback();
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
 export default slice.reducer;
