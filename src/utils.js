@@ -183,6 +183,19 @@ export function toMoney(money) {
   );
 }
 
+export function toThousand(number) {
+  // number = Math.floor(number);
+  if (typeof number === "undefined") {
+    return "0";
+  }
+  let numberFormat = new Number(number).toLocaleString("id-ID", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+  return numberFormat;
+  // (!money ? "0" : money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"))
+}
+
 export function removeLastFromPath(path, lastn = 1) {
   var newpath = path.split("/");
   do {

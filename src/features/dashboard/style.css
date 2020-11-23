@@ -13,6 +13,76 @@
     line-height: 1.3;
 }
 
+.recharts-text.recharts-pie-label-text > tspan{
+    color: "#000" !important;
+}
+
+.ads-detail-container {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ads-card-title {
+    font-weight: 100;
+    color: #828282;
+}
+
+.ads-detail-title {
+    font-weight: bolder;
+    font-size: 2rem;
+    text-align: center;
+}
+.ads-summary-data-text {
+    font-weight: bolder;
+    font-size: 2rem;
+    text-align: center;
+}
+.ads-summary-data-text {
+    font-weight: bolder;
+    font-size: 2rem;
+    text-align: center;
+}
+
+.ads-summary-label-text {
+    font-weight: 100;
+    font-size: 1.5rem;
+    color: #888;
+    text-align: center;
+}
+
+.ads-summary-icon {
+    max-width: 50px;
+    max-height: 40px;
+}
+
+.ads-summary-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ads-active-button {
+    background-color: #e12029 !important;
+    min-width: 90px;
+    max-width: 90px;
+    border-radius: 1rem;
+}
+
+.ads-dropdown-button {
+    background-color: #e12029 !important;
+    border-radius: 1rem;
+}
+
+.ads-inactive-button {
+    background-color: #bbbbbb !important;
+    min-width: 90px;
+    max-width: 90px;
+    border-radius: 1rem;
+}
+
 .BigIcon {
     font-size: 5rem;
 }
