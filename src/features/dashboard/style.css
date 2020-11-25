@@ -64,6 +64,15 @@
     justify-content: center;
 }
 
+.ads-list-scroll {
+    margin-bottom: 10px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    max-height: 450px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 .ads-active-button {
     background-color: #e12029 !important;
     min-width: 90px;

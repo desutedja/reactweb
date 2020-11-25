@@ -10,6 +10,7 @@ import {
   ResponsiveContainer,
   Tooltip,
 } from "recharts";
+import { toThousand } from "../../../utils";
 
 const Component = ({ data, color }) => {
   const RADIAN = Math.PI / 180;
@@ -35,7 +36,7 @@ const Component = ({ data, color }) => {
         dominantBaseline="central"
       >
         {/* {`${(percent * 100).toFixed(0)}%`} */}
-        {data[index].value}
+        {toThousand(data[index].value)}
       </text>
     );
   };

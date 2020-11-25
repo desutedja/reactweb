@@ -12,7 +12,7 @@ import "./style.css";
 import { get } from "../slice";
 import Tab from "../../components/Tab";
 import { useDispatch } from "react-redux";
-import { toSentenceCase } from "../../utils";
+import { toSentenceCase, toThousand } from "../../utils";
 import {
   Button,
   ButtonDropdown,
@@ -24,6 +24,21 @@ import {
 } from "reactstrap";
 import { FiSearch, FiTarget } from "react-icons/fi";
 import SummaryItem from "./Components/SummaryItem";
+
+const monthConst = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
 const CustomLabelList = (props) => {
   const { x, y, stroke, value } = props;
@@ -54,25 +69,75 @@ function Component() {
   const [selectedMonth, setSelectedMonth] = useState("Time");
   const [selectedFilter, setSelectedFilter] = useState(0);
   const [adsData, setAdsData] = useState([]);
-  const [type, setType] = useState("Popup");
+  const [type, setType] = useState("pop-up");
   const [selectedId, setSelectedId] = useState([]);
+  const [selectedType, setSelectedType] = useState("");
 
-  const [impressionDetail, setImpressionDetail] = useState([]);
-  const [platformDetail, setPlatformDetail] = useState([]);
-  const [ageDetail, setAgeDetail] = useState([]);
-  const [genderDetail, setGenderDetail] = useState([]);
-  const [buildingDetail, setBuildingDetail] = useState([]);
-  const [occupationDetail, setOccupationDetail] = useState([]);
+  const [impressionDetail, setImpressionDetail] = useState([
+    { name: "", value: 1 },
+    { name: "", value: 2 },
+  ]);
+  const [platformDetail, setPlatformDetail] = useState([
+    { name: "", value: 1 },
+    { name: "", value: 2 },
+  ]);
+  const [ageDetail, setAgeDetail] = useState([
+    { name: "", value: 1 },
+    { name: "", value: 2 },
+  ]);
+  const [genderDetail, setGenderDetail] = useState([
+    { name: "", value: 1 },
+    { name: "", value: 2 },
+  ]);
+  const [buildingDetail, setBuildingDetail] = useState([
+    { name: "", value: 1 },
+    { name: "", value: 2 },
+  ]);
+  const [occupationDetail, setOccupationDetail] = useState([
+    { name: "", value: 1 },
+    { name: "", value: 2 },
+  ]);
   const [searchValue, setSearchValue] = useState("");
+  const [searchAdvertiser, setSearchAdvertiser] = useState("");
   const [campaigns, setCampaigns] = useState([]);
   const [popup, setPopup] = useState("");
   const [popups, setPopups] = useState([]);
   const [banner, setBanner] = useState("");
   const [banners, setBanners] = useState([]);
+  const [advertiser, setAdvertiser] = useState("");
+  const [advertisers, setAdvertisers] = useState([]);
   const [loadingPopup, setLoadingPopup] = useState(false);
   const [loadingBanner, setLoadingBanner] = useState(false);
+  const [loadingAdvertiser, setLoadingAdvertiser] = useState(false);
+  const [summary, setSummary] = useState([
+    {
+      label: "Impression",
+      icon:
+        "https://api.yipy.id/yipy-assets/asset-storage/img/76695B6C63524E46A289758114CF2609.png",
+      data: 0,
+    },
+    {
+      label: "Views",
+      icon:
+        "https://api.yipy.id/yipy-assets/asset-storage/img/C514A1D0A34EF8A8852CD417DA4F2BAC.png",
+      data: 0,
+    },
+    {
+      label: "Click",
+      icon:
+        "https://api.yipy.id/yipy-assets/asset-storage/img/9EC3211E8CCDA375F28D2166BCD066C1.png",
+      data: 0,
+    },
+    {
+      label: "Download Report",
+      data:
+        "https://api.yipy.id/yipy-assets/asset-storage/img/F8F140A85BA88A1B61C6855ECD9E04E6.png",
+    },
+  ]);
 
-  const [limit, setLimit] = useState(5);
+  const [limitPopup, setLimitPopup] = useState(5);
+  const [limitAdvertiser, setLimitAdvertiser] = useState(5);
+  const [limitBanner, setLimitBanner] = useState(5);
   const data = [
     { month: "Jan 2020", view: 1000, click: 700, amt: 2400 },
     { month: "Feb 2020", view: 200, click: 200, amt: 2400 },
@@ -117,7 +182,7 @@ function Component() {
     { name: "Housewife", value: 250 },
   ];
 
-  const summary = [
+  const summaryData = [
     {
       label: "Impression",
       icon:
@@ -158,40 +223,255 @@ function Component() {
 
   const toggle = () => setOpen(!dropdownOpen);
 
+  const handleReport = (data) => {
+    setSummary([
+      {
+        label: "Impression",
+        icon:
+          "https://api.yipy.id/yipy-assets/asset-storage/img/76695B6C63524E46A289758114CF2609.png",
+        data: data.summary.total_repeated_impression,
+      },
+      {
+        label: "Views",
+        icon:
+          "https://api.yipy.id/yipy-assets/asset-storage/img/C514A1D0A34EF8A8852CD417DA4F2BAC.png",
+        data: data.summary.total_repeated_view,
+      },
+      {
+        label: "Click",
+        icon:
+          "https://api.yipy.id/yipy-assets/asset-storage/img/9EC3211E8CCDA375F28D2166BCD066C1.png",
+        data: data.summary.total_repeated_click,
+      },
+      {
+        label: "Download Report",
+        data:
+          "https://api.yipy.id/yipy-assets/asset-storage/img/F8F140A85BA88A1B61C6855ECD9E04E6.png",
+      },
+    ]);
+
+    const timelineFiltered = data.timeline.map((item) => {
+      console.log(`${monthConst[item.month - 1]} ${item.year}`);
+      return {
+        month: `${monthConst[item.month - 1]} ${item.year}`,
+        view: item.total_repeated_view,
+        click: item.total_repeated_click,
+      };
+    });
+    setTimeline(timelineFiltered);
+    Object.keys(data.detail).map((key) => {
+      switch (key) {
+        case "ages":
+          setAgeDetail([
+            ...data.detail[key].map((item) => ({
+              name: item.name,
+              value: item.repeated_value,
+            })),
+          ]);
+          break;
+        case "occupations":
+          setOccupationDetail([
+            ...data.detail[key].map((item) => ({
+              name: item.name,
+              value: item.repeated_value,
+            })),
+          ]);
+          break;
+        case "genders":
+          setGenderDetail([
+            ...data.detail[key].map((item) => ({
+              name: item.name,
+              value: item.repeated_value,
+            })),
+          ]);
+          break;
+        case "platforms":
+          setPlatformDetail([
+            ...data.detail[key].map((item) => ({
+              name: item.name,
+              value: item.repeated_value,
+            })),
+          ]);
+          break;
+        case "impressions":
+          setImpressionDetail([
+            ...data.detail[key].map((item) => ({
+              name: item.name,
+              value: item.repeated_value,
+            })),
+          ]);
+          break;
+        case "buildings":
+          setBuildingDetail([
+            ...data.detail[key].map((item) => ({
+              name: item.name,
+              value: item.repeated_value,
+            })),
+          ]);
+          break;
+      }
+    });
+  };
+
   useEffect(() => {
+    setLoadingAdvertiser(true);
+    setLoadingPopup(true);
+    setLoadingBanner(true);
+    dispatch(
+      get(
+        endpointAds +
+          "/management/ads/list/advertiser?" +
+          "limit=" +
+          limitAdvertiser,
+        (res) => {
+          setAdvertisers(res.data.data.items);
+          setLoadingAdvertiser(false);
+        },
+        (err) => {
+          console.log("FAILED GET LIST ADVERTISER :", err);
+          setLoadingAdvertiser(false);
+        }
+      )
+    );
+    dispatch(
+      get(
+        endpointAds +
+          "/management/ads?" +
+          "limit=" +
+          limitPopup +
+          "&appear_as=popup",
+        (res) => {
+          setPopups(res.data.data.items);
+          setLoadingPopup(false);
+        },
+        (err) => {
+          console.log("FAILED GET LIST ADVERTISER :", err);
+          setLoadingPopup(false);
+        }
+      )
+    );
+    dispatch(
+      get(
+        endpointAds +
+          "/management/ads?" +
+          "limit=" +
+          limitBanner +
+          "&appear_as=banner",
+        (res) => {
+          setBanners(res.data.data.items);
+          setLoadingBanner(false);
+        },
+        (err) => {
+          console.log("FAILED GET LIST ADVERTISER :", err);
+          setLoadingBanner(false);
+        }
+      )
+    );
+
+    dispatch(
+      get(
+        endpointAds + "/management/ads/report",
+        (res) => {
+          const data = res.data.data;
+          handleReport(data);
+        },
+        (err) => {
+          console.log("FAILED GET LIST REPORT :", err);
+        }
+      )
+    );
     // get(endpointAds + "/management/ads/report/overview", (res) => {
     //   setAdsData(res.data.data);
     // })
   }, [dispatch]);
-  useEffect(() => {
-    if (timeline.length > 0) return;
-    setTimeline(data);
-  }, [data]);
 
   useEffect(() => {
-    if (impressionDetail.length > 0) return;
-    setImpressionDetail(dataImpression);
-  }, [dataImpression]);
+    console.log(type);
+    if (type === "pop-up") {
+      setLoadingPopup(true);
+      dispatch(
+        get(
+          endpointAds +
+            "/management/ads?" +
+            "limit=" +
+            limitPopup +
+            "&appear_as=popup" +
+            "&search=" +
+            searchValue,
+          (res) => {
+            setPopups(res.data.data.items);
+            setLoadingPopup(false);
+          },
+          (err) => {
+            console.log("FAILED GET LIST ADVERTISER :", err);
+            setLoadingPopup(false);
+          }
+        )
+      );
+    }
+    if (type == "banner") {
+      setLoadingBanner(true);
+      dispatch(
+        get(
+          endpointAds +
+            "/management/ads?" +
+            "limit=" +
+            limitBanner +
+            "&appear_as=banner" +
+            "&search=" +
+            searchValue,
+          (res) => {
+            setBanners(res.data.data.items);
+            setLoadingBanner(false);
+          },
+          (err) => {
+            console.log("FAILED GET LIST ADVERTISER :", err);
+            setLoadingBanner(false);
+          }
+        )
+      );
+    }
+  }, [searchValue, type, limitBanner, limitPopup]);
   useEffect(() => {
-    if (platformDetail.length > 0) return;
-    setPlatformDetail(dataPlatform);
-  }, [dataPlatform]);
+    setLoadingAdvertiser(true);
+    dispatch(
+      get(
+        endpointAds +
+          "/management/ads/list/advertiser?" +
+          "limit=" +
+          limitAdvertiser +
+          "&search=" +
+          searchAdvertiser,
+        (res) => {
+          setAdvertisers(res.data.data.items);
+          setLoadingAdvertiser(false);
+        },
+        (err) => {
+          console.log("FAILED GET LIST ADVERTISER :", err);
+          setLoadingAdvertiser(false);
+        }
+      )
+    );
+  }, [searchAdvertiser]);
+
   useEffect(() => {
-    if (ageDetail.length > 0) return;
-    setAgeDetail(dataAge);
-  }, [dataAge]);
-  useEffect(() => {
-    if (genderDetail.length > 0) return;
-    setGenderDetail(dataGender);
-  }, [dataGender]);
-  useEffect(() => {
-    if (buildingDetail.length > 0) return;
-    setBuildingDetail(dataBuilding);
-  }, [dataBuilding]);
-  useEffect(() => {
-    if (occupationDetail.length > 0) return;
-    setOccupationDetail(dataOccupation);
-  }, [dataOccupation]);
+    const idList = selectedId.map((el) => el.id).join(",");
+    if (idList === "") return;
+    if (selectedType === "advertiser") return;
+
+    dispatch(
+      get(
+        endpointAds + "/management/ads/report?ads_id=" + idList,
+        (res) => {
+          const data = res.data.data;
+          handleReport(data);
+        },
+        (err) => {
+          console.log("FAILED GET LIST REPORT :", err);
+        }
+      )
+    );
+  }, [selectedId]);
   return (
     <>
       <div className="row no-gutters">
@@ -205,17 +485,34 @@ function Component() {
               >
                 <>
                   <InputSearch
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    value={searchAdvertiser}
+                    onChange={(e) => setSearchAdvertiser(e.target.value)}
                   />
                   {loadingBanner && (
                     <div className="w-100 py-5 d-flex justify-content-center">
                       <ClinkLoader />
                     </div>
                   )}
-                  <ListGroup>
-                    {!loadingBanner &&
-                      banners.map((el, index) => (
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      padding: "0.75rem 1.25rem",
+                    }}
+                  >
+                    <div className="col-8" style={{ padding: 0 }}>
+                      <strong>Advertiser Name</strong>
+                    </div>
+                    <div
+                      className="col-4"
+                      style={{ padding: 0, textAlign: "center" }}
+                    >
+                      <strong>Total Ads</strong>
+                    </div>
+                  </div>
+                  <ListGroup className="ads-list-scroll">
+                    {!loadingAdvertiser &&
+                      advertisers.map((el, index) => (
                         <ListGroupItem
                           style={{ cursor: "pointer" }}
                           key={index}
@@ -224,14 +521,21 @@ function Component() {
                             (items) => items.id === el.id
                           )}
                           onClick={() => {
-                            setPopup("");
-                            !selectedId.some((items) => items.id === el.id)
-                              ? setSelectedId([...selectedId, el])
-                              : setSelectedId(
-                                  selectedId.filter(
-                                    (items) => items.id !== el.id
-                                  )
-                                );
+                            setAdvertiser("");
+                            if (
+                              !selectedId.some((items) => items.id === el.id)
+                            ) {
+                              if (selectedType != "advertiser") {
+                                setSelectedType("advertiser");
+                                setSelectedId([el]);
+                              } else {
+                                setSelectedId([...selectedId, el]);
+                              }
+                            } else {
+                              setSelectedId(
+                                selectedId.filter((items) => items.id !== el.id)
+                              );
+                            }
                           }}
                         >
                           <div
@@ -240,29 +544,41 @@ function Component() {
                               justifyContent: "space-between",
                             }}
                           >
-                            <div>
-                              {el.firstname} {el.lastname}
+                            <div
+                              className="col-8"
+                              style={{ padding: 0, fontWeight: 100 }}
+                            >
+                              {el.advertiser_name}
                             </div>
-                            <div>{}</div>
+                            <div
+                              className="col-4"
+                              style={{
+                                padding: 0,
+                                textAlign: "center",
+                                fontWeight: 100,
+                              }}
+                            >
+                              {el.total_ads}
+                            </div>
                           </div>
                         </ListGroupItem>
                       ))}
                   </ListGroup>
-                  {!loadingBanner && banners.length === 0 && (
-                    <div className="w-100 text-center">No Banner found</div>
+                  {!loadingAdvertiser && advertisers.length === 0 && (
+                    <div className="w-100 text-center">No Advertiser found</div>
                   )}
-                  {!loadingPopup &&
-                    banners.length !== 0 &&
-                    banners.length >= limit && (
+                  {!loadingAdvertiser &&
+                    advertisers.length !== 0 &&
+                    advertisers.length >= limitAdvertiser && (
                       <div
                         className="btn w-100 text-primary"
-                        onClick={() => setLimit(limit + 10)}
+                        onClick={() => setLimitAdvertiser(limitAdvertiser + 10)}
                       >
                         load 10 more
                       </div>
                     )}
                 </>
-                ,{/* <div className="row mb-4 p-3">
+                {/* <div className="row mb-4 p-3">
                 </div> */}
               </div>
             </>
@@ -283,8 +599,31 @@ function Component() {
                       value={searchValue}
                       onChange={(e) => setSearchValue(e.target.value)}
                     />
-                    <ListGroup>
-                      {campaigns.map((el, index) => (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        padding: "0.75rem 1.25rem",
+                      }}
+                    >
+                      <div className="col-6" style={{ padding: 0 }}>
+                        <strong>Advertiser Name</strong>
+                      </div>
+                      <div
+                        className="col-3"
+                        style={{ padding: 0, textAlign: "center" }}
+                      >
+                        <strong>Views</strong>
+                      </div>
+                      <div
+                        className="col-3"
+                        style={{ padding: 0, textAlign: "center" }}
+                      >
+                        <strong>Clicks</strong>
+                      </div>
+                    </div>
+                    <ListGroup className="ads-list-scroll">
+                      {popups.map((el, index) => (
                         <ListGroupItem
                           style={{ cursor: "pointer" }}
                           key={index}
@@ -292,12 +631,21 @@ function Component() {
                           // active={index === active}
                           active={selectedId.some((item) => item.id === el.id)}
                           onClick={() => {
-                            setBanner("");
-                            !selectedId.some((item) => item.id === el.id)
-                              ? setSelectedId([...selectedId, el])
-                              : setSelectedId(
-                                  selectedId.filter((item) => item.id !== el.id)
-                                );
+                            setPopup("");
+                            if (
+                              !selectedId.some((items) => items.id === el.id)
+                            ) {
+                              if (selectedType != "campaign") {
+                                setSelectedType("campaign");
+                                setSelectedId([el]);
+                              } else {
+                                setSelectedId([...selectedId, el]);
+                              }
+                            } else {
+                              setSelectedId(
+                                selectedId.filter((items) => items.id !== el.id)
+                              );
+                            }
                           }}
                         >
                           <div
@@ -306,14 +654,31 @@ function Component() {
                               justifyContent: "space-between",
                             }}
                           >
-                            <div>{el.name}</div>
-                            <div style={{ display: "flex" }}>
-                              {/* <Pill color="success">{el.disbursed_count}</Pill> */}
-                              {el.undisbursed_count > 0 && (
-                                <Pill color={"warning"}>
-                                  {el.undisbursed_count}
-                                </Pill>
-                              )}
+                            <div
+                              className="col-6"
+                              style={{ padding: 0, fontWeight: 100 }}
+                            >
+                              {el.content_name}
+                            </div>
+                            <div
+                              className="col-3"
+                              style={{
+                                padding: 0,
+                                fontWeight: 100,
+                                textAlign: "center",
+                              }}
+                            >
+                              {el.total_actual_view}
+                            </div>
+                            <div
+                              className="col-3"
+                              style={{
+                                padding: 0,
+                                fontWeight: 100,
+                                textAlign: "center",
+                              }}
+                            >
+                              {el.total_actual_click}
                             </div>
                           </div>
                         </ListGroupItem>
@@ -324,12 +689,12 @@ function Component() {
                     )}
                     {!loadingPopup &&
                       popups.length !== 0 &&
-                      popups.length >= limit && (
+                      popups.length >= limitPopup && (
                         <div
                           className="btn w-100 text-primary"
-                          onClick={() => setLimit(limit + 10)}
+                          onClick={() => setLimitPopup(limitPopup + 10)}
                         >
-                          load more
+                          load 10 more
                         </div>
                       )}
                   </>,
@@ -343,7 +708,30 @@ function Component() {
                         <ClinkLoader />
                       </div>
                     )}
-                    <ListGroup>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        padding: "0.75rem 1.25rem",
+                      }}
+                    >
+                      <div className="col-6" style={{ padding: 0 }}>
+                        <strong>Advertiser Name</strong>
+                      </div>
+                      <div
+                        className="col-3"
+                        style={{ padding: 0, textAlign: "center" }}
+                      >
+                        <strong>Views</strong>
+                      </div>
+                      <div
+                        className="col-3"
+                        style={{ padding: 0, textAlign: "center" }}
+                      >
+                        <strong>Clicks</strong>
+                      </div>
+                    </div>
+                    <ListGroup className="ads-list-scroll">
                       {!loadingBanner &&
                         banners.map((el, index) => (
                           <ListGroupItem
@@ -354,14 +742,23 @@ function Component() {
                               (items) => items.id === el.id
                             )}
                             onClick={() => {
-                              setPopup("");
-                              !selectedId.some((items) => items.id === el.id)
-                                ? setSelectedId([...selectedId, el])
-                                : setSelectedId(
-                                    selectedId.filter(
-                                      (items) => items.id !== el.id
-                                    )
-                                  );
+                              setBanner("");
+                              if (
+                                !selectedId.some((items) => items.id === el.id)
+                              ) {
+                                if (selectedType != "campaign") {
+                                  setSelectedType("campaign");
+                                  setSelectedId([el]);
+                                } else {
+                                  setSelectedId([...selectedId, el]);
+                                }
+                              } else {
+                                setSelectedId(
+                                  selectedId.filter(
+                                    (items) => items.id !== el.id
+                                  )
+                                );
+                              }
                             }}
                           >
                             <div
@@ -370,10 +767,32 @@ function Component() {
                                 justifyContent: "space-between",
                               }}
                             >
-                              <div>
-                                {el.firstname} {el.lastname}
+                              <div
+                                className="col-6"
+                                style={{ padding: 0, fontWeight: 100 }}
+                              >
+                                {el.content_name}
                               </div>
-                              <div>{}</div>
+                              <div
+                                className="col-3"
+                                style={{
+                                  padding: 0,
+                                  fontWeight: 100,
+                                  textAlign: "center",
+                                }}
+                              >
+                                {el.total_actual_view}
+                              </div>
+                              <div
+                                className="col-3"
+                                style={{
+                                  padding: 0,
+                                  fontWeight: 100,
+                                  textAlign: "center",
+                                }}
+                              >
+                                {el.total_actual_click}
+                              </div>
                             </div>
                           </ListGroupItem>
                         ))}
@@ -383,10 +802,10 @@ function Component() {
                     )}
                     {!loadingPopup &&
                       banners.length !== 0 &&
-                      banners.length >= limit && (
+                      banners.length >= limitBanner && (
                         <div
                           className="btn w-100 text-primary"
-                          onClick={() => setLimit(limit + 10)}
+                          onClick={() => setLimitBanner(limitBanner + 10)}
                         >
                           load 10 more
                         </div>
@@ -406,18 +825,19 @@ function Component() {
                   <strong>Wonderful Indonesia - Bali Holiday</strong>
                 </h4>
                 <div className="row pl-3 mb-0">
-                  {summary.map((el, index) => {
-                    return (
-                      <div key={`summary-${index}`} className="col-3">
-                        <SummaryItem
-                          label={el.label}
-                          icon={el.icon}
-                          // icon="https://api.yipy.id/yipy-assets/asset-storage/img/9EC3211E8CCDA375F28D2166BCD066C1.png"
-                          data={el.data}
-                        />
-                      </div>
-                    );
-                  })}
+                  {summary.length > 0 &&
+                    summary.map((el, index) => {
+                      return (
+                        <div key={`summary-${index}`} className="col-3">
+                          <SummaryItem
+                            label={el.label}
+                            icon={el.icon}
+                            // icon="https://api.yipy.id/yipy-assets/asset-storage/img/9EC3211E8CCDA375F28D2166BCD066C1.png"
+                            data={el.data}
+                          />
+                        </div>
+                      );
+                    })}
                 </div>
               </div>
             </div>
@@ -499,8 +919,8 @@ function Component() {
                 {impressionDetail.map((el, index) => {
                   return (
                     <div key={`impression-${index}`}>
-                      <span>{el.name}</span> :
-                      <span className="pl-1">{el.value}</span>
+                      <span>{toSentenceCase(el.name.replace(/_/g, " "))}</span>{" "}
+                      :<span className="pl-1">{toThousand(el.value)}</span>
                     </div>
                   );
                 })}
@@ -511,8 +931,8 @@ function Component() {
                 {platformDetail.map((el) => {
                   return (
                     <div>
-                      <span>{el.name}</span> :
-                      <span className="pl-1">{el.value}</span>
+                      <span>{toSentenceCase(el.name.replace(/_/g, " "))}</span>{" "}
+                      :<span className="pl-1">{toThousand(el.value)}</span>
                     </div>
                   );
                 })}
@@ -525,8 +945,8 @@ function Component() {
                 {ageDetail.map((el) => {
                   return (
                     <div>
-                      <span>{el.name}</span> :
-                      <span className="pl-1">{el.value}</span>
+                      <span>{toSentenceCase(el.name.replace(/_/g, " "))}</span>{" "}
+                      :<span className="pl-1">{toThousand(el.value)}</span>
                     </div>
                   );
                 })}
@@ -537,8 +957,8 @@ function Component() {
                 {genderDetail.map((el) => {
                   return (
                     <div>
-                      <span>{el.name}</span> :
-                      <span className="pl-1">{el.value}</span>
+                      <span>{toSentenceCase(el.name.replace(/_/g, " "))}</span>{" "}
+                      :<span className="pl-1">{toThousand(el.value)}</span>
                     </div>
                   );
                 })}
@@ -551,8 +971,8 @@ function Component() {
                 {buildingDetail.map((el) => {
                   return (
                     <div>
-                      <span>{el.name}</span> :
-                      <span className="pl-1">{el.value}</span>
+                      <span>{toSentenceCase(el.name.replace(/_/g, " "))}</span>{" "}
+                      :<span className="pl-1">{toThousand(el.value)}</span>
                     </div>
                   );
                 })}
@@ -563,8 +983,8 @@ function Component() {
                 {occupationDetail.map((el) => {
                   return (
                     <div>
-                      <span>{el.name}</span> :
-                      <span className="pl-1">{el.value}</span>
+                      <span>{toSentenceCase(el.name.replace(/_/g, " "))}</span>{" "}
+                      :<span className="pl-1">{toThousand(el.value)}</span>
                     </div>
                   );
                 })}

@@ -44,9 +44,9 @@ function Component() {
       {/* <Route path={"/sa/chat"}>
                 <Chat />
             </Route> */}
-      <Route path={"/sa/settings"}>
+      {/* <Route path={"/sa/settings"}>
         <Settings />
-      </Route>
+      </Route> */}
     </Template>
   );
 }
