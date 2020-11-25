@@ -23,7 +23,12 @@ const SummaryItem = ({ label, icon, data }) => {
             <strong>{toThousand(data)}</strong>
           </div>
         )}
-        <div className="ads-summary-label-text mt-1">{label}</div>
+        <div
+          className="ads-summary-label-text mt-1"
+          style={{ textAlign: isNaN(data) ? "center" : "left" }}
+        >
+          {label}
+        </div>
       </div>
     </div>
   );

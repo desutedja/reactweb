@@ -266,6 +266,7 @@ function Component() {
       renderChild={(props) => {
         const { values, errors, setFieldValue } = props;
 
+        console.log(errors);
         return (
           <Form className="Form">
             <Input {...props} label="Title" name="content_name" />
@@ -322,7 +323,9 @@ function Component() {
                 { value: "url", label: "URL" },
               ]}
             />
-            {values.media === "url" && <Input {...props} label="Media URL" />}
+            {values.media === "url" && (
+              <Input type="text" {...props} label="Media URL" />
+            )}
             <Input {...props} label="Start Date" type="date" />
             <Input {...props} label="End Date" type="date" />
 

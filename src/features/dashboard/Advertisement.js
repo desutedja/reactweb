@@ -24,6 +24,7 @@ import {
 } from "reactstrap";
 import { FiSearch, FiTarget } from "react-icons/fi";
 import SummaryItem from "./Components/SummaryItem";
+import { setData } from "../slices/transaction";
 
 const monthConst = [
   "Jan",
@@ -72,6 +73,7 @@ function Component() {
   const [type, setType] = useState("pop-up");
   const [selectedId, setSelectedId] = useState([]);
   const [selectedType, setSelectedType] = useState("");
+  const [dataKeys, setDataKeys] = useState([]);
 
   const [impressionDetail, setImpressionDetail] = useState([
     { name: "", value: 1 },
@@ -223,7 +225,7 @@ function Component() {
 
   const toggle = () => setOpen(!dropdownOpen);
 
-  const handleReport = (data) => {
+  const handleReport = (data, withTimeline = true) => {
     setSummary([
       {
         label: "Impression",
@@ -250,15 +252,18 @@ function Component() {
       },
     ]);
 
-    const timelineFiltered = data.timeline.map((item) => {
-      console.log(`${monthConst[item.month - 1]} ${item.year}`);
-      return {
-        month: `${monthConst[item.month - 1]} ${item.year}`,
-        view: item.total_repeated_view,
-        click: item.total_repeated_click,
-      };
-    });
-    setTimeline(timelineFiltered);
+    if (withTimeline) {
+      const timelineFiltered = data.timeline.map((item) => {
+        return {
+          m: item.month,
+          y: item.year,
+          month: `${monthConst[item.month - 1]} ${item.year}`,
+          view: item.total_repeated_view,
+          click: item.total_repeated_click,
+        };
+      });
+      setTimeline(timelineFiltered);
+    }
     Object.keys(data.detail).map((key) => {
       switch (key) {
         case "ages":
@@ -339,7 +344,7 @@ function Component() {
           "/management/ads?" +
           "limit=" +
           limitPopup +
-          "&appear_as=popup",
+          "&appear_as=popup&published=1&for=report",
         (res) => {
           setPopups(res.data.data.items);
           setLoadingPopup(false);
@@ -356,7 +361,7 @@ function Component() {
           "/management/ads?" +
           "limit=" +
           limitBanner +
-          "&appear_as=banner",
+          "&appear_as=banner&published=1&for=report",
         (res) => {
           setBanners(res.data.data.items);
           setLoadingBanner(false);
@@ -395,7 +400,7 @@ function Component() {
             "/management/ads?" +
             "limit=" +
             limitPopup +
-            "&appear_as=popup" +
+            "&appear_as=popup&published=1&for=report" +
             "&search=" +
             searchValue,
           (res) => {
@@ -417,7 +422,7 @@ function Component() {
             "/management/ads?" +
             "limit=" +
             limitBanner +
-            "&appear_as=banner" +
+            "&appear_as=banner&published=1&for=report" +
             "&search=" +
             searchValue,
           (res) => {
@@ -432,6 +437,7 @@ function Component() {
       );
     }
   }, [searchValue, type, limitBanner, limitPopup]);
+
   useEffect(() => {
     setLoadingAdvertiser(true);
     dispatch(
@@ -454,24 +460,135 @@ function Component() {
     );
   }, [searchAdvertiser]);
 
-  useEffect(() => {
-    const idList = selectedId.map((el) => el.id).join(",");
-    if (idList === "") return;
-    if (selectedType === "advertiser") return;
+  // useEffect(() => {
+  //   const idList = selectedId.map((el) => el.id).join(",");
+  //   if (idList === "") {
+  //     dispatch(
+  //       get(
+  //         endpointAds + "/management/ads/report",
+  //         (res) => {
+  //           const data = res.data.data;
+  //           handleReport(data);
+  //         },
+  //         (err) => {
+  //           console.log("FAILED GET LIST REPORT :", err);
+  //         }
+  //       )
+  //     );
+  //     return;
+  //   }
+  //   if (selectedType === "advertiser") {
+  //     dispatch(
+  //       get(
+  //         endpointAds + "/management/ads/report?advertiser_id=" + idList,
+  //         (res) => {
+  //           const data = res.data.data;
+  //           handleReport(data);
+  //         },
+  //         (err) => {
+  //           console.log("FAILED GET LIST REPORT :", err);
+  //         }
+  //       )
+  //     );
+  //     return;
+  //   }
 
+  //   dispatch(
+  //     get(
+  //       endpointAds + "/management/ads/report?ads_id=" + idList,
+  //       (res) => {
+  //         const data = res.data.data;
+  //         handleReport(data);
+  //       },
+  //       (err) => {
+  //         console.log("FAILED GET LIST REPORT :", err);
+  //       }
+  //     )
+  //   );
+  // }, [selectedId]);
+
+  useEffect(() => {
+    const audFilt = audiencesFilter[selectedFilter];
+    const idList = selectedId.map((el) => el.id).join(",");
+    console.log(selectedId);
+
+    setDataKeys([]);
+    let urlEndpoint = endpointAds + "/management/ads/report";
+    if (selectedType === "advertiser") {
+      urlEndpoint += "?advertiser_id=" + idList + "&";
+    } else if (selectedType === "campaign") {
+      urlEndpoint += "?ads_id=" + idList + "&";
+    } else {
+      urlEndpoint += "?";
+    }
+
+    if (audFilt === "") {
+      dispatch(
+        get(
+          urlEndpoint,
+          (res) => {
+            const data = res.data.data;
+            handleReport(data);
+          },
+          (err) => {
+            console.log("FAILED GET LIST REPORT :", err);
+          }
+        )
+      );
+      return;
+    }
+    urlEndpoint += "timeline_filter=" + audFilt;
     dispatch(
       get(
-        endpointAds + "/management/ads/report?ads_id=" + idList,
+        urlEndpoint,
         (res) => {
           const data = res.data.data;
-          handleReport(data);
+          handleReport(data, false);
+          const timelineDeepfilter = [];
+          const dtKey = [];
+          data.timeline.map((item) => {
+            const checkArr = timelineDeepfilter.findIndex(
+              (el) => el.y === item.year && el.m === item.month
+            );
+            let fieldName = audFilt;
+            if (audFilt === "platform") {
+              fieldName = "os";
+            } else if (audFilt === "age") {
+              fieldName = "age_range";
+            } else if (audFilt === "building") {
+              fieldName = "city_name";
+            }
+            if (checkArr > -1) {
+              timelineDeepfilter[checkArr][item[fieldName]] =
+                item.total_repeated_view + item.total_repeated_click;
+            } else {
+              const data = {
+                m: item.month,
+                y: item.year,
+                month: `${monthConst[item.month - 1]} ${item.year}`,
+                view: item.total_repeated_view,
+                click: item.total_repeated_click,
+              };
+              data[item[fieldName]] =
+                item.total_repeated_view + item.total_repeated_click;
+              timelineDeepfilter.push(data);
+            }
+            if (!dtKey.some((dt) => dt === item[fieldName])) {
+              dtKey.push(item[fieldName]);
+            }
+          });
+          setTimeline([...timelineDeepfilter]);
+          setDataKeys([...dtKey]);
         },
         (err) => {
           console.log("FAILED GET LIST REPORT :", err);
         }
       )
     );
-  }, [selectedId]);
+  }, [selectedFilter, selectedMonth, selectedId]);
+  useEffect(() => {
+    console.log(dataKeys);
+  }, [dataKeys]);
   return (
     <>
       <div className="row no-gutters">
@@ -607,7 +724,7 @@ function Component() {
                       }}
                     >
                       <div className="col-6" style={{ padding: 0 }}>
-                        <strong>Advertiser Name</strong>
+                        <strong>Campaign Name</strong>
                       </div>
                       <div
                         className="col-3"
@@ -668,7 +785,7 @@ function Component() {
                                 textAlign: "center",
                               }}
                             >
-                              {el.total_actual_view}
+                              {el.impression_repeated_view}
                             </div>
                             <div
                               className="col-3"
@@ -678,7 +795,7 @@ function Component() {
                                 textAlign: "center",
                               }}
                             >
-                              {el.total_actual_click}
+                              {el.impression_repeated_click}
                             </div>
                           </div>
                         </ListGroupItem>
@@ -716,7 +833,7 @@ function Component() {
                       }}
                     >
                       <div className="col-6" style={{ padding: 0 }}>
-                        <strong>Advertiser Name</strong>
+                        <strong>Campaign Name</strong>
                       </div>
                       <div
                         className="col-3"
@@ -781,7 +898,7 @@ function Component() {
                                   textAlign: "center",
                                 }}
                               >
-                                {el.total_actual_view}
+                                {el.impression_repeated_view}
                               </div>
                               <div
                                 className="col-3"
@@ -791,7 +908,7 @@ function Component() {
                                   textAlign: "center",
                                 }}
                               >
-                                {el.total_actual_click}
+                                {el.impression_repeated_click}
                               </div>
                             </div>
                           </ListGroupItem>
@@ -822,7 +939,15 @@ function Component() {
             <div className="row">
               <div className="col-12">
                 <h4 className="p-3">
-                  <strong>Wonderful Indonesia - Bali Holiday</strong>
+                  <strong>
+                    {selectedId.length === 0
+                      ? "All Campaign"
+                      : selectedId.length === 1 && selectedType === "campaign"
+                      ? selectedId[0].content_name
+                      : selectedType === "advertiser"
+                      ? ""
+                      : `Selected ${selectedId.length} Advertisements`}
+                  </strong>
                 </h4>
                 <div className="row pl-3 mb-0">
                   {summary.length > 0 &&
@@ -864,7 +989,14 @@ function Component() {
                           caret
                         ></DropdownToggle>
                         <DropdownMenu>
-                          <DropdownItem header>Choose Time</DropdownItem>
+                          <DropdownItem
+                            // header
+                            onClick={() => {
+                              setSelectedMonth("Time");
+                            }}
+                          >
+                            All
+                          </DropdownItem>
                           {timeline.length > 0 &&
                             timeline.map((el) => {
                               return (
@@ -905,7 +1037,7 @@ function Component() {
                     })}
                   </div>
                 </div>
-                <LineCharts data={timeline} />
+                <LineCharts data={timeline} dataKeys={dataKeys} />
               </div>
             </div>
             <div className="row"></div>
@@ -971,7 +1103,11 @@ function Component() {
                 {buildingDetail.map((el) => {
                   return (
                     <div>
-                      <span>{toSentenceCase(el.name.replace(/_/g, " "))}</span>{" "}
+                      <span>
+                        {toSentenceCase(
+                          el.name.toLowerCase().replace(/_/g, " ")
+                        )}
+                      </span>{" "}
                       :<span className="pl-1">{toThousand(el.value)}</span>
                     </div>
                   );

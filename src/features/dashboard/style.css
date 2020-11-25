@@ -37,20 +37,15 @@
 }
 .ads-summary-data-text {
     font-weight: bolder;
-    font-size: 2rem;
-    text-align: center;
-}
-.ads-summary-data-text {
-    font-weight: bolder;
-    font-size: 2rem;
-    text-align: center;
+    font-size: 1.75rem;
+    text-align: left;
 }
 
 .ads-summary-label-text {
     font-weight: 100;
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     color: #888;
-    text-align: center;
+    text-align: left;
 }
 
 .ads-summary-icon {
@@ -68,7 +63,7 @@
     margin-bottom: 10px;
     overflow: scroll;
     -webkit-overflow-scrolling: touch;
-    max-height: 450px;
+    max-height: 400px;
     overflow-x: hidden;
     overflow-y: auto;
 }
