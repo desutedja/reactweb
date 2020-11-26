@@ -25,8 +25,7 @@ import {
 } from "reactstrap";
 import { FiSearch, FiTarget } from "react-icons/fi";
 import SummaryItem from "./Components/SummaryItem";
-import { setData } from "../slices/transaction";
-
+import { downloadAdsReport } from "../slices/ads";
 const monthConst = [
   "Jan",
   "Feb",
@@ -347,25 +346,28 @@ function Component() {
   };
 
   useEffect(() => {
-    setLoadingAdvertiser(true);
     setLoadingPopup(true);
     setLoadingBanner(true);
-    dispatch(
-      get(
-        endpointAds +
-          "/management/ads/list/advertiser?" +
-          "limit=" +
-          limitAdvertiser,
-        (res) => {
-          setAdvertisers(res.data.data.items);
-          setLoadingAdvertiser(false);
-        },
-        (err) => {
-          console.log("FAILED GET LIST ADVERTISER :", err);
-          setLoadingAdvertiser(false);
-        }
-      )
-    );
+    if (group !== "vas_advertiser") {
+      setLoadingAdvertiser(true);
+
+      dispatch(
+        get(
+          endpointAds +
+            "/management/ads/list/advertiser?" +
+            "limit=" +
+            limitAdvertiser,
+          (res) => {
+            setAdvertisers(res.data.data.items);
+            setLoadingAdvertiser(false);
+          },
+          (err) => {
+            console.log("FAILED GET LIST ADVERTISER :", err);
+            setLoadingAdvertiser(false);
+          }
+        )
+      );
+    }
     dispatch(
       get(
         endpointAds +
@@ -467,6 +469,9 @@ function Component() {
   }, [searchValue, type, limitBanner, limitPopup]);
 
   useEffect(() => {
+    if (group === "vas_advertiser") {
+      return;
+    }
     setLoadingAdvertiser(true);
     dispatch(
       get(
@@ -654,6 +659,7 @@ function Component() {
       );
     }
   }, [selectedFilter, selectedMonth, selectedId]);
+  const now = moment().format(`DDMMyyyy${parseInt(Math.random() * 100000)}`);
   return (
     <>
       <div className="row no-gutters">
@@ -1035,6 +1041,14 @@ function Component() {
                             icon={el.icon}
                             // icon="https://api.yipy.id/yipy-assets/asset-storage/img/9EC3211E8CCDA375F28D2166BCD066C1.png"
                             data={el.data}
+                            download={() => {
+                              const idList = selectedId
+                                .map((el) => el.id)
+                                .join(",");
+                              return dispatch(
+                                downloadAdsReport(idList, selectedType)
+                              );
+                            }}
                           />
                         </div>
                       );
@@ -1055,6 +1069,7 @@ function Component() {
                         color="primary"
                         isOpen={dropdownOpen}
                         toggle={toggle}
+                        style={{ display: "none" }}
                       >
                         <Button className="ads-dropdown-button">
                           {selectedMonth}

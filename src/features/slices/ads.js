@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { endpointAds } from "../../settings";
-import { get, post, put, del, patch } from "../slice";
+import moment from "moment";
+import { get, post, put, del, patch, getFile } from "../slice";
 import { setInfo } from "../slice";
 
 const adsEndpoint = endpointAds + "/management/ads";
@@ -136,6 +137,36 @@ export const createAds = (data, history) => (dispatch, getState) => {
             message: "Advertisement has been created.",
           })
         );
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const downloadAdsReport = (selectedId, selectedType) => (dispatch) => {
+  dispatch(startAsync());
+  const now = moment().format(`DDMMyyyy${parseInt(Math.random() * 100000)}`);
+  let userID = "";
+  let adsID = "";
+  if (selectedType === "advertiser") {
+    userID = selectedId;
+  } else if (selectedType === "campaign") {
+    adsID = selectedId;
+  }
+  const url =
+    endpointAds +
+    "/management/ads/report?export=true&user_id=" +
+    userID +
+    "&ads_id=" +
+    adsID;
+  dispatch(
+    getFile(
+      url,
+      `ads-report-${now.toString()}.xlsx`,
+      (res) => {
         dispatch(stopAsync());
       },
       (err) => {
