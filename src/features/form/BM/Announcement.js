@@ -192,10 +192,12 @@ function Component() {
           building_section:
             values.consumer_role !== "resident" || values.building.length !== 1
               ? []
-              : values.building_section.map((el) => ({
+              : typeof values.building_section !== "undefined"
+              ? values.building_section.map((el) => ({
                   building_id: values.building[0].value,
                   building_section_id: el.value,
-                })),
+                }))
+              : [],
           merchant:
             values.consumer_role === "merchant"
               ? values.merchant.map((el) => el.value)
