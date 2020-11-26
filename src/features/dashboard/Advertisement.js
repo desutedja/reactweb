@@ -7,12 +7,13 @@ import LineCharts from "./Components/LineCharts";
 import Piecharts from "./Components/PieCharts";
 import ClinkLoader from "../../components/ClinkLoader";
 import Pill from "../../components/Pill";
+import moment from "moment";
 
 import "./style.css";
 import { get } from "../slice";
 import Tab from "../../components/Tab";
 import { useDispatch } from "react-redux";
-import { toSentenceCase, toThousand } from "../../utils";
+import { toSentenceCase, toThousand, getDatesRange } from "../../utils";
 import {
   Button,
   ButtonDropdown,
@@ -253,16 +254,43 @@ function Component() {
     ]);
 
     if (withTimeline) {
-      const timelineFiltered = data.timeline.map((item) => {
-        return {
-          m: item.month,
-          y: item.year,
-          month: `${monthConst[item.month - 1]} ${item.year}`,
-          view: item.total_repeated_view,
-          click: item.total_repeated_click,
-        };
+      const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+      const endOfYear = new Date(new Date().getFullYear(), 12, 0);
+      const monthsRange = getDatesRange(
+        new Date(startOfYear),
+        new Date(endOfYear),
+        "months"
+      );
+      const timelineFormatted = monthsRange.map((date) => {
+        const month = moment(date).format("MMM") + " ";
+        const monthNumber = moment(date).format("M");
+        const year = moment(date).format("YYYY");
+        const adsData = data.timeline.filter(
+          (el) =>
+            parseInt(el.month) === parseInt(monthNumber) &&
+            parseInt(el.year) === parseInt(year)
+        )[0];
+        if (typeof adsData === "undefined") {
+          return {
+            m: parseInt(monthNumber),
+            y: parseInt(year),
+            month: month + year,
+            view: 0,
+            click: 0,
+            empty: true,
+          };
+        } else {
+          return {
+            m: parseInt(monthNumber),
+            y: parseInt(year),
+            month: month + year,
+            view: adsData.total_repeated_view,
+            click: adsData.total_repeated_click,
+            empty: false,
+          };
+        }
       });
-      setTimeline(timelineFiltered);
+      setTimeline(timelineFormatted);
     }
     Object.keys(data.detail).map((key) => {
       switch (key) {
@@ -536,7 +564,6 @@ function Component() {
           }
         )
       );
-      // return;
     } else {
       urlEndpoint += "timeline_filter=" + audFilt;
       dispatch(
@@ -547,10 +574,15 @@ function Component() {
             handleReport(data, false);
             const timelineDeepfilter = [];
             const dtKey = [];
+
+            const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+            const endOfYear = new Date(new Date().getFullYear(), 12, 0);
+            const monthsRange = getDatesRange(
+              new Date(startOfYear),
+              new Date(endOfYear),
+              "months"
+            );
             data.timeline.map((item) => {
-              const checkArr = timelineDeepfilter.findIndex(
-                (el) => el.y === item.year && el.m === item.month
-              );
               let fieldName = audFilt;
               if (audFilt === "platform") {
                 fieldName = "os";
@@ -559,23 +591,57 @@ function Component() {
               } else if (audFilt === "building") {
                 fieldName = "city_name";
               }
-              if (checkArr > -1) {
-                timelineDeepfilter[checkArr][item[fieldName]] =
-                  item.total_repeated_view + item.total_repeated_click;
-              } else {
-                const data = {
-                  m: item.month,
-                  y: item.year,
-                  month: `${monthConst[item.month - 1]} ${item.year}`,
-                  view: item.total_repeated_view,
-                  click: item.total_repeated_click,
-                };
-                data[item[fieldName]] =
-                  item.total_repeated_view + item.total_repeated_click;
-                timelineDeepfilter.push(data);
-              }
               if (!dtKey.some((dt) => dt === item[fieldName])) {
                 dtKey.push(item[fieldName]);
+              }
+            });
+            const timelineFormatted = monthsRange.map((date) => {
+              const month = moment(date).format("MMM") + " ";
+              const monthNumber = moment(date).format("M");
+              const year = moment(date).format("YYYY");
+              const adsData = data.timeline.filter(
+                (el) =>
+                  parseInt(el.month) === parseInt(monthNumber) &&
+                  parseInt(el.year) === parseInt(year)
+              );
+
+              const retData = {
+                m: parseInt(monthNumber),
+                y: parseInt(year),
+                month: month + year,
+                view: 0,
+                click: 0,
+              };
+              dtKey.map((item) => {
+                retData[item] = 0;
+              });
+              if (adsData.length === 0) {
+                retData.empty = true;
+                timelineDeepfilter.push(retData);
+              } else {
+                adsData.map((item) => {
+                  const checkArr = timelineDeepfilter.findIndex(
+                    (el) => el.y === item.year && el.m === item.month
+                  );
+                  let fieldName = audFilt;
+                  if (audFilt === "platform") {
+                    fieldName = "os";
+                  } else if (audFilt === "age") {
+                    fieldName = "age_range";
+                  } else if (audFilt === "building") {
+                    fieldName = "city_name";
+                  }
+
+                  retData.empty = false;
+                  if (checkArr > -1) {
+                    timelineDeepfilter[checkArr][item[fieldName]] =
+                      item.total_repeated_view + item.total_repeated_click;
+                  } else {
+                    retData[item[fieldName]] =
+                      item.total_repeated_view + item.total_repeated_click;
+                    timelineDeepfilter.push(retData);
+                  }
+                });
               }
             });
             setTimeline([...timelineDeepfilter]);
@@ -1012,6 +1078,7 @@ function Component() {
                               return (
                                 <>
                                   <DropdownItem
+                                    disabled={el.empty}
                                     onClick={() => {
                                       setSelectedMonth(el.month);
                                     }}

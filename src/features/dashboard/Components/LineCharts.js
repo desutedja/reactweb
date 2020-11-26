@@ -41,7 +41,6 @@ const CustomTooltip = ({ active, payload, label }) => {
   let fullYear = "",
     fullMonth = "";
   if (payload != null && payload.length > 0) {
-    console.log(payload);
     fullYear = payload[0].payload.y;
     fullMonth = payload[0].payload.m ? monthsArr[payload[0].payload.m] : "";
   }
