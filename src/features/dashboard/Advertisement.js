@@ -510,17 +510,18 @@ function Component() {
   useEffect(() => {
     const audFilt = audiencesFilter[selectedFilter];
     const idList = selectedId.map((el) => el.id).join(",");
-    console.log(selectedId);
 
     setDataKeys([]);
     let urlEndpoint = endpointAds + "/management/ads/report";
     if (selectedType === "advertiser") {
-      urlEndpoint += "?advertiser_id=" + idList + "&";
+      urlEndpoint += "?user_id=" + idList + "&";
     } else if (selectedType === "campaign") {
       urlEndpoint += "?ads_id=" + idList + "&";
     } else {
       urlEndpoint += "?";
     }
+
+    console.log(urlEndpoint);
 
     if (audFilt === "") {
       dispatch(
@@ -535,60 +536,58 @@ function Component() {
           }
         )
       );
-      return;
+      // return;
+    } else {
+      urlEndpoint += "timeline_filter=" + audFilt;
+      dispatch(
+        get(
+          urlEndpoint,
+          (res) => {
+            const data = res.data.data;
+            handleReport(data, false);
+            const timelineDeepfilter = [];
+            const dtKey = [];
+            data.timeline.map((item) => {
+              const checkArr = timelineDeepfilter.findIndex(
+                (el) => el.y === item.year && el.m === item.month
+              );
+              let fieldName = audFilt;
+              if (audFilt === "platform") {
+                fieldName = "os";
+              } else if (audFilt === "age") {
+                fieldName = "age_range";
+              } else if (audFilt === "building") {
+                fieldName = "city_name";
+              }
+              if (checkArr > -1) {
+                timelineDeepfilter[checkArr][item[fieldName]] =
+                  item.total_repeated_view + item.total_repeated_click;
+              } else {
+                const data = {
+                  m: item.month,
+                  y: item.year,
+                  month: `${monthConst[item.month - 1]} ${item.year}`,
+                  view: item.total_repeated_view,
+                  click: item.total_repeated_click,
+                };
+                data[item[fieldName]] =
+                  item.total_repeated_view + item.total_repeated_click;
+                timelineDeepfilter.push(data);
+              }
+              if (!dtKey.some((dt) => dt === item[fieldName])) {
+                dtKey.push(item[fieldName]);
+              }
+            });
+            setTimeline([...timelineDeepfilter]);
+            setDataKeys([...dtKey]);
+          },
+          (err) => {
+            console.log("FAILED GET LIST REPORT :", err);
+          }
+        )
+      );
     }
-    urlEndpoint += "timeline_filter=" + audFilt;
-    dispatch(
-      get(
-        urlEndpoint,
-        (res) => {
-          const data = res.data.data;
-          handleReport(data, false);
-          const timelineDeepfilter = [];
-          const dtKey = [];
-          data.timeline.map((item) => {
-            const checkArr = timelineDeepfilter.findIndex(
-              (el) => el.y === item.year && el.m === item.month
-            );
-            let fieldName = audFilt;
-            if (audFilt === "platform") {
-              fieldName = "os";
-            } else if (audFilt === "age") {
-              fieldName = "age_range";
-            } else if (audFilt === "building") {
-              fieldName = "city_name";
-            }
-            if (checkArr > -1) {
-              timelineDeepfilter[checkArr][item[fieldName]] =
-                item.total_repeated_view + item.total_repeated_click;
-            } else {
-              const data = {
-                m: item.month,
-                y: item.year,
-                month: `${monthConst[item.month - 1]} ${item.year}`,
-                view: item.total_repeated_view,
-                click: item.total_repeated_click,
-              };
-              data[item[fieldName]] =
-                item.total_repeated_view + item.total_repeated_click;
-              timelineDeepfilter.push(data);
-            }
-            if (!dtKey.some((dt) => dt === item[fieldName])) {
-              dtKey.push(item[fieldName]);
-            }
-          });
-          setTimeline([...timelineDeepfilter]);
-          setDataKeys([...dtKey]);
-        },
-        (err) => {
-          console.log("FAILED GET LIST REPORT :", err);
-        }
-      )
-    );
   }, [selectedFilter, selectedMonth, selectedId]);
-  useEffect(() => {
-    console.log(dataKeys);
-  }, [dataKeys]);
   return (
     <>
       <div className="row no-gutters">
@@ -935,20 +934,31 @@ function Component() {
         </div>
         <div className="col-8">
           <h5 className="pl-4 ads-card-title">Summary</h5>
-          <div className="Container flex-column pb-5 pr-4">
+          <div
+            className="Container flex-column pb-5 pr-4"
+            style={{ overflow: "visible" }}
+          >
             <div className="row">
               <div className="col-12">
-                <h4 className="p-3">
-                  <strong>
-                    {selectedId.length === 0
-                      ? "All Campaign"
-                      : selectedId.length === 1 && selectedType === "campaign"
-                      ? selectedId[0].content_name
-                      : selectedType === "advertiser"
-                      ? ""
-                      : `Selected ${selectedId.length} Advertisements`}
-                  </strong>
-                </h4>
+                <div className="row pl-3 mb-0">
+                  <h4
+                    className="p-3"
+                    style={{ display: "flex", flexDirection: "row" }}
+                  >
+                    <strong>
+                      {selectedId.length === 0
+                        ? "All Campaign"
+                        : selectedId.length === 1 && selectedType === "campaign"
+                        ? selectedId[0].content_name
+                        : selectedType === "advertiser"
+                        ? ""
+                        : `Selected ${selectedId.length} Advertisements`}
+                    </strong>
+                    {selectedType === "campaign" && selectedId.length > 1 && (
+                      <ListAds data={selectedId} />
+                    )}
+                  </h4>
+                </div>
                 <div className="row pl-3 mb-0">
                   {summary.length > 0 &&
                     summary.map((el, index) => {
@@ -1149,3 +1159,33 @@ const InputSearch = (props) => (
     />
   </div>
 );
+
+const ListAds = ({ data }) => {
+  const history = useHistory();
+  const { role } = useSelector((state) => state.auth);
+  const [modalHover, setModalHover] = useState(false);
+  return (
+    <div className="modal-hover">
+      <button
+        onClick={() => undefined}
+        className="ml-2"
+        onMouseEnter={() => setModalHover(true)}
+        onMouseLeave={() => setModalHover(false)}
+      >
+        i
+      </button>
+      <div
+        style={{ minWidth: 400 }}
+        className={"list-modal-hover" + (modalHover ? " on" : "")}
+        onMouseEnter={() => setModalHover(true)}
+        onMouseLeave={() => setModalHover(false)}
+      >
+        {data.map((item, i) => (
+          <div className="p-2" style={{ fontSize: 14 }}>
+            {i + 1 + ". " + item.content_name}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
