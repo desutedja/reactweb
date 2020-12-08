@@ -159,8 +159,8 @@ function Component({
                   {placeholder == null ? label : placeholder}
                 </option>
               )}
-              {options.map((el) => (
-                <option key={el.value} value={el.value}>
+              {options.map((el, index) => (
+                <option key={el.value + "-" + index} value={el.value}>
                   {el.label}
                 </option>
               ))}
@@ -187,9 +187,13 @@ function Component({
                         }
                         id={typeof el.id == "undefined" ? el.label : el.id}
                         value={el.value}
-                        onClick={(event) =>
-                          setInputValue && setInputValue(event.target.value)
-                        }
+                        onClick={(event) => {
+                          return (
+                            setInputValue &&
+                            setInputValue(event.target.value) &&
+                            setValue(event.target.value)
+                          );
+                        }}
                         checked
                       />
                     ) : (
@@ -200,9 +204,13 @@ function Component({
                           name ? name : label.toLowerCase().replace(/ /g, "_")
                         }
                         id={typeof el.id == "undefined" ? el.label : el.id}
-                        onClick={(event) =>
-                          setInputValue && setInputValue(event.target.value)
-                        }
+                        onClick={(event) => {
+                          return (
+                            setInputValue &&
+                            setInputValue(event.target.value) &&
+                            setValue(event.target.value)
+                          );
+                        }}
                         value={el.value}
                       />
                     )}

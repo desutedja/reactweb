@@ -6,7 +6,6 @@ import { endpointAds } from "../../settings";
 import LineCharts from "./Components/LineCharts";
 import Piecharts from "./Components/PieCharts";
 import ClinkLoader from "../../components/ClinkLoader";
-import Pill from "../../components/Pill";
 import moment from "moment";
 
 import "./style.css";
@@ -23,7 +22,7 @@ import {
   ListGroup,
   ListGroupItem,
 } from "reactstrap";
-import { FiSearch, FiTarget } from "react-icons/fi";
+import { FiSearch } from "react-icons/fi";
 import SummaryItem from "./Components/SummaryItem";
 import { downloadAdsReport } from "../slices/ads";
 const monthConst = [

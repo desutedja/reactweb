@@ -17,6 +17,20 @@
     color: "#000" !important;
 }
 
+
+.cctv-active-button {
+    background-color: #e12029 !important;
+    min-width: 150px;
+    max-width: 150px;
+    border-radius: 1rem;
+}
+.cctv-inactive-button {
+    background-color: #bbbbbb !important;
+    min-width: 150px;
+    max-width: 150px;
+    border-radius: 1rem;
+}
+
 .ads-detail-container {
     display: flex;
     height: 100%;

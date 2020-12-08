@@ -1,15 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { FiSearch, FiPlus } from "react-icons/fi";
+import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
-import Filter from "../../components/Filter";
-import Input from "../../components/Input";
-import Pill from "../../components/Pill";
-import Tile from "../../components/Tile";
 // import { getMerchant, setSelected, deleteMerchant } from "../slices/merchant";
-import { toSentenceCase, dateTimeFormatterCell, toMoney } from "../../utils";
+import { dateTimeFormatterCell, toMoney } from "../../utils";
 import { endpointAdmin } from "../../settings";
 import { get } from "../slice";
 

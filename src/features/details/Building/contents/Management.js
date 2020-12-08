@@ -35,6 +35,8 @@ function Component({ view }) {
   const [edit, setEdit] = useState(false);
   const [addManagement, setAddManagement] = useState(false);
   const [loadDefault, setLoadDefault] = useState(5);
+  const [xenPlatformActive, setXenPlatformActive] = useState(null);
+  const [xenPlatformReady, setXenPlatformReady] = useState(null);
 
   const [search, setSearch] = useState("");
   const [managementID, setManagementID] = useState("");
@@ -116,6 +118,8 @@ function Component({ view }) {
 
   useEffect(() => {
     console.log(selectedRow);
+    setXenPlatformActive(selectedRow.xenplatform_active);
+    setXenPlatformReady(selectedRow.xenplatform_ready);
   }, [selectedRow]);
 
   useEffect(() => {
@@ -368,6 +372,63 @@ function Component({ view }) {
             addons="%"
             inputValue={selectedRow.courier_external_markup}
           />
+          <Input
+            label="Using Xenplatform"
+            type="radio"
+            name="xenplatform_active"
+            inputValue={
+              xenPlatformActive !== null
+                ? xenPlatformActive
+                : selectedRow.xenplatform_active
+            }
+            setInputValue={(val) => setXenPlatformActive(val)}
+            options={[
+              { value: "yes", label: "Yes", id: "yes_xenplatform_active" },
+              { value: "no", label: "No", id: "no_xenplatform_active" },
+            ]}
+          />
+
+          {xenPlatformActive == "yes" && selectedRow.xenplatform_id && (
+            <Input
+              label="Xenplatform Ready"
+              type="radio"
+              name="xenplatform_ready"
+              inputValue={
+                xenPlatformReady !== null
+                  ? xenPlatformReady
+                  : selectedRow.xenplatform_ready
+              }
+              setInputValue={(val) => setXenPlatformReady(val)}
+              options={[
+                { value: "yes", label: "Yes", id: "yes_xenplatform_ready" },
+                { value: "no", label: "No", id: "no_xenplatform_ready" },
+              ]}
+            />
+          )}
+          {xenPlatformReady == "yes" && selectedRow.xenplatform_id && (
+            <>
+              <Input
+                label="Xenplatform VA BCA"
+                name="xenplatform_va_bca"
+                inputValue={selectedRow.xenplatform_va_bca}
+              />
+              <Input
+                label="Xenplatform VA Mandiri"
+                name="xenplatform_va_mandiri"
+                inputValue={selectedRow.xenplatform_va_mandiri}
+              />
+              <Input
+                label="Xenplatform VA BNI"
+                name="xenplatform_va_bni"
+                inputValue={selectedRow.xenplatform_va_bni}
+              />
+              <Input
+                label="Xenplatform VA BRI"
+                name="xenplatform_va_bri"
+                inputValue={selectedRow.xenplatform_va_bri}
+              />
+            </>
+          )}
         </Form>
       </Modal>
       <Table

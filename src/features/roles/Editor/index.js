@@ -44,7 +44,7 @@ const menu = [
     icon: <FiBarChart2 className="MenuItem-icon" />,
     label: "Dashboard",
     path: "/dashboard",
-    subpaths: ["/building", "/transaction", "/task", "/advertisement"],
+    subpaths: ["/building", "/transaction", "/task", "/advertisement", "/CCTV"],
     component: <Dashboard />,
   },
   {
