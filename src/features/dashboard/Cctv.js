@@ -276,14 +276,14 @@ function Component() {
             ]}
           />
           <Input
-            label="Power"
+            label="Enable"
             type="radio"
             name="power"
             inputValue={power !== null ? power : selectedRow.power}
             setInputValue={(val) => setPower(val)}
             options={[
-              { value: "on", label: "On", id: "on_power" },
-              { value: "off", label: "Off", id: "off_power" },
+              { value: "on", label: "Yes", id: "on_power" },
+              { value: "off", label: "No", id: "off_power" },
             ]}
           />
         </Form>
