@@ -940,4 +940,32 @@ export const editCctv = (data, id) => (dispatch) => {
   );
 };
 
+export const deleteCctv = (row, history) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    del(
+      endpointAdmin + "/cctv/admin/" + row.id,
+      (res) => {
+        history && history.push("/" + auth.role + "/dashboard/CCTV");
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building has been deleted.",
+          })
+        );
+
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
 export default slice.reducer;

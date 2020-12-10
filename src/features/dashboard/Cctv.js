@@ -5,16 +5,17 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 
 import "./style.css";
-import { get } from "../slice";
+import { get, setConfirmDelete } from "../slice";
 import { useDispatch } from "react-redux";
 import Input from "../../components/Input";
 import Form from "../../components/Form";
 import Modal from "../../components/Modal";
 import Filter from "../../components/Filter";
-import { createCctv, editCctv } from "../slices/building";
+import { createCctv, editCctv, deleteCctv } from "../slices/building";
 import { FiSearch } from "react-icons/fi";
 import { Button } from "reactstrap";
 import { endpointAdmin } from "../../settings";
+import { FiTrash, FiEdit } from "react-icons/fi";
 
 function Component() {
   const { auth } = useSelector((state) => state);
@@ -23,7 +24,7 @@ function Component() {
 
   const [cctvPage, setCctvPage] = useState(1);
   const [cctvMaxPage, setCctvMaxPage] = useState(1);
-  const [cctvLimit, setCctvLimit] = useState(10);
+  const [cctvLimit, setCctvLimit] = useState(100);
   const [cctvList, setCctvList] = useState([]);
   const [edit, setEdit] = useState(false);
   const [addCctv, setAddCctv] = useState(false);
@@ -39,9 +40,13 @@ function Component() {
   const [host, setHost] = useState("");
   const [residentAccess, setResidentAccess] = useState(null);
   const [power, setPower] = useState(null);
+  const [channel, setChannel] = useState("");
+  const [confirmDeleteCctv, setConfirmDeleteCctv] = useState(false);
+  const [chosenCctv, setChosenCctv] = useState({});
 
   let dispatch = useDispatch();
   const history = useHistory();
+  const { refreshToggle } = useSelector((state) => state.building);
   useEffect(() => {}, [dispatch]);
 
   useEffect(() => {
@@ -90,7 +95,7 @@ function Component() {
         }
       )
     );
-  }, [cctvPage, addCctv]);
+  }, [cctvPage, addCctv, refreshToggle]);
 
   useEffect(() => {
     (!search || search.length >= 1) &&
@@ -107,10 +112,10 @@ function Component() {
             let data = res.data.data.items;
             const totalItems = res.data.data.total_items;
             const currentItems = totalItems - data.length;
-
+            console.log(res.data.data.items);
             let formatted = data.map((el) => ({
               label: el.name + " by " + el.management_name,
-              value: el.id,
+              value: el.management_building_id,
               clickable: true,
             }));
             if (currentItems > 0 && !search) {
@@ -147,6 +152,7 @@ function Component() {
           }}
           onSubmit={(data) => {
             data.host = host;
+            data.channel = channel;
             edit
               ? dispatch(
                   editCctv(
@@ -158,7 +164,8 @@ function Component() {
                       status: managementChose.status,
                     },
                     selectedRow.id
-                  )
+                  ),
+                  (res) => {}
                 )
               : // console.log({
                 //     "building_id": selected.id, building_name: selected.name, ...data})
@@ -190,6 +197,7 @@ function Component() {
               data={managements}
               onClick={(el) => {
                 if (el.clickable) {
+                  console.log(el);
                   setManagementID(el.value);
                   setManagementName(el.label);
                   setModalManagement(false);
@@ -227,7 +235,8 @@ function Component() {
           <Input
             label="Channel ID"
             name="channel"
-            inputValue={selectedRow.channel}
+            inputValue={selectedRow.channel ? selectedRow.channel : channel}
+            setInputValue={setChannel}
           />
           <Input label="Alias" inputValue={selectedRow.alias} />
           <Input
@@ -279,6 +288,27 @@ function Component() {
           />
         </Form>
       </Modal>
+
+      <Modal
+        disableHeader={true}
+        isOpen={confirmDeleteCctv}
+        onClick={() => {
+          dispatch(deleteCctv(chosenCctv));
+          setChosenCctv({});
+          setConfirmDeleteCctv(false);
+        }}
+        onClickSecondary={() => setConfirmDeleteCctv(false)}
+        okLabel={"Sure"}
+      >
+        <h4
+          className="mb-3"
+          style={{
+            fontSize: "1.2rem",
+          }}
+        >
+          Are you sure to delete <strong>{chosenCctv.alias}</strong> ?
+        </h4>
+      </Modal>
       <div className="row no-gutters">
         <div className="col-4">
           <h5 className="pl-4 ads-card-title">CCTV</h5>
@@ -286,30 +316,33 @@ function Component() {
             className="Container flex-column pb-5 pr-4"
             style={{ maxHeight: 628, height: 628 }}
           >
-            <div className="row mb-4 p-3">
-              <div className="col-12 center">
-                <Button
-                  className="cctv-active-button"
-                  style={{
-                    minWidth: 200,
-                    maxWidth: 200,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    alignContent: "center",
-                  }}
-                  onClick={() => {
-                    setAddCctv(true);
-                    setRow({});
-                    setEdit(false);
-                    setHost("");
-                    setPower(null);
-                    setResidentAccess(null);
-                  }}
-                >
-                  Manage CCTV
-                </Button>
+            {role === "sa" && (
+              <div className="row mb-4 p-3">
+                <div className="col-12 center">
+                  <Button
+                    className="cctv-active-button"
+                    style={{
+                      minWidth: 200,
+                      maxWidth: 200,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      alignContent: "center",
+                    }}
+                    onClick={() => {
+                      setAddCctv(true);
+                      setRow({});
+                      setEdit(false);
+                      setHost("");
+                      setChannel("");
+                      setPower(null);
+                      setResidentAccess(null);
+                    }}
+                  >
+                    <FiEdit /> Add CCTV
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
             <div className="cctv-list-scroll">
               {cctvList.length > 0 &&
                 cctvList.map((el) => {
@@ -338,20 +371,42 @@ function Component() {
 
                         <div className="mb-2">Power : {el.power}</div>
 
-                        <div className="mt-4 mb-2">
-                          <Button
-                            className={"cctv-active-button"}
-                            onClick={() => {
-                              console.log(el);
-                              setEdit(true);
-                              setAddCctv(true);
-                              setRow(el);
-                              setHost(el.host);
-                            }}
-                          >
-                            Edit
-                            {/* {el.power === "on" ? "Turn Off" : "Turn On"} */}
-                          </Button>
+                        <div className="mt-4 mb-2 row">
+                          <div className="col-6">
+                            <Button
+                              className={"cctv-active-button"}
+                              onClick={() => {
+                                console.log(el);
+                                setEdit(true);
+                                setAddCctv(true);
+                                setRow(el);
+                                setHost(el.host);
+                                setChannel(el.channel);
+                              }}
+                              style={{
+                                width: 100,
+                                maxWidth: 100,
+                                minWidth: 100,
+                              }}
+                            >
+                              Edit CCTV
+                              {/* {el.power === "on" ? "Turn Off" : "Turn On"} */}
+                            </Button>
+                          </div>
+                          <div className="col-4 ml-2">
+                            <Button
+                              className={"cctv-active-button"}
+                              onClick={() => {
+                                setConfirmDeleteCctv(true);
+                                setChosenCctv(el);
+                                // dispatch(deleteCctv(el, history));
+                              }}
+                              style={{ width: 30, maxWidth: 30, minWidth: 30 }}
+                            >
+                              <FiTrash />
+                              {/* {el.power === "on" ? "Turn Off" : "Turn On"} */}
+                            </Button>
+                          </div>
                         </div>
                       </div>
                     </div>

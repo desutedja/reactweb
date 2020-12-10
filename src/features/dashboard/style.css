@@ -30,13 +30,13 @@
     background-color: #e12029 !important;
     min-width: 150px;
     max-width: 150px;
-    border-radius: 1rem;
+    border-radius: 4px;
 }
 .cctv-inactive-button {
     background-color: #bbbbbb !important;
     min-width: 150px;
     max-width: 150px;
-    border-radius: 1rem;
+    border-radius: 4px;
 }
 
 .ads-detail-container {
@@ -94,19 +94,19 @@
     background-color: #e12029 !important;
     min-width: 90px;
     max-width: 90px;
-    border-radius: 1rem;
+    border-radius: 4px;
 }
 
 .ads-dropdown-button {
     background-color: #e12029 !important;
-    border-radius: 1rem;
+    border-radius: 4px;
 }
 
 .ads-inactive-button {
     background-color: #bbbbbb !important;
     min-width: 90px;
     max-width: 90px;
-    border-radius: 1rem;
+    border-radius: 4px;
 }
 
 .BigIcon {

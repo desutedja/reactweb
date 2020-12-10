@@ -62,7 +62,7 @@ const modules = [
     icon: <FiBarChart2 className="MenuItem-icon" />,
     label: "Dashboard",
     path: "/dashboard",
-    subpaths: ["/building", "/task", "/advertisement"],
+    subpaths: ["/building", "/task", "/advertisement", "/CCTV"],
     component: <Dashboard />,
   },
   {
