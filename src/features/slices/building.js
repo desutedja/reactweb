@@ -1,12 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { endpointAdmin } from '../../settings';
-import { post, get, del, put } from '../slice';
-import { setInfo } from '../slice';
+import { createSlice } from "@reduxjs/toolkit";
+import { endpointAdmin } from "../../settings";
+import { post, get, del, put, patch } from "../slice";
+import { setInfo } from "../slice";
 
-const buildingEndpoint = endpointAdmin + '/building';
+const buildingEndpoint = endpointAdmin + "/building";
 
 export const slice = createSlice({
-  name: 'building',
+  name: "building",
   initialState: {
     loading: false,
     items: [],
@@ -120,544 +120,824 @@ export const {
   setUnitTypeData,
   setSectionData,
   setServiceData,
-  setManagementData
+  setManagementData,
 } = slice.actions;
 
-export const getBuilding = ( pageIndex, pageSize, search = '', province, city, district) => dispatch => {
+export const getBuilding = (
+  pageIndex,
+  pageSize,
+  search = "",
+  province,
+  city,
+  district
+) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(buildingEndpoint +
-    '?page=' + (pageIndex + 1) +
-    '&limit=' + pageSize +
-    '&search=' + search +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&province=' + province +
-    '&city=' + city +
-    '&district=' + district,
-    
-    res => {
-      // console.log(res);
+  dispatch(
+    get(
+      buildingEndpoint +
+        "?page=" +
+        (pageIndex + 1) +
+        "&limit=" +
+        pageSize +
+        "&search=" +
+        search +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&province=" +
+        province +
+        "&city=" +
+        city +
+        "&district=" +
+        district,
 
-      dispatch(setData(res.data.data));
+      (res) => {
+        // console.log(res);
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }
-    ))
-}
+        dispatch(setData(res.data.data));
 
-export const createBuilding = ( data, history) => dispatch => {
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const createBuilding = (data, history) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(post(buildingEndpoint, data, 
-    res => {
-      history.push("/sa/building");
+  dispatch(
+    post(
+      buildingEndpoint,
+      data,
+      (res) => {
+        history.push("/sa/building");
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building has been created.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building has been created.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const editBuilding = ( data, history, id, role) => dispatch => {
+export const editBuilding = (data, history, id, role) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint, { ...data, id: id }, 
-    res => {
-      dispatch(setSelected(res.data.data));
-      console.log(history)
-      role === 'bm' ? history && history.push('/' + role + '/settings') :
-      history && history.push(`${id}`);
+  dispatch(
+    put(
+      buildingEndpoint,
+      { ...data, id: id },
+      (res) => {
+        dispatch(setSelected(res.data.data));
+        console.log(history);
+        role === "bm"
+          ? history && history.push("/" + role + "/settings")
+          : history && history.push(`${id}`);
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building has been updated.'
-      }));
-      dispatch(refresh());
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building has been updated.",
+          })
+        );
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
 export const deleteBuilding = (row, history) => (dispatch, getState) => {
   dispatch(startAsync());
 
   const { auth } = getState();
 
-  dispatch(del(buildingEndpoint + '/' + row.id, 
-    res => {
-      history && history.push('/' + auth.role + '/building');
+  dispatch(
+    del(
+      buildingEndpoint + "/" + row.id,
+      (res) => {
+        history && history.push("/" + auth.role + "/building");
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building has been deleted.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building has been deleted.",
+          })
+        );
 
-      dispatch(refresh());
-      dispatch(stopAsync())
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const getBuildingDetails = (row,  history, url) => dispatch => {
+export const getBuildingDetails = (row, history, url) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(buildingEndpoint + '/details/' + row.id, 
-    res => {
-      dispatch(setSelected(res.data.data));
-      history.push(url + '/' + res.data.data.id);
+  dispatch(
+    get(
+      buildingEndpoint + "/details/" + row.id,
+      (res) => {
+        dispatch(setSelected(res.data.data));
+        history.push(url + "/" + res.data.data.id);
 
-      dispatch(stopAsync())
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const getBuildingUnit = ( pageIndex, pageSize, search, row, hasResident = false) => dispatch => {
+export const getBuildingUnit = (
+  pageIndex,
+  pageSize,
+  search,
+  row,
+  hasResident = false
+) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(buildingEndpoint + '/unit' +
-    '?page=' + (pageIndex + 1) +
-    '&building_id=' + row.id +
-    '&search=' + search +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&limit=' + pageSize +
-    (hasResident ? '&has_resident=true' : ''),
-    
-    res => {
-      dispatch(setUnitData(res.data.data));
+  dispatch(
+    get(
+      buildingEndpoint +
+        "/unit" +
+        "?page=" +
+        (pageIndex + 1) +
+        "&building_id=" +
+        row.id +
+        "&search=" +
+        search +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&limit=" +
+        pageSize +
+        (hasResident ? "&has_resident=true" : ""),
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+      (res) => {
+        dispatch(setUnitData(res.data.data));
 
-export const getBuildingUnitType = ( pageIndex, pageSize, search, row, unit_type = "") => dispatch => {
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const getBuildingUnitType = (
+  pageIndex,
+  pageSize,
+  search,
+  row,
+  unit_type = ""
+) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(buildingEndpoint + '/unit/type' +
-    '?page=' + (pageIndex + 1) +
-    '&building_id=' + row.id +
-    '&search=' + search +
-    '&unit_type=' + unit_type +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&limit=' + pageSize,
-    
-    res => {
-      dispatch(setUnitTypeData(res.data.data));
+  dispatch(
+    get(
+      buildingEndpoint +
+        "/unit/type" +
+        "?page=" +
+        (pageIndex + 1) +
+        "&building_id=" +
+        row.id +
+        "&search=" +
+        search +
+        "&unit_type=" +
+        unit_type +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&limit=" +
+        pageSize,
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+      (res) => {
+        dispatch(setUnitTypeData(res.data.data));
 
-export const getBuildingSection = ( pageIndex, pageSize, search, row, section_type = "") => dispatch => {
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const getBuildingSection = (
+  pageIndex,
+  pageSize,
+  search,
+  row,
+  section_type = ""
+) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(buildingEndpoint + '/section' +
-    '?page=' + (pageIndex + 1) +
-    '&building_id=' + row.id +
-    '&section_type=' + section_type +
-    '&search=' + search +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&limit=' + pageSize,
-    
-    res => {
-      dispatch(setSectionData(res.data.data));
+  dispatch(
+    get(
+      buildingEndpoint +
+        "/section" +
+        "?page=" +
+        (pageIndex + 1) +
+        "&building_id=" +
+        row.id +
+        "&section_type=" +
+        section_type +
+        "&search=" +
+        search +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&limit=" +
+        pageSize,
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+      (res) => {
+        dispatch(setSectionData(res.data.data));
 
-export const getBuildingService = ( pageIndex, pageSize, search, row, group = "") => dispatch => {
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const getBuildingService = (
+  pageIndex,
+  pageSize,
+  search,
+  row,
+  group = ""
+) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(get(buildingEndpoint + '/service' +
-    '?page=' + (pageIndex + 1) +
-    '&building_id=' + row.id +
-    '&group=' + group +
-    '&search=' + search +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&limit=' + pageSize,
-    
-    res => {
-      dispatch(setServiceData(res.data.data));
+  dispatch(
+    get(
+      buildingEndpoint +
+        "/service" +
+        "?page=" +
+        (pageIndex + 1) +
+        "&building_id=" +
+        row.id +
+        "&group=" +
+        group +
+        "&search=" +
+        search +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&limit=" +
+        pageSize,
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+      (res) => {
+        dispatch(setServiceData(res.data.data));
 
-export const getBuildingManagement = ( pageIndex, pageSize, search, row) => dispatch => {
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const getBuildingManagement = (pageIndex, pageSize, search, row) => (
+  dispatch
+) => {
   dispatch(startAsync());
 
-  dispatch(get(buildingEndpoint + '/management' +
-    '?page=' + (pageIndex + 1) +
-    '&building_id=' + row.id +
-    '&search=' + search +
-    '&sort_field=created_on&sort_type=DESC' +
-    '&limit=' + pageSize,
-    
-    res => {
-      dispatch(setManagementData(res.data.data));
+  dispatch(
+    get(
+      buildingEndpoint +
+        "/management" +
+        "?page=" +
+        (pageIndex + 1) +
+        "&building_id=" +
+        row.id +
+        "&search=" +
+        search +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&limit=" +
+        pageSize,
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+      (res) => {
+        dispatch(setManagementData(res.data.data));
 
-export const changeBuildingManagement = ( data ) => dispatch => {
-  dispatch(startAsync())
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-  dispatch(post(buildingEndpoint + '/management/status', data, 
-    res => {
-      dispatch(refresh());
-      console.log(res.data)
-
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Management status has been changed.'
-      }));
-
-      // dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-
-  dispatch(stopAsync())
-}
-
-export const createBuildingUnit = ( data) => dispatch => {
+export const changeBuildingManagement = (data) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(post(buildingEndpoint + '/unit', data, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    post(
+      buildingEndpoint + "/management/status",
+      data,
+      (res) => {
+        dispatch(refresh());
+        console.log(res.data);
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building unit has been created.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Management status has been changed.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        // dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
 
-export const createBuildingUnitType = ( data) => dispatch => {
+  dispatch(stopAsync());
+};
+
+export const createBuildingUnit = (data) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(post(buildingEndpoint + '/unit/type', data, 
-    res => {
-      dispatch(refresh());
-      
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building unit type has been created.'
-      }));
+  dispatch(
+    post(
+      buildingEndpoint + "/unit",
+      data,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building unit has been created.",
+          })
+        );
 
-export const createBuildingSection = ( data) => dispatch => {
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const createBuildingUnitType = (data) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(post(buildingEndpoint + '/section', data, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    post(
+      buildingEndpoint + "/unit/type",
+      data,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building section has been created.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building unit type has been created.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const createBuildingManagement = ( data) => dispatch => {
+export const createBuildingSection = (data) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(post(buildingEndpoint + '/management', data, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    post(
+      buildingEndpoint + "/section",
+      data,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building management has been created.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building section has been created.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const createBuildingService = ( data ) => dispatch => {
+export const createBuildingManagement = (data) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      buildingEndpoint + "/management",
+      data,
+      (res) => {
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building management has been created.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const createBuildingService = (data) => (dispatch) => {
   dispatch(startAsync());
 
   // console.log(data)
 
-  dispatch(post(buildingEndpoint + '/service', data, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    post(
+      buildingEndpoint + "/service",
+      data,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building service has been created.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building service has been created.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const editBuildingUnit = ( data, id) => dispatch => {
+export const editBuildingUnit = (data, id) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint + '/unit', {...data, id: id}, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    put(
+      buildingEndpoint + "/unit",
+      { ...data, id: id },
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building unit has been updated.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building unit has been updated.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const editBuildingUnitType = ( data, id) => dispatch => {
+export const editBuildingUnitType = (data, id) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint + '/unit/type', {...data, id: id}, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    put(
+      buildingEndpoint + "/unit/type",
+      { ...data, id: id },
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building unit type has been updated.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building unit type has been updated.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const editBuildingSection = ( data, id) => dispatch => {
+export const editBuildingSection = (data, id) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint + '/section', {...data, id: id}, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    put(
+      buildingEndpoint + "/section",
+      { ...data, id: id },
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building section has been updated.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building section has been updated.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const editBuildingManagement = ( data, id) => dispatch => {
+export const editBuildingManagement = (data, id) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint + '/management', {...data, id: id}, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    put(
+      buildingEndpoint + "/management",
+      { ...data, id: id },
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building mangement has been updated.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building mangement has been updated.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const editBuildingService = ( data, id) => dispatch => {
+export const editBuildingService = (data, id) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(put(buildingEndpoint + '/service', {...data, id: id}, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    put(
+      buildingEndpoint + "/service",
+      { ...data, id: id },
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building service has been updated.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building service has been updated.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const deleteBuildingUnit = (row, ) => dispatch => {
+export const deleteBuildingUnit = (row) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(del(buildingEndpoint + '/unit/' + row.id, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    del(
+      buildingEndpoint + "/unit/" + row.id,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building unit has been deleted.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building unit has been deleted.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const deleteBuildingUnitType = (row, ) => dispatch => {
+export const deleteBuildingUnitType = (row) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(del(buildingEndpoint + '/unit/type/' + row.id, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    del(
+      buildingEndpoint + "/unit/type/" + row.id,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building unit type has been deleted.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building unit type has been deleted.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const deleteBuildingSection = (row, ) => dispatch => {
+export const deleteBuildingSection = (row) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(del(buildingEndpoint + '/section/' + row.id, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    del(
+      buildingEndpoint + "/section/" + row.id,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building section has been deleted.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building section has been deleted.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const deleteBuildingManagement = (row, ) => dispatch => {
+export const deleteBuildingManagement = (row) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(del(buildingEndpoint + '/management/' + row.id, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    del(
+      buildingEndpoint + "/management/" + row.id,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building management has been deleted.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building management has been deleted.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const deleteBuildingService = (row, ) => dispatch => {
+export const deleteBuildingService = (row) => (dispatch) => {
   dispatch(startAsync());
 
-  dispatch(del(buildingEndpoint + '/service/' + row.id, 
-    res => {
-      dispatch(refresh());
+  dispatch(
+    del(
+      buildingEndpoint + "/service/" + row.id,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Building service has been deleted.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Building service has been deleted.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
-export const deleteMultipleBuilding = (row, history) => dispatch => {
+export const deleteMultipleBuilding = (row, history) => (dispatch) => {
   dispatch(startAsync());
 
-  const data = row.map(el => 'building_id=' + el).join('&');
+  const data = row.map((el) => "building_id=" + el).join("&");
 
-  dispatch(del(buildingEndpoint + '?' + data,
-    res => {
-      dispatch(refresh());
+  dispatch(
+    del(
+      buildingEndpoint + "?" + data,
+      (res) => {
+        dispatch(refresh());
 
-      dispatch(setInfo({
-        color: 'success',
-        message: 'Buildings have been deleted.'
-      }));
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Buildings have been deleted.",
+          })
+        );
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const createCctv = (data) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      endpointAdmin + "/cctv/admin",
+      data,
+      (res) => {
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "CCTV has been created.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const editCctv = (data, id) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    patch(
+      endpointAdmin + "/cctv/admin/" + id,
+      { ...data, id: id },
+      (res) => {
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "CCTV has been updated.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
 export default slice.reducer;
