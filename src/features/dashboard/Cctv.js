@@ -316,14 +316,17 @@ function Component() {
                   return (
                     <div className="row mb-4 p-3">
                       <div className="col-6">
-                        {/* <img src={el.thumbBase64} /> */}
-                        <div
+                        <img
+                          src={el.default_thumbnail}
+                          style={{ height: 100 }}
+                        />
+                        {/* <div
                           style={{
                             width: "100%",
                             height: 100,
                             background: "grey",
                           }}
-                        ></div>
+                        ></div> */}
                       </div>
                       <div
                         className="col-6"
