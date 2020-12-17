@@ -13,6 +13,7 @@ import {
   RiHotelLine,
   RiUserStarLine,
   RiUserFollowLine,
+  RiUserLocationLine,
 } from "react-icons/ri";
 
 import { toMoney, getDatesRange } from "../../utils";
@@ -289,45 +290,129 @@ function Component() {
             </div>
           </div>
         )}
-        <div className="col">
-          <div className="Container color-6 d-flex flex-column cursor-pointer">
-            <div className="row no-gutters align-items-center">
-              <div className="col">
-                <AnimatedNumber
-                  className="h2 font-weight-bold white"
-                  value={staffData.num_of_login_resident}
-                  formatValue={formatValue}
-                />
-                <div className="text-nowrap">Online Resident(s)</div>
-              </div>
-              <div className="col-auto">
-                <div className="w-auto">
-                  <RiUserFollowLine className="BigIcon white my-0" />
+        {auth.role !== "sa" && (
+          <>
+            <div className="col">
+              <div className="Container color-6 d-flex flex-column cursor-pointer">
+                <div className="row no-gutters align-items-center">
+                  <div className="col">
+                    <AnimatedNumber
+                      className="h2 font-weight-bold white"
+                      value={staffData.num_of_login_resident}
+                      formatValue={formatValue}
+                    />
+                    <div className="text-nowrap">Online Resident(s)</div>
+                  </div>
+                  <div className="col-auto">
+                    <div className="w-auto">
+                      <RiUserFollowLine className="BigIcon white my-0" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="col">
-          <div className="Container color-7 d-flex flex-column cursor-pointer">
-            <div className="row no-gutters align-items-center">
-              <div className="col">
-                <AnimatedNumber
-                  className="h2 font-weight-bold white"
-                  value={staffData.num_of_login_staff}
-                  formatValue={formatValue}
-                />
-                <div className="text-nowrap">Online Staff(s)</div>
-              </div>
-              <div className="col-auto">
-                <div className="w-auto">
-                  <RiUserStarLine className="BigIcon white my-0" />
+            <div className="col">
+              <div className="Container color-8 d-flex flex-column cursor-pointer">
+                <div className="row no-gutters align-items-center">
+                  <div className="col">
+                    <AnimatedNumber
+                      className="h2 font-weight-bold white"
+                      value={staffData.num_of_onboarded_resident}
+                      formatValue={formatValue}
+                    />
+                    <div className="text-nowrap">Onboarded Resident(s)</div>
+                  </div>
+                  <div className="col-auto">
+                    <div className="w-auto">
+                      <RiUserLocationLine className="BigIcon white my-0" />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+            <div className="col">
+              <div className="Container color-7 d-flex flex-column cursor-pointer">
+                <div className="row no-gutters align-items-center">
+                  <div className="col">
+                    <AnimatedNumber
+                      className="h2 font-weight-bold white"
+                      value={staffData.num_of_login_staff}
+                      formatValue={formatValue}
+                    />
+                    <div className="text-nowrap">Online Staff(s)</div>
+                  </div>
+                  <div className="col-auto">
+                    <div className="w-auto">
+                      <RiUserStarLine className="BigIcon white my-0" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
+      {auth.role === "sa" && (
+        <div class="row no-gutters">
+          <div className="col">
+            <div className="Container color-6 d-flex flex-column cursor-pointer">
+              <div className="row no-gutters align-items-center">
+                <div className="col">
+                  <AnimatedNumber
+                    className="h2 font-weight-bold white"
+                    value={staffData.num_of_login_resident}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap">Online Resident(s)</div>
+                </div>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <RiUserFollowLine className="BigIcon white my-0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="Container color-8 d-flex flex-column cursor-pointer">
+              <div className="row no-gutters align-items-center">
+                <div className="col">
+                  <AnimatedNumber
+                    className="h2 font-weight-bold white"
+                    value={staffData.num_of_onboarded_resident}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap">Onboarded Resident(s)</div>
+                </div>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <RiUserLocationLine className="BigIcon white my-0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="Container color-7 d-flex flex-column cursor-pointer">
+              <div className="row no-gutters align-items-center">
+                <div className="col">
+                  <AnimatedNumber
+                    className="h2 font-weight-bold white"
+                    value={staffData.num_of_login_staff}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap">Online Staff(s)</div>
+                </div>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <RiUserStarLine className="BigIcon white my-0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="row no-gutters">
         <div className="col-12">
           <div className="Container flex-column pr-4">

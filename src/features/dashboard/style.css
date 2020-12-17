@@ -148,6 +148,11 @@
     color: white;
 }
 
+.color-8 {
+    background: linear-gradient(45deg, #d63031 -30%, #ff7675 130%);
+    color: white;
+}
+
 .white {
     color: white;
 }
