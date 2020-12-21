@@ -263,32 +263,53 @@ function Component() {
           </div>
         </div>
         {auth.role === "sa" && (
-          <div className="col">
-            <div
-              className="Container color-5 d-flex flex-column cursor-pointer"
-              onClick={() => {
-                history.push("/" + auth.role + "/building");
-              }}
-            >
-              <div className="row no-gutters align-items-center">
-                <div className="col">
-                  <AnimatedNumber
-                    className="h2 font-weight-bold white"
-                    value={
-                      staffData.num_of_unit / staffData.num_of_building + ""
-                    }
-                    formatValue={formatValue}
-                  />
-                  <div className="text-nowrap">Average Unit</div>
-                </div>
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiHotelLine className="BigIcon white my-0" />
+          <>
+            <div className="col">
+              <div
+                className="Container color-5 d-flex flex-column cursor-pointer"
+                onClick={() => {
+                  history.push("/" + auth.role + "/building");
+                }}
+              >
+                <div className="row no-gutters align-items-center">
+                  <div className="col">
+                    <AnimatedNumber
+                      className="h2 font-weight-bold white"
+                      value={
+                        staffData.num_of_unit / staffData.num_of_building + ""
+                      }
+                      formatValue={formatValue}
+                    />
+                    <div className="text-nowrap">Average Unit</div>
+                  </div>
+                  <div className="col-auto">
+                    <div className="w-auto">
+                      <RiHotelLine className="BigIcon white my-0" />
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
+            <div className="col">
+              <div className="Container color-7 d-flex flex-column cursor-pointer">
+                <div className="row no-gutters align-items-center">
+                  <div className="col">
+                    <AnimatedNumber
+                      className="h2 font-weight-bold white"
+                      value={staffData.num_of_login_staff}
+                      formatValue={formatValue}
+                    />
+                    <div className="text-nowrap">Online Staff(s)</div>
+                  </div>
+                  <div className="col-auto">
+                    <div className="w-auto">
+                      <RiUserStarLine className="BigIcon white my-0" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
         )}
         {auth.role !== "sa" && (
           <>
@@ -467,25 +488,6 @@ function Component() {
                 <div className="col-auto">
                   <div className="w-auto">
                     <RiBuilding4Line className="BigIcon white my-0" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="Container color-7 d-flex flex-column cursor-pointer">
-              <div className="row no-gutters align-items-center">
-                <div className="col">
-                  <AnimatedNumber
-                    className="h2 font-weight-bold white"
-                    value={staffData.num_of_login_staff}
-                    formatValue={formatValue}
-                  />
-                  <div className="text-nowrap">Online Staff(s)</div>
-                </div>
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiUserStarLine className="BigIcon white my-0" />
                   </div>
                 </div>
               </div>
