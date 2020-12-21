@@ -48,6 +48,7 @@ const columnsService = [
         ? row.tax_value + "%"
         : toMoney(row.tax_amount) + " (Fixed)",
   },
+  { Header: "Summary", accessor: "show_summary" },
 ];
 
 function Component({ view, canUpdate, canDelete, canAdd }) {

@@ -103,15 +103,17 @@ function Component({ view, canAdd }) {
     },
     {
       Header: "Resident",
-      accessor: (row) => (row.resident_name ? row.resident_name : "-"),
+      accessor: (row) =>
+        row.resident_name ? toSentenceCase(row.resident_name) : "-",
     },
+    { Header: "Paid Amount", accessor: (row) => toMoney(row.paid_amount) },
     { Header: "Unpaid Amount", accessor: (row) => toMoney(row.unpaid_amount) },
     {
       Header: "Additional Charges",
       accessor: (row) => toMoney(row.additional_charge),
     },
     { Header: "Penalty", accessor: (row) => toMoney(row.billing_penalty) },
-    { Header: "Total Unpaid", accessor: (row) => <b>{toMoney(row.total)}</b> },
+    { Header: "Total Billing", accessor: (row) => <b>{toMoney(row.total)}</b> },
   ];
 
   function uploadResult(result) {
