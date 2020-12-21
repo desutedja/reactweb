@@ -293,44 +293,6 @@ function Component() {
         {auth.role !== "sa" && (
           <>
             <div className="col">
-              <div className="Container color-6 d-flex flex-column cursor-pointer">
-                <div className="row no-gutters align-items-center">
-                  <div className="col">
-                    <AnimatedNumber
-                      className="h2 font-weight-bold white"
-                      value={staffData.num_of_login_resident}
-                      formatValue={formatValue}
-                    />
-                    <div className="text-nowrap">Online Resident(s)</div>
-                  </div>
-                  <div className="col-auto">
-                    <div className="w-auto">
-                      <RiUserFollowLine className="BigIcon white my-0" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="Container color-8 d-flex flex-column cursor-pointer">
-                <div className="row no-gutters align-items-center">
-                  <div className="col">
-                    <AnimatedNumber
-                      className="h2 font-weight-bold white"
-                      value={staffData.num_of_onboarded_resident}
-                      formatValue={formatValue}
-                    />
-                    <div className="text-nowrap">Onboarded Resident(s)</div>
-                  </div>
-                  <div className="col-auto">
-                    <div className="w-auto">
-                      <RiUserLocationLine className="BigIcon white my-0" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="col">
               <div className="Container color-7 d-flex flex-column cursor-pointer">
                 <div className="row no-gutters align-items-center">
                   <div className="col">
@@ -352,6 +314,86 @@ function Component() {
           </>
         )}
       </div>
+      {auth.role !== "sa" && (
+        <div className="row no-gutters">
+          <div className="col">
+            <div className="Container color-6 d-flex flex-column cursor-pointer">
+              <div className="row no-gutters align-items-center">
+                <div className="col">
+                  <AnimatedNumber
+                    className="h2 font-weight-bold white"
+                    value={staffData.num_of_login_resident}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap">Online Resident(s)</div>
+                </div>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <RiUserFollowLine className="BigIcon white my-0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="Container color-6 d-flex flex-column cursor-pointer">
+              <div className="row no-gutters align-items-center">
+                <div className="col">
+                  <AnimatedNumber
+                    className="h2 font-weight-bold white"
+                    value={staffData.num_of_login_unit}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap">Online Unit(s)</div>
+                </div>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <RiBuilding4Line className="BigIcon white my-0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="Container color-8 d-flex flex-column cursor-pointer">
+              <div className="row no-gutters align-items-center">
+                <div className="col">
+                  <AnimatedNumber
+                    className="h2 font-weight-bold white"
+                    value={staffData.num_of_onboarded_resident}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap">Onboarded Resident(s)</div>
+                </div>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <RiUserLocationLine className="BigIcon white my-0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="Container color-8 d-flex flex-column cursor-pointer">
+              <div className="row no-gutters align-items-center">
+                <div className="col">
+                  <AnimatedNumber
+                    className="h2 font-weight-bold white"
+                    value={staffData.num_of_onboarded_unit}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap">Onboarded Unit(s)</div>
+                </div>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <RiBuilding4Line className="BigIcon white my-0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {auth.role === "sa" && (
         <div class="row no-gutters">
           <div className="col">
@@ -374,6 +416,25 @@ function Component() {
             </div>
           </div>
           <div className="col">
+            <div className="Container color-6 d-flex flex-column cursor-pointer">
+              <div className="row no-gutters align-items-center">
+                <div className="col">
+                  <AnimatedNumber
+                    className="h2 font-weight-bold white"
+                    value={staffData.num_of_login_unit}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap">Online Unit(s)</div>
+                </div>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <RiBuilding4Line className="BigIcon white my-0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
             <div className="Container color-8 d-flex flex-column cursor-pointer">
               <div className="row no-gutters align-items-center">
                 <div className="col">
@@ -387,6 +448,25 @@ function Component() {
                 <div className="col-auto">
                   <div className="w-auto">
                     <RiUserLocationLine className="BigIcon white my-0" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="Container color-8 d-flex flex-column cursor-pointer">
+              <div className="row no-gutters align-items-center">
+                <div className="col">
+                  <AnimatedNumber
+                    className="h2 font-weight-bold white"
+                    value={staffData.num_of_onboarded_unit}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap">Onboarded Unit(s)</div>
+                </div>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <RiBuilding4Line className="BigIcon white my-0" />
                   </div>
                 </div>
               </div>
