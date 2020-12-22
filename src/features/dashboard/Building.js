@@ -592,7 +592,7 @@ function Component() {
                 <div className="text-center pb-3">No billing summary</div>
               )}
               <div className="row mb-4">
-                <div className="col-3">
+                <div className="col-4">
                   <select
                     className="form-control"
                     onChange={(event) => {
