@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import { FiPlus } from "react-icons/fi";
 import { useSelector, useDispatch } from "react-redux";
-import { toMoney } from "../../../../utils";
+import { toMoney, toSentenceCase } from "../../../../utils";
 // import { useParams } from 'react-router-dom';
 
 import Table from "../../../../components/Table";
@@ -48,7 +48,7 @@ const columnsService = [
         ? row.tax_value + "%"
         : toMoney(row.tax_amount) + " (Fixed)",
   },
-  { Header: "Summary", accessor: "show_summary" },
+  { Header: "Summary", accessor: (row) => toSentenceCase(row.show_summary) },
 ];
 
 function Component({ view, canUpdate, canDelete, canAdd }) {
@@ -59,6 +59,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
 
   const [priceType, setPriceType] = useState("");
   const [taxType, setTaxType] = useState("percentage");
+  const [showSummary, setShowSummary] = useState();
 
   const [sGroupFilter, setSGroupFilter] = useState({});
 
@@ -206,6 +207,18 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
             hidden={taxType === "percentage"}
             inputValue={selectedRow.tax_amount}
             addons="rupiah"
+            optional
+          />
+          <Input
+            label="Show Summary"
+            name="show_summary"
+            type="select"
+            options={[
+              { value: "yes", label: "Yes" },
+              { value: "no", label: "No" },
+            ]}
+            setInputValue={setShowSummary}
+            inputValue={showSummary ? showSummary : selectedRow.show_summary}
             optional
           />
         </Form>

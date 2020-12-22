@@ -26,6 +26,14 @@ import { setNotificationData } from "../slices/notification";
 
 import CardList from "../../components/CardList";
 import BarChartDMY from "../../components/BarChartDMY";
+import {
+  Button,
+  ButtonDropdown,
+  DropdownMenu,
+  DropdownToggle,
+  DropdownItem,
+} from "reactstrap";
+import BillingItem from "../../components/cells/BillingItem";
 
 const formatValue = (value) => value.toFixed(0);
 const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
@@ -50,6 +58,65 @@ function Component() {
   const [isTechnician, setIsTechnician] = useState(false);
   const [isCourier, setIsCourier] = useState(false);
   const [isSecurity, setIsSecurity] = useState(false);
+  const [billingList, setBillingList] = useState([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState("Time");
+  const [selectedYear, setSelectedYear] = useState("");
+  // const [toggle, setToggle] = useState(false)
+  const toggle = () => setDropdownOpen(!dropdownOpen);
+
+  const handleBillingSummary = (billingSummaries) => {
+    const startOfYear = new Date(new Date().getFullYear(), 0, 1);
+    const endOfYear = new Date(new Date().getFullYear(), 12, 0);
+    const monthsRange = getDatesRange(
+      new Date(startOfYear),
+      new Date(endOfYear),
+      "months"
+    );
+
+    const bList = [];
+    const bListVal = [];
+    billingSummaries.map((bSummary) => {
+      if (bListVal.filter((x) => x === bSummary.summary_name).length == 0) {
+        bListVal.push(bSummary.summary_name);
+      }
+    });
+
+    monthsRange.map((date) => {
+      const month = moment(date).format("MMM");
+      const monthNumber = moment(date).format("M");
+      const year = moment(date).format("YYYY");
+      const billingSummary = billingSummaries.filter(
+        (el) =>
+          parseInt(el.month) === parseInt(monthNumber) &&
+          parseInt(el.year) === parseInt(year)
+      );
+      const billArr = [];
+      bListVal.map((bVal) => {
+        const bItem = {
+          month: month,
+          summary_name: "",
+          total_amount: 0,
+          year: year,
+        };
+        bItem.summary_name = bVal;
+
+        const billingSummaryIndex = billingSummary.findIndex(
+          (el) => el.summary_name === bVal
+        );
+        if (billingSummaryIndex > -1) {
+          bItem.total_amount = billingSummary[billingSummaryIndex].total_amount;
+        }
+        billArr.push(bItem);
+      });
+      bList.push(billArr);
+    });
+    setBillingList([...bList]);
+  };
+
+  useEffect(() => {
+    console.log(billingList);
+  }, [billingList]);
 
   useEffect(() => {
     setLoading(true);
@@ -81,6 +148,7 @@ function Component() {
     dispatch(
       get(endpointManagement + "/admin/staff/statistics", (res) => {
         setStaffData(res.data.data);
+        handleBillingSummary(res.data.data.billing_summary);
       })
     );
   }, [dispatch]);
@@ -514,110 +582,182 @@ function Component() {
         </div>
       </div>
       <div className="Row">
+        {auth.role !== "sa" && (
+          <div className="col-6">
+            <div className="Container flex-column m-0">
+              <div className="mb-4">
+                <h5>Billing Summary</h5>
+              </div>
+              {billingList.length === 0 && (
+                <div className="text-center pb-3">No billing summary</div>
+              )}
+              <div className="row mb-4">
+                <div className="col-3">
+                  <select
+                    className="form-control"
+                    onChange={(event) => {
+                      if (event.target.value === null) {
+                        return;
+                      }
+                      const el = event.target.value.split(" ");
+                      setSelectedMonth(el[0]);
+                      setSelectedYear(el[1]);
+                    }}
+                  >
+                    <option value={null}>Select Month</option>
+                    {billingList.length > 0 &&
+                      billingList.map((el) => {
+                        return (
+                          <>
+                            <option
+                              disabled={el.empty}
+                              value={`${el[0].month} ${el[0].year}`}
+                            >
+                              {`${el[0].month} ${el[0].year}`}
+                            </option>
+                          </>
+                        );
+                      })}
+                  </select>
+                </div>
+              </div>
+
+              <div
+                style={{
+                  maxHeight: "544px",
+                  overflow: "auto",
+                }}
+              >
+                {billingList.findIndex((x) => x[0].month === selectedMonth) >
+                  -1 &&
+                  billingList[
+                    billingList.findIndex((x) => x[0].month === selectedMonth)
+                  ].map(({ summary_name, total_amount, year, month }) => {
+                    return (
+                      <div className="row no-gutters">
+                        <div className="col-8">
+                          <strong>{summary_name} </strong>:{" "}
+                        </div>
+                        <div className="col-4" style={{ textAlign: "right" }}>
+                          {toMoney(total_amount)}
+                        </div>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          </div>
+        )}
         <div
-          className="Container cursor-pointer"
-          style={{
-            // marginLeft: 16,
-            marginRight: 0,
-          }}
-          onClick={() => {
-            history.push("/" + auth.role + "/billing/settlement");
-          }}
+          className={
+            auth.role !== "sa" ? "col-6 mr-0 pr-0" : "col-12 mr-0 pr-0"
+          }
         >
           <div
+            className="Container cursor-pointer mr-0"
             style={{
-              flex: 1,
-              borderRight: "1px solid #f3f3fa",
+              // marginLeft: 16,
+              marginRight: 0,
+            }}
+            onClick={() => {
+              history.push("/" + auth.role + "/billing/settlement");
             }}
           >
             <div
               style={{
                 flex: 1,
-                padding: 16,
+                borderRight: "1px solid #f3f3fa",
               }}
             >
-              <div>Paid Amount Billing</div>
-              <AnimatedNumber
-                className="BigNumber"
-                value={billingData.total_paid_amount}
-                formatValue={formatValuetoMoney}
-              />
-            </div>
-            <div
-              style={{
-                flex: 1,
-                padding: 16,
-              }}
-            >
-              <div>Settled Amount Billing</div>
-              <AnimatedNumber
-                className="BigNumber"
-                value={billingData.total_settle_amount}
-                formatValue={formatValuetoMoney}
-              />
-            </div>
-            {auth.role === "sa" && (
               <div
                 style={{
                   flex: 1,
                   padding: 16,
                 }}
               >
-                <div>Disbursed Amount Billing</div>
+                <div>Paid Amount Billing</div>
                 <AnimatedNumber
                   className="BigNumber"
-                  value={billingData.total_disburse_amount}
+                  value={billingData.total_paid_amount}
                   formatValue={formatValuetoMoney}
                 />
               </div>
-            )}
-          </div>
-          <div
-            style={{
-              flex: 1,
-            }}
-          >
-            <div
-              style={{
-                flex: 1,
-                padding: 16,
-              }}
-            >
-              <div>Unpaid Amount Billing</div>
-              <AnimatedNumber
-                className="BigNumber"
-                value={billingData.total_unpaid_amount}
-                formatValue={formatValuetoMoney}
-              />
-            </div>
-            <div
-              style={{
-                flex: 1,
-                padding: 16,
-              }}
-            >
-              <div>Unsettled Amount Billing</div>
-              <AnimatedNumber
-                className="BigNumber"
-                value={billingData.total_unsettle_amount}
-                formatValue={formatValuetoMoney}
-              />
-            </div>
-            {auth.role === "sa" && (
               <div
                 style={{
                   flex: 1,
                   padding: 16,
                 }}
               >
-                <div>Undisbursed Amount Billing</div>
+                <div>Settled Amount Billing</div>
                 <AnimatedNumber
                   className="BigNumber"
-                  value={billingData.total_undisburse_amount}
+                  value={billingData.total_settle_amount}
                   formatValue={formatValuetoMoney}
                 />
               </div>
-            )}
+              {auth.role === "sa" && (
+                <div
+                  style={{
+                    flex: 1,
+                    padding: 16,
+                  }}
+                >
+                  <div>Disbursed Amount Billing</div>
+                  <AnimatedNumber
+                    className="BigNumber"
+                    value={billingData.total_disburse_amount}
+                    formatValue={formatValuetoMoney}
+                  />
+                </div>
+              )}
+            </div>
+            <div
+              style={{
+                flex: 1,
+              }}
+            >
+              <div
+                style={{
+                  flex: 1,
+                  padding: 16,
+                }}
+              >
+                <div>Unpaid Amount Billing</div>
+                <AnimatedNumber
+                  className="BigNumber"
+                  value={billingData.total_unpaid_amount}
+                  formatValue={formatValuetoMoney}
+                />
+              </div>
+              <div
+                style={{
+                  flex: 1,
+                  padding: 16,
+                }}
+              >
+                <div>Unsettled Amount Billing</div>
+                <AnimatedNumber
+                  className="BigNumber"
+                  value={billingData.total_unsettle_amount}
+                  formatValue={formatValuetoMoney}
+                />
+              </div>
+              {auth.role === "sa" && (
+                <div
+                  style={{
+                    flex: 1,
+                    padding: 16,
+                  }}
+                >
+                  <div>Undisbursed Amount Billing</div>
+                  <AnimatedNumber
+                    className="BigNumber"
+                    value={billingData.total_undisburse_amount}
+                    formatValue={formatValuetoMoney}
+                  />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

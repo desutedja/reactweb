@@ -90,17 +90,19 @@ function Component({ view, canAdd }) {
               " " +
               row.number}
           </b>
+          <br />
+          <span>{row.building_name}</span>
         </span>
       ),
     },
-    {
-      Header: "Building",
-      accessor: (row) => (
-        <a className="Link" href={"/" + role + "/building/" + row.building_id}>
-          {row.building_name}
-        </a>
-      ),
-    },
+    // {
+    //   Header: "Building",
+    //   accessor: (row) => (
+    //     <a className="Link" href={"/" + role + "/building/" + row.building_id}>
+    //       {row.building_name}
+    //     </a>
+    //   ),
+    // },
     {
       Header: "Resident",
       accessor: (row) =>
@@ -108,12 +110,12 @@ function Component({ view, canAdd }) {
     },
     { Header: "Paid Amount", accessor: (row) => toMoney(row.paid_amount) },
     { Header: "Unpaid Amount", accessor: (row) => toMoney(row.unpaid_amount) },
-    {
-      Header: "Additional Charges",
-      accessor: (row) => toMoney(row.additional_charge),
-    },
-    { Header: "Penalty", accessor: (row) => toMoney(row.billing_penalty) },
-    { Header: "Total Billing", accessor: (row) => <b>{toMoney(row.total)}</b> },
+    // {
+    //   Header: "Additional Charges",
+    //   accessor: (row) => toMoney(row.additional_charge),
+    // },
+    // { Header: "Penalty", accessor: (row) => toMoney(row.billing_penalty) },
+    { Header: "Total Amount", accessor: (row) => <b>{toMoney(row.total)}</b> },
   ];
 
   function uploadResult(result) {
