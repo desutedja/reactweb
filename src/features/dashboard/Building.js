@@ -148,7 +148,9 @@ function Component() {
     dispatch(
       get(endpointManagement + "/admin/staff/statistics", (res) => {
         setStaffData(res.data.data);
-        handleBillingSummary(res.data.data.billing_summary);
+        if (res.data.data.billing_summary.length > 0) {
+          handleBillingSummary(res.data.data.billing_summary);
+        }
       })
     );
   }, [dispatch]);
@@ -591,60 +593,71 @@ function Component() {
               {billingList.length === 0 && (
                 <div className="text-center pb-3">No billing summary</div>
               )}
-              <div className="row mb-4">
-                <div className="col-4">
-                  <select
-                    className="form-control"
-                    onChange={(event) => {
-                      if (event.target.value === null) {
-                        return;
-                      }
-                      const el = event.target.value.split(" ");
-                      setSelectedMonth(el[0]);
-                      setSelectedYear(el[1]);
+              {billingList.length > 0 && (
+                <>
+                  <div className="row mb-4">
+                    <div className="col-4">
+                      <select
+                        className="form-control"
+                        onChange={(event) => {
+                          if (event.target.value === null) {
+                            return;
+                          }
+                          const el = event.target.value.split(" ");
+                          setSelectedMonth(el[0]);
+                          setSelectedYear(el[1]);
+                        }}
+                      >
+                        <option value={null}>Select Month</option>
+                        {billingList.length > 0 &&
+                          billingList.map((el) => {
+                            if (el.length === 0) {
+                              return null;
+                            }
+                            console.log(el);
+                            return (
+                              <>
+                                <option value={`${el[0].month} ${el[0].year}`}>
+                                  {`${el[0].month} ${el[0].year}`}
+                                </option>
+                              </>
+                            );
+                          })}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div
+                    style={{
+                      maxHeight: "544px",
+                      overflow: "auto",
                     }}
                   >
-                    <option value={null}>Select Month</option>
-                    {billingList.length > 0 &&
-                      billingList.map((el) => {
+                    {billingList.findIndex(
+                      (x) => x[0].month === selectedMonth
+                    ) > -1 &&
+                      billingList[
+                        billingList.findIndex(
+                          (x) => x[0].month === selectedMonth
+                        )
+                      ].map(({ summary_name, total_amount, year, month }) => {
                         return (
-                          <>
-                            <option
-                              disabled={el.empty}
-                              value={`${el[0].month} ${el[0].year}`}
+                          <div className="row no-gutters">
+                            <div className="col-8">
+                              <strong>{summary_name} </strong>:{" "}
+                            </div>
+                            <div
+                              className="col-4"
+                              style={{ textAlign: "right" }}
                             >
-                              {`${el[0].month} ${el[0].year}`}
-                            </option>
-                          </>
+                              {toMoney(total_amount)}
+                            </div>
+                          </div>
                         );
                       })}
-                  </select>
-                </div>
-              </div>
-
-              <div
-                style={{
-                  maxHeight: "544px",
-                  overflow: "auto",
-                }}
-              >
-                {billingList.findIndex((x) => x[0].month === selectedMonth) >
-                  -1 &&
-                  billingList[
-                    billingList.findIndex((x) => x[0].month === selectedMonth)
-                  ].map(({ summary_name, total_amount, year, month }) => {
-                    return (
-                      <div className="row no-gutters">
-                        <div className="col-8">
-                          <strong>{summary_name} </strong>:{" "}
-                        </div>
-                        <div className="col-4" style={{ textAlign: "right" }}>
-                          {toMoney(total_amount)}
-                        </div>
-                      </div>
-                    );
-                  })}
-              </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         )}
