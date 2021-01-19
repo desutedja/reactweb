@@ -689,11 +689,8 @@ function Component() {
                 }}
               >
                 <div>Paid Amount Billing</div>
-                <AnimatedNumber
-                  className="BigNumber"
-                  value={billingData.total_paid_amount}
-                  formatValue={formatValuetoMoney}
-                />
+                
+                <div  className="BigNumber"> {typeof billingData.total_paid_amount !== 'undefined' && billingData.total_paid_amount != null ? formatValuetoMoney(billingData.total_paid_amount) : 0}</div>
               </div>
               <div
                 style={{
@@ -702,11 +699,8 @@ function Component() {
                 }}
               >
                 <div>Settled Amount Billing</div>
-                <AnimatedNumber
-                  className="BigNumber"
-                  value={billingData.total_settle_amount}
-                  formatValue={formatValuetoMoney}
-                />
+                <div  className="BigNumber"> {typeof billingData.total_settle_amount !== 'undefined' && billingData.total_settle_amount != null ? formatValuetoMoney(billingData.total_settle_amount) : 0}</div>
+                 
               </div>
               {auth.role === "sa" && (
                 <div
@@ -716,11 +710,8 @@ function Component() {
                   }}
                 >
                   <div>Disbursed Amount Billing</div>
-                  <AnimatedNumber
-                    className="BigNumber"
-                    value={billingData.total_disburse_amount}
-                    formatValue={formatValuetoMoney}
-                  />
+                  <div  className="BigNumber"> {typeof billingData.total_disburse_amount !== 'undefined' && billingData.total_disburse_amount != null  ? formatValuetoMoney(billingData.total_disburse_amount) : 0}</div>
+                    
                 </div>
               )}
             </div>
@@ -736,11 +727,8 @@ function Component() {
                 }}
               >
                 <div>Unpaid Amount Billing</div>
-                <AnimatedNumber
-                  className="BigNumber"
-                  value={billingData.total_unpaid_amount}
-                  formatValue={formatValuetoMoney}
-                />
+                <div  className="BigNumber"> {typeof billingData.total_unpaid_amount !== 'undefined' && billingData.total_unpaid_amount != null ? formatValuetoMoney(billingData.total_unpaid_amount) : 0}</div>
+                   
               </div>
               <div
                 style={{
@@ -749,11 +737,8 @@ function Component() {
                 }}
               >
                 <div>Unsettled Amount Billing</div>
-                <AnimatedNumber
-                  className="BigNumber"
-                  value={billingData.total_unsettle_amount}
-                  formatValue={formatValuetoMoney}
-                />
+                <div  className="BigNumber"> {typeof billingData.total_unsettle_amount !== 'undefined' && billingData.total_unsettle_amount != null  ? formatValuetoMoney(billingData.total_unsettle_amount) : 0}</div>
+                     
               </div>
               {auth.role === "sa" && (
                 <div
@@ -763,11 +748,8 @@ function Component() {
                   }}
                 >
                   <div>Undisbursed Amount Billing</div>
-                  <AnimatedNumber
-                    className="BigNumber"
-                    value={billingData.total_undisburse_amount}
-                    formatValue={formatValuetoMoney}
-                  />
+                  <div  className="BigNumber"> {typeof billingData.total_undisburse_amount !== 'undefined' && billingData.total_undisburse_amount != null  ? formatValuetoMoney(billingData.total_undisburse_amount) : 0}</div>
+                  
                 </div>
               )}
             </div>

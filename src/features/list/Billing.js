@@ -74,6 +74,7 @@ function Component({ view, canAdd }) {
   const columns = [
     // { Header: 'ID', accessor: 'code' },
     { Header: "Unit ID", accessor: "id" },
+    { Header: "Billing Code", accessor: (row)=> row.ref_code },
     {
       Header: "Unit",
       accessor: (row) => (
@@ -108,14 +109,16 @@ function Component({ view, canAdd }) {
       accessor: (row) =>
         row.resident_name ? toSentenceCase(row.resident_name) : "-",
     },
-    { Header: "Paid Amount", accessor: (row) => toMoney(row.paid_amount) },
-    { Header: "Unpaid Amount", accessor: (row) => toMoney(row.unpaid_amount) },
+    { Header: "Month", accessor: (row) => row.month },
+    { Header: "Year", accessor: (row) => row.year },
+    { Header: "Paid Amount", accessor: (row) => toMoney(row.paid) },
+    { Header: "Unpaid Amount", accessor: (row) => toMoney(row.unpaid) },
     // {
     //   Header: "Additional Charges",
     //   accessor: (row) => toMoney(row.additional_charge),
     // },
     // { Header: "Penalty", accessor: (row) => toMoney(row.billing_penalty) },
-    { Header: "Total Amount", accessor: (row) => <b>{toMoney(row.total)}</b> },
+    { Header: "Total Amount", accessor: (row) => <b>{toMoney(row.total_all)}</b> },
   ];
 
   function uploadResult(result) {

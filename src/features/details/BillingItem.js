@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 
 import Detail from "./components/Detail";
 import Template from "./components/Template";
-
+import Avatar from 'react-avatar';
 import Modal from "../../components/Modal";
 import Table from "../../components/Table";
 import Button from "../../components/Button";
@@ -195,6 +195,11 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         },
         { label: "total_amount", vfmt: (v) => toMoney(v) },
       ],
+
+      "Attachment": [
+        { label: "image", lfmt: () => "File Capture", vfmt: (v) => (<Avatar className="Item-avatar" size="300" round={8} src={v}
+       />), },
+      ]
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }),
     [dataDetails]

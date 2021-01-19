@@ -402,27 +402,44 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                     />
                                 </>
                         }
-                    ] : [
-                            {
-                                hidex: settled === "",
-                                label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
-                                delete: () => setSettled(''),
-                                component: (toggleModal) =>
-                                    <Filter
-                                        data={[
-                                            { value: '0', label: 'Unsettled' },
-                                            { value: '1', label: 'Settled' },
-                                        ]}
-                                        onClick={(el) => {
-                                            setSettled(el.value);
-                                            toggleModal(false);
-                                        }}
-                                        onClickAll={() => {
-                                            setSettled("");
-                                            toggleModal(false);
-                                        }}
-                                    />
-                            }
+                    ] : [ ...settled === '1' ? [{
+                        hidex: isRangeToday(settlementStart, settlementEnd),
+                        label: "Settlement Date: ",
+                        delete: () => { setSettlementStart(today); setSettlementEnd(today); },
+                        value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
+                            moment(settlementStart).format('DD-MM-yyyy') + ' - '
+                            + moment(settlementEnd).format('DD-MM-yyyy'),
+                        component: (toggleModal) =>
+                            <DateRangeFilter
+                                startDate={settlementStart}
+                                endDate={settlementEnd}
+                                onApply={(start, end) => {
+                                    setSettlementStart(start);
+                                    setSettlementEnd(end);
+                                    toggleModal();
+                                }} />
+                    }] : [],
+                    {
+                        hidex: settled === "",
+                        label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
+                        delete: () => setSettled(''),
+                        component: (toggleModal) =>
+                            <Filter
+                                data={[
+                                    { value: '0', label: 'Unsettled' },
+                                    { value: '1', label: 'Settled' },
+                                ]}
+                                onClick={(el) => {
+                                    setSettled(el.value);
+                                    toggleModal(false);
+                                }}
+                                onClickAll={() => {
+                                    setSettled("");
+                                    toggleModal(false);
+                                }}
+                            />
+                    }
+                           
                         ]}
                     renderActions={(selectedRowIds, page) => {
                         return ([
