@@ -9,6 +9,7 @@ import Disbursement from '../../disbursement/Billing';
 import BillingRecord from '../../details/BillingRecord';
 
 import List from '../../list/Billing';
+import ListCategory from '../../list/BillingCategory';
 
 function Component() {
     let { path } = useRouteMatch();
@@ -18,6 +19,9 @@ function Component() {
             <Redirect exact from={path} to={`${path}/unit`} />
             <Route exact path={`${path}/unit`}>
                 <List />
+            </Route>
+            <Route exact path={`${path}/category`}>
+                <ListCategory />
             </Route>
             <Route path={`${path}/edit`}>
                 <Add />

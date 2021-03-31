@@ -40,7 +40,7 @@ start:
 test:
 	docker build -t appsweb .
 	docker stop appsweb; docker rm appsweb;
-	docker run -dt -p 80:80 --name appsweb appsweb:latest 
+	docker run -dt -p 80:80 --name appsweb appsweb:latest
 
 deploy-dev:
 	firebase deploy

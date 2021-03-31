@@ -81,8 +81,15 @@ const modules = [
     icon: <FiZap className="MenuItem-icon" />,
     label: "Billing",
     path: "/billing",
-    subpaths: ["/unit", "/settlement"],
+    subpaths: ["/unit", "/category","/settlement"],
     component: <Billing />,
+  },
+  
+  {
+    icon: <RiTaskLine className="MenuItem-icon" />,
+    label: "Catat Meter",
+    path: "/catatmeter",
+   
   },
   {
     icon: <RiCustomerService2Line className="MenuItem-icon" />,

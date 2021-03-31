@@ -648,7 +648,11 @@ function Component() {
                             </div>
                             <div
                               className="col-4"
+
                               style={{ textAlign: "right" }}
+                              onClick={() => {
+                                history.push("/" + auth.role + "/billing/settlement");
+                              }}
                             >
                               {toMoney(total_amount)}
                             </div>

@@ -15,7 +15,7 @@ import { toMoney, toSentenceCase, dateTimeFormatter, dateFormatter } from '../..
 
 function Component() {
     const [data, setData] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true); 
 
     let { trx_code } = useParams();
     let dispatch = useDispatch();

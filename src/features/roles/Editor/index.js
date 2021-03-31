@@ -32,6 +32,7 @@ import Staff from "./Staff";
 import Task from "./Task";
 import Transaction from "./Transaction";
 import Admin from "./Admin";
+import Xenplatform from "./Xenplatform";
 
 import Settings from "../../settings";
 import Chat from "../../chat";
@@ -69,8 +70,21 @@ const menu = [
     icon: <FiZap className="MenuItem-icon" />,
     label: "Billing",
     path: "/billing",
-    subpaths: ["/unit", "/settlement", "/disbursement"],
+    subpaths: ["/unit","/category", "/settlement", "/disbursement"],
     component: <Billing />,
+  },
+  {
+    icon: <RiTaskLine className="MenuItem-icon" />,
+    label: "XenPlatform",
+    path: "/xenplatform",
+    component: <Xenplatform />,
+  },
+  
+  {
+    icon: <RiTaskLine className="MenuItem-icon" />,
+    label: "Catat Meter",
+    path: "/catatmeter",
+   
   },
   {
     icon: <RiCustomerService2Line className="MenuItem-icon" />,

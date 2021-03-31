@@ -9,6 +9,7 @@ import Settlement from "../../settlement/Billing";
 import BillingRecord from "../../details/BillingRecord";
 
 import List from "../../list/Billing";
+import ListCategory from '../../list/BillingCategory';
 
 function Component() {
   let { path } = useRouteMatch();
@@ -57,6 +58,7 @@ function Component() {
   return (
     <Switch>
       <Redirect exact from={path} to={`${path}/unit`} />
+      
       {read && (
         <Route exact path={`${path}/unit`}>
           <List canAdd={create} canUpdate={update} canDelete={del} />
@@ -65,6 +67,12 @@ function Component() {
       {update && (
         <Route path={`${path}/edit`}>
           <Add canAdd={create} canUpdate={update} canDelete={del} />
+        </Route>
+      )}
+      <Redirect exact from={path} to={`${path}/category`} />
+      {read && (
+        <Route exact path={`${path}/category`}>
+          <ListCategory canAdd={create} canUpdate={update} canDelete={del} />
         </Route>
       )}
       <Redirect

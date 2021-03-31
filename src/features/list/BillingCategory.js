@@ -8,31 +8,26 @@ import Filter from "../../components/Filter";
 import Button from "../../components/Button";
 import { ListGroup, ListGroupItem } from "reactstrap";
 import {
-  getBillingUnit,
-  downloadBillingUnit,
+    getBillingCategory,
+    downloadBillingCategory,
   setSelectedItem,
   setSelected,
-  updateBillingPublish,
 } from "../slices/billing";
 import { endpointAdmin, endpointBilling } from "../../settings";
 import { toSentenceCase, toMoney } from "../../utils";
-import { get } from "../slice";
+import { get, post } from "../slice";
 
-import TemplateWithSelection from "./components/TemplateWithSelection";
+import Template from "./components/Template";
 import UploadModal from "../../components/UploadModal";
 
-function Component({ view }) {
+function Component({ view, canAdd }) {
   const [search, setSearch] = useState("");
 
   const { role, user } = useSelector((state) => state.auth);
 
-  //   const { selectedRowIds } = useSelector((state) => state.billing);
-
   const [building, setBuilding] = useState("");
   const [buildingName, setBuildingName] = useState("");
   const [buildings, setBuildings] = useState("");
-  const [multiActionRows, setMultiActionRows] = useState([]);
-  const [columns, setColumns] = useState([]);
 
   const [limit, setLimit] = useState(5);
   const [upload, setUpload] = useState(false);
@@ -73,66 +68,58 @@ function Component({ view }) {
   }, [dispatch, search, limit]);
 
   useEffect(() => {
-    if (role) {
-      setColumns([
-        // { Header: 'ID', accessor: 'code' },
-        { Header: "ID", accessor: "id" },
-        {
-          Header: "Unit",
-          accessor: (row) => (
-            <span
-              className="Link"
-              onClick={() => {
-                history.push("/" + role + "/billing/unit/" + row.id);
-              }}
-            >
-              <b>
-                {toSentenceCase(row.section_type) +
-                  " " +
-                  row.section_name +
-                  " " +
-                  row.number}
-              </b>
-            </span>
-          ),
-        },
-        {
-          Header: "Building",
-          accessor: (row) => (
-            <a
-              className="Link"
-              href={"/" + role + "/building/" + row.building_id}
-            >
-              {row.building_name}
-            </a>
-          ),
-        },
-        {
-          Header: "Resident",
-          accessor: (row) => (row.resident_name ? row.resident_name : "-"),
-        },
-        {
-          Header: "Unpaid Amount",
-          accessor: (row) => toMoney(row.unpaid_amount),
-        },
-        {
-          Header: "Additional Charges",
-          accessor: (row) => toMoney(row.additional_charge),
-        },
-        { Header: "Penalty", accessor: (row) => toMoney(row.billing_penalty) },
-        {
-          Header: "Total Unpaid",
-          accessor: (row) => <b>{toMoney(row.total)}</b>,
-        },
-      ]);
-    }
-  }, [role]);
-
-  useEffect(() => {
     if (search.length === 0) setLimit(5);
   }, [search]);
 
-  //   const columns = ;
+  const columns = [
+    // { Header: 'ID', accessor: 'code' },
+    { Header: "Unit ID", accessor: "id" },
+    {
+      Header: "Unit",
+      accessor: (row) => (
+        <span
+          className="Link"
+          onClick={() => {
+            history.push("/" + role + "/billing/unit/" + row.id);
+          }}
+        >
+          <b>
+            {toSentenceCase(row.section_type) +
+              " " +
+              row.section_name +
+              " " +
+              row.number}
+          </b>
+          <br />
+          <span>{row.building_name}</span>
+        </span>
+      ),
+    },
+    // {
+    //   Header: "Building",
+    //   accessor: (row) => (
+    //     <a className="Link" href={"/" + role + "/building/" + row.building_id}>
+    //       {row.building_name}
+    //     </a>
+    //   ),
+    // },
+    {
+      Header: "Resident",
+      accessor: (row) =>
+        row.resident_name ? toSentenceCase(row.resident_name) : "-",
+    },
+    { Header: "Month", accessor: (row) => row.month },
+    { Header: "Year", accessor: (row) => row.year },
+    { Header: "Service Name", accessor: (row) => row.service_name },
+    { Header: "Paid Amount", accessor: (row) => toMoney(row.paid) },
+    { Header: "Unpaid Amount", accessor: (row) => toMoney(row.unpaid) },
+    // {
+    //   Header: "Additional Charges",
+    //   accessor: (row) => toMoney(row.additional_charge),
+    // },
+    // { Header: "Penalty", accessor: (row) => toMoney(row.billing_penalty) },
+    { Header: "Total Amount", accessor: (row) => <b>{toMoney(row.total_all)}</b> },
+  ];
 
   function uploadResult(result) {
     return (
@@ -246,18 +233,12 @@ function Component({ view }) {
         uploadDataName="file_upload"
         resultComponent={uploadResult}
       />
-      <TemplateWithSelection
-        view={view}
+      <Template
+        pagetitle="Billing List Category"
+        title="Unit"
         columns={columns}
         slice="billing"
-        getAction={getBillingUnit}
-        selectAction={(selectedRows) => {
-          const selectedRowIds = [];
-          selectedRows.map((row) => {
-            selectedRowIds.push(row.id);
-          });
-          setMultiActionRows([...selectedRowIds]);
-        }}
+        getAction={getBillingCategory}
         filterVars={[building, upload]}
         filters={
           role === "sa"
@@ -302,37 +283,30 @@ function Component({ view }) {
               ]
             : []
         }
-        renderActions={
+        actions={
           view
             ? null
-            : (selectedRowIds, page) => {
-                return [
+            : [
+                role === "bm" && !canAdd ? null : (
                   <Button
                     label="Upload Bulk"
                     icon={<FiUpload />}
                     onClick={() => setUpload(true)}
-                  />,
-                  <Button
-                    label="Download .csv"
-                    icon={<FiDownload />}
-                    onClick={() =>
-                      dispatch(downloadBillingUnit(search, building))
-                    }
-                  />,
-
-                  <Button
-                    label="Publish Selected"
-                    disabled={Object.keys(selectedRowIds).length === 0}
-                    icon={<FiUpload />}
-                    onClick={() => {
-                      dispatch(updateBillingPublish(multiActionRows));
-                    }}
-                  />,
-                ];
-              }
+                  />
+                ),
+                <Button
+                  label="Download .csv"
+                  icon={<FiDownload />}
+                  onClick={() =>
+                    dispatch(downloadBillingCategory(search, building))
+                  }
+                />,
+              ]
         }
         onClickAddBilling={
           view
+            ? null
+            : role === "bm" && !canAdd
             ? null
             : (row) => {
                 dispatch(setSelected(row));
@@ -344,3 +318,5 @@ function Component({ view }) {
     </>
   );
 }
+
+export default Component;
