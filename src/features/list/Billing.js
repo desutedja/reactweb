@@ -344,3 +344,4 @@ function Component({ view }) {
     </>
   );
 }
+export default Component;

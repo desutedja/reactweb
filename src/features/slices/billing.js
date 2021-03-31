@@ -431,6 +431,48 @@ export const payByCash = (data) => (dispatch) => {
   );
 };
 
+
+
+export const getBillingCategory = (pageIndex, pageSize, search = '', building, unit) => dispatch => {
+    dispatch(startAsync());
+
+    dispatch(get(billingEndpoint + '/unit/category' +
+        '?page=' + (pageIndex + 1) +
+        '&limit=' + pageSize +
+        '&sort_field=created_on&sort_type=DESC' +
+        '&building_id=' + building +
+        '&search=' + search,
+
+        res => {
+            dispatch(setData(res.data.data));
+
+            dispatch(stopAsync());
+        },
+        err => {
+            dispatch(stopAsync());
+        }
+    ))
+}
+
+
+export const downloadBillingCategory = (search = '', building) => dispatch => {
+    dispatch(startAsync());
+
+    dispatch(getFile(billingEndpoint + '/unit/category' +
+        '?search=' + search +
+        '&resident_building=' + building +
+        '&export=true&limit=999999999999',
+        'billing_category.csv',
+        res => {
+            dispatch(stopAsync());
+        },
+        err => {
+            dispatch(stopAsync());
+        }
+    ))
+}
+
+
 export const updateBillingPublish = (ids) => (dispatch) => {
   dispatch(startAsync());
   dispatch(
