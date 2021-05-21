@@ -9,8 +9,8 @@ export REPO=registry.gitlab.com/clink1/building-management-apps-web/adminweb:${V
 # PREFIX ?= yipy
 
 ifeq (${ENV},production)
-BASE = api.yipy.id
-PREFIX = yipy
+# BASE = api.yipy.id
+# PREFIX = yipy
 else
 BASE = api-dev.yipy.id
 PREFIX = yipy
