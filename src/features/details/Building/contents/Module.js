@@ -65,7 +65,7 @@ export default (props) => {
 
   useEffect(() => {
     if (auth.role !== 'sa') return;
-    refresh && dispatch(get('http://localhost:9001/modules/building?id=' + id,
+    refresh && dispatch(get(endpointAdmin + '/modules/building?id=' + id,
       res => {
         setActiveModules(res.data.data.active_modules)
         setModulesLabel(modulesFiltered(modules, res.data.data.active_modules))
@@ -85,7 +85,7 @@ export default (props) => {
       activeModules.filter(am => am !== clickedModule.value) : 
       [clickedModule.value, ...activeModules]
 
-      dispatch(post('http://localhost:9001/modules/building?id=' + id,
+      dispatch(post(endpointAdmin + '/modules/building?id=' + id,
         {
           active_modules: updated
         },
