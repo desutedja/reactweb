@@ -4,6 +4,7 @@ import Modal from './Modal';
 import Loading from './Loading';
 import { useDispatch } from 'react-redux';
 import { getFile, post } from '../features/slice';
+import exportFromJSON from 'export-from-json';
 
 const UploadModal = ({
     open,
@@ -61,6 +62,7 @@ const UploadModal = ({
 
                     dispatch(post(uploadLink, formData, res => {
                         console.log(res.data.data);
+                        exportFromJSON({ data: res.data.data.errorList, fileName: 'data', exportType: exportFromJSON.types.csv })
                         setResult(res.data.data);
                         setLoading(false);
                         if (resultComponent) {

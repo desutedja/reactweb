@@ -136,12 +136,14 @@ function Component() {
                 return (
                     <Form className="Form">
                         <Input {...props} onFocus={() => setEmailRegistered(false)} label="Email"
-                            placeholder={"Input Resident Email"} type="email" compact disabled={!exist} />
+                            placeholder={"Input Resident Email"} type="email" compact />
+                        <Input {...props} label="Phone" prefix="+62" />
                         {exist && <button
                             type="button"
                             onClick={() => {
                                 dispatch(post(endpointResident + '/management/resident/check', {
-                                    email: values.email
+                                    email: values.email,
+                                    phone: values.phone
                                 },
                                     res => {
                                         res.data.data.id
@@ -152,7 +154,7 @@ function Component() {
                                     },
                                 ))
                             }}
-                            disabled={!values.email}
+                            disabled={!((values.phone) || (values.email))}
                         >
                             Check
                             </button>}
@@ -176,7 +178,7 @@ function Component() {
                             <SectionSeparator />
                             <Input {...props} label="First Name" name="firstname" />
                             <Input {...props} label="Last Name" name="lastname" />
-                            <Input {...props} label="Phone" prefix="+62" />
+                            
                             <SectionSeparator />
 
                             <Input {...props} optional label="Nationality" options={countries}

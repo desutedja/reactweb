@@ -13,7 +13,9 @@ const modules = [
   {label: 'Advertisement', value: 'advertisement'},
   {label: 'Security', value: 'security'},
   {label: 'Technician', value: 'technician'},
-  {label: 'Internal Courier', value: 'internal_courier'}
+  {label: 'Internal Courier', value: 'internal_courier'},
+  {label: 'Separate Billing', value: 'separate_billing'},
+  {label: 'CCTV', value: 'cctv'}
 ]
 
 // const active_modules = [
@@ -132,7 +134,7 @@ export default (props) => {
             okLabel={"Confirm"}
             cancelLabel={"Cancel"}
         >
-            Are you sure you want to {activeModules.find(am => am === clickedModule.value) === clickedModule.value? "enable" : "disable"} <b>{clickedModule.label}</b> module in this building? 
+            Are you sure you want to {activeModules.find(am => am === clickedModule.value) === clickedModule.value? "disable" : "enable"} <b>{clickedModule.label}</b> module in this building? 
         </Modal>
       <div className="row no-gutters mt-4">
         {modulesLabel && modulesLabel.map((el, i) => (
