@@ -134,7 +134,7 @@ export default (props) => {
             okLabel={"Confirm"}
             cancelLabel={"Cancel"}
         >
-            Are you sure you want to {activeModules.find(am => am === clickedModule.value) === clickedModule.value? "enable" : "disable"} <b>{clickedModule.label}</b> module in this building? 
+            Are you sure you want to {activeModules.find(am => am === clickedModule.value) === clickedModule.value? "disable" : "enable"} <b>{clickedModule.label}</b> module in this building? 
         </Modal>
       <div className="row no-gutters mt-4">
         {modulesLabel && modulesLabel.map((el, i) => (

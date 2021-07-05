@@ -1,7 +1,7 @@
 # VERSION ?= b9fef8b-2209202002
 # export VERSION=$(git show --format=%h -q)-$(date "+%j%H%M%S")
 export ENV?=development
-export REPO=registry.gitlab.com/clink1/building-management-apps-web/dev-test:${VERSION}
+export REPO=registry.gitlab.com/clink1/building-management-apps-web/adminweb:${VERSION}
 
 # BASE ?= api.yipy.id
 # PREFIX ?= yipy
