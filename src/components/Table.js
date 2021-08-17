@@ -5,7 +5,7 @@ import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
-    FiEdit, FiCheck, FiUserPlus, FiMessageSquare, FiFilter, FiList, FiArrowDown, FiArrowUp, FiPlus,
+    FiEdit, FiCheck, FiUserPlus, FiMessageSquare, FiFilter, FiList, FiArrowDown, FiArrowUp, FiPlus, FiX,
 } from 'react-icons/fi'
 import {
     FaCaretRight, FaCaretDown,
@@ -38,6 +38,8 @@ function Table({
     onClickDetails,
     onClickEdit,
     onClickAddBilling,
+    onClickApproved,
+    onClickDisapproved,
     renderActions,
     deleteSelection,
     sortBy = []
@@ -302,6 +304,18 @@ function Table({
                                         onClick: () => onClickDelete(row.original),
                                         color: "Danger",
                                         icon: <FiTrash />,
+                                    } : ""),
+                                    (onClickApproved && !(row.original.approved_status == "approved" || row.original.approved_status == "disapprove") ? {
+                                        name: "Approved",
+                                        onClick: () => onClickApproved(row.original),
+                                        color: "Details",
+                                        icon: <FiCheck />,
+                                    } : ""),
+                                    (onClickDisapproved && !(row.original.approved_status == "approved" || row.original.approved_status == "disapprove") ? {
+                                        name: "Disapprove",
+                                        onClick: () => onClickDisapproved(row.original),
+                                        color: "Danger",
+                                        icon: <FiX />,
                                     } : ""),
                                 ].filter(x => x !== "")
 

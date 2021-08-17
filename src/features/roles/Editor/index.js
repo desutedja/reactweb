@@ -28,6 +28,8 @@ import Vouchers from "./Vouchers";
 import Merchant from "./Merchant";
 import Product from "./Product";
 import Resident from "./Resident";
+import RequestPremium from "./RequestPremium";
+import CatatMeter from "./CatatMeter";
 import Staff from "./Staff";
 import Task from "./Task";
 import Transaction from "./Transaction";
@@ -67,6 +69,12 @@ const menu = [
     component: <Resident />,
   },
   {
+    icon: <FiUsers className="MenuItem-icon" />,
+    label: "Basic User Request",
+    path: "/basicuserrequest",
+    component: <RequestPremium />,
+  },
+  {
     icon: <FiZap className="MenuItem-icon" />,
     label: "Billing",
     path: "/billing",
@@ -84,7 +92,7 @@ const menu = [
     icon: <RiTaskLine className="MenuItem-icon" />,
     label: "Catat Meter",
     path: "/catatmeter",
-   
+    component: <CatatMeter />
   },
   {
     icon: <RiCustomerService2Line className="MenuItem-icon" />,

@@ -96,6 +96,12 @@ export const resident_statuses = [
   { label: "Inactive", value: "inactive" },
 ];
 
+export const request_premium_status = [
+  { label: "Pending", value: "pending" },
+  { label: "Approved", value: "approved" },
+  { label: "Disapprove", value: "disapprove" },
+];
+
 export const resident_kyc_statuses = [
   { label: "Submitted", value: "submitted" },
   { label: "Unsubmitted", value: "none" },

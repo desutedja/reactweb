@@ -24,6 +24,8 @@ import ads from "./features/slices/ads";
 import announcement from "./features/slices/announcement";
 import admin from "./features/slices/admin";
 import notification from "./features/slices/notification";
+import requestpremium from "./features/slices/requestpremium";
+import catatmeter from "./features/slices/catatmeter";
 
 const logger = createLogger({
   predicate: (getState, action) =>
@@ -37,6 +39,8 @@ const reducers = combineReducers({
   management,
   building,
   resident,
+  requestpremium,
+  catatmeter,
   billing,
   staff,
   task,

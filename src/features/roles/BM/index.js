@@ -42,6 +42,7 @@ import Announcement from "./Announcement";
 import Billing from "./Billing";
 import Building from "./Building";
 import Resident from "./Resident";
+import RequestPremium from "./RequestPremium";
 import Staff from "./Staff";
 import Task from "./Task";
 import Details from "../../details/components/Detail";
@@ -78,13 +79,18 @@ const modules = [
     component: <Resident />,
   },
   {
+    icon: <FiUsers className="MenuItem-icon" />,
+    label: "Basic User Request",
+    path: "/basicuserrequest",
+    component: <RequestPremium />,
+  },
+  {
     icon: <FiZap className="MenuItem-icon" />,
     label: "Billing",
     path: "/billing",
     subpaths: ["/unit", "/category","/settlement"],
     component: <Billing />,
   },
-  
   {
     icon: <RiTaskLine className="MenuItem-icon" />,
     label: "Catat Meter",

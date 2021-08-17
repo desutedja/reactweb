@@ -93,24 +93,17 @@ function Component({ view }) {
                   " " +
                   row.number}
               </b>
+              <br />
+              <span>{row.building_name}</span>
             </span>
           ),
-        },
-        {
-          Header: "Building",
-          accessor: (row) => (
-            <a
-              className="Link"
-              href={"/" + role + "/building/" + row.building_id}
-            >
-              {row.building_name}
-            </a>
-          ),
-        },
+        },    
         {
           Header: "Resident",
           accessor: (row) => (row.resident_name ? row.resident_name : "-"),
         },
+        { Header: "Month", accessor: (row) => row.month },
+    { Header: "Year", accessor: (row) => row.year },
         {
           Header: "Unpaid Amount",
           accessor: (row) => toMoney(row.unpaid_amount),
