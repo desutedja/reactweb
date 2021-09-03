@@ -306,7 +306,7 @@ function Component({ view }) {
                     onClick={() => setUpload(true)}
                   />,
                   <Button
-                    label="Download .csv"
+                    label="Download Billing Units .csv"
                     icon={<FiDownload />}
                     onClick={() =>
                       dispatch(downloadBillingUnit(search, building))
