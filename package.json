@@ -26,6 +26,7 @@
     "qiscus-sdk-core": "^2.9.7",
     "react": "^16.13.1",
     "react-avatar": "^3.9.7",
+    "react-datepicker": "^4.2.1",
     "react-dom": "^16.13.1",
     "react-draft-wysiwyg": "^1.14.5",
     "react-hls-player": "^1.1.0",

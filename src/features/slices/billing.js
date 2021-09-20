@@ -107,8 +107,10 @@ export const getBillingUnit = (
   pageIndex,
   pageSize,
   search = "",
+  startDate,
+  endDate,
   building,
-  unit
+  released=""
 ) => (dispatch) => {
   dispatch(startAsync());
 
@@ -120,11 +122,16 @@ export const getBillingUnit = (
         (pageIndex + 1) +
         "&limit=" +
         pageSize +
-        "&sort_field=created_on&sort_type=DESC" +
         "&building_id=" +
         building +
         "&search=" +
-        search,
+        search+
+        "&startDate=" +
+        startDate+
+        "&endDate=" +
+        endDate +
+        "&released="+
+        released,
 
       (res) => {
         dispatch(setData(res.data.data));

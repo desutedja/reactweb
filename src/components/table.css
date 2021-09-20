@@ -7,6 +7,15 @@
   flex-direction: column;
 }
 
+.react-datepicker-popper {
+  z-index: 9999 !important;
+  background-color: #f0f0f3;
+}
+
+.react-datepicker__month-text, .react-datepicker-year-header {
+  text-align: center;
+}
+
 .Table-content {
   position: relative;
   overflow: auto;

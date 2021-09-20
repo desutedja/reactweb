@@ -14,11 +14,11 @@ import {
   setSelected,
   updateBillingPublish,
 } from "../slices/billing";
-import { endpointAdmin, endpointBilling } from "../../settings";
+import { endpointAdmin, endpointBilling, online_status} from "../../settings";
 import { toSentenceCase, toMoney } from "../../utils";
 import { get } from "../slice";
 
-import TemplateWithSelection from "./components/TemplateWithSelection";
+import TemplateWithSelectionAndDate from "./components/TemplateWithSelectionAndDate";
 import UploadModal from "../../components/UploadModal";
 
 function Component({ view }) {
@@ -31,6 +31,7 @@ function Component({ view }) {
   const [building, setBuilding] = useState("");
   const [buildingName, setBuildingName] = useState("");
   const [buildings, setBuildings] = useState("");
+  const [released, setReleased] = useState("");
   const [multiActionRows, setMultiActionRows] = useState([]);
   const [columns, setColumns] = useState([]);
 
@@ -102,21 +103,21 @@ function Component({ view }) {
           Header: "Resident",
           accessor: (row) => (row.resident_name ? row.resident_name : "-"),
         },
+        { Header: "Year", accessor: (row) => row.year },
         { Header: "Month", accessor: (row) => row.month },
-    { Header: "Year", accessor: (row) => row.year },
-        {
-          Header: "Unpaid Amount",
-          accessor: (row) => toMoney(row.unpaid_amount),
-        },
-        {
-          Header: "Additional Charges",
-          accessor: (row) => toMoney(row.additional_charge),
-        },
-        { Header: "Penalty", accessor: (row) => toMoney(row.billing_penalty) },
         {
           Header: "Total Unpaid",
+          accessor: (row) => toMoney(row.total_unpaid),
+        },
+        {
+          Header: "Total Paid",
+          accessor: (row) => toMoney(row.total_paid),
+        },
+        {
+          Header: "Total",
           accessor: (row) => <b>{toMoney(row.total)}</b>,
         },
+        { Header: "Released", accessor: (row) => row.released },
       ]);
     }
   }, [role]);
@@ -239,7 +240,7 @@ function Component({ view }) {
         uploadDataName="file_upload"
         resultComponent={uploadResult}
       />
-      <TemplateWithSelection
+      <TemplateWithSelectionAndDate
         view={view}
         columns={columns}
         slice="billing"
@@ -251,7 +252,7 @@ function Component({ view }) {
           });
           setMultiActionRows([...selectedRowIds]);
         }}
-        filterVars={[building, upload]}
+        filterVars={[building, released]}
         filters={
           role === "sa"
             ? [
@@ -261,13 +262,7 @@ function Component({ view }) {
                   delete: () => setBuilding(""),
                   component: (toggleModal) => (
                     <>
-                      <Input
-                        label="Search"
-                        compact
-                        icon={<FiSearch />}
-                        inputValue={search}
-                        setInputValue={setSearch}
-                      />
+                      
                       <Filter
                         data={buildings}
                         onClick={(el) => {
@@ -292,8 +287,49 @@ function Component({ view }) {
                     </>
                   ),
                 },
+                {
+                  hidex: released === "",
+                  label: <p>{released ? "Released: " + released : "Released: All"}</p>,
+                  delete: () => {
+                    setReleased("");
+                  },
+                  component: (toggleModal) => (
+                    <Filter
+                      data={online_status}
+                      onClickAll={() => {
+                        setReleased("");
+                        toggleModal(false);
+                      }}
+                      onClick={(el) => {
+                        setReleased(el.value);
+                        toggleModal(false);
+                      }}
+                    />
+                  ),
+                },
               ]
-            : []
+            : [
+            {
+              hidex: released === "",
+              label: <p>{released ? "Released: " + released : "Released: All"}</p>,
+              delete: () => {
+                setReleased("");
+              },
+              component: (toggleModal) => (
+                <Filter
+                  data={online_status}
+                  onClickAll={() => {
+                    setReleased("");
+                    toggleModal(false);
+                  }}
+                  onClick={(el) => {
+                    setReleased(el.value);
+                    toggleModal(false);
+                  }}
+                />
+              ),
+            },
+          ]
         }
         renderActions={
           view
