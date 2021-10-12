@@ -248,7 +248,11 @@ function Component({ view }) {
         selectAction={(selectedRows) => {
           const selectedRowIds = [];
           selectedRows.map((row) => {
-            selectedRowIds.push(row.id);
+            selectedRowIds.push({
+              unitID:row.id,
+              month:row.month,
+              year:row.year
+            });
           });
           setMultiActionRows([...selectedRowIds]);
         }}
