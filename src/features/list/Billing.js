@@ -2,9 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FiSearch, FiDownload, FiUpload } from "react-icons/fi";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
+import Modal from '../../components/Modal';
 
 import Input from "../../components/Input";
 import Filter from "../../components/Filter";
+import Dropdown from "../../components/DropDown";
 import Button from "../../components/Button";
 import { ListGroup, ListGroupItem } from "reactstrap";
 import {
@@ -16,7 +21,7 @@ import {
 } from "../slices/billing";
 import { endpointAdmin, endpointBilling, online_status} from "../../settings";
 import { toSentenceCase, toMoney } from "../../utils";
-import { get } from "../slice";
+import { get,post,setInfo } from "../slice";
 
 import TemplateWithSelectionAndDate from "./components/TemplateWithSelectionAndDate";
 import UploadModal from "../../components/UploadModal";
@@ -27,16 +32,53 @@ function Component({ view }) {
   const { role, user } = useSelector((state) => state.auth);
 
   //   const { selectedRowIds } = useSelector((state) => state.billing);
+  const [modalPublish, toggleModalPublish] = useState(false);
+  const handleShow = () => toggleModalPublish(true);
+  const [buildingRelease, setBuildingRelease] = useState("");
 
   const [building, setBuilding] = useState("");
   const [buildingName, setBuildingName] = useState("");
   const [buildings, setBuildings] = useState("");
+  const [buildinglist, setBuildingList] = useState("");
   const [released, setReleased] = useState("");
   const [multiActionRows, setMultiActionRows] = useState([]);
   const [columns, setColumns] = useState([]);
 
   const [limit, setLimit] = useState(5);
   const [upload, setUpload] = useState(false);
+
+  const yearnow = (new Date()).getFullYear();
+  const years = [];
+
+  for(let i = yearnow-1; i <= yearnow+1; i++) {
+    years.push({"value":i,"label":i});
+  }
+
+  const [year, setYear] = useState(yearnow);
+
+  const monthnow = (new Date()).getMonth();
+  const months = [
+    { value: 1, label: "January" },
+    { value: 2, label: "February" },
+    { value: 3, label: "March" },
+    { value: 4, label: "April" },
+    { value: 5, label: "May" },
+    { value: 6, label: "June" },
+    { value: 7, label: "July" },
+    { value: 8, label: "August" },
+    { value: 9, label: "September" },
+    { value: 10, label: "October" },
+    { value: 11, label: "November" },
+    { value: 12, label: "December" },
+  ];
+
+  const yesno = [
+    { value: "yes", label: "Yes" },
+    { value: "no", label: "No" },
+  ];
+  const [withImage, setWithImage] = useState("");
+
+  const [month, setMonth] = useState(monthnow+1);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -72,6 +114,25 @@ function Component({ view }) {
       )
     );
   }, [dispatch, search, limit]);
+
+  useEffect(() => {
+    dispatch(
+      get(
+        endpointAdmin +
+          "/building" +
+          "?limit=100" +
+          "&page=1" +
+          "&search=",
+        (res) => {
+          let databuilding = res.data.data.items;
+          let formatted = databuilding.map((el) => ({ label: el.name, value: el.id }));
+
+          setBuildingList(formatted);
+        }
+      )
+    );
+  }, [dispatch]);
+
 
   useEffect(() => {
     if (role) {
@@ -118,6 +179,7 @@ function Component({ view }) {
           accessor: (row) => <b>{toMoney(row.total)}</b>,
         },
         { Header: "Released", accessor: (row) => row.released },
+        //{ Header: "With Image", accessor: (row) => row.with_image },
       ]);
     }
   }, [role]);
@@ -231,6 +293,66 @@ function Component({ view }) {
 
   return (
     <>
+      <Modal
+          isOpen={modalPublish}
+          toggle={() => { toggleModalPublish(false) }}
+          title="Publish All"
+          okLabel={"Submit"}
+          onClick={() => {
+            dispatch(post(endpointBilling+"/management/billing/publish-billing-building", {
+              "building_id": '' +buildingRelease,
+              "year": '' +year,
+              "month": '' +month,
+              "with_image": ''+withImage
+            }, res => {
+                console.log(res.data.data);
+                dispatch(
+                  setInfo({
+                    color: "success",
+                    message: `${res.data.data} billing has been set to released.`,
+                  })
+                );
+                // resultComponent ? setOpenRes(true) : toggle();
+            }, err => {
+              dispatch(
+                setInfo({
+                  color: "error",
+                  message: `Error to released.`,
+                })
+              );
+              console.log("error");
+            }))
+
+            toggleModalPublish(false)
+        }}
+      >
+        
+        <Input
+            label="Building" inputValue={buildingRelease}
+            type="select" options={buildinglist} setInputValue={setBuildingRelease}
+            title='Building List'
+            hidden={role!=="sa"}
+        />
+
+        <Input
+            label="Month" inputValue={month}
+            type="select" options={months} setInputValue={setMonth}
+            title='Month List'
+        />
+
+        <Input
+            label="Year" inputValue={year}
+            type="select" options={years} setInputValue={setYear}
+            title='Year List'
+        />
+
+        <Input
+            label="With Image" inputValue={withImage}
+            type="select" options={yesno} setInputValue={setWithImage}
+            title='With Image'
+        />
+      </Modal>
+
       <UploadModal
         open={upload}
         toggle={() => setUpload(false)}
@@ -248,12 +370,14 @@ function Component({ view }) {
         selectAction={(selectedRows) => {
           const selectedRowIds = [];
           selectedRows.map((row) => {
-            selectedRowIds.push({
-              unitID:row.id,
-              month:row.month,
-              year:row.year
-            });
-          });
+            if (row !== undefined){
+              selectedRowIds.push({
+                unitID:row.id,
+                month:row.month,
+                year:row.year
+              });
+            }
+          });    
           setMultiActionRows([...selectedRowIds]);
         }}
         filterVars={[building, released]}
@@ -354,12 +478,43 @@ function Component({ view }) {
                   />,
 
                   <Button
-                    label="Publish Selected"
+                    label="Release Selected"
                     disabled={Object.keys(selectedRowIds).length === 0}
                     icon={<FiUpload />}
-                    onClick={() => {
-                      dispatch(updateBillingPublish(multiActionRows));
-                    }}
+                    onClick={() => 
+                      {
+                        confirmAlert({
+                          title: 'Release Billing',
+                          message: 'Do you want to release this billing with image from Catat Meter?',
+                          buttons: [
+                            {
+                              label: 'Yes, with image',
+                              onClick: () => {
+                                dispatch(updateBillingPublish(multiActionRows,"yes"));
+                              },
+                              className:"Button btn btn-secondary"
+                            },
+                            {
+                              label: 'No, without image',
+                              onClick: () => {
+                                dispatch(updateBillingPublish(multiActionRows,"no"));
+                              },
+                              className:"Button btn btn-custom"
+                            },
+                            {
+                              label: 'Cancel',
+                              className:"Button btn btn-cancel"
+                            }
+                          ]
+                        });
+                      }
+                    }
+                  />,
+
+                  <Button
+                    label="Release All"
+                    icon={<FiUpload />}
+                    onClick={handleShow}
                   />,
                 ];
               }

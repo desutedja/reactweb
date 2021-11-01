@@ -2,11 +2,9 @@ import React, { useState } from 'react';
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 
 function Component({ color = "", label, labelIcon = "", items }) {
-    const listitem = items.map((item, key) => {
-        if (!item.disabled)
-            return <DropdownItem key={key} onClick={item.onClick}>{item.icon}  {item.name}
-            </DropdownItem>
-        return null
+    const listitem = items.map((el) => {
+        return (<DropdownItem key={el.value}>{el.name} {el.label}
+            </DropdownItem>);
     });
 
     const [dropdownOpen, setOpen] = useState(false);

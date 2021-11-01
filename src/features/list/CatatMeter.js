@@ -1,34 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
-import { getCatatmeter } from "../slices/catatmeter";
+import { useDispatch, useSelector } from "react-redux";
+import { getCatatmeter,downloadCatatMeter } from "../slices/catatmeter";
 import Template from "./components/Template";
+import Button from "../../components/Button";
+import { FiDownload } from "react-icons/fi";
+import Filter from "../../components/Filter";
+import { get } from "../slice";
+import { endpointAdmin} from "../../settings";
 
 const columns = [
     {
-      Header: "Resident ID", 
-      accessor: "resident_id", 
-      sorting: "f.id"
+      Header: "Building Name", 
+      accessor: "building_name", 
+      sorting: "bld.name"
     },
-    {
-      Header: "Resident Name", 
-      accessor: "resident_name", 
-      sorting: "f.firstname"
-    },
-    {
-      Header: "Unit ID", 
-      accessor: "unit_id", 
-      sorting: "unit_id"
-    },
+    // {
+    //   Header: "Unit ID", 
+    //   accessor: "unit_id", 
+    //   sorting: "unit_id"
+    // },
     {
       Header: "Unit", 
       accessor: "unit", 
       sorting: "c.number"
     },
-    {
-      Header: "Records ID", 
-      accessor: "records_id", 
-      sorting: "b.id"
-    },
+    // {
+    //   Header: "Records ID", 
+    //   accessor: "records_id", 
+    //   sorting: "b.id"
+    // },
     {
         Header: "Year", 
         accessor: "year", 
@@ -49,11 +49,11 @@ const columns = [
         accessor: "current_usage", 
         sorting: "b.current_usage"
     },
-    {
-        Header: "Staff ID", 
-        accessor: "staff_id", 
-        sorting: "b.staff_id"
-    },
+    // {
+    //     Header: "Staff ID", 
+    //     accessor: "staff_id", 
+    //     sorting: "b.staff_id"
+    // },
     {
         Header: "Staff Name", 
         accessor: "staff_name", 
@@ -93,10 +93,46 @@ const columns = [
   ];
 
 function Component({ view, canAdd }) {
+  let dispatch = useDispatch();
+  const [search, setSearch] = useState("");
   const { role, user } = useSelector((state) => state.auth);
 
   const [file, setFile] = useState();
   const [data, setData] = useState();
+
+  const [building, setBuilding] = useState("");
+  const [buildingName, setBuildingName] = useState("");
+  const [buildings, setBuildings] = useState("");
+
+  useEffect(() => {
+    dispatch(
+      get(
+        endpointAdmin +
+          "/building" +
+          "?limit=50" +
+          "&page=1" +
+          "&search=" +
+          search,
+        (res) => {
+          let data = res.data.data.items;
+          let totalItems = Number(res.data.data.total_items);
+          let restTotal = totalItems - data.length;
+
+          let formatted = data.map((el) => ({ label: el.name, value: el.id }));
+
+          if (data.length < totalItems && search.length === 0) {
+            formatted.push({
+              label: "Load " + (restTotal > 5 ? 5 : restTotal) + " more",
+              restTotal: restTotal > 5 ? 5 : restTotal,
+              className: "load-more",
+            });
+          }
+
+          setBuildings(formatted);
+        }
+      )
+    );
+  }, [dispatch, search]);
 
 
   useEffect(() => {
@@ -120,14 +156,51 @@ function Component({ view, canAdd }) {
         columns={columns}
         slice={"catatmeter"}
         getAction={getCatatmeter}
+        filterVars={[building]}
+        filters={
+          role === "sa"
+            ? [
+                {
+                  hidex: building === "",
+                  label: <p>Building: {building ? buildingName : "All"}</p>,
+                  delete: () => setBuilding(""),
+                  component: (toggleModal) => (
+                    <>
+                      <Filter
+                        data={buildings}
+                        onClick={(el) => {
+                          if (!el.value) {
+                            return;
+                          }
+                          setBuilding(el.value);
+                          setBuildingName(el.label);
+                          toggleModal(false);
+                        }}
+                        onClickAll={() => {
+                          setBuilding("");
+                          setBuildingName("");
+                          toggleModal(false);
+                        }}
+                      />
+                    </>
+                  ),
+                },
+              ]
+            : []
+        }
         actions={
           view
             ? null
-            : (role === "bm" ? !canAdd : false)
-            ? null
-            : []
-        }
-        
+            : 
+              <Button
+                  label="Download Catat Meter .csv"
+                  icon={<FiDownload />}
+                  onClick={() => {
+                      dispatch(downloadCatatMeter(document.getElementById("Search").value,building))
+                    }
+                  }
+              />
+          }
       />
     </>
   );

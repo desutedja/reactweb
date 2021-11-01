@@ -80,7 +80,6 @@ function Component() {
   const [province, setProvince] = useState("");
   const [provinces, setProvinces] = useState([]);
   const [module, setModule] = useState([]);
-  const [moduleAccess, setModuleAccess] = useState([]);
   const [selectedModule, setSelectedModule] = useState([]);
 
   let dispatch = useDispatch();
@@ -175,7 +174,7 @@ function Component() {
             id: el.access_id,
             type: toSentenceCase(el.access_type),
           }));
-          setModule([]);
+          console.log("asdasd" + JSON.stringify(formatted));
           setModule([...formatted]);
         }
       )
@@ -301,12 +300,6 @@ function Component() {
       }}
       renderChild={(props) => {
         const { values, errors, setFieldValue } = props;
-        // if (
-        //   moduleAccess.length > 0 &&
-        //   typeof values.module_access === "undefined"
-        // ) {
-        //   setFieldValue("module_access", moduleAccess);
-        // }
         if (values.building_management_id !== "") {
           setBmId(values.building_management_id);
         } else if (user.building_management_id != null) {
@@ -426,64 +419,9 @@ function Component() {
               <ModuleTable
                 options={[...module]}
                 values={values.module_access}
-                setFieldValue={(value) => setFieldValue("module_access", value)}
+                setFieldValue={(value) => (setFieldValue("module_access", value))}
               />
             )}
-            {
-              // module.length > 0 &&
-              //   module.map(
-              //     (el) => {
-              //       let radio = [
-              //         { value: "read", label: "Yes" },
-              //         { value: "n", label: "No" },
-              //       ]
-              //       console.log(el);
-              //     }
-              // <Input
-              //   {...props}
-              //   type="multiselecttable"
-              //   label="Select Module(s)"
-              //   name="module_access"
-              //   // defaultValue={moduleAccess}
-              //   // values.module_access
-              //   //   ? values.module_access.map((el) => {
-              //   //       let fullValue = ["create", "read", "update", "delete"];
-              //   //       let inclPrivArr = fullValue;
-              //   //       if (typeof el.access_privilege === "string") {
-              //   //         inclPrivArr = el.access_privilege.split(",");
-              //   //       }
-              //   //       let privilege = {};
-              //   //       inclPrivArr.map((priv) => {
-              //   //         privilege[priv] = true;
-              //   //       });
-              //   //       if (inclPrivArr.length !== fullValue.length) {
-              //   //         let exclPrivArr = fullValue.filter(
-              //   //           (x) => inclPrivArr.indexOf(x) === -1
-              //   //         );
-              //   //         exclPrivArr.map((priv) => {
-              //   //           privilege[priv] = false;
-              //   //         });
-              //   //       }
-              //   //       if (typeof el.access != "undefined") {
-              //   //         let values = {
-              //   //           label: toSentenceCase(el.access.replace("_", " ")),
-              //   //           value: el.access,
-              //   //           id: el.access_id,
-              //   //           type: toSentenceCase(el.access_type),
-              //   //           privilege,
-              //   //         };
-              //   //         return values;
-              //   //       }
-              //   //     })
-              //   //   : []
-              //   // }
-              //   placeholder="Start typing module access name to add"
-              //   options={module}
-              //   onChange={(e, value) => {
-              //     setSelectedModule(value);
-              //   }}
-              // />
-            }
             <Input {...props} label="Staff Id" placeholder="KTP/SIM/Passport" />
             <Input
               {...props}
@@ -561,7 +499,7 @@ const ModuleTable = ({ options, setFieldValue, values }) => {
 
   useEffect(() => {
     if (moduleAccess.length === 0) {
-      console.log(options);
+      console.log("optopt" + JSON.stringify(options));
       const newData = [...options];
       newData.map((item) => {
         item.privilege = {
@@ -572,6 +510,7 @@ const ModuleTable = ({ options, setFieldValue, values }) => {
         };
         return item;
       });
+      console.log("qweqwe:" + JSON.stringify(newData))
       setModuleAccess(newData);
       setFieldValue(newData);
     }
@@ -579,7 +518,7 @@ const ModuleTable = ({ options, setFieldValue, values }) => {
 
   useEffect(() => {}, [moduleAccess]);
   useEffect(() => {
-    console.log(values);
+    console.log("val2:" + JSON.stringify(values));
     if (typeof values === "undefined") {
       return;
     }
@@ -618,12 +557,10 @@ const ModuleTable = ({ options, setFieldValue, values }) => {
       return;
     }
     let merge = formatted.concat(moduleAccess);
+    console.log("chxchx1:" +  JSON.stringify(formatted));
+    console.log("chxchx2:" +  JSON.stringify(moduleAccess));
     merge = [...new Set([...formatted, ...moduleAccess])];
     console.log(merge, "merged");
-    // let merge = moduleAccess.concat(formatted);
-    // merge = merge.filter((item, index) => {
-    //   return merge.indexOf(item) !== index;
-    // });
     setModuleAccess([...merge]);
     setFieldValue([...merge]);
     setMerged(true);
@@ -721,6 +658,7 @@ const ModuleTable = ({ options, setFieldValue, values }) => {
         <div class="css-table-body">
           {moduleAccess.length > 0 &&
             moduleAccess.map((el, index) => {
+              console.log("modmod:" + JSON.stringify(moduleAccess))
               return (
                 <div key={index} class="css-table-row">
                   <div style={{ textAlign: "left" }}>{el.label}</div>
@@ -731,7 +669,6 @@ const ModuleTable = ({ options, setFieldValue, values }) => {
                       onChange={() => {
                         handleChange(index, "read", !el.privilege.read);
                       }}
-                      // checked={moduleAccess[index].privilege.read}
                     />
                   </div>
                   <div>

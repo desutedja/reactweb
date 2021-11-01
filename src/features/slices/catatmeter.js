@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { endpointManagement } from "../../settings";
-import { get, post, del, put,patch, setInfo } from "../slice";
+import { get, post, del, put,patch, setInfo, getFile } from "../slice";
 
 const managementEndpoint = endpointManagement + "/admin/meter";
 
@@ -51,6 +51,7 @@ export const getCatatmeter = (
   pageIndex,
   pageSize,
   search = "",
+  building,
 ) => (dispatch) => {
   dispatch(startAsync());
 
@@ -64,10 +65,40 @@ export const getCatatmeter = (
         pageSize +
         "&search=" +
         search +
-        "&sort_field=created_on&sort_type=DESC",
+        "&building=" +
+        building +
+        "&sort_field=created_on&sort_type=DESC&export=false",
       (res) => {
         dispatch(setData(res.data.data));
 
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const downloadCatatMeter = (
+  search,
+  building,
+) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    getFile(
+      managementEndpoint +
+        "/list" +
+        "?page=1" +
+        "&limit=10000" +
+        "&search=" +
+        search +
+        "&building=" +
+        building +
+        "&sort_field=created_on&sort_type=DESC&export=true",
+        "catat_meter.csv",
+      (res) => {
         dispatch(stopAsync());
       },
       (err) => {

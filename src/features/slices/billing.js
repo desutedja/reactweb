@@ -477,19 +477,20 @@ export const downloadBillingCategory = (search = '', building) => dispatch => {
 }
 
 
-export const updateBillingPublish = (ids) => (dispatch) => {
+export const updateBillingPublish = (ids,withImage) => (dispatch) => {
   dispatch(startAsync());
   dispatch(
     post(
       billingEndpoint + "/publish-billing",
       {
         data: ids,
+        with_image: withImage,
       },
       (res) => {
         dispatch(
           setInfo({
             color: "success",
-            message: `${ids.length} billing has been set to published.`,
+            message: `${res.data.data} billing has been set to released.`,
           })
         );
 
@@ -497,8 +498,17 @@ export const updateBillingPublish = (ids) => (dispatch) => {
         dispatch(stopAsync());
       },
       (err) => {
+        dispatch(
+          setInfo({
+            color: "error",
+            message: `Error to released.`,
+          })
+        );
+
+        dispatch(refresh());
         dispatch(stopAsync());
       }
+      
     )
   );
 };

@@ -43,6 +43,7 @@ import Billing from "./Billing";
 import Building from "./Building";
 import Resident from "./Resident";
 import RequestPremium from "./RequestPremium";
+import CatatMeter from "./CatatMeter";
 import Staff from "./Staff";
 import Task from "./Task";
 import Details from "../../details/components/Detail";
@@ -95,7 +96,7 @@ const modules = [
     icon: <RiTaskLine className="MenuItem-icon" />,
     label: "Catat Meter",
     path: "/catatmeter",
-   
+    component: <CatatMeter />,
   },
   {
     icon: <RiCustomerService2Line className="MenuItem-icon" />,
