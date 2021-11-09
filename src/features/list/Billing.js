@@ -3,6 +3,8 @@ import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FiSearch, FiDownload, FiUpload } from "react-icons/fi";
 import { confirmAlert } from 'react-confirm-alert';
+import CustomAlert from '../../components/CustomAlert';
+import { closeAlert } from '../slice';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Modal from '../../components/Modal';
@@ -43,9 +45,11 @@ function Component({ view }) {
   const [released, setReleased] = useState("");
   const [multiActionRows, setMultiActionRows] = useState([]);
   const [columns, setColumns] = useState([]);
+  const [alert, setAlert] = useState("");
 
   const [limit, setLimit] = useState(5);
   const [upload, setUpload] = useState(false);
+  const [uploadSetAsPaid, setUploadSetAsPaid] = useState(false);
 
   const yearnow = (new Date()).getFullYear();
   const years = [];
@@ -362,6 +366,25 @@ function Component({ view }) {
         uploadDataName="file_upload"
         resultComponent={uploadResult}
       />
+
+      <UploadModal
+        open={uploadSetAsPaid}
+        toggle={() => setUploadSetAsPaid(false)}
+        templateLink={"https://api.yipy.id/yipy-assets/asset-storage/document/FF1F6CBF5AC929160DDD7E04321C7053.xlsx"}
+        filename="set_as_paid_template.xlsx"
+        uploadLink={endpointBilling + "/management/billing/setaspaidbulk?building_id="+building}
+        uploadDataName="file_upload"
+        resultComponent={uploadResult}
+      />
+
+      <CustomAlert
+        isOpen={alert}
+        toggle={() => setAlert(false)}
+        title={"Error"}
+        subtitle={"Please Choose Building"}
+        content={"You need to choose Building first"}
+      />
+
       <TemplateWithSelectionAndDate
         view={view}
         columns={columns}
@@ -515,6 +538,20 @@ function Component({ view }) {
                     label="Release All"
                     icon={<FiUpload />}
                     onClick={handleShow}
+                  />,
+
+                  <Button
+                    label="Upload Bulk Set As Paid"
+                    icon={<FiUpload />}
+                    onClick={() => {
+                        if (role === "sa" && building == ""){
+                          setAlert(true)
+                          return
+                        }
+
+                        setUploadSetAsPaid(true)
+                      }
+                    }
                   />,
                 ];
               }

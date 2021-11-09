@@ -140,6 +140,7 @@ function Component({ view, canAdd, canUpdate }) {
             </Pill>
           ),
       },
+      { Header: "Paid By", accessor: "paid_by" },
       {
         Header: "Payment Date",
         accessor: (row) =>
