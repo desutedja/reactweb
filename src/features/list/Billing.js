@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FiSearch, FiDownload, FiUpload } from "react-icons/fi";
@@ -17,6 +17,7 @@ import { ListGroup, ListGroupItem } from "reactstrap";
 import {
   getBillingUnit,
   downloadBillingUnit,
+  downloadSetAsPaidBulk,
   setSelectedItem,
   setSelected,
   updateBillingPublish,
@@ -27,6 +28,7 @@ import { get,post,setInfo } from "../slice";
 
 import TemplateWithSelectionAndDate from "./components/TemplateWithSelectionAndDate";
 import UploadModal from "../../components/UploadModal";
+import UploadModalV2 from "../../components/UploadModalV2";
 
 function Component({ view }) {
   const [search, setSearch] = useState("");
@@ -46,6 +48,8 @@ function Component({ view }) {
   const [multiActionRows, setMultiActionRows] = useState([]);
   const [columns, setColumns] = useState([]);
   const [alert, setAlert] = useState("");
+  const [fileUpload, setFileUpload] = useState('');
+  const fileInput = useRef();
 
   const [limit, setLimit] = useState(5);
   const [upload, setUpload] = useState(false);
@@ -295,6 +299,26 @@ function Component({ view }) {
     );
   }
 
+  function uploadResultSetAsPaid(result) {
+    return (
+      <>
+       {result.status=="Success" ? (
+          <>
+          <div>
+            <h5>{result.message}</h5>
+          </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <h5 class="red">{result.message}</h5>
+            </div>
+          </>
+        )}
+      </>
+    );
+  }
+
   return (
     <>
       <Modal
@@ -357,6 +381,24 @@ function Component({ view }) {
         />
       </Modal>
 
+      {/* <Modal
+            isOpen={uploadSetAsPaid}
+            toggle={() => setUploadSetAsPaid(false)}
+            title="Upload Bulk"
+            okLabel={"Submit"}
+            onClick={
+              dispatch(downloadSetAsPaidBulk(fileUpload, search, building))
+            }
+        >
+          <input
+              ref={fileInput}
+              type="file"
+              onChange={e => {
+                  setFileUpload(fileInput.current.files[0]);
+              }}
+          />
+        </Modal> */}
+
       <UploadModal
         open={upload}
         toggle={() => setUpload(false)}
@@ -367,14 +409,14 @@ function Component({ view }) {
         resultComponent={uploadResult}
       />
 
-      <UploadModal
+      <UploadModalV2
         open={uploadSetAsPaid}
         toggle={() => setUploadSetAsPaid(false)}
-        templateLink={"https://api.yipy.id/yipy-assets/asset-storage/document/FF1F6CBF5AC929160DDD7E04321C7053.xlsx"}
+        templateLink={"https://api.yipy.id/yipy-assets/asset-storage/document/8D23E9158CBE5501CFDBD34E4B132C54.xlsx"}
         filename="set_as_paid_template.xlsx"
         uploadLink={endpointBilling + "/management/billing/setaspaidbulk?building_id="+building}
         uploadDataName="file_upload"
-        resultComponent={uploadResult}
+        resultComponent={uploadResultSetAsPaid}
       />
 
       <CustomAlert

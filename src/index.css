@@ -192,6 +192,10 @@ h5 {
   font-weight: 600;
 }
 
+.red{
+  color:red;
+}
+
 table {
   width: 100%;
   border-spacing: 0;

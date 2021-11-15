@@ -165,6 +165,23 @@ export const downloadBillingUnit = (search = "", building) => (dispatch) => {
   );
 };
 
+export const downloadSetAsPaidBulk = (fileUpload, building,downloadfile) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    getFile(
+      endpointBilling + "/management/billing/setaspaidbulk?building_id="+building,
+      downloadfile + ".csv",
+      (res) => {
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
 export const getBillingSettlement = (
   pageIndex,
   pageSize,

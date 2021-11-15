@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { endpointTask } from "../../settings";
-import { get, post, setInfo } from "../slice";
+import { get, post, setInfo, getFile } from "../slice";
 
 const taskEndpoint = endpointTask + "/admin";
 
@@ -47,6 +47,67 @@ export const {
   refresh,
 } = slice.actions;
 
+export const downloadTasks = (
+  pageIndex,
+  pageSize,
+  search = "",
+  type,
+  prio,
+  status,
+  building,
+  unit,
+  createdStart = "",
+  createdEnd = "",
+  resolvedStart = "",
+  resolvedEnd = "",
+  exportCsv="true"
+  ) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    getFile(
+      taskEndpoint +
+      "/list/download" +
+      "?page=" +
+      pageIndex +
+      "&limit=" +
+      pageSize +
+      "&search=" +
+      search +
+      //'&sort_field=created_on' +
+      "&sort_type=DESC" +
+      "&type=" +
+      type +
+      "&priority=" +
+      prio +
+      "&requester_building_id=" +
+      building +
+      "&requester_unit_id=" +
+      unit +
+      "&sort_field=created_on" +
+      "&created_start_date=" +
+      createdStart +
+      "T00:00:00" +
+      "&created_end_date=" +
+      createdEnd +
+      "T23:59:59" +
+      "&resolved_start_date=" +
+      "&resolved_end_date=" +
+      "&status=" +
+      status +
+      "&export=" +
+      exportCsv,
+      "tasks.csv",
+      (res) => {
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
 export const getTask = (
   pageIndex,
   pageSize,
@@ -83,7 +144,7 @@ export const getTask = (
         building +
         "&requester_unit_id=" +
         unit +
-        "&sort_field=created_on&sort_type=DESC" +
+        "&sort_field=created_on" +
         "&created_start_date=" +
         createdStart +
         "T00:00:00" +

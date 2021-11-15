@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { FiSearch, FiPlus, FiCheck } from "react-icons/fi";
+import { FiSearch, FiPlus, FiCheck, FiDownload } from "react-icons/fi";
 import moment from "moment";
 
 import Button from "../../components/Button";
@@ -31,6 +31,7 @@ import {
   resolveTask,
   reassignTask,
   setSelected,
+  downloadTasks,
 } from "../slices/task";
 import { get } from "../slice";
 
@@ -674,6 +675,11 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
                         />
                       )}
                   </>,
+                  <Button
+                  label="Download Tasks .csv"
+                  icon={<FiDownload />}
+                  onClick={() => dispatch(downloadTasks(1,10000,search,type,prio,status,building,unit,createdStart,createdEnd,resolvedStart,resolvedEnd,"true"))}
+                />,
                   role === "bm" && (role === "bm" ? canAdd : false) && (
                     <Button
                       key="Add Task"
