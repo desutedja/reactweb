@@ -107,7 +107,7 @@ function Component() {
 
                 return (
                     <Form className="Form">
-                        <Input {...props} label="Service" options={services} onChange={el => {
+                        <Input {...props} label="Service" autoComplete="off" options={services} onChange={el => {
                             setService(el);
                         }} />
                         <div>
@@ -116,8 +116,8 @@ function Component() {
                                 service.price_fixed : service.price_unit)}{service.price_type === 'unit' && <span>/{service.unit}</span>}</div>
                         </div>
                         <SectionSeparator />
-                        <Input {...props} label="Month" options={months} />
-                        <Input {...props} label="Year" options={yearsOnRange(10)} />
+                        <Input {...props} label="Month" autoComplete="off" options={months} />
+                        <Input {...props} label="Year" autoComplete="off" options={yearsOnRange(10)} />
                         <Input {...props} label="Name" placeholder="Billing description e.g. Electricity for July 2020" />
                         <Input {...props} label="Previous Usage" externalValue={previous} suffix={service.unit} 
                             hidden={service.price_type ==='fixed' || service.price_type === ''}/>

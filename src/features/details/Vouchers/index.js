@@ -32,6 +32,13 @@ const info = {
       },
     },
     {
+      label: "name",
+      lfmt: (v) => "Specific Merchant ",
+      vfmt: (v) => {
+        return v;
+      },
+    },
+    {
       label: "discount_type",
       lfmt: (v) => "Discount Type",
       vfmt: (v) => {
@@ -46,6 +53,20 @@ const info = {
           return `${v} %`;
         }
         return toMoney(v);
+      },
+    },
+    {
+      label: "minimum_transaction",
+      lfmt: (v) => "Minimum Transaction",
+      vfmt: (v) => {
+        return (v);
+      },
+    },
+    {
+      label: "maximum_discount",
+      lfmt: (v) => "Maximum Discount",
+      vfmt: (v) => {
+        return (v);
       },
     },
     {
@@ -240,3 +261,21 @@ function Component({ view }) {
 }
 
 export default Component;
+
+// building_management_id	2
+// building_management_id_label	"Centratama Group by Fastel Sarana Indonesia"
+// categories	[…]
+// 0	{…}
+// category_id	1
+// limit	1
+// discount	10
+// discount_type	"percentage"
+// discount_type_label	"Percentage"
+// expired_date	"2021-11-30 23:59:59"
+// limit	1
+// maximum_discount	"10000"
+// merchant_id	63
+// merchant_id_label	"ACS Gourmet – Tebet"
+// minimum_transaction	"100000"
+// prefix	"TEST1234"
+// usage_limit	1

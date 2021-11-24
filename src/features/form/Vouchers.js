@@ -20,7 +20,9 @@ function Component() {
   const { loading, selected } = useSelector((state) => state.vouchers);
 
   const [bManagements, setBManagements] = useState([]);
-
+  
+  const [merchant, setMerchant] = useState([]);
+  
   const [inBuildings, setBuildings] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -73,6 +75,26 @@ function Component() {
     );
   }, [dispatch]);
 
+  useEffect(() => {
+    dispatch(
+      get(
+        endpointMerchant +
+          "/admin/listmerchantname?search=",
+        (res) => {
+          
+          let formatted = res.data.data.map((el) => {
+            return {
+              id: el.id,
+              label: el.name,
+              value: el.name,
+            };
+          });
+          setMerchant(formatted);
+        }
+      )
+    );
+  }, [dispatch]);
+
   return (
     <Template
       slice="vouchers"
@@ -87,9 +109,12 @@ function Component() {
       }
       schema={voucherSchema}
       formatValues={(values) => ({
+        
         ...values,
         limit: parseInt(values.limit),
         discount: parseFloat(values.discount),
+        minimum_transaction: parseFloat(values.minimum_transaction),
+        maximum_discount: parseFloat(values.maximum_discount),
         expired_date: values.expired_date + " 23:59:59",
       })}
       edit={(data) => dispatch(editVoucher(data, history, selected.id))}
@@ -105,6 +130,14 @@ function Component() {
               name="building_management_id"
               options={bManagements}
             />
+            <Input
+              {...props}
+              type="multiselect"
+              label="Select Merchant(s)"
+              name="merchant_id"
+              placeholder="Start typing to add Merchant"
+              options={[...merchant]}
+            />
             <Input {...props} label="Total Voucher" name="limit" />
             <Input
               {...props}
@@ -116,6 +149,8 @@ function Component() {
               ]}
             />
             <Input {...props} label="Discount" name="discount" />
+            <Input {...props} label="Minimum Transaction" name="minimum_transaction" />
+            <Input {...props} label="Maximum Discount" name="maximum_discount" />
             <Input
               {...props}
               label="Expired Date"

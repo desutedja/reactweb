@@ -100,10 +100,10 @@ function Component({ view }) {
         Are you sure you want to delete merchant <b>{data.name}</b>?
       </Modal>
       <Template
+        loading={!data.id}
         image={data.logo || "placeholder"}
         title={data.name}
         phone={data.phone}
-        loading={!data.id}
         labels={["Details", "Contact Person", "Bank Account"]}
         contents={[
           <Detail
