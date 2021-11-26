@@ -22,6 +22,7 @@ import {
 import { get } from '../slice';
 
 import BarChartDMY from '../../components/BarChartDMY';
+import Loading from '../../components/Loading';
 
 const colorsSuccess = ['#577590', '#43aa8b', '#90be6d', '#f9c74f'];
 const colorsFailed = ['#9a031e', '#f3722c', '#f8961e', '#f9c74f'];
@@ -189,7 +190,7 @@ function Component() {
     ]
 
     return (
-        <>
+        <Loading loading={loading}>
             <div className="row no-gutters">
                 <div className="col-9">
                     <div className="Container color-2 d-flex flex-column cursor-pointer"
@@ -265,7 +266,6 @@ function Component() {
                         <BarChartDMY
                             headTitle='Transaction Statistics'
                             dataChart={trxDataFormatted}
-                            loading={loading}
                             range={range}
                             setRange={setRange}
                             barClick={() => {
@@ -459,7 +459,7 @@ function Component() {
                     </div>
                 </div>
             </div>
-        </>
+        </Loading>
     )
 }
 

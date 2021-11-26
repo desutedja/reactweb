@@ -143,6 +143,7 @@ function Component() {
               {...props}
               label="Discount Type"
               name="discount_type"
+              autoComplete="off"
               options={[
                 { value: "percentage", label: "Percentage" },
                 { value: "value", label: "Value" },

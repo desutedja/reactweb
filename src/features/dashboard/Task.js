@@ -17,6 +17,7 @@ import moment from 'moment';
 
 import './style.css';
 import { get } from '../slice';
+import Loading from '../../components/Loading';
 
 const formatValue = (value) => value.toFixed(0);
 
@@ -26,6 +27,8 @@ function Component() {
     const history = useHistory();
     const { sosData } = useSelector(state => state.dashboard);
     const { auth, dashboard } = useSelector(state => state);
+
+    const [loading, setLoading] = useState(false);
     
     const [range, setRange] = useState('ytd');
     const [pieData, setPieData] = useState([]);
@@ -36,6 +39,16 @@ function Component() {
 
     useEffect(() => {
         dispatch(getSOS(range));
+    }, [dispatch, range]);
+
+    useEffect(() => {
+        setLoading(true);
+        dispatch(get(endpointTask + '/admin/sa/statistics?range=' + range,
+            res => {
+                setLoading(false);
+                setPieData(res.data.data.ticket_by_category);
+                setTaskData(res.data.data);
+            }))
     }, [dispatch, range]);
 
     useEffect(() => {
@@ -137,7 +150,7 @@ function Component() {
     }, [sosData]);
 
     return (
-        <>
+        <Loading loading={loading}>
             <div className="row no-gutters">
                 <div className="col">
                     <div className="Container color-4 d-flex flex-column cursor-pointer"
@@ -246,20 +259,6 @@ function Component() {
                                 height: '390px',
                                 position: 'relative'
                             }}>
-                            {dashboard.loading && <div style={{
-                                position: 'absolute',
-                                top: 0,
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                backgroundColor: 'rgba(255, 255, 255, .8)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                zIndex: '1'
-                            }}>
-                                <ClinkLoader />
-                            </div>}
                                 <ResponsiveContainer width='100%'>
                                     <ComposedChart data={sosDataFormatted}>
                                         <XAxis height={30} dy={10} dataKey="Time" />
@@ -417,7 +416,7 @@ function Component() {
                     </div>
                 </div>
             </div>}
-        </>
+        </Loading>
     )
 }
 

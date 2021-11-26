@@ -34,6 +34,7 @@ import {
   DropdownItem,
 } from "reactstrap";
 import BillingItem from "../../components/cells/BillingItem";
+import Loading from "../../components/Loading";
 
 const formatValue = (value) => value.toFixed(0);
 const formatValuetoMoney = (value) => toMoney(value.toFixed(0));
@@ -275,7 +276,7 @@ function Component() {
   }, [billingGraph]);
 
   return (
-    <>
+    <Loading loading={loading}>
       <div className="row no-gutters">
         {auth.role === "sa" && (
           <div className="col">
@@ -571,7 +572,6 @@ function Component() {
             <BarChartDMY
               headTitle="Billing Statistics"
               dataChart={billingGraphFormatted}
-              loading={loading}
               range={range}
               setRange={setRange}
               dataY={["Amount Billing"]}
@@ -1016,7 +1016,7 @@ function Component() {
           </div>
         </div>
       </div>
-    </>
+    </Loading>
   );
 }
 

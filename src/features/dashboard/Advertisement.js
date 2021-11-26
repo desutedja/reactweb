@@ -25,6 +25,7 @@ import {
 import { FiSearch } from "react-icons/fi";
 import SummaryItem from "./Components/SummaryItem";
 import { downloadAdsReport } from "../slices/ads";
+import Loading from "../../components/Loading";
 const monthConst = [
   "Jan",
   "Feb",
@@ -660,7 +661,7 @@ function Component() {
   }, [selectedFilter, selectedMonth, selectedId]);
   const now = moment().format(`DDMMyyyy${parseInt(Math.random() * 100000)}`);
   return (
-    <>
+    <Loading loading={loadingPopup}>
       <div className="row no-gutters">
         <div className="col-4">
           {group !== "vas_advertiser" && (
@@ -1220,7 +1221,7 @@ function Component() {
           </div>
         </div>
       </div>
-    </>
+    </Loading>
   );
 }
 
