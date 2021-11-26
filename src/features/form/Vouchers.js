@@ -128,6 +128,7 @@ function Component() {
               {...props}
               label="Building Management"
               name="building_management_id"
+              autoComplete="off"
               options={bManagements}
             />
             <Input
@@ -135,6 +136,7 @@ function Component() {
               type="multiselect"
               label="Select Merchant(s)"
               name="merchant_id"
+              autoComplete="off"
               placeholder="Start typing to add Merchant"
               options={[...merchant]}
             />
@@ -149,9 +151,9 @@ function Component() {
                 { value: "value", label: "Value" },
               ]}
             />
-            <Input {...props} label="Discount" name="discount" />
-            <Input {...props} label="Minimum Transaction" name="minimum_transaction" />
-            <Input {...props} label="Maximum Discount" name="maximum_discount" />
+            <Input {...props} label="Discount" name="discount" autoComplete="off" />
+            <Input {...props} label="Minimum Transaction" name="minimum_transaction" autoComplete="off" />
+            <Input {...props} label="Maximum Discount" name="maximum_discount" autoComplete="off" />
             <Input
               {...props}
               label="Expired Date"
@@ -246,6 +248,7 @@ const CategoriesTable = ({ options, setFieldValue, values, setMaximum }) => {
                   <div>
                     <input
                       type="number"
+                      autoComplete="off"
                       onChange={(val) => {
                         handleChange(el.id, parseInt(val.target.value));
                       }}
