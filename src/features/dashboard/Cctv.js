@@ -16,11 +16,14 @@ import { FiSearch } from "react-icons/fi";
 import { Button } from "reactstrap";
 import { endpointAdmin } from "../../settings";
 import { FiTrash, FiEdit } from "react-icons/fi";
+import Loading from "../../components/Loading";
 
 function Component() {
   const { auth } = useSelector((state) => state);
   const { user, role } = auth;
   const { group } = user;
+
+    const [loading, setLoading] = useState(false);
 
   const [cctvPage, setCctvPage] = useState(1);
   const [cctvMaxPage, setCctvMaxPage] = useState(1);
@@ -98,6 +101,7 @@ function Component() {
   }, [cctvPage, addCctv, refreshToggle]);
 
   useEffect(() => {
+    setLoading(true);
     (!search || search.length >= 1) &&
       dispatch(
         get(
@@ -109,6 +113,7 @@ function Component() {
             "&search=" +
             search,
           (res) => {
+            setLoading(false);
             let data = res.data.data.items;
             const totalItems = res.data.data.total_items;
             const currentItems = totalItems - data.length;
@@ -134,7 +139,7 @@ function Component() {
 
   const now = moment().format(`DDMMyyyy${parseInt(Math.random() * 100000)}`);
   return (
-    <>
+    <Loading loading={loading}>
       <Modal
         isOpen={addCctv}
         toggle={() => setAddCctv(false)}
@@ -457,7 +462,7 @@ function Component() {
           </div>
         </div>
       </div>
-    </>
+    </Loading>
   );
 }
 
