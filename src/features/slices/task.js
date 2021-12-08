@@ -45,6 +45,7 @@ export const {
   setData,
   setSelected,
   refresh,
+  delegate,
 } = slice.actions;
 
 export const downloadTasks = (
@@ -228,6 +229,84 @@ export const resolveTask = (data) => (dispatch) => {
     )
   );
 };
+
+export const delegateTask = (data) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      taskEndpoint + "/delegate",
+      data,
+      (res) => {
+        dispatch(stopAsync());
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            message:
+              "Task " +
+              data.task_id +
+              " has been delegated to staff id " +
+              data.assignee_id,
+          })
+        );
+        setTimeout(() => dispatch(setInfo({ message: "" })), 3000);
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const rejectDelegate = (data) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      taskEndpoint + "/delegate",
+      data,
+      (res) => {
+        dispatch(stopAsync());
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            message:
+              "Delegate Request Task " +
+              data.task_id +
+              " has been Rejected ",
+          })
+        );
+        setTimeout(() => dispatch(setInfo({ message: "" })), 3000);
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+// export const rejectDelegate = (data) => (dispatch) => {
+//   dispatch(startAsync());
+  
+//   dispatch(
+//     post(
+//       taskEndpoint + "/delegate",  { id: data.id },
+//       res => {
+//         dispatch(refresh());
+//         dispatch(setInfo({
+//           color: 'success',
+//           message: 'Delegate Request Rejected'
+//         }));
+  
+//         dispatch(stopAsync());
+//       },
+//       err => {
+//         dispatch(stopAsync());
+//       })
+//   );
+// };
 
 export const reassignTask = (data) => (dispatch) => {
   dispatch(startAsync());

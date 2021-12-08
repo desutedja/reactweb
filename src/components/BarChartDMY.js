@@ -1,4 +1,5 @@
 import React from 'react';
+
 import {
   Line,
   Legend,
@@ -16,6 +17,9 @@ import ClinkLoader from '../components/ClinkLoader';
 export default ({
   dataChart = [],
   loading = false,
+  // buildingId,
+  section = '',
+  setSection,
   range = 'dtd',
   setRange,
   barClick,
@@ -31,6 +35,18 @@ export default ({
           <div className="col">
               <h5>{headTitle || 'Example Statistics'}</h5>
           </div>
+          {/* <div className="col-auto">
+              <div style={{
+                  display: 'flex',
+              }}>
+                  <div
+                      className="Group"
+                      onClick={() => setSection({buildingId}) }
+                  >
+                      Building
+                  </div>
+              </div>
+          </div> */}
           <div className="col-auto">
               <div style={{
                   display: 'flex',

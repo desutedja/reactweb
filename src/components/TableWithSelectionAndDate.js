@@ -213,7 +213,7 @@ function Component({
                 </div>
                 <div className="TableAction-right d-flex align-items-center">
                 
-                    <div>
+                    <div className="TableDatePicker d-flex align-items-center">
                     <DatePicker
                         selected={startDate}
                         onChange={(date) => setStartDate(date)}
@@ -222,7 +222,7 @@ function Component({
                         showMonthYearPicker
                     />
                     </div>
-                    <div>
+                    <div className="TableDatePicker d-flex align-items-center">
                     <DatePicker
                         selected={endDate}
                         onChange={(date) => setEndDate(date)}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useHistory } from "react-router-dom";
 import {
@@ -29,7 +29,7 @@ import { Card, CardHeader, CardFooter, CardTitle, CardBody } from "reactstrap";
 
 import { useParams } from "react-router-dom";
 import { get } from "../../slice";
-import { resolveTask, reassignTask, setSelected } from "../../slices/task";
+import { resolveTask, reassignTask, setSelected, delegateTask, rejectDelegate } from "../../slices/task";
 import {
   endpointTask,
   endpointManagement,
@@ -55,9 +55,18 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   // const [long, setLong] = useState(0.000);
 
   const [assign, setAssign] = useState(false);
+  const [delegate, setDelegate] = useState(false);
+  const [reject, setReject] = useState(false);
+  const [assignHelper, setAssignHelper] = useState(false);
   const [resolve, setResolve] = useState(false);
   const [staff, setStaff] = useState({});
   const [staffs, setStaffs] = useState([]);
+  const [staffHelper, setStaffHelper] = useState({});
+  const [staffHelpers, setStaffHelpers] = useState([]);
+  const [staffDelegate, setStaffDelegate] = useState({});
+  const [staffDelegates, setStaffDelegates] = useState([]);
+  const [staffRejectDelegate, setStaffRejectDelegate] = useState({});
+  const [staffRejectDelegates, setStaffRejectDelegates] = useState([]);
   const [
     search,
     // setSearch
@@ -94,6 +103,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           endpointManagement +
             "/admin/staff/list" +
             "?limit=5&page=1&max_ongoing_task=1" +
+            "&task_id=" +
+            id +
             "&staff_role=" +
             staffRole +
             "&status=active" +
@@ -116,6 +127,126 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, search, data, assign]);
+
+  useEffect(() => {
+    let staffRole =
+      data.task_type === "security"
+        ? "security"
+        : data.task_type === "service"
+        ? "technician"
+        : "courier";
+
+    assignHelper &&
+      (!search || search.length >= 1) &&
+      dispatch(
+        get(
+          endpointManagement +
+            "/admin/staff/list" +
+            "?limit=5&page=1&max_ongoing_task=1" +
+            "&task_id=" +
+            id +
+            "&staff_role=" +
+            staffRole +
+            "&status=active" +
+            (data.priority === "emergency"
+              ? "&is_ongoing_emergency=true"
+              : "") +
+            "&search=" +
+            search,
+          (res) => {
+            let data = res.data.data.items;
+
+            let formatted = data.map((el) => ({
+              label: el.firstname + " " + el.lastname,
+              value: el.id,
+            }));
+
+            setStaffHelpers(formatted);
+          }
+        )
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, search, data, assignHelper]);
+
+  useEffect(() => {
+    let staffRole =
+      data.task_type === "security"
+        ? "security"
+        : data.task_type === "service"
+        ? "technician"
+        : "courier";
+
+    delegate &&
+      (!search || search.length >= 1) &&
+      dispatch(
+        get(
+          endpointManagement +
+            "/admin/staff/list" +
+            "?limit=5&page=1&max_ongoing_task=1" +
+            "&task_id=" +
+            id +
+            "&staff_role=" +
+            staffRole +
+            "&status=active" +
+            (data.priority === "emergency"
+              ? "&is_ongoing_emergency=true"
+              : "") +
+            "&search=" +
+            search,
+          (res) => {
+            let data = res.data.data.items;
+
+            let formatted = data.map((el) => ({
+              label: el.firstname + " " + el.lastname,
+              value: el.id,
+            }));
+
+            setStaffDelegates(formatted);
+          }
+        )
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, search, data, delegate]);
+
+  useEffect(() => {
+    let staffRole =
+      data.task_type === "security"
+        ? "security"
+        : data.task_type === "service"
+        ? "technician"
+        : "courier";
+
+    reject &&
+      (!search || search.length >= 1) &&
+      dispatch(
+        get(
+          endpointManagement +
+            "/admin/staff/list" +
+            "?limit=5&page=1&max_ongoing_task=1" +
+            "&task_id=" +
+            id +
+            "&staff_role=" +
+            staffRole +
+            "&status=active" +
+            (data.priority === "emergency"
+              ? "&is_ongoing_emergency=true"
+              : "") +
+            "&search=" +
+            search,
+          (res) => {
+            let data = res.data.data.items;
+
+            let formatted = data.map((el) => ({
+              label: el.firstname + " " + el.lastname,
+              value: el.id,
+            }));
+
+            setStaffRejectDelegates(formatted);
+          }
+        )
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch, search, data, reject]);
 
   return (
     <>
@@ -153,28 +284,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           }}
         />
       </Modal>
-      {/* <Modal disableFooter disableHeader isOpen={mapModal} toggle={() => setMapModal(false)}>
-                <div style={{ height: '40rem', width: '100%' }}>
-                    <GoogleMap
-                        mapContainerStyle={{
-                            width: '100%',
-                            height: '100%',
-                        }}
-                        center={{
-                            lat: -6.2107863,
-                            lng: 106.8137977,
-                        }}
-                        zoom={18}
-                    >
-                        <div style={{
-                            position: 'absolute',
-                            transform: 'translate(-50%, -50%)'
-                        }}>
-                            <FiMapPin size={40} color="dodgerblue" />
-                        </div>
-                    </GoogleMap>
-                </div>
-            </Modal> */}
       <Modal
         isOpen={resolve}
         toggle={() => setResolve(false)}
@@ -224,6 +333,92 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             No elligible staff found.
           </p>
         )}
+      </Modal>
+      <Modal
+        title="Delegate Staff"
+        subtitle="Choose eligible staffs to assign for this task"
+        isOpen={delegate}
+        toggle={() => setDelegate(false)}
+        cancelLabel="Cancel"
+        onClickSecondary={() => {
+          setStaffDelegate({});
+          setDelegate(false);
+        }}
+      >
+        <Filter
+          data={staffDelegate.value ? [staffDelegate] : staffDelegates}
+          onClick={(el) => {
+            dispatch(
+              delegateTask({
+                task_id: parseInt(data.task_id),
+                assignee_id: parseInt(data.assignee),
+                delegate_id: el.value,
+                status: "accepted"
+              })
+            );
+            setStaffDelegate({});
+            setDelegate(false);
+          }}
+        />
+        {staffDelegates.length === 0 && (
+          <p
+            style={{
+              fontStyle: "italic",
+            }}
+          >
+            No elligible staff found.
+          </p>
+        )}
+      </Modal>
+      <Modal
+        title="Assign Helper"
+        subtitle="Choose eligible helpers to assign for this task"
+        isOpen={assignHelper}
+        toggle={() => setAssignHelper(false)}
+        cancelLabel="Cancel"
+        onClickSecondary={() => {
+          setStaffHelper({});
+          setAssignHelper(false);
+        }}
+      >
+        <>
+        <Filter
+          data={staffHelper.value ? [staffHelper] : staffHelpers}
+          onClick={(el) => {
+            dispatch(
+              reassignTask({
+                task_id: parseInt(data.task_id),
+                helper_id: el.value,
+              })
+            );
+            setStaffHelper({});
+            setAssignHelper(false);
+          }}
+        />
+        </>
+      </Modal>
+      <Modal
+        isOpen={reject}
+        toggle={() => setReject(false)}
+        disableHeader
+        okLabel="Yes"
+        onClick={() => {
+          setReject(false);
+          dispatch(
+            rejectDelegate({
+              task_id: parseInt(data.task_id),
+              assignee_id: parseInt(data.assignee),
+              delegate_id: parseInt(data.assignee),
+              status: "rejected"
+            })
+          );
+        }}
+        cancelLabel="No"
+        onClickSecondary={() => {
+          setReject(false);
+        }}
+      >
+        Are you sure you want to reject delegaate this task?
       </Modal>
       <Template
         transparent
@@ -418,7 +613,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       : (role === "bm" ? canUpdate : true)
                       ? data.status !== "completed" &&
                         data.status !== "canceled" && (
-                          <CardFooter style={{ textAlign: "right" }}>
+                          <CardFooter>
                             <Button
                               onClick={() => setResolve(true)}
                               icon={<FiCheck />}
@@ -486,12 +681,14 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       </div>
                     </CardBody>
                   </Card>
+                  {view ? null : (data.status === "assigned" || data.status === "in_progress" || data.status === "rejected") &&
+                      (role === "bm" ? canUpdate && canAdd : true) ? (
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>
                       <h5>Assignee</h5>
                       <div
                         className="row no-gutters flex-wrap"
-                        style={{ position: "relative" }}
+                        style={{ position: "relative" }} 
                       >
                         {data.assignee ? (
                           <>
@@ -513,7 +710,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                               />
                             </div>
                             <span
-                              className="border-right h-100 d-none d-lg-block"
+                              className="border-right h-50 d-none d-lg-block"
                               style={{
                                 position: "absolute",
                                 top: 0,
@@ -546,15 +743,237 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     {view ? null : (data.status === "rejected" ||
                         data.status === "created") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                      <CardFooter style={{ textAlign: "right" }}>
+                      <CardFooter>
                         <Button
                           onClick={() => setAssign(true)}
                           icon={<FiUserPlus />}
                           label="Assign Staff"
                         />
                       </CardFooter>
-                    ) : null}
+                    ) : null
+                    }
+                    {view ? null : (data.status === "assigned" || data.status === "in_progress") && (data.RequestDelegate?.status !== "requested") &&
+                      (role === "bm" ? canUpdate && canAdd : true) ? (
+                        <CardFooter>
+                          <Button
+                            onClick={() => setAssignHelper(true)}
+                            icon={<FiUserPlus />}
+                            label="Assign Helper"
+                          />
+                        </CardFooter>
+                    ) : null
+                    }
                   </Card>
+                      ) :
+                    <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                    <CardBody>
+                      <h5>Assignee</h5>
+                      <div
+                        className="row no-gutters flex-wrap"
+                        style={{ position: "relative" }} 
+                      >
+                        {data.assignee ? (
+                          <>
+                            <div
+                              className="col-12 col-lg-6"
+                              style={{
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                              }}
+                            >
+                              <Staff
+                                id={data.assignee}
+                                data={{
+                                  photo: data.assignee_photo,
+                                  firstname: data.assignee_name,
+                                  lastname: "",
+                                  staff_role: data.assignee_role,
+                                }}
+                              />
+                            </div>
+                            <span
+                              className="border-right h-50 d-none d-lg-block"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                              }}
+                            ></span>
+                            <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
+                              <b>Assigned by</b>
+                              <div>
+                                {data.assigned_by
+                                  ? data.assigned_by
+                                  : "Automatic Assignment"}
+                              </div>
+                              <div>{dateTimeFormatter(data.assigned_on)}</div>
+                              {data.task_type === "delivery" && (
+                                <div>
+                                  <b>Fee : {toMoney(data.assignee_fee)}</b>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-12 mt-4" >
+                              <h5>Helper</h5>
+                              <div
+                                className="row no-gutters flex-wrap"
+                                style={{ position: "relative" }} 
+                              >
+                                {data.assignee ? (
+                                  <>
+                                    <div
+                                      className="col-12 col-lg-6"
+                                      style={{
+                                        textOverflow: "ellipsis",
+                                        overflow: "hidden",
+                                      }}
+                                    >
+                                      <Staff
+                                        id={data.assignee}
+                                        data={{
+                                          photo: data.assignee_photo,
+                                          firstname: data.assignee_name,
+                                          lastname: "",
+                                          staff_role: data.assignee_role,
+                                        }}
+                                      />
+                                    </div>
+                                    <span
+                                      className="border-right h-100 d-none d-lg-block"
+                                      style={{
+                                        position: "absolute",
+                                        top: 0,
+                                        left: "50%",
+                                        transform: "translateX(-50%)",
+                                      }}
+                                    ></span>
+                                    <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
+                                      <b>Assigned by</b>
+                                      <div>
+                                        {data.assigned_by
+                                          ? data.assigned_by
+                                          : "Automatic Assignment"}
+                                      </div>
+                                      <div>{dateTimeFormatter(data.assigned_on)}</div>
+                                      {data.task_type === "delivery" && (
+                                        <div>
+                                          <b>Fee : {toMoney(data.assignee_fee)}</b>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </>
+                                ) : (
+                                  <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
+                                    <i>No Helper Staff Yet</i>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </>
+                        ) : (
+                          <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
+                            <i>No Assigned Staff Yet</i>
+                          </div>
+                        )}
+                      </div>
+                    </CardBody>
+                    {view ? null : (data.status === "rejected" ||
+                        data.status === "created") &&
+                      (role === "bm" ? canUpdate && canAdd : true) ? (
+                      <CardFooter>
+                        <Button
+                          onClick={() => setAssign(true)}
+                          icon={<FiUserPlus />}
+                          label="Assign Staff"
+                        />
+                      </CardFooter>
+                    ) : null
+                    }
+                  </Card> 
+                  }
+                  {view ? null : (data.RequestDelegate?.status === "requested") &&
+                  (role === "bm" ? canUpdate && canAdd : true) ? (
+                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                    <CardBody>
+                      <h5>Request Delegate</h5>
+                      <div
+                        className="row no-gutters flex-wrap"
+                        style={{ position: "relative" }} 
+                      >
+                        {data.RequestDelegate ? (
+                          <>
+                            <div
+                              className="col-12 col-lg-6"
+                              style={{
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                              }}
+                            >
+                              <Staff
+                                id={data.delegate_id}
+                                data={{
+                                  photo: data.assignee_photo,
+                                  firstname: data.assignee_name,
+                                  lastname: "",
+                                  staff_role: data.assignee_role,
+                                }}
+                              />
+                            </div>
+                            <span
+                              className="border-right d-none d-lg-block"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                              }}
+                            ></span>
+                            <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
+                              <div><b>Request Date</b></div>
+                              <div>{data.RequestDelegate?.status}</div>
+                              {/* <div>{data.assigned_by
+                                    ? data.assigned_by
+                                    : "Automatic Assignment"}
+                              </div> */}
+                              <div>{dateTimeFormatter(data.RequestDelegate?.created_on)}</div>
+                              {data.task_type === "delivery" && (
+                                <div>
+                                  <b>Fee : {toMoney(data.assignee_fee)}</b>
+                                </div>
+                              )}
+                            </div>
+                            <div className="col-12" 
+                            style={{ color: "rgba(0, 0, 0, 0.345)" }}>
+                              <hr />
+                              <p>{data.RequestDelegate?.message}</p>
+                            </div>
+                          </>
+                        ) : (
+                          <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
+                            <i>No Request Delegate yet</i>
+                          </div>
+                        )}
+                      </div>
+                    </CardBody>
+                    {view ? null : (data.RequestDelegate?.status === "requested") &&
+                      (role === "bm" ? canUpdate && canAdd : true) ? (
+                      <CardFooter>
+                        <Button
+                          onClick={() => setDelegate(true)} 
+                          label="Accept"
+                        />
+                        <Button
+                          color={ 'Danger'}
+                          onClick={() => setReject(true)}
+                          label="Reject"
+                        />
+                      </CardFooter>
+                    ) : null
+                    }
+                  </Card>
+                      ) : null 
+                  }
                   {data.task_type === "delivery" && (
                     <Card style={{ marginRight: "20px" }}>
                       <CardBody>

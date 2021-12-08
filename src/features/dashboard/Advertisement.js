@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { endpointAds } from "../../settings";
 import LineCharts from "./Components/LineCharts";
 import Piecharts from "./Components/PieCharts";
-import ClinkLoader from "../../components/ClinkLoader";
 import moment from "moment";
 
 import "./style.css";
@@ -108,9 +107,7 @@ function Component() {
   const [banners, setBanners] = useState([]);
   const [advertiser, setAdvertiser] = useState("");
   const [advertisers, setAdvertisers] = useState([]);
-  const [loadingPopup, setLoadingPopup] = useState(false);
-  const [loadingBanner, setLoadingBanner] = useState(false);
-  const [loadingAdvertiser, setLoadingAdvertiser] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState([
     {
       label: "Impression",
@@ -346,10 +343,17 @@ function Component() {
   };
 
   useEffect(() => {
-    setLoadingPopup(true);
-    setLoadingBanner(true);
+    setLoading(true);
+    dispatch(get(endpointAds +
+      "/management/ads?",
+        res => {
+            setLoading(false);
+            setPopups(res.data.data.items);
+        }))
+  }, [dispatch]);
+
+  useEffect(() => {
     if (group !== "vas_advertiser") {
-      setLoadingAdvertiser(true);
 
       dispatch(
         get(
@@ -359,11 +363,9 @@ function Component() {
             limitAdvertiser,
           (res) => {
             setAdvertisers(res.data.data.items);
-            setLoadingAdvertiser(false);
           },
           (err) => {
             console.log("FAILED GET LIST ADVERTISER :", err);
-            setLoadingAdvertiser(false);
           }
         )
       );
@@ -377,11 +379,9 @@ function Component() {
           "&appear_as=popup&published=1&for=report",
         (res) => {
           setPopups(res.data.data.items);
-          setLoadingPopup(false);
         },
         (err) => {
           console.log("FAILED GET LIST ADVERTISER :", err);
-          setLoadingPopup(false);
         }
       )
     );
@@ -394,11 +394,9 @@ function Component() {
           "&appear_as=banner&published=1&for=report",
         (res) => {
           setBanners(res.data.data.items);
-          setLoadingBanner(false);
         },
         (err) => {
           console.log("FAILED GET LIST ADVERTISER :", err);
-          setLoadingBanner(false);
         }
       )
     );
@@ -423,7 +421,6 @@ function Component() {
   useEffect(() => {
     console.log(type);
     if (type === "pop-up") {
-      setLoadingPopup(true);
       dispatch(
         get(
           endpointAds +
@@ -435,17 +432,14 @@ function Component() {
             searchValue,
           (res) => {
             setPopups(res.data.data.items);
-            setLoadingPopup(false);
           },
           (err) => {
             console.log("FAILED GET LIST ADVERTISER :", err);
-            setLoadingPopup(false);
           }
         )
       );
     }
     if (type == "banner") {
-      setLoadingBanner(true);
       dispatch(
         get(
           endpointAds +
@@ -457,11 +451,9 @@ function Component() {
             searchValue,
           (res) => {
             setBanners(res.data.data.items);
-            setLoadingBanner(false);
           },
           (err) => {
             console.log("FAILED GET LIST ADVERTISER :", err);
-            setLoadingBanner(false);
           }
         )
       );
@@ -472,7 +464,6 @@ function Component() {
     if (group === "vas_advertiser") {
       return;
     }
-    setLoadingAdvertiser(true);
     dispatch(
       get(
         endpointAds +
@@ -483,11 +474,9 @@ function Component() {
           searchAdvertiser,
         (res) => {
           setAdvertisers(res.data.data.items);
-          setLoadingAdvertiser(false);
         },
         (err) => {
           console.log("FAILED GET LIST ADVERTISER :", err);
-          setLoadingAdvertiser(false);
         }
       )
     );
@@ -661,7 +650,7 @@ function Component() {
   }, [selectedFilter, selectedMonth, selectedId]);
   const now = moment().format(`DDMMyyyy${parseInt(Math.random() * 100000)}`);
   return (
-    <Loading loading={loadingPopup}>
+    <Loading loading={loading}>
       <div className="row no-gutters">
         <div className="col-4">
           {group !== "vas_advertiser" && (
@@ -676,11 +665,6 @@ function Component() {
                     value={searchAdvertiser}
                     onChange={(e) => setSearchAdvertiser(e.target.value)}
                   />
-                  {loadingBanner && (
-                    <div className="w-100 py-5 d-flex justify-content-center">
-                      <ClinkLoader />
-                    </div>
-                  )}
                   <div
                     style={{
                       display: "flex",
@@ -699,7 +683,7 @@ function Component() {
                     </div>
                   </div>
                   <ListGroup className="ads-list-scroll">
-                    {!loadingAdvertiser &&
+                    {
                       advertisers.map((el, index) => (
                         <ListGroupItem
                           style={{ cursor: "pointer" }}
@@ -752,10 +736,10 @@ function Component() {
                         </ListGroupItem>
                       ))}
                   </ListGroup>
-                  {!loadingAdvertiser && advertisers.length === 0 && (
+                  { advertisers.length === 0 && (
                     <div className="w-100 text-center">No Advertiser found</div>
                   )}
-                  {!loadingAdvertiser &&
+                  {
                     advertisers.length !== 0 &&
                     advertisers.length >= limitAdvertiser && (
                       <div
@@ -872,10 +856,10 @@ function Component() {
                         </ListGroupItem>
                       ))}
                     </ListGroup>
-                    {!loadingPopup && popups.length === 0 && (
+                    { popups.length === 0 && (
                       <div className="w-100 text-center">No Popup found</div>
                     )}
-                    {!loadingPopup &&
+                    {
                       popups.length !== 0 &&
                       popups.length >= limitPopup && (
                         <div
@@ -891,11 +875,6 @@ function Component() {
                       value={searchValue}
                       onChange={(e) => setSearchValue(e.target.value)}
                     />
-                    {loadingBanner && (
-                      <div className="w-100 py-5 d-flex justify-content-center">
-                        <ClinkLoader />
-                      </div>
-                    )}
                     <div
                       style={{
                         display: "flex",
@@ -920,7 +899,7 @@ function Component() {
                       </div>
                     </div>
                     <ListGroup className="ads-list-scroll">
-                      {!loadingBanner &&
+                      {
                         banners.map((el, index) => (
                           <ListGroupItem
                             style={{ cursor: "pointer" }}
@@ -985,10 +964,10 @@ function Component() {
                           </ListGroupItem>
                         ))}
                     </ListGroup>
-                    {!loadingBanner && banners.length === 0 && (
+                    { banners.length === 0 && (
                       <div className="w-100 text-center">No Banner found</div>
                     )}
-                    {!loadingPopup &&
+                    {
                       banners.length !== 0 &&
                       banners.length >= limitBanner && (
                         <div

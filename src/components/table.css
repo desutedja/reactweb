@@ -10,6 +10,7 @@
 .react-datepicker-popper {
   z-index: 9999 !important;
   background-color: #f0f0f3;
+  padding: 4px;
 }
 
 .react-datepicker__month-text, .react-datepicker-year-header {
@@ -111,12 +112,18 @@
   align-items: center;
 }
 
+.TableDatePicker input {
+  padding: 4px;
+  width: 120px;
+  margin-right: 4px;
+}
+
 .TableSearch input {
-  padding: 6px;
+  padding: 4px;
 }
 
 .TableSearch .InputIcon {
-  top: 6px;
+  top: 4px;
 }
 
 .TableEmpty {
@@ -235,7 +242,7 @@
   margin-left: 8px;
   margin-bottom: 8px;
   padding: 4px 16px;
-  border-radius: 16px;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   flex-wrap: nowrap;

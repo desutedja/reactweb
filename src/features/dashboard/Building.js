@@ -51,6 +51,7 @@ function Component() {
 
   const [loading, setLoading] = useState(false);
   const [range, setRange] = useState("dtd");
+  const [section, setSection] = useState([]);
   const [billingData, setBillingData] = useState({});
   const [staffData, setStaffData] = useState({});
   const [billingGraph, setBillingGraph] = useState([]);
@@ -119,11 +120,12 @@ function Component() {
     console.log(billingList);
   }, [billingList]);
 
+  // filter
   useEffect(() => {
     setLoading(true);
     dispatch(
       get(
-        endpointBilling + "/management/billing/graph?range=" + range,
+        endpointBilling + "/management/billing/graph?range=" + range + "&section=" + section,
         (res) => {
           setLoading(false);
           setBillingGraph(res.data.data);
@@ -135,7 +137,7 @@ function Component() {
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, range]);
+  }, [dispatch, range, section]);
 
   useEffect(() => {
     dispatch(
@@ -572,6 +574,8 @@ function Component() {
             <BarChartDMY
               headTitle="Billing Statistics"
               dataChart={billingGraphFormatted}
+              section={section}
+              setSection={setSection}
               range={range}
               setRange={setRange}
               dataY={["Amount Billing"]}
