@@ -34,7 +34,7 @@ import { Card, CardHeader, CardFooter, CardTitle, CardBody } from "reactstrap";
 
 import { useParams } from "react-router-dom";
 import { get } from "../../slice";
-import { resolveTask, reassignTask, setSelected, delegateTask, rejectDelegate } from "../../slices/task";
+import { resolveTask, reassignTask, setSelected, delegateTask, rejectDelegate, acceptAssignHelper } from "../../slices/task";
 import {
   endpointTask,
   endpointManagement,
@@ -351,7 +351,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
       </Modal>
       <Modal
         title="Assign Helper"
-        subtitle="Choose eligible helpers to assign for this task"
+        subtitle="Choose eligible helpers to assist this task"
         isOpen={assignHelper}
         toggle={() => setAssignHelper(false)}
         cancelLabel="Cancel"
@@ -365,12 +365,9 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           data={staffHelper.value ? [staffHelper] : staffHelpers}
           onClick={(el) => {
             dispatch(
-              assignHelper({
-                request_helper_id: (data.request_helper?.id),
+              acceptAssignHelper({
                 task_id: parseInt(data.task_id),
-                assignee_id: parseInt(data.assignee),
-                helper_id: el.value,
-                status: "ask_staff"
+                helper_id: el.value
               })
             );
             setStaffHelper({});
@@ -470,7 +467,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           setReject(false);
         }}
       >
-        Are you sure you want to reject delegaate this task?
+        Are you sure you want to reject delegate this task?
         <Input name="rejectMessage" placeholder="Type reason for reject this request"  />
       </Modal>
       <Template
@@ -734,7 +731,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       </div>
                     </CardBody>
                   </Card>
-                  {view ? null : (data.status === "assigned" || data.status === "in_progress" || data.status === "rejected") &&
+                  {view ? null : (data.status === "assigned" || data.status === "in_progress" || data.status === "rejected" || data.status === "approved") && (data.request_delegate === null && data.request_helper === null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>
@@ -805,7 +802,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       </CardFooter>
                     ) : null
                     }
-                    {view ? null : (data.status === "assigned" || data.status === "in_progress") && (data.request_delegate?.status !== "requested") && (data.request_helper?.status !== null) &&
+                    {view ? null : (data.status === "assigned" || data.status === "in_progress") && (data.request_delegate?.status !== "requested" || data.request_delegate?.status === "reject" || data.request_delegate === null) && (data.request_helper === null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                         <CardFooter>
                           <Button
@@ -818,7 +815,9 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     }
                   </Card>
                       ) :
-                    <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                      view ? null : (data.status === "assigned" || data.status === "in_progress" || data.status === "rejected") && (data.request_helper?.status === "requested") &&
+                      (role === "bm" ? canUpdate && canAdd : true) ? (
+                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>
                       <h5>Assignee</h5>
                       <div
@@ -827,103 +826,100 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       >
                         {data.assignee ? (
                           <>
-                            <div
-                              className="col-12 col-lg-6"
-                              style={{
-                                textOverflow: "ellipsis",
-                                overflow: "hidden",
+                          <div
+                            className="col-12 col-lg-6"
+                            style={{
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                            }}
+                          >
+                            <Staff
+                              id={data.assignee}
+                              data={{
+                                photo: data.assignee_photo,
+                                firstname: data.assignee_name,
+                                lastname: "",
+                                staff_role: data.assignee_role,
                               }}
-                            >
-                              <Staff
-                                id={data.assignee}
-                                data={{
-                                  photo: data.assignee_photo,
-                                  firstname: data.assignee_name,
-                                  lastname: "",
-                                  staff_role: data.assignee_role,
-                                }}
-                              />
+                            />
+                          </div>
+                          <span
+                            className="border-right h-50 d-none d-lg-block"
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: "50%",
+                              transform: "translateX(-50%)",
+                            }}
+                          ></span>
+                          <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
+                            <b>Assigned by</b>
+                            <div>
+                              {data.assigned_by
+                                ? data.assigned_by
+                                : "Automatic Assignment"}
                             </div>
-                            <span
-                              className="border-right h-50 d-none d-lg-block"
-                              style={{
-                                position: "absolute",
-                                top: 0,
-                                left: "50%",
-                                transform: "translateX(-50%)",
-                              }}
-                            ></span>
-                            <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
-                              <b>Assigned by</b>
+                            <div>{dateTimeFormatter(data.assigned_on)}</div>
+                            {data.task_type === "delivery" && (
                               <div>
-                                {data.assigned_by
-                                  ? data.assigned_by
-                                  : "Automatic Assignment"}
+                                <b>Fee : {toMoney(data.assignee_fee)}</b>
                               </div>
-                              <div>{dateTimeFormatter(data.assigned_on)}</div>
-                              {data.task_type === "delivery" && (
-                                <div>
-                                  <b>Fee : {toMoney(data.assignee_fee)}</b>
+                            )}
+                          </div>
+                          <div className="col-12 mt-4" >
+                            <h5>Helper</h5>
+                            <div
+                              className="row no-gutters flex-wrap"
+                              style={{ position: "relative" }} 
+                            >
+                              {data.assignee ? (
+                                <>
+                                  <div
+                                    className="col-12 col-lg-6"
+                                    style={{
+                                      textOverflow: "ellipsis",
+                                      overflow: "hidden",
+                                    }}
+                                  >
+                                    {(data.request_helper?.status === "requested") ? (
+                                      <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
+                                        <i>No Assigned Staff Yet</i>
+                                      </div>) : <Staff
+                                      id={data.assignee}
+                                      data={{
+                                        photo: data.request_helper?.helper_profile?.helper_photo,
+                                        firstname: data.request_helper?.helper_profile?.helper_firstname,
+                                        lastname: data.request_helper?.helper_profile?.helper_lastname,
+                                      }}
+                                    />}
+                                  </div>
+                                  <span
+                                    className="border-right h-100 d-none d-lg-block"
+                                    style={{
+                                      position: "absolute",
+                                      top: 0,
+                                      left: "50%",
+                                      transform: "translateX(-50%)",
+                                    }}
+                                  ></span>
+                                  <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
+                                    <b>Request Date</b>
+                                    <div>{dateTimeFormatter(data.request_helper?.created_on)}</div>
+                                    {data.task_type === "delivery" && (
+                                      <div>
+                                        <b>Fee : {toMoney(data.assignee_fee)}</b>
+                                      </div>
+                                    )}
+                                  </div>
+                                </>
+                              ) : (
+                                <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
+                                  <i>No Helper Staff Yet</i>
                                 </div>
                               )}
                             </div>
-                            <div className="col-12 mt-4" >
-                              <h5>Helper</h5>
-                              <div
-                                className="row no-gutters flex-wrap"
-                                style={{ position: "relative" }} 
-                              >
-                                {data.assignee ? (
-                                  <>
-                                    <div
-                                      className="col-12 col-lg-6"
-                                      style={{
-                                        textOverflow: "ellipsis",
-                                        overflow: "hidden",
-                                      }}
-                                    >
-                                      <Staff
-                                        id={data.assignee}
-                                        data={{
-                                          photo: data.assignee_photo,
-                                          firstname: data.assignee_name,
-                                          lastname: "",
-                                          staff_role: data.assignee_role,
-                                        }}
-                                      />
-                                    </div>
-                                    <span
-                                      className="border-right h-100 d-none d-lg-block"
-                                      style={{
-                                        position: "absolute",
-                                        top: 0,
-                                        left: "50%",
-                                        transform: "translateX(-50%)",
-                                      }}
-                                    ></span>
-                                    <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
-                                      <b>Assigned by</b>
-                                      <div>
-                                        {data.assigned_by
-                                          ? data.assigned_by
-                                          : "Automatic Assignment"}
-                                      </div>
-                                      <div>{dateTimeFormatter(data.assigned_on)}</div>
-                                      {data.task_type === "delivery" && (
-                                        <div>
-                                          <b>Fee : {toMoney(data.assignee_fee)}</b>
-                                        </div>
-                                      )}
-                                    </div>
-                                  </>
-                                ) : (
-                                  <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
-                                    <i>No Helper Staff Yet</i>
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          </>
+                          </div>
+                        </>
                         ) : (
                           <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
                             <i>No Assigned Staff Yet</i>
@@ -932,18 +928,149 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       </div>
                     </CardBody>
                     {view ? null : (data.status === "rejected" ||
-                        data.status === "created") &&
+                        data.status === "created") && (data.request_delegate?.status !== "requested" && data.request_delegate?.status !== "rejected") && (data.request_helper?.status !== null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                       <CardFooter>
                         <Button
                           onClick={() => setAssign(true)}
                           icon={<FiUserPlus />}
-                          label="Assign Staff"
+                          label="Assign Helper"
                         />
                       </CardFooter>
                     ) : null
                     }
-                  </Card> 
+                    {view ? null : (data.status === "assigned" || data.status === "in_progress") && (data.request_delegate?.status !== "requested" && data.request_delegate?.status !== "rejected") && (data.request_helper !== null) &&
+                      (role === "bm" ? canUpdate && canAdd : true) ? (
+                        <CardFooter>
+                          <Button
+                            onClick={() => setAssignHelper(true)}
+                            icon={<FiUserPlus />}
+                            label="Accept"
+                          />
+                          <Button
+                            color={ 'Danger'}
+                            onClick={() => setReject(true)}
+                            label="Reject"
+                          />
+                        </CardFooter>
+                    ) : null
+                    }
+                  </Card>
+                      ) : view ? null : (data.status === "assigned" || data.status === "in_progress" || data.status === "rejected") && (data.request_helper?.status === "ask_staff") &&
+                      (role === "bm" ? canUpdate && canAdd : true) ? (
+                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                    <CardBody>
+                      <h5>Assignee</h5>
+                      <div
+                        className="row no-gutters flex-wrap"
+                        style={{ position: "relative" }} 
+                      >
+                        {data.assignee ? (
+                          <>
+                          <div
+                            className="col-12 col-lg-6"
+                            style={{
+                              textOverflow: "ellipsis",
+                              overflow: "hidden",
+                            }}
+                          >
+                            <Staff
+                              id={data.assignee}
+                              data={{
+                                photo: data.assignee_photo,
+                                firstname: data.assignee_name,
+                                lastname: "",
+                                staff_role: data.assignee_role,
+                              }}
+                            />
+                          </div>
+                          <span
+                            className="border-right h-50 d-none d-lg-block"
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: "50%",
+                              transform: "translateX(-50%)",
+                            }}
+                          ></span>
+                          <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
+                            <b>Assigned by</b>
+                            <div>
+                              {data.assigned_by
+                                ? data.assigned_by
+                                : "Automatic Assignment"}
+                            </div>
+                            <div>{dateTimeFormatter(data.assigned_on)}</div>
+                            {data.task_type === "delivery" && (
+                              <div>
+                                <b>Fee : {toMoney(data.assignee_fee)}</b>
+                              </div>
+                            )}
+                          </div>
+                          <div className="col-12 mt-4" >
+                            <h5>Helper</h5>
+                            <div
+                              className="row no-gutters flex-wrap"
+                              style={{ position: "relative" }} 
+                            >
+                              {data.assignee ? (
+                                <>
+                                  <div
+                                    className="col-12 col-lg-6"
+                                    style={{
+                                      textOverflow: "ellipsis",
+                                      overflow: "hidden",
+                                    }}
+                                  >
+                                    {(data.request_helper?.status === "ask_staff") ? (
+                                      <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
+                                        <i>Waiting for request to be accepted</i>
+                                      </div>) : <Staff
+                                      id={data.assignee}
+                                      data={{
+                                        photo: data.request_helper?.helper_profile?.helper_photo,
+                                        firstname: data.request_helper?.helper_profile?.helper_firstname,
+                                        lastname: data.request_helper?.helper_profile?.helper_lastname,
+                                      }}
+                                    />}
+                                  </div>
+                                  <span
+                                    className="border-right h-100 d-none d-lg-block"
+                                    style={{
+                                      position: "absolute",
+                                      top: 0,
+                                      left: "50%",
+                                      transform: "translateX(-50%)",
+                                    }}
+                                  ></span>
+                                  <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
+                                    <b>Request Date</b>
+                                    <div>{dateTimeFormatter(data.request_helper?.created_on)}</div>
+                                    {data.task_type === "delivery" && (
+                                      <div>
+                                        <b>Fee : {toMoney(data.assignee_fee)}</b>
+                                      </div>
+                                    )}
+                                  </div>
+                                </>
+                              ) : (
+                                <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
+                                  <i>No Helper Staff Yet</i>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </>
+                        ) : (
+                          <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
+                            <i>No Assigned Staff Yet</i>
+                          </div>
+                        )}
+                      </div>
+                    </CardBody>
+                    
+                  </Card>
+                      ) : null
                   }
                   {view ? null : (data.request_delegate?.status !== "approved") && (data.request_delegate !== null) && 
                   (data.request_helper?.status !== "requested") && (data.request_helper === null) &&
@@ -985,7 +1112,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                             ></span>
                             <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
                               <div><b>Request Date</b></div>
-                              <div>{data.request_delegate?.status}</div>
+                              {/* <div>{data.request_delegate?.status}</div> */}
                               {/* <div>{data.assigned_by
                                     ? data.assigned_by
                                     : "Automatic Assignment"}
@@ -1010,7 +1137,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                         )}
                       </div>
                     </CardBody>
-                    {view ? null : (data.request_delegate?.status !== "approved") && (data.request_delegate !== null) &&
+                    {view ? null : (data.request_delegate?.status !== "approved" && data.request_delegate?.status !== "ask_staff") && (data.request_delegate !== null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                         <div>
                           <CardFooter>

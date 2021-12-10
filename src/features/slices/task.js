@@ -231,12 +231,12 @@ export const resolveTask = (data) => (dispatch) => {
 };
 
 // Helper Section
-export const assignHelper = (data) => (dispatch) => {
+export const acceptAssignHelper = (data) => (dispatch) => {
   dispatch(startAsync());
 
   dispatch(
     post(
-      taskEndpoint + "/helper",
+      taskEndpoint + "/add_helper",
       data,
       (res) => {
         dispatch(stopAsync());
@@ -295,7 +295,7 @@ export const rejectDelegate = (data) => (dispatch) => {
 
   dispatch(
     post(
-      taskEndpoint + "/delegate",
+      taskEndpoint + "/reject_delegate",
       data,
       (res) => {
         dispatch(stopAsync());
