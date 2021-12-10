@@ -230,6 +230,37 @@ export const resolveTask = (data) => (dispatch) => {
   );
 };
 
+// Helper Section
+export const assignHelper = (data) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      taskEndpoint + "/helper",
+      data,
+      (res) => {
+        dispatch(stopAsync());
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            message:
+              "Helper request for task " +
+              data.task_id +
+              " has been assigned",
+          })
+        );
+        setTimeout(() => dispatch(setInfo({ message: "" })), 3000);
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+// End Helper Section
+
+// Delegate Section
 export const delegateTask = (data) => (dispatch) => {
   dispatch(startAsync());
 
@@ -307,6 +338,8 @@ export const rejectDelegate = (data) => (dispatch) => {
 //       })
 //   );
 // };
+
+// End of Delegate Section
 
 export const reassignTask = (data) => (dispatch) => {
   dispatch(startAsync());

@@ -23,6 +23,11 @@ import { FiCheck, FiUserPlus } from "react-icons/fi";
 import Button from "../../../components/Button";
 import Filter from "../../../components/Filter";
 import Modal from "../../../components/Modal";
+
+import { Form } from "reactstrap";
+import { Input } from "reactstrap";
+import SubmitButton from "../../form/components/SubmitButton";
+
 import Template from "../components/Template";
 
 import { Card, CardHeader, CardFooter, CardTitle, CardBody } from "reactstrap";
@@ -65,6 +70,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   const [staffHelpers, setStaffHelpers] = useState([]);
   const [staffDelegate, setStaffDelegate] = useState({});
   const [staffDelegates, setStaffDelegates] = useState([]);
+  const [input, setInput] = useState('');
   const [staffRejectDelegate, setStaffRejectDelegate] = useState({});
   const [staffRejectDelegates, setStaffRejectDelegates] = useState([]);
   const [
@@ -247,6 +253,15 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, search, data, reject]);
+  
+  const FooBarForm = () => {
+
+    const rejectMessage = React.useRef();
+
+    const handleSubmit = () => {
+      console.log(rejectMessage.current.value);
+    };
+  };
 
   return (
     <>
@@ -335,6 +350,36 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         )}
       </Modal>
       <Modal
+        title="Assign Helper"
+        subtitle="Choose eligible helpers to assign for this task"
+        isOpen={assignHelper}
+        toggle={() => setAssignHelper(false)}
+        cancelLabel="Cancel"
+        onClickSecondary={() => {
+          setStaffHelper({});
+          setAssignHelper(false);
+        }}
+      >
+        <>
+        <Filter
+          data={staffHelper.value ? [staffHelper] : staffHelpers}
+          onClick={(el) => {
+            dispatch(
+              assignHelper({
+                request_helper_id: (data.request_helper?.id),
+                task_id: parseInt(data.task_id),
+                assignee_id: parseInt(data.assignee),
+                helper_id: el.value,
+                status: "ask_staff"
+              })
+            );
+            setStaffHelper({});
+            setAssignHelper(false);
+          }}
+        />
+        </>
+      </Modal>
+      <Modal
         title="Delegate Staff"
         subtitle="Choose eligible staffs to assign for this task"
         isOpen={delegate}
@@ -350,10 +395,11 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           onClick={(el) => {
             dispatch(
               delegateTask({
+                request_delegate_id: (data.request_delegate?.id),
                 task_id: parseInt(data.task_id),
                 assignee_id: parseInt(data.assignee),
                 delegate_id: el.value,
-                status: "accepted"
+                status: "ask_staff"
               })
             );
             setStaffDelegate({});
@@ -370,45 +416,51 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           </p>
         )}
       </Modal>
-      <Modal
-        title="Assign Helper"
-        subtitle="Choose eligible helpers to assign for this task"
-        isOpen={assignHelper}
-        toggle={() => setAssignHelper(false)}
+      {/* <Modal
+        title="Reject Delegate Request"
+        subtitle="Are you sure you want to reject this delegate request?"
+        isOpen={reject}
+        toggle={() => setReject(false)}
         cancelLabel="Cancel"
         onClickSecondary={() => {
-          setStaffHelper({});
-          setAssignHelper(false);
+          setStaffRejectDelegate({});
+          setReject(false);
         }}
       >
         <>
         <Filter
-          data={staffHelper.value ? [staffHelper] : staffHelpers}
+          data={staffRejectDelegate.value ? [staffRejectDelegate] : staffRejectDelegates}
           onClick={(el) => {
             dispatch(
-              reassignTask({
+              rejectDelegate({
+                //reject_message: (el.target.value),
                 task_id: parseInt(data.task_id),
-                helper_id: el.value,
+                assignee_id: parseInt(data.assignee),
+                delegate_id: parseInt(data.assignee),
+                status: "rejected"
               })
             );
-            setStaffHelper({});
-            setAssignHelper(false);
+            setStaffRejectDelegate({});
+            setReject(false);
           }}
         />
+          <Input value={input} onInput={el => setInput(el.target.value)} placeholder="Type reason for reject this request"  />
         </>
-      </Modal>
+      </Modal> */}
       <Modal
+        title="Reject Delegate Request"
         isOpen={reject}
         toggle={() => setReject(false)}
-        disableHeader
         okLabel="Yes"
-        onClick={() => {
+        onClick={(e) => {
           setReject(false);
           dispatch(
             rejectDelegate({
+              request_delegate_id: (data.request_delegate?.id),
               task_id: parseInt(data.task_id),
               assignee_id: parseInt(data.assignee),
-              delegate_id: parseInt(data.assignee),
+              delegate_id: 0,
+              reject_message: e.target.value,
               status: "rejected"
             })
           );
@@ -419,6 +471,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         }}
       >
         Are you sure you want to reject delegaate this task?
+        <Input value={input} onChange={e => setInput(e.target.value)} placeholder="Type reason for reject this request"  />
       </Modal>
       <Template
         transparent
@@ -752,7 +805,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       </CardFooter>
                     ) : null
                     }
-                    {view ? null : (data.status === "assigned" || data.status === "in_progress") && (data.RequestDelegate?.status !== "requested") &&
+                    {view ? null : (data.status === "assigned" || data.status === "in_progress") && (data.request_delegate?.status !== "requested") && (data.request_helper?.status !== null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                         <CardFooter>
                           <Button
@@ -892,7 +945,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     }
                   </Card> 
                   }
-                  {view ? null : (data.RequestDelegate?.status === "requested") &&
+                  {view ? null : (data.request_delegate?.status !== "approved") && (data.request_delegate !== null) && 
+                  (data.request_helper?.status !== "requested") && (data.request_helper === null) &&
                   (role === "bm" ? canUpdate && canAdd : true) ? (
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>
@@ -901,7 +955,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                         className="row no-gutters flex-wrap"
                         style={{ position: "relative" }} 
                       >
-                        {data.RequestDelegate ? (
+                        {data.request_delegate ? (
                           <>
                             <div
                               className="col-12 col-lg-6"
@@ -931,12 +985,12 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                             ></span>
                             <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
                               <div><b>Request Date</b></div>
-                              <div>{data.RequestDelegate?.status}</div>
+                              <div>{data.request_delegate?.status}</div>
                               {/* <div>{data.assigned_by
                                     ? data.assigned_by
                                     : "Automatic Assignment"}
                               </div> */}
-                              <div>{dateTimeFormatter(data.RequestDelegate?.created_on)}</div>
+                              <div>{dateTimeFormatter(data.request_delegate?.created_on)}</div>
                               {data.task_type === "delivery" && (
                                 <div>
                                   <b>Fee : {toMoney(data.assignee_fee)}</b>
@@ -946,7 +1000,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                             <div className="col-12" 
                             style={{ color: "rgba(0, 0, 0, 0.345)" }}>
                               <hr />
-                              <p>{data.RequestDelegate?.message}</p>
+                              <p>{data.request_delegate?.message}</p>
                             </div>
                           </>
                         ) : (
@@ -956,19 +1010,21 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                         )}
                       </div>
                     </CardBody>
-                    {view ? null : (data.RequestDelegate?.status === "requested") &&
+                    {view ? null : (data.request_delegate?.status !== "approved") && (data.request_delegate !== null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                      <CardFooter>
-                        <Button
-                          onClick={() => setDelegate(true)} 
-                          label="Accept"
-                        />
-                        <Button
-                          color={ 'Danger'}
-                          onClick={() => setReject(true)}
-                          label="Reject"
-                        />
-                      </CardFooter>
+                        <div>
+                          <CardFooter>
+                            <Button
+                              onClick={() => setDelegate(true)} 
+                              label="Accept"
+                            />
+                            <Button
+                              color={ 'Danger'}
+                              onClick={() => setReject(true)}
+                              label="Reject"
+                            />
+                          </CardFooter>
+                      </div>
                     ) : null
                     }
                   </Card>
