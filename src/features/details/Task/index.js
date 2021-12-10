@@ -460,7 +460,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               task_id: parseInt(data.task_id),
               assignee_id: parseInt(data.assignee),
               delegate_id: 0,
-              reject_message: e.target.value,
+              reject_message: e.rejectMessage,
               status: "rejected"
             })
           );
@@ -471,7 +471,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         }}
       >
         Are you sure you want to reject delegaate this task?
-        <Input value={input} onChange={e => setInput(e.target.value)} placeholder="Type reason for reject this request"  />
+        <Input name="rejectMessage" placeholder="Type reason for reject this request"  />
       </Modal>
       <Template
         transparent
