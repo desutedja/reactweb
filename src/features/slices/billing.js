@@ -103,329 +103,350 @@ export const {
 
 export default slice.reducer;
 
-export const getBillingUnit = (
-  pageIndex,
-  pageSize,
-  search = "",
-  startDate,
-  endDate,
-  building,
-  released=""
-) => (dispatch) => {
-  dispatch(startAsync());
+export const getBillingUnit =
+  (
+    pageIndex,
+    pageSize,
+    search = "",
+    startDate,
+    endDate,
+    building,
+    released = ""
+  ) =>
+  (dispatch) => {
+    dispatch(startAsync());
 
-  dispatch(
-    get(
-      billingEndpoint +
-        "/unit" +
-        "?page=" +
-        (pageIndex + 1) +
-        "&limit=" +
-        pageSize +
-        "&building_id=" +
-        building +
-        "&search=" +
-        search+
-        "&startDate=" +
-        startDate+
-        "&endDate=" +
-        endDate +
-        "&released="+
-        released,
+    dispatch(
+      get(
+        billingEndpoint +
+          "/unit" +
+          "?page=" +
+          (pageIndex + 1) +
+          "&limit=" +
+          pageSize +
+          "&building_id=" +
+          building +
+          "&search=" +
+          search +
+          "&startDate=" +
+          startDate +
+          "&endDate=" +
+          endDate +
+          "&released=" +
+          released,
 
-      (res) => {
-        dispatch(setData(res.data.data));
+        (res) => {
+          dispatch(setData(res.data.data));
 
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
-export const downloadBillingUnit = (search = "", building) => (dispatch) => {
-  dispatch(startAsync());
+export const getBillingUnitSetAsPaid =
+  (page, pageSize, searchItem = "", month, year, status, unitid) =>
+  (dispatch) => {
+    dispatch(startAsync());
 
-  dispatch(
-    getFile(
-      billingEndpoint +
-        "/unit/download" +
-        "?building_id=" +
-        building ,
-      "billing_unit.csv",
-      (res) => {
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+    dispatch(
+      get(
+        endpointBilling +
+          "/management/billing/unit/groupv3/details" +
+          "?page=" +
+          (page + 1) +
+          "&limit=" +
+          pageSize +
+          "&month=" +
+          month +
+          "&year=" +
+          year +
+          "&unit_id=" +
+          unitid +
+          "&payment=" +
+          status +
+          "&search=" +
+          searchItem,
 
-export const downloadSetAsPaidBulk = (fileUpload, building,downloadfile) => (dispatch) => {
-  dispatch(startAsync());
+        (res) => {
+          // console.log(res);
+          dispatch(setData(res.data.data));
 
-  dispatch(
-    getFile(
-      endpointBilling + "/management/billing/setaspaidbulk?building_id="+building,
-      downloadfile + ".csv",
-      (res) => {
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
-export const getBillingSettlement = (
-  pageIndex,
-  pageSize,
-  search = "",
-  building,
-  settled,
-  start = "",
-  end = ""
-) => (dispatch) => {
-  dispatch(startAsync());
+export const downloadBillingUnit =
+  (search = "", building) =>
+  (dispatch) => {
+    dispatch(startAsync());
 
-  dispatch(
-    get(
-      billingEndpoint +
-        "/settlement" +
-        "?page=" +
-        (pageIndex + 1) +
-        "&limit=" +
-        pageSize +
-        "&building_id=" +
-        building +
-        "&payment_settled=" +
-        settled +
-        "&sort_field=created_on&sort_type=DESC" +
-        "&date_min=" +
-        start +
-        "&date_max=" +
-        end +
-        "&search=" +
-        search,
+    dispatch(
+      getFile(
+        billingEndpoint + "/unit/download" + "?building_id=" + building,
+        "billing_unit.csv",
+        (res) => {
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
-      (res) => {
-        dispatch(setSettlement(res.data.data));
+export const downloadSetAsPaidBulk =
+  (fileUpload, building, downloadfile) => (dispatch) => {
+    dispatch(startAsync());
 
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+    dispatch(
+      getFile(
+        endpointBilling +
+          "/management/billing/setaspaidbulk?building_id=" +
+          building,
+        downloadfile + ".csv",
+        (res) => {
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
-export const downloadBillingSettlement = (
-  search = "",
-  building = "",
-  status = "",
-  dateMin = "",
-  dateMax = ""
-) => (dispatch) => {
-  dispatch(startAsync());
+export const getBillingSettlement =
+  (pageIndex, pageSize, search = "", building, settled, start = "", end = "") =>
+  (dispatch) => {
+    dispatch(startAsync());
 
-  dispatch(
-    getFile(
-      billingEndpoint +
-        "/settlement" +
-        "?building_id=" +
-        building +
-        "&payment_settled=" +
-        status +
-        "&date_min=" +
-        dateMin +
-        "&date_max=" +
-        dateMax +
-        "&search=" +
-        search +
-        "&export=true",
-      "billing_settlement.csv",
-      (res) => {
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+    dispatch(
+      get(
+        billingEndpoint +
+          "/settlement" +
+          "?page=" +
+          (pageIndex + 1) +
+          "&limit=" +
+          pageSize +
+          "&building_id=" +
+          building +
+          "&payment_settled=" +
+          settled +
+          "&sort_field=created_on&sort_type=DESC" +
+          "&date_min=" +
+          start +
+          "&date_max=" +
+          end +
+          "&search=" +
+          search,
 
-export const getBillingDisbursement = (
-  pageIndex,
-  pageSize,
-  search = "",
-  filter = ""
-) => (dispatch) => {
-  dispatch(startAsync());
+        (res) => {
+          dispatch(setSettlement(res.data.data));
 
-  dispatch(
-    get(
-      billingEndpoint +
-        "/disbursement/list/management" +
-        "?page=" +
-        (pageIndex + 1) +
-        "&limit=" +
-        pageSize +
-        "&sort_field=created_on&sort_type=DESC" +
-        "&search=" +
-        search +
-        "&filter=" +
-        filter,
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
-      (res) => {
-        dispatch(setDisbursement(res.data.data));
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+export const downloadBillingSettlement =
+  (search = "", building = "", status = "", dateMin = "", dateMax = "") =>
+  (dispatch) => {
+    dispatch(startAsync());
+
+    dispatch(
+      getFile(
+        billingEndpoint +
+          "/settlement" +
+          "?building_id=" +
+          building +
+          "&payment_settled=" +
+          status +
+          "&date_min=" +
+          dateMin +
+          "&date_max=" +
+          dateMax +
+          "&search=" +
+          search +
+          "&export=true",
+        "billing_settlement.csv",
+        (res) => {
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
+
+export const getBillingDisbursement =
+  (pageIndex, pageSize, search = "", filter = "") =>
+  (dispatch) => {
+    dispatch(startAsync());
+
+    dispatch(
+      get(
+        billingEndpoint +
+          "/disbursement/list/management" +
+          "?page=" +
+          (pageIndex + 1) +
+          "&limit=" +
+          pageSize +
+          "&sort_field=created_on&sort_type=DESC" +
+          "&search=" +
+          search +
+          "&filter=" +
+          filter,
+
+        (res) => {
+          dispatch(setDisbursement(res.data.data));
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
 export const getBillingUnitDetails = (row, history, url) => (dispatch) => {
   dispatch(setSelected(row));
   history.push(url + "/item");
 };
 
-export const getBillingUnitItem = (
-  pageIndex,
-  pageSize,
-  search = "",
-  selected,
-  status
-) => (dispatch) => {
-  dispatch(startAsync());
+export const getBillingUnitItem =
+  (pageIndex, pageSize, search = "", selected, status) =>
+  (dispatch) => {
+    dispatch(startAsync());
 
-  dispatch(
-    get(
-      billingEndpoint +
-        "/unit/group" +
-        "?page=" +
-        (pageIndex + 1) +
-        "&limit=" +
-        pageSize +
-        "&unit_id=" +
-        selected.id +
-        "&building_id=" +
-        selected.building_id +
-        // '&sort_field=created_on&sort_type=DESC' +
-        "&search=" +
-        search,
+    dispatch(
+      get(
+        billingEndpoint +
+          "/unit/group" +
+          "?page=" +
+          (pageIndex + 1) +
+          "&limit=" +
+          pageSize +
+          "&unit_id=" +
+          selected.id +
+          "&building_id=" +
+          selected.building_id +
+          // '&sort_field=created_on&sort_type=DESC' +
+          "&search=" +
+          search,
 
-      (res) => {
-        dispatch(setUnit(res.data.data));
+        (res) => {
+          dispatch(setUnit(res.data.data));
 
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
-export const createBillingUnitItem = (data, selected, history, role) => (
-  dispatch
-) => {
-  dispatch(startAsync());
+export const createBillingUnitItem =
+  (data, selected, history, role) => (dispatch) => {
+    dispatch(startAsync());
 
-  dispatch(
-    post(
-      billingEndpoint,
-      data,
-      (res) => {
-        const _res = res.data.data;
-        history.push(
-          "/" + role + "/billing/unit/" + _res.resident_unit + "/" + _res.id
-        );
+    dispatch(
+      post(
+        billingEndpoint,
+        data,
+        (res) => {
+          const _res = res.data.data;
+          history.push(
+            "/" + role + "/billing/unit/" + _res.resident_unit + "/" + _res.id
+          );
 
-        dispatch(
-          setInfo({
-            color: "success",
-            message: "Billing has been created.",
-          })
-        );
+          dispatch(
+            setInfo({
+              color: "success",
+              message: "Billing has been created.",
+            })
+          );
 
-        dispatch(refresh());
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+          dispatch(refresh());
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
-export const editBillingUnitItem = (data, selectedItem, history, role) => (
-  dispatch
-) => {
-  dispatch(startAsync());
+export const editBillingUnitItem =
+  (data, selectedItem, history, role) => (dispatch) => {
+    dispatch(startAsync());
 
-  dispatch(
-    put(
-      billingEndpoint,
-      { ...data, id: selectedItem.id },
-      (res) => {
-        const _res = res.data.data;
-        history.push(
-          "/" + role + "/billing/unit/" + _res.resident_unit + "/" + _res.id
-        );
+    dispatch(
+      put(
+        billingEndpoint,
+        { ...data, id: selectedItem.id },
+        (res) => {
+          const _res = res.data.data;
+          history.push(
+            "/" + role + "/billing/unit/" + _res.resident_unit + "/" + _res.id
+          );
 
-        dispatch(
-          setInfo({
-            color: "success",
-            message: "Billing has been updated.",
-          })
-        );
+          dispatch(
+            setInfo({
+              color: "success",
+              message: "Billing has been updated.",
+            })
+          );
 
-        dispatch(refresh());
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+          dispatch(refresh());
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
-export const deleteBillingUnitItem = (id, unitid, history, role) => (
-  dispatch
-) => {
-  dispatch(startAsync());
+export const deleteBillingUnitItem =
+  (id, unitid, history, role) => (dispatch) => {
+    dispatch(startAsync());
 
-  dispatch(
-    del(
-      billingEndpoint + "/" + id,
-      (res) => {
-        history.push("/" + role + "/billing/unit/" + unitid);
+    dispatch(
+      del(
+        billingEndpoint + "/" + id,
+        (res) => {
+          history.push("/" + role + "/billing/unit/" + unitid);
 
-        dispatch(
-          setInfo({
-            color: "success",
-            message: "Billing has been deleted.",
-          })
-        );
+          dispatch(
+            setInfo({
+              color: "success",
+              message: "Billing has been deleted.",
+            })
+          );
 
-        dispatch(refresh());
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+          dispatch(refresh());
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
 export const payByCash = (data) => (dispatch) => {
   dispatch(startAsync());
@@ -452,49 +473,88 @@ export const payByCash = (data) => (dispatch) => {
   );
 };
 
+export const paidMultipleBuilding = (data) => (dispatch) => {
+  dispatch(startAsync());
 
+  dispatch(
+    post(
+      billingEndpoint + "/cash",
+      data,
+      (res) => {
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Billing has been set as paid by cash.",
+          })
+        );
 
-export const getBillingCategory = (pageIndex, pageSize, search = '', building, unit) => dispatch => {
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const getBillingCategory =
+  (pageIndex, pageSize, search = "", building, unit) =>
+  (dispatch) => {
     dispatch(startAsync());
 
-    dispatch(get(billingEndpoint + '/unit/category' +
-        '?page=' + (pageIndex + 1) +
-        '&limit=' + pageSize +
-        '&sort_field=created_on&sort_type=DESC' +
-        '&building_id=' + building +
-        '&search=' + search,
+    dispatch(
+      get(
+        billingEndpoint +
+          "/unit/category" +
+          "?page=" +
+          (pageIndex + 1) +
+          "&limit=" +
+          pageSize +
+          "&sort_field=created_on&sort_type=DESC" +
+          "&building_id=" +
+          building +
+          "&search=" +
+          search,
 
-        res => {
-            dispatch(setData(res.data.data));
+        (res) => {
+          dispatch(setData(res.data.data));
 
-            dispatch(stopAsync());
+          dispatch(stopAsync());
         },
-        err => {
-            dispatch(stopAsync());
+        (err) => {
+          dispatch(stopAsync());
         }
-    ))
-}
+      )
+    );
+  };
 
-
-export const downloadBillingCategory = (search = '', building) => dispatch => {
+export const downloadBillingCategory =
+  (search = "", building) =>
+  (dispatch) => {
     dispatch(startAsync());
 
-    dispatch(getFile(billingEndpoint + '/unit/category' +
-        '?search=' + search +
-        '&resident_building=' + building +
-        '&export=true&limit=999999999999',
-        'billing_category.csv',
-        res => {
-            dispatch(stopAsync());
+    dispatch(
+      getFile(
+        billingEndpoint +
+          "/unit/category" +
+          "?search=" +
+          search +
+          "&resident_building=" +
+          building +
+          "&export=true&limit=999999999999",
+        "billing_category.csv",
+        (res) => {
+          dispatch(stopAsync());
         },
-        err => {
-            dispatch(stopAsync());
+        (err) => {
+          dispatch(stopAsync());
         }
-    ))
-}
+      )
+    );
+  };
 
-
-export const updateBillingPublish = (ids,withImage) => (dispatch) => {
+export const updateBillingPublish = (ids, withImage) => (dispatch) => {
   dispatch(startAsync());
   dispatch(
     post(
@@ -525,7 +585,6 @@ export const updateBillingPublish = (ids,withImage) => (dispatch) => {
         dispatch(refresh());
         dispatch(stopAsync());
       }
-      
     )
   );
 };

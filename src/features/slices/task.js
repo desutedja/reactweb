@@ -258,6 +258,35 @@ export const acceptAssignHelper = (data) => (dispatch) => {
     )
   );
 };
+
+export const rejectHelper = (data) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      taskEndpoint + "/reject_helper",
+      data,
+      (res) => {
+        dispatch(stopAsync());
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            message:
+              "Assigning helper to this Task " +
+              data.task_id +
+              " has been Rejected ",
+          })
+        );
+        setTimeout(() => dispatch(setInfo({ message: "" })), 3000);
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
 // End Helper Section
 
 // Delegate Section
