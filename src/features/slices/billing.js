@@ -99,6 +99,7 @@ export const {
   setDisbursement,
   setSelectedItem,
   setPublishBilling,
+  setUpdateSetAsPaid,
 } = slice.actions;
 
 export default slice.reducer;
@@ -568,6 +569,40 @@ export const updateBillingPublish = (ids, withImage) => (dispatch) => {
           setInfo({
             color: "success",
             message: `${res.data.data} billing has been set to released.`,
+          })
+        );
+
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(
+          setInfo({
+            color: "error",
+            message: `Error to released.`,
+          })
+        );
+
+        dispatch(refresh());
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const updateSetAsPaidSelected = (data) => (dispatch) => {
+  dispatch(startAsync());
+  dispatch(
+    post(
+      billingEndpoint + "/set_as_paid",
+      {
+        data,
+      },
+      (res) => {
+        dispatch(
+          setInfo({
+            color: "success",
+            message: `${res.data.data} billing has been set to paid.`,
           })
         );
 

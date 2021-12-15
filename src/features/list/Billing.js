@@ -21,6 +21,7 @@ import {
   setSelectedItem,
   setSelected,
   updateBillingPublish,
+  updateSetAsPaidSelected,
 } from "../slices/billing";
 import { endpointAdmin, endpointBilling, online_status} from "../../settings";
 import { toSentenceCase, toMoney } from "../../utils";
@@ -50,6 +51,8 @@ function Component({ view }) {
   const [alert, setAlert] = useState("");
   const [fileUpload, setFileUpload] = useState('');
   const fileInput = useRef();
+
+  const [confirmPaid, setConfirmPaid] = useState(false);
 
   const [limit, setLimit] = useState(5);
   const [upload, setUpload] = useState(false);
@@ -321,6 +324,33 @@ function Component({ view }) {
 
   return (
     <>
+    {/* <Modal
+        isOpen={confirmPaid}
+        disableHeader={true}
+        btnDanger
+        onClick={() => {
+          const data = multiActionRows.map((el) => el.id);
+          console.log(data);
+          dispatch(paidMultipleBuilding(data, history));
+          setMultiActionRows([]);
+          setConfirmPaid(false);
+        }}
+        toggle={() => {
+          setConfirmPaid(false);
+          setMultiActionRows([]);
+        }}
+        okLabel={"Delete"}
+        cancelLabel={"Cancel"}
+      >
+        Are you sure you want to delete these buildings?
+        <p style={{ paddingTop: "10px" }}>
+          <ul>
+            {multiActionRows.map((el) => (
+              <li>{el?.name ? el.name : "nama"}</li>
+            ))}
+          </ul>
+        </p>
+      </Modal> */}
       <Modal
           isOpen={modalPublish}
           toggle={() => { toggleModalPublish(false) }}
@@ -592,6 +622,32 @@ function Component({ view }) {
                         }
 
                         setUploadSetAsPaid(true)
+                      }
+                    }
+                  />,
+
+                  <Button
+                    label="Set as Paid Selected"
+                    disabled={Object.keys(selectedRowIds).length === 0}
+                    onClick={() => 
+                      {
+                        confirmAlert({
+                          title: 'Set as paid',
+                          message: 'Do you want to set selected billing as paid?',
+                          buttons: [
+                            {
+                              label: 'Yes',
+                              onClick: () => {
+                                dispatch(updateSetAsPaidSelected(multiActionRows, year, month));
+                              },
+                              className:"Button btn btn-secondary"
+                            },
+                            {
+                              label: 'Cancel',
+                              className:"Button btn btn-cancel"
+                            }
+                          ]
+                        });
                       }
                     }
                   />,

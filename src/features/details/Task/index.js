@@ -798,7 +798,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       </div>
                     </CardBody>
                   </Card>
-                  {view ? null : (data.status === "assigned" || data.status === "in_progress" || data.status === "rejected" || data.status === "approved") && (data.request_delegate === null && data.request_helper === null) &&
+                  {view ? null : (data.request_delegate === null && data.request_helper === null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>
@@ -857,8 +857,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                         )}
                       </div>
                     </CardBody>
-                    {view ? null : (data.status === "rejected" ||
-                        data.status === "created") &&
+                    {view ? null : (data.status === "created" || data.status === "rejected") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                       <CardFooter>
                         <Button
