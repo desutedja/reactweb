@@ -478,7 +478,7 @@ export const paidMultipleBuilding = (data) => (dispatch) => {
 
   dispatch(
     post(
-      billingEndpoint + "/cash",
+      billingEndpoint + "/billing",
       data,
       (res) => {
         dispatch(
