@@ -486,11 +486,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           dispatch(
             rejectDelegate({
               request_delegate_id: (data.request_delegate?.id),
-              task_id: parseInt(data.task_id),
-              assignee_id: parseInt(data.assignee),
-              delegate_id: 0,
-              reject_message: toString(rejectMessage),
-              status: "rejected"
+              reject_message: rejectMessage,
             })
           );
         }}
@@ -515,12 +511,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           setRejectingHelper(false);
           dispatch(
             rejectHelper({
-              request_delegate_id: (data.request_helper?.id),
-              task_id: parseInt(data.task_id),
-              assignee_id: parseInt(data.assignee),
-              delegate_id: 0,
-              reject_message: toString(rejectMessage),
-              status: "rejected"
+              request_helper_id: (data.request_helper?.id),
+              reject_message: rejectMessage,
             })
           );
         }}
@@ -798,7 +790,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       </div>
                     </CardBody>
                   </Card>
-                  {view ? null : (data.request_delegate === null && data.request_helper === null) &&
+                  {view ? null : (data.request_delegate === null && data.request_helper === null) || (data.request_delegate?.status === "rejected" && data.request_helper?.status === "rejected") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>
@@ -868,7 +860,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       </CardFooter>
                     ) : null
                     }
-                    {view ? null : (data.status === "assigned" || data.status === "in_progress") && (data.request_delegate?.status !== "requested" || data.request_delegate?.status === "reject" || data.request_delegate === null) && (data.request_helper === null) &&
+                    {view ? null : (data.status === "assigned" || data.status === "in_progress") && (data.request_delegate?.status !== "requested" || data.request_delegate?.status === "reject" || data.request_delegate === null) && (data.request_helper === null || data.request_helper?.status === "rejected") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                         <CardFooter>
                           <Button
@@ -1005,7 +997,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       </CardFooter>
                     ) : null
                     }
-                    {view ? null : (data.status === "assigned" || data.status === "in_progress") && (data.request_delegate?.status !== "requested" && data.request_delegate?.status !== "rejected") && (data.request_helper !== null) &&
+                    {view ? null : (data.status === "assigned" || data.status === "in_progress") && (data.request_delegate?.status !== "requested" || data.request_delegate?.status !== "rejected") && (data.request_helper !== null || data.request_helper?.status === "requested") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                         <CardFooter>
                           <Button
