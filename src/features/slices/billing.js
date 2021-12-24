@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { endpointBilling } from "../../settings";
 import { get, post, put, del, getFile } from "../slice";
-import { setInfo } from "../slice";
+import { setInfo, setInfoSetAsPaid } from "../slice";
 
 const billingEndpoint = endpointBilling + "/management/billing";
 
@@ -99,7 +99,6 @@ export const {
   setDisbursement,
   setSelectedItem,
   setPublishBilling,
-  setUpdateSetAsPaid,
 } = slice.actions;
 
 export default slice.reducer;
@@ -474,18 +473,17 @@ export const payByCash = (data) => (dispatch) => {
   );
 };
 
-export const paidMultipleBuilding = (data) => (dispatch) => {
+export const updateSetAsPaidSelected = (data) => (dispatch) => {
   dispatch(startAsync());
-
   dispatch(
     post(
-      billingEndpoint + "/billing",
-      data,
+      billingEndpoint + "/set_as_paid",
+        data,
       (res) => {
         dispatch(
-          setInfo({
+          setInfoSetAsPaid({
             color: "success",
-            message: "Billing has been set as paid by cash.",
+            message: `Selected billing has been set to paid.`,
           })
         );
 
@@ -493,6 +491,49 @@ export const paidMultipleBuilding = (data) => (dispatch) => {
         dispatch(stopAsync());
       },
       (err) => {
+        dispatch(
+          setInfo({
+            color: "danger",
+            message: `No data found or selected billing is already Paid.`,
+          })
+        );
+
+        dispatch(refresh());
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const updateSetAsPaidSelectedDetail = (data) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      billingEndpoint + "/set_as_paid_detail",
+      {
+        data,
+      },
+        (res) => {
+        dispatch(
+          setInfo({
+            color: "success",
+            message: `Selected billing has been set to paid.`,
+          })
+        );
+
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(
+          setInfo({
+            color: "error",
+            message: `Error to set as paid billing.`,
+          })
+        );
+
+        dispatch(refresh());
         dispatch(stopAsync());
       }
     )
@@ -590,36 +631,4 @@ export const updateBillingPublish = (ids, withImage) => (dispatch) => {
   );
 };
 
-export const updateSetAsPaidSelected = (data) => (dispatch) => {
-  dispatch(startAsync());
-  dispatch(
-    post(
-      billingEndpoint + "/set_as_paid",
-      {
-        data,
-      },
-      (res) => {
-        dispatch(
-          setInfo({
-            color: "success",
-            message: `${res.data.data} billing has been set to paid.`,
-          })
-        );
 
-        dispatch(refresh());
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(
-          setInfo({
-            color: "error",
-            message: `Error to released.`,
-          })
-        );
-
-        dispatch(refresh());
-        dispatch(stopAsync());
-      }
-    )
-  );
-};

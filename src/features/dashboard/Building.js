@@ -904,7 +904,7 @@ function Component() {
                   <AnimatedNumber
                     className="BigNumber white"
                     value={
-                      staffData.num_of_unit / staffData.num_of_courier || "0"
+                      staffData.num_of_courier || "0"
                     }
                     formatValue={formatValue}
                   />

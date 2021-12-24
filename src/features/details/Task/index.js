@@ -71,6 +71,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   const [staffHelpers, setStaffHelpers] = useState([]);
   const [staffDelegate, setStaffDelegate] = useState({});
   const [staffDelegates, setStaffDelegates] = useState([]);
+  const [rejectMessage, setRejectMessage] = useState("");
   const [staffRejectDelegates, setStaffRejectDelegates] = useState([]);
   const [staffRejectHelper, setStaffRejectHelper] = useState([]);
   const [
@@ -293,15 +294,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
       );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, search, data, rejectingHelper]);
-  
-  const FooBarForm = () => {
-
-    const rejectMessage = React.useRef();
-
-    const handleSubmit = () => {
-      console.log(rejectMessage.current.value);
-    };
-  };
 
   return (
     <>
@@ -489,7 +481,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         isOpen={reject}
         toggle={() => setReject(false)}
         okLabel="Yes"
-        onClick={(e) => {
+        onClick={() => {
           setReject(false);
           dispatch(
             rejectDelegate({
@@ -497,7 +489,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               task_id: parseInt(data.task_id),
               assignee_id: parseInt(data.assignee),
               delegate_id: 0,
-              reject_message: e.rejectMessage,
+              reject_message: toString(rejectMessage),
               status: "rejected"
             })
           );
@@ -508,14 +500,18 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         }}
       >
         Are you sure you want to reject delegate this task?
-        <Input name="rejectMessage" placeholder="Type reason for reject this request"  />
+        <Input
+            value={rejectMessage}
+            type="text" onChange={(e) => setRejectMessage(e.target.value)}
+            placeholder='Type rejection message here'
+        />
       </Modal>
       <Modal
         title="Reject Delegate Request"
         isOpen={rejectingHelper}
         toggle={() => setRejectingHelper(false)}
         okLabel="Yes"
-        onClick={(e) => {
+        onClick={() => {
           setRejectingHelper(false);
           dispatch(
             rejectHelper({
@@ -523,7 +519,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               task_id: parseInt(data.task_id),
               assignee_id: parseInt(data.assignee),
               delegate_id: 0,
-              reject_message: e.rejectMessage,
+              reject_message: toString(rejectMessage),
               status: "rejected"
             })
           );
@@ -534,7 +530,11 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         }}
       >
         Are you sure you want to reject delegate this task?
-        <Input name="rejectMessage" placeholder="Type reason for reject this request"  />
+        <Input
+            value={rejectMessage}
+            type="text" onChange={(e) => setRejectMessage(e.target.value)}
+            placeholder='Type rejection message here'
+        />
       </Modal>
 
       <Template
@@ -1136,7 +1136,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     </CardBody>
                     
                   </Card>
-                      ) : view ? null : (data.status === "assigned" || data.status === "in_progress" || data.status === "rejected" || data.status === "completed") && (data.request_helper?.status === "approved") &&
+                      ) : view ? null : (data.status === "assigned" || data.status === "in_progress" || data.status === "rejected" || data.status === "completed" || data.status === "reported") && (data.request_helper?.status === "approved") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>

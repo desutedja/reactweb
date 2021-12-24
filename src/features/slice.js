@@ -106,6 +106,14 @@ export const setInfo = data => dispatch => {
   })), 5000);
 }
 
+export const setInfoSetAsPaid = data => dispatch => {
+  dispatch(setInfoData(data));
+
+  setTimeout(() => dispatch(setInfoData({
+    message: '',
+  })), 50000);
+}
+
 const responseAlert = (err, link) => async dispatch => {
   const response = err.response
     /* if (response && response.status === 401) {

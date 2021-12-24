@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { FiSearch, FiDownload, FiUpload } from "react-icons/fi";
+import { FiSearch, FiDownload, FiUpload, FiCheck } from "react-icons/fi";
 import { confirmAlert } from 'react-confirm-alert';
 import CustomAlert from '../../components/CustomAlert';
 import { closeAlert } from '../slice';
@@ -51,8 +51,6 @@ function Component({ view }) {
   const [alert, setAlert] = useState("");
   const [fileUpload, setFileUpload] = useState('');
   const fileInput = useRef();
-
-  const [confirmPaid, setConfirmPaid] = useState(false);
 
   const [limit, setLimit] = useState(5);
   const [upload, setUpload] = useState(false);
@@ -199,8 +197,6 @@ function Component({ view }) {
     if (search.length === 0) setLimit(5);
   }, [search]);
 
-  //   const columns = ;
-
   function uploadResult(result) {
     return (
       <>
@@ -302,6 +298,59 @@ function Component({ view }) {
     );
   }
 
+  // function setAsPaidSelected(result) {
+  //   return (
+  //     <>
+  //       <div>
+  //         <h5>Total of {result.main_billings_total} billings was read</h5>
+  //       </div>
+  //       <hr />
+  //       <ListGroup style={{ marginBottom: "20px" }}>
+  //         <ListGroupItem color="success">
+  //           {result.main_billings_success} billings successfully set as paid.
+  //         </ListGroupItem>
+  //         <ListGroupItem color="danger">
+  //           {result.main_billings_failed} billings failed to set as paid.
+  //         </ListGroupItem>
+  //       </ListGroup>
+  //       <ListGroup>
+  //         <p>Showing up to 100 result: </p>
+  //         {result.main_billings?.map((el, index) => {
+  //           /* only show up to 10 rows */
+  //           return (
+  //             <>
+  //               {index < 100 && (
+  //                 <ListGroupItem
+  //                   color={
+  //                     !el.row_error && !el.column_error ? "success" : "danger"
+  //                   }
+  //                 >
+  //                   {!el.row_error && !el.column_error ? (
+  //                     <>
+  //                       Row {el.row_number}: <b>{el.data?.name}</b> for unit ID{" "}
+  //                       <b>{el.data?.resident_unit}</b> was set as paid{" "}
+  //                       <b>(ID: {el.data?.id})</b>.
+  //                     </>
+  //                   ) : (
+  //                     <>
+  //                       Row {el.row_number}:{" "}
+  //                       {el.row_error && <>{el.row_error},</>}{" "}
+  //                       {el.column_error &&
+  //                         el.column_error.map(
+  //                           (k) => k.column_name + " " + k.error_message
+  //                         )}
+  //                     </>
+  //                   )}
+  //                 </ListGroupItem>
+  //               )}
+  //             </>
+  //           );
+  //         })}
+  //       </ListGroup>
+  //     </>
+  //   );
+  // }
+
   function uploadResultSetAsPaid(result) {
     return (
       <>
@@ -324,33 +373,6 @@ function Component({ view }) {
 
   return (
     <>
-    {/* <Modal
-        isOpen={confirmPaid}
-        disableHeader={true}
-        btnDanger
-        onClick={() => {
-          const data = multiActionRows.map((el) => el.id);
-          console.log(data);
-          dispatch(paidMultipleBuilding(data, history));
-          setMultiActionRows([]);
-          setConfirmPaid(false);
-        }}
-        toggle={() => {
-          setConfirmPaid(false);
-          setMultiActionRows([]);
-        }}
-        okLabel={"Delete"}
-        cancelLabel={"Cancel"}
-      >
-        Are you sure you want to delete these buildings?
-        <p style={{ paddingTop: "10px" }}>
-          <ul>
-            {multiActionRows.map((el) => (
-              <li>{el?.name ? el.name : "nama"}</li>
-            ))}
-          </ul>
-        </p>
-      </Modal> */}
       <Modal
           isOpen={modalPublish}
           toggle={() => { toggleModalPublish(false) }}
@@ -467,9 +489,9 @@ function Component({ view }) {
           selectedRows.map((row) => {
             if (row !== undefined){
               selectedRowIds.push({
-                unitID:row.id,
+                unit_id:row.id,
                 month:row.month,
-                year:row.year
+                year:row.year,
               });
             }
           });    
@@ -626,19 +648,52 @@ function Component({ view }) {
                     }
                   />,
 
+                  // <Button
+                  //   label="Set as Paid Selected"
+                  //   disabled={Object.keys(selectedRowIds).length === 0}
+                  //   icon={<FiCheck />}
+                  //   onClick={() => 
+                  //     {
+                  //       confirmAlert({
+                  //         title: 'Set as Paid Billing',
+                  //         message: 'Do you want to set these billing as Paid?',
+                  //         buttons: [
+                  //           {
+                  //             label: 'Yes',
+                  //             onClick: () => {
+                  //               const data = multiActionRows.map(el => el.id)
+                  //               console.log(data);
+                  //               dispatch(updateSetAsPaidSelected({
+                  //                 unitID: data.unitID,
+                  //                 year: data.year,
+                  //                 month: data.month,
+                  //               }));
+                  //             },
+                  //             className:"Button btn btn-secondary"
+                  //           },
+                  //           {
+                  //             label: 'Cancel',
+                  //             className:"Button btn btn-cancel"
+                  //           }
+                  //         ]
+                  //       });
+                  //     }
+                  //   }
+                  // />,
                   <Button
                     label="Set as Paid Selected"
                     disabled={Object.keys(selectedRowIds).length === 0}
+                    icon={<FiCheck />}
                     onClick={() => 
                       {
                         confirmAlert({
-                          title: 'Set as paid',
-                          message: 'Do you want to set selected billing as paid?',
+                          title: 'Set as Paid Billing',
+                          message: 'Do you want to set selected unit as Paid?',
                           buttons: [
                             {
                               label: 'Yes',
                               onClick: () => {
-                                dispatch(updateSetAsPaidSelected(multiActionRows, year, month));
+                                dispatch(updateSetAsPaidSelected(multiActionRows));
                               },
                               className:"Button btn btn-secondary"
                             },
@@ -650,7 +705,7 @@ function Component({ view }) {
                         });
                       }
                     }
-                  />,
+                  />
                 ];
               }
         }

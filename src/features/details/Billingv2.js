@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useRouteMatch, useParams } from "react-router-dom";
+import { confirmAlert } from "react-confirm-alert";
 
 import Detail from "./components/Detail";
 import Template from "./components/Template";
@@ -32,11 +33,11 @@ import {
   setSelectedItem,
   deleteBillingUnitItem,
   setSelected,
-  paidMultipleBuilding,
+  updateSetAsPaidSelectedDetail,
 } from "../slices/billing";
 import { ListGroupItem, ListGroup } from "reactstrap";
 import Pill from "../../components/Pill";
-import { FiSearch, FiClock, FiPlus } from "react-icons/fi";
+import { FiSearch, FiClock, FiPlus, FiCheck } from "react-icons/fi";
 import BillingItem from "../../components/cells/BillingItem";
 import moment from "moment";
 
@@ -188,34 +189,22 @@ function Component({ view, canAdd, canUpdate }) {
 
   return (
     <>
-      <Modal
+      {/* <Modal
         isOpen={confirmPaid}
         disableHeader={true}
         btnDanger
         onClick={() => {
-          const data = multiActionRows.map((el) => el.id);
-          console.log(data);
-          dispatch(paidMultipleBuilding(data, history));
-          setMultiActionRows([]);
+          dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
           setConfirmPaid(false);
         }}
         toggle={() => {
           setConfirmPaid(false);
-          setMultiActionRows([]);
         }}
-        okLabel={"Delete"}
+        okLabel={"Yes"}
         cancelLabel={"Cancel"}
       >
-        Are you sure you want to delete these buildings?
-        <p style={{ paddingTop: "10px" }}>
-          <ul>
-            {multiActionRows.map((el) => (
-              <li>{el?.name ? el.name : "nama"}</li>
-            ))}
-          </ul>
-        </p>
-      </Modal>
-      ;
+        Do you want to set these selected billing as Paid?
+      </Modal> */}
       <Template
         transparent
         pagetitle="Unit Billing Details"
@@ -475,7 +464,15 @@ function Component({ view, canAdd, canUpdate }) {
                     pageCount={data?.total_pages}
                     totalItems={data?.total_items}
                     selectAction={(selectedRows) => {
-                      setMultiActionRows(selectedRows);
+                      const selectedRowIds = [];
+                      selectedRows.map((row) => {
+                        if (row !== undefined){
+                          selectedRowIds.push({
+                            billing_items:row.id,
+                          });
+                        }
+                      });    
+                      setMultiActionRows([...selectedRowIds]);
                     }}
                     filters={[
                       {
@@ -533,25 +530,47 @@ function Component({ view, canAdd, canUpdate }) {
                         dispatch(deleteBillingUnitItem(rows[el].original.id))
                       );
                     }}
-                    renderActions={
-                      view
-                        ? null
-                        : (selectedRowIds, page) => {
-                            return [
-                              <>
-                                {Object.keys(selectedRowIds).length > 0 && (
-                                  <Button
-                                    onClick={() => {
-                                      console.log(selectedRowIds);
-                                      setConfirmPaid(true);
-                                    }}
-                                    label="Set as Paid"
-                                  />
-                                )}
-                              </>,
-                            ];
-                          }
-                    }
+                    // renderActions={
+                    //   view
+                    //     ? null
+                    //     : (selectedRowIds, page) => {
+                    //         return [
+                    //           <>
+                    //             <Button
+                    //               label="Set as Paid Selected"
+                    //               disabled={
+                    //                 Object.keys(selectedRowIds).length === 0
+                    //               }
+                    //               icon={<FiCheck />}
+                    //               onClick={() => {
+                    //                 confirmAlert({
+                    //                   title: "Set as Paid Billing",
+                    //                   message:
+                    //                     "Do you want to set selected billing as Paid?",
+                    //                   buttons: [
+                    //                     {
+                    //                       label: "Yes",
+                    //                       onClick: () => {
+                    //                         dispatch(
+                    //                           updateSetAsPaidSelectedDetail(
+                    //                             multiActionRows
+                    //                           )
+                    //                         );
+                    //                       },
+                    //                       className: "Button btn btn-secondary",
+                    //                     },
+                    //                     {
+                    //                       label: "Cancel",
+                    //                       className: "Button btn btn-cancel",
+                    //                     },
+                    //                   ],
+                    //                 });
+                    //               }}
+                    //             />
+                    //           </>,
+                    //         ];
+                    //       }
+                    // }
                   />
                 </Card>
               </Row>

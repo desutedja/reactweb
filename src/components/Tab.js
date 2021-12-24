@@ -15,6 +15,7 @@ function Component({
         flex: 1,
         width: "100%",
         overflow: "auto",
+        fontWeight: "bolder"
       }}
     >
       {labels.length > 1 && (
