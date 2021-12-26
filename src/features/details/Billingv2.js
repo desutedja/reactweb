@@ -425,7 +425,8 @@ function Component({ view, canAdd, canUpdate }) {
                     </>
                   </CardTitle>
 
-                  <TableWithSelection
+                  <Table
+                  // <TableWithSelection
                     columns={columns}
                     data={data?.items?.billing_items || []}
                     fetchData={useCallback(
