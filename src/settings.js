@@ -25,7 +25,9 @@ export const endpointAds = _endpointAds;
 
 export const mainColor = "#2f78e9";
 
-export const defaultRole = process.env.REACT_APP_DEFAULT_ROLE || "sa";
+export const defaultRole = process.env.REACT_APP_DEFAULT_ROLE || "sa"; 
+
+// export const defaultRole = "bm";
 
 export const taskStatusColor = {
   created: "light",

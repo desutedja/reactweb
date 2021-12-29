@@ -512,7 +512,7 @@ export const updateSetAsPaidSelectedDetail = (data) => (dispatch) => {
     post(
       billingEndpoint + "/set_as_paid_detail",
       {
-        data,
+        billing_items: data,
       },
         (res) => {
         dispatch(

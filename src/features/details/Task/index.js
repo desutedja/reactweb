@@ -954,6 +954,88 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     ) : null
                     }
                   </Card>
+                      ) : view ? null : (data.status !== null) &&
+                      (role === "bm" ? canUpdate && canAdd : true) ? (
+                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                    <CardBody>
+                      <h5>Assignee</h5>
+                      <div
+                        className="row no-gutters flex-wrap"
+                        style={{ position: "relative" }} 
+                      >
+                        {data.assignee ? (
+                          <>
+                            <div
+                              className="col-12 col-lg-6"
+                              style={{
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                              }}
+                            >
+                              <Staff
+                                id={data.assignee}
+                                data={{
+                                  photo: data.assignee_photo,
+                                  firstname: data.assignee_name,
+                                  lastname: "",
+                                  staff_role: data.assignee_role,
+                                }}
+                              />
+                            </div>
+                            <span
+                              className="border-right h-50 d-none d-lg-block"
+                              style={{
+                                position: "absolute",
+                                top: 0,
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                              }}
+                            ></span>
+                            <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
+                              <b>Assigned by</b>
+                              <div>
+                                {data.assigned_by
+                                  ? data.assigned_by
+                                  : "Automatic Assignment"}
+                              </div>
+                              <div>{dateTimeFormatter(data.assigned_on)}</div>
+                              {data.task_type === "delivery" && (
+                                <div>
+                                  <b>Fee : {toMoney(data.assignee_fee)}</b>
+                                </div>
+                              )}
+                            </div>
+                          </>
+                        ) : (
+                          <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
+                            <i>No Assigned Staff Yet</i>
+                          </div>
+                        )}
+                      </div>
+                    </CardBody>
+                    {view ? null : (data.status === "created" || data.status === "rejected") &&
+                      (role === "bm" ? canUpdate && canAdd : true) ? (
+                      <CardFooter>
+                        <Button
+                          onClick={() => setAssign(true)}
+                          icon={<FiUserPlus />}
+                          label="Assign Staff"
+                        />
+                      </CardFooter>
+                    ) : null
+                    }
+                    {view ? null : (data.status === "in_progress") && (data.request_delegate?.status !== "requested" || data.request_delegate?.status === "reject" || data.request_delegate === null) && (data.request_helper === null) &&
+                      (role === "bm" ? canUpdate && canAdd : true) ? (
+                        <CardFooter>
+                          <Button
+                            onClick={() => setAssignHelper(true)}
+                            icon={<FiUserPlus />}
+                            label="Assign Helper"
+                          />
+                        </CardFooter>
+                    ) : null
+                    }
+                  </Card>
                       ) :
                       view ? null : (data.request_delegate !== null || data.request_helper !== null) && (data.request_delegate?.status === "requested") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (

@@ -189,6 +189,138 @@ function Component({ view, canAdd, canUpdate }) {
 
   return (
     <>
+    {/* <Modal
+        isOpen={settleModal}
+        toggle={() => {
+          setSettleModal(!settleModal);
+          setSelected([]);
+        }}
+        title="Settlement Selection"
+        okLabel="Flag as Settled"
+        onClick={() => {
+          const currentDate = new Date().toISOString();
+          const trx_codes = [],
+            additional_trx_codes = [];
+          selected.map((el) => {
+            if (el.payment_settled === 0) {
+              trx_codes.push(el.trx_code);
+            }
+            if (el.additional_trx_code !== null) {
+              additional_trx_codes.push(el.additional_trx_code);
+            }
+          });
+          console.log(trx_codes);
+          const dataSettle = {
+            trx_codes,
+            additional_trx_codes,
+            amount: getSum(selected),
+            settled_on: currentDate,
+          };
+          dispatch(
+            post(
+              endpointTransaction + "/admin/transaction/settlement/create",
+              dataSettle,
+              (res) => {
+                setSettleModal(false);
+                dispatch(refresh());
+                dispatch(
+                  get(
+                    endpointTransaction + "/admin/transaction/summary",
+                    (res) => {
+                      setInfo(res.data.data);
+                    }
+                  )
+                );
+              }
+            )
+          );
+        }}
+      >
+        <div
+          style={{
+            minHeight: 300,
+          }}
+        >
+          {selected.map((el) => {
+            const additional =
+              el.additional_trx_code !== null &&
+              el.additional_payment_settled != 1
+                ? true
+                : false;
+            let additionalData = {},
+              stlAdditionalItem = null;
+            if (additional) {
+              additionalData = {
+                payment_charge:
+                  el.additional_payment_amount - el.additional_payment_charge,
+                trx_code: el.additional_trx_code,
+              };
+              stlAdditionalItem = (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    width: "100%",
+                    padding: 8,
+                    marginBottom: 4,
+                    border: "1px solid silver",
+                    borderRadius: 4,
+                  }}
+                >
+                  <div>
+                    <div>Trx Code</div>
+                    {additionalData.trx_code}
+                  </div>
+                  <div
+                    style={{
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {toMoney(additionalData.payment_charge)}
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <div key={el.id}>
+                {stlAdditionalItem}
+                {!el.payment_settled_date && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      width: "100%",
+                      padding: 8,
+                      marginBottom: 4,
+                      border: "1px solid silver",
+                      borderRadius: 4,
+                    }}
+                  >
+                    <div>
+                      <div>Trx Code</div>
+                      {el.trx_code}
+                    </div>
+                    <div
+                      style={{
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {toMoney(el.payment_amount - el.payment_charge)}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        <div
+          style={{
+            marginTop: 16,
+          }}
+        >
+          <h5>Total {toMoney(getSum(selected))}</h5>
+        </div>
+      </Modal> */}
       {/* <Modal
         isOpen={confirmPaid}
         disableHeader={true}
@@ -429,6 +561,17 @@ function Component({ view, canAdd, canUpdate }) {
                   // <TableWithSelection
                     columns={columns}
                     data={data?.items?.billing_items || []}
+                    // onSelection={(selectedRows) => {
+                    //   const selectedRowIds = [];
+                    //   selectedRows.map((row) => {
+                    //     if (row !== undefined){
+                    //       selectedRowIds.push({
+                    //         billing_items:row.id,
+                    //       });
+                    //     }
+                    //   });    
+                    //   setSelected([...selectedRowIds]);
+                    // }}
                     fetchData={useCallback(
                       (page, limit, searchItem, sortField, sortType) => {
                         setLoading(true);
@@ -464,17 +607,6 @@ function Component({ view, canAdd, canUpdate }) {
                     loading={loading}
                     pageCount={data?.total_pages}
                     totalItems={data?.total_items}
-                    selectAction={(selectedRows) => {
-                      const selectedRowIds = [];
-                      selectedRows.map((row) => {
-                        if (row !== undefined){
-                          selectedRowIds.push({
-                            billing_items:row.id,
-                          });
-                        }
-                      });    
-                      setMultiActionRows([...selectedRowIds]);
-                    }}
                     filters={[
                       {
                         label: (

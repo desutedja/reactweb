@@ -34,6 +34,11 @@ const columns = [
       accessor: "number", 
       sorting: "number"
     },
+    // {
+    //   Header: "Building", 
+    //   accessor: "building", 
+    //   sorting: "building"
+    // },
     {
       Header: "ID Number", 
       accessor: "id_number", 
@@ -123,8 +128,8 @@ function Component({ view, canAdd }) {
             ? null
             : []
         }
-        approvedAction={view ? null : role === "sa" && approvedResident}
-        disapprovedAction={view ? null : role === "sa" && disapprovedResident}
+        approvedAction={view ? null : (role === "sa" || role === "bm") && approvedResident}
+        disapprovedAction={view ? null : (role === "sa" || role === "bm") && disapprovedResident}
         filterVars={[approved_status]}
         filters={[
           {
