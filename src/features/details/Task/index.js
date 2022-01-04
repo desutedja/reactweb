@@ -830,8 +830,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                             <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
                               <b>Assigned by</b>
                               <div>
-                                {data.assigned_by
-                                  ? data.assigned_by
+                                {data.assigned_by_name
+                                  ? data.assigned_by_name
                                   : "Automatic Assignment"}
                               </div>
                               <div>{dateTimeFormatter(data.assigned_on)}</div>
@@ -912,8 +912,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                             <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
                               <b>Assigned by</b>
                               <div>
-                                {data.assigned_by
-                                  ? data.assigned_by
+                                {data.assigned_by_name
+                                  ? data.assigned_by_name
                                   : "Automatic Assignment"}
                               </div>
                               <div>{dateTimeFormatter(data.assigned_on)}</div>
@@ -954,7 +954,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     ) : null
                     }
                   </Card>
-                      ) : view ? null : (data.status !== null) &&
+                      ) : view ? null : (data.status !== null && data.request_delegate === null && data.request_helper === null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>
@@ -994,8 +994,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                             <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
                               <b>Assigned by</b>
                               <div>
-                                {data.assigned_by
-                                  ? data.assigned_by
+                                {data.assigned_by_name
+                                  ? data.assigned_by_name
                                   : "Automatic Assignment"}
                               </div>
                               <div>{dateTimeFormatter(data.assigned_on)}</div>
@@ -1077,8 +1077,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                             <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
                               <b>Assigned by</b>
                               <div>
-                                {data.assigned_by
-                                  ? data.assigned_by
+                                {data.assigned_by_name
+                                  ? data.assigned_by_name
                                   : "Automatic Assignment"}
                               </div>
                               <div>{dateTimeFormatter(data.assigned_on)}</div>
@@ -1160,8 +1160,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                           <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
                             <b>Assigned by</b>
                             <div>
-                              {data.assigned_by
-                                ? data.assigned_by
+                              {data.assigned_by_name
+                                ? data.assigned_by_name
                                 : "Automatic Assignment"}
                             </div>
                             <div>{dateTimeFormatter(data.assigned_on)}</div>
@@ -1302,8 +1302,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                           <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
                             <b>Assigned by</b>
                             <div>
-                              {data.assigned_by
-                                ? data.assigned_by
+                              {data.assigned_by_name
+                                ? data.assigned_by_name
                                 : "Automatic Assignment"}
                             </div>
                             <div>{dateTimeFormatter(data.assigned_on)}</div>
@@ -1417,8 +1417,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                           <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
                             <b>Assigned by</b>
                             <div>
-                              {data.assigned_by
-                                ? data.assigned_by
+                              {data.assigned_by_name
+                                ? data.assigned_by_name
                                 : "Automatic Assignment"}
                             </div>
                             <div>{dateTimeFormatter(data.assigned_on)}</div>
@@ -1532,8 +1532,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                           <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
                             <b>Assigned by</b>
                             <div>
-                              {data.assigned_by
-                                ? data.assigned_by
+                              {data.assigned_by_name
+                                ? data.assigned_by_name
                                 : "Automatic Assignment"}
                             </div>
                             <div>{dateTimeFormatter(data.assigned_on)}</div>
@@ -1684,8 +1684,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                             <div className="col-12 col-lg-6 mt-3 mt-lg-0 pl-0 pl-lg-3">
                               <div><b>Request Date</b></div>
                               {/* <div>{data.request_delegate?.status}</div> */}
-                              {/* <div>{data.assigned_by
-                                    ? data.assigned_by
+                              {/* <div>{data.assigned_by_name
+                                    ? data.assigned_by_name
                                     : "Automatic Assignment"}
                               </div> */}
                               <div>{dateTimeFormatter(data.request_delegate?.created_on)}</div>
