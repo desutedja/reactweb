@@ -954,7 +954,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     ) : null
                     }
                   </Card>
-                      ) : view ? null : (data.status !== null && data.request_delegate === null && data.request_helper === null) &&
+                      ) : view ? null : (data.status !== null ) && ((data.request_delegate === null && data.request_helper === null) || (data.request_delegate !== null && data.request_helper !== null)) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>
