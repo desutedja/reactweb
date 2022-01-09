@@ -481,7 +481,7 @@ export const updateSetAsPaidSelected = (data) => (dispatch) => {
         data,
       (res) => {
         dispatch(
-          setInfoSetAsPaid({
+          setInfo({
             color: "success",
             message: `Selected billing has been set to paid.`,
           })
@@ -511,9 +511,7 @@ export const updateSetAsPaidSelectedDetail = (data) => (dispatch) => {
   dispatch(
     post(
       billingEndpoint + "/set_as_paid_detail",
-      {
-        billing_items: data,
-      },
+        data,
         (res) => {
         dispatch(
           setInfo({

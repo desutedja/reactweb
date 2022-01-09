@@ -1,0 +1,217 @@
+.BigNumber {
+    /* margin: 16px; */
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    line-height: 1;
+}
+.cctv-list-scroll {
+    margin-bottom: 10px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    max-height: 500px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.BigNumber.in-dashboard {
+    color: var(--primary-color);
+    font-size: 3rem;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.recharts-text.recharts-pie-label-text > tspan{
+    color: "#000" !important;
+}
+
+
+.cctv-active-button {
+    background-color: #e12029 !important;
+    min-width: 150px;
+    max-width: 150px;
+    border-radius: 4px;
+}
+.cctv-inactive-button {
+    background-color: #bbbbbb !important;
+    min-width: 150px;
+    max-width: 150px;
+    border-radius: 4px;
+}
+
+.ads-detail-container {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ads-card-title {
+    font-weight: 100;
+    color: #828282;
+}
+
+.ads-detail-title {
+    font-weight: bolder;
+    font-size: 2rem;
+    text-align: center;
+}
+.ads-summary-data-text {
+    font-weight: bolder;
+    font-size: 1.75rem;
+    text-align: left;
+}
+
+.ads-summary-label-text {
+    font-weight: 100;
+    font-size: 1.25rem;
+    color: #FFF;
+    text-align: left;
+}
+
+.ads-summary-icon {
+    max-width: 100px;
+    max-height: 90px;
+}
+
+.ads-summary-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ads-list-scroll {
+    margin-bottom: 10px;
+    overflow: scroll;
+    -webkit-overflow-scrolling: touch;
+    max-height: 400px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.ads-active-button {
+    background-color: #e12029 !important;
+    min-width: 90px;
+    max-width: 90px;
+    border-radius: 4px;
+}
+
+.ads-dropdown-button {
+    background-color: #e12029 !important;
+    border-radius: 4px;
+}
+
+.ads-inactive-button {
+    background-color: #bbbbbb !important;
+    min-width: 90px;
+    max-width: 90px;
+    border-radius: 4px;
+}
+
+.BigIcon {
+    font-size: 5rem;
+}
+
+.color-1 {
+    background: linear-gradient(90deg, var(--primary-color) -30%, var(--accent-color) 130%);
+    color: white;
+}
+
+.color-2 {
+    background: linear-gradient(45deg, #fc4a1a -30%, #f7b733 130%);
+    color: white;
+}
+
+.color-3 {
+    background: linear-gradient(45deg, #e12029 -30%, #ff6a00 130%);
+    color: white;
+}
+
+.color-4 {
+    background: linear-gradient(45deg, #00b09b -30%, #96c93d 130%);
+    color: white;
+}
+
+.color-5 {
+    background: linear-gradient(45deg, #000428 -30%, #004e92 130%);
+    color: white;
+}
+
+.color-6 {
+    background: linear-gradient(45deg, #96c93d -30%, #000428 130%);
+    color: white;
+}
+
+.color-7 {
+    background: linear-gradient(45deg, #00b09b -30%, #004e92 130%);
+    color: white;
+}
+
+.color-8 {
+    background: linear-gradient(45deg, #d63031 -30%, #ff7675 130%);
+    color: white;
+}
+
+.white {
+    color: white;
+}
+
+.color-primary {
+    color: var(--primary-color)
+}
+
+.list-stats {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.list-stats li {
+    padding: 6px 0;
+    /* border: 1px solid rgba(0, 0, 0, .08);
+    border-left: none;
+    border-right: none; */
+}
+
+.black {
+    color: #212529;
+}
+
+.blue {
+    color: rgb(0, 78, 146);
+}
+
+.bread {
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.bread:hover {
+    background-color: rgba(0, 0, 0, .08);
+    cursor: pointer;
+}
+
+.ads-card {
+    /* Add shadows to create the "card" effect */
+    padding: 20px;
+  }
+  
+  /* On mouse-over, add a deeper shadow */
+  .container:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+  
+  /* Add some padding inside the card container */
+  .container {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    padding: 20px;
+    color: white;
+    background: linear-gradient(180deg, #E12029 0%, #B0131A 100%);
+    border-radius: 8px;  
+}
+
+.wmy {
+    margin: 10px;
+}

@@ -27,18 +27,18 @@ const Component = ({ data, color }) => {
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
-    return (
-      <text
-        x={x}
-        y={y}
-        fill="black"
-        textAnchor={x > cx ? "start" : "end"}
-        dominantBaseline="central"
-      >
-        {/* {`${(percent * 100).toFixed(0)}%`} */}
-        {toThousand(data[index].value)}
-      </text>
-    );
+    // return (
+    //   <text
+    //     x={x}
+    //     y={y}
+    //     fill="black"
+    //     textAnchor={x > cx ? "start" : "end"}
+    //     dominantBaseline="central"
+    //   >
+    //     {/* {`${(percent * 100).toFixed(0)}%`} */}
+    //     {toThousand(data[index].value)}
+    //   </text>
+    // );
   };
 
   return (
@@ -52,6 +52,7 @@ const Component = ({ data, color }) => {
           labelLine={false}
           isAnimationActive={false}
           outerRadius={100}
+          innerRadius={50}
         >
           {data.map((_, index) => {
             return (

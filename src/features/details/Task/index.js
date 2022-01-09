@@ -872,7 +872,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     ) : null
                     }
                   </Card>
-                      ) : view ? null : (data.status === "completed") && (data.request_delegate === null || data.request_helper === null) || (data.request_delegate === null && data.request_helper === null) &&
+                      ) : view ? null : (data.status === "completed") && ((data.request_delegate === null || data.request_helper === null) || (data.request_delegate === null && data.request_helper === null)) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>
@@ -954,7 +954,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     ) : null
                     }
                   </Card>
-                      ) : view ? null : (data.status !== null ) && ((data.request_delegate === null && data.request_helper === null) || (data.request_delegate !== null && data.request_helper !== null)) &&
+                      ) : view ? null : (data.status !== null ) && (data.request_delegate === null && data.request_helper === null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>
@@ -1190,7 +1190,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                                       <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
                                         <i>No Assigned Staff Yet</i>
                                       </div>) : <Staff
-                                      id={data.assignee}
+                                      id={data.request_helper?.helper_profile?.helper_id}
                                       data={{
                                         photo: data.request_helper?.helper_profile?.helper_photo,
                                         firstname: data.request_helper?.helper_profile?.helper_firstname,
@@ -1332,7 +1332,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                                       <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
                                         <i>Waiting for request to be accepted</i>
                                       </div>) : <Staff
-                                      id={data.assignee}
+                                      id={data.request_helper?.helper_profile?.helper_id}
                                       data={{
                                         photo: data.request_helper?.helper_profile?.helper_photo,
                                         firstname: data.request_helper?.helper_profile?.helper_firstname,
@@ -1377,7 +1377,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     </CardBody>
                     
                   </Card>
-                      ) : view ? null : (data.status === "in_progress" || data.status === "rejected" || data.status === "completed" || data.status === "reported" || data.status === "approved") && (data.request_helper?.status === "approved") && (data.request_delegate === null || data.request_delegate?.status === "rejected") &&
+                      ) : view ? null : (data.status === "in_progress" || data.status === "rejected" || data.status === "completed" || data.status === "reported" || data.status === "approved") && ((data.request_helper?.status === "approved") && (data.request_delegate === null || data.request_delegate?.status === "rejected")) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
                     <CardBody>
@@ -1447,7 +1447,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                                       <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
                                         <i>Waiting for request to be accepted</i>
                                       </div>) : <Staff
-                                      id={data.assignee}
+                                      id={data.request_helper?.helper_profile?.helper_id}
                                       data={{
                                         photo: data.request_helper?.helper_profile?.helper_photo,
                                         firstname: data.request_helper?.helper_profile?.helper_firstname,
@@ -1562,7 +1562,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                                       <div style={{ color: "rgba(0, 0, 0, 0.345)" }}>
                                         <i>Waiting for request to be accepted</i>
                                       </div>) : <Staff
-                                      id={data.assignee}
+                                      id={data.request_helper?.helper_profile?.helper_id}
                                       data={{
                                         photo: data.request_helper?.helper_profile?.helper_photo,
                                         firstname: data.request_helper?.helper_profile?.helper_firstname,

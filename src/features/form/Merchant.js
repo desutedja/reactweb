@@ -339,6 +339,7 @@ function Component() {
               </div>
             </Modal>
 
+            {/* <Input {...props} type="file" label="Icon" /> */}
             <Input {...props} label="Name" />
             <Input {...props} label="Phone" prefix="+62" />
             <Input
@@ -461,8 +462,9 @@ function Component() {
               label="Bank Account"
               name="account_bank"
               options={banks}
+              required
             />
-            <Input {...props} label="Bank Account Number" name="account_no" />
+            <Input {...props} label="Bank Account Number" name="account_no" type="number" />
             <Input {...props} label="Bank Account Name" name="account_name" />
             <SubmitButton loading={loading} errors={errors} />
           </Form>
