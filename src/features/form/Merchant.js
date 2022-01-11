@@ -436,6 +436,7 @@ function Component() {
               label="Province"
               options={provinces}
               onChange={(el) => setProvince(el.value)}
+              required
             />
             {values.province && (
               <Input
@@ -443,10 +444,11 @@ function Component() {
                 label="City"
                 options={cities}
                 onChange={(el) => setCity(el.value)}
+                required
               />
             )}
             {values.city && (
-              <Input {...props} label="District" options={districts} />
+              <Input {...props} label="District" options={districts} required/>
             )}
 
             <SectionSeparator />

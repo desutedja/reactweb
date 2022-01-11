@@ -15,6 +15,7 @@ import {
   RiCustomerService2Line,
   RiAdvertisementLine,
   RiCoupon2Line,
+  RiBankCardLine,
 } from "react-icons/ri";
 import { FaIdBadge } from "react-icons/fa";
 
@@ -25,6 +26,7 @@ import Billing from "./Billing";
 import Building from "./Building";
 import Management from "./Management";
 import Vouchers from "./Vouchers";
+import PaymentMethod from "./PaymentMethod";
 import Merchant from "./Merchant";
 import Product from "./Product";
 import Resident from "./Resident";
@@ -124,6 +126,12 @@ const menu = [
     path: "/vouchers",
     component: <Vouchers />,
   },
+  // {
+  //   icon: <RiBankCardLine className="MenuItem-icon" />,
+  //   label: "Payment Method",
+  //   path: "/payment method",
+  //   component: <PaymentMethod />,
+  // },
   {
     icon: <FiShoppingCart className="MenuItem-icon" />,
     label: "Transaction",

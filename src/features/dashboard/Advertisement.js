@@ -28,9 +28,9 @@ import SummaryItem from "./Components/SummaryItem";
 import { downloadAdsReport } from "../slices/ads";
 import Loading from "../../components/Loading";
 
-import ico1 from "../../assets/Impression 1.svg"
-import ico2 from "../../assets/Views 1.svg"
-import ico3 from "../../assets/Clicks 1.svg"
+import ico1 from "../../assets/Impression 1.png"
+import ico2 from "../../assets/Views 1.png"
+import ico3 from "../../assets/Clicks 1.png"
 
 const monthConst = [
   "Jan",
