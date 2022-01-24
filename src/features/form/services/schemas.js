@@ -3,6 +3,7 @@ import * as Yup from "yup";
 const defaultRequiredError = "This field is required.";
 
 const Text = Yup.string().required(defaultRequiredError);
+const TextReason = Yup.string().max(120, 'Only 120 character can be add on Reason').required(defaultRequiredError);
 const TextOptional = Yup.string().nullable();
 
 const Number = Yup.number("This value shoud be number.").required(
@@ -87,6 +88,7 @@ export const residentSchema = Yup.object().shape({
   firstname: Text,
   lastname: Text,
   phone: Phone,
+  // reason: TextReason,
 
   birthplace: TextOptional,
   birth_date: TextOptional,

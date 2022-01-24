@@ -445,37 +445,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           </p>
         )}
       </Modal>
-      {/* <Modal
-        title="Reject Delegate Request"
-        subtitle="Are you sure you want to reject this delegate request?"
-        isOpen={reject}
-        toggle={() => setReject(false)}
-        cancelLabel="Cancel"
-        onClickSecondary={() => {
-          setStaffRejectDelegate({});
-          setReject(false);
-        }}
-      >
-        <>
-        <Filter
-          data={staffRejectDelegate.value ? [staffRejectDelegate] : staffRejectDelegates}
-          onClick={(el) => {
-            dispatch(
-              rejectDelegate({
-                //reject_message: (el.target.value),
-                task_id: parseInt(data.task_id),
-                assignee_id: parseInt(data.assignee),
-                delegate_id: parseInt(data.assignee),
-                status: "rejected"
-              })
-            );
-            setStaffRejectDelegate({});
-            setReject(false);
-          }}
-        />
-          <Input value={input} onInput={el => setInput(el.target.value)} placeholder="Type reason for reject this request"  />
-        </>
-      </Modal> */}
       <Modal
         title="Reject Delegate Request"
         isOpen={reject}

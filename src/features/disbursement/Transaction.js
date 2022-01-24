@@ -43,6 +43,7 @@ function Component({ view }) {
   const [selected, setSelected] = useState([]);
   const [limit, setLimit] = useState(5);
   const [status, setStatus] = useState("");
+  const [paymentChannel, setPaymentChannel] = useState("");
   const [filter, setFilter] = useState("undisbursed");
   const [loadingMerchant, setLoadingMerchant] = useState(false);
   const [loadingCourier, setLoadingCourier] = useState(false);
@@ -87,6 +88,17 @@ function Component({ view }) {
     { label: "Disbursed Transaction", value: "disbursed" },
     { label: "Undisbursed Transaction", value: "undisbursed" },
   ];
+  
+  const payment_channel = [
+    { label: "OVO", value: "ovo" },
+    { label: "Credit Card", value: "credit_card" },
+    { label: "BCA", value: "bca" },
+    { label: "BRI", value: "bri" },
+    { label: "BNI", value: "bni" },
+    { label: "LinkAja", value: "linkaja" },
+    { label: "Gopay", value: "gopay" },
+    { label: "Mandiri", value: "mandiri" },
+];
 
   const columns = useMemo(() => {
     if (type === "merchant")
@@ -938,7 +950,8 @@ function Component({ view }) {
                         ? [disbursedStart, disbursedEnd]
                         : [today, today]),
                       settledStart,
-                      settledEnd
+                      settledEnd,
+                      // paymentChannel
                     )
                   );
                   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -954,6 +967,7 @@ function Component({ view }) {
                   settledStart,
                   settledEnd,
                   status,
+                  // paymentChannel,
                 ]
               )}
               filters={[
@@ -1032,6 +1046,24 @@ function Component({ view }) {
                     />
                   ),
                 },
+                // {
+                //     hidex: paymentChannel === '',
+                //     label: "Payment Channel: ",
+                //     delete: () => { setPaymentChannel('') },
+                //     value: paymentChannel ? toSentenceCase(paymentChannel) : 'All',
+                //     component: (toggleModal) =>
+                //         <Filter
+                //             data={payment_channel}
+                //             onClickAll={() => {
+                //                 setPaymentChannel('');
+                //                 toggleModal();
+                //             }}
+                //             onClick={el => {
+                //                 setPaymentChannel(el.value);
+                //                 toggleModal(false);
+                //             }}
+                //         />
+                // },
               ]}
               actions={[]}
               renderActions={

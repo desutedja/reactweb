@@ -19,6 +19,7 @@ const residentPayload = {
     firstname: "",
     lastname: "",
     phone: "",
+    // reason: "",
 
     birthplace: "others",
     birth_date: null,
@@ -221,6 +222,10 @@ function Component() {
                             <Input {...props} optional label="Account Bank" options={banks} />
                             <Input {...props} optional label="Account Number" name="account_no" />
                             <Input {...props} optional label="Account Name" />
+                            {/* <SectionSeparator />
+
+                            <Input {...props} required type="textarea" limit={120} label="Edit Reason" name="reason" /> */}
+
                             <SubmitButton loading={loading} errors={errors} />
                         </>}
                     </Form>

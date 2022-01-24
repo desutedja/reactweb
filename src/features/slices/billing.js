@@ -473,12 +473,12 @@ export const payByCash = (data) => (dispatch) => {
   );
 };
 
-export const updateSetAsPaidSelected = (data) => (dispatch) => {
+export const updateSetAsPaidSelected = (id) => (dispatch) => {
   dispatch(startAsync());
   dispatch(
     post(
       billingEndpoint + "/set_as_paid",
-        data,
+        {data: id},
       (res) => {
         dispatch(
           setInfo({
@@ -505,13 +505,13 @@ export const updateSetAsPaidSelected = (data) => (dispatch) => {
   );
 };
 
-export const updateSetAsPaidSelectedDetail = (data) => (dispatch) => {
+export const updateSetAsPaidSelectedDetail = (id, billing_items) => (dispatch) => {
   dispatch(startAsync());
 
   dispatch(
     post(
       billingEndpoint + "/set_as_paid_detail",
-        data,
+        {billing_items: id},
         (res) => {
         dispatch(
           setInfo({

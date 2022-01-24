@@ -189,6 +189,8 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
         owner_id: parseInt(id),
         level: level,
         status: status,
+        period_from: '2022-12-31 23:59:59',
+        period_to: '2022-12-31 23:59:59', 
       })
     );
     setAddUnit(false);

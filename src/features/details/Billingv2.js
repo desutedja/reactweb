@@ -321,7 +321,7 @@ function Component({ view, canAdd, canUpdate }) {
           <h5>Total {toMoney(getSum(selected))}</h5>
         </div>
       </Modal> */}
-      {/* <Modal
+      <Modal
         isOpen={confirmPaid}
         disableHeader={true}
         btnDanger
@@ -336,7 +336,7 @@ function Component({ view, canAdd, canUpdate }) {
         cancelLabel={"Cancel"}
       >
         Do you want to set these selected billing as Paid?
-      </Modal> */}
+      </Modal>
       <Template
         transparent
         pagetitle="Unit Billing Details"
@@ -557,21 +557,19 @@ function Component({ view, canAdd, canUpdate }) {
                     </>
                   </CardTitle>
 
-                  <Table
-                  // <TableWithSelection
+                  {/* <Table */}
+                  <TableWithSelection
                     columns={columns}
                     data={data?.items?.billing_items || []}
-                    // onSelection={(selectedRows) => {
-                    //   const selectedRowIds = [];
-                    //   selectedRows.map((row) => {
-                    //     if (row !== undefined){
-                    //       selectedRowIds.push({
-                    //         billing_items:row.id,
-                    //       });
-                    //     }
-                    //   });    
-                    //   setSelected([...selectedRowIds]);
-                    // }}
+                    onSelection={(selectedRows) => {
+                      const selectedRowIds = [];
+                      selectedRows.map((row) => {
+                        if (row !== undefined){
+                          selectedRowIds.push(row.id);
+                          setMultiActionRows([...selectedRowIds]);
+                        }
+                      });    
+                    }}
                     fetchData={useCallback(
                       (page, limit, searchItem, sortField, sortType) => {
                         setLoading(true);
@@ -663,47 +661,45 @@ function Component({ view, canAdd, canUpdate }) {
                         dispatch(deleteBillingUnitItem(rows[el].original.id))
                       );
                     }}
-                    // renderActions={
-                    //   view
-                    //     ? null
-                    //     : (selectedRowIds, page) => {
-                    //         return [
-                    //           <>
-                    //             <Button
-                    //               label="Set as Paid Selected"
-                    //               disabled={
-                    //                 Object.keys(selectedRowIds).length === 0
-                    //               }
-                    //               icon={<FiCheck />}
-                    //               onClick={() => {
-                    //                 confirmAlert({
-                    //                   title: "Set as Paid Billing",
-                    //                   message:
-                    //                     "Do you want to set selected billing as Paid?",
-                    //                   buttons: [
-                    //                     {
-                    //                       label: "Yes",
-                    //                       onClick: () => {
-                    //                         dispatch(
-                    //                           updateSetAsPaidSelectedDetail(
-                    //                             multiActionRows
-                    //                           )
-                    //                         );
-                    //                       },
-                    //                       className: "Button btn btn-secondary",
-                    //                     },
-                    //                     {
-                    //                       label: "Cancel",
-                    //                       className: "Button btn btn-cancel",
-                    //                     },
-                    //                   ],
-                    //                 });
-                    //               }}
-                    //             />
-                    //           </>,
-                    //         ];
-                    //       }
-                    // }
+                    renderActions={
+                      view
+                        ? null
+                        : (selectedRowIds, page) => {
+                            return [
+                              <>
+                                <Button
+                                  label="Set as Paid Selected"
+                                  disabled={
+                                    Object.keys(selectedRowIds).length === 0
+                                  }
+                                  icon={<FiCheck />}
+                                  onClick={() => {
+                                    confirmAlert({
+                                      title: "Set as Paid Billing",
+                                      message:
+                                        "Do you want to set selected billing as Paid?",
+                                      buttons: [
+                                        {
+                                          label: "Yes",
+                                          onClick: () => {
+                                            dispatch(
+                                              updateSetAsPaidSelectedDetail(multiActionRows)
+                                            );
+                                          },
+                                          className: "Button btn btn-secondary",
+                                        },
+                                        {
+                                          label: "Cancel",
+                                          className: "Button btn btn-cancel",
+                                        },
+                                      ],
+                                    });
+                                  }}
+                                />
+                              </>,
+                            ];
+                          }
+                    }
                   />
                 </Card>
               </Row>

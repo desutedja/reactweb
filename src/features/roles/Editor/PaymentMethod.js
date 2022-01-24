@@ -2,8 +2,8 @@ import React from "react";
 import { useRouteMatch, Switch, Route } from "react-router-dom";
 
 import List from "../../list/PaymentMethod";
-import Add from "../../form/Vouchers";
-import Details from "../../details/Vouchers";
+import Add from "../../form/PaymentMethod";
+import Details from "../../details/PaymentMethod";
 
 function Component() {
   let { path } = useRouteMatch();

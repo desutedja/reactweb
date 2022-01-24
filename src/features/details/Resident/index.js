@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import Detail from "../components/Detail";
 import Template from "../components/Template";
+import TemplateResident from "../components/TemplateResident";
 
 import Modal from "../../../components/Modal";
 import Pill from "../../../components/Pill";

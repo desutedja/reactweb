@@ -28,6 +28,16 @@ const filtersDisbursement = [
     { label: 'Undisbursed Only', value: 'undisbursed' },
 ]
 
+const payment_channel = [
+    { label: "OVO", value: "ovo" },
+    { label: "Credit Card", value: "credit_card" },
+    { label: "BCA", value: "bca" },
+    { label: "BRI", value: "bri" },
+    { label: "BNI", value: "bni" },
+    { label: "LinkAja", value: "linkaja" },
+    { label: "Gopay", value: "gopay" },
+    { label: "Mandiri", value: "mandiri" },
+];
 
 function Component({ view }) {
     const [active, setActive] = useState(0);
@@ -38,6 +48,7 @@ function Component({ view }) {
     const [destinationBank, setDestinationBank] = useState('');
     const [destinationAccount, setDestinationAccount] = useState('');
     const [status, setStatus] = useState('');
+    const [paymentChannel, setPaymentChannel] = useState('');
     
     const [searchValue, setSearchValue] = useState('');
     const [data, setData] = useState([]);
@@ -347,6 +358,7 @@ function Component({ view }) {
                                         + '&settlement_date_min=' + settledStart
                                         + '&settlement_date_max=' + settledEnd
                                         + '&filter=' + status
+                                        + '&payment_channel=' + paymentChannel
                                         + '&export=true',
                                         'billing_disbursement.csv',
                                         res => {}))}
@@ -374,7 +386,8 @@ function Component({ view }) {
                                         + '&disbursement_date_max=' + (status === 'disbursed' ? disbursedEnd : '')
                                         + '&settlement_date_min=' + settledStart
                                         + '&settlement_date_max=' + settledEnd
-                                        + '&filter=' + status,
+                                        + '&filter=' + status
+                                        + '&payment_channel=' + paymentChannel,
                                         res => {
                                             const data = res.data.data.items
                                             setData(data);
@@ -387,7 +400,7 @@ function Component({ view }) {
                                     res => {
                                         setAmount(res.data.data.undisburse_amount);
                                     }))
-                                }, [dispatch, selectedManagement, status, disbursedStart, disbursedEnd, settledStart, settledEnd, refreshTable])}
+                                }, [dispatch, selectedManagement, status, disbursedStart, disbursedEnd, settledStart, settledEnd, paymentChannel, refreshTable])}
                                 filters={[
                                     {
                                         hidex: isRangeThisMonth(settledStart, settledEnd),
@@ -444,6 +457,24 @@ function Component({ view }) {
                                                 }}
                                                 onClick={el => {
                                                     setStatus(el.value);
+                                                    toggleModal(false);
+                                                }}
+                                            />
+                                    },
+                                    {
+                                        hidex: paymentChannel === '',
+                                        label: "Payment Channel: ",
+                                        delete: () => { setPaymentChannel('') },
+                                        value: paymentChannel ? toSentenceCase(paymentChannel) : 'All',
+                                        component: (toggleModal) =>
+                                            <Filter
+                                                data={payment_channel}
+                                                onClickAll={() => {
+                                                    setPaymentChannel('');
+                                                    toggleModal();
+                                                }}
+                                                onClick={el => {
+                                                    setPaymentChannel(el.value);
                                                     toggleModal(false);
                                                 }}
                                             />
