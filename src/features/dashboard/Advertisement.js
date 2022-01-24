@@ -1478,7 +1478,7 @@ function Component() {
                             <div className="col-12">
                               <div className="row mb-4">
                                 <div className="col-2">
-                                  <div className="row mb-5 justify-content-between right">
+                                  {/* <div className="row mb-5 justify-content-between right">
                                     <div className="col-auto">
                                         <div style={{
                                             display: 'flex',
@@ -1491,7 +1491,7 @@ function Component() {
                                             </div>
                                         </div>
                                     </div>
-                                  </div>
+                                  </div> */}
                                   <ButtonDropdown
                                     className="ads-active-button"
                                     color="primary"
