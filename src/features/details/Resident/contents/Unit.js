@@ -22,6 +22,8 @@ import {
 import { endpointAdmin, endpointResident } from "../../../../settings";
 import { get, post } from "../../../slice";
 import Loading from "../../../../components/Loading";
+import { RiCalendarEventLine } from "react-icons/ri";
+import { dateTimeFormatter } from "../../../../utils";
 
 const columnsUnit = [
   { Header: "ID", accessor: "unit_id" },
@@ -63,6 +65,8 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
     // setLevel
   ] = useState("main");
   const [status, setStatus] = useState("own");
+  const [periodeFrom, setPeriodeFrom] = useState("");
+  const [periodeTo, setPeriodeTo] = useState("");
 
   const { unit, loading, refreshToggle } = useSelector(
     (state) => state.resident
@@ -189,8 +193,8 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
         owner_id: parseInt(id),
         level: level,
         status: status,
-        period_from: '2022-12-31 23:59:59',
-        period_to: '2022-12-31 23:59:59', 
+        period_from: dateTimeFormatter(periodeFrom),
+        period_to: dateTimeFormatter(periodeTo), 
       })
     );
     setAddUnit(false);
@@ -534,10 +538,10 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
               />
               <SectionSeparator />
               {!mainOwner ? (
+              <>
                 <Input
-                  fullwidth
                   label="Status"
-                  type="select"
+                  type="radio"
                   inputValue={status}
                   setInputValue={setStatus}
                   options={[
@@ -545,6 +549,36 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
                     { value: "rent", label: "Rent" },
                   ]}
                 />
+                {status === "own" ? <>
+                <Input 
+                    type="hidden"
+                    inputValue={periodeFrom}
+                    setInputValue="2012-12-31 23:59:59"
+                  />
+                  <Input
+                    type="hidden"
+                    inputValue={periodeTo}
+                    setInputValue="2012-12-31 23:59:59"
+                  />
+                </> : 
+                <>
+                  <Input 
+                    label="Period From"
+                    type="date"
+                    autoComplete="off"
+                    inputValue={periodeFrom}
+                    setInputValue={setPeriodeFrom}
+                  />
+                  <Input
+                    label="Period To"
+                    type="date"
+                    autoComplete="off"
+                    inputValue={periodeTo}
+                    setInputValue={setPeriodeTo}
+                  />
+                </>
+                }
+              </>
               ) : mainOwner.id === id ? (
                 <p>This resident is already the owner of this unit.</p>
               ) : (
