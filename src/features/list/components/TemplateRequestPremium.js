@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Table from '../../../components/Table';
@@ -17,6 +17,9 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
         total_pages,
         refreshToggle
     } = useSelector(state => state[slice]);
+
+    const [inputFrom, setInputFrom] = useState();
+    const [inputTo, setInputTo] = useState();
 
     let dispatch = useDispatch();
 
@@ -42,8 +45,30 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
                     sortBy={sortBy}
                     actions={view ? null : actions}
                     onClickApproved={view ? null : approvedAction ? row => {
-                        dispatch(setConfirmDelete("Are you sure to Approve this item?",
-                            () => dispatch(approvedAction(row))
+                        dispatch(setConfirmDelete(
+                        <>
+                            <div style={{ borderBottom: "1px solid #E9E9E9", marginBottom: 10, paddingBottom: 10}}>
+                                Are you sure to Approve this item?
+                            </div>
+                            <div className='column'>
+                                <div>
+                                    Status
+                                </div>
+                                <div>
+                                    <strong>{row.status}</strong>
+                                </div>
+                                {row.status === "own" ? null :
+                                <> 
+                                <label>Period From
+                                    <input className='form-control' type="date" value={inputFrom} onChange={setInputFrom} />
+                                </label>
+                                <label>Period To
+                                    <input className='form-control' type="date" value={inputTo} onChange={setInputTo}  />
+                                </label>
+                                </>}
+                            </div>
+                        </>,
+                            () => dispatch(approvedAction(row, inputFrom, inputTo))
                         ));
                     } : null}
                     onClickDisapproved={view ? null : disapprovedAction ? row => {

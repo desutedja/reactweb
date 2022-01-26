@@ -21,7 +21,7 @@ import {
   kyccolor,
   onboarding_status,
 } from "../../settings";
-import { getRequestPremium,approvedResident,disapprovedResident } from "../slices/requestpremium";
+import { getRequestPremium, approvedResident, disapprovedResident } from "../slices/requestpremium";
 
 const columns = [
     {
@@ -58,7 +58,7 @@ const columns = [
       Header: "Approved",
       accessor: (row) => (
         <Pill color={row.approved_status === "approved" ? "success" : "secondary"}>
-          {toSentenceCase(row.approved_status)}
+          {toSentenceCase(row.approved_status) === "-" ? "Pending" : toSentenceCase(row.approved_status)}
         </Pill>
       ),
       sorting: "approved_status",
