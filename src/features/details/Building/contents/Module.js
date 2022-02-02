@@ -15,7 +15,8 @@ const modules = [
   {label: 'Technician', value: 'technician'},
   {label: 'Internal Courier', value: 'internal_courier'},
   {label: 'Separate Billing', value: 'separate_billing'},
-  {label: 'CCTV', value: 'cctv'}
+  {label: 'CCTV', value: 'cctv'},
+  {label: 'Assignment Staff', value: 'assignment_staff'}
 ]
 
 // const active_modules = [

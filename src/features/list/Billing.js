@@ -298,59 +298,6 @@ function Component({ view }) {
     );
   }
 
-  // function setAsPaidSelected(result) {
-  //   return (
-  //     <>
-  //       <div>
-  //         <h5>Total of {result.main_billings_total} billings was read</h5>
-  //       </div>
-  //       <hr />
-  //       <ListGroup style={{ marginBottom: "20px" }}>
-  //         <ListGroupItem color="success">
-  //           {result.main_billings_success} billings successfully set as paid.
-  //         </ListGroupItem>
-  //         <ListGroupItem color="danger">
-  //           {result.main_billings_failed} billings failed to set as paid.
-  //         </ListGroupItem>
-  //       </ListGroup>
-  //       <ListGroup>
-  //         <p>Showing up to 100 result: </p>
-  //         {result.main_billings?.map((el, index) => {
-  //           /* only show up to 10 rows */
-  //           return (
-  //             <>
-  //               {index < 100 && (
-  //                 <ListGroupItem
-  //                   color={
-  //                     !el.row_error && !el.column_error ? "success" : "danger"
-  //                   }
-  //                 >
-  //                   {!el.row_error && !el.column_error ? (
-  //                     <>
-  //                       Row {el.row_number}: <b>{el.data?.name}</b> for unit ID{" "}
-  //                       <b>{el.data?.resident_unit}</b> was set as paid{" "}
-  //                       <b>(ID: {el.data?.id})</b>.
-  //                     </>
-  //                   ) : (
-  //                     <>
-  //                       Row {el.row_number}:{" "}
-  //                       {el.row_error && <>{el.row_error},</>}{" "}
-  //                       {el.column_error &&
-  //                         el.column_error.map(
-  //                           (k) => k.column_name + " " + k.error_message
-  //                         )}
-  //                     </>
-  //                   )}
-  //                 </ListGroupItem>
-  //               )}
-  //             </>
-  //           );
-  //         })}
-  //       </ListGroup>
-  //     </>
-  //   );
-  // }
-
   function uploadResultSetAsPaid(result) {
     return (
       <>
@@ -433,24 +380,6 @@ function Component({ view }) {
         />
       </Modal>
 
-      {/* <Modal
-            isOpen={uploadSetAsPaid}
-            toggle={() => setUploadSetAsPaid(false)}
-            title="Upload Bulk"
-            okLabel={"Submit"}
-            onClick={
-              dispatch(downloadSetAsPaidBulk(fileUpload, search, building))
-            }
-        >
-          <input
-              ref={fileInput}
-              type="file"
-              onChange={e => {
-                  setFileUpload(fileInput.current.files[0]);
-              }}
-          />
-        </Modal> */}
-
       <UploadModal
         open={upload}
         toggle={() => setUpload(false)}
@@ -492,10 +421,12 @@ function Component({ view }) {
                 unit_id:row.id,
                 month:row.month,
                 year:row.year,
+                // released:row.released,
               });
             }
           });    
           setMultiActionRows([...selectedRowIds]);
+          console.log(selectedRowIds);
         }}
         filterVars={[building, released]}
         filters={

@@ -132,7 +132,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     setUploadModal(false);
                 }}
                 title="Upload Settlement"
-                subtitle="Upload csv from Xendit dashboard"
+                subtitle="Upload file type .xlsx for bulk setllement"
                 okLabel={uploadResult && uploadResult.valid_transactions.length > 0 ? "Flag As Settled" : "Submit"}
                 disablePrimary={loading || (uploadResult && uploadResult.valid_transactions.length === 0)}
                 disableSecondary={loading}
@@ -142,7 +142,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                         const dataSettle = {
                             trx_code,
                         }
-                        dispatch(post(endpointBilling + '/management/billing/settlement', dataSettle, res => {
+                        dispatch(post(endpointBilling + '/management/billing/settlement/bulksettlement', dataSettle, res => {
                             setSettleModal(false);
                             dispatch(refresh());
                             dispatch(setInfo({

@@ -473,12 +473,12 @@ export const payByCash = (data) => (dispatch) => {
   );
 };
 
-export const updateSetAsPaidSelected = (id) => (dispatch) => {
+export const updateSetAsPaidSelected = (data) => (dispatch) => {
   dispatch(startAsync());
   dispatch(
     post(
       billingEndpoint + "/set_as_paid",
-        {data: id},
+        data,
       (res) => {
         dispatch(
           setInfo({
@@ -504,6 +504,66 @@ export const updateSetAsPaidSelected = (id) => (dispatch) => {
     )
   );
 };
+
+// export const resolveTask = (data) => (dispatch) => {
+//   dispatch(startAsync());
+
+//   const ids = data.map((el) => el.id);
+
+//   dispatch(
+//     post(
+//       taskEndpoint + "/resolve?id=" + ids,
+//       {},
+//       (res) => {
+//         dispatch(stopAsync());
+//         dispatch(refresh());
+
+//         const body = res.data.data;
+//         var message, color;
+
+//         if (!body.valid_ids || body.valid_ids === []) {
+//           if (data.length === 1) {
+//             message =
+//               "Error: Task could not be marked as resolved. Reason: " +
+//               body.reasons.map((el) => el);
+//             color = "danger";
+//           } else {
+//             message =
+//               "Error: Could not mark all tasks as resolved. Reasons: " +
+//               body.reasons.map((el) => el).join(" / ");
+//             color = "danger";
+//           }
+//         } else if (body.valid_ids.length > 0) {
+//           if (body.valid_ids.length === data.length) {
+//             if (data.length === 1) {
+//               message = "Tasks have been marked as resolved.";
+//             } else {
+//               message =
+//                 body.valid_ids.length + " tasks have been marked as resolved.";
+//             }
+//             color = "success";
+//           } else if (body.valid_ids.length < data.length) {
+//             message =
+//               body.valid_ids.length +
+//               " tasks have been marked as resolved, " +
+//               body.invalid_ids.length +
+//               " was not marked as resolved";
+//             color = "warning";
+//           } else {
+//             // nothing
+//           }
+//         }
+
+//         dispatch(setInfo({ message: message, color: color }));
+//         setTimeout(() => dispatch(setInfo({ message: "" })), 5000);
+//       },
+//       (err) => {
+//         dispatch(stopAsync());
+//       }
+//     )
+//   );
+// };
+
 
 export const updateSetAsPaidSelectedDetail = (id, billing_items) => (dispatch) => {
   dispatch(startAsync());
