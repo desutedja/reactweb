@@ -16,7 +16,7 @@ const modules = [
   {label: 'Internal Courier', value: 'internal_courier'},
   {label: 'Separate Billing', value: 'separate_billing'},
   {label: 'CCTV', value: 'cctv'},
-  {label: 'Assignment Staff', value: 'assignment_staff'}
+  {label: 'Assignment Staff', value: 'staff_pertower'}
 ]
 
 // const active_modules = [
