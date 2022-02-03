@@ -51,6 +51,10 @@ function Component() {
 
   const [loading, setLoading] = useState(false);
   const [range, setRange] = useState("dtd");
+  const [tower, setTower] = useState("");
+  const [buildingName, setBuildingName] = useState("");
+  const [buildingLabel, setBuildingLabel] = useState("");
+  const [unitLabel, setUnitLabel] = useState("");
   const [section, setSection] = useState([]);
   const [billingData, setBillingData] = useState({});
   const [staffData, setStaffData] = useState({});
@@ -125,7 +129,7 @@ function Component() {
     setLoading(true);
     dispatch(
       get(
-        endpointBilling + "/management/billing/graph?range=" + range + "&section=" + section,
+        endpointBilling + "/management/billing/graph?range=" + range + "&tower=" + tower,
         (res) => {
           setLoading(false);
           setBillingGraph(res.data.data);
@@ -137,19 +141,23 @@ function Component() {
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, range, section]);
+  }, [dispatch, range, tower]);
 
   useEffect(() => {
+    setLoading(true)
     dispatch(
-      get(endpointBilling + "/management/billing/statistic", (res) => {
+      get(
+        endpointBilling + "/management/billing/statistic?tower=" + tower,
+        (res) => {
+        setLoading(false);
         setBillingData(res.data.data);
       })
     );
-  }, [dispatch]);
+  }, [dispatch, tower]);
 
   useEffect(() => {
     dispatch(
-      get(endpointManagement + "/admin/staff/statistics", (res) => {
+      get(endpointManagement + "/admin/staff/statistics?tower=" + tower, (res) => {
         setStaffData(res.data.data);
         if (res.data.data.billing_summary.length > 0) {
           handleBillingSummary(res.data.data.billing_summary);
@@ -574,10 +582,16 @@ function Component() {
             <BarChartDMY
               headTitle="Billing Statistics"
               dataChart={billingGraphFormatted}
-              section={section}
-              setSection={setSection}
               range={range}
               setRange={setRange}
+              tower={tower}
+              setTower={setTower}
+              buildingName={buildingName}
+              setBuildingName={setBuildingName}
+              buildingLabel={buildingLabel}
+              setBuildingLabel={setBuildingLabel}
+              unitLabel={unitLabel}
+              setUnitLabel={setUnitLabel}
               dataY={["Amount Billing"]}
               dataX={["Date"]}
               barClick={() => {
