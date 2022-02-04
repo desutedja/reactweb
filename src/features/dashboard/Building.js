@@ -164,7 +164,7 @@ function Component() {
         }
       })
     );
-  }, [dispatch]);
+  }, [dispatch, tower]);
 
   useEffect(() => {
     dispatch(
@@ -176,7 +176,7 @@ function Component() {
         (err) => console.log(err.response)
       )
     );
-  }, [dispatch]);
+  }, [dispatch, tower]);
 
   useEffect(() => {
     if (auth.role === "bm") {
