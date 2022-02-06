@@ -72,7 +72,7 @@ function Component() {
                 setPieData(res.data.data.ticket_by_category);
                 setTaskData(res.data.data);
             }));
-        }
+        } else
         if (auth.role === 'bm') {
             dispatch(get(endpointTask + '/admin/pic_bm/statistics?range=' + range + '&tower=' + tower,  res => {
                 setPieData(res.data.data.ticket_by_category);

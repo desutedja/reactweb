@@ -147,13 +147,13 @@ function Component() {
     setLoading(true)
     dispatch(
       get(
-        endpointBilling + "/management/billing/statistic?tower=" + tower,
+        endpointBilling + "/management/billing/statistic?building_id=" + buildingName + '&tower=' + tower,
         (res) => {
         setLoading(false);
         setBillingData(res.data.data);
       })
     );
-  }, [dispatch, tower]);
+  }, [dispatch, tower, buildingName]);
 
   useEffect(() => {
     dispatch(
