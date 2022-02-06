@@ -56,15 +56,15 @@ function Component() {
         dispatch(getSOS(range, tower));
     }, [dispatch, range, tower]);
 
-    useEffect(() => {
-        setLoading(true);
-        dispatch(get(endpointTask + '/admin/sa/statistics?range=' + range + '&tower=' + tower,
-            res => {
-                setLoading(false);
-                setPieData(res.data.data.ticket_by_category);
-                setTaskData(res.data.data);
-            }))
-    }, [dispatch, range, tower]);
+    // useEffect(() => {
+    //     setLoading(true);
+    //     dispatch(get(endpointTask + '/admin/sa/statistics?range=' + range + '&tower=' + tower,
+    //         res => {
+    //             setLoading(false);
+    //             setPieData(res.data.data.ticket_by_category);
+    //             setTaskData(res.data.data);
+    //         }))
+    // }, [dispatch, range, tower]);
 
     useEffect(() => {
         if (auth.role === 'sa') {
@@ -80,7 +80,7 @@ function Component() {
                 console.log(res.data.data);
             }));
         }
-    }, [auth.role, dispatch, range, tower]);
+    }, [dispatch, auth.role, range, tower]);
 
     useEffect(() => {
         openModalBuilding &&
@@ -393,38 +393,38 @@ function Component() {
                                 <h5>SOS Statistics</h5>
                             </div>
                             <div className="col-auto">
-              { (auth.role === "bm") ? 
-              <div style={{
-                  display: 'flex',
-              }}>
-                  <div
-                      style={{ marginLeft: 5 }}
-                      className="Group"
-                      onClick={() => setOpenModalUnit(true) }
-                  >
-                     { tower ? unitLabel : 'Section'}
-                  </div>
-              </div> : <div style={{
-                  display: 'flex',
-              }}>
-                  <div
-                      className="Group"
-                      onClick={() => setOpenModalBuilding(true) }
-                  >
-                     { buildingName ? buildingLabel : 'Building'}
-                  </div>
-                  {buildingName ?
-                  <div
-                      style={{ marginLeft: 5 }}
-                      className="Group"
-                      onClick={() => setOpenModalUnit(true) }
-                  >
-                     { tower ? unitLabel : 'Section'}
-                  </div>
-                  : []}
-              </div>
-              }
-          </div>
+                                { (auth.role === "bm") ? 
+                                <div style={{
+                                    display: 'flex',
+                                }}>
+                                    <div
+                                        style={{ marginLeft: 5 }}
+                                        className="Group"
+                                        onClick={() => setOpenModalUnit(true) }
+                                    >
+                                        { tower ? unitLabel : 'Section'}
+                                    </div>
+                                </div> : <div style={{
+                                    display: 'flex',
+                                }}>
+                                    <div
+                                        className="Group"
+                                        onClick={() => setOpenModalBuilding(true) }
+                                    >
+                                        { buildingName ? buildingLabel : 'Building'}
+                                    </div>
+                                    {buildingName ?
+                                    <div
+                                        style={{ marginLeft: 5 }}
+                                        className="Group"
+                                        onClick={() => setOpenModalUnit(true) }
+                                    >
+                                        { tower ? unitLabel : 'Section'}
+                                    </div>
+                                    : []}
+                                </div>
+                                }
+                            </div>
                             <div className="col-auto">
                                 <div style={{
                                     display: 'flex',
