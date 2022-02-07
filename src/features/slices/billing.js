@@ -484,9 +484,9 @@ export const updateSetAsPaidSelected = (data) => (dispatch) => {
         dispatch(stopAsync());
 
         const body = res.data.data;
-        console.log(body);
+        console.log(body.data_paid.length);
         
-        if (body.data_paid !== null && body.error_message === null) {
+        if (body.data_paid.length != 0 && body.error_message == null) {
           dispatch(
             setInfo({
               color: "success",
@@ -494,14 +494,14 @@ export const updateSetAsPaidSelected = (data) => (dispatch) => {
             })
           );
 
-        } else if (body.data_paid !== null && body.error_message !== null){
+        } else if (body.data_paid.length != 0 && body.error_message.length != 0){
           dispatch(
             setInfo({
               color: "danger",
               message: `Some selected billing has been set to paid and some cant be set as paid.`,
             })
           );
-
+          
         }else {
           dispatch(
             setInfo({

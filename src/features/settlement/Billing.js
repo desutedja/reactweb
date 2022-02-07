@@ -133,22 +133,12 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                 }}
                 title="Upload Settlement"
                 subtitle="Upload file type .xlsx for bulk setllement"
-                okLabel={uploadResult && uploadResult.valid_transactions.length > 0 ? "Flag As Settled" : "Submit"}
-                disablePrimary={loading || (uploadResult && uploadResult.valid_transactions.length === 0)}
+                okLabel={"Submit"}
+                disablePrimary={loading}
                 disableSecondary={loading}
-                onClick={uploadResult ?
+                onClick={
+                    uploadResult ?
                     () => {
-                        const trx_code = uploadResult.valid_transactions.map(el => el.trx_code)
-                        const dataSettle = {
-                            trx_code,
-                        }
-                        dispatch(post(endpointBilling + '/management/billing/settlement/bulksettlement', dataSettle, res => {
-                            setSettleModal(false);
-                            dispatch(refresh());
-                            dispatch(setInfo({
-                                message: trx_code.length + ' billing' + (trx_code.length > 0 ? 's' : '') + ' was marked as settled',
-                            }))
-                        }))
                         setUploadResult('');
                         setUploadModal(false);
                     }
@@ -159,7 +149,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                         let formData = new FormData();
                         formData.append('file', fileUpload);
 
-                        dispatch(post(endpointBilling + '/management/billing/settlement/validate/bulk',
+                        dispatch(post(endpointBilling + '/management/billing/settlement/bulksettlement',
                             formData,
                             res => {
                                 setLoadingUpload(false);
@@ -170,39 +160,49 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                 setLoadingUpload(false);
                             }
                         ));
-                    }}
+                    }
+                }
             >
                 {uploadResult ?
                     <div style={{ maxHeight: '600px', overflow: 'scroll' }} >
                         <ListGroup style={{ marginBottom: '15px' }}>
                             <div style={{ padding: '5px' }}><b>
-                                Valid Transaction Codes: <span style={{ color: "green" }} >
-                                    {uploadResult.valid_transactions.length + ' '}
-                                    result{uploadResult.valid_transactions.length > 1 ? 's' : ''}</span>
+                                Settled Transaction: 
+                                {
+                                    uploadResult.settled !== null ?
+                                    <span style={{ color: "green" }}>
+                                    {uploadResult.settled.length + ' '}
+                                    result{uploadResult.settled.length > 1 ? 's' : ''}</span>
+                                    : <span style={{ color: "green" }}>
+                                    0 result</span>
+                                }
                             </b></div>
-                            {uploadResult.valid_transactions.map((el) =>
-                                <ListGroupItem color={el.payment_amount - el.payment_charge !== el.xendit_amount ? "warning" : "success"}>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <div>Trx Code</div> <b>Value: {toMoney(el.payment_amount - el.payment_charge)}</b>
-                                    </div>
-                                    <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <div>{el.trx_code}</div> <b>From Xendit: {toMoney(el.xendit_amount)}</b>
-                                    </div>
-                                    {el.payment_amount - el.payment_charge !== el.xendit_amount && <div style={{ color: "red" }}>
-                                        There's difference between value of transaction and xendit amount.
-                                    </div>}
-                                </ListGroupItem>
-                            )}
+                        </ListGroup>
+                        <ListGroup style={{ marginBottom: '15px' }}>
+                            <div style={{ padding: '5px' }}><b>
+                                Already Settled Transaction: 
+                                {
+                                    uploadResult.already_settled !== null ?
+                                    <span style={{ color: "green" }}>
+                                    {uploadResult.count_already_settled + ' '}
+                                    result{uploadResult.count_already_settled > 1 ? 's' : ''}</span>
+                                    : <span style={{ color: "green" }}>
+                                    0 result</span>
+                                }
+                            </b></div>
                         </ListGroup>
                         <ListGroup>
                             <div style={{ padding: '5px' }}><b>
-                                Invalid Transaction Codes: <span style={{ color: "red" }}>
-                                    {uploadResult.invalid_transactions.length + ' '}
-                                    result{uploadResult.invalid_transactions.length > 1 ? 's' : ''}</span>
+                                Unsettled Transaction: 
+                                {
+                                    uploadResult.unsettled !== null ?
+                                    <span style={{ color: "red" }}>
+                                    {uploadResult.unsettled.length + ' '}
+                                    result{uploadResult.unsettled.length > 1 ? 's' : ''}</span>
+                                    : <span style={{ color: "red" }}>
+                                    0 result</span>
+                                }
                             </b></div>
-                            {uploadResult.invalid_transactions.map((el) =>
-                                <ListGroupItem color="danger">{el.trx_code} ({el.reason})</ListGroupItem>
-                            )}
                         </ListGroup>
                     </div>
                     :
@@ -210,6 +210,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                         <input
                             className="d-block"
                             ref={fileInput}
+                            accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                             type="file"
                             onChange={e => {
                                 setFileUpload(fileInput.current.files[0]);
