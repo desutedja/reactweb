@@ -36,7 +36,6 @@ function Component({ view }) {
 
   const { role, user } = useSelector((state) => state.auth);
 
-  //   const { selectedRowIds } = useSelector((state) => state.billing);
   const [modalPublish, toggleModalPublish] = useState(false);
   const handleShow = () => toggleModalPublish(true);
   const [buildingRelease, setBuildingRelease] = useState("");
@@ -421,7 +420,6 @@ function Component({ view }) {
                 unit_id:row.id,
                 month:row.month,
                 year:row.year,
-                // released:row.released,
               });
             }
           });    
@@ -579,38 +577,6 @@ function Component({ view }) {
                     }
                   />,
 
-                  // <Button
-                  //   label="Set as Paid Selected"
-                  //   disabled={Object.keys(selectedRowIds).length === 0}
-                  //   icon={<FiCheck />}
-                  //   onClick={() => 
-                  //     {
-                  //       confirmAlert({
-                  //         title: 'Set as Paid Billing',
-                  //         message: 'Do you want to set these billing as Paid?',
-                  //         buttons: [
-                  //           {
-                  //             label: 'Yes',
-                  //             onClick: () => {
-                  //               const data = multiActionRows.map(el => el.id)
-                  //               console.log(data);
-                  //               dispatch(updateSetAsPaidSelected({
-                  //                 unitID: data.unitID,
-                  //                 year: data.year,
-                  //                 month: data.month,
-                  //               }));
-                  //             },
-                  //             className:"Button btn btn-secondary"
-                  //           },
-                  //           {
-                  //             label: 'Cancel',
-                  //             className:"Button btn btn-cancel"
-                  //           }
-                  //         ]
-                  //       });
-                  //     }
-                  //   }
-                  // />,
                   <Button
                     label="Set as Paid Selected"
                     disabled={Object.keys(selectedRowIds).length === 0}

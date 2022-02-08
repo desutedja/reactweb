@@ -44,12 +44,12 @@ export const {
 } = slice.actions;
 
 export const getSOS = (
-   range, tower
+   range, buildingName, tower
 ) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(chartEndpoint + '/sos/statistics' + 
-    '?range=' + range + '&tower=' + tower,
+    '?range=' + range + '&building_id=' + buildingName + '&tower=' + tower,
     
     res => {
       console.log(res);

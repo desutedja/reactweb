@@ -133,7 +133,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                 }}
                 title="Upload Settlement"
                 subtitle="Upload file type .xlsx for bulk setllement"
-                okLabel={"Submit"}
+                okLabel={uploadResult ? "Done" : "Submit"}
                 disablePrimary={loading}
                 disableSecondary={loading}
                 onClick={

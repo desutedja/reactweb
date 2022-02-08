@@ -53,8 +53,8 @@ function Component() {
     let dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getSOS(range, tower));
-    }, [dispatch, range, tower]);
+        dispatch(getSOS(range, tower, buildingName));
+    }, [dispatch, range, tower, buildingName]);
 
     // useEffect(() => {
     //     setLoading(true);
@@ -67,20 +67,23 @@ function Component() {
     // }, [dispatch, range, tower]);
 
     useEffect(() => {
+        setLoading(true);
         if (auth.role === 'sa') {
-            dispatch(get(endpointTask + '/admin/sa/statistics?range=' + range + '&tower=' + tower,  res => {
+            dispatch(get(endpointTask + '/admin/sa/statistics?range=' + range + '&building_id=' + buildingName + '&tower=' + tower,  res => {
+                setLoading(false);
                 setPieData(res.data.data.ticket_by_category);
                 setTaskData(res.data.data);
             }));
         } else
         if (auth.role === 'bm') {
             dispatch(get(endpointTask + '/admin/pic_bm/statistics?range=' + range + '&tower=' + tower,  res => {
+                setLoading(false);
                 setPieData(res.data.data.ticket_by_category);
                 setTaskData(res.data.data);
                 console.log(res.data.data);
             }));
         }
-    }, [dispatch, auth.role, range, tower]);
+    }, [dispatch, auth.role, range, buildingName, tower]);
 
     useEffect(() => {
         openModalBuilding &&
