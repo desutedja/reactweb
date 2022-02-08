@@ -1,5 +1,5 @@
 const root = 'yipy';
-export const _endpointBase = 'https://api-dev.yipy.id';
+export const _endpointBase = 'https://api.yipy.id';
 
 export const _endpointAsset = _endpointBase + '/' + root + '-assets';
 export const _endpointAdmin = _endpointBase + '/' + root + '-admin';
