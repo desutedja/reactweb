@@ -418,9 +418,10 @@ function Component() {
               <Input
                 {...props}
                 type="file"
-                label="Image (optional)"
+                label="Image Header"
                 name="image"
                 placeholder="Image URL"
+                hint="Image ratio must be 1:1"
               />
               <Input
                 {...props}

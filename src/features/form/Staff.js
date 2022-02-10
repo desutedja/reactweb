@@ -460,13 +460,15 @@ function Component() {
                 { value: "divorce", label: "Divorced" },
                 { value: "other", label: "Other" },
               ]}
+              optional
             />
-            <Input {...props} label="Address" type="textarea" />
+            <Input {...props} label="Address" type="textarea" optional />
             <Input
               {...props}
               label="Province"
               options={provinces}
               onChange={(el) => setProvince(el.value)}
+              optional
             />
             {values.province && (
               <Input
@@ -474,10 +476,11 @@ function Component() {
                 label="City"
                 options={cities}
                 onChange={(el) => setCity(el.value)}
+                optional
               />
             )}
             {values.city && (
-              <Input {...props} label="District" options={districts} />
+              <Input {...props} label="District" options={districts} optional />
             )}
 
             <SectionSeparator />
