@@ -350,7 +350,7 @@ function Component({ role, children }) {
             />
             {role === "sa"
               ? "Superadmin - " + toSentenceCase(user.group)
-              : "Building Manager"}
+              : "Building Manager - " + toSentenceCase(user.building_name)}
           </IconButton>
         </div>
         <div
