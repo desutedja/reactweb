@@ -421,7 +421,7 @@ function Component() {
                 label="Image Header"
                 name="image"
                 placeholder="Image URL"
-                hint="Image ratio must be 1:2"
+                hint="Preferred size for maximum result is 1:2"
               />
               <Input
                 {...props}

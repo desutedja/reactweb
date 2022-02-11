@@ -26,6 +26,7 @@ import SubmitButton from "./components/SubmitButton";
 
 const merchantPayload = {
   name: "",
+  logo: "",
   type: "goods",
   legal: "individual",
   category: "",
@@ -341,6 +342,7 @@ function Component() {
 
             {/* <Input {...props} type="file" label="Icon" /> */}
             <Input {...props} label="Name" />
+            <Input {...props} label="Logo" type="file" name="logo" placeholder="Merchant Logo URL" />
             <Input {...props} label="Phone" prefix="+62" />
             <Input
               {...props}
@@ -466,7 +468,7 @@ function Component() {
               options={banks}
               required
             />
-            <Input {...props} label="Bank Account Number" name="account_no" type="number" />
+            <Input {...props} label="Bank Account Number" name="account_no" />
             <Input {...props} label="Bank Account Name" name="account_name" />
             <SubmitButton loading={loading} errors={errors} />
           </Form>
