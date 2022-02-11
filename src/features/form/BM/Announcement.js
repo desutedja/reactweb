@@ -283,9 +283,10 @@ function Component() {
               <Input
                 {...props}
                 type="file"
-                label="Image (optional)"
+                label="Image Header"
                 name="image"
                 placeholder="Image URL"
+                hint="Preferred size for maximum result is 1:2"
               />
               <Input
                 {...props}
