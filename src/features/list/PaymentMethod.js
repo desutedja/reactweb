@@ -8,6 +8,10 @@ import { get } from "../slice";
 import Table from "../../components/Table";
 import Breadcrumb from "../../components/Breadcrumb";
 import Pill from "../../components/Pill";
+import { setSelected } from "../slices/vouchers";
+import { FiPlus } from "react-icons/fi";
+
+import Button from "../../components/Button";
 
 
 const columns = [
@@ -185,6 +189,21 @@ function Component({ view, title = '', pagetitle }) {
                       [dispatch, buildingid, bank, startdate, enddate]
                     )}
                     loading={loading}
+                    actions={
+                      view
+                        ? null
+                        : [
+                            <Button
+                              key="Add Promo VA"
+                              label="Add Promo VA"
+                              icon={<FiPlus />}
+                              onClick={() => {
+                                dispatch(setSelected({}));
+                                history.push(url + "/add");
+                              }}
+                            />,
+                          ]
+                    }
                     // pageCount={data?.total_pages}
                     // totalItems={data?.total_items}
                     // filters={[

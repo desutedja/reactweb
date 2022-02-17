@@ -164,7 +164,6 @@ export default (props) => {
         {isLoading && (
         <div className="col-12 d-flex flex-column justify-content-center align-items-center">
           <ClinkLoader />
-          <span className="mt-2 text-secondary">please wait...</span>
         </div>
         )}
       </div>

@@ -192,7 +192,7 @@ function Component({ view }) {
   return (
     <>
       <Modal
-        width={"850px"}
+        width={"720px"}
         isOpen={modal}
         disableFooter={true}
         toggle={() => setModal(false)}
@@ -202,14 +202,14 @@ function Component({ view }) {
         <div
           style={{
             width: "100%",
-            height: "calc(614 / 1080 * 850px)",
+            height: "calc(614 / 1024 * 720px)",
             overflow: "hidden",
             position: "relative",
           }}
         >
           <div
             style={{
-              height: "calc(164 / 1080 * 850px)",
+              height: "calc(164 / 1024 * 720px)",
               flex: 1,
               position: "absolute",
               right: 0,
