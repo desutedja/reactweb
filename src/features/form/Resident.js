@@ -46,6 +46,7 @@ const residentPayload = {
 }
 
 function Component() {
+
     const { banks } = useSelector(state => state.main);
     const { selected, loading } = useSelector(state => state.resident);
 
@@ -61,7 +62,7 @@ function Component() {
     const [provinces, setProvinces] = useState([]);
 
     const [bcities, setBCities] = useState([]);
-    const [bcloading, setBCLoading] = useState(true);
+    const [bcloading, setBCLoading] = useState(true);      
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -138,7 +139,11 @@ function Component() {
                     <Form className="Form">
                         <Input {...props} onFocus={() => setEmailRegistered(false)} label="Email"
                             placeholder={"Input Resident Email"} type="email" compact />
-                        <Input {...props} label="Phone" prefix="+62" />
+                        <Input {...props} label="Phone" prefix="+62" onKeyPress={(event) => {
+                            if (!/[0-9]/.test(event.key)) {
+                            event.preventDefault();
+                            }
+                        }} />
                         {exist && <button
                             type="button"
                             onClick={() => {
