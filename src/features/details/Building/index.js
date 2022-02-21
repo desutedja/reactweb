@@ -171,15 +171,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
     );
   }, [id, dispatch]);
 
-  useEffect(() => {
-    dispatch(
-      get(setting, (res) => {
-        setSettingData(res.data.data);
-        dispatch(setSelected(res.data.data));
-      })
-    );
-  }, [dispatch]);
-
   return (
     <>
       <Modal
