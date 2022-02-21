@@ -108,13 +108,13 @@ export const editResident = (data, history, id) => (dispatch) => {
   );
 };
 
-export const approvedResident = (row, inputFrom, inputTo, history) => (dispatch) => {
+export const approvedResident = (row, history, periodFrom, periodTo) => (dispatch) => {
   dispatch(startAsync());
 
   dispatch(
     put(
       residentEndpoint + "/upgrade_user",
-      { approved_status:"approved", id: row.id, resident_id : parseInt(row.resident_id), periode_from: inputFrom, periode_to: inputTo },
+      { approved_status:"approved", id: row.id, resident_id : parseInt(row.resident_id), period_from: periodFrom, period_to: periodTo },
       (res) => {
         history && history.push("/get_basicuser");
 

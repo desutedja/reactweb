@@ -132,7 +132,7 @@ function Component() {
               label="Bank"
               name="account_bank"
               autoComplete="off"
-              placeholder="-Pilih Bank-"
+              placeholder="Pilih Bank"
               options={banks}
             />
             <Input

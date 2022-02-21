@@ -7,7 +7,7 @@ function PaymentMethod({ items, id, data }) {
 
   return (
     <Link
-      to={"/" + role + "/payment method/" + id}
+      to={"/" + role + "/paymentmethod/" + id}
       style={{ display: "block", textDecoration: "none", color: "#00000" }}
       className="Item"
     >

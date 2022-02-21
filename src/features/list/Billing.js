@@ -128,7 +128,7 @@ function Component({ view }) {
       get(
         endpointAdmin +
           "/building" +
-          "?limit=100" +
+          "?limit=10" +
           "&page=1" +
           "&search=",
         (res) => {

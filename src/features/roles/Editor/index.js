@@ -128,8 +128,8 @@ const menu = [
   },
   // {
   //   icon: <RiBankCardLine className="MenuItem-icon" />,
-  //   label: "Payment Method",
-  //   path: "/payment method",
+  //   label: "Promo VA",
+  //   path: "/promo VA",
   //   component: <PaymentMethod />,
   // },
   {

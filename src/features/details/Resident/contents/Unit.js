@@ -65,8 +65,8 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
     // setLevel
   ] = useState("main");
   const [status, setStatus] = useState("own");
-  const [periodeFrom, setPeriodeFrom] = useState("");
-  const [periodeTo, setPeriodeTo] = useState("");
+  const [periodFrom, setPeriodFrom] = useState("");
+  const [periodTo, setPeriodTo] = useState("");
 
   const { unit, loading, refreshToggle } = useSelector(
     (state) => state.resident
@@ -193,8 +193,8 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
         owner_id: parseInt(id),
         level: level,
         status: status,
-        period_from: dateTimeFormatter(periodeFrom),
-        period_to: dateTimeFormatter(periodeTo), 
+        period_from: dateTimeFormatter(periodFrom),
+        period_to: dateTimeFormatter(periodTo), 
       })
     );
     setAddUnit(false);
@@ -552,12 +552,12 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
                 {status === "own" ? <>
                 <Input 
                     type="hidden"
-                    inputValue={periodeFrom}
+                    inputValue={periodFrom}
                     setInputValue="2012-12-31 23:59:59"
                   />
                   <Input
                     type="hidden"
-                    inputValue={periodeTo}
+                    inputValue={periodTo}
                     setInputValue="2012-12-31 23:59:59"
                   />
                 </> : 
@@ -566,15 +566,15 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
                     label="Period From"
                     type="date"
                     autoComplete="off"
-                    inputValue={periodeFrom}
-                    setInputValue={setPeriodeFrom}
+                    inputValue={periodFrom}
+                    setInputValue={setPeriodFrom}
                   />
                   <Input
                     label="Period To"
                     type="date"
                     autoComplete="off"
-                    inputValue={periodeTo}
-                    setInputValue={setPeriodeTo}
+                    inputValue={periodTo}
+                    setInputValue={setPeriodTo}
                   />
                 </>
                 }

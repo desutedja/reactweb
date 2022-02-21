@@ -6,9 +6,10 @@ import Table from '../../../components/Table';
 import Breadcrumb from '../../../components/Breadcrumb';
 
 import { setConfirmDelete } from '../../slice';
+import Input from "../../../components/Input";
 
 function Component({ view = false, columns, slice, title = '', getAction, filterVars = [],
-    filters = [], actions = [], approved_status,approvedAction,disapprovedAction, sortBy, pagetitle, withSelection = false, filterExpanded = false,...props }) {
+    filters = [], actions = [], approved_status, approvedAction, disapprovedAction, sortBy, pagetitle, withSelection = false, filterExpanded = false, ...props }) {
 
     const {
         loading,
@@ -18,8 +19,8 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
         refreshToggle
     } = useSelector(state => state[slice]);
 
-    const [inputFrom, setInputFrom] = useState();
-    const [inputTo, setInputTo] = useState();
+    const [periodFrom, setPeriodFrom] = useState("");
+    const [periodTo, setPeriodTo] = useState("");
 
     let dispatch = useDispatch();
 
@@ -58,17 +59,23 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
                                     <strong>{row.status}</strong>
                                 </div>
                                 {row.status === "own" ? null :
-                                <> 
-                                <label>Period From
-                                    <input className='form-control' type="date" value={inputFrom} onChange={setInputFrom} />
-                                </label>
-                                <label>Period To
-                                    <input className='form-control' type="date" value={inputTo} onChange={setInputTo}  />
-                                </label>
-                                </>}
+                                <form>
+                                    <Input 
+                                        label="Period From"
+                                        type="date"
+                                        inputValue={periodFrom}
+                                        setInputValue={setPeriodFrom}
+                                    />
+                                    <Input
+                                        label="Period To"
+                                        type="date"
+                                        inputValue={periodTo}
+                                        setInputValue={setPeriodTo}
+                                    />
+                                </form>}
                             </div>
                         </>,
-                            () => dispatch(approvedAction(row, inputFrom, inputTo))
+                            () => dispatch(approvedAction(row, periodFrom, periodTo))
                         ));
                     } : null}
                     onClickDisapproved={view ? null : disapprovedAction ? row => {
