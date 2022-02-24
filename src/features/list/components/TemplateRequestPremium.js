@@ -9,7 +9,7 @@ import { setConfirmDelete } from '../../slice';
 import Input from "../../../components/Input";
 
 function Component({ view = false, columns, slice, title = '', getAction, filterVars = [],
-    filters = [], actions = [], approved_status, approvedAction, disapprovedAction, sortBy, pagetitle, withSelection = false, filterExpanded = false, ...props }) {
+    filters = [], actions = [], approved_status, periodFrom, periodTo, approvedAction, disapprovedAction, sortBy, pagetitle, withSelection = false, filterExpanded = false, ...props }) {
 
     const {
         loading,
@@ -19,8 +19,8 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
         refreshToggle
     } = useSelector(state => state[slice]);
 
-    const [periodFrom, setPeriodFrom] = useState("");
-    const [periodTo, setPeriodTo] = useState("");
+    const [from, setFrom] = useState(periodFrom);
+    const [to, setTo] = useState(periodTo);
 
     let dispatch = useDispatch();
 
@@ -63,19 +63,19 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
                                     <Input 
                                         label="Period From"
                                         type="date"
-                                        inputValue={periodFrom}
-                                        setInputValue={setPeriodFrom}
+                                        inputValue={from}
+                                        setInputValue={setFrom}
                                     />
                                     <Input
                                         label="Period To"
                                         type="date"
-                                        inputValue={periodTo}
-                                        setInputValue={setPeriodTo}
+                                        inputValue={to}
+                                        setInputValue={setTo}
                                     />
                                 </form>}
                             </div>
                         </>,
-                            () => dispatch(approvedAction(row, periodFrom, periodTo))
+                            () => dispatch(approvedAction(row, from, to))
                         ));
                     } : null}
                     onClickDisapproved={view ? null : disapprovedAction ? row => {

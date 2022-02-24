@@ -7,14 +7,17 @@ import Filter from '../../components/Filter';
 import Pill from '../../components/Pill';
 import {
     getProduct,
+    setSelected,
 } from '../slices/product';
 import { merchant_types, endpointMerchant } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
-import { FiSearch } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiCheck } from 'react-icons/fi';
 import { get } from '../slice';
 import Product from '../../components/cells/Product'; 
 
-import Template from './components/Template';
+import TemplateWithSelection from './components/TemplateWithSelection';
+import Button from '../../components/Button';
+import Modal from '../../components/Modal';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -38,7 +41,7 @@ const columns = [
         {toSentenceCase(row.status)}</Pill> },
 ]
 
-function Component() {
+function Component({view}) {
     const [search, setSearch] = useState('');
 
     const [merchant, setMerchant] = useState('');
@@ -54,6 +57,9 @@ function Component() {
 
     const dispatch = useDispatch();
     const history = useHistory();
+
+    const [multiActionRows, setMultiActionRows] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
 
     useEffect(() => {
         history.location.state && history.location.state.cat && setCat(history.location.state.cat);
@@ -108,106 +114,167 @@ function Component() {
     }, [search])
 
     return (
-        <Template
-            columns={columns}
-            slice='product'
-            getAction={getProduct}
-            filterVars={[merchant, cat, type]}
-            filters={[
-                {
-                    hidex: type === "",
-                    label: <p>{type ? "Type: " + type : "Type: All"}</p>,
-                    delete: () => { setType(""); },
-                    component: (toggleModal) =>
-                        <>
-                            <Filter
-                                data={merchant_types}
-                                onClick={(el) => {
-                                    setType(el.value);
-                                    toggleModal(false);
-                                    setSearch("");
-                                }}
-                                onClickAll={() => {
-                                    setType("");
-                                    toggleModal(false);
-                                    setSearch("");
-                                }}
-                            />
-                        </>
-                },
-                {
-                    hidex: merchant === "",
-                    label: <p>{merchant ? "Merchant: " + merchantName : "Merchant: All"}</p>,
-                    delete: () => { setMerchant(""); },
-                    component: (toggleModal) =>
-                        <>
-                            <Input
-                                label="Search merchant here"
-                                compact
-                                icon={<FiSearch />}
-                                inputValue={search}
-                                setInputValue={setSearch}
-                            />
-                            <Filter
-                                data={merchants}
-                                onClick={(el) => {
-                                    if (!el.value) {
-                                        setLimit(limit + el.restTotal);
-                                        setSearch('');
-                                        return;
-                                    }
-                                    setMerchant(el.value);
-                                    setMerchantName(el.label);
-                                    setLimit(5);
-                                    toggleModal(false);
-                                    setSearch("");
-                                }}
-                                onClickAll={() => {
-                                    setLimit(5);
-                                    setMerchant("");
-                                    setMerchantName("");
-                                    toggleModal(false);
-                                    setSearch("");
-                                }}
-                            />
-                        </>
-                },
-                {
-                    hidex: cat === "",
-                    label: <p>{cat ? "Category: " + catName : "Category: All"}</p>,
-                    delete: () => { setCat(""); },
-                    component: (toggleModal) =>
-                        <>
-                            <Input
-                                label="Search"
-                                compact
-                                icon={<FiSearch />}
-                                inputValue={search}
-                                setInputValue={setSearch}
-                            />
-                            <Filter
-                                data={cats}
-                                onClick={(el) => {
-                                    if (!el.value) {
-                                        setLimit(limit + el.restTotal);
-                                        return;
-                                    }
-                                    setCat(el.value);
-                                    setCatName(el.label);
-                                    toggleModal(false);
-                                    setSearch("");
-                                }}
-                                onClickAll={() => {
-                                    setCat("");
-                                    setCatName("");
-                                    toggleModal(false);
-                                    setSearch("");
-                                }}
-                            />
-                        </>
-                },
-            ]}
-        />
+        <>
+            <Modal
+                isOpen={openModal}
+                disableHeader={true}
+                btnDanger
+                onClick={() => {
+                // dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
+                setOpenModal(false);
+                }}
+                toggle={() => {
+                setOpenModal(false);
+                }}
+                okLabel={"Yes"}
+                cancelLabel={"Cancel"}
+            >
+                This Feature is under development. Stay Tuned..
+            </Modal>
+            <TemplateWithSelection
+                columns={columns}
+                slice='product'
+                getAction={getProduct}
+                selectAction={(selectedRows) => {
+                    const selectedRowIds = [];
+                    selectedRows.map((row) => {
+                    if (row !== undefined){
+                        selectedRowIds.push({
+                        merchant_id:row.id,
+                        });
+                    }
+                    });    
+                    setMultiActionRows([...selectedRowIds]);
+                    console.log(selectedRowIds);
+                }}
+                filterVars={[merchant, cat, type]}
+                filters={[
+                    {
+                        hidex: type === "",
+                        label: <p>{type ? "Type: " + type : "Type: All"}</p>,
+                        delete: () => { setType(""); },
+                        component: (toggleModal) =>
+                            <>
+                                <Filter
+                                    data={merchant_types}
+                                    onClick={(el) => {
+                                        setType(el.value);
+                                        toggleModal(false);
+                                        setSearch("");
+                                    }}
+                                    onClickAll={() => {
+                                        setType("");
+                                        toggleModal(false);
+                                        setSearch("");
+                                    }}
+                                />
+                            </>
+                    },
+                    {
+                        hidex: merchant === "",
+                        label: <p>{merchant ? "Merchant: " + merchantName : "Merchant: All"}</p>,
+                        delete: () => { setMerchant(""); },
+                        component: (toggleModal) =>
+                            <>
+                                <Input
+                                    label="Search merchant here"
+                                    compact
+                                    icon={<FiSearch />}
+                                    inputValue={search}
+                                    setInputValue={setSearch}
+                                />
+                                <Filter
+                                    data={merchants}
+                                    onClick={(el) => {
+                                        if (!el.value) {
+                                            setLimit(limit + el.restTotal);
+                                            setSearch('');
+                                            return;
+                                        }
+                                        setMerchant(el.value);
+                                        setMerchantName(el.label);
+                                        setLimit(5);
+                                        toggleModal(false);
+                                        setSearch("");
+                                    }}
+                                    onClickAll={() => {
+                                        setLimit(5);
+                                        setMerchant("");
+                                        setMerchantName("");
+                                        toggleModal(false);
+                                        setSearch("");
+                                    }}
+                                />
+                            </>
+                    },
+                    {
+                        hidex: cat === "",
+                        label: <p>{cat ? "Category: " + catName : "Category: All"}</p>,
+                        delete: () => { setCat(""); },
+                        component: (toggleModal) =>
+                            <>
+                                <Input
+                                    label="Search"
+                                    compact
+                                    icon={<FiSearch />}
+                                    inputValue={search}
+                                    setInputValue={setSearch}
+                                />
+                                <Filter
+                                    data={cats}
+                                    onClick={(el) => {
+                                        if (!el.value) {
+                                            setLimit(limit + el.restTotal);
+                                            return;
+                                        }
+                                        setCat(el.value);
+                                        setCatName(el.label);
+                                        toggleModal(false);
+                                        setSearch("");
+                                    }}
+                                    onClickAll={() => {
+                                        setCat("");
+                                        setCatName("");
+                                        toggleModal(false);
+                                        setSearch("");
+                                    }}
+                                />
+                            </>
+                    },
+                ]}
+                renderActions={view ? null : (selectedRowIds) => {
+                    return [
+                    <Button
+                        label="On/Off Product"
+                        disabled={Object.keys(selectedRowIds).length === 0}
+                        icon={<FiCheck />}
+                        onClick={() =>
+                                setOpenModal(true)
+                        //   {
+                        //     confirmAlert({
+                        //       title: 'Set as Paid Billing',
+                        //       message: 'Do you want to set selected unit as Paid?',
+                        //       buttons: [
+                        //         {
+                        //           label: 'Yes',
+                        //           onClick: () => {
+                        //             dispatch(updateSetAsPaidSelected(multiActionRows));
+                        //           },
+                        //           className:"Button btn btn-secondary"
+                        //         },
+                        //         {
+                        //           label: 'Cancel',
+                        //           className:"Button btn btn-cancel"
+                        //         }
+                        //       ]
+                        //     });
+                        //   }
+                        }
+                    />,
+                ]}
+            }
+            />
+        </>
     )
 }
 
