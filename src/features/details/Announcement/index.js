@@ -1,7 +1,7 @@
 import React, { useCallback, useState, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useRouteMatch, useParams } from "react-router-dom";
-import { dateTimeFormatter, toSentenceCase } from "../../../utils";
+import { dateTimeFormatter, dateTimeFormatterScheduler, toSentenceCase } from "../../../utils";
 
 import { FiCopy, FiArrowUpCircle, FiTrash, FiImage } from "react-icons/fi";
 import Detail from "../components/Detail";
@@ -143,7 +143,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
         {
           label: "publish_schedule",
           lfmt: () => "Schedule Publish Date",
-          vfmt: (val) => (val ? dateTimeFormatter(val, "-") : "-"),
+          vfmt: (val) => (val ? dateTimeFormatterScheduler(val, "-") : "-"),
         },
       ],
     }),

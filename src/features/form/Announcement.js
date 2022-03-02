@@ -11,7 +11,7 @@ import Input from "./input";
 import { Form } from "formik";
 import { announcementSchema } from "./services/schemas";
 import SubmitButton from "./components/SubmitButton";
-import { toSentenceCase } from "../../utils";
+import { dateTimeFormatter, inputDateTimeFormatter, toSentenceCase } from "../../utils";
 import moment from "moment";
 
 
@@ -281,9 +281,10 @@ function Component() {
             values.consumer_role === "merchant"
               ? values.merchant.map((el) => el.value)
               : [],
+          publish_schedule: inputDateTimeFormatter(values.publish_schedule),
         })}
         edit={(data) => {
-          //console.log(data);
+          console.log(data);
           dispatch(editAnnouncement(data, history, selected.id, "sa"));
         }}
         add={(data) => {
@@ -429,8 +430,8 @@ function Component() {
               />
               <Input
                 {...props}
-                label="Schedule"
                 type="datetime-local"
+                label="Schedule"
                 name="publish_schedule"
               />
               <Input

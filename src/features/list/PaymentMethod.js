@@ -47,12 +47,12 @@ const columns = [
           <div>
           {
           row.fee_type === "percentage" ?
-            toSentenceCase(row.fee_type) + " = " + row.percentage + "%"
+            toSentenceCase(row.fee_type) + " : " + row.percentage + "%"
           :
           row.fee_type === "fee" ?
-            toSentenceCase(row.fee_type) + " = " + row.fee
+            toSentenceCase(row.fee_type) + " : " + row.fee
           :
-            toSentenceCase(row.fee_type) + " = " + (parseInt(row.fee) + parseInt(row.fee * (row.percentage / 100)))
+            toSentenceCase(row.fee_type) + " : " + (parseInt(row.fee) + parseInt(row.fee * (row.percentage / 100)))
           }
           
           </div>
