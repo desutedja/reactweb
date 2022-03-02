@@ -126,12 +126,12 @@ const menu = [
     path: "/vouchers",
     component: <Vouchers />,
   },
-  // {
-  //   icon: <RiBankCardLine className="MenuItem-icon" />,
-  //   label: "Promo VA",
-  //   path: "/promo VA",
-  //   component: <PaymentMethod />,
-  // },
+  {
+    icon: <RiBankCardLine className="MenuItem-icon" />,
+    label: "Promo VA",
+    path: "/promo VA",
+    component: <PaymentMethod />,
+  },
   {
     icon: <FiShoppingCart className="MenuItem-icon" />,
     label: "Transaction",

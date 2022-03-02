@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { dateTimeFormatterCell, toMoney, toSentenceCase } from "../../utils";
 import { endpointAdmin } from "../../settings";
-import { get } from "../slice";
+import { get, setConfirmDelete, post, del } from "../slice";
 
 import Table from "../../components/Table";
 import Breadcrumb from "../../components/Breadcrumb";
@@ -12,6 +12,11 @@ import { setSelected } from "../slices/vouchers";
 import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
+import PaymentMethod from "../../components/cells/PaymentMethod";
+import { deleteVA, editVA } from "../slices/paymentmethod";
+import Modal from "../../components/Modal"
+import Input from "../../components/Input"
+import MultiSelectInput from "../form/input/MultiSelect";
 
 
 const columns = [
@@ -20,7 +25,13 @@ const columns = [
   {
     Header: "Bank",
     accessor: (row) => (
-      <b>{toSentenceCase(row.provider)}</b>
+      <PaymentMethod
+        id={row.id}
+        data={row}
+        items={[
+          <b>{toSentenceCase(row.provider)}</b>
+        ]}
+      />
     ),
   },
   {
@@ -34,10 +45,16 @@ const columns = [
       return (
         <div>
           <div>
-            Fee : <b>{row.fee}</b>
-          </div>
-          <div>
-            Markup : <b>None</b>
+          {
+          row.fee_type === "percentage" ?
+            toSentenceCase(row.fee_type) + " = " + row.percentage + "%"
+          :
+          row.fee_type === "fee" ?
+            toSentenceCase(row.fee_type) + " = " + row.fee
+          :
+            toSentenceCase(row.fee_type) + " = " + (parseInt(row.fee) + parseInt(row.fee * (row.percentage / 100)))
+          }
+          
           </div>
         </div>
       );
@@ -88,7 +105,7 @@ const columns = [
   },
 ];
 
-function Component({ view, title = '', pagetitle }) {
+function Component({ view, title = '', pagetitle, canDelete }) {
   const [startdate, setStartDate] = useState("");
   const [enddate, setEndDate] = useState("");
   const [buildingid, setBuildingid] = useState("");
@@ -97,6 +114,15 @@ function Component({ view, title = '', pagetitle }) {
   const [data, setData] = useState({ items: [] });
   const [type, setType] = useState("");
   const [typeLabel, setTypeLabel] = useState("");
+  const [toggle, setToggle] = useState(false);
+  const { role } = useSelector((state) => state.auth);
+  const [updatePromoModal, setUpdatePromoModal] = useState(false);
+  const [startPromo, setStartPromo] = useState("");
+  const [endPromo, setEndPromo] = useState("");
+  const [dataPromo, setDataPromo] = useState({ items: [] });
+  const [bManagements, setBManagements] = useState([]);
+  const [dataBanks, setDataBanks] = useState([]);
+  const [inBuildings, setBuildings] = useState([]);
 
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(10);
@@ -109,40 +135,181 @@ function Component({ view, title = '', pagetitle }) {
   let history = useHistory();
   let { url } = useRouteMatch();
 
+  // useEffect(() => {
+  //   dispatch(
+  //     get(endpointAdmin + "/centratama/vouchers/list?name=" + search, (res) => {
+  //       let data = res.data.data;
+  //       let formatted = data.map((el) => ({ label: el.name, value: el.name }));
+  //       let limited = formatted.slice(0, limit);
+
+  //       const restTotal = formatted.length - limited.length;
+  //       const valueLimit = 5;
+
+  //       if (limited.length < formatted.length) {
+  //         limited.push({
+  //           label:
+  //             "load " +
+  //             (restTotal > valueLimit ? valueLimit : restTotal) +
+  //             " more",
+  //           className: "load-more",
+  //           restTotal: restTotal > valueLimit ? valueLimit : restTotal,
+  //         });
+  //       }
+
+  //       setCats(limited);
+  //     })
+  //   );
+  // }, [dispatch, limit, search]);
+
+  // useEffect(() => {
+  //   if (search.length === 0) {
+  //     setLimit(5);
+  //   }
+  // }, [search]);
+
   useEffect(() => {
     dispatch(
-      get(endpointAdmin + "/centratama/vouchers/list?name=" + search, (res) => {
-        let data = res.data.data;
-        let formatted = data.map((el) => ({ label: el.name, value: el.name }));
-        let limited = formatted.slice(0, limit);
+      get(
+        endpointAdmin +
+          "/management/building" +
+          "?limit=10&page=1" +
+          "&search=",
+        (res) => {
+          let data = res.data.data.items;
 
-        const restTotal = formatted.length - limited.length;
-        const valueLimit = 5;
+          let formatted = data.map((el) => ({
+            label: el.building_name + " by " + el.management_name,
+            value: el.id,
+          }));
 
-        if (limited.length < formatted.length) {
-          limited.push({
-            label:
-              "load " +
-              (restTotal > valueLimit ? valueLimit : restTotal) +
-              " more",
-            className: "load-more",
-            restTotal: restTotal > valueLimit ? valueLimit : restTotal,
-          });
+          setBManagements(formatted);
         }
-
-        setCats(limited);
-      })
+      )
     );
-  }, [dispatch, limit, search]);
+  }, [dispatch]);
 
   useEffect(() => {
-    if (search.length === 0) {
-      setLimit(5);
-    }
-  }, [search]);
+    dispatch(
+      get(endpointAdmin + "/paymentperbuilding/list/payment_method", (res) => {
+        const banks = res.data.data.items.map((el) => ({
+          value: el.id,
+          label: toSentenceCase(el.provider),
+        }));
+
+        // console.log(banks)
+
+        dispatch(setDataBanks(banks));
+      })
+    );
+  }, [dispatch]);
+
+  useEffect(() => {
+    
+    dispatch(
+      get(
+        endpointAdmin +
+        "/paymentperbuilding/list?status=all" +
+        "&start_date=" +
+        startdate +
+        "&end_date=" +
+        enddate + 
+        "&building_id=" + 
+        buildingid +
+        "&bank=" +
+        bank +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&limit=" + 
+        limit,
+
+        (res) => {
+          console.log(res.data.data);
+          setDataPromo(res.data.data);
+        }
+      )
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch]);
 
   return (
     <>
+      <Modal
+        title="Update Promo"
+        isOpen={updatePromoModal}
+        toggle={() => setUpdatePromoModal(false)}
+        okLabel="Submit"
+        onClick={() => {
+          setUpdatePromoModal(false);
+          dispatch(
+            editVA({
+              // payment_perbuilding_id: dataPromo.id,
+              // start_date: startPromo,
+              // end_date: endPromo,
+            })
+          );
+        }}
+        cancelLabel="Cancel"
+        onClickSecondary={() => {
+          setUpdatePromoModal(false);
+        }}
+      >
+        Change schedule for this promo
+            {/* <MultiSelectInput    
+              // type="multiselect"
+              label="Bank"
+              name="account_bank"
+              autoComplete="off"
+              placeholder={dataPromo.provider}
+              options={dataBanks}
+            />
+            <MultiSelectInput
+            
+              // type="multiselect"
+              label="Building Management"
+              name="building_management_id"
+              autoComplete="off"
+              placeholder={dataPromo.name}
+              options={bManagements}
+            />
+            <MultiSelectInput
+            
+              label="Fee Type"
+              name="fee_type"
+              autoComplete="off"
+              placeholder={dataPromo.fee_type}
+              options={[
+                { value: "fee", label: "Fee" },
+                { value: "percentage", label: "Percentage" },
+                { value: "combination", label: "Combination" },
+              ]}
+            />
+            {(dataPromo.fee_type) === "fee" ?
+              <>
+                <Input label="Fee" name="fee" autoComplete="off" suffix="Rp" />
+              </>
+              : (dataPromo.fee_type) === "percentage" ?
+              <>
+                <Input label="Percentage" name="percentage" autoComplete="off" suffix="%" />
+              </>
+              : (dataPromo.fee_type) === "combination" ?
+              <>
+                <Input label="Fee" name="fee" autoComplete="off" suffix="Rp" />
+                <Input label="Percentage" name="percentage" autoComplete="off" suffix="%" />
+              </>
+              : null
+            }
+        <Input 
+            label="Start Date"
+            type="date"
+            inputValue={startPromo}
+            setInputValue={setStartPromo}
+        />
+        <Input 
+            label="End Date"
+            type="date"
+            inputValue={endPromo}
+            setInputValue={setEndPromo}
+        /> */}
+      </Modal>
       <h2 style={{ marginLeft: '16px' }}>{pagetitle}</h2>
             <Breadcrumb title={title} />
             <div className="Container">
@@ -164,7 +331,7 @@ function Component({ view, title = '', pagetitle }) {
                         dispatch(
                           get(
                             endpointAdmin +
-                            "/building/getpaymentchannel?status=all" +
+                            "/paymentperbuilding/list?status=all" +
                             "&start_date=" +
                             startdate +
                             "&end_date=" +
@@ -189,6 +356,34 @@ function Component({ view, title = '', pagetitle }) {
                       [dispatch, buildingid, bank, startdate, enddate]
                     )}
                     loading={loading}
+                    onClickChange={
+                      view
+                        ? null
+                        : (row) => {
+                          
+                          dispatch(setSelected(row));
+                          history.push(url + "/edit");
+                          console.log(row)
+                        }
+                          
+                    }
+                    onClickStop={
+                      view
+                        ? null
+                        : role === "bm" && !canDelete
+                        ? null
+                        : (row) => {
+                            dispatch(
+                              setConfirmDelete(
+                                // "Are you sure to end this promo?",
+                                "Feature still under development",
+                                () => {
+                                  // dispatch(deleteVA(row));
+                                }
+                              )
+                            );
+                          }
+                    }
                     actions={
                       view
                         ? null

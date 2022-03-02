@@ -43,38 +43,38 @@ export const {
 
 export default slice.reducer;
 
-export const getPaymentMethod = (
-  startdate ="",
-  enddate ="",
-  buildingid ="",
-  bank ="",
-) => (dispatch) => {
-  dispatch(startAsync());
+// export const getPaymentMethod = (
+//   startdate ="",
+//   enddate ="",
+//   buildingid ="",
+//   bank ="",
+// ) => (dispatch) => {
+//   dispatch(startAsync());
 
-  dispatch(
-    get(
-      paymentEndpoint +
-        "/getpaymentchannel?status=all" +
-        "&start_date=" +
-        startdate +
-        "&end_date=" +
-        enddate + 
-        "&building_id=" + 
-        buildingid +
-        "&bank=" +
-        bank,
+//   dispatch(
+//     get(
+//       paymentEndpoint +
+//         "/getpaymentchannel?status=all" +
+//         "&start_date=" +
+//         startdate +
+//         "&end_date=" +
+//         enddate + 
+//         "&building_id=" + 
+//         buildingid +
+//         "&bank=" +
+//         bank,
 
-      (res) => {
-        dispatch(setData(res.data.data));
+//       (res) => {
+//         dispatch(setData(res.data.data));
 
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+//         dispatch(stopAsync());
+//       },
+//       (err) => {
+//         dispatch(stopAsync());
+//       }
+//     )
+//   );
+// };
 
 // export const getVoucherDetails = (row, history, url) => (dispatch) => {
 //   dispatch(startAsync());
@@ -95,31 +95,87 @@ export const getPaymentMethod = (
 //   );
 // };
 
-// export const createVoucher = (data, history) => (dispatch) => {
-//   dispatch(startAsync());
+export const createVA = (data, history) => (dispatch) => {
+  dispatch(startAsync());
 
-//   dispatch(
-//     post(
-//       voucherEndpoint,
-//       data,
-//       (res) => {
-//         history.push("/sa/vouchers");
+  dispatch(
+    post(
+      endpointAdmin + '/paymentperbuilding',
+      data,
+      (res) => {
+        history.push("/sa/promo VA");
 
-//         dispatch(
-//           setInfo({
-//             color: "success",
-//             message: "Vouchers has been created.",
-//           })
-//         );
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Promo VA has been created.",
+          })
+        );
 
-//         dispatch(stopAsync());
-//       },
-//       (err) => {
-//         dispatch(stopAsync());
-//       }
-//     )
-//   );
-// };
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const editVA = (data, history) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      endpointAdmin + '/paymentperbuilding',
+      data,
+      (res) => {
+        history.push("/sa/promo VA");
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Promo VA has been updated.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const deleteVA = (row, history) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    del(
+        endpointAdmin +
+          "/paymentperbuilding",
+          row.id,
+      (res) => {
+        history && history.push("/" + auth.role + "/Promo VA");
+
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Promo has been deleted.",
+          })
+        );
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
 
 // export const editVoucher = (data, history, id) => (dispatch) => {
 //   dispatch(startAsync());

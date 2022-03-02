@@ -81,11 +81,8 @@ const info = {
   ],
 };
 
-const voucherCodes = {
-  Information: ["copic_name", "pic_phone", "pic_mail"],
-};
 
-function Component({ view }) {
+function Component({ view, canUpdate }) {
   const [data, setData] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [confirmDistribute, setConfirmDistribute] = useState(false);
@@ -97,48 +94,6 @@ function Component({ view }) {
   let dispatch = useDispatch();
   let history = useHistory();
   let { id } = useParams();
-  const columnsCodes = [
-    { Header: "ID", accessor: (row) => row.id },
-    { Header: "Voucher Code", accessor: "voucher_code" },
-    {
-      Header: "Usage",
-      accessor: (row) => {
-        const sum = row.categories.reduce((a, b) => a + (b.usage || 0), 0);
-        // row.categories;
-        return sum;
-      },
-    },
-    {
-      Header: "Limit",
-      accessor: (row) => {
-        const sum = row.categories.reduce((a, b) => a + (b.limit || 0), 0);
-        // row.categories;
-        return sum;
-      },
-    },
-    {
-      Header: "Distributed",
-      accessor: (row) => {
-        return row.distributed === "y" ? "Yes" : "No";
-      },
-    },
-    {
-      Header: "Distribute",
-      accessor: (row) => {
-        return (
-          <Button
-            disabled={row.distributed === "y" ? true : false}
-            icon={<FiCheck />}
-            label="Distribute Voucher"
-            onClick={() => {
-              setVoucherCodeId(row.id);
-              setConfirmDistribute(true);
-            }}
-          />
-        );
-      },
-    },
-  ];
 
   useEffect(() => {
     dispatch(
@@ -196,62 +151,16 @@ function Component({ view }) {
         title={data.name}
         phone={data.phone}
         loading={!data.id}
-        labels={["Details", "Voucher Codes"]}
+        labels={["Details"]}
         contents={[
           <>
             <Detail
               view={view}
               data={data}
               labels={info}
-              editable={false}
+              editable={canUpdate}
               // onDelete={() => setConfirmDelete(true)}
             />
-            {categories.length > 0 && (
-              <>
-                <div
-                  style={{
-                    color: "grey",
-                    borderBottom: "1px solid silver",
-                    width: 200,
-                    marginBottom: 8,
-                    marginLeft: 4,
-                  }}
-                >
-                  Category
-                </div>
-                <Table
-                  expander={false}
-                  noSearch={true}
-                  pagination={false}
-                  columns={columnsCategories}
-                  data={categories}
-                />
-              </>
-            )}
-          </>,
-          <>
-            {codes.length > 0 && (
-              <>
-                <div
-                  style={{
-                    color: "grey",
-                    borderBottom: "1px solid silver",
-                    width: 200,
-                    marginBottom: 8,
-                    marginLeft: 4,
-                  }}
-                >
-                  Voucher Codes
-                </div>
-                <Table
-                  expander={false}
-                  noSearch={true}
-                  pagination={false}
-                  columns={columnsCodes}
-                  data={codes}
-                />
-              </>
-            )}
           </>,
           // <Detail view={view} data={data} labels={voucherCodes} />,
         ]}

@@ -12,6 +12,8 @@ import { Form } from "formik";
 import { announcementSchema } from "./services/schemas";
 import SubmitButton from "./components/SubmitButton";
 import { toSentenceCase } from "../../utils";
+import moment from "moment";
+
 
 const announcementPayload = {
   title: "",
@@ -23,6 +25,7 @@ const announcementPayload = {
   description: "",
   building_unit: [],
   merchant: [],
+  publish_schedule: "2022-01-01T06:00:01",
 };
 
 const roles = [
@@ -241,6 +244,7 @@ function Component() {
             )}`,
             value: el.building_section_id,
           })),
+        publish_schedule: selected.publish_schedule ? selected.publish_schedule : "2022-01-01T06:00:01" ,
       }
     : announcementPayload;
 
@@ -422,6 +426,12 @@ function Component() {
                 name="image"
                 placeholder="Image URL"
                 hint="Preferred size for maximum result is 1:2"
+              />
+              <Input
+                {...props}
+                label="Schedule"
+                type="datetime-local"
+                name="publish_schedule"
               />
               <Input
                 {...props}

@@ -5,7 +5,7 @@ import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
-    FiEdit, FiCheck, FiUserPlus, FiMessageSquare, FiFilter, FiList, FiArrowDown, FiArrowUp, FiPlus, FiX,
+    FiEdit, FiCheck, FiUserPlus, FiMessageSquare, FiFilter, FiList, FiArrowDown, FiArrowUp, FiPlus, FiX, FiCalendar, FiStopCircle,
 } from 'react-icons/fi'
 import {
     FaCaretRight, FaCaretDown,
@@ -37,6 +37,8 @@ function Table({
     onClickDelete,
     onClickDetails,
     onClickEdit,
+    onClickChange,
+    onClickStop,
     onClickAddBilling,
     onClickApproved,
     onClickDisapproved,
@@ -298,6 +300,16 @@ function Table({
                                         onClick: () => onClickEdit(row.original),
                                         name: "Edit",
                                         icon: <FiEdit />,
+                                    } : ""),
+                                    (onClickChange ? {
+                                        onClick: () => onClickChange(row.original),
+                                        name: "Change",
+                                        icon: <FiCalendar />,
+                                    } : ""),
+                                    (onClickStop ? {
+                                        onClick: () => onClickStop(row.original),
+                                        name: "Stop Promo",
+                                        icon: <FiStopCircle />,
                                     } : ""),
                                     (onClickDelete ? {
                                         name: "Delete",

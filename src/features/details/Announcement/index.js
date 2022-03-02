@@ -139,6 +139,13 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
           },
         },
       ],
+      Schedule: [
+        {
+          label: "publish_schedule",
+          lfmt: () => "Schedule Publish Date",
+          vfmt: (val) => (val ? dateTimeFormatter(val, "-") : "-"),
+        },
+      ],
     }),
     [data]
   );

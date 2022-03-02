@@ -179,6 +179,17 @@ export const voucherSchema = Yup.object().shape({
   building_management_id: Number,
 });
 
+export const promoVaSchema = Yup.object().shape({
+  // account_bank: Text,
+  // building_management_id: Text,
+  fee_type: Text,
+  fee: Number,
+  percentage: Number,
+  markup: Number,
+  start_date: Text,
+  endd_ate: Text,
+});
+
 export const adsSchema = Yup.object().shape({
   appear_as: Text,
   media: Text,
