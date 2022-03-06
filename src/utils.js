@@ -157,6 +157,16 @@ export function inputDateTimeFormatter(serverDateTime, whenzero = "-") {
 }
 
 // all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
+export function updateDateTimeFormatter(serverDateTime, whenzero = "-") {
+  if (!serverDateTime) return whenzero;
+  if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
+
+  return (
+    moment.utc(serverDateTime).format("YYYY-MM-DDThh:mm:ss")
+  );
+}
+
+// all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function timeFormatter(serverDateTime, whenzero = "-", plusHour = 0) {
   if (!serverDateTime) return whenzero;
   if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;

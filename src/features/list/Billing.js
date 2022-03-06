@@ -22,6 +22,9 @@ import {
   setSelected,
   updateBillingPublish,
   updateSetAsPaidSelected,
+  refresh,
+  startAsync,
+  stopAsync
 } from "../slices/billing";
 import { endpointAdmin, endpointBilling, online_status} from "../../settings";
 import { toSentenceCase, toMoney } from "../../utils";
@@ -37,6 +40,10 @@ function Component({ view }) {
   const { role, user } = useSelector((state) => state.auth);
 
   const [modalPublish, toggleModalPublish] = useState(false);
+  const [openReleaseWithSchedule, setOpenReleaseWithSchedule] = useState(false);
+  const [type, setType] = useState("now");
+  const [selectWithImage, setSelectWithImage] = useState("n");
+  const [schedule, setSchedule] = useState("");
   const handleShow = () => toggleModalPublish(true);
   const [buildingRelease, setBuildingRelease] = useState("");
 
@@ -329,7 +336,8 @@ function Component({ view }) {
               "building_id": '' +buildingRelease,
               "year": '' +year,
               "month": '' +month,
-              "with_image": ''+withImage
+              "with_image": '' +selectWithImage,
+              "schedule_publish": '' + schedule,
             }, res => {
                 console.log(res.data.data);
                 dispatch(
@@ -349,6 +357,8 @@ function Component({ view }) {
               console.log("error");
             }))
 
+            dispatch(refresh());
+            dispatch(stopAsync());
             toggleModalPublish(false)
         }}
       >
@@ -372,11 +382,118 @@ function Component({ view }) {
             title='Year List'
         />
 
-        <Input
+        {/* <Input
             label="With Image" inputValue={withImage}
             type="select" options={yesno} setInputValue={setWithImage}
             title='With Image'
+        /> */}
+
+        <Input
+            label="Choose Release Schedule"
+            type="radio"
+            name="release_type"
+            options={[
+              { value: "now", label: "Now" },
+              { value: "othe", label: "Other" },
+            ]}
+            inputValue={type}
+            setInputValue={setType}
+        /> 
+
+        {type === "now" ? null :    
+        <Input
+            type="date"
+            label="Schedule"
+            name="publish_schedule"
+            inputValue={schedule}
+            setInputValue={setSchedule}
         />
+        }  
+
+        <Input
+            label="Release with image from catat meter?"
+            type="radio"
+            name="with_image"
+            options={[
+              { value: "y", label: "Yes" },
+              { value: "n", label: "No" },
+            ]}
+            inputValue={selectWithImage}
+            setInputValue={setSelectWithImage}
+        /> 
+
+      </Modal>
+
+      <Modal
+          isOpen={openReleaseWithSchedule}
+          toggle={() => { setOpenReleaseWithSchedule(false) }}
+          title="Release Billing"
+          okLabel={"Yes, Submit"}
+          onClick={() => {
+            dispatch(startAsync());
+            dispatch(post(endpointBilling+"/management/billing/publish-billing", {
+              multiActionRows,
+              "with_image": ''+selectWithImage,
+              "schedule_publish": ''+schedule
+            }, res => {
+                console.log(res.data.data);
+                dispatch(
+                  setInfo({
+                    color: "success",
+                    message: `${res.data.data} billing has been set to released.`,
+                  })
+                );
+                // resultComponent ? setOpenRes(true) : toggle();
+            dispatch(refresh());
+            dispatch(stopAsync());
+            }, err => {
+              dispatch(
+                setInfo({
+                  color: "error",
+                  message: `Error to released.`,
+                })
+              );
+              console.log("error");
+            }))
+
+            setOpenReleaseWithSchedule(false)
+        }}
+      >
+
+        <Input
+            label="Choose Release Schedule"
+            type="radio"
+            name="release_type"
+            options={[
+              { value: "now", label: "Now" },
+              { value: "other", label: "Other" },
+            ]}
+            inputValue={type}
+            setInputValue={setType}
+        /> 
+
+        {type === "now" ? null :    
+        <Input
+            type="date"
+            label="Schedule"
+            name="publish_schedule"
+            inputValue={schedule}
+            setInputValue={setSchedule}
+        />
+        }  
+
+        <Input
+            label="Release with image from catat meter?"
+            type="radio"
+            name="with_image"
+            options={[
+              { value: "y", label: "Yes" },
+              { value: "n", label: "No" },
+            ]}
+            inputValue={selectWithImage}
+            setInputValue={setSelectWithImage}
+        />  
+
       </Modal>
 
       <UploadModal
@@ -529,30 +646,64 @@ function Component({ view }) {
                     icon={<FiUpload />}
                     onClick={() => 
                       {
-                        confirmAlert({
-                          title: 'Release Billing',
-                          message: 'Do you want to release this billing with image from Catat Meter?',
-                          buttons: [
-                            {
-                              label: 'Yes, with image',
-                              onClick: () => {
-                                dispatch(updateBillingPublish(multiActionRows,"yes"));
-                              },
-                              className:"Button btn btn-secondary"
-                            },
-                            {
-                              label: 'No, without image',
-                              onClick: () => {
-                                dispatch(updateBillingPublish(multiActionRows,"no"));
-                              },
-                              className:"Button btn btn-custom"
-                            },
-                            {
-                              label: 'Cancel',
-                              className:"Button btn btn-cancel"
-                            }
-                          ]
-                        });
+                        setOpenReleaseWithSchedule(true)
+                        // confirmAlert({
+                        //   title: 'Release Billing',
+                        //   message:
+                        //   <>
+                        //       <Input
+                        //           label="Choose Release Schedule"
+                        //           type="radio"
+                        //           name="release_type"
+                        //           options={[
+                        //             { value: "now", label: "Now" },
+                        //             { value: "othe", label: "Other" },
+                        //           ]}
+                        //       />     
+                        //       {/* {values.release_type === "other" ? */}
+                        //       <Input
+                        //           type="datetime-local"
+                        //           label="Schedule"
+                        //           name="publish_schedule"
+                        //           inputValue={schedule}
+                        //           setInputValue={setSchedule}
+                        //       />  
+                        //       {/* : null
+                        //       } */}
+                        //       <Input
+                        //           label="Release with image from catat meter?"
+                        //           type="radio"
+                        //           name="release_type"
+                        //           options={[
+                        //             { value: "yes", label: "Yes" },
+                        //             { value: "no", label: "No" },
+                        //           ]}
+                        //           inputValue={selectWithImage}
+                        //           setInputValue={setSelectWithImage}
+                        //       />     
+                        //   </>,
+                        //   buttons: [
+                        //     {
+                        //       label: 'Yes, with image',
+                        //       onClick: () => {
+                        //         // dispatch(updateBillingPublish(multiActionRows,"yes"));
+                        //         dispatch(updateBillingPublish(multiActionRows,with_image = selectWithImage,schedule_publish = schedule));
+                        //       },
+                        //       className:"Button btn btn-secondary"
+                        //     },
+                        //     // {
+                        //     //   label: 'No, without image',
+                        //     //   onClick: () => {
+                        //     //     dispatch(updateBillingPublish(multiActionRows,"no"));
+                        //     //   },
+                        //     //   className:"Button btn btn-custom"
+                        //     // },
+                        //     {
+                        //       label: 'Cancel',
+                        //       className:"Button btn btn-cancel"
+                        //     }
+                        //   ]
+                        // });
                       }
                     }
                   />,

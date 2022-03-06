@@ -13,6 +13,7 @@ import { Form } from 'formik';
 import { residentSchema } from "./services/schemas";
 import Input from './input';
 import SubmitButton from './components/SubmitButton';
+import Modal from '../../components/Modal';
 
 const residentPayload = {
     email: "",
@@ -49,6 +50,7 @@ function Component() {
 
     const { banks } = useSelector(state => state.main);
     const { selected, loading } = useSelector(state => state.resident);
+    const [modalReason, setModalReason] = useState(false);
 
     const [emailRegistered, setEmailRegistered] = useState(false);
     const [exist, setExist] = useState(selected.id ? false : true);
@@ -114,6 +116,75 @@ function Component() {
     }, [dispatch]);
 
     return (
+        <>
+        <Modal
+            isOpen={modalReason}
+            toggle={() => { setModalReason(false) }}
+            title="Release Billing"
+            okLabel={"Yes, Submit"}
+            onClick={() => {
+            //   dispatch(post(endpointBilling+"/management/billing/publish-billing-building", {
+            //     "building_id": '' +buildingRelease,
+            //     "year": '' +year,
+            //     "month": '' +month,
+            //     "with_image": ''+withImage
+            //   }, res => {
+            //       console.log(res.data.data);
+            //       dispatch(
+            //         setInfo({
+            //           color: "success",
+            //           message: `${res.data.data} billing has been set to released.`,
+            //         })
+            //       );
+            //       // resultComponent ? setOpenRes(true) : toggle();
+            //   }, err => {
+            //     dispatch(
+            //       setInfo({
+            //         color: "error",
+            //         message: `Error to released.`,
+            //       })
+            //     );
+            //     console.log("error");
+            //   }))
+  
+              setModalReason(false)
+          }}
+        >
+  
+          <Input
+              label="Choose Release Schedule"
+              type="radio"
+              name="release_type"
+              options={[
+                { value: "now", label: "Now" },
+                { value: "othe", label: "Other" },
+              ]}
+            //   inputValue={type}
+            //   setInputValue={setType}
+          /> 
+  
+          {/* {type === "now" ? null :     */}
+          <Input
+              type="date"
+              label="Schedule"
+              name="publish_schedule"
+          />
+          {/* }   */}
+  
+          <Input
+              label="Release with image from catat meter?"
+              type="radio"
+              name="with_image"
+              options={[
+                { value: "y", label: "Yes" },
+                { value: "n", label: "No" },
+              ]}
+            //   inputValue={selectWithImage}
+            //   setInputValue={setSelectWithImage}
+          />  
+  
+        </Modal>
+  
         <Template
             slice="resident"
             payload={state?.email ? {
@@ -130,14 +201,14 @@ function Component() {
                 birth_date: values.birth_date ? values.birth_date + ' 00:00:00' : null,
             })}
             edit={data => state?.email ? dispatch(createResident(data, history)) :
-                dispatch(editResident(data, history, selected.id))}
+                dispatch(editResident(data, history, selected.id)), () => dispatch(setModalReason(true))}
             add={data => dispatch(createResident(data, history))}
             renderChild={props => {
                 const { values, errors } = props;
 
                 return (
                     <Form className="Form">
-                        <Input {...props} onFocus={() => setEmailRegistered(false)} label="Email"
+                        <Input {...props} label="Email" onFocus={() => setEmailRegistered(false)}
                             placeholder={"Input Resident Email"} type="email" compact />
                         <Input {...props} label="Phone" prefix="+62" onKeyPress={(event) => {
                             if (!/[0-9]/.test(event.key)) {
@@ -237,6 +308,7 @@ function Component() {
                 )
             }}
         />
+    </>
     )
 }
 

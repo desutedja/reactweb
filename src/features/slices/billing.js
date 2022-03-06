@@ -608,14 +608,15 @@ export const downloadBillingCategory =
     );
   };
 
-export const updateBillingPublish = (ids, withImage) => (dispatch) => {
+export const updateBillingPublish = (ids, selectWithImage, schedule) => (dispatch) => {
   dispatch(startAsync());
   dispatch(
     post(
       billingEndpoint + "/publish-billing",
       {
         data: ids,
-        with_image: withImage,
+        schedule_publish: schedule,
+        with_image: selectWithImage,
       },
       (res) => {
         dispatch(

@@ -11,7 +11,7 @@ import Input from "./input";
 import { Form } from "formik";
 import { announcementSchema } from "./services/schemas";
 import SubmitButton from "./components/SubmitButton";
-import { dateTimeFormatter, inputDateTimeFormatter, toSentenceCase } from "../../utils";
+import { dateTimeFormatter, inputDateTimeFormatter, toSentenceCase, updateDateTimeFormatter } from "../../utils";
 import moment from "moment";
 
 
@@ -67,6 +67,8 @@ function Component() {
 
   const [searchmerchant, setSearchmerchant] = useState("");
   const [merchants, setMerchants] = useState([]);
+
+  const [schedule, setSchedule] = useState("");
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -244,7 +246,7 @@ function Component() {
             )}`,
             value: el.building_section_id,
           })),
-        publish_schedule: selected.publish_schedule ? selected.publish_schedule : "2022-01-01T06:00:01" ,
+        publish_schedule: selected.publish_schedule ? updateDateTimeFormatter(selected.publish_schedule) : "2022-01-01T06:00:01" ,
       }
     : announcementPayload;
 

@@ -146,7 +146,7 @@ export const createResident = (data, history) => (dispatch, getState) => {
   );
 };
 
-export const editResident = (data, history, id) => (dispatch) => {
+export const editResident = (data, history, id, setModalReason) => (dispatch) => {
   dispatch(startAsync());
 
   dispatch(
@@ -158,10 +158,7 @@ export const editResident = (data, history, id) => (dispatch) => {
         history.push(`${id}`);
 
         dispatch(
-          setInfo({
-            color: "success",
-            message: "Resident has been edited.",
-          })
+          setModalReason(true)
         );
 
         dispatch(stopAsync());
