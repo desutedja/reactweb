@@ -24,15 +24,8 @@ const columns = [
   // { Header: "ID", accessor: "id" },
   {
     Header: "Bank",
-    accessor: (row) => (
-      <PaymentMethod
-        id={row.id}
-        data={row}
-        items={[
-          <b>{toSentenceCase(row.provider)}</b>
-        ]}
-      />
-    ),
+    accessor: (row) => 
+      <b>{toSentenceCase(row.provider)}</b>        
   },
   {
     Header: "Target Building",
@@ -252,7 +245,7 @@ function Component({ view, title = '', pagetitle, canDelete }) {
           setUpdatePromoModal(false);
         }}
       >
-        Change schedule for this promo
+        Change data for this promo
             {/* <MultiSelectInput    
               // type="multiselect"
               label="Bank"

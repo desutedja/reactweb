@@ -15,7 +15,7 @@ import { Form } from "formik";
 import { announcementSchema } from "../services/schemas";
 import SubmitButton from "../components/SubmitButton";
 import moment from "moment";
-import { toSentenceCase } from "../../../utils";
+import { inputDateTimeFormatter, toSentenceCase, updateDateTimeFormatter } from "../../../utils";
 
 const announcementPayload = {
   title: "",
@@ -28,6 +28,7 @@ const announcementPayload = {
   description: "",
   building_unit: [],
   merchant: [],
+  publish_schedule: "2022-01-01T06:00:01",
 };
 
 const roles = [
@@ -166,6 +167,7 @@ function Component() {
             )}`,
             value: el.building_section_id,
           })),
+        publish_schedule: selected.publish_schedule ? updateDateTimeFormatter(selected.publish_schedule) : "2022-01-01T06:00:01",
       }
     : {
         ...announcementPayload,
@@ -202,6 +204,7 @@ function Component() {
             values.consumer_role === "merchant"
               ? values.merchant.map((el) => el.value)
               : [],
+          publish_schedule: inputDateTimeFormatter(values.publish_schedule),
         })}
         edit={(data) => {
           //console.log(data);
@@ -287,6 +290,12 @@ function Component() {
                 name="image"
                 placeholder="Image URL"
                 hint="Preferred size for maximum result is 1:2"
+              />
+              <Input
+                {...props}
+                type="datetime-local"
+                label="Schedule"
+                name="publish_schedule"
               />
               <Input
                 {...props}
