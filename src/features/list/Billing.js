@@ -27,7 +27,7 @@ import {
   stopAsync
 } from "../slices/billing";
 import { endpointAdmin, endpointBilling, online_status} from "../../settings";
-import { toSentenceCase, toMoney } from "../../utils";
+import { toSentenceCase, toMoney, inputDateTimeFormatter } from "../../utils";
 import { get,post,setInfo } from "../slice";
 
 import TemplateWithSelectionAndDate from "./components/TemplateWithSelectionAndDate";
@@ -337,7 +337,7 @@ function Component({ view }) {
               "year": '' +year,
               "month": '' +month,
               "with_image": '' +selectWithImage,
-              "schedule_publish": '' + schedule,
+              "publish_date": '' +inputDateTimeFormatter(schedule),
             }, res => {
                 console.log(res.data.data);
                 dispatch(
@@ -394,7 +394,7 @@ function Component({ view }) {
             name="release_type"
             options={[
               { value: "now", label: "Now" },
-              { value: "othe", label: "Other" },
+              { value: "other", label: "Other" },
             ]}
             inputValue={type}
             setInputValue={setType}
@@ -402,7 +402,7 @@ function Component({ view }) {
 
         {type === "now" ? null :    
         <Input
-            type="date"
+            type="datetime-local"
             label="Schedule"
             name="publish_schedule"
             inputValue={schedule}
@@ -432,9 +432,9 @@ function Component({ view }) {
           onClick={() => {
             dispatch(startAsync());
             dispatch(post(endpointBilling+"/management/billing/publish-billing", {
-              multiActionRows,
+              data: multiActionRows,
               "with_image": ''+selectWithImage,
-              "schedule_publish": ''+schedule
+              "publish_date": ''+inputDateTimeFormatter(schedule)
             }, res => {
                 console.log(res.data.data);
                 dispatch(
@@ -474,7 +474,7 @@ function Component({ view }) {
 
         {type === "now" ? null :    
         <Input
-            type="date"
+            type="datetime-local"
             label="Schedule"
             name="publish_schedule"
             inputValue={schedule}
