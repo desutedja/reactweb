@@ -337,7 +337,7 @@ function Component({ view }) {
               "year": '' +year,
               "month": '' +month,
               "with_image": '' +selectWithImage,
-              "publish_date": '' +inputDateTimeFormatter(schedule),
+              "published_date": '' +inputDateTimeFormatter(schedule),
             }, res => {
                 console.log(res.data.data);
                 dispatch(
@@ -404,7 +404,7 @@ function Component({ view }) {
         <Input
             type="datetime-local"
             label="Schedule"
-            name="publish_schedule"
+            name="published_date"
             inputValue={schedule}
             setInputValue={setSchedule}
         />
@@ -433,8 +433,8 @@ function Component({ view }) {
             dispatch(startAsync());
             dispatch(post(endpointBilling+"/management/billing/publish-billing", {
               data: multiActionRows,
-              "with_image": ''+selectWithImage,
-              "publish_date": ''+inputDateTimeFormatter(schedule)
+              "with_image": '' +selectWithImage,
+              "published_date": '' +inputDateTimeFormatter(schedule)
             }, res => {
                 console.log(res.data.data);
                 dispatch(
@@ -476,7 +476,7 @@ function Component({ view }) {
         <Input
             type="datetime-local"
             label="Schedule"
-            name="publish_schedule"
+            name="published_date"
             inputValue={schedule}
             setInputValue={setSchedule}
         />
@@ -664,7 +664,7 @@ function Component({ view }) {
                         //       <Input
                         //           type="datetime-local"
                         //           label="Schedule"
-                        //           name="publish_schedule"
+                        //           name="published_date"
                         //           inputValue={schedule}
                         //           setInputValue={setSchedule}
                         //       />  
