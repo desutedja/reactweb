@@ -80,13 +80,13 @@ export const {
 export const getResident = (
   pageIndex,
   pageSize,
-  search = "",
+  search = search,
   status = "",
-  kyc = "",
+  kyc = kyc,
   online = "",
   onboarding = ""
 ) => (dispatch) => {
-  dispatch(startAsync());
+  // dispatch(startAsync());
 
   dispatch(
     get(
@@ -110,10 +110,10 @@ export const getResident = (
       (res) => {
         dispatch(setData(res.data.data));
 
-        dispatch(stopAsync());
+        // dispatch(stopAsync());
       },
       (err) => {
-        dispatch(stopAsync());
+        // dispatch(stopAsync());
       }
     )
   );

@@ -117,8 +117,14 @@ function Component() {
         maximum_discount: parseFloat(values.maximum_discount),
         expired_date: values.expired_date + " 23:59:59",
       })}
-      edit={(data) => dispatch(editVoucher(data, history, selected.id))}
-      add={(data) => dispatch(createVoucher(data, history))}
+      edit={(data) =>{
+        delete data[undefined];
+        dispatch(editVoucher(data, history, selected.id))}}
+      add={(data) =>{
+        delete data[undefined];
+        delete data["discount_type_label"];
+        dispatch(createVoucher(data, history))
+      }}
       renderChild={(props) => {
         const { setFieldValue, values, errors } = props;
         return (

@@ -3,6 +3,7 @@ import { useRouteMatch, Switch, Route } from "react-router-dom";
 
 import List from "../../list/PaymentMethod";
 import Add from "../../form/PaymentMethod";
+import Edit from "../../form/PaymentMethodEdit";
 import Details from "../../details/PaymentMethod";
 
 function Component() {
@@ -17,7 +18,7 @@ function Component() {
         <Add />
       </Route>
       <Route path={`${path}/edit`}>
-        <Add />
+        <Edit />
       </Route>
       <Route path={`${path}/:id`}>
         <Details />

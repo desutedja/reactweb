@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { FiPlus } from "react-icons/fi";
+import { FiDownload, FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
 import Modal from "../../components/Modal";
@@ -87,6 +87,7 @@ function Component({ view, canAdd }) {
 
   const [loading, setLoading] = useState(false);
   const [bulk, setBulk] = useState(false);
+  const [downloadResident, setDownloadResident] = useState(false);
   const [file, setFile] = useState();
   const [data, setData] = useState();
   const [res, setRes] = useState();
@@ -255,6 +256,14 @@ function Component({ view, canAdd }) {
                   icon={<FiPlus />}
                   onClick={() => {
                     setBulk(true);
+                  }}
+                />,
+                <Button
+                  key="Download Data Resident"
+                  label="Download Data Resident"
+                  icon={<FiDownload />}
+                  onClick={() => {
+                    setDownloadResident(true);
                   }}
                 />,
               ]

@@ -125,7 +125,7 @@ export const editVA = (data, history) => (dispatch) => {
   dispatch(startAsync());
 
   dispatch(
-    post(
+    put(
       endpointAdmin + '/paymentperbuilding',
       data,
       (res) => {

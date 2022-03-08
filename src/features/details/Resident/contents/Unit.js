@@ -209,6 +209,8 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
         level: "sub",
         parent_id: parseInt(id),
         status: ownershipStatus.value,
+        period_from: periodFrom,
+        period_to: periodTo
       })
     );
     setAddSubAccount(false);
@@ -421,6 +423,7 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
               onClick={(el) => {
                 setOwnershipStatus(el);
                 setAddSubAccountStep(3);
+                console.log(el);
               }}
             />
           </>
@@ -435,6 +438,25 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
               inputValue={ownershipStatus.label}
               onClick={() => {}}
             />
+            {ownershipStatus.label === "Own" ? null
+            :
+            <>
+              <Input 
+                label="Period From"
+                type="date"
+                name="period_from"
+                inputValue={periodFrom}
+                setInputValue={setPeriodFrom}
+              />
+              <Input 
+                label="Period To"
+                type="date"
+                name="period_to"
+                inputValue={periodTo}
+                setInputValue={setPeriodTo}
+              />
+            </>
+            }
           </>
         )}
       </Modal>
