@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { FiPlus } from "react-icons/fi";
 
 import { toSentenceCase } from "../../utils";
-import { endpointAdmin } from "../../settings";
+import { endpointAdmin, endpointManagement } from "../../settings";
 import { FiSearch } from "react-icons/fi";
 
 import Button from "../../components/Button";
@@ -127,6 +127,9 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
   const [building, setBuilding] = useState("");
   const [buildings, setBuildings] = useState("");
   const [buildingLabel, setBuildingLabel] = useState("");
+  const [department, setDepartment] = useState("");
+  const [departments, setDepartments] = useState("");
+  const [departmentType, setDepartmentType] = useState("");
 
   const [
     management,
@@ -179,6 +182,40 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
   }, [dispatch, search, limit]);
 
   useEffect(() => {
+    building &&
+      dispatch(
+        get(
+          endpointManagement +
+            "/admin/department?bm_id=" +
+            building +
+            "&type=all" +
+            "&limit=" +
+            limit,
+          (res) => {
+            let data = res.data.data;
+            let totalItems = Number(res.data.data.total_items);
+            let restTotal = totalItems - data.length;
+
+            const formatted = res.data.data.map((el) => ({
+              label: el.department_name,
+              value: el.id,
+            }));
+
+            if (data.length < totalItems && search.length === 0) {
+              formatted.push({
+                label: "Load " + (restTotal > 5 ? 5 : restTotal) + " more",
+                restTotal: restTotal > 5 ? 5 : restTotal,
+                className: "load-more",
+              });
+            }
+
+            setDepartments(formatted);
+          }
+        )
+      );
+  }, [building, dispatch, limit]);
+
+  useEffect(() => {
     if (auth.role === "bm") {
       const blacklist_modules = auth.user.blacklist_modules;
       const isSecurity = blacklist_modules.find(
@@ -209,8 +246,51 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
       columns={columns}
       slice="staff"
       getAction={getStaff}
-      filterVars={[role, building, shift, management]}
+      filterVars={[role, building, shift, management, department]}
       filters={[
+        ...(building
+          ? [
+              {
+                hidex: department === "",
+                label: "Department: ",
+                value: department ? departmentType : "All",
+                delete: () => {
+                  setDepartment("");
+                },
+                component: (toggleModal) => (
+                  <>
+                    <Input
+                      label="Search Department"
+                      compact
+                      icon={<FiSearch />}
+                      inputValue={search}
+                      setInputValue={setSearch}
+                    />
+                    <Filter
+                      data={departments}
+                      onClick={(el) => {
+                        if (!el.value) {
+                          setLimit(limit + el.restTotal);
+                          return;
+                        }
+                        setDepartment(el.value);
+                        setDepartmentType(el.label);
+                        setLimit(5);
+                        toggleModal(false);
+                      }}
+                      onClickAll={() => {
+                        setDepartment("");
+                        setLimit(5);
+                        toggleModal(false);
+                      }}
+                    />
+                    {/* {unitSearch ? 'Showing at most 10 matching units' : 
+                              'Showing 10 most recent units'} */}
+                  </>
+                ),
+              },
+            ]
+          : []),
         {
           hidex: building === "",
           label: "Building: ",

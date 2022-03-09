@@ -8,7 +8,7 @@ import Table from "../../../../components/Table";
 import Modal from "../../../../components/Modal";
 import Input from "../../../../components/Input";
 import Filter from "../../../../components/Filter";
-import { toSentenceCase, removeLastFromPath } from "../../../../utils";
+import { toSentenceCase, removeLastFromPath, dateFormatter } from "../../../../utils";
 import SectionSeparator from "../../../../components/SectionSeparator";
 import Resident from "../../../../components/cells/Resident";
 
@@ -31,6 +31,7 @@ const columnsUnit = [
   { Header: "Unit Number", accessor: "number" },
   { Header: "Level", accessor: "level" },
   { Header: "Status", accessor: "status" },
+  { Header: "Period", accessor: (row) => (row.period_from && row.period_to) ? dateFormatter(row.period_from) + " - " + dateFormatter(row.period_to) : "-" },
   { Header: "Type", accessor: (row) => row.unit_type + " - " + row.unit_size },
 ];
 
@@ -193,8 +194,8 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
         owner_id: parseInt(id),
         level: level,
         status: status,
-        period_from: dateTimeFormatter(periodFrom),
-        period_to: dateTimeFormatter(periodTo), 
+        period_from: periodFrom,
+        period_to: periodTo, 
       })
     );
     setAddUnit(false);
@@ -571,30 +572,19 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
                     { value: "rent", label: "Rent" },
                   ]}
                 />
-                {status === "own" ? <>
-                <Input 
-                    type="hidden"
-                    inputValue={periodFrom}
-                    setInputValue="2012-12-31 23:59:59"
-                  />
-                  <Input
-                    type="hidden"
-                    inputValue={periodTo}
-                    setInputValue="2012-12-31 23:59:59"
-                  />
-                </> : 
+                {status === "own" ? null : 
                 <>
                   <Input 
                     label="Period From"
                     type="date"
-                    autoComplete="off"
+                    name="period_from"
                     inputValue={periodFrom}
                     setInputValue={setPeriodFrom}
                   />
-                  <Input
+                  <Input 
                     label="Period To"
                     type="date"
-                    autoComplete="off"
+                    name="period_to"
                     inputValue={periodTo}
                     setInputValue={setPeriodTo}
                   />
