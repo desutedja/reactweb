@@ -55,7 +55,8 @@ export const getStaff = ( pageIndex, pageSize,search = '', role, building, shift
     '&limit=' + pageSize +
     '&search=' + search +
     '&building_id=' + building +
-    '&department_id=' + department +
+    '&department_ids=' + department +
+    '&staff_all=1' +
     '&is_shift=' + (shift === 'yes' ? 1 : shift === 'no' ? 0 : '') +
     '&staff_role=' + role +
     // '&sort_field=created_on&sort_type=DESC' +

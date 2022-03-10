@@ -23,7 +23,7 @@ const residentPayload = {
     // reason: "",
 
     birthplace: "others",
-    birth_date: null,
+    birthdate: null,
     nationality: null,
     gender: null,
     marital_status: null,
@@ -192,16 +192,16 @@ function Component() {
             } : selected.id ? {
                 ...residentPayload, ...selected,
                 phone: selected.phone.slice(2),
-                birth_date: selected.birth_date?.split('T')[0],
+                birthdate: selected.birthdate?.split('T')[0],
             } : residentPayload}
             schema={residentSchema}
             formatValues={values => ({
                 ...values,
                 phone: '62' + values.phone,
-                birth_date: values.birth_date ? values.birth_date + ' 00:00:00' : null,
+                birthdate: values.birthdate ? values.birthdate + ' 00:00:00' : null,
             })}
             edit={data => state?.email ? dispatch(createResident(data, history)) :
-                dispatch(editResident(data, history, selected.id)), () => dispatch(setModalReason(true))}
+                dispatch(editResident(data, history, selected.id))}
             add={data => dispatch(createResident(data, history))}
             renderChild={props => {
                 const { values, errors } = props;
@@ -263,7 +263,7 @@ function Component() {
                             <Input {...props} optional label="Birth Place" name="birthplace" options={bcities}
                                 loading={bcloading}
                             />
-                            <Input {...props} optional label="Birth Date" name="birth_date" type="date" />
+                            <Input {...props} optional label="Birth Date" name="birthdate" type="date" />
                             <Input {...props} optional hidden name="nationality" />
                             <Input {...props} optional label="Gender" type="radio" options={[
                                 { value: 'P', label: 'Female' },

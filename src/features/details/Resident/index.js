@@ -25,7 +25,7 @@ const details = {
     "gender",
     "birthplace",
     {
-      label: "birth_date",
+      label: "birthdate",
       lfmt: () => "Birthdate",
       vfmt: (v) => {
         return (

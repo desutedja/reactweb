@@ -197,7 +197,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
             let restTotal = totalItems - data.length;
 
             const formatted = res.data.data.map((el) => ({
-              label: el.department_name,
+              label: toSentenceCase(el.department_name) + "( " + toSentenceCase(el.department_type) + ")",
               value: el.id,
             }));
 
@@ -259,13 +259,6 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
                 },
                 component: (toggleModal) => (
                   <>
-                    <Input
-                      label="Search Department"
-                      compact
-                      icon={<FiSearch />}
-                      inputValue={search}
-                      setInputValue={setSearch}
-                    />
                     <Filter
                       data={departments}
                       onClick={(el) => {

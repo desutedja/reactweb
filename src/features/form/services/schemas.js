@@ -91,7 +91,7 @@ export const residentSchema = Yup.object().shape({
   // reason: TextReason,
 
   birthplace: TextOptional,
-  birth_date: TextOptional,
+  birthdate: TextOptional,
   nationality: TextOptional,
   gender: TextOptional,
   marital_status: TextOptional,
