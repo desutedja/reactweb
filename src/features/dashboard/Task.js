@@ -258,12 +258,14 @@ function Component() {
                   }
                   setBuildingName(el.value);
                   setBuildingLabel(el.label);
+                  setTower("");
                   setLimit(5);
                   setOpenModalBuilding(false);
                 }}
                 onClickAll={() => {
                   setBuildingName("");
                   setBuildingLabel("");
+                  setTower("");
                   setLimit(5);
                   setOpenModalBuilding(false);
                 }}

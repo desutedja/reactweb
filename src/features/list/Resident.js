@@ -230,6 +230,22 @@ function Component({ view, canAdd }) {
           </Loading>
         )}
       </Modal>
+      <Modal
+        isOpen={downloadResident}
+        disableHeader={true}
+        btnDanger
+        onClick={() => {
+        // dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
+          setDownloadResident(false);
+        }}
+        toggle={() => {
+          setDownloadResident(false);
+        }}
+        okLabel={"Yes"}
+        cancelLabel={"Cancel"}
+      >
+        This Feature is under development. Stay Tuned..
+      </Modal>      
       <Template
         view={view}
         columns={columns}

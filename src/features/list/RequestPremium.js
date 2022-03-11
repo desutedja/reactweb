@@ -9,7 +9,7 @@ import Pill from "../../components/Pill";
 import Loading from "../../components/Loading";
 import Filter from "../../components/Filter";
 
-import { toSentenceCase } from "../../utils";
+import { dateTimeFormatter, toSentenceCase } from "../../utils";
 
 import TemplateRequestPremium from "./components/TemplateRequestPremium";
 import { post, getFile } from "../slice";
@@ -51,7 +51,9 @@ const columns = [
     },
     {
       Header: "Status", 
-      accessor: "status", 
+      accessor: (row) => (
+        toSentenceCase(row.status)
+      ),
       sorting: "status"
     },
     {
@@ -70,7 +72,9 @@ const columns = [
     },
     { 
       Header: "Approved Date", 
-      accessor: "approved_on", 
+      accessor: (row) => (
+        dateTimeFormatter(row.approved_on)
+      ),
       sorting: "approved_on" 
     },
   ];

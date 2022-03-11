@@ -145,11 +145,13 @@ useEffect(() => {
                   }
                   setBuildingName(el.value);
                   setBuildingLabel(el.label);
+                  setTower("");
                   setLimit(5);
                   setOpenModalBuilding(false);
                 }}
                 onClickAll={() => {
                   setBuildingName("");
+                  setTower("");
                   setBuildingLabel("");
                   setLimit(5);
                   setOpenModalBuilding(false);

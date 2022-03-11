@@ -158,7 +158,10 @@ export const editResident = (data, history, id, setModalReason) => (dispatch) =>
         history.push(`${id}`);
 
         dispatch(
-          setModalReason(true)
+          setInfo({
+            color: "success",
+            message: "Resident has been updated.",
+          })
         );
 
         dispatch(stopAsync());

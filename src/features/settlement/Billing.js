@@ -348,6 +348,23 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                         setSettlementEnd(end);
                                         toggleModal();
                                     }} />
+                        }] :
+                        settled === '0' ? [{
+                            hidex: isRangeToday(settlementStart, settlementEnd),
+                            label: "Transaction Date: ",
+                            delete: () => { setSettlementStart(today); setSettlementEnd(today); },
+                            value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
+                                moment(settlementStart).format('DD-MM-yyyy') + ' - '
+                                + moment(settlementEnd).format('DD-MM-yyyy'),
+                            component: (toggleModal) =>
+                                <DateRangeFilter
+                                    startDate={settlementStart}
+                                    endDate={settlementEnd}
+                                    onApply={(start, end) => {
+                                        setSettlementStart(start);
+                                        setSettlementEnd(end);
+                                        toggleModal();
+                                    }} />
                         }] : [],
                         {
                             hidex: settled === "",

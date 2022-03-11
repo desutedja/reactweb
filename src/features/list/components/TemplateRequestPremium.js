@@ -9,6 +9,7 @@ import { setConfirmDelete, put, setInfo } from '../../slice';
 import Input from "../../../components/Input";
 import Modal from "../../../components/Modal";
 import { endpointResident } from '../../../settings';
+import { toSentenceCase } from '../../../utils';
 
 function Component({ view = false, columns, slice, title = '', getAction, filterVars = [],
     filters = [], actions = [], approved_status, approvedAction, disapprovedAction, sortBy, pagetitle, withSelection = false, filterExpanded = false, ...props }) {
@@ -68,7 +69,7 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
                 }}
             >
                 <label><b>Status</b></label><br />
-                {datas.status}
+                {toSentenceCase(datas.status)}
 
                 <Input
                     label="Period From"
