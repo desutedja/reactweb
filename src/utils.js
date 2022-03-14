@@ -145,7 +145,7 @@ export function dateTimeFormatterScheduler(serverDateTime, whenzero = "-") {
 }
 
 // all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
-export function inputDateTimeFormatter(serverDateTime, whenzero = "-") {
+export function inputDateTimeFormatter(serverDateTime, whenzero = "") {
   if (!serverDateTime) return whenzero;
   if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
 

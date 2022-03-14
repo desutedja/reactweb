@@ -146,7 +146,7 @@ export const createResident = (data, history) => (dispatch, getState) => {
   );
 };
 
-export const editResident = (data, history, id, setModalReason) => (dispatch) => {
+export const editResident = (data, history, id) => (dispatch) => {
   dispatch(startAsync());
 
   dispatch(
@@ -163,7 +163,7 @@ export const editResident = (data, history, id, setModalReason) => (dispatch) =>
             message: "Resident has been updated.",
           })
         );
-
+        
         dispatch(stopAsync());
       },
       (err) => {

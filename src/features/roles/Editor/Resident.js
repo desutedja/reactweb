@@ -3,6 +3,7 @@ import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
 import List from '../../list/Resident';
 import Add from '../../form/Resident';
+import Edit from '../../form/ResidentUpdate';
 import Details from '../../details/Resident';
 
 function Component() {
@@ -17,7 +18,7 @@ function Component() {
                 <Add />
             </Route>
             <Route path={`${path}/edit`}>
-                <Add />
+                <Edit />
             </Route>
             <Route path={`${path}/:id`}>
                 <Details />

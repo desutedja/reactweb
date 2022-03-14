@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import List from "../../list/Resident";
 import Add from "../../form/Resident";
+import Edit from "../../form/ResidentUpdate";
 import Details from "../../details/Resident";
 
 function Component() {
@@ -60,7 +61,7 @@ function Component() {
       )}
       {update && (
         <Route exact path={`${path}/edit`}>
-          <Add />
+          <Edit />
         </Route>
       )}
       {read && (

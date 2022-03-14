@@ -105,6 +105,28 @@ export const residentSchema = Yup.object().shape({
   account_no: TextOptional,
 });
 
+export const residentSchemaWithReason = Yup.object().shape({
+  email: EmailOptional,
+  firstname: Text,
+  lastname: Text,
+  phone: Phone,
+  update_reason: TextReason,
+
+  birthplace: TextOptional,
+  birthdate: TextOptional,
+  nationality: TextOptional,
+  gender: TextOptional,
+  marital_status: TextOptional,
+  occupation: TextOptional,
+  address: TextOptional,
+  province: TextOptional,
+  city: TextOptional,
+  district: TextOptional,
+  account_bank: TextOptional,
+  account_name: TextOptional,
+  account_no: TextOptional,
+});
+
 export const billingSchema = Yup.object().shape({
   service: Text,
   name: Text,

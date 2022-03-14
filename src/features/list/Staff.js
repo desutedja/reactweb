@@ -310,12 +310,14 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
                   }
                   setBuilding(el.value);
                   setBuildingLabel(el.label);
+                  setDepartment("");
                   setLimit(5);
                   toggleModal(false);
                 }}
                 onClickAll={() => {
                   setBuilding("");
                   setBuildingLabel("");
+                  setDepartment("");
                   setLimit(5);
                   toggleModal(false);
                 }}
