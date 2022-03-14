@@ -86,7 +86,7 @@ export const getResident = (
   online = "",
   onboarding = ""
 ) => (dispatch) => {
-  // dispatch(startAsync());
+  dispatch(startAsync());
 
   dispatch(
     get(
@@ -110,10 +110,10 @@ export const getResident = (
       (res) => {
         dispatch(setData(res.data.data));
 
-        // dispatch(stopAsync());
+        dispatch(stopAsync());
       },
       (err) => {
-        // dispatch(stopAsync());
+        dispatch(stopAsync());
       }
     )
   );

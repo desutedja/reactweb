@@ -15,7 +15,7 @@ import { getResident, setSelected, deleteResident } from "../slices/resident";
 import { toSentenceCase } from "../../utils";
 
 import Template from "./components/Template";
-import { post, getFile } from "../slice";
+import { post, getFile, get } from "../slice";
 import {
   endpointResident,
   resident_statuses,
@@ -276,11 +276,21 @@ function Component({ view, canAdd }) {
                 />,
                 <Button
                   key="Download Data Resident"
-                  label="Download Data Resident"
+                  label="Download Resident.csv"
                   icon={<FiDownload />}
                   onClick={() => {
-                    setDownloadResident(true);
-                  }}
+                    setLoading(true);
+                    dispatch(getFile(endpointResident + "/management/resident/download?onboarding=" +
+                    onboardingStatus,
+                    "Data_Resident_Onboarding="+(onboardingStatus ? toSentenceCase(onboardingStatus) : "All")+".csv",
+                    (res) => {
+                      setLoading(false);
+                    },
+                    (err) => {
+                      setLoading(false);
+                    }
+                    ))}
+                  }
                 />,
               ]
         }

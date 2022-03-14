@@ -290,6 +290,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
           value: building ? buildingLabel : "All",
           delete: () => {
             setBuilding("");
+            setDepartment("");
           },
           component: (toggleModal) => (
             <>
