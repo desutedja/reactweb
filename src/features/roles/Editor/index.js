@@ -26,7 +26,7 @@ import Billing from "./Billing";
 import Building from "./Building";
 import Management from "./Management";
 import Vouchers from "./Vouchers";
-import PaymentMethod from "./PaymentMethod";
+import PromoVA from "./PromoVA";
 import Merchant from "./Merchant";
 import Product from "./Product";
 import Resident from "./Resident";
@@ -130,7 +130,7 @@ const menu = [
     icon: <RiBankCardLine className="MenuItem-icon" />,
     label: "Promo VA",
     path: "/promo VA",
-    component: <PaymentMethod />,
+    component: <PromoVA />,
   },
   {
     icon: <FiShoppingCart className="MenuItem-icon" />,

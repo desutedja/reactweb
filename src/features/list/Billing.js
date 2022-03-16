@@ -334,8 +334,8 @@ function Component({ view }) {
           onClick={() => {
             dispatch(post(endpointBilling+"/management/billing/publish-billing-building", {
               "building_id": buildingRelease,
-              "year": toString(year),
-              "month": toString(month),
+              "year": "" + year,
+              "month": "" + month,
               "with_image": selectWithImage,
               "published_date": inputDateTimeFormatter(schedule),
             }, res => {

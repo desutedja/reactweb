@@ -12,8 +12,8 @@ import { setSelected } from "../slices/vouchers";
 import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
-import PaymentMethod from "../../components/cells/PaymentMethod";
-import { deleteVA, editVA } from "../slices/paymentmethod";
+import PromoVA from "../../components/cells/PromoVA";
+import { deleteVA, editVA } from "../slices/promova";
 import Modal from "../../components/Modal"
 import Input from "../../components/Input"
 import MultiSelectInput from "../form/input/MultiSelect";

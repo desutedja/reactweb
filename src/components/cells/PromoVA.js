@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-function PaymentMethod({ items, id, data }) {
+function PromoVA({ items, id, data }) {
   const { role } = useSelector((state) => state.auth);
 
   return (
@@ -18,4 +18,4 @@ function PaymentMethod({ items, id, data }) {
   );
 }
 
-export default PaymentMethod;
+export default PromoVA;
