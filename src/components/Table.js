@@ -57,8 +57,11 @@ function Table({
         canNextPage,
         pageCount,
         gotoPage,
-        setPageSize,
-        state: { pageIndex, pageSize, selectedRowIds }
+        // setPageSize,
+        state: { 
+            pageIndex, 
+            // pageSize,
+             selectedRowIds }
     } = useTable({
         columns,
         data,
@@ -109,6 +112,21 @@ function Table({
     const [sortType, setSortType] = useState('DESC');
     const [sortTypeInput, setSortTypeInput] = useState(sortType);
     const [sort, toggleSort] = useState(false);
+    const [pageSize, setPageSize] = useState(() => {
+        const savedSize = localStorage.getItem("page_size");
+        const initialSize = savedSize;
+        return initialSize || "";
+      });
+
+    useEffect(() => {
+        // storing input building
+        localStorage.setItem("page_size", pageSize);
+      }, [pageSize]);
+
+    useEffect(() => {
+        // storing input building
+        localStorage.setItem("page_index", pageIndex + 1);
+      }, [pageIndex]);
 
     useEffect(() => {
         fetchData && fetchData(pageIndex, pageSize, searchToggle,

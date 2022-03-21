@@ -121,15 +121,40 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
   let { url } = useRouteMatch();
 
   const { auth } = useSelector((state) => state);
-  const [shift, setShift] = useState("");
-  const [shiftLabel, setShiftLabel] = useState("");
+  const [shift, setShift] = useState(() => {
+    const savedShift = localStorage.getItem("filter_shift");
+    const initialShift = savedShift;
+    return initialShift || "";
+  });
+  const [shiftLabel, setShiftLabel] = useState(() => {
+    const savedLabelShift = localStorage.getItem("label_shift");
+    const initialLabelShift = savedLabelShift;
+    return initialLabelShift || "";
+  });
 
-  const [building, setBuilding] = useState("");
+  const [building, setBuilding] = useState(() => {
+    const savedBuilding = localStorage.getItem("filter_building");
+    const initialBuilding = savedBuilding;
+    return initialBuilding || "";
+  });
   const [buildings, setBuildings] = useState("");
-  const [buildingLabel, setBuildingLabel] = useState("");
-  const [department, setDepartment] = useState("");
+  const [buildingLabel, setBuildingLabel] = useState(() => {
+    const savedBuilding = localStorage.getItem("label_building");
+    const initialBuilding = savedBuilding;
+    return initialBuilding || "";
+  });
+  
+  const [department, setDepartment] = useState(() => {
+    const savedDepartment = localStorage.getItem("filter_department");
+    const initialDepartment = savedDepartment;
+    return initialDepartment || "";
+  });
   const [departments, setDepartments] = useState("");
-  const [departmentType, setDepartmentType] = useState("");
+  const [departmentType, setDepartmentType] = useState(() => {
+    const savedDepartment = localStorage.getItem("label_department");
+    const initialDepartment = savedDepartment;
+    return initialDepartment || "";
+  });
 
   const [
     management,
@@ -145,6 +170,25 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
 
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(5);
+
+  useEffect(() => {
+    // storing input building
+    localStorage.setItem("filter_building", building);
+    localStorage.setItem("label_building", buildingLabel);
+  }, [building, buildingLabel]);
+
+  useEffect(() => {
+    // storing input department
+    localStorage.setItem("filter_department", department);
+    localStorage.setItem("label_department", departmentType);
+  }, [department, departmentType]);
+
+  useEffect(() => {
+    // storing input shift
+    localStorage.setItem("filter_shift", shift);
+    localStorage.setItem("label_shift", shiftLabel);
+  }, [shift, shiftLabel]);
+
 
   useEffect(() => {
     (!search || search.length >= 1) &&
@@ -253,7 +297,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
               {
                 hidex: department === "",
                 label: "Department: ",
-                value: department ? departmentType : "All",
+                value: department ? departmentType : "All" ,
                 delete: () => {
                   setDepartment("");
                 },
