@@ -223,6 +223,7 @@ function Component() {
                 {...props}
                 type="select"
                 label="Consumer Role"
+                autoComplete="off"
                 placeholder="Select Consumer Role"
                 options={roles}
               />

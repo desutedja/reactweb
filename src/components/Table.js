@@ -57,11 +57,10 @@ function Table({
         canNextPage,
         pageCount,
         gotoPage,
-        // setPageSize,
         state: { 
-            pageIndex, 
-            // pageSize,
-             selectedRowIds }
+            pageIndex,
+            selectedRowIds
+        }
     } = useTable({
         columns,
         data,
@@ -116,17 +115,12 @@ function Table({
         const savedSize = localStorage.getItem("page_size");
         const initialSize = savedSize;
         return initialSize || "";
-      });
+    });
 
     useEffect(() => {
-        // storing input building
+        // storing input page size
         localStorage.setItem("page_size", pageSize);
       }, [pageSize]);
-
-    useEffect(() => {
-        // storing input building
-        localStorage.setItem("page_index", pageIndex + 1);
-      }, [pageIndex]);
 
     useEffect(() => {
         fetchData && fetchData(pageIndex, pageSize, searchToggle,

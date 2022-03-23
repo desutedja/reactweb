@@ -92,14 +92,46 @@ function Component({ view, canAdd }) {
   const [data, setData] = useState();
   const [res, setRes] = useState();
 
-  const [status, setStatus] = useState("");
-  const [statusLabel, setStatusLabel] = useState("");
-  const [KYCStatus, setKYCStatus] = useState("");
-  const [KYCStatusLabel, setKYCStatusLabel] = useState("");
-  const [onlineStatus, setOnlineStatus] = useState("");
-  const [onlineStatusLabel, setOnlineStatusLabel] = useState("");
-  const [onboardingStatus, setOnboardingStatus] = useState("");
-  const [onboardingStatusLabel, setOnboardingStatusLabel] = useState("");
+  const [status, setStatus] = useState(() => {
+    const savedStatus = localStorage.getItem("filter_status");
+    const initialStatus = savedStatus;
+    return initialStatus || "";
+  });
+  const [statusLabel, setStatusLabel] = useState(() => {
+    const savedLabelStatus = localStorage.getItem("label_status");
+    const initialLabelStatus = savedLabelStatus;
+    return initialLabelStatus || "";
+  });
+  const [KYCStatus, setKYCStatus] = useState(() => {
+    const savedKYC = localStorage.getItem("filter_KYC");
+    const initialKYC = savedKYC;
+    return initialKYC || "";
+  });
+  const [KYCStatusLabel, setKYCStatusLabel] = useState(() => {
+    const savedKYCLabel = localStorage.getItem("label_KYC");
+    const initialKYCLabel = savedKYCLabel;
+    return initialKYCLabel || "";
+  });
+  const [onlineStatus, setOnlineStatus] = useState(() => {
+    const savedOnline = localStorage.getItem("filter_online");
+    const initialOnline = savedOnline;
+    return initialOnline || "";
+  });
+  const [onlineStatusLabel, setOnlineStatusLabel] = useState(() => {
+    const savedOnlineLabel = localStorage.getItem("label_online");
+    const initialOnlineLabel = savedOnlineLabel;
+    return initialOnlineLabel || "";
+  });
+  const [onboardingStatus, setOnboardingStatus] = useState(() => {
+    const savedOnboarding = localStorage.getItem("filter_onboarding");
+    const initialOnboarding = savedOnboarding;
+    return initialOnboarding || "";
+  });
+  const [onboardingStatusLabel, setOnboardingStatusLabel] = useState(() => {
+    const savedOnboardingLabel = localStorage.getItem("label_onboarding");
+    const initialOnboardingLabel = savedOnboardingLabel;
+    return initialOnboardingLabel || "";
+  });
 
   let fileInput = useRef();
 
@@ -108,6 +140,30 @@ function Component({ view, canAdd }) {
   let { url } = useRouteMatch();
 
   useEffect(() => {
+    // storing input status
+    localStorage.setItem("filter_status", status);
+    localStorage.setItem("label_status", statusLabel);
+  }, [status, statusLabel]);
+
+  useEffect(() => {
+    // storing input status KYC
+    localStorage.setItem("filter_KYC", KYCStatus);
+    localStorage.setItem("label_KYC", KYCStatusLabel);
+  }, [KYCStatus, KYCStatusLabel]);
+
+  useEffect(() => {
+    // storing input status KYC
+    localStorage.setItem("filter_online", onlineStatus);
+    localStorage.setItem("label_online", onlineStatusLabel);
+  }, [onlineStatus, onlineStatusLabel]);
+
+  useEffect(() => {
+    // storing input status KYC
+    localStorage.setItem("filter_onboarding", onboardingStatus);
+    localStorage.setItem("label_onboarding", onboardingStatusLabel);
+  }, [onboardingStatus, onboardingStatusLabel]);
+  useEffect(() => {
+
     // console.log(file);
 
     let form = new FormData();

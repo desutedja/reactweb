@@ -11,13 +11,14 @@ import {
 } from '../slices/product';
 import { merchant_types, endpointMerchant } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
-import { FiSearch, FiPlus, FiCheck } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiCheck, FiPercent } from 'react-icons/fi';
 import { get } from '../slice';
 import Product from '../../components/cells/Product'; 
 
 import TemplateWithSelection from './components/TemplateWithSelection';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
+import { FaMoneyBillWaveAlt } from 'react-icons/fa';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -59,7 +60,9 @@ function Component({view}) {
     const history = useHistory();
 
     const [multiActionRows, setMultiActionRows] = useState([]);
-    const [openModal, setOpenModal] = useState(false);
+    const [modalOnOff, setModalOnOff] = useState(false);
+    const [modalDiscount, setModalDiscount] = useState(false);
+    const [modalAdminFee, setModalAdminFee] = useState(false);
 
     useEffect(() => {
         history.location.state && history.location.state.cat && setCat(history.location.state.cat);
@@ -116,15 +119,47 @@ function Component({view}) {
     return (
         <>
             <Modal
-                isOpen={openModal}
-                disableHeader={true}
+                isOpen={modalOnOff}
+                title="Set Product(s) to On/Off"
                 btnDanger
                 onClick={() => {
                 // dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
-                setOpenModal(false);
+                setModalOnOff(false);
                 }}
                 toggle={() => {
-                setOpenModal(false);
+                setModalOnOff(false);
+                }}
+                okLabel={"Yes"}
+                cancelLabel={"Cancel"}
+            >
+                This Feature is under development. Stay Tuned..
+            </Modal>
+            <Modal
+                isOpen={modalDiscount}
+                title="Set Discount product(s)"
+                btnDanger
+                onClick={() => {
+                // dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
+                setModalDiscount(false);
+                }}
+                toggle={() => {
+                setModalDiscount(false);
+                }}
+                okLabel={"Yes"}
+                cancelLabel={"Cancel"}
+            >
+                This Feature is under development. Stay Tuned..
+            </Modal>
+            <Modal
+                isOpen={modalAdminFee}
+                title="Set Admin Fee product(s)"
+                btnDanger
+                onClick={() => {
+                // dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
+                setModalAdminFee(false);
+                }}
+                toggle={() => {
+                setModalAdminFee(false);
                 }}
                 okLabel={"Yes"}
                 cancelLabel={"Cancel"}
@@ -249,7 +284,61 @@ function Component({view}) {
                         disabled={Object.keys(selectedRowIds).length === 0}
                         icon={<FiCheck />}
                         onClick={() =>
-                                setOpenModal(true)
+                                setModalOnOff(true)
+                        //   {
+                        //     confirmAlert({
+                        //       title: 'Set as Paid Billing',
+                        //       message: 'Do you want to set selected unit as Paid?',
+                        //       buttons: [
+                        //         {
+                        //           label: 'Yes',
+                        //           onClick: () => {
+                        //             dispatch(updateSetAsPaidSelected(multiActionRows));
+                        //           },
+                        //           className:"Button btn btn-secondary"
+                        //         },
+                        //         {
+                        //           label: 'Cancel',
+                        //           className:"Button btn btn-cancel"
+                        //         }
+                        //       ]
+                        //     });
+                        //   }
+                        }
+                    />,
+                    <Button
+                        label="Set Discount"
+                        disabled={Object.keys(selectedRowIds).length === 0}
+                        icon={<FiPercent />}
+                        onClick={() =>
+                                setModalDiscount(true)
+                        //   {
+                        //     confirmAlert({
+                        //       title: 'Set as Paid Billing',
+                        //       message: 'Do you want to set selected unit as Paid?',
+                        //       buttons: [
+                        //         {
+                        //           label: 'Yes',
+                        //           onClick: () => {
+                        //             dispatch(updateSetAsPaidSelected(multiActionRows));
+                        //           },
+                        //           className:"Button btn btn-secondary"
+                        //         },
+                        //         {
+                        //           label: 'Cancel',
+                        //           className:"Button btn btn-cancel"
+                        //         }
+                        //       ]
+                        //     });
+                        //   }
+                        }
+                    />,
+                    <Button
+                        label="Admin Fee"
+                        disabled={Object.keys(selectedRowIds).length === 0}
+                        icon={<FaMoneyBillWaveAlt />}
+                        onClick={() =>
+                                setModalAdminFee(true)
                         //   {
                         //     confirmAlert({
                         //       title: 'Set as Paid Billing',

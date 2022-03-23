@@ -47,7 +47,7 @@ export const {
   refresh
 } = slice.actions;
 
-export const getStaff = ( pageIndex, pageSize,search = '', role, building, shift, management, department) => dispatch => {
+export const getStaff = ( pageIndex, pageSize, search = '', role, building, shift, management, department) => dispatch => {
   dispatch(startAsync());
 
   dispatch(get(staffEndpoint + '/list' +
