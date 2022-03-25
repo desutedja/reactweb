@@ -431,10 +431,35 @@ function Component({ view }) {
           okLabel={"Yes, Submit"}
           onClick={() => {
             dispatch(startAsync());
+            type !== "now" ? 
             dispatch(post(endpointBilling+"/management/billing/publish-billing", {
               data: multiActionRows,
               "with_image": selectWithImage,
               "published_date": inputDateTimeFormatter(schedule)
+            }, res => {
+                console.log(res.data.data);
+                dispatch(
+                  setInfo({
+                    color: "success",
+                    message: `${res.data.data} billing has been set to released.`,
+                  })
+                );
+                // resultComponent ? setOpenRes(true) : toggle();
+            dispatch(refresh());
+            dispatch(stopAsync());
+            }, err => {
+              dispatch(
+                setInfo({
+                  color: "error",
+                  message: `Error to released.`,
+                })
+              );
+              console.log("error");
+            }))
+            : 
+            dispatch(post(endpointBilling+"/management/billing/publish-billing", {
+              data: multiActionRows,
+              "with_image": selectWithImage,
             }, res => {
                 console.log(res.data.data);
                 dispatch(
