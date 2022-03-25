@@ -758,6 +758,34 @@ function Component({ view }) {
                     ),
                   },
                 ]
+              :
+              statusSettlement.value === "unsettled"
+              ? [
+                  {
+                    hidex: isRangeToday(settlementStart, settlementEnd),
+                    label: "Transaction Date: ",
+                    delete: () => {
+                      setSettlementStart(today);
+                      setSettlementEnd(today);
+                    },
+                    value: isRangeToday(settlementStart, settlementEnd)
+                      ? "Today"
+                      : moment(settlementStart).format("DD-MM-yyyy") +
+                        " - " +
+                        moment(settlementEnd).format("DD-MM-yyyy"),
+                    component: (toggleModal) => (
+                      <DateRangeFilter
+                        startDate={settlementStart}
+                        endDate={settlementEnd}
+                        onApply={(start, end) => {
+                          setSettlementStart(start);
+                          setSettlementEnd(end);
+                          toggleModal();
+                        }}
+                      />
+                    ),
+                  },
+                ]
               : []),
             {
               hidex: statusSettlement === "",
