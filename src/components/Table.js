@@ -114,7 +114,7 @@ function Table({
     const [pageSize, setPageSize] = useState(() => {
         const savedSize = localStorage.getItem("page_size");
         const initialSize = savedSize;
-        return initialSize || "";
+        return initialSize || "10";
     });
 
     useEffect(() => {
