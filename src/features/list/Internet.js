@@ -25,7 +25,7 @@ const columns = [
   {
     Header: "Provider Name",
     accessor: (row) => 
-      <b>{toSentenceCase(row.provider)}</b>        
+      <b>Globenet</b>        
   },
   {
     Header: "PIC",
@@ -33,11 +33,10 @@ const columns = [
       return (
         <div>
           <div>
-            {
-      row.name}
+            <b>Dadang Jordan</b>
           </div>
           <div>
-            by System
+            dadangjordan@gmail.com
           </div>
         </div>
       );

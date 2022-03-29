@@ -14,7 +14,7 @@ import Resident from "../../components/cells/Resident";
 import { getResident, setSelected, deleteResident } from "../slices/resident";
 import { toSentenceCase } from "../../utils";
 
-import Template from "./components/Template";
+import TemplateLocalStorage from "./components/TemplateLocalStorage";
 import { post, getFile, get } from "../slice";
 import {
   endpointResident,
@@ -302,7 +302,7 @@ function Component({ view, canAdd }) {
       >
         This Feature is under development. Stay Tuned..
       </Modal>      
-      <Template
+      <TemplateLocalStorage
         view={view}
         columns={columns}
         slice={"resident"}
