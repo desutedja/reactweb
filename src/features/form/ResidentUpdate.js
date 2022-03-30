@@ -137,7 +137,6 @@ function Component() {
             })}
             edit={data => state?.email ? dispatch(createResident(data, history)) :
                 dispatch(editResident(data, history, selected.id))}
-            add={data => dispatch(createResident(data, history))}
             renderChild={props => {
                 const { values, errors } = props;
 

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import TableWithSelectionAndDate from '../../../components/TableWithSelectionAndDate';
+import TableWithSelectionAndDateLocal from '../../../components/TableWithSelectionAndDateLocal';
 // import Container from '../../../components/Container';
 import Breadcrumb from '../../../components/Breadcrumb';
 // import Button from '../../../components/Button';
@@ -26,7 +26,7 @@ function Component({ view = false, columns, slice, startDate, title = '', getAct
             <h2 style={{ marginLeft: '16px' }}>{pagetitle}</h2>
             <Breadcrumb title={title} />
             <div className="Container">
-                <TableWithSelectionAndDate
+                <TableWithSelectionAndDateLocal
                     onSelection={(selectedRows) => {
                         selectAction(selectedRows);
                     }}

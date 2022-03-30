@@ -47,11 +47,24 @@ function Component({ view }) {
   const handleShow = () => toggleModalPublish(true);
   const [buildingRelease, setBuildingRelease] = useState("");
 
-  const [building, setBuilding] = useState("");
-  const [buildingName, setBuildingName] = useState("");
+  const [building, setBuilding] = useState(() => {
+    const savedBuilding = localStorage.getItem("filter_building");
+    const initialBuilding = savedBuilding;
+    return initialBuilding || "";
+  });
+  const [buildingName, setBuildingName] = useState(() => {
+    const savedBuildingLabel = localStorage.getItem("label_building");
+    const initialBuildingLabel = savedBuildingLabel;
+    return initialBuildingLabel || "";
+  });
+
   const [buildings, setBuildings] = useState("");
   const [buildinglist, setBuildingList] = useState("");
-  const [released, setReleased] = useState("");
+  const [released, setReleased] = useState(() => {
+    const savedReleased = localStorage.getItem("filter_released");
+    const initialReleased = savedReleased;
+    return initialReleased || "";
+  });
   const [multiActionRows, setMultiActionRows] = useState([]);
   const [columns, setColumns] = useState([]);
   const [alert, setAlert] = useState("");
@@ -98,6 +111,17 @@ function Component({ view }) {
   let dispatch = useDispatch();
   let history = useHistory();
   let { url } = useRouteMatch();
+
+  useEffect(() => {
+    // storing input status
+    localStorage.setItem("filter_building", building);
+    localStorage.setItem("label_building", buildingName);
+  }, [building, buildingName]);
+
+  useEffect(() => {
+    // storing input status
+    localStorage.setItem("filter_released", released);
+  }, [released]);
 
   useEffect(() => {
     dispatch(
@@ -605,7 +629,7 @@ function Component({ view }) {
                 },
                 {
                   hidex: released === "",
-                  label: <p>{released ? "Released: " + released : "Released: All"}</p>,
+                  label: <p>{released ? "Released: " + toSentenceCase(released) : "Released: All"}</p>,
                   delete: () => {
                     setReleased("");
                   },
