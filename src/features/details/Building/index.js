@@ -41,11 +41,11 @@ const labels = {
 
 const settings = {
   "Custom Setting" : [
-    "created_on",
-    "legal_name",
-    "owner_name",
-    "code_name",
-    "email",
+    "main_color",
+    "secondary_color",
+    "logo_url",
+    "logo_url_white",
+    "splash_background",
   ],
 };
 
@@ -127,7 +127,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
     />,
     <CustomSetting
       view={view}
-      data={data}
+      data={settingData}
       labels={settings}
       editModal={setOpenEdit}
       logoModal={setOpenLogo}
@@ -166,6 +166,15 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
     dispatch(
       get(endpointAdmin + "/building/details/" + id, (res) => {
         setData(res.data.data);
+        dispatch(setSelected(res.data.data));
+      })
+    );
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    dispatch(
+      get(endpointAdmin + "/building/settings/list?building_id=" + id, (res) => {
+        setSettingData(res.data.data);
         dispatch(setSelected(res.data.data));
       })
     );
@@ -220,8 +229,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                 left: "30px",
                 position: "absolute",
               }}
-              src={require("../../../assets/yipy-logo-color.png")}
-              alt="clinklogo"
+              src={settingData.logo_url}
+              alt="logo"
             />
             <FiMessageSquare
               size="45"
@@ -241,7 +250,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               transform: "translate(-50%, -50%)",
               marginRight: "-50%",
             }}
-            // src={data.content_image}
             src="https://api-dev.yipy.id/yipy-assets/asset-storage/img/F34D997E4CE07657D5A0EC38304E6BE8.png"
             alt="content_image"
           />
@@ -271,7 +279,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               right: 0,
               left: 0,
               zIndex: 99,
-              backgroundColor: "#fafafaaa",
               fontWeight: "bold",
               display: "flex",
             }}
@@ -283,8 +290,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                 left: "30px",
                 position: "absolute",
               }}
-              src={require("../../../assets/yipy-logo-white.png")}
-              alt="clinklogo"
+              src={settingData.logo_url_white}
+              alt="logo_white"
             />
             <FiMessageSquare
               size="45"
@@ -304,7 +311,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               transform: "translate(-50%, -50%)",
               marginRight: "-50%",
             }}
-            // src={data.content_image}
             src="https://api-dev.yipy.id/yipy-assets/asset-storage/img/F34D997E4CE07657D5A0EC38304E6BE8.png"
             alt="content_image"
           />
@@ -326,20 +332,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             position: "relative",
           }}
         >
-          <div
-            style={{
-              height: "calc(164 / 1024 * 720px)",
-              flex: 1,
-              position: "absolute",
-              right: 0,
-              left: 0,
-              zIndex: 99,
-              backgroundColor: "#fafafaaa",
-              fontWeight: "bold",
-              display: "flex",
-            }}
-          >
-          </div>
           <img
             style={{
               height: "100%",
@@ -349,8 +341,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               transform: "translate(-50%, -50%)",
               marginRight: "-50%",
             }}
-            // src={data.content_image}
-            alt="content_image"
+            src={settingData.splash_background}
+            alt="splash_screen"
           />
         </div>
       </Modal>
