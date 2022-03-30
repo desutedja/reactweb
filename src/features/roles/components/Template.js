@@ -59,6 +59,9 @@ function Component({ role, children }) {
   let { url } = useRouteMatch();
 
   useEffect(() => {
+    if (!messaging) return
+    messaging.requestPermission()
+    
     messaging
       .getToken()
       .then((currentToken) => {
