@@ -26,3 +26,11 @@ export const storageRef = storage.ref();
 //     "BN1Y76p50tWwgq45KSIFWgSOvdUCm0XF1eW6B9W17QLceZrdBBssy2PSBh074cGDjf2JKFRuq1Vr7sL4leya0EQ"
 // );
 // export { messaging } 
+let messaging = null
+if (firebase.messaging.isSupported()) {
+   messaging = firebase.messaging()
+   messaging.usePublicVapidKey(
+       "BN1Y76p50tWwgq45KSIFWgSOvdUCm0XF1eW6B9W17QLceZrdBBssy2PSBh074cGDjf2JKFRuq1Vr7sL4leya0EQ"
+   )
+}
+export { messaging }
