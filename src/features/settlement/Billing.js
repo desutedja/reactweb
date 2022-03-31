@@ -132,7 +132,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     setUploadModal(false);
                 }}
                 title="Upload Settlement"
-                subtitle="Upload file type .xlsx for bulk setllement"
+                subtitle="Upload file type .xlsx for bulk settlement"
                 okLabel={uploadResult ? "Done" : "Submit"}
                 disablePrimary={loading}
                 disableSecondary={loading}

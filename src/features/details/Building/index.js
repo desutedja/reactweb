@@ -14,11 +14,12 @@ import Module from "./contents/Module";
 import CustomSetting from "./contents/CustomSetting";
 import { endpointAdmin } from "../../../settings";
 import { useParams, useHistory } from "react-router-dom";
-import { get } from "../../slice";
-import { setSelected, deleteBuilding} from "../../slices/building";
+import { get, put, setInfo } from "../../slice";
+import { setSelected, deleteBuilding, refresh, startAsync, stopAsync} from "../../slices/building";
 import {setting} from "./contents/data";
 import Input from "../../../components/Input";
 import { FiBell, FiMessageSquare } from "react-icons/fi";
+import { toSentenceCase } from "../../../utils";
 
 const labels = {
   Information: [
@@ -74,6 +75,11 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   const [openLogo, setOpenLogo] = useState(false);
   const [openLW, setOpenLW] = useState(false);
   const [openSplash, setOpenSplash] = useState(false);
+  const [mainColor, setMainColor] = useState();
+  const [secondaryColor, setSecondaryColor] = useState();
+  const [logoURL, setLogoURL] = useState();
+  const [logoURLWhite, setlogoURLWhite] = useState();
+  const [splashScreen, setSplashScreen] = useState();
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -172,13 +178,36 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   }, [id, dispatch]);
 
   useEffect(() => {
+
+  //   dispatch(
+  //     get(endpointAdmin + "/building/settings?building_id=" + id, (res) => {
+
+  //       const body = res.data;
+  //       console.log(body);
+        
+  //       if (body.data == null) { 
+  //         dispatch(
+  //           setInfo({
+  //             color: "danger",
+  //             message: `Custom setting building is not set`,
+  //           })
+  //         );       
+
+  //       }else {
+  //         setSettingData(res.data.data);
+  //         dispatch(setSelected(res.data.data));
+
+  //       } 
+  //     },
+  //   )
+  // );
     dispatch(
       get(endpointAdmin + "/building/settings?building_id=" + id, (res) => {
         setSettingData(res.data.data);
         dispatch(setSelected(res.data.data));
       })
     );
-  }, [id, dispatch]);
+  }, [dispatch, id]);
 
   return (
     <>
@@ -353,18 +382,42 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         title="Edit Custom Setting"
         okLabel="Save"
         onClick={() => {
+          dispatch(startAsync());
             dispatch(
-                setSelected(
-                  // {
-                  //   building_id: selected.id,
-                  //   section_type: sectionType
-                  //     ? sectionType
-                  //     : selectedRow.section_type,
-                  //   section_name: sectionName
-                  //     ? sectionName
-                  //     : selectedRow.section_name,
-                  // },
-                  // selectedRow.id
+                put(endpointAdmin + "/building/settings?building_id",
+                  {
+                    building_id: settingData.building_id,
+                    main_color: mainColor
+                      ? mainColor
+                      : settingData.main_color,
+                    secondary_color: secondaryColor
+                      ? secondaryColor
+                      : settingData.secondary_color,
+                    logo_url: logoURL
+                      ? logoURL
+                      : settingData.logo_url,
+                    logo_url_white: logoURLWhite
+                      ? logoURLWhite
+                      : settingData.logo_url_white,
+                    splash_background: splashScreen
+                      ? splashScreen
+                      : settingData.splash_background,
+                  },
+                  (res) => {
+                    dispatch(refresh());
+            
+                    dispatch(
+                      setInfo({
+                        color: "success",
+                        message: "Custom setting building has been updated.",
+                      })
+                    );
+            
+                    dispatch(stopAsync());
+                  },
+                  (err) => {
+                    dispatch(stopAsync());
+                  }
                 )
               );
           setOpenEdit(false);
@@ -374,51 +427,51 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         <form>
           <Input
             label="Main Color"
-            // inputValue={
-            //   selectedRow.section_name
-            //     ? toSentenceCase(selectedRow.section_name)
-            //     : sectionName
-            // }
-            // setInputValue={setSectionName}
+            inputValue={
+              settingData.main_color
+                ? toSentenceCase(settingData.main_color)
+                : mainColor
+            }
+            setInputValue={setMainColor}
           />
           <Input
             label="Second Color"
-            // inputValue={
-            //   selectedRow.section_type ? selectedRow.section_type : sectionType
-            // }
-            // setInputValue={setSectionType}
-            // type="select"
-            // options={sectionTypes}
+            inputValue={
+              settingData.secondary_color
+                ? toSentenceCase(settingData.secondary_color)
+                : secondaryColor
+            }
+            setInputValue={setSecondaryColor}
           />
           <Input
             label="Logo URL"
             type="file"
-            // inputValue={
-            //   selectedRow.section_type ? selectedRow.section_type : sectionType
-            // }
-            // setInputValue={setSectionType}
-            // type="select"
-            // options={sectionTypes}
+            inputValue={
+              settingData.logo_url
+                ? settingData.logo_url
+                : logoURL
+            }
+            setInputValue={setLogoURL}
           />
           <Input
             label="Logo White URL"
             type="file"
-            // inputValue={
-            //   selectedRow.section_type ? selectedRow.section_type : sectionType
-            // }
-            // setInputValue={setSectionType}
-            // type="select"
-            // options={sectionTypes}
+            inputValue={
+              settingData.logo_url_white
+                ? settingData.logo_url_white
+                : logoURLWhite
+            }
+            setInputValue={setlogoURLWhite}
           />
           <Input
             label="Splash Screen"
             type="file"
-            // inputValue={
-            //   selectedRow.section_type ? selectedRow.section_type : sectionType
-            // }
-            // setInputValue={setSectionType}
-            // type="select"
-            // options={sectionTypes}
+            inputValue={
+              settingData.splash_background
+                ? settingData.splash_background
+                : splashScreen
+            }
+            setInputValue={setSplashScreen}
           />
           <div
             style={{
