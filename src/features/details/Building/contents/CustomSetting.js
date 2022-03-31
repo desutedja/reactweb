@@ -33,21 +33,9 @@ function Component({ view = false, imgPreview = false, editModal, logoModal, log
 
     function formatValue(label, value) {
         return (value == null || value === "") ? "-" :
-            label.includes('phone') ? '+' + value :
-                label === "birthdate" ? dateFormatter(value, '-') :
-                    label === "birthplace" ? value.toUpperCase() :
-                        label === "address" ? toSentenceCase(value) :
-                            label === "created_on" ? "#000080" :
-                              label === "legal_name" ? "#FFFFFF" :
-                              label === "owner_name" ? "https://api-dev.yipy.id/yipy-assets/asset-storage/img/DA244DBBE8BC9D8A717917AFBCE86AB5.png" :
-                              label === "code_name" ? "https://api-dev.yipy.id/yipy-assets/asset-storage/img/DA244DBBE8BC9D8A717917AFBCE86AB5.png" :
-                              label === "email" ? "https://api-dev.yipy.id/yipy-assets/asset-storage/img/DA244DBBE8BC9D8A717917AFBCE86AB5.png" :
-                                  label === "nationality" ? getCountryFromCode(value) :
-                                      label === "account_bank" ? getBank(value, banks) :
-                                          label === "gender" ?
-                                              (value === "L" ? "Male" :
-                                                  value === "P" ? "Female" : "Undefined") :
-                                              value
+                label === "main_color" ? "#" + value :
+                    label === "secondary_color" ? "#" + value : 
+                        value
     }
 
     return (

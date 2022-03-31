@@ -173,7 +173,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
 
   useEffect(() => {
     dispatch(
-      get(endpointAdmin + "/building/settings/list?building_id=" + id, (res) => {
+      get(endpointAdmin + "/building/settings?building_id=" + id, (res) => {
         setSettingData(res.data.data);
         dispatch(setSelected(res.data.data));
       })
@@ -261,7 +261,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         disableFooter={true}
         toggle={() => setOpenLW(false)}
         title="Preview"
-        subtitle="How the logo would look on mobile apps"
+        subtitle="How the logo white would look on mobile apps"
       >
         <div
           style={{
@@ -322,7 +322,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         disableFooter={true}
         toggle={() => setOpenSplash(false)}
         title="Preview"
-        subtitle="How the logo would look on mobile apps"
+        subtitle="How the splash screen would look on mobile apps"
       >
         <div
           style={{
