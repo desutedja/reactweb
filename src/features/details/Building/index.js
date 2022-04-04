@@ -207,7 +207,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         dispatch(setSelected(res.data.data));
       })
     );
-  }, [dispatch, id]);
+  }, [id, dispatch]);
 
   return (
     <>

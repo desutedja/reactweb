@@ -77,7 +77,7 @@ export const downloadStaff = ( pageIndex, pageSize, role, building, shift, searc
   dispatch(startAsync());
 
   dispatch(getFile(staffEndpoint + '/list' +
-    '?page=1' +
+    '?page=' + (pageIndex + 1) +
     '&limit=101' + 
     '&search=' + search +
     '&building_id=' + building +
