@@ -187,7 +187,7 @@ export const announcementSchema = Yup.object().shape({
   title: Text,
   building: TextOptional,
   consumer_role: Text,
-  image: Text,
+  image: TextOptional,
   publish_schedule: Text,
   description: Text,
 });

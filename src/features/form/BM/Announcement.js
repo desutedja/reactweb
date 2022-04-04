@@ -289,6 +289,7 @@ function Component() {
                 type="file"
                 label="Image Header"
                 name="image"
+                optional
                 placeholder="Image URL"
                 hint="Preferred size for maximum result is 1:2"
               />

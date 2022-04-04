@@ -201,12 +201,16 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   //     },
   //   )
   // );
-    dispatch(
-      get(endpointAdmin + "/building/settings?building_id=" + id, (res) => {
-        setSettingData(res.data.data);
-        dispatch(setSelected(res.data.data));
-      })
-    );
+
+  if (auth.role === 'sa') {
+      dispatch(
+        get(endpointAdmin + "/building/settings?building_id=" + id, (res) => {
+          setSettingData(res.data.data);
+          dispatch(setSelected(res.data.data));
+        })
+      );
+  } else {
+  }
   }, [id, dispatch]);
 
   return (
