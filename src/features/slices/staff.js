@@ -76,8 +76,8 @@ export const getStaff = ( pageIndex, pageSize, search = '', role, building, shif
 export const downloadStaff = ( pageIndex, pageSize, role, building, shift, search = '', department, management = '') => dispatch => {
   dispatch(startAsync());
 
-  dispatch(getStaff(staffEndpoint + '/list' +
-    '?page=' + (pageIndex + 1) +
+  dispatch(getFile(staffEndpoint + '/list' +
+    '?page=1' +
     '&limit=101' + 
     '&search=' + search +
     '&building_id=' + building +
