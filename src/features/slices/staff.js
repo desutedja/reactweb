@@ -1,6 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointManagement } from '../../settings';
-import { get, post, put, del, setInfo } from '../slice';
+import { get, post, put, del, setInfo, getFile } from '../slice';
 
 const staffEndpoint = endpointManagement + '/admin/staff';
 
@@ -64,10 +64,36 @@ export const getStaff = ( pageIndex, pageSize, search = '', role, building, shif
     
     res => {
       dispatch(setData(res.data.data));
+      console.log(res);
 
       dispatch(stopAsync());
     },
     err => {
+      dispatch(stopAsync());
+    }))
+}
+
+export const downloadStaff = ( pageIndex, pageSize, role, building, shift, search = '', department, management = '') => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(get(staffEndpoint + '/list' +
+    '?page=' + (pageIndex + 1) +
+    '&limit=101' + 
+    '&search=' + search +
+    '&building_id=' + building +
+    '&department_ids=' + department +
+    '&staff_all=1' +
+    '&is_shift=' + (shift === 'yes' ? 1 : shift === 'no' ? 0 : '') +
+    '&staff_role=' + role +
+    // '&sort_field=created_on&sort_type=DESC' +
+    '&management=' + management +
+    '&download=1',
+    "Data_Staff.csv",
+    
+    (res) => {
+      dispatch(stopAsync());
+    },
+    (err) => {
       dispatch(stopAsync());
     }))
 }
