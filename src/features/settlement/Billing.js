@@ -328,6 +328,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                         dispatch(getBillingSettlement(pageIndex, pageSize, search,
                             building, settled,
                             ...(settled === '1' ? [settlementStart, settlementEnd] 
+                                : settled === '0' ? [settlementStart, settlementEnd] 
                                 : [])
                         ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -717,6 +717,8 @@ function Component({ view }) {
                   statusSettlement.value,
                   ...(statusSettlement.value === "settled"
                     ? [settlementStart, settlementEnd]
+                    : statusSettlement.value === "unsettled"
+                    ? [settlementStart, settlementEnd]
                     : [today, today])
                 )
               );
