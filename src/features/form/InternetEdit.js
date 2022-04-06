@@ -186,6 +186,7 @@ function Component() {
               {...props}
               label="Phone"
               name="provider_phone"
+              prefix="+62"
               autoComplete="off"
             />
             <div className="card" style={{ padding: 15, borderRadius: 10, background: "#F0F6FF"}}>

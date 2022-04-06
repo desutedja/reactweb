@@ -50,8 +50,6 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
     const today = moment().format('yyyy-MM-DD', 'day');
     const [settlementStart, setSettlementStart] = useState(today);
     const [settlementEnd, setSettlementEnd] = useState(today);
-    const [datemin, setDatemin] = useState(today);
-    const [datemax, setDatemax] = useState(today);
 
     let dispatch = useDispatch();
 
@@ -330,16 +328,15 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                         dispatch(getBillingSettlement(pageIndex, pageSize, search,
                             building, settled,
                             ...(settled === '1' ? [settlementStart, settlementEnd] 
-                                :
-                                settled === '0' ? [datemin, datemax]
                                 : [])
                         ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [dispatch, refreshToggle, building, settled, settlementStart, settlementEnd, datemin, datemax])}
-                    filters={auth.role === 'sa' ? [
-                        ...settled === '1' ? [{
+                    }, [dispatch, refreshToggle, building, settled, settlementStart, settlementEnd])}
+                    filters={auth.role === 'sa' ? 
+                    [
+                        {
                             hidex: isRangeToday(settlementStart, settlementEnd),
-                            label: "Settlement Date: ",
+                            label: "Date: ",
                             delete: () => { setSettlementStart(today); setSettlementEnd(today); },
                             value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
                                 moment(settlementStart).format('DD-MM-yyyy') + ' - '
@@ -353,24 +350,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                         setSettlementEnd(end);
                                         toggleModal();
                                     }} />
-                        }] :
-                        settled === '0' ? [{
-                            hidex: isRangeToday(datemin, datemax),
-                            label: "Payment Date: ",
-                            delete: () => { setDatemin(today); setDatemax(today); },
-                            value: isRangeToday(datemin, datemax) ? 'Today' :
-                                moment(datemin).format('DD-MM-yyyy') + ' - '
-                                + moment(datemax).format('DD-MM-yyyy'),
-                            component: (toggleModal) =>
-                                <DateRangeFilter
-                                    startDate={datemin}
-                                    endDate={datemax}
-                                    onApply={(start, end) => {
-                                        setDatemin(start);
-                                        setDatemax(end);
-                                        toggleModal();
-                                    }} />
-                        }] : [],
+                        },
                         {
                             hidex: settled === "",
                             label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
@@ -425,9 +405,12 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                     />
                                 </>
                         }
-                    ] : [ ...settled === '1' ? [{
+                    ] 
+                    : 
+                    [
+                    {
                         hidex: isRangeToday(settlementStart, settlementEnd),
-                        label: "Settlement Date: ",
+                        label: "Date: ",
                         delete: () => { setSettlementStart(today); setSettlementEnd(today); },
                         value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
                             moment(settlementStart).format('DD-MM-yyyy') + ' - '
@@ -441,7 +424,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                     setSettlementEnd(end);
                                     toggleModal();
                                 }} />
-                    }] : [],
+                    },
                     {
                         hidex: settled === "",
                         label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,

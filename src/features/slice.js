@@ -190,9 +190,9 @@ export const getErr = (
     .catch(err => {
       // console.log(err);
 
-      dispatch(responseAlertErr(err));
+      // dispatch(responseAlertErr(err));
 
-      ifError(err);
+      // ifError(err);
     })
     .finally(() => {
       finallyDo();
