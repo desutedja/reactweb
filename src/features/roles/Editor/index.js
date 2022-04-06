@@ -134,12 +134,12 @@ const menu = [
     path: "/promo VA",
     component: <PromoVA />,
   },
-  // {
-  //   icon: <FiWifi className="MenuItem-icon" />,
-  //   label: "Internet",
-  //   path: "/internet",
-  //   component: <Internet />,
-  // },
+  {
+    icon: <FiWifi className="MenuItem-icon" />,
+    label: "Internet",
+    path: "/internet",
+    component: <Internet />,
+  },
   {
     icon: <FiShoppingCart className="MenuItem-icon" />,
     label: "Transaction",

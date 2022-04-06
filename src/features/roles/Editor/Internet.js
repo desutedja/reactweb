@@ -2,7 +2,7 @@ import React from "react";
 import { useRouteMatch, Switch, Route } from "react-router-dom";
 
 import List from "../../list/Internet";
-import Add from "../../form/PromoVa";
+import Add from "../../form/Internet";
 import Edit from "../../form/PromoVAEdit";
 import Details from "../../details/PromoVA";
 

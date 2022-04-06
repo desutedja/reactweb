@@ -50,6 +50,8 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
     const today = moment().format('yyyy-MM-DD', 'day');
     const [settlementStart, setSettlementStart] = useState(today);
     const [settlementEnd, setSettlementEnd] = useState(today);
+    const [datemin, setDatemin] = useState(today);
+    const [datemax, setDatemax] = useState(today);
 
     let dispatch = useDispatch();
 
@@ -327,10 +329,13 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     fetchData={useCallback((pageIndex, pageSize, search) => {
                         dispatch(getBillingSettlement(pageIndex, pageSize, search,
                             building, settled,
-                            ...(settled === '1' ? [settlementStart, settlementEnd] : [])
+                            ...(settled === '1' ? [settlementStart, settlementEnd] 
+                                :
+                                settled === '0' ? [datemin, datemax]
+                                : [])
                         ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [dispatch, refreshToggle, building, settled, settlementStart, settlementEnd])}
+                    }, [dispatch, refreshToggle, building, settled, settlementStart, settlementEnd, datemin, datemax])}
                     filters={auth.role === 'sa' ? [
                         ...settled === '1' ? [{
                             hidex: isRangeToday(settlementStart, settlementEnd),
@@ -350,19 +355,19 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                     }} />
                         }] :
                         settled === '0' ? [{
-                            hidex: isRangeToday(settlementStart, settlementEnd),
-                            label: "Transaction Date: ",
-                            delete: () => { setSettlementStart(today); setSettlementEnd(today); },
-                            value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
-                                moment(settlementStart).format('DD-MM-yyyy') + ' - '
-                                + moment(settlementEnd).format('DD-MM-yyyy'),
+                            hidex: isRangeToday(datemin, datemax),
+                            label: "Payment Date: ",
+                            delete: () => { setDatemin(today); setDatemax(today); },
+                            value: isRangeToday(datemin, datemax) ? 'Today' :
+                                moment(datemin).format('DD-MM-yyyy') + ' - '
+                                + moment(datemax).format('DD-MM-yyyy'),
                             component: (toggleModal) =>
                                 <DateRangeFilter
-                                    startDate={settlementStart}
-                                    endDate={settlementEnd}
+                                    startDate={datemin}
+                                    endDate={datemax}
                                     onApply={(start, end) => {
-                                        setSettlementStart(start);
-                                        setSettlementEnd(end);
+                                        setDatemin(start);
+                                        setDatemax(end);
                                         toggleModal();
                                     }} />
                         }] : [],

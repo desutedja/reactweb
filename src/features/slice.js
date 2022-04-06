@@ -111,7 +111,7 @@ export const setInfoSetAsPaid = data => dispatch => {
 
   setTimeout(() => dispatch(setInfoData({
     message: '',
-  })), 50000);
+  })), 5000);
 }
 
 const responseAlert = (err, link) => async dispatch => {
@@ -127,6 +127,24 @@ const responseAlert = (err, link) => async dispatch => {
       subtitle: link,
       //subtitle: err,
       content: response?.data.error_message,
+    }));
+  } else return null
+}
+
+const responseAlertErr = (err, link) => async dispatch => {
+  const response = err.response
+    /* if (response && response.status === 401) {
+    dispatch(openAlert({
+      title: 'Token Expired',
+      content: "Your authentication token has expired. For your safety, please relogin.",
+    }));
+  } else */ if (response && response.data.error_message) {
+    dispatch(openAlert({
+      title: 'Info',
+      subtitle: "Data custom setting building tidak ditemukan.",
+      //subtitle: err,
+      // content: response?.data.error_message,
+      content: "-",
     }));
   } else return null
 }
@@ -148,6 +166,31 @@ export const get = (
       // console.log(err);
 
       dispatch(responseAlert(err, link));
+
+      ifError(err);
+    })
+    .finally(() => {
+      finallyDo();
+    })
+}
+
+export const getErr = (
+  link, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) => (dispatch, getState) => {
+  const { auth } = getState();
+
+  Axios.get(link, {
+    headers: auth.headers,
+  })
+    .then(res => {
+      // console.log(res);
+
+      ifSuccess(res);
+    })
+    .catch(err => {
+      // console.log(err);
+
+      dispatch(responseAlertErr(err));
 
       ifError(err);
     })

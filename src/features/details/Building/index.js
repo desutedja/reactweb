@@ -14,7 +14,7 @@ import Module from "./contents/Module";
 import CustomSetting from "./contents/CustomSetting";
 import { endpointAdmin } from "../../../settings";
 import { useParams, useHistory } from "react-router-dom";
-import { get, put, setInfo } from "../../slice";
+import { get, getErr, put, setInfo } from "../../slice";
 import { setSelected, deleteBuilding, refresh, startAsync, stopAsync} from "../../slices/building";
 import {setting} from "./contents/data";
 import Input from "../../../components/Input";
@@ -84,6 +84,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   let dispatch = useDispatch();
   let history = useHistory();
   let { id } = useParams();
+
+  const reload=()=>window.location.reload();
 
   const contents = [
     <Detail
@@ -179,32 +181,9 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
 
   useEffect(() => {
 
-  //   dispatch(
-  //     get(endpointAdmin + "/building/settings?building_id=" + id, (res) => {
-
-  //       const body = res.data;
-  //       console.log(body);
-        
-  //       if (body.data == null) { 
-  //         dispatch(
-  //           setInfo({
-  //             color: "danger",
-  //             message: `Custom setting building is not set`,
-  //           })
-  //         );       
-
-  //       }else {
-  //         setSettingData(res.data.data);
-  //         dispatch(setSelected(res.data.data));
-
-  //       } 
-  //     },
-  //   )
-  // );
-
   if (auth.role === 'sa') {
       dispatch(
-        get(endpointAdmin + "/building/settings?building_id=" + id, (res) => {
+        getErr(endpointAdmin + "/building/settings?building_id=" + id, (res) => {
           setSettingData(res.data.data);
           dispatch(setSelected(res.data.data));
         })
@@ -408,7 +387,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       : settingData.splash_background,
                   },
                   (res) => {
-                    dispatch(refresh());
+                    // dispatch(refresh());
             
                     dispatch(
                       setInfo({
@@ -416,6 +395,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                         message: "Custom setting building has been updated.",
                       })
                     );
+                    reload();
             
                     dispatch(stopAsync());
                   },
