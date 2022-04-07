@@ -217,10 +217,10 @@ export const getTransactionSettlement = (
       settlementStatus +
       "&status=completed" +
       "&sort_field=created_on&sort_type=DESC" +
-      "&settlement_start_date=" +
+      "&start_date=" +
       start +
       "T00:00:00" +
-      "&settlement_end_date=" +
+      "&end_date=" +
       end +
       "T23:59:59" +
       "&search=" +
@@ -255,10 +255,10 @@ export const downloadTransactionSettlement = (
       settlementStatus +
       "&status=completed" +
       "&sort_field=created_on&sort_type=DESC" +
-      "&settlement_start_date=" +
+      "&start_date=" +
       start +
       "T00:00:00" +
-      "&settlement_end_date=" +
+      "&end_date=" +
       end +
       "T23:59:59" +
       "&search=" +

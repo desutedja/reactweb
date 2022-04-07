@@ -12,7 +12,7 @@ import { setSelected } from "../slices/vouchers";
 import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
-import PromoVA from "../../components/cells/PromoVA";
+import Internet from "../../components/cells/Internet";
 import { deleteVA, editVA } from "../slices/promova";
 import Modal from "../../components/Modal"
 import Input from "../../components/Input"
@@ -25,7 +25,20 @@ const columns = [
   {
     Header: "Provider Name",
     accessor: (row) => 
-      <b>Globenet</b>        
+    <Internet
+        id={row.id}
+        data={row}
+        items={[
+          <b>Globenet</b>,
+          // <p>
+          //   Discount :{" "}
+          //   {row.discount_type === "percentage"
+          //     ? `${row.discount}%`
+          //     : toMoney(row.discount)}
+          // </p>,
+          // <p>{toSentenceCase(row.type)}</p>
+        ]}
+      />       
   },
   {
     Header: "PIC",

@@ -329,7 +329,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                             building, settled,
                             ...(settled === '1' ? [settlementStart, settlementEnd] 
                                 : settled === '0' ? [settlementStart, settlementEnd] 
-                                : [])
+                                : [today, today])
                         ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, building, settled, settlementStart, settlementEnd])}
