@@ -326,10 +326,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     pageCount={settlement.total_pages}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
                         dispatch(getBillingSettlement(pageIndex, pageSize, search,
-                            building, settled,
-                            ...(settled === '1' ? [settlementStart, settlementEnd] 
-                                : settled === '0' ? [settlementStart, settlementEnd] 
-                                : [today, today])
+                            building, settled, settlementStart, settlementEnd,
                         ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                     }, [dispatch, refreshToggle, building, settled, settlementStart, settlementEnd])}

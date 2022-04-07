@@ -715,11 +715,8 @@ function Component({ view }) {
                   pageSize,
                   search,
                   statusSettlement.value,
-                  ...(statusSettlement.value === "settled"
-                    ? [settlementStart, settlementEnd]
-                    : statusSettlement.value === "unsettled"
-                    ? [settlementStart, settlementEnd]
-                    : [today, today])
+                  settlementStart,
+                  settlementEnd,
                 )
               );
               // eslint-disable-next-line react-hooks/exhaustive-deps
