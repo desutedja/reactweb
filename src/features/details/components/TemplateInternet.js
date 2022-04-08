@@ -11,9 +11,8 @@ import {
 import Loading from '../../../components/Loading';
 import Tab from '../../../components/Tab';
 import Breadcrumb from '../../../components/Breadcrumb';
-import { toSentenceCase } from '../../../utils';
 
-function Component({image, title, website, phone, merchant, transparent, reason,
+function Component({image, title, website, phone, merchant, transparent=false,
     email, labels, contents, activeTab, pagetitle= '',  imageTitle = '', loading = true }) {
 
     const [imgLoading, setImgLoading] = useState(true);
@@ -28,14 +27,13 @@ function Component({image, title, website, phone, merchant, transparent, reason,
                 flex: 1,
                 overflow: 'hidden',
             }}>
-                <div className='column'>
                 {(image) && <div className="Container" style={{
                     flexDirection: 'column',
                     maxWidth: 360,
                 }}>
                     {imgLoading &&
                         <div style={{
-                            height: 300,
+                            height: 400,
                             objectFit: 'cover',
                             width: '100%',
                             marginBottom: 16,
@@ -46,7 +44,7 @@ function Component({image, title, website, phone, merchant, transparent, reason,
                         src={image && image !== "placeholder" ? image :
                             require('../../../assets/fallback.jpg')}
                         style={{
-                            height: imgLoading ? 0 : 300,
+                            height: imgLoading ? 0 : 400,
                             objectFit: 'cover',
                             width: '100%',
                             marginBottom: 16,
@@ -82,40 +80,6 @@ function Component({image, title, website, phone, merchant, transparent, reason,
                         </div>
                     </div>}
                 </div>}
-                {reason && <div className="Container" style={{
-                    flexDirection: 'column',
-                    maxWidth: 360,
-                }}>
-                    <div className="row" style={{ borderBottom: '1px solid #E9E9E9', marginBottom: 10 }}>
-                        <div className="col">
-                            <h5>Update Reason Message</h5>
-                        </div>
-                        {/* <div className="col">
-                            <p style={{ textAlign: 'right', fontSize: '12px' }}><a style={{ color: '#E12029' }} href=''>See history</a></p>
-                        </div> */}
-                    </div>
-                    {/* <div className="row">
-                        <div className="col d-flex">
-                            <h5>Edited by</h5>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col">
-                            <h6>Dadang Jordan</h6>
-                        </div>
-                        <div className="col">
-                            <p style={{ textAlign: 'right', fontSize: '12px' }}>18 January 2022 12:23</p>
-                        </div>
-                    </div> */}
-                    {/* <div className="row" style={{ borderBottom: '1px solid #E9E9E9', marginRight: 1, marginLeft: 1, marginBottom: 10 }}>
-                    </div> */}
-                    <div className="row">
-                        <div className="col d-flex reason-container">
-                            <p style={{ fontSize: '12px' }}>{toSentenceCase(reason)}</p>
-                        </div>
-                    </div>
-                </div>}
-                </div>
                 <div className={ transparent ? "Container-transparent" : "Container" } style={{
                     flex: 2,
                 }}>

@@ -889,9 +889,9 @@ function Component({ view }) {
                 onClick={() => {
                   dispatch(downloadTransactionSettlement(
                     statusSettlement.value,
-                    ...(statusSettlement.value === "settled"
-                      ? [settlementStart, settlementEnd]
-                      : [today, today])));
+                    settlementStart,
+                    settlementEnd,
+                    ));
                 }}
               />,
             ];
