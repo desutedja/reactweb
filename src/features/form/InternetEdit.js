@@ -147,7 +147,7 @@ function Component() {
       edit={(data) => {
         delete data[undefined];
         delete data["fee_type_label"];
-        dispatch(editVA(data, history, selected.id))
+        // dispatch(editVA(data, history, selected.id))
       }}
       add={(data) => {
         delete data[undefined];

@@ -109,7 +109,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
             "&task_id=" +
             id +
             "&staff_role=" +
@@ -149,7 +149,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
             "&task_id=" +
             id +
             "&staff_role=" +
@@ -189,7 +189,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
             "&task_id=" +
             id +
             "&staff_role=" +
@@ -229,7 +229,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
             "&task_id=" +
             id +
             "&staff_role=" +
@@ -269,7 +269,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
             "&task_id=" +
             id +
             "&staff_role=" +

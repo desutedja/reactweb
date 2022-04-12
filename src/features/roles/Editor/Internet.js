@@ -3,7 +3,7 @@ import { useRouteMatch, Switch, Route } from "react-router-dom";
 
 import List from "../../list/Internet";
 import Add from "../../form/Internet";
-import Edit from "../../form/PromoVAEdit";
+import Edit from "../../form/InternetEdit";
 import Details from "../../details/Internet";
 
 function Component() {

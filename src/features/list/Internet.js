@@ -205,7 +205,7 @@ function Component({ view, title = '', pagetitle, canDelete }) {
 
   return (
     <>
-      <Modal
+      {/* <Modal
         title="Update Promo"
         isOpen={updatePromoModal}
         toggle={() => setUpdatePromoModal(false)}
@@ -225,7 +225,7 @@ function Component({ view, title = '', pagetitle, canDelete }) {
           setUpdatePromoModal(false);
         }}
       >
-        Change data for this promo
+        Change data for this promo */}
             {/* <MultiSelectInput    
               // type="multiselect"
               label="Bank"
@@ -282,7 +282,7 @@ function Component({ view, title = '', pagetitle, canDelete }) {
             inputValue={endPromo}
             setInputValue={setEndPromo}
         /> */}
-      </Modal>
+      {/* </Modal> */}
       <h2 style={{ marginLeft: '16px' }}>{pagetitle}</h2>
             <Breadcrumb title={title} />
             <div className="Container">
@@ -329,18 +329,18 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                       [dispatch, buildingid, bank, startdate, enddate]
                     )}
                     loading={loading}
-                    onClickChange={
+                    onClickEdit={
                       view
                         ? null
                         : (row) => {
                           
                           dispatch(setSelected(row));
                           history.push(url + "/edit");
-                          console.log(row)
+                          // console.log(row)
                         }
                           
                     }
-                    onClickStop={
+                    onClickDelete={
                       view
                         ? null
                         : role === "bm" && !canDelete
