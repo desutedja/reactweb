@@ -102,6 +102,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         : data.task_type === "service"
         ? "technician"
         : "courier";
+    let department = 
+      data.department?.id
 
     assign &&
       (!search || search.length >= 1) &&
@@ -110,6 +112,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           endpointManagement +
             "/admin/staff/list" +
             "?limit=5&page=1" +
+            "&department_id=" + 
+            department +
             "&task_id=" +
             id +
             "&staff_role=" +
@@ -142,6 +146,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         : data.task_type === "service"
         ? "technician"
         : "courier";
+    let department = 
+      data.department?.id
 
     assignHelper &&
       (!search || search.length >= 1) &&
@@ -150,6 +156,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           endpointManagement +
             "/admin/staff/list" +
             "?limit=5&page=1" +
+            "&department_id=" + 
+            department +
             "&task_id=" +
             id +
             "&staff_role=" +
@@ -182,6 +190,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         : data.task_type === "service"
         ? "technician"
         : "courier";
+    let department = 
+      data.department?.id
 
     delegate &&
       (!search || search.length >= 1) &&
@@ -190,6 +200,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           endpointManagement +
             "/admin/staff/list" +
             "?limit=5&page=1" +
+            "&department_id=" + 
+            department +
             "&task_id=" +
             id +
             "&staff_role=" +
@@ -222,6 +234,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         : data.task_type === "service"
         ? "technician"
         : "courier";
+    let department = 
+      data.department?.id
 
     reject &&
       (!search || search.length >= 1) &&
@@ -230,6 +244,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           endpointManagement +
             "/admin/staff/list" +
             "?limit=5&page=1" +
+            "&department_id=" + 
+            department +
             "&task_id=" +
             id +
             "&staff_role=" +
@@ -262,6 +278,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         : data.task_type === "service"
         ? "technician"
         : "courier";
+    let department = 
+      data.department?.id
 
     rejectingHelper &&
       (!search || search.length >= 1) &&
@@ -270,6 +288,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           endpointManagement +
             "/admin/staff/list" +
             "?limit=5&page=1" +
+            "&department_id=" + 
+            department +
             "&task_id=" +
             id +
             "&staff_role=" +

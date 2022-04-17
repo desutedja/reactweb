@@ -86,7 +86,7 @@ const columns = [
         )
       ) : row.staff_role === "gm_bm" || row.staff_role === "pic_bm" ? (
         <Pill color="success">Always</Pill>
-      ) : row.current_shift_status ? (
+      ) : row.on_shift === "yes" ? (
         <Pill color="success">On Shift</Pill>
       ) : (
         <Pill color="secondary">No</Pill>

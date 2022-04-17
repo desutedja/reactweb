@@ -322,11 +322,22 @@ function Component({ id, view, canAdd, canUpdate, canDelete, editPath = 'edit' }
                   <td colSpan={5}>
                     <b>Provider Details</b>
                   </td>
-                  <td style={{ textAlign: "right"}}>
-                    <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
+                  <td>
+                    {/* <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
                       pathname: editPath,
                       // state: data,
-                    })} />
+                    })} /> */}
+                    <div className="row no-gutters w-100" style={{ justifyContent: 'space-between' }}>
+                        <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
+                            
+                        </div>
+                        <div className="col-auto d-flex flex-column">
+                            <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
+                                pathname: editPath,
+                                // state: data,
+                            })} />
+                        </div>
+                    </div>
                   </td>
                 </tr>
                 <tr style={{ textAlign: "center"}}>

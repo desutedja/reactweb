@@ -267,7 +267,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
             (selectedRow?.department_id
               ? "&department_id=" + selectedRow.department_id
               : "") +
