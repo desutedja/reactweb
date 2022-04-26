@@ -14,17 +14,17 @@ import Button from "../../components/Button";
 import { createVoucher, editVoucher } from "../slices/vouchers";
 
 import { RiLightbulbLine, RiCalendarEventLine } from "react-icons/ri"
-import { createInternetProvider } from "../slices/internet";
+import { createVA, editVA } from "../slices/promova";
 
 import { toSentenceCase } from "../../utils";
+import countries from "../../countries";
 
 const internetPayload = {
   provider_name: "",
-  image: "",
+  provider_logo: "",
   pic_name: "",
-  pic_email: "",
-  pic_phone: "",
-  coverage_area: "",
+  provider_email: "",
+  provider_phone: ""
 };
 
 function Component() {
@@ -127,6 +127,8 @@ function Component() {
               //   value: el.id,
               //   label: el.name,
               // })),
+              start_date: selected.start_date?.split('T')[0],
+              end_date: selected.end_date?.split('T')[0],
             }
           : internetPayload
       }
@@ -134,6 +136,12 @@ function Component() {
       formatValues={(values) => ({
         
         ...values,
+        fee: parseInt(values.fee),
+        fee_type: values.fee_type,
+        percentage: parseFloat(values.percentage),
+        markup: 0,
+        start_date: values.start_date,
+        end_date: values.end_date,
         // building_management_id: values.building_management_id,
         // account_bank: values.account_bank,
       })}
@@ -142,52 +150,52 @@ function Component() {
       //   delete data["fee_type_label"];
       //   dispatch(editVA(data, history, selected.id))
       // }}
-      add={(data) => {
-        delete data[undefined];
-        dispatch(createInternetProvider(data, history))
-      }}
+      // add={(data) => {
+      //   delete data[undefined];
+      //   // dispatch(createProvider(data, history))
+      // }}
       renderChild={(props) => {
         const { setFieldValue, values, errors } = props;
         return (
           <Form className="Form">
             <Input
               {...props}
-              label="Provider Name"
-              name="provider_name"
+              label="Package Name"
+              name="package_name"
               autoComplete="off"
             />
             <Input
               {...props}
-              type="file"
-              label="Logo Provider"
-              name="image"
-              autoComplete="off"
-              hint="Logo berwarna dengan ukuran 256 x 256 px"
-            />
-            <Input
-              {...props}
-              label="PIC Name"
-              name="pic_name"
+              label="Speed"
+              name="package_speed"
               autoComplete="off"
             />
             <Input
               {...props}
+              label="Price"
+              name="package_price"
+              autoComplete="off"
+            />
+            <Input
+              {...props}
+              type="multiselect"
               label="Coverage Area"
-              name="coverage_area"
-              autoComplete="off"
-              hint="Ex: Jakarta, Bandung, Sulawesi, dst"
-            />
-            <Input
-              {...props}
-              label="Email"
-              name="pic_email"
+              placeholder="Coverage Area"
+              options={countries} 
               autoComplete="off"
             />
             <Input
               {...props}
-              label="Phone"
-              name="pic_phone"
-              prefix="+62"
+              type="textarea"
+              label="Notes"
+              name="notes"
+              autoComplete="off"
+            />
+            <Input
+              {...props}
+              type="textarea"
+              label="TV Channel"
+              name="tv_channel"
               autoComplete="off"
             />
             <div className="card" style={{ padding: 15, borderRadius: 10, background: "#F0F6FF"}}>

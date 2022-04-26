@@ -9,6 +9,7 @@ import {
   _endpointMerchant,
   _endpointTransaction,
   _endpointAds,
+  _endpointInternet,
 } from "./endpoints";
 
 export const endpointBase = _endpointBase;
@@ -22,6 +23,7 @@ export const endpointTask = _endpointTask;
 export const endpointMerchant = _endpointMerchant;
 export const endpointTransaction = _endpointTransaction;
 export const endpointAds = _endpointAds;
+export const endpointInternet = _endpointInternet;
 
 export const mainColor = "#2f78e9";
 

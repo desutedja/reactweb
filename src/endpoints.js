@@ -10,3 +10,4 @@ export const _endpointTask = _endpointBase + '/' + root + '-task';
 export const _endpointMerchant = _endpointBase + '/' + root + '-merchant';
 export const _endpointTransaction = _endpointBase + '/' + root + '-transaction';
 export const _endpointAds = _endpointBase + '/' + root + '-advertisement';
+export const _endpointInternet = _endpointBase + '/' + root + '-internet';

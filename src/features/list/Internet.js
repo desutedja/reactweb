@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { dateTimeFormatterCell, toMoney, toSentenceCase } from "../../utils";
-import { endpointAdmin } from "../../settings";
+import { endpointAdmin, endpointInternet } from "../../settings";
 import { get, setConfirmDelete, post, del } from "../slice";
 
 import Table from "../../components/Table";
@@ -13,10 +13,11 @@ import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
 import Internet from "../../components/cells/Internet";
-import { deleteVA, editVA } from "../slices/promova";
+import { getInternetProvider } from "../slices/internet";
 import Modal from "../../components/Modal"
 import Input from "../../components/Input"
 import MultiSelectInput from "../form/input/MultiSelect";
+import Avatar from "react-avatar";
 
 
 const columns = [
@@ -29,36 +30,60 @@ const columns = [
         id={row.id}
         data={row}
         items={[
-          <b>Globenet</b>,
-          // <p>
-          //   Discount :{" "}
-          //   {row.discount_type === "percentage"
-          //     ? `${row.discount}%`
-          //     : toMoney(row.discount)}
-          // </p>,
-          // <p>{toSentenceCase(row.type)}</p>
+          <>
+          <Avatar
+            className="Item-avatar"
+            size="40"
+            src={row.image}
+            name='L O G O'
+          />
+          <b>{row.provider_name}</b>
+          </>
         ]}
       />       
   },
   {
     Header: "PIC",
-    accessor: (row) =>{
+    accessor: (row) => {
       return (
         <div>
-          <div>
-            <b>Dadang Jordan</b>
-          </div>
-          <div>
-            dadangjordan@gmail.com
-          </div>
+            {row.pic.map((item) =>
+            <> 
+              <div>
+                <b>
+                {
+                  item.name ? item.name : '-'
+                }
+                </b>
+              </div> 
+              <div>
+                {
+                  item.email
+                }
+              </div>
+            </>
+              )
+            }
         </div>
       );
     },
   },
   {
     Header: "Phone",
-    accessor: (row) =>
-    "6281289089898"
+    accessor: (row) =>{
+      return (
+        <div>
+            {row.pic.map((item) =>
+              <div>
+                {
+                  item.phone ? '62'+item.phone : '-'
+                }
+              </div> 
+              )
+            }
+        </div>
+      );
+    },
   },
   {
     Header: "Created On",
@@ -66,8 +91,7 @@ const columns = [
       return (
         <div>
           <div>
-            {
-      row.created_on ? dateTimeFormatterCell(row.created_on) : "-"}
+            {row.created_on ? dateTimeFormatterCell(row.created_on) : "-"}
           </div>
           <div>
             by System
@@ -96,6 +120,7 @@ function Component({ view, title = '', pagetitle, canDelete }) {
   const [bManagements, setBManagements] = useState([]);
   const [dataBanks, setDataBanks] = useState([]);
   const [inBuildings, setBuildings] = useState([]);
+  const [provider, setProvider] = useState("");
 
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(10);
@@ -303,19 +328,12 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                         setLoading(true);
                         dispatch(
                           get(
-                            endpointAdmin +
-                            "/paymentperbuilding/list?status=all" +
-                            "&start_date=" +
-                            startdate +
-                            "&end_date=" +
-                            enddate + 
-                            "&building_id=" + 
-                            buildingid +
-                            "&bank=" +
-                            bank +
-                            "&sort_field=created_on&sort_type=DESC" +
-                            "&limit=" + 
-                            limit,
+                            endpointInternet +
+                            "/admin/provider?" +
+                            'page=' + (page + 1) +
+                            '&limit=' + limit +
+                            '&search=' + searchItem +
+                            '&provider_id=' + provider,
 
                             (res) => {
                               console.log(res.data.data);
@@ -326,7 +344,7 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                         );
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                       },
-                      [dispatch, buildingid, bank, startdate, enddate]
+                      [dispatch, provider]
                     )}
                     loading={loading}
                     onClickEdit={

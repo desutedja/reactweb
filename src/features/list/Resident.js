@@ -222,7 +222,7 @@ function Component({ view, canAdd }) {
               }}
             >
               {res.data ? res.data.length : 0} rows{" "}
-              {res.error.length === 0
+              {res.error === null
                 ? "added succesfully."
                 : "in correct format."}
             </p>
@@ -233,9 +233,9 @@ function Component({ view, canAdd }) {
               }}
             >
               {res.error ? res.error.length : 0} rows{" "}
-              {res.error.length === 0 ? "failed to add." : "in wrong format."}
+              {res.error === null ? "failed to add." : "in wrong format."}
             </p>
-            {res.error.map((el) => (
+            {res.error != null ? res.error.map((el) => (
               <p
                 style={{
                   color: "crimson",
@@ -244,7 +244,16 @@ function Component({ view, canAdd }) {
               >
                 {el}
               </p>
-            ))}
+            )) : 
+              <p
+                style={{
+                  color: "seagreen",
+                  marginBottom: 4,
+                }}
+              >
+                {res.data.length} Resident(s) successfully added.
+              </p>
+              }
           </div>
         ) : (
           <Loading loading={loading}>

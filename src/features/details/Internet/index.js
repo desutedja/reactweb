@@ -20,29 +20,53 @@ import {
   refresh,
 } from "../../slices/resident";
 import { endpointAdmin, endpointResident } from "../../../settings";
-import { get, post } from "../../slice";
+import { get, post, setConfirmDelete } from "../../slice";
 import Loading from "../../../components/Loading";
 import { RiCalendarEventLine } from "react-icons/ri";
 import { dateTimeFormatter } from "../../../utils";
 import Breadcrumb from "../../../components/Breadcrumb";
 import { setSelected } from "../../slices/promova";
+import InternetPackage from "../../../components/cells/InternetPackage";
 
 const columnsUnit = [
-  { Header: "Package Name", accessor: "package" },
-  { Header: "Speed", accessor: "speed" },
-  { Header: "Price", accessor: "price" },
-  { Header: "Coverage Area", accessor: "coverage" },
+  { Header: "Package Name", accessor: (row) => 
+  <InternetPackage
+    id={row.id}
+    data={row}
+    items={[
+      <b>Globenet EZY</b>,
+      // <p>
+      //   Discount :{" "}
+      //   {row.discount_type === "percentage"
+      //     ? `${row.discount}%`
+      //     : toMoney(row.discount)}
+      // </p>,
+      // <p>{toSentenceCase(row.type)}</p>
+    ]}
+  />      
+  },
+  { Header: "Speed", accessor: (row) => 
+    <b>10 Mbps</b>,
+  },
+  { Header: "Price", accessor: (row) => 
+    "Rp. 250.000",
+  },
+  { Header: "Coverage Area", accessor: (row) =>
+    "Jakarta Barat, Jakarta Selatan, Kota Bandung, Balikpapan"
+  },
   { Header: "Created On", accessor: "created_on" },
 ];
 
-function Component({ id, view, canAdd, canUpdate, canDelete, editPath = 'edit' }) {
+function Component({ id, view, canAdd, canUpdate, canDelete, editPath = 'edit', addPath = 'package/add' }) {
   const [addUnit, setAddUnit] = useState(false);
   const [delUnit, setDelUnit] = useState({
     delete: [],
   });
-  const [confirmDelete, setConfirmDelete] = useState(false);
+  // const [confirmDelete, setConfirmDelete] = useState(false);
   const [confirmDeleteUnit, setConfirmDeleteUnit] = useState(false);
   const [addUnitStep, setAddUnitStep] = useState(1);
+
+  const [data, setData] = useState({ items: [] });
 
   const [addSubAccount, setAddSubAccount] = useState(false);
   const [addSubAccountStep, setAddSubAccountStep] = useState(false);
@@ -385,21 +409,42 @@ function Component({ id, view, canAdd, canUpdate, canDelete, editPath = 'edit' }
       </div>
       <div className="Container">
       <TableInternet
-        totalItems={unit.items.length}
         noContainer={true}
         columns={columnsUnit}
-        data={unit.items.map((el) =>
-          el.level === "main"
-            ? {
-                expandable: true,
-                subComponent: SubAccountList,
-                ...el,
-              }
-            : el
-        )}
+        data={data?.items || []}
         loading={loading}
         pageCount={unit.total_pages}
-        fetchData={fetchData}
+        fetchData={useCallback(
+          (page, limit, searchItem, sortField, sortType) => {
+            // setLoading(true);
+            dispatch(
+              get(
+                endpointAdmin +
+                "/paymentperbuilding/list?status=all" +
+                "&start_date=" +
+                "" +
+                "&end_date=" +
+                "" + 
+                "&building_id=" + 
+                "" +
+                "&bank=" +
+                "" +
+                "&sort_field=created_on&sort_type=DESC" +
+                "&limit=" + 
+                limit,
+
+                (res) => {
+                  console.log(res.data.data);
+                  setData(res.data.data);
+                  // setLoading(false);
+                }
+              )
+            );
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+          },
+          // [dispatch, buildingid, bank, startdate, enddate]
+          [dispatch]
+        )}
         filters={[]}
         actions={
           view
@@ -414,29 +459,39 @@ function Component({ id, view, canAdd, canUpdate, canDelete, editPath = 'edit' }
                     history.push(url + "/add");
                   }}
                 />,
+              //   <Button icon={<FiPlus />} label="Add Package" key="Add Package" onClick={() => history.push({
+              //     pathname: addPath,
+              //     // state: data,
+              // })} />
               ]
+        }
+        onClickEdit={
+          view
+            ? null
+            : (row) => {
+              
+              dispatch(setSelected(row));
+              history.push(url + "/package/edit");
+              // console.log(row)
+            }
+              
         }
         onClickDelete={
           view
             ? null
-            : canDelete
-            ? (row) => {
-                let del = row.unit_sub_account
-                  ? row.unit_sub_account.map((item) => ({
-                      unit_id: Number(row.unit_id),
-                      owner_id: Number(item.id),
-                    }))
-                  : [];
-                del.push({
-                  unit_id: Number(row.unit_id),
-                  owner_id: Number(id),
-                });
-                setDelUnit({
-                  delete: del,
-                });
-                setConfirmDeleteUnit(true);
+            : role === "bm" && !canDelete
+            ? null
+            : (row) => {
+                dispatch(
+                  setConfirmDelete(
+                    // "Are you sure to end this promo?",
+                    "Feature still under development",
+                    () => {
+                      // dispatch(deleteVA(row));
+                    }
+                  )
+                );
               }
-            : undefined
         }
       />
       </div>

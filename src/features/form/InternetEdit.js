@@ -20,10 +20,11 @@ import { toSentenceCase } from "../../utils";
 
 const internetPayload = {
   provider_name: "",
-  provider_logo: "",
+  image: "",
   pic_name: "",
-  provider_email: "",
-  provider_phone: ""
+  pic_email: "",
+  pic_phone: "",
+  coverage_area: "",
 };
 
 function Component() {
@@ -126,8 +127,6 @@ function Component() {
               //   value: el.id,
               //   label: el.name,
               // })),
-              start_date: selected.start_date?.split('T')[0],
-              end_date: selected.end_date?.split('T')[0],
             }
           : internetPayload
       }
@@ -135,12 +134,6 @@ function Component() {
       formatValues={(values) => ({
         
         ...values,
-        fee: parseInt(values.fee),
-        fee_type: values.fee_type,
-        percentage: parseFloat(values.percentage),
-        markup: 0,
-        start_date: values.start_date,
-        end_date: values.end_date,
         // building_management_id: values.building_management_id,
         // account_bank: values.account_bank,
       })}
@@ -166,7 +159,7 @@ function Component() {
             <Input
               {...props}
               label="Logo Provider"
-              name="provider_logo"
+              name="image"
               autoComplete="off"
               hint="Logo berwarna dengan ukuran 256 x 256 px"
             />
@@ -178,14 +171,21 @@ function Component() {
             />
             <Input
               {...props}
+              label="Coverage Area"
+              name="coverage_area"
+              autoComplete="off"
+              hint="Ex: Jakarta, Bandung, Sulawesi, dst"
+            />
+            <Input
+              {...props}
               label="Email"
-              name="provider_email"
+              name="pic_email"
               autoComplete="off"
             />
             <Input
               {...props}
               label="Phone"
-              name="provider_phone"
+              name="pic_phone"
               prefix="+62"
               autoComplete="off"
             />

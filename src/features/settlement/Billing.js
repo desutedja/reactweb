@@ -48,8 +48,12 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
     const [loadingUpload, setLoadingUpload] = useState(false);
 
     const today = moment().format('yyyy-MM-DD', 'day');
+    const monthStart = moment().startOf("month").format("yyyy-MM-DD");
+    const monthEnd = moment().endOf("month").format("yyyy-MM-DD");
     const [settlementStart, setSettlementStart] = useState(today);
     const [settlementEnd, setSettlementEnd] = useState(today);
+    const [startDate, setStartDate] = useState(monthStart);
+    const [endDate, setEndDate] = useState(monthEnd);
 
     let dispatch = useDispatch();
 
@@ -326,10 +330,14 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     pageCount={settlement.total_pages}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
                         dispatch(getBillingSettlement(pageIndex, pageSize, search,
-                            building, settled, settlementStart, settlementEnd,
+                            building, settled, 
+                            ...(auth.role === 'sa' ? [settlementStart, settlementEnd] 
+                                : auth.role === 'bm' ? [startDate, endDate] 
+                                : [today, today])
+
                         ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [dispatch, refreshToggle, building, settled, settlementStart, settlementEnd])}
+                    }, [dispatch, auth.role, refreshToggle, building, settled, settlementStart, settlementEnd, startDate, endDate])}
                     filters={auth.role === 'sa' ? 
                     [
                         {
@@ -407,19 +415,19 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     : 
                     [
                     {
-                        hidex: isRangeToday(settlementStart, settlementEnd),
+                        hidex: isRangeToday(startDate, endDate),
                         label: "Date: ",
-                        delete: () => { setSettlementStart(today); setSettlementEnd(today); },
-                        value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
-                            moment(settlementStart).format('DD-MM-yyyy') + ' - '
-                            + moment(settlementEnd).format('DD-MM-yyyy'),
+                        delete: () => { setStartDate(monthStart); setEndDate(monthEnd); },
+                        value: isRangeToday(startDate, endDate) ? 'Today' :
+                            moment(startDate).format('DD-MM-yyyy') + ' - '
+                            + moment(endDate).format('DD-MM-yyyy'),
                         component: (toggleModal) =>
                             <DateRangeFilter
-                                startDate={settlementStart}
-                                endDate={settlementEnd}
+                                startDate={startDate}
+                                endDate={endDate}
                                 onApply={(start, end) => {
-                                    setSettlementStart(start);
-                                    setSettlementEnd(end);
+                                    setStartDate(start);
+                                    setEndDate(end);
                                     toggleModal();
                                 }} />
                     },

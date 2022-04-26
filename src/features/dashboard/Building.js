@@ -157,14 +157,14 @@ function Component() {
 
   useEffect(() => {
     dispatch(
-      get(endpointManagement + "/admin/staff/statistics?tower=" + tower, (res) => {
+      get(endpointManagement + "/admin/staff/statistics?tower=" + tower + '&building_id=' + buildingName, (res) => {
         setStaffData(res.data.data);
         if (res.data.data.billing_summary.length > 0) {
           handleBillingSummary(res.data.data.billing_summary);
         }
       })
     );
-  }, [dispatch, tower]);
+  }, [dispatch, tower, buildingName]);
 
   useEffect(() => {
     dispatch(
