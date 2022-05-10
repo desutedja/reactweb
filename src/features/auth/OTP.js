@@ -67,6 +67,7 @@ function Page({ role }) {
                         }}>(ini harusnya 1 menit, cuma di persingkat buat dev purposes)</p> */}
                         {tick > 0 ? <p>00:{tick}</p> :
                             <button
+                                style={{ color: 'white' }}
                                 className="py-2"
                                 type="button"
                                 onClick={() => {

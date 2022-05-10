@@ -26,6 +26,7 @@ import admin from "./features/slices/admin";
 import notification from "./features/slices/notification";
 import requestpremium from "./features/slices/requestpremium";
 import catatmeter from "./features/slices/catatmeter";
+import internet from "./features/slices/internet";
 
 const logger = createLogger({
   predicate: (getState, action) =>
@@ -53,6 +54,7 @@ const reducers = combineReducers({
   admin,
   notification,
   vouchers,
+  internet,
 });
 
 const persistConfig = {

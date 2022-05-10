@@ -710,7 +710,7 @@ const ModuleTable = ({ options, setFieldValue, values }) => {
                   <div>
                     <button
                       type="button"
-                      style={{}}
+                      style={{ color: 'white' }}
                       onClick={() => {
                         setIndex(index, true);
                       }}
@@ -719,7 +719,7 @@ const ModuleTable = ({ options, setFieldValue, values }) => {
                     </button>
                     <button
                       type="button"
-                      style={{ marginLeft: 10 }}
+                      style={{ marginLeft: 10, color: 'white' }}
                       onClick={() => {
                         setIndex(index, false);
                       }}

@@ -124,7 +124,7 @@ button {
   /* cursor: pointer; */
   background-color: var(--primary-color);
   border-radius: 4px;
-  color: white;
+  /* color: white; */
   border: none;
   padding: 4px;
   padding-left: 8px;

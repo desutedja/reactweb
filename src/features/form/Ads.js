@@ -505,6 +505,7 @@ function Component() {
                             type="button"
                             style={{
                               marginLeft: 16,
+                              color: 'white'
                             }}
                             onClick={() => {
                               setFieldValue(
@@ -523,6 +524,7 @@ function Component() {
                             type="button"
                             style={{
                               marginLeft: 16,
+                              color: 'white'
                             }}
                             onClick={() => {
                               setFieldValue(

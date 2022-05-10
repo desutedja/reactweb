@@ -347,10 +347,6 @@ function Component({ id, view, canAdd, canUpdate, canDelete, editPath = 'edit', 
                     <b>Provider Details</b>
                   </td>
                   <td>
-                    {/* <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
-                      pathname: editPath,
-                      // state: data,
-                    })} /> */}
                     <div className="row no-gutters w-100" style={{ justifyContent: 'space-between' }}>
                         <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
                             

@@ -384,6 +384,7 @@ function Component({ view }) {
               }}
               style={{
                 marginTop: 16,
+                color: 'white'
               }}
             >
               Download Template

@@ -5,16 +5,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { endpointAdmin, endpointMerchant, endpointResident } from "../../settings";
 import { get } from "../slice";
 
-import Template from "./components/TemplateWithFormik";
+import Template from "./components/TemplateInternet";
 import { Form } from "formik";
-import { promoVaSchema } from "./services/schemas";
+import { providerSchema } from "./services/schemas";
 import Input from "./input";
 import SubmitButton from "./components/SubmitButton";
 import Button from "../../components/Button";
-import { createVoucher, editVoucher } from "../slices/vouchers";
 
 import { RiLightbulbLine, RiCalendarEventLine } from "react-icons/ri"
-import { createInternetProvider } from "../slices/internet";
+import { createInternetProvider} from "../slices/internet";
 
 import { toSentenceCase } from "../../utils";
 
@@ -30,7 +29,7 @@ const internetPayload = {
 function Component() {
 
   // const { banks } = useSelector((state) => state.main);
-  const { loading, selected } = useSelector((state) => state.vouchers);
+  const { loading, selected } = useSelector((state) => state.internet);
 
   const [bManagements, setBManagements] = useState([]);
   const [dataBanks, setDataBanks] = useState([]);
@@ -43,79 +42,9 @@ function Component() {
   let dispatch = useDispatch();
   let history = useHistory();
 
-  useEffect(() => {
-    dispatch(
-      get(endpointAdmin + "/building?page=1&limit=9999", (res) => {
-        let formatted = res.data.data.items.map((el) => ({
-          label: el.name,
-          value: el.id,
-          lat: el.lat,
-          long: el.long,
-        }));
-        setBuildings(formatted);
-      })
-    );
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(
-      get(
-        endpointAdmin +
-          "/management/building" +
-          "?limit=10&page=1" +
-          "&search=",
-        (res) => {
-          let data = res.data.data.items;
-
-          let formatted = data.map((el) => ({
-            label: el.building_name + " by " + el.management_name,
-            value: el.id,
-          }));
-
-          setBManagements(formatted);
-        }
-      )
-    );
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(
-      get(endpointAdmin + "/paymentperbuilding/list/payment_method", (res) => {
-        const banks = res.data.data.items.map((el) => ({
-          value: el.id,
-          label: toSentenceCase(el.provider),
-        }));
-
-        // console.log(banks)
-
-        dispatch(setDataBanks(banks));
-      })
-    );
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(
-      get(
-        endpointMerchant +
-          "/admin/listmerchantname?search=",
-        (res) => {
-          
-          let formatted = res.data.data.map((el) => {
-            return {
-              id: el.id,
-              label: el.name,
-              value: el.name,
-            };
-          });
-          setMerchant(formatted);
-        }
-      )
-    );
-  }, [dispatch]);
-
   return (
     <Template
-      slice="vouchers"
+      slice="internet"
       payload={
         selected.id
           ? {
@@ -130,18 +59,11 @@ function Component() {
             }
           : internetPayload
       }
-      // schema={promoVaSchema}
+      schema={providerSchema}
       formatValues={(values) => ({
         
         ...values,
-        // building_management_id: values.building_management_id,
-        // account_bank: values.account_bank,
       })}
-      // edit={(data) => {
-      //   delete data[undefined];
-      //   delete data["fee_type_label"];
-      //   dispatch(editVA(data, history, selected.id))
-      // }}
       add={(data) => {
         delete data[undefined];
         dispatch(createInternetProvider(data, history))
@@ -189,15 +111,21 @@ function Component() {
               name="pic_phone"
               prefix="+62"
               autoComplete="off"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                event.preventDefault();
+                }
+              }}
             />
             <div className="card" style={{ padding: 15, borderRadius: 10, background: "#F0F6FF"}}>
               <p style={{ color: "#244091" }}><RiLightbulbLine /> Pastikan semua form terisi dengan benar. Silakan cek kembali terlebih dahulu semua data yang telah <br />
               diisi sebelum melakukan submit.</p>
             </div>
             <div>
+            <SubmitButton loading={loading} errors={errors} />
             <button style={{
                 marginTop: 16,
-                marginRight: 10,
+                marginLeft: 10,
                 background: "#F4F4F4",
                 color: "#000000",
                 paddingTop: 6,
@@ -206,7 +134,6 @@ function Component() {
                 paddingRight: 21,
             }} 
             onClick={() => history.goBack()}><b>Cancel</b></button>
-            <SubmitButton loading={loading} errors={errors} />
             </div>
           </Form>
         );

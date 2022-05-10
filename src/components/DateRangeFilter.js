@@ -18,7 +18,8 @@ const DateRangeFilter = ({ startDate, endDate, onApply, title='Created Date'}) =
             />
             <button
                 style={{
-                    marginTop: 16
+                    marginTop: 16,
+                    color: 'white'
                 }}
                 onClick={() => {
                     onApply(start, end);

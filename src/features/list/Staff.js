@@ -24,6 +24,7 @@ const ListDepartment = ({ data }) => {
   return (
     <div className="modal-hover">
       <button
+        style={{ color: 'white' }}
         onClick={() => history.push("/" + role + "/staff/" + data.id)}
         className="ml-2"
         onMouseEnter={() => setModalHover(true)}

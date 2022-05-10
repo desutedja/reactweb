@@ -287,6 +287,7 @@ function Component({ view, canAdd }) {
                 }}
                 style={{
                   marginTop: 16,
+                  color: 'white'
                 }}
               >
                 Download Template

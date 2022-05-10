@@ -31,6 +31,7 @@ function Component({
                 </ModalBody>
                 {!disableFooter && (<ModalFooter>
                     {!disablePrimary && <button
+                        style={{ color: 'white' }}
                         disabled={disabledOk}
                         className={btnDanger ? "Button Danger" : "Button"}
                         // color={btnDanger ? "danger" : "primary"}

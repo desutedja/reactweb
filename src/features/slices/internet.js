@@ -1,11 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import { endpointInternet } from '../../settings';
-import { get, post, put, del, setInfo, getFile } from '../slice';
+import { get, post, put, del, setInfo, getFile, patch } from '../slice';
 
 const internetEndpoint = endpointInternet + '/admin';
 
 export const slice = createSlice({
-  name: 'staff',
+  name: 'internet',
   initialState: {
     loading: false,
     items: [],
@@ -47,25 +47,27 @@ export const {
   refresh
 } = slice.actions;
 
-export const getInternetProvider = ( pageIndex, pageSize, search = '', role, provider, shift, management, department) => dispatch => {
-  dispatch(startAsync());
+export default slice.reducer;
 
-  dispatch(get(internetEndpoint + '/provider?' +
-    '?page=' + (pageIndex + 1) +
-    '&limit=' + pageSize +
-    '&search=' + search +
-    '&provider_id=' + provider,
+// export const getInternetProvider = ( pageIndex, pageSize, search = '', role, provider = "") => dispatch => {
+//   dispatch(startAsync());
+
+//   dispatch(get(internetEndpoint + '/provider' +
+//     '?page=' + (pageIndex + 1) +
+//     '&limit=' + pageSize +
+//     '&search=' + search +
+//     '&provider_id=' + provider,
     
-    res => {
-      dispatch(setData(res.data.data));
-      console.log(res);
+//     res => {
+//       dispatch(setData(res.data.data));
+//       console.log(res);
 
-      dispatch(stopAsync());
-    },
-    err => {
-      dispatch(stopAsync());
-    }))
-}
+//       dispatch(stopAsync());
+//     },
+//     err => {
+//       dispatch(stopAsync());
+//     }))
+// }
 
 // export const downloadStaff = ( pageIndex, pageSize, role, building, shift, search = '', department, management = '') => dispatch => {
 //   dispatch(startAsync());
@@ -101,11 +103,73 @@ export const createInternetProvider = (data, history) => (dispatch) => {
       data,
       (res) => {
         history.push("/sa/internet");
+        
+        dispatch(refresh());
 
         dispatch(
           setInfo({
             color: "success",
-            message: "New provider internet has been created.",
+            message: "New internet provider has been created.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const editInternetProvider = (data, history) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    patch(
+      endpointInternet + '/admin/provider',
+      data,
+      (res) => {
+        history && history.push("/" + auth.role + "/internet");
+
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Internet provider has been updated.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const deleteInternetProvider = (row, history) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    del(
+      endpointInternet + '/admin/provider/' + row.id,
+      row.id,
+      (res) => {
+        history && history.push("/" + auth.role + "/internet");
+
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "danger",
+            message: "Provider internet has been deleted.",
           })
         );
 
@@ -175,5 +239,3 @@ export const createInternetProvider = (data, history) => (dispatch) => {
 //       dispatch(stopAsync());
 //     }))
 // }
-
-export default slice.reducer;

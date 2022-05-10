@@ -202,6 +202,15 @@ export const voucherSchema = Yup.object().shape({
   building_management_id: Number,
 });
 
+export const providerSchema = Yup.object().shape({
+  provider_name: Text,
+  image: Text,
+  pic_name: Text,
+  pic_email: Text,
+  pic_phone: Phone,
+  coverage_area: Text,
+});
+
 export const promoVaSchema = Yup.object().shape({
   // account_bank: Text,
   // building_management_id: Text,

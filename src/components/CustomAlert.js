@@ -3,7 +3,7 @@ import { Modal, ModalHeader, ModalBody } from 'reactstrap';
 import { useHistory } from 'react-router-dom';
 
 function Component({ isOpen, toggle, title, subtitle='', content }) {
-    const closeBtn = <button className="close" onClick={toggle}>&times;</button>;
+    const closeBtn = <button style={{ color: 'white' }} className="close" onClick={toggle}>&times;</button>;
 
     let history = useHistory();
 
