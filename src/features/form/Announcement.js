@@ -20,6 +20,7 @@ const announcementPayload = {
   target_building: "allbuilding",
   target_merchant: "allmerchant",
   building: [],
+  building_section_floor: [],
   consumer_role: "",
   image: "",
   description: "",

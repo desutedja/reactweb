@@ -22,6 +22,7 @@ const announcementPayload = {
   target_building: "specificbuilding",
   target_merchant: "allmerchant",
   target_unit: "allunit",
+  building_section_floor: [],
   building: [],
   consumer_role: "",
   image: "",
@@ -44,6 +45,7 @@ const roles = [
 const target_units = [
   { label: "All Unit", value: "allunit" },
   { label: "Specific Unit(s)", value: "specificunit" },
+  { label: "Specific Section(s) & Floor(s)", value: "specificsectionandfloor" },
 ];
 
 function Component() {
@@ -54,8 +56,14 @@ function Component() {
   const [sections, setSections] = useState([]);
   const [searchSection, setSearchSection] = useState("");
 
+  const [selectedSectionsFloors, setSelectedSectionsFloors] = useState([]);
+  const [sectionsFloors, setSectionsFloors] = useState([]);
+  const [searchSectionFloor, setSearchSectionFloor] = useState("");
+
   const [units, setUnits] = useState([]);
   const [searchUnit, setSearchUnit] = useState("");
+
+  // const [floor, setFloor] = useState([]);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -120,6 +128,34 @@ function Component() {
     );
   }, [dispatch, searchSection, user]);
 
+  // section floor
+  useEffect(() => {
+    dispatch(
+      get(
+        endpointAdmin +
+          "/building/sectionfloor?building_id=" +
+          user.building_id +
+          "&limit=100&page=1" +
+          "&search=" +
+          searchSectionFloor,
+        (res) => {
+          let data = res.data.data.items;
+
+          let formatted = data.map((el) => ({
+            label: `${toSentenceCase(el.section_type)} ${toSentenceCase(
+              el.section_name
+            )}` + ', Floor ' + el.floor,
+            value: el.id,
+            section_value: el.section_id,
+            floor_value: el.floor,
+          }));
+
+          setSectionsFloors(formatted);
+        }
+      )
+    );
+  }, [dispatch, searchSectionFloor, user]);
+
   const payload = selected.id
     ? {
         ...announcementPayload,
@@ -139,7 +175,10 @@ function Component() {
             : "allmerchant",
         target_unit:
           selected.building_unit && selected.building_unit.length > 0
-            ? "specificunit"
+            ? "specificunit" 
+            :
+            selected.building_section_floor && selected.building_section_floor.length > 0
+            ? "specificsectionandfloor"
             : "allunit",
         merchant:
           selected.merchant &&
@@ -166,6 +205,14 @@ function Component() {
               el.section_name
             )}`,
             value: el.building_section_id,
+          })),
+        building_section_floor:
+          selected.building_section_floor &&
+          selected.building_section_floor.map((el) => ({
+            label: `${toSentenceCase(el.section_type)} ${toSentenceCase(
+              el.section_name
+            )}` + ', Floor ' + el.floor,
+            value: el.building_section_floor_id,
           })),
         publish_schedule: selected.publish_schedule ? updateDateTimeFormatter(selected.publish_schedule) : "2022-01-01T06:00:01",
       }
@@ -200,6 +247,17 @@ function Component() {
                   building_section_id: el.value,
                 }))
               : [],
+          building_section_floor:
+            values.consumer_role !== "resident" || values.building.length !== 1
+              ? []
+              : typeof values.building_section_floor !== "undefined"
+              ? values.building_section_floor.map((el) => ({
+                  building_section_floor_id : el.value,
+                  building_id: values.building[0].value,
+                  building_section_id: el.section_value,
+                  floor: el.floor_value,
+                }))
+              : [],
           merchant:
             values.consumer_role === "merchant"
               ? values.merchant.map((el) => el.value)
@@ -212,6 +270,7 @@ function Component() {
         }}
         add={(data) => {
           //console.log(data);
+          delete data[undefined];
           dispatch(createAnnouncement(data, history, "bm"));
         }}
         renderChild={(props) => {
@@ -276,6 +335,32 @@ function Component() {
                     defaultValue={values.building_unit}
                     placeholder="Start typing room number to add"
                     options={units}
+                  />
+                )}
+                {values.consumer_role === "resident" &&
+                values.target_unit === "specificsectionandfloor" && (
+                  <Input
+                    {...props}
+                    type="multiselect"
+                    label="Select Section(s) & Floor(s)"
+                    name="building_section_floor"
+                    onInputChange={(e, value) =>
+                      value === "" ? setSectionsFloors([]) : setSearchSectionFloor(value)
+                    }
+                    defaultValue={values.building_section_floor_id}
+                    // hint={
+                    //   "Selecting section is only valid when consumer is resident and not selecting any unit on below form.  " +
+                    //   "Not specifying section means targeting the announcement for all resident on all section."
+                    // }
+                    placeholder="Start typing section name to add"
+                    options={sectionsFloors}
+                    onChange={(e, value) => {
+                      // if there's change in selected buildings, clear units
+                      //   if (value !== selectedSections) {
+                      //     setFieldValue("building_unit", []);
+                      //   }
+                      setSelectedSectionsFloors(value);
+                    }}
                   />
                 )}
               <Input

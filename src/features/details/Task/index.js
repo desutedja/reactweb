@@ -113,11 +113,11 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             "/admin/staff/list" +
             "?limit=5&page=1" +
             "&department_id=" + 
-            department +
+            // department +
             "&task_id=" +
             id +
             "&staff_role=" +
-            staffRole +
+            // staffRole +
             "&status=active" +
             (data.priority === "emergency"
               ? "&is_ongoing_emergency=true"
@@ -157,11 +157,11 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             "/admin/staff/list" +
             "?limit=5&page=1" +
             "&department_id=" + 
-            department +
+            // department +
             "&task_id=" +
             id +
             "&staff_role=" +
-            staffRole +
+            // staffRole +
             "&status=active" +
             (data.priority === "emergency"
               ? "&is_ongoing_emergency=true"
@@ -201,11 +201,11 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             "/admin/staff/list" +
             "?limit=5&page=1" +
             "&department_id=" + 
-            department +
+            // department +
             "&task_id=" +
             id +
             "&staff_role=" +
-            staffRole +
+            // staffRole +
             "&status=active" +
             (data.priority === "emergency"
               ? "&is_ongoing_emergency=true"
@@ -245,11 +245,11 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             "/admin/staff/list" +
             "?limit=5&page=1" +
             "&department_id=" + 
-            department +
+            // department +
             "&task_id=" +
             id +
             "&staff_role=" +
-            staffRole +
+            // staffRole +
             "&status=active" +
             (data.priority === "emergency"
               ? "&is_ongoing_emergency=true"
@@ -289,11 +289,11 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             "/admin/staff/list" +
             "?limit=5&page=1" +
             "&department_id=" + 
-            department +
+            // department +
             "&task_id=" +
             id +
             "&staff_role=" +
-            staffRole +
+            // staffRole +
             "&status=active" +
             (data.priority === "emergency"
               ? "&is_ongoing_emergency=true"
