@@ -15,6 +15,13 @@ export const slice = createSlice({
     page: 1,
     range: 10,
     refreshToggle: true,
+    internet: {
+      items: [],
+      total_items: 0,
+      total_pages: 1,
+      page: 1,
+      range: 10,
+    },
   },
   reducers: {
     startAsync: (state) => {
@@ -170,6 +177,96 @@ export const deleteInternetProvider = (row, history) => (dispatch, getState) => 
           setInfo({
             color: "danger",
             message: "Provider internet has been deleted.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const createInternetPackage = (data, history) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    post(
+      endpointInternet + '/admin/package',
+      data,
+      (res) => {
+        history && history.push("/" + auth.role + "/internet/" + data.provider_id);
+        
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "New internet package has been created.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const editInternetPackage = (data, history) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    patch(
+      endpointInternet + '/admin/package',
+      data,
+      (res) => {
+        history && history.push("/" + auth.role + "/internet/" + data.provider_id);
+
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Internet package has been updated.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const deleteInternetPackage = (row, history) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    del(
+      endpointInternet + '/admin/package/' + row.id,
+      row.id,
+      (res) => {
+        history && history.push("/" + auth.role + "/internet/" + row.provider_id);
+
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "danger",
+            message: "Internet package has been deleted.",
           })
         );
 

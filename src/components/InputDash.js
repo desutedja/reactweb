@@ -137,7 +137,7 @@ function Component({
         return (
           <div className="Input-container w-100">
             <select
-              className="select"
+              className="select-2"
               disabled={disabled}
               style={{
                 color: !value && "grey",
@@ -166,7 +166,7 @@ function Component({
                 </option>
               ))}
             </select>
-            <div className="InputIcon">
+            <div className="InputIcon-dashboard">
               <FiChevronDown />
             </div>
           </div>
@@ -369,7 +369,7 @@ function Component({
               type={type}
               id={label}
               name={name ? name : label.toLowerCase().replace(/ /g, "_")}
-              className={addons ? "withaddons" : ""}
+              className={addons ? ("withaddons", "select-2") : ("" ,"select-2")}
               required={!optional}
               placeholder={placeholder === null ? label : placeholder}
               min={min}
@@ -454,9 +454,6 @@ function Component({
             {!compact && (
               <>
                 <div style={{ display: "flex" }}>
-                  <label className="Input-label mt-4" htmlFor={label}>
-                    {label}
-                  </label>
                   {Object.keys(actionlabels).map((action) => (
                     // eslint-disable-next-line jsx-a11y/anchor-is-valid
                     <a

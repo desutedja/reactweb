@@ -5,6 +5,17 @@
     color: var(--primary-color);
     line-height: 1;
 }
+
+.BigNumber2 {
+    /* margin: 16px; */
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
 .cctv-list-scroll {
     margin-bottom: 10px;
     overflow: scroll;

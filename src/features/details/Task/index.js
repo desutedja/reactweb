@@ -117,6 +117,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             "&task_id=" +
             id +
             "&staff_role=" +
+            "all_staff" +
             // staffRole +
             "&status=active" +
             (data.priority === "emergency"
@@ -161,6 +162,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             "&task_id=" +
             id +
             "&staff_role=" +
+            "all_staff" +
             // staffRole +
             "&status=active" +
             (data.priority === "emergency"
@@ -205,6 +207,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             "&task_id=" +
             id +
             "&staff_role=" +
+            "all_staff" +
             // staffRole +
             "&status=active" +
             (data.priority === "emergency"
@@ -249,6 +252,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             "&task_id=" +
             id +
             "&staff_role=" +
+            "all_staff" +
             // staffRole +
             "&status=active" +
             (data.priority === "emergency"
@@ -293,6 +297,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             "&task_id=" +
             id +
             "&staff_role=" +
+            "all_staff" +
             // staffRole +
             "&status=active" +
             (data.priority === "emergency"

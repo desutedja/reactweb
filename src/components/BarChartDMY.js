@@ -209,7 +209,7 @@ useEffect(() => {
     <div>
       <div className="row mb-5 justify-content-between">
           <div className="col">
-              <h5>{headTitle || 'Example Statistics'}</h5>
+              <h5 className='ml-4 mt-2 mb-4'>{headTitle || 'Example Statistics'}</h5>
           </div>
           <div className="col-auto">
               { (auth.role === "bm") ? 

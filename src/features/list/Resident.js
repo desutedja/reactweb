@@ -277,7 +277,8 @@ function Component({ view, canAdd }) {
                   setLoading(true);
                   dispatch(
                     getFile(
-                      user.resident_bulk_template,
+                      // user.resident_bulk_template,
+                      "https://api.yipy.id/yipy-assets/asset-storage/document/ABB45E5DDEC4AF95D0960C2EB88CFC57.xlsx",
                       "resident_template.xlsx",
                       (res) => {
                         setLoading(false);

@@ -222,6 +222,14 @@ export const promoVaSchema = Yup.object().shape({
   endd_ate: Text,
 });
 
+export const internetPackageSchema = Yup.object().shape({
+  package_name: Text,
+  speed: Text,
+  price: Text,
+  notes: Text,
+  tv_channel: Text,
+});
+
 export const adsSchema = Yup.object().shape({
   appear_as: Text,
   media: Text,

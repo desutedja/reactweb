@@ -167,7 +167,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
       >
         Are you sure you want to delete this announcement?
       </Modal>
-      <Modal
+      {/* <Modal
         width="900px"
         isOpen={impression}
         disableSecondary
@@ -176,14 +176,14 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
         okLabel={"Close"}
         onClick={() => setImpression(false)}
       >
-        <Impression data={data} />
+        <Impression data={data} /> */}
 
         {/* {typeof data.impression != "undefined" &&
          
           data.impression.map((el) => {
             return <div>{el.resident_name}</div>;
           })} */}
-      </Modal>
+      {/* </Modal> */}
       <Modal
         width="720"
         isOpen={preview}
@@ -215,7 +215,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
       <Template
         title={data.title}
         loading={!data.id}
-        labels={["Details"]}
+        labels={["Details", "Impression"]}
         contents={[
           <div style={{ display: "flex" }}>
             <div style={{ marginRight: "20px" }}>
@@ -254,13 +254,13 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     setPreview(true);
                   }}
                 />,
-                <Button
-                  label="Impression"
-                  icon={<FiImage />}
-                  onClick={() => {
-                    setImpression(true);
-                  }}
-                />,
+                // <Button
+                //   label="Impression"
+                //   icon={<FiImage />}
+                //   onClick={() => {
+                //     setImpression(true);
+                //   }}
+                // />,
                 (role === "bm" ? canAdd : true) ? (
                   <Button
                     label="Duplicate"
@@ -285,6 +285,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
               ]}
             />
           </div>,
+          <Impression data={data} />
         ]}
       />
     </>

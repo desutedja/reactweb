@@ -9,13 +9,14 @@ import Input from '../../components/Input';
 import Pill from '../../components/Pill';
 import Tile from '../../components/Tile';
 import Merchant from '../../components/cells/Merchant';
-import { getMerchant, setSelected, deleteMerchant } from '../slices/merchant';
-import { toSentenceCase, dateTimeFormatterCell } from '../../utils';
+import { getMerchant, setSelected, deleteMerchant, refresh } from '../slices/merchant';
+import { toSentenceCase, dateTimeFormatterCell, inputDateTimeFormatter24 } from '../../utils';
 import { merchant_types, endpointMerchant } from '../../settings';
-import { get } from '../slice';
+import { get, patch, setInfo } from '../slice';
 
 import TemplateWithSelection from './components/TemplateWithSelection';
 import Modal from '../../components/Modal';
+import moment from 'moment';
 
 
 const columns = [
@@ -54,7 +55,11 @@ function Component({ view }) {
     const [cats, setCats] = useState('');
 
     const [multiActionRows, setMultiActionRows] = useState([]);
-    const [openModal, setOpenModal] = useState(false);
+    const [onOffMerchant, setOnOffMerchant] = useState(false);
+
+    const today = moment().format("yyyy-MM-DDTHH:mm:ss");
+    const [merchantStatus, setMerchantStatus] = useState("open");
+    const [openDate, setOpenDate] = useState(today);
 
     let dispatch = useDispatch();
     let history = useHistory();
@@ -90,20 +95,61 @@ function Component({ view }) {
     return (
         <>
             <Modal
-                isOpen={openModal}
-                disableHeader={true}
-                btnDanger
+                isOpen={onOffMerchant}
+                toggle={() => { setOnOffMerchant(false) }}
+                title="Set status"
+                okLabel={"Submit"}
                 onClick={() => {
-                // dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
-                setOpenModal(false);
+                    dispatch(patch(endpointMerchant+"/admin/bulk/setonoff", {
+                    "merchant_id": multiActionRows,
+                    "status": merchantStatus,
+                    "is_open_until": merchantStatus === "open" ? inputDateTimeFormatter24(openDate) : null,
+                    }, res => {
+                        dispatch(
+                        setInfo({
+                            color: "success",
+                            message: `Merchant(s) status has been updated.`,
+                        })
+                        );
+                        // resultComponent ? setOpenRes(true) : toggle();
+                    }, err => {
+                    dispatch(
+                        setInfo({
+                        color: "error",
+                        message: `Set merchant status error.`,
+                        })
+                    );
+                    console.log("error");
+                    }))
+
+                    // dispatch(stopAsync());
+                    setOnOffMerchant(false)
+                    dispatch(refresh());
                 }}
-                toggle={() => {
-                setOpenModal(false);
-                }}
-                okLabel={"Yes"}
-                cancelLabel={"Cancel"}
-            >
-                This Feature is under development. Stay Tuned..
+            > 
+                <Input
+                    label="Set merchant status"
+                    type="radio"
+                    name="status"
+                    options={[
+                    { value: "open", label: "Open" },
+                    { value: "closed", label: "Close" },
+                    ]}
+                    inputValue={merchantStatus}
+                    setInputValue={setMerchantStatus}
+                /> 
+                {merchantStatus === "open" ? 
+                <Input
+                    label="Open until?"
+                    type="datetime-local"
+                    name="is_open_until"
+                    inputValue={openDate}
+                    setInputValue={setOpenDate}
+                /> 
+                :
+                null
+                }
+
             </Modal>
             <TemplateWithSelection
                 view={view}
@@ -115,9 +161,7 @@ function Component({ view }) {
                     const selectedRowIds = [];
                     selectedRows.map((row) => {
                     if (row !== undefined){
-                        selectedRowIds.push({
-                        merchant_id:row.id,
-                        });
+                        selectedRowIds.push(row.id);
                     }
                     });    
                     setMultiActionRows([...selectedRowIds]);
@@ -199,7 +243,7 @@ function Component({ view }) {
                         disabled={Object.keys(selectedRowIds).length === 0}
                         icon={<FiCheck />}
                         onClick={() =>
-                                setOpenModal(true)
+                                setOnOffMerchant(true)
                         //   {
                         //     confirmAlert({
                         //       title: 'Set as Paid Billing',

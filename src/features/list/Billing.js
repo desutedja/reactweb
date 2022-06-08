@@ -549,6 +549,7 @@ function Component({ view }) {
         open={upload}
         toggle={() => setUpload(false)}
         templateLink={user.billing_bulk_template}
+        // templateLink={"https://api.yipy.id/yipy-assets/asset-storage/document/ABB45E5DDEC4AF95D0960C2EB88CFC57.xlsx"}
         filename="billing_unit_template.xlsx"
         uploadLink={endpointBilling + "/management/billing/upload"}
         uploadDataName="file_upload"

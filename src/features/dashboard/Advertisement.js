@@ -1304,7 +1304,8 @@ function Component() {
             <div className="row">
               <div className="col-12">
                 <div className="row pl-3 mb-0">
-                  <div className="col-6">
+                  <div className="row no-gutters w-100" style={{ justifyContent: 'space-between' }}>
+                        <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
                     <h4
                       className="p-3"
                       style={{ display: "flex", flexDirection: "row" }}
@@ -1323,13 +1324,22 @@ function Component() {
                       )}
                     </h4>
                   </div>
-                  <div className="p-3 col-6 text-right">
+                            
+                        <div className="col-auto d-flex flex-column mt-2 mr-3">
+                          <Button
+                            className="btn-cancel"
+                            label="Download Report"
+                            icon={<FiDownload />}
+                          />
+                        </div>
+                    </div>
+                  {/* <div className="p-3 col-6 text-right">
                       <Button
                         className="btn-cancel"
                         label="Download Report"
                         icon={<FiDownload />}
                       />
-                    </div>
+                    </div> */}
                 </div>
                 <div className="row">
                   {summary.length > 0 &&

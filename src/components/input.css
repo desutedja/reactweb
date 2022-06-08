@@ -78,7 +78,7 @@
   /* align-items: center; */
 }
 
-.Input-container select {
+.Input-container .select {
   width: 100%;
   padding: 12px;
   margin-top: 3px;
@@ -89,6 +89,21 @@
   border-color: silver;
   appearance: none;
   background-color: white;
+  flex: 1;
+}
+
+.Input-container .select-2 {
+  width: 100%;
+  padding: 5px;
+  margin-left: 2px;
+  padding-right: 24px;
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 0.5px;
+  border-color: silver;
+  appearance: none;
+  background-color: white;
+  font-size: 12px;
   flex: 1;
 }
 
@@ -104,6 +119,14 @@
   position: absolute;
   right: 8px;
   top: 14px;
+  color: gray;
+  margin-left: 16px;
+}
+
+.InputIcon-dashboard {
+  position: absolute;
+  right: 8px;
+  top: 4px;
   color: gray;
   margin-left: 16px;
 }

@@ -11,7 +11,7 @@ import Input from "./input";
 import { Form } from "formik";
 import { announcementSchema } from "./services/schemas";
 import SubmitButton from "./components/SubmitButton";
-import { dateTimeFormatter, inputDateTimeFormatter, toSentenceCase, updateDateTimeFormatter } from "../../utils";
+import { dateTimeFormatter, inputDateTimeFormatter24, toSentenceCase, updateDateTimeFormatter } from "../../utils";
 import moment from "moment";
 
 
@@ -282,7 +282,7 @@ function Component() {
             values.consumer_role === "merchant"
               ? values.merchant.map((el) => el.value)
               : [],
-          publish_schedule: inputDateTimeFormatter(values.publish_schedule),
+          publish_schedule: inputDateTimeFormatter24(values.publish_schedule),
         })}
         edit={(data) => {
           console.log(data);

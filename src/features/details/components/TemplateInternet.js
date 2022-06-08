@@ -19,7 +19,9 @@ function Component({image, title, website, phone, merchant, transparent=false,
 
     return (
         <>
-        <h2 style={{ marginLeft: '16px' }}>{pagetitle}</h2>
+        <h2 style={{ marginLeft: "16px", marginTop: "10px" }}>
+          Provider Information
+        </h2>
         <Breadcrumb title={title ? title : 'Details'} />
         <Loading loading={loading}>
             <div style={{

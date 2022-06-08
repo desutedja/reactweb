@@ -17,7 +17,7 @@ import {
 } from "react-icons/ri";
 
 import { toMoney, getDatesRange } from "../../utils";
-import { endpointBilling, endpointManagement } from "../../settings";
+import { endpointAdmin, endpointBilling, endpointManagement, endpointResident } from "../../settings";
 
 import "./style.css";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,6 +58,9 @@ function Component() {
   const [section, setSection] = useState([]);
   const [billingData, setBillingData] = useState({});
   const [staffData, setStaffData] = useState({});
+  const [unitStatistic, setUnitStatistic] = useState({});
+  const [staffStatistic, setStaffStatistic] = useState({});
+  const [residentStatistic, setResidentStatistic] = useState({});
   const [billingGraph, setBillingGraph] = useState([]);
   const [billingGraphFormatted, setBillingGraphFormatted] = useState([]);
 
@@ -162,6 +165,33 @@ function Component() {
         if (res.data.data.billing_summary.length > 0) {
           handleBillingSummary(res.data.data.billing_summary);
         }
+      })
+    );
+  }, [dispatch, tower, buildingName]);
+
+  // Unit Statistic
+  useEffect(() => {
+    dispatch(
+      get(endpointAdmin + "/building/unit/data?building_id=" + buildingName + "&building_section="  + tower +  "&date=2021-01-01&filter=all", (res) => {
+        setUnitStatistic(res.data.data);
+      })
+    );
+  }, [dispatch, tower, buildingName]);
+
+  // Staff Statistic
+  useEffect(() => {
+    dispatch(
+      get(endpointManagement + "/admin/staff/data?building_id=" + buildingName + "&building_section="  + tower +  "&date=2021-01-01&filter=all", (res) => {
+        setStaffStatistic(res.data.data);
+      })
+    );
+  }, [dispatch, tower, buildingName]);
+
+  // Resident Statistic
+  useEffect(() => {
+    dispatch(
+      get(endpointResident + "/management/resident/data?building_id=" + buildingName + "&building_section="  + tower +  "&date=2021-01-01&filter=all", (res) => {
+        setResidentStatistic(res.data.data);
       })
     );
   }, [dispatch, tower, buildingName]);
@@ -288,6 +318,32 @@ function Component() {
   return (
     <Loading loading={loading}>
       <div className="row no-gutters">
+        {/* {auth.role === "sa" && (
+          <div className="col">
+            <div
+              className="Container border-1 d-flex flex-column cursor-pointer"
+              onClick={() => {
+                history.push("/" + auth.role + "/building");
+              }}
+            >
+              <div className="row no-gutters align-items-center">
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <img src={require('./../../assets/Group 2311.jpg')} />
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="text-nowrap ml-3">Total Building</div>
+                  <AnimatedNumber
+                    className="h2 font-weight-bold black ml-3"
+                    value={staffData.num_of_building}
+                    formatValue={formatValue}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )} */}
         {auth.role === "sa" && (
           <div className="col">
             <div
@@ -330,6 +386,7 @@ function Component() {
               <div className="col">
                 <AnimatedNumber
                   className="h2 font-weight-bold white"
+                  // value={unitStatistic.registered_unit}
                   value={staffData.num_of_unit}
                   formatValue={formatValue}
                 />
@@ -341,6 +398,21 @@ function Component() {
                 </div>
               </div>
             </div>
+              {/* <div className="row no-gutters align-items-center">
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <RiBuilding4Line className="BigIcon red my-0" />
+                  </div>
+                </div>
+                <div className="col">
+                  <div className="text-nowrap ml-3">Total Unit</div>
+                  <AnimatedNumber
+                    className="h2 font-weight-bold black ml-3"
+                    value={unitStatistic.registered_unit}
+                    formatValue={formatValue}
+                  />
+                </div>
+              </div> */}
           </div>
         </div>
         {auth.role === "sa" && (
@@ -356,6 +428,9 @@ function Component() {
                   <div className="col">
                     <AnimatedNumber
                       className="h2 font-weight-bold white"
+                      // value={
+                      //   unitStatistic.registered_unit / staffData.num_of_building + ""
+                      // }
                       value={
                         staffData.num_of_unit / staffData.num_of_building + ""
                       }
@@ -377,6 +452,7 @@ function Component() {
                   <div className="col">
                     <AnimatedNumber
                       className="h2 font-weight-bold white"
+                      // value={staffStatistic.num_of_login_staff}
                       value={staffData.num_of_login_staff}
                       formatValue={formatValue}
                     />
@@ -400,6 +476,7 @@ function Component() {
                   <div className="col">
                     <AnimatedNumber
                       className="h2 font-weight-bold white"
+                      // value={staffStatistic.num_of_login_staff}
                       value={staffData.num_of_login_staff}
                       formatValue={formatValue}
                     />
@@ -424,6 +501,7 @@ function Component() {
                 <div className="col">
                   <AnimatedNumber
                     className="h2 font-weight-bold white"
+                    // value={residentStatistic.online_resident + residentStatistic.online_resident_basic}
                     value={staffData.num_of_login_resident}
                     formatValue={formatValue}
                   />
@@ -462,6 +540,7 @@ function Component() {
                 <div className="col">
                   <AnimatedNumber
                     className="h2 font-weight-bold white"
+                    // value={(residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)}
                     value={staffData.num_of_onboarded_resident}
                     formatValue={formatValue}
                   />
@@ -481,6 +560,7 @@ function Component() {
                 <div className="col">
                   <AnimatedNumber
                     className="h2 font-weight-bold white"
+                    // value={unitStatistic.onboard_unit}
                     value={staffData.num_of_onboarded_unit}
                     formatValue={formatValue}
                   />
@@ -504,6 +584,7 @@ function Component() {
                 <div className="col">
                   <AnimatedNumber
                     className="h2 font-weight-bold white"
+                    // value={residentStatistic.online_resident + residentStatistic.online_resident_basic}
                     value={staffData.num_of_login_resident}
                     formatValue={formatValue}
                   />
@@ -542,6 +623,7 @@ function Component() {
                 <div className="col">
                   <AnimatedNumber
                     className="h2 font-weight-bold white"
+                    // value={(residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)}
                     value={staffData.num_of_onboarded_resident}
                     formatValue={formatValue}
                   />
@@ -561,6 +643,7 @@ function Component() {
                 <div className="col">
                   <AnimatedNumber
                     className="h2 font-weight-bold white"
+                    // value={unitStatistic.onboard_unit}
                     value={staffData.num_of_onboarded_unit}
                     formatValue={formatValue}
                   />
@@ -813,7 +896,7 @@ function Component() {
                 {/* <FiUsers className="h3 mr-2" /> */}
                 <AnimatedNumber
                   className="BigNumber white"
-                  value={staffData.num_of_resident || "0"}
+                  value={residentStatistic.registered_resident || "0"}
                   formatValue={formatValue}
                 />
                 <p className="white">Resident</p>
@@ -847,7 +930,7 @@ function Component() {
                 >
                   <AnimatedNumber
                     className="BigNumber white"
-                    value={staffData.num_of_technician || "0"}
+                    value={staffStatistic.staff_role_data?.num_of_technician || "0"}
                     formatValue={formatValue}
                   />
                   <p className="white">Technician</p>
@@ -882,7 +965,7 @@ function Component() {
                 >
                   <AnimatedNumber
                     className="BigNumber white"
-                    value={staffData.num_of_security || "0"}
+                    value={staffStatistic.staff_role_data?.num_of_security || "0"}
                     formatValue={formatValue}
                   />
                   <p className="white">Security</p>
@@ -918,7 +1001,7 @@ function Component() {
                   <AnimatedNumber
                     className="BigNumber white"
                     value={
-                      staffData.num_of_courier || "0"
+                      staffStatistic.staff_role_data?.num_of_courier || "0"
                     }
                     formatValue={formatValue}
                   />
@@ -949,7 +1032,7 @@ function Component() {
               >
                 <AnimatedNumber
                   className="BigNumber white"
-                  value={staffData.num_of_pic_bm || "0"}
+                  value={staffStatistic.staff_role_data?.num_of_pic_bm || "0"}
                   formatValue={formatValue}
                 />
                 <p className="text-nowrap white">BM Admin</p>
@@ -982,7 +1065,7 @@ function Component() {
               >
                 <AnimatedNumber
                   className="BigNumber white"
-                  value={staffData.num_of_gm_bm || "0"}
+                  value={staffStatistic.staff_role_data?.num_of_gm_bm || "0"}
                   formatValue={formatValue}
                 />
                 <p className="text-nowrap white">BM Manager</p>

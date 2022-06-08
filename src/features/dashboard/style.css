@@ -5,6 +5,17 @@
     color: var(--primary-color);
     line-height: 1;
 }
+
+.BigNumber2 {
+    /* margin: 16px; */
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
 .cctv-list-scroll {
     margin-bottom: 10px;
     overflow: scroll;
@@ -151,6 +162,20 @@
 .color-8 {
     background: linear-gradient(45deg, #d63031 -30%, #ff7675 130%);
     color: white;
+}
+
+.border-1 {
+    border-bottom: 4px solid #E12029;
+    border-left: 1px solid #E5E7E9;
+    border-right: 1px solid #E5E7E9;
+    border-top: 1px solid #E5E7E9;
+    border-radius: 10px;
+}
+
+.border-2 {
+    /* border-bottom: 4px solid #E12029; */
+    border: 1px solid #E5E7E9;
+    border-radius: 10px;
 }
 
 .white {

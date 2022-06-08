@@ -49,8 +49,9 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
 
     const today = moment().format('yyyy-MM-DD', 'day');
     const monthStart = moment().startOf("month").format("yyyy-MM-DD");
+    const monthStartAdmin = moment().subtract("month",3).format("yyyy-MM-DD");
     const monthEnd = moment().endOf("month").format("yyyy-MM-DD");
-    const [settlementStart, setSettlementStart] = useState(today);
+    const [settlementStart, setSettlementStart] = useState(monthStartAdmin);
     const [settlementEnd, setSettlementEnd] = useState(today);
     const [startDate, setStartDate] = useState(monthStart);
     const [endDate, setEndDate] = useState(monthEnd);
