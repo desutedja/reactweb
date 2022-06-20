@@ -151,8 +151,9 @@ export function inputDateTimeFormatter(serverDateTime, whenzero = "") {
 
   return (
     moment.utc(serverDateTime).format("YYYY-MM-DD") +
-    " " +
-    moment.utc(serverDateTime).format("hh:mm:ss")
+    "T" +
+    moment.utc(serverDateTime).format("HH:mm:ss") +
+    "Z"
   );
 }
 
@@ -237,6 +238,21 @@ export function toMoneyRP(money) {
   let moneyFormat = new Number(money).toLocaleString("id-ID", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
+  });
+  return (
+     moneyFormat
+    // (!money ? "0" : money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"))
+  );
+}
+
+export function decimal(money) {
+  // money = Math.floor(money);
+  if (typeof money === "undefined") {
+    return "Rp 0";
+  }
+  let moneyFormat = new Number(money).toLocaleString("id-ID", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   });
   return (
      moneyFormat

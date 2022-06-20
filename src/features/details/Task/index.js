@@ -18,7 +18,7 @@ import TwoColumn from "../../../components/TwoColumn";
 import Pill from "../../../components/Pill";
 import { dateTimeFormatter, toSentenceCase, toMoney } from "../../../utils";
 import { MdChatBubble } from "react-icons/md";
-import { FiCheck, FiUserPlus } from "react-icons/fi";
+import { FiCheck, FiFile, FiFileText, FiUserPlus } from "react-icons/fi";
 
 import Button from "../../../components/Button";
 import Filter from "../../../components/Filter";
@@ -26,9 +26,11 @@ import Modal from "../../../components/Modal";
 
 import { Form } from "reactstrap";
 import { Input } from "reactstrap";
+import InputDash from "../../../components/InputDash";
 import SubmitButton from "../../form/components/SubmitButton";
 
 import Template from "../components/Template";
+import parse from 'html-react-parser';
 
 import { Card, CardHeader, CardFooter, CardTitle, CardBody } from "reactstrap";
 
@@ -72,6 +74,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   const [staffDelegate, setStaffDelegate] = useState({});
   const [staffDelegates, setStaffDelegates] = useState([]);
   const [rejectMessage, setRejectMessage] = useState("");
+  const [attachmentModal, setAttachmentModal] = useState(false);
+  const [reportModal, setReportModal] = useState(false);
   const [staffRejectDelegates, setStaffRejectDelegates] = useState([]);
   const [staffRejectHelper, setStaffRejectHelper] = useState([]);
   const [
@@ -373,6 +377,48 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         Are you sure you want to resolve this task?
       </Modal>
       <Modal
+        isOpen={attachmentModal}
+        toggle={() => setAttachmentModal(false)}
+        okLabel="Submit"
+        onClick={() => {
+          setAttachmentModal(false);
+          // dispatch(resolveTask([{ ...data, id: data.task_id }]));
+        }}
+        cancelLabel="Cancel"
+        onClickSecondary={() => {
+          setAttachmentModal(false);
+        }}
+      >
+        <InputDash
+          type="file"
+          label="Attachment"
+          placeholder="Insert File"
+          name="attachment"
+          accept="image/*"
+        />
+      </Modal>
+      <Modal
+        title="Add Report"
+        isOpen={reportModal}
+        toggle={() => setReportModal(false)}
+        okLabel="Submit"
+        onClick={() => {
+          setReportModal(false);
+          // dispatch(resolveTask([{ ...data, id: data.task_id }]));
+        }}
+        cancelLabel="Cancel"
+        onClickSecondary={() => {
+          setReportModal(false);
+        }}
+      >
+        <Input
+          type="textarea"
+          label="Report"
+          placeholder="Insert Description"
+          name="report"
+        />
+      </Modal>
+      <Modal
         title="Assign Staff"
         subtitle="Choose eligible staffs to assign for this task"
         isOpen={assign}
@@ -596,9 +642,29 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     )}
                   </Card>
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                    <CardHeader style={{ background: "Transparent" }}>
+                      <TwoColumn
+                        first={"Attachment"}
+                        second={
+                          <div>
+                            {/* <Pill color={taskPriorityColor[data.priority]}>
+                              {toSentenceCase(data.priority) + " Priority"}
+                            </Pill> */}
+                            <Button 
+                              color="Secondary" 
+                              label="Add Attachment" 
+                              icon={<FiFile />}
+                              onClick={() => {
+                                setAttachmentModal(true)
+                              }}
+                            />
+                          </div>
+                        }
+                      />
+                    </CardHeader>
                     <CardBody>
-                      <h5>Attachment</h5>
-                      <hr />
+                      {/* <h5>Attachment</h5> */}
+                      {/* <hr /> */}
                       {data.attachment_1 ? (
                         attachments.map(
                           (el) =>
@@ -629,9 +695,29 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     </CardBody>
                   </Card>
                   <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                    <CardHeader style={{ background: "Transparent" }}>
+                      <TwoColumn
+                        first={"Reports"}
+                        second={
+                          <div>
+                            {/* <Pill color={taskPriorityColor[data.priority]}>
+                              {toSentenceCase(data.priority) + " Priority"}
+                            </Pill> */}
+                            <Button 
+                              color="Secondary" 
+                              label="Add Report" 
+                              icon={<FiFileText />}
+                              onClick={() => {
+                                setReportModal(true)
+                              }}
+                            />
+                          </div>
+                        }
+                      />
+                    </CardHeader>
                     <CardBody>
-                      <h5>Reports</h5>
-                      <hr />
+                      {/* <h5>Reports</h5>
+                      <hr /> */}
                       <Column style={{ lineHeight: "1.5em" }}>
                         {data.task_reports?.length > 0 ? (
                           <>
@@ -651,7 +737,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                                     </small>
                                   </div>
                                 </Row>
-                                <Row>{el.description}</Row>
+                                <Row>{parse(el.description)}</Row>
                                 <hr />
                                 <Row>
                                   {el.attachments > 0 &&

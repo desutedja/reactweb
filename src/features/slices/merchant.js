@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { endpointMerchant } from "../../settings";
-import { get, post, del, patch, setInfo } from "../slice";
+import { get, post, del, patch, setInfo, getFile } from "../slice";
 
 const merchantEndpoint = endpointMerchant + "/admin";
 
@@ -54,7 +54,8 @@ export const getMerchant = (
   pageSize,
   search = "",
   type,
-  category
+  category,
+  stat
 ) => (dispatch) => {
   dispatch(startAsync());
 
@@ -72,7 +73,51 @@ export const getMerchant = (
         category +
         "&sort_field=created_on&sort_type=DESC" +
         "&search=" +
-        search,
+        search+
+        "&is_open=" +
+        stat,
+
+      (res) => {
+        dispatch(setData(res.data.data));
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const downloadMerchant = (
+  pageIndex,
+  pageSize,
+  search = "",
+  type,
+  category,
+  stat
+) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    getFile(
+      merchantEndpoint +
+        "/list" +
+        "?page=" +
+        (pageIndex + 1) +
+        "&limit=10" +
+        pageSize +
+        "&type=" +
+        type +
+        "&category=" +
+        category +
+        "&sort_field=created_on&sort_type=DESC" +
+        "&search=" +
+        search+
+        "&is_open=" +
+        stat + 
+        "&is_download=1",
+        "Data_Merchant.csv",
 
       (res) => {
         dispatch(setData(res.data.data));

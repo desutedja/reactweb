@@ -95,6 +95,11 @@ export const merchant_types = [
   { label: "Goods", value: "Goods" },
 ];
 
+export const merchant_status = [
+  { label: "Open", value: "1" },
+  { label: "Close", value: "0" },
+];
+
 export const resident_statuses = [
   { label: "Active", value: "active" },
   { label: "Inactive", value: "inactive" },

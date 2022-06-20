@@ -29,7 +29,8 @@ const announcementPayload = {
   description: "",
   building_unit: [],
   merchant: [],
-  publish_schedule: "2022-01-01T06:00:01",
+  publish_schedule: "",
+  scheduled: "n",
 };
 
 const roles = [
@@ -380,10 +381,24 @@ function Component() {
               />
               <Input
                 {...props}
+                type="radio"
+                label="Scheduling"
+                name="scheduled"
+                options={[
+                  { value: "y", label: "Yes"},
+                  { value: "n", label: "No"},
+                ]} 
+              />
+              {values.scheduled === "y" ?
+              <Input
+                {...props}
                 type="datetime-local"
-                label="Schedule"
+                label="Publish Schedule"
                 name="publish_schedule"
               />
+              :
+              []
+              }
               <Input
                 {...props}
                 type="editor"

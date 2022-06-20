@@ -31,6 +31,7 @@
     "react-dom": "^16.13.1",
     "react-draft-wysiwyg": "^1.14.5",
     "react-hls-player": "^1.1.0",
+    "react-horizontal-scroll-container": "^1.0.1",
     "react-icons": "^3.9.0",
     "react-input-mask": "^3.0.0-alpha.2",
     "react-modal": "^3.11.2",

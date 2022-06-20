@@ -98,6 +98,20 @@ export const downloadStaff = ( pageIndex, pageSize, role, building, shift, searc
     }))
 }
 
+export const downloadStaffLog = ( pageIndex, pageSize, role, building, shift, search = '', department, management = '') => dispatch => {
+  dispatch(startAsync());
+
+  dispatch(getFile(endpointManagement + '/admin/download/stafflog',
+    "Data_Log_Staff.csv",
+    
+    (res) => {
+      dispatch(stopAsync());
+    },
+    (err) => {
+      dispatch(stopAsync());
+    }))
+}
+
 export const createStaff = ( data, history) => (dispatch, getState) => {
   dispatch(startAsync());
 

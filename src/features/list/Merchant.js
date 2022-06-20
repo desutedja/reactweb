@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouteMatch, useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { FiSearch, FiPlus, FiCheck } from 'react-icons/fi';
+import { FiSearch, FiPlus, FiCheck, FiDownload } from 'react-icons/fi';
 
 import Button from '../../components/Button';
 import Filter from '../../components/Filter';
@@ -9,10 +9,10 @@ import Input from '../../components/Input';
 import Pill from '../../components/Pill';
 import Tile from '../../components/Tile';
 import Merchant from '../../components/cells/Merchant';
-import { getMerchant, setSelected, deleteMerchant, refresh } from '../slices/merchant';
+import { getMerchant, setSelected, deleteMerchant, refresh, downloadMerchant } from '../slices/merchant';
 import { toSentenceCase, dateTimeFormatterCell, inputDateTimeFormatter24 } from '../../utils';
-import { merchant_types, endpointMerchant } from '../../settings';
-import { get, patch, setInfo } from '../slice';
+import { merchant_types, endpointMerchant, merchant_status } from '../../settings';
+import { get, getFile, patch, setInfo } from '../slice';
 
 import TemplateWithSelection from './components/TemplateWithSelection';
 import Modal from '../../components/Modal';
@@ -34,7 +34,7 @@ const columns = [
         </div>
     },
     {
-        Header: 'Open', accessor: row => {
+        Header: 'Status', accessor: row => {
             return <Tile items={[
                 row.is_open === 1 ? <Pill color="primary">Open</Pill> : <Pill color="secondary">Closed</Pill>,
             ]} />
@@ -46,6 +46,9 @@ const columns = [
 function Component({ view }) {
     const [type, setType] = useState('');
     const [typeLabel, setTypeLabel] = useState('');
+
+    const [stat, setStat] = useState('');
+    const [statLabel, setStatLabel] = useState('');
 
     const [search, setSearch] = useState('');
     const [limit, setLimit] = useState(5);
@@ -167,7 +170,7 @@ function Component({ view }) {
                     setMultiActionRows([...selectedRowIds]);
                     console.log(selectedRowIds);
                 }}
-                filterVars={[type, cat]}
+                filterVars={[type, cat, stat]}
                 filters={[
                     {
                         hidex: type === "",
@@ -228,6 +231,25 @@ function Component({ view }) {
                                 />
                             </>
                     },
+                    {
+                        hidex: stat === "",
+                        label: <p>{stat ? "Status: " + statLabel : "Status: All"}</p>,
+                        delete: () => { setStat(""); },
+                        component: toggleModal =>
+                            <Filter
+                                data={merchant_status}
+                                onClickAll={() => {
+                                    setStat("");
+                                    setStatLabel("");
+                                    toggleModal(false);
+                                }}
+                                onClick={el => {
+                                    setStat(el.value);
+                                    setStatLabel(el.label);
+                                    toggleModal(false);
+                                }}
+                            />
+                    },
                 ]}
                 renderActions={view ? null : (selectedRowIds) => {
                     return [
@@ -265,6 +287,33 @@ function Component({ view }) {
                         //   }
                         }
                     />,
+                    <Button
+                        key="Download Merchant"
+                        label="Download Merchant.csv"
+                        icon={<FiDownload />}
+                        // onClick={() =>
+                        //   dispatch(downloadMerchant(search, type, cat, stat ))
+                        // }
+                        onClick={() => {
+                            dispatch(getFile(endpointMerchant + "/admin/list?" +
+                            "?page=" +
+                            1 +
+                            "&limit=" +
+                            10 +
+                            "&type=" +
+                            type +
+                            "&category=" +
+                            cat +
+                            "&sort_field=created_on&sort_type=DESC" +
+                            "&search=" +
+                            search +
+                            "&is_open=" +
+                            stat + 
+                            "&is_download=1",
+                            "Data Merchant.csv",
+                            ))}
+                          }
+                      />,
                 ]}
             }
             />

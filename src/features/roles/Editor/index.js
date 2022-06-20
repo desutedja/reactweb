@@ -8,6 +8,7 @@ import {
   FiBriefcase,
   FiShoppingBag,
   FiWifi,
+  FiFile,
 } from "react-icons/fi";
 import {
   RiStore2Line,
@@ -36,6 +37,7 @@ import RequestPremium from "./RequestPremium";
 import CatatMeter from "./CatatMeter";
 import Staff from "./Staff";
 import Task from "./Task";
+import UserRequest from "./UserRequest";
 import Transaction from "./Transaction";
 import Admin from "./Admin";
 import Xenplatform from "./Xenplatform";
@@ -109,6 +111,12 @@ const menu = [
     label: "Task",
     path: "/task",
     component: <Task />,
+  },
+  {
+    icon: <FiFile className="MenuItem-icon" />,
+    label: "User Request",
+    path: "/user request",
+    component: <UserRequest />,
   },
   {
     icon: <RiStore2Line className="MenuItem-icon" />,

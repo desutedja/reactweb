@@ -12,7 +12,7 @@ import Input from "../../components/Input";
 import Filter from "../../components/Filter";
 import Pill from "../../components/Pill";
 import Staff from "../../components/cells/Staff";
-import { downloadStaff, getStaff, setSelected } from "../slices/staff";
+import { downloadStaff, downloadStaffLog, getStaff, setSelected } from "../slices/staff";
 import { get } from "../slice";
 
 import Template from "./components/Template";
@@ -442,6 +442,14 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
                   icon={<FiDownload />}
                   onClick={() =>
                     dispatch(downloadStaff(search, building, role, building, shift, management, department ))
+                  }
+                />,
+              <Button
+                  key="Download Staff Log"
+                  label="Download Staff Log.csv"
+                  icon={<FiDownload />}
+                  onClick={() =>
+                    dispatch(downloadStaffLog(search, building, role, building, shift, management, department ))
                   }
                 />,
             ]

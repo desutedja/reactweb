@@ -455,7 +455,13 @@ function Table({
                     </>
                     }
                     <div className="PageInfo">
-                        <p>{parseInt(pageIndex) + 1}</p>
+                        <p>
+                            {
+                            pageCount <= parseInt(pageIndex) ?
+                            setPageIndex(pageCount - 1) :
+                            parseInt(pageIndex) + 1
+                            }
+                        </p>
                         <p style={{
                             marginRight: 8,
                             marginLeft: 8,

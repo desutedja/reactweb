@@ -22,24 +22,24 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
         if (label.label)
             label = label.label;
 
-        if (label === 'address') label = "Package Name";
-        if (label === 'district_name') label = "Speed";
-        if (label === 'city_name') label = "Price";
-        if (label === 'province_name') label = "Coverage Area";
-        if (label === 'management_name') label = "Notes";
-        if (label === 'staff_role') label = "TV Channel";
+        if (label === 'package_name') label = "Package Name";
+        if (label === 'speed') label = "Speed";
+        if (label === 'price') label = "Price";
+        if (label === 'coverage_area') label = "Coverage Area";
+        if (label === 'notes') label = "Notes";
+        if (label === 'tv_channel') label = "TV Channel";
 
         return toSentenceCase(label);
     }
 
     function formatValue(label, value) {
         return (value == null || value === "") ? "-" :
-                        label === "address" ? "Globenet EZY" :
-                            label === "district_name" ? "10 Mbps" :
-                                label === "city_name" ? "Rp. 250.000" :
-                                    label === "province_name" ? "Jakarta Barat, Jakarta Selatan, Kota Bandung, Balikpapan" :
-                                        label === "management_name" ? "Internet speed up to 10 Mbps unlimited. 60 TV Channel pilihan. Gratis biaya instalasi. Gratis biaya sewa High End Access Point WIFI. S&K berlaku." :
-                                            label === "staff_role" ? "Animal Planet, Animal Planet HD, Discovery Channel, Discovery HD Channel, Nat Geo Ch, Nat Geo Wild, Discovery Asia, Nat Geo Ch HD, Nat Geo Wild HD, Love Nature HD, Berita Satu, Berita Satu World, Jakarta Globe News Channel, Jakarta Globe News Channel HD, Reformed 21, Reformed 21 HD, TV Parlemen, Kairos, karaOKE CHANNEL, Berita Satu HD, Berita Satu World HD, Balai Kota, Balai Kota Bandung, First Lifestyle, First Highlights, Balai Kota Medan, West Jave Network, IDX Channel HD MNC Shop, CATCHPLAY, Meikarta District 1, Meikarta District 2, Holland Village Jakarta." :
+                        // label === "address" ? "Globenet EZY" :
+                        //     label === "district_name" ? "10 Mbps" :
+                        //         label === "city_name" ? "Rp. 250.000" :
+                        //             label === "province_name" ? "Jakarta Barat, Jakarta Selatan, Kota Bandung, Balikpapan" :
+                        //                 label === "management_name" ? "Internet speed up to 10 Mbps unlimited. 60 TV Channel pilihan. Gratis biaya instalasi. Gratis biaya sewa High End Access Point WIFI. S&K berlaku." :
+                        //                     label === "staff_role" ? "Animal Planet, Animal Planet HD, Discovery Channel, Discovery HD Channel, Nat Geo Ch, Nat Geo Wild, Discovery Asia, Nat Geo Ch HD, Nat Geo Wild HD, Love Nature HD, Berita Satu, Berita Satu World, Jakarta Globe News Channel, Jakarta Globe News Channel HD, Reformed 21, Reformed 21 HD, TV Parlemen, Kairos, karaOKE CHANNEL, Berita Satu HD, Berita Satu World HD, Balai Kota, Balai Kota Bandung, First Lifestyle, First Highlights, Balai Kota Medan, West Jave Network, IDX Channel HD MNC Shop, CATCHPLAY, Meikarta District 1, Meikarta District 2, Holland Village Jakarta." :
                                             value
     }
 
@@ -101,14 +101,14 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
                     </div>
                 )}
             </div>
-            {!view && <div className="col-auto d-flex flex-column">
+            {/* {!view && <div className="col-auto d-flex flex-column">
                 <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
                     pathname: editPath,
                     // state: data,
                 })} />
                 {renderButtons()}
                 {onDelete && <Button icon={<FiTrash />} color="Danger" label="Delete" onClick={onDelete} />}
-            </div>}
+            </div>} */}
         </div>
         </>
     )
