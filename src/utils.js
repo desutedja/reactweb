@@ -215,6 +215,16 @@ export function toSentenceCase(sentence) {
   }, "");
 }
 
+export function toSentenceCase2(sentence) {
+  if (!sentence) return "-";
+  let words = sentence.replace(/-/g, " ").split(" ");
+
+  return words.reduce((result, el) => {
+    let newEl = el.slice(0, 1).toUpperCase() + el.slice(1) + " ";
+    return result + newEl;
+  }, "");
+}
+
 export function toMoney(money) {
   // money = Math.floor(money);
   if (typeof money === "undefined") {

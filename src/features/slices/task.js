@@ -399,6 +399,33 @@ export const reassignTask = (data) => (dispatch) => {
   );
 };
 
+export const addReportAttachment = (data) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      taskEndpoint + "/report/create",
+      data,
+      (res) => {
+        dispatch(stopAsync());
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            message:
+              "Report has been succesfully add for task with id" +
+              data.task_id,
+          })
+        );
+        setTimeout(() => dispatch(setInfo({ message: "" })), 3000);
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
 export const getTaskDetails = (row, history) => (dispatch) => {
   dispatch(startAsync());
 

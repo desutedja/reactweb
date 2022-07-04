@@ -33,11 +33,14 @@ const publisherRoles = [
   {value:"pic_bm", label:"PIC Admin"}
 ];
 
+const publisherRolesBM = [
+  {value:"gm_bm", label:"BM Manager"},
+  {value:"pic_bm", label:"PIC Admin"}
+];
+
 function Component({ view, canAdd, canUpdate, canDelete }) {
   const [con, setCon] = useState("");
   const [publisherRole, setPublisherRole] = useState("");
-  const [search, setSearch] = useState("");
-  const [limit, setLimit] = useState(5);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -151,7 +154,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
           },
           component: (toggleModal) => (
             <Filter
-              data={publisherRoles}
+              data={role === "bm" ? publisherRolesBM : publisherRoles}
               onClick={(el) => {
                 setPublisherRole(el);
                 toggleModal(false);

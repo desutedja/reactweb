@@ -190,8 +190,9 @@ function Component() {
           ),
         },
       ]}
-      actions={[
+      actionDownloads={[
         <MyButton
+          color="Download"
           label="Download .csv"
           icon={<FiDownload />}
           onClick={() => {

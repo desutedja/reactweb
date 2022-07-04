@@ -862,6 +862,24 @@ function Component({ view }) {
             },
           ]}
           actions={[]}
+          actionDownloads={
+            view
+              ? null
+              : [
+                <MyButton
+                  color="Download"
+                  label="Download.csv"
+                  icon={<FiDownload />}
+                  onClick={() => {
+                    dispatch(downloadTransactionSettlement(
+                      statusSettlement.value,
+                      settlementStart,
+                      settlementEnd,
+                      ));
+                  }}
+                />,
+              ]
+          }
           renderActions={(selectedRowIds, page) => {
             // console.log(selectedRowIds);
             return [
@@ -884,17 +902,6 @@ function Component({ view }) {
                   }}
                 />
               ),
-              <MyButton
-                label="Download.csv"
-                icon={<FiDownload />}
-                onClick={() => {
-                  dispatch(downloadTransactionSettlement(
-                    statusSettlement.value,
-                    settlementStart,
-                    settlementEnd,
-                    ));
-                }}
-              />,
             ];
           }}
         />

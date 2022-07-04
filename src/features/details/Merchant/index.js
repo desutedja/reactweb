@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import Detail from "../components/Detail";
+import Products from "./contents/Products";
 import Template from "../components/Template";
 import Modal from "../../../components/Modal";
 import { useHistory, useParams } from "react-router-dom";
@@ -104,7 +105,7 @@ function Component({ view }) {
         image={data.logo || "placeholder"}
         title={data.name}
         phone={data.phone}
-        labels={["Details", "Contact Person", "Bank Account"]}
+        labels={["Details", "Contact Person", "Bank Account", "Product"]}
         contents={[
           <Detail
             view={view}
@@ -114,6 +115,7 @@ function Component({ view }) {
           />,
           <Detail view={view} data={data} labels={pic} />,
           <Detail view={view} data={data} labels={account} />,
+          <Products view={view} id={id} />,
         ]}
       />
     </>

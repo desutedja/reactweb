@@ -94,6 +94,8 @@ function Component({ view }) {
   const [codes, setCodes] = useState([]);
   const { loading, refreshToggle } = useSelector((state) => state.vouchers);
 
+  const reload=()=>window.location.reload();
+
   let dispatch = useDispatch();
   let history = useHistory();
   let { id } = useParams();
@@ -183,6 +185,7 @@ function Component({ view }) {
         disableHeader={true}
         onClick={() => {
           dispatch(distributeVoucher(voucherCodeId, id, history));
+          // reload();
           setConfirmDistribute(false);
         }}
         toggle={() => setConfirmDistribute(false)}

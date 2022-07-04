@@ -16,6 +16,8 @@ import Modal from './Modal';
 import FilterButton from './FilterButton';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { toSentenceCase } from '../utils';
+import moment from 'moment';
+import DatePicker from 'react-datepicker';
 
 function Component({
     expander = true,
@@ -30,7 +32,6 @@ function Component({
     loading,
     pageCount: controlledPageCount,
     actions = [],
-    actionDownloads = [],
     onClickChat,
     onClickReassign,
     onClickResolve,
@@ -54,12 +55,10 @@ function Component({
         canNextPage,
         pageCount,
         gotoPage,
-        setPageSize,
-        state: { pageIndex, pageSize, selectedRowIds }
+        state: { selectedRowIds }
     } = useTable({
         columns,
         data,
-        initialState: { pageIndex: 0 },
         manualPagination: true,
         manualSorting: true,
         pageCount: controlledPageCount,
@@ -126,9 +125,12 @@ function Component({
             })
         }
     );
-
+    
     const [search, setSearch] = useState("");
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
     const [searchToggle, toggleSearch] = useState("");
+
 
     const [activeFilter, setFilter] = useState(0);
     const [modalOpen, toggleModal] = useState(false);
@@ -139,13 +141,34 @@ function Component({
     const [sortType, setSortType] = useState('DESC');
     const [sortTypeInput, setSortTypeInput] = useState(sortType);
     const [sort, toggleSort] = useState(false);
+    const [pageSize, setPageSize] = useState(() => {
+        const savedSize = localStorage.getItem("page_size");
+        const initialSize = savedSize;
+        return initialSize || "10";
+    });
+
+    const [pageIndex, setPageIndex] = useState(() => {
+        const savedSize = localStorage.getItem("page_index");
+        const initialSize = savedSize;
+        return initialSize || 0;
+    });
 
     useEffect(() => {
-        fetchData && fetchData(pageIndex, pageSize, searchToggle,
-            ...sortBy.length > 0 ? [sortField, sortType] : []);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchData, pageIndex, pageSize, searchToggle, sortField, sortType]);
+        // storing input page size
+        localStorage.setItem("page_size", pageSize);
+      }, [pageSize]);
+    useEffect(() => {
+        // storing input page size
+        localStorage.setItem("page_index", parseInt(pageIndex));
+      }, [parseInt(pageIndex)]);
 
+    useEffect(() => {
+        fetchData && fetchData(parseInt(pageIndex), pageSize, searchToggle,moment(startDate).format('YYYY-MM-DD'),moment(endDate).format('YYYY-MM-DD'),
+            ...sortBy.length > 0 ? [sortField, sortType] : []
+        );
+    }, [fetchData, parseInt(pageIndex), pageSize, searchToggle,moment(startDate).format('YYYY-MM-DD'),moment(endDate).format('YYYY-MM-DD'), sortField, sortType]);
+
+    
     useEffect(() => {
         gotoPage(0);
     }, [fetchData, gotoPage, searchToggle]);
@@ -199,88 +222,7 @@ function Component({
                     { label: 'Descending', value: 'DESC' },
                 ]} inputValue={sortType} setInputValue={setSortTypeInput} />
             </Modal>
-            {tableAction && 
-            <>
-                <div className="TableActionBilTop">
-
-                    <div className="TableAction-new d-flex align-items-center">
-                        <div className="TableSearch d-flex align-items-center" style={{marginLeft: "4px"}}>
-                            <Input
-                                label="Search"
-                                compact
-                                fullwidth={true}
-                                icon={<FiSearch />}
-                                inputValue={search}
-                                setInputValue={setSearch}
-                            />
-                        </div>
-                    
-                        {filters.length > 0 && <div className="Button" style={{
-                            cursor: 'pointer',
-                            color: 'white',
-                            marginRight: 8,
-                        }} onClick={() => {
-                            toggleFilter(!filter);
-                        }}>
-                            <FiFilter />
-                            <b style={{
-                                marginRight: 8,
-                                marginLeft: 8,
-                            }}>Filter</b>
-                            {filter ? <FiChevronUp /> : <FiChevronDown />}
-                        </div>}
-                        {sortBy.length > 0 && <div className="Button Secondary" style={{
-                            cursor: 'pointer',
-                            marginRight: 8,
-                        }} onClick={() => {
-                            toggleSort(!sort);
-                        }}>
-                            <FiList />
-                            <b style={{
-                                marginRight: 8,
-                                marginLeft: 8,
-                            }}>Sort by: {toSentenceCase(sortField)}</b>
-                            {sortType === 'DESC' ? <FiArrowDown /> : <FiArrowUp />}
-                        </div>}
-        
-                        {countactivefilter > 0 && <span style={{ paddingRight: '10px' }}>
-                            {countactivefilter} filter{countactivefilter > 1 ? 's' : ''} applied
-                        </span>}
-                    
-                    </div>
-                    <div className="TableAction-new d-flex align-items-center">
-                    
-                        {actionDownloads}
-                        
-                    </div>
-        
-                </div>
-                {filters.length > 0 && <div className={"FilterContainerNew" + (filter ? ' down' : '')}>
-                    {filters.map((el, index) => !el.hidden &&
-                        <FilterButton
-                            key={index}
-                            label={el.label}
-                            value={el.value}
-                            hideX={el.hidex}
-                            onClick={() => {
-                                el.onClick && el.onClick();
-                                el.component && toggleModal(true);
-                                setFilter(index);
-                            }}
-                            onClickDelete={el.delete} />
-                    )}
-                </div>}
-                <div className="TableActionBil">
-                    <div style={{
-                        display: 'flex',
-                    }}
-                    >
-                        {actions}
-                        {renderActions != null ? renderActions(selectedRowIds, page) : []}
-                    </div>
-                </div>
-            </>}
-            {/* {tableAction && <div className="TableAction">
+            {tableAction && <div className="TableAction">
                 <div style={{
                     display: 'flex',
                 }}>
@@ -288,9 +230,29 @@ function Component({
                     {renderActions != null ? renderActions(selectedRowIds, page) : []}
                 </div>
                 <div className="TableAction-right d-flex align-items-center">
+                
+                    <div className="TableDatePicker d-flex align-items-center">
+                    <DatePicker
+                        selected={startDate}
+                        onChange={(date) => setStartDate(date)}
+                        maxDate={endDate}
+                        dateFormat="MMM-yyyy"
+                        showMonthYearPicker
+                    />
+                    </div>
+                    <div className="TableDatePicker d-flex align-items-center">
+                    <DatePicker
+                        selected={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        minDate={startDate}
+                        dateFormat="MMM-yyyy"
+                        showMonthYearPicker
+                    />
+                    </div>
                     {countactivefilter > 0 && <span style={{ paddingRight: '10px' }}>
                         {countactivefilter} filter{countactivefilter > 1 ? 's' : ''} applied
                     </span>}
+                    
                     {filters.length > 0 && <div className="Button" style={{
                         cursor: 'pointer',
                         color: 'white',
@@ -344,7 +306,7 @@ function Component({
                         }}
                         onClickDelete={el.delete} />
                 )}
-            </div>} */}
+            </div>}
             <div className="Table-content scroller">
                 <table {...getTableProps()}>
                     {loading &&
@@ -497,42 +459,98 @@ function Component({
                     </select>
                 </div>
                 <div className="Pagination-control">
-                    <IconButton
-                        disabled={!canPreviousPage}
-                        className="PageControl"
-                        onClick={() => gotoPage(0)}
-                    >
-                        <FiChevronsLeft />
-                    </IconButton>
-                    <IconButton
-                        disabled={!canPreviousPage}
-                        className="PageControl"
-                        onClick={() => gotoPage(pageIndex - 1)}
-                    >
-                        <FiChevronLeft />
-                    </IconButton>
+                {parseInt(pageIndex) === 0 ?
+                    <>
+                        <IconButton
+                            disabled={!canPreviousPage}
+                            className="PageControl"
+                            onClick={() => setPageIndex(0) && gotoPage(0)}
+                        >
+                            <FiChevronsLeft />
+                        </IconButton>
+                        <IconButton
+                            disabled={!canPreviousPage}
+                            className="PageControl"
+                            onClick={() => setPageIndex(parseInt(pageIndex) - 1) && gotoPage(parseInt(pageIndex) - 1)}
+                        >
+                            <FiChevronLeft />
+                        </IconButton>
+                    </>
+                    :
+                    <>
+                        <IconButton
+                            className="PageControl"
+                            onClick={() => setPageIndex(0) && gotoPage(0)}
+                        >
+                            <FiChevronsLeft />
+                        </IconButton>
+                        <IconButton
+                            className="PageControl"
+                            onClick={() => setPageIndex(parseInt(pageIndex) - 1) && gotoPage(parseInt(pageIndex) - 1)}
+                        >
+                            <FiChevronLeft />
+                        </IconButton>
+                    </>
+                    }
                     <div className="PageInfo">
-                        <p>{pageIndex + 1}</p>
+                        <p>{parseInt(pageIndex) + 1}</p>
                         <p style={{
                             marginRight: 8,
                             marginLeft: 8,
                         }}>of</p>
                         <p>{pageCount ? pageCount : '1'}</p>
                     </div>
-                    <IconButton
-                        disabled={!canNextPage}
-                        className="PageControl"
-                        onClick={() => gotoPage(pageIndex + 1)}
-                    >
-                        <FiChevronRight />
-                    </IconButton>
-                    <IconButton
-                        disabled={!canNextPage}
-                        className="PageControl"
-                        onClick={() => gotoPage(pageCount - 1)}
-                    >
-                        <FiChevronsRight />
-                    </IconButton>
+                    {parseInt(pageIndex) === pageCount - 1 ?
+                    <>
+                        <IconButton
+                            disabled={canNextPage}
+                            className="PageControl"
+                            onClick={() => setPageIndex(parseInt(pageIndex) + 1) && gotoPage(parseInt(pageIndex) + 1)}
+                        >
+                            <FiChevronRight />
+                        </IconButton>
+                        <IconButton
+                            disabled={canNextPage}
+                            className="PageControl"
+                            onClick={() => setPageIndex(pageCount - 1) && gotoPage(pageCount - 1)}
+                        >
+                            <FiChevronsRight />
+                        </IconButton>
+                    </>
+                    :
+                    pageCount === 1 ?
+                    <>
+                        <IconButton
+                            disabled={!canNextPage}
+                            className="PageControl"
+                            onClick={() => setPageIndex(parseInt(pageIndex) + 1) && gotoPage(parseInt(pageIndex) + 1)}
+                        >
+                            <FiChevronRight />
+                        </IconButton>
+                        <IconButton
+                            disabled={!canNextPage}
+                            className="PageControl"
+                            onClick={() => setPageIndex(pageCount - 1) && gotoPage(pageCount - 1)}
+                        >
+                            <FiChevronsRight />
+                        </IconButton>
+                    </>
+                    :
+                    <>
+                        <IconButton
+                            className="PageControl"
+                            onClick={() => setPageIndex(parseInt(pageIndex) + 1) && gotoPage(parseInt(pageIndex) + 1)}
+                        >
+                            <FiChevronRight />
+                        </IconButton>
+                        <IconButton
+                            className="PageControl"
+                            onClick={() => setPageIndex(pageCount - 1) && gotoPage(pageCount - 1)}
+                        >
+                            <FiChevronsRight />
+                        </IconButton>
+                    </>
+                    }
                 </div>
             </div>}
         </div>

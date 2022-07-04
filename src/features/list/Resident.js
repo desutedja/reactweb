@@ -341,25 +341,32 @@ function Component({ view, canAdd }) {
                     setBulk(true);
                   }}
                 />,
-                <Button
-                  key="Download Data Resident"
-                  label="Download Resident.csv"
-                  icon={<FiDownload />}
-                  onClick={() => {
-                    setLoading(true);
-                    dispatch(getFile(endpointResident + "/management/resident/download?onboarding=" +
-                    onboardingStatus,
-                    "Data_Resident_Onboarding="+(onboardingStatus ? toSentenceCase(onboardingStatus) : "All")+".csv",
-                    (res) => {
-                      setLoading(false);
-                    },
-                    (err) => {
-                      setLoading(false);
-                    }
-                    ))}
-                  }
-                />,
               ]
+        }
+        actionDownloads={
+          view 
+            ? null
+            : [
+              <Button
+                color="Download"
+                key="Download Data Resident"
+                label="Download Resident.csv"
+                icon={<FiDownload />}
+                onClick={() => {
+                  setLoading(true);
+                  dispatch(getFile(endpointResident + "/management/resident/download?onboarding=" +
+                  onboardingStatus,
+                  "Data_Resident_Onboarding="+(onboardingStatus ? toSentenceCase(onboardingStatus) : "All")+".csv",
+                  (res) => {
+                    setLoading(false);
+                  },
+                  (err) => {
+                    setLoading(false);
+                  }
+                  ))}
+                }
+              />,
+            ]
         }
         deleteAction={view ? null : role === "sa" && deleteResident}
         filterVars={[status, KYCStatus, onlineStatus, onboardingStatus]}

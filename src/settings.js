@@ -64,7 +64,7 @@ export const trx_status = [
   { label: "completed", value: "completed" },
   { label: "rejected", value: "rejected" },
   { label: "ready_for_pickup", value: "ready_for_pickup" },
-  { label: "requested", value: "requested" },
+  // { label: "requested", value: "requested" },
 ];
 
 export const trxStatusColor = {

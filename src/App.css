@@ -33,11 +33,12 @@
 .TopBar,
 .TopBar-wide {
   /* background-color: white; */
-  background: linear-gradient(
+  /* background: linear-gradient(
     90deg,
     var(--primary-color) 0%,
     var(--accent-color) 100%
-  );
+  ); */
+  background: var(--primary-color);
   padding-left: 8px;
   padding-right: 8px;
   display: flex;

@@ -5,7 +5,7 @@ import moment from "moment";
 import parser from "html-react-parser";
 import InputDash from "../../components/InputDash";
 
-import { FiUsers, FiBriefcase, FiSearch } from "react-icons/fi";
+import { FiUsers, FiBriefcase, FiSearch, FiTriangle, FiChevronUp } from "react-icons/fi";
 import { FaTools, FaBoxOpen } from "react-icons/fa";
 import { MdSecurity } from "react-icons/md";
 import {
@@ -706,7 +706,7 @@ function Component() {
                                 history.push("/" + auth.role + "/building");
                               }}
                             >
-                              <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                              <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                 <div className="col-auto">
                                   <div className="w-auto">
                                     <img src={require('./../../assets/Group 2311.jpg')} />
@@ -773,7 +773,7 @@ function Component() {
                                   : history.push("/" + auth.role + "/building");
                               }}
                             >
-                                <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                                <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                   <div className="col-auto">
                                     <div className="w-auto">
                                       <img src={require('./../../assets/Total Unit 2.jpg')} />
@@ -811,14 +811,34 @@ function Component() {
                                   </div>
                                   <div className="col">
                                     <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
-                                      <font style={{color:"#52A452"}}>
                                         {
                                         unitStatistic.registered_unit_previous != 0 ?
-                                        decimal((((unitStatistic.registered_unit)-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100)
+                                        <font 
+                                        style={{ 
+                                          color: `${((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100 < 0 ?
+                                          '#E12029'
+                                        :
+                                          '#52A452'}`}}
+                                        >
+                                        {
+                                          ((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100 < 0 ?
+                                          <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                                          :
+                                          ((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100 > 0 ?
+                                          <FiChevronUp style={{ marginBottom: "6px"}}/>
+                                          :
+                                          []
+                                        }
+                                        {
+                                          ((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100 < 0 ?
+                                          " " + (decimal(((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100*(-1))) + "%" + " ( -" + ((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)*(-1)) + " )"
+                                          :
+                                          " " + decimal(((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100) + "%" + " ( +" + (unitStatistic.registered_unit-unitStatistic.registered_unit_previous) + " )"
+                                        }
+                                        </font>
                                         :
                                         0
-                                        }%
-                                      </font>
+                                        }
                                     </div>
                                   </div>
                                 </div>
@@ -866,7 +886,7 @@ function Component() {
                                   history.push("/" + auth.role + "/building");
                                 }}
                               >
-                                <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                                <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                   <div className="col-auto">
                                     <div className="w-auto">
                                       <img src={require('./../../assets/Average Unit 3.jpg')} />
@@ -909,14 +929,43 @@ function Component() {
                                   </div>
                                   <div className="col">
                                     <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
-                                      <font style={{color:"#52A452"}}>
+                                        {
+                                        (unitStatistic.registered_unit_previous / staffData.num_of_building) != 0 ?
+                                        <font 
+                                        style={{ 
+                                          color: `${((((unitStatistic.registered_unit / staffData.num_of_building)-(unitStatistic.registered_unit_previous / staffData.num_of_building))/(unitStatistic.registered_unit_previous / staffData.num_of_building))*100) < 0 ?
+                                          '#E12029'
+                                        :
+                                          '#52A452'}`}}
+                                        >
+                                        {
+                                          ((((unitStatistic.registered_unit / staffData.num_of_building)-(unitStatistic.registered_unit_previous / staffData.num_of_building))/(unitStatistic.registered_unit_previous / staffData.num_of_building))*100) < 0 ?
+                                          <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                                          :
+                                          ((((unitStatistic.registered_unit / staffData.num_of_building)-(unitStatistic.registered_unit_previous / staffData.num_of_building))/(unitStatistic.registered_unit_previous / staffData.num_of_building))*100) > 0 ?
+                                          <FiChevronUp style={{ marginBottom: "6px"}}/>
+                                          :
+                                          []
+                                        }
+                                        {
+                                          ((((unitStatistic.registered_unit / staffData.num_of_building)-(unitStatistic.registered_unit_previous / staffData.num_of_building))/(unitStatistic.registered_unit_previous / staffData.num_of_building))*100) < 0 ?
+                                          " " + (decimal(((((unitStatistic.registered_unit / staffData.num_of_building)-(unitStatistic.registered_unit_previous / staffData.num_of_building))/(unitStatistic.registered_unit_previous / staffData.num_of_building))*100))*(-1)) + "%" + " ( -" + formatValue(((unitStatistic.registered_unit / staffData.num_of_building)-(unitStatistic.registered_unit_previous / staffData.num_of_building)*(-1))) + " )"
+                                          :
+                                          " " + decimal(((((unitStatistic.registered_unit / staffData.num_of_building)-(unitStatistic.registered_unit_previous / staffData.num_of_building))/(unitStatistic.registered_unit_previous / staffData.num_of_building))*100)) + "%" + " ( +" + formatValue(((unitStatistic.registered_unit / staffData.num_of_building)-(unitStatistic.registered_unit_previous / staffData.num_of_building))) + " )"
+
+                                        }
+                                        </font>
+                                        :
+                                        0
+                                        }
+                                      {/* <font style={{color:"#52A452"}}>
                                         {
                                         (unitStatistic.registered_unit_previous / staffData.num_of_building) != 0 ?
                                         decimal((((unitStatistic.registered_unit / staffData.num_of_building)-(unitStatistic.registered_unit_previous / staffData.num_of_building))/(unitStatistic.registered_unit_previous / staffData.num_of_building))*100)
                                         :
                                         0
                                         }%
-                                      </font>
+                                      </font> */}
                                     </div>
                                   </div>
                                 </div>
@@ -925,7 +974,7 @@ function Component() {
                             </div>
                             <div className="col">
                               <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
-                                <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                                <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                   <div className="col-auto">
                                     <div className="w-auto">
                                       <img src={require('./../../assets/Onboarding Unit 2.jpg')} />
@@ -964,14 +1013,43 @@ function Component() {
                                   </div>
                                   <div className="col">
                                     <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
-                                      <font style={{color:"#52A452"}}>
+                                        {
+                                        unitStatistic.onboard_unit_previous != 0 ?
+                                        <font 
+                                        style={{ 
+                                          color: `${(((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100 < 0 ?
+                                          '#E12029'
+                                        :
+                                          '#52A452'}`}}
+                                        >
+                                        {
+                                          (((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100 < 0 ?
+                                          <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                                          :
+                                          (((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100 > 0 ?
+                                          <FiChevronUp style={{ marginBottom: "6px"}}/>
+                                          :
+                                          []
+                                        }
+                                        {
+                                          (((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100 < 0 ?
+                                          " " + (decimal((((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100)*(-1)) + "%" + " ( -" + ((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous) + " )"
+                                          :
+                                          " " + decimal((((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100) + "%" + " ( +" + ((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous) + " )"
+
+                                        }
+                                        </font>
+                                        :
+                                        0
+                                        }
+                                      {/* <font style={{color:"#52A452"}}>
                                         {
                                         unitStatistic.onboard_unit_previous != 0 ?
                                         decimal((((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100)
                                         :
                                         0
                                         }%
-                                      </font>
+                                      </font> */}
                                     </div>
                                   </div>
                                 </div>
@@ -984,7 +1062,7 @@ function Component() {
                           <>
                             <div className="col">
                               <div className="Container color-7 d-flex flex-column cursor-pointer">
-                                <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                                <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                   <div className="col">
                                     <AnimatedNumber
                                       className="h2 font-weight-bold white"
@@ -1012,7 +1090,7 @@ function Component() {
                         <div className="row no-gutters">
                           <div className="col">
                             <div className="Container color-6 d-flex flex-column cursor-pointer">
-                              <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                              <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                 <div className="col">
                                   <AnimatedNumber
                                     className="h2 font-weight-bold white"
@@ -1032,7 +1110,7 @@ function Component() {
                           </div>
                           <div className="col">
                             <div className="Container color-6 d-flex flex-column cursor-pointer">
-                              <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                              <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                 <div className="col">
                                   <AnimatedNumber
                                     className="h2 font-weight-bold white"
@@ -1051,7 +1129,7 @@ function Component() {
                           </div>
                           <div className="col">
                             <div className="Container color-8 d-flex flex-column cursor-pointer">
-                              <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                              <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                 <div className="col">
                                   <AnimatedNumber
                                     className="h2 font-weight-bold white"
@@ -1071,7 +1149,7 @@ function Component() {
                           </div>
                           <div className="col">
                             <div className="Container color-8 d-flex flex-column cursor-pointer">
-                              <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                              <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                 <div className="col">
                                   <AnimatedNumber
                                     className="h2 font-weight-bold white"
@@ -1096,7 +1174,7 @@ function Component() {
                         <div class="row no-gutters">
                           <div className="col">
                             <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
-                              <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                              <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                 <div className="col-auto">
                                   <div className="w-auto">
                                     <img src={require('./../../assets/Online Staff 1.jpg')} />
@@ -1154,7 +1232,7 @@ function Component() {
                           </div>
                           <div className="col">
                             <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
-                              <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                              <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                 <div className="col-auto">
                                   <div className="w-auto">
                                     <img src={require('./../../assets/Online Staff 1.jpg')} />
@@ -1193,14 +1271,45 @@ function Component() {
                                   </div>
                                   <div className="col">
                                     <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
-                                      <font style={{color:"#52A452"}}>
+                                        {
+                                        staffStatistic.registered_staff != 0 ?
+                                        <font 
+                                        style={{ 
+                                          color: `${(((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100 < 0 ?
+                                          '#E12029'
+                                        :
+                                          '#52A452'}`}}
+                                        >
+                                        {
+                                          (((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100 < 0 ?
+                                          <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                                          :
+                                          (((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100 > 0 ?
+                                          <FiChevronUp style={{ marginBottom: "6px"}}/>
+                                          :
+                                          []
+                                        }
+                                        {
+                                          (((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100 < 0 ?
+                                          " " + (decimal((((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100*(-1))) + "%" + " ( -" + ((staffStatistic.registered_staff-staffStatistic.registered_staff_prev)*(-1)) + " )"
+                                          :
+                                          " " + decimal((((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100) + "%" + " ( +" + (staffStatistic.registered_staff-staffStatistic.registered_staff_prev) + " )"
+
+                                        }
+                                        </font>
+                                        :
+                                        <font style={{color: "#52A452"}}>
+                                        0%
+                                        </font>
+                                        }
+                                      {/* <font style={{color:"#52A452"}}>
                                         {
                                         staffStatistic.registered_staff != 0 ?
                                         decimal((((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100)
                                         :
                                         0
                                         }%
-                                      </font>
+                                      </font> */}
                                     </div>
                                   </div>
                                 </div>
@@ -1209,7 +1318,7 @@ function Component() {
                           </div>
                           <div className="col">
                             <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
-                              <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                              <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                 <div className="col-auto">
                                   <div className="w-auto">
                                     <img src={require('./../../assets/Online Staff 1.jpg')} />
@@ -1264,7 +1373,7 @@ function Component() {
                           </div>
                           <div className="col">
                             <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
-                              <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                              <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                                 <div className="col-auto">
                                   <div className="w-auto">
                                     <img src={require('./../../assets/Online Staff 1.jpg')} />
@@ -1325,7 +1434,7 @@ function Component() {
                       <div class="row no-gutters">
                         <div className="col">
                           <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
-                            <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                            <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                               <div className="col-auto">
                                 <div className="w-auto">
                                   <img src={require('./../../assets/Resident.jpg')} />
@@ -1364,14 +1473,45 @@ function Component() {
                                   </div>
                                   <div className="col">
                                     <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
-                                      <font style={{color:"#52A452"}}>
+                                        {
+                                        residentStatistic.registered_resident_prev != 0 ?
+                                        <font 
+                                        style={{ 
+                                          color: `${((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100 < 0 ?
+                                          '#E12029'
+                                        :
+                                          '#52A452'}`}}
+                                        >
+                                        {
+                                          ((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100 < 0 ?
+                                          <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                                          :
+                                          ((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100 > 0 ?
+                                          <FiChevronUp style={{ marginBottom: "6px"}}/>
+                                          :
+                                          []
+                                        }
+                                        {
+                                          ((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100 < 0 ?
+                                          " " + (decimal(((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100*(-1))) + "%" + " ( -" + (unitStatistic.registered_unit-unitStatistic.registered_unit_previous) + " )"
+                                          :
+                                          " " + decimal(((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100) + "%" + " ( +" + (unitStatistic.registered_unit-unitStatistic.registered_unit_previous) + " )"
+
+                                        }
+                                        </font>
+                                        :
+                                        <font style={{color: "#52A452"}}>
+                                        0%
+                                        </font>
+                                        }
+                                      {/* <font style={{color:"#52A452"}}>
                                         {
                                         (residentStatistic.registered_resident_prev) != 0 ?
                                         decimal((residentStatistic.registered_resident-residentStatistic.registered_resident_prev/residentStatistic.registered_resident_prev)*100)
                                         :
                                         0
                                         }%
-                                      </font>
+                                      </font> */}
                                     </div>
                                   </div>
                                 </div>
@@ -1380,7 +1520,7 @@ function Component() {
                         </div>
                         <div className="col">
                           <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
-                            <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                            <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                               <div className="col-auto">
                                 <div className="w-auto">
                                   <img src={require('./../../assets/Online Resident.jpg')} />
@@ -1419,14 +1559,45 @@ function Component() {
                                   </div>
                                   <div className="col">
                                     <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
-                                      <font style={{color:"#52A452"}}>
+                                        {
+                                        residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev != 0 ?
+                                        <font 
+                                        style={{ 
+                                          color: `${(((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
+                                          '#E12029'
+                                        :
+                                          '#52A452'}`}}
+                                        >
+                                        {
+                                          (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
+                                          <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                                          :
+                                          (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 > 0 ?
+                                          <FiChevronUp style={{ marginBottom: "6px"}}/>
+                                          :
+                                          []
+                                        }
+                                        {
+                                          (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
+                                          " " + (decimal((((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100*(-1))) + "%" + " ( -" + (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*(-1)) + " )"
+                                          :
+                                          " " + decimal((((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100) + "%" + " ( +" + ((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev)) + " )"
+
+                                        }
+                                        </font>
+                                        :
+                                        <font style={{color: "#52A452"}}>
+                                        0%
+                                        </font>
+                                        }
+                                      {/* <font style={{color:"#52A452"}}>
                                         {
                                         (residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev) != 0 ?
                                         decimal((((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100)
                                         :
                                         0
                                         }%
-                                      </font>
+                                      </font> */}
                                     </div>
                                   </div>
                                 </div>
@@ -1435,7 +1606,7 @@ function Component() {
                         </div>
                         <div className="col">
                           <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
-                            <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                            <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                               <div className="col-auto">
                                 <div className="w-auto">
                                   <img src={require('./../../assets/Onboarding Resident.jpg')} />
@@ -1474,14 +1645,45 @@ function Component() {
                                   </div>
                                   <div className="col">
                                     <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
-                                      <font style={{color:"#52A452"}}>
+                                        {
+                                        residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev != 0 ?
+                                        <font 
+                                        style={{ 
+                                          color: `${(((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100 < 0 ?
+                                          '#E12029'
+                                        :
+                                          '#52A452'}`}}
+                                        >
+                                        {
+                                          (((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100 < 0 ?
+                                          <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                                          :
+                                          (((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100 > 0 ?
+                                          <FiChevronUp style={{ marginBottom: "6px"}}/>
+                                          :
+                                          []
+                                        }
+                                        {
+                                          (((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100 < 0 ?
+                                          " " + (decimal((((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100*(-1))) + "%" + " ( -" + (((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*(-1)) + " )"
+                                          :
+                                          " " + decimal((((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100) + "%" + " ( +" + ((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev)) + " )"
+
+                                        }
+                                        </font>
+                                        :
+                                        <font style={{color: "#52A452"}}>
+                                        0%
+                                        </font>
+                                        }
+                                      {/* <font style={{color:"#52A452"}}>
                                         {
                                         (residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev) != 0 ?
                                         decimal((((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100)
                                         :
                                         0
                                         }%
-                                      </font>
+                                      </font> */}
                                     </div>
                                   </div>
                                 </div>
@@ -1490,7 +1692,7 @@ function Component() {
                         </div>
                         <div className="col">
                           <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
-                            <div className="row no-gutters align-items-center" style={{minWidth:200}}>
+                            <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                               <div className="col-auto">
                                 <div className="w-auto">
                                   <img src={require('./../../assets/Online Staff 1.jpg')} />
@@ -1529,14 +1731,45 @@ function Component() {
                                   </div>
                                   <div className="col">
                                     <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
-                                      <font style={{color:"#52A452"}}>
+                                        {
+                                        staffStatistic.registered_staff != 0 ?
+                                        <font 
+                                        style={{ 
+                                          color: `${(((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100 < 0 ?
+                                          '#E12029'
+                                        :
+                                          '#52A452'}`}}
+                                        >
+                                        {
+                                          (((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100 < 0 ?
+                                          <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                                          :
+                                          (((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100 > 0 ?
+                                          <FiChevronUp style={{ marginBottom: "6px"}}/>
+                                          :
+                                          []
+                                        }
+                                        {
+                                          (((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100 < 0 ?
+                                          " " + (decimal((((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100*(-1))) + "%" + " ( -" + ((staffStatistic.registered_staff-staffStatistic.registered_staff_prev)*(-1)) + " )"
+                                          :
+                                          " " + decimal((((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100) + "%" + " ( +" + ((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev) + " )"
+
+                                        }
+                                        </font>
+                                        :
+                                        <font style={{color: "#52A452"}}>
+                                        0%
+                                        </font>
+                                        }
+                                      {/* <font style={{color:"#52A452"}}>
                                         {
                                         staffStatistic.registered_staff != 0 ?
                                         decimal((((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100)
                                         :
                                         0
                                         }%
-                                      </font>
+                                      </font> */}
                                     </div>
                                   </div>
                                 </div>

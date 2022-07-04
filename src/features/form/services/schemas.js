@@ -188,7 +188,7 @@ export const announcementSchema = Yup.object().shape({
   building: TextOptional,
   consumer_role: Text,
   image: TextOptional,
-  publish_schedule: Text,
+  publish_schedule: TextOptional,
   description: Text,
 });
 
@@ -199,7 +199,7 @@ export const voucherSchema = Yup.object().shape({
   limit: Number,
   usage_limit: Number,
   expired_date: Text,
-  building_management_id: Number,
+  building_management_id: NumberOptional,
 });
 
 export const providerSchema = Yup.object().shape({

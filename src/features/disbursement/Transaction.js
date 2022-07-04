@@ -903,6 +903,7 @@ function Component({ view }) {
                 />
               )}
               <Button
+                color="Download"
                 label="Download XLSX"
                 icon={<FiDownload />}
                 onClick={() => {

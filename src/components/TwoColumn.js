@@ -8,7 +8,7 @@ function Component({ first, second, noborder=false }) {
             <Column flex={6} style={{ textAlign: 'left' }}>
                 {first || " "}
             </Column>
-            <Column flex={6} style={{ textAlign: 'right' }}>
+            <Column flex={6} style={{ textAlign: 'right'}}>
                 {second ? second : '-'}
             </Column>
         </Row>

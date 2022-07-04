@@ -1,11 +1,11 @@
-import React, { useEffect, useState, forwardRef, useRef } from 'react'
-import { useTable, useExpanded, usePagination, useRowSelect, } from 'react-table'
+import React, { useEffect, useState } from 'react'
+import { useTable, useExpanded, usePagination } from 'react-table'
 import ClinkLoader from './ClinkLoader';
 import {
     FiChevronsLeft, FiChevronLeft,
     FiChevronsRight, FiChevronRight, FiSearch,
     FiChevronDown, FiChevronUp, FiTrash, FiMoreHorizontal,
-    FiEdit, FiCheck, FiUserPlus, FiMessageSquare, FiFilter, FiList, FiArrowDown, FiArrowUp, FiPlus,
+    FiEdit, FiCheck, FiUserPlus, FiMessageSquare, FiFilter, FiList, FiArrowDown, FiArrowUp, FiPlus, FiX, FiCalendar, FiStopCircle,
 } from 'react-icons/fi'
 import {
     FaCaretRight, FaCaretDown,
@@ -17,30 +17,33 @@ import FilterButton from './FilterButton';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { toSentenceCase } from '../utils';
 
-function Component({
+function Table({
+    noSearch = false,
     expander = true,
-    pagination = true,
     tableAction = true,
+    pagination = true,
     columns,
     data,
     totalItems,
     fetchData,
     filters = [],
-    filterExpanded = false,
     loading,
     pageCount: controlledPageCount,
     actions = [],
-    actionDownloads = [],
+    filterExpanded=false,
     onClickChat,
     onClickReassign,
     onClickResolve,
     onClickDelete,
     onClickDetails,
     onClickEdit,
+    onClickChange,
+    onClickStop,
     onClickAddBilling,
+    onClickApproved,
+    onClickDisapproved,
     renderActions,
     deleteSelection,
-    onSelection,
     sortBy = []
 }) {
     const {
@@ -55,7 +58,11 @@ function Component({
         pageCount,
         gotoPage,
         setPageSize,
-        state: { pageIndex, pageSize, selectedRowIds }
+        state: { 
+            pageIndex,
+            pageSize,
+            selectedRowIds
+        }
     } = useTable({
         columns,
         data,
@@ -68,27 +75,10 @@ function Component({
     },
         useExpanded,
         usePagination,
-        useRowSelect,
         hooks => {
-            expander ? 
+            expander ?
             hooks.visibleColumns.push(columns => {
                 return [
-                    {
-                        id: 'selection',
-                        Header: ({ getToggleAllRowsSelectedProps }) => (
-                            <div>
-                                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-                            </div>
-                        ),
-                        Cell: ({ row }) => {
-                            // console.log(row.getToggleRowSelectedProps())
-                            return (
-                                <div >
-                                    <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-                                </div>
-                            )
-                        }
-                    },
                     {
                         id: 'expander',
                         Header: () => null,
@@ -105,22 +95,6 @@ function Component({
             }) :
             hooks.visibleColumns.push(columns => {
                 return [
-                    {
-                        id: 'selection',
-                        Header: ({ getToggleAllRowsSelectedProps }) => (
-                            <div>
-                                <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-                            </div>
-                        ),
-                        Cell: ({ row }) => {
-                            // console.log(row.getToggleRowSelectedProps())
-                            return (
-                                <div >
-                                    <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-                                </div>
-                            )
-                        }
-                    },
                     ...columns,
                 ]
             })
@@ -151,20 +125,12 @@ function Component({
     }, [fetchData, gotoPage, searchToggle]);
 
     useEffect(() => {
-        let searchTimeout = setTimeout(() => toggleSearch(search), 500);
+        let searchTimeout = setTimeout(() => toggleSearch(search), 1000);
 
         return () => {
             clearTimeout(searchTimeout);
         }
     }, [search])
-
-    useEffect(() => {
-        const selectedRows = selectedRowIds ?
-            Object.keys(selectedRowIds).map(el => page[el] && page[el].original) : [];
-        onSelection && onSelection(selectedRows);
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [page, selectedRowIds]);
 
     const countactivefilter = filters.filter(el => !el.hidex).length
 
@@ -199,88 +165,7 @@ function Component({
                     { label: 'Descending', value: 'DESC' },
                 ]} inputValue={sortType} setInputValue={setSortTypeInput} />
             </Modal>
-            {tableAction && 
-            <>
-                <div className="TableActionBilTop">
-
-                    <div className="TableAction-new d-flex align-items-center">
-                        <div className="TableSearch d-flex align-items-center" style={{marginLeft: "4px"}}>
-                            <Input
-                                label="Search"
-                                compact
-                                fullwidth={true}
-                                icon={<FiSearch />}
-                                inputValue={search}
-                                setInputValue={setSearch}
-                            />
-                        </div>
-                    
-                        {filters.length > 0 && <div className="Button" style={{
-                            cursor: 'pointer',
-                            color: 'white',
-                            marginRight: 8,
-                        }} onClick={() => {
-                            toggleFilter(!filter);
-                        }}>
-                            <FiFilter />
-                            <b style={{
-                                marginRight: 8,
-                                marginLeft: 8,
-                            }}>Filter</b>
-                            {filter ? <FiChevronUp /> : <FiChevronDown />}
-                        </div>}
-                        {sortBy.length > 0 && <div className="Button Secondary" style={{
-                            cursor: 'pointer',
-                            marginRight: 8,
-                        }} onClick={() => {
-                            toggleSort(!sort);
-                        }}>
-                            <FiList />
-                            <b style={{
-                                marginRight: 8,
-                                marginLeft: 8,
-                            }}>Sort by: {toSentenceCase(sortField)}</b>
-                            {sortType === 'DESC' ? <FiArrowDown /> : <FiArrowUp />}
-                        </div>}
-        
-                        {countactivefilter > 0 && <span style={{ paddingRight: '10px' }}>
-                            {countactivefilter} filter{countactivefilter > 1 ? 's' : ''} applied
-                        </span>}
-                    
-                    </div>
-                    <div className="TableAction-new d-flex align-items-center">
-                    
-                        {actionDownloads}
-                        
-                    </div>
-        
-                </div>
-                {filters.length > 0 && <div className={"FilterContainerNew" + (filter ? ' down' : '')}>
-                    {filters.map((el, index) => !el.hidden &&
-                        <FilterButton
-                            key={index}
-                            label={el.label}
-                            value={el.value}
-                            hideX={el.hidex}
-                            onClick={() => {
-                                el.onClick && el.onClick();
-                                el.component && toggleModal(true);
-                                setFilter(index);
-                            }}
-                            onClickDelete={el.delete} />
-                    )}
-                </div>}
-                <div className="TableActionBil">
-                    <div style={{
-                        display: 'flex',
-                    }}
-                    >
-                        {actions}
-                        {renderActions != null ? renderActions(selectedRowIds, page) : []}
-                    </div>
-                </div>
-            </>}
-            {/* {tableAction && <div className="TableAction">
+            {tableAction && <div className="TableAction">
                 <div style={{
                     display: 'flex',
                 }}>
@@ -318,7 +203,7 @@ function Component({
                         }}>Sort by: {toSentenceCase(sortField)}</b>
                         {sortType === 'DESC' ? <FiArrowDown /> : <FiArrowUp />}
                     </div>}
-                    <div className="TableSearch d-flex align-items-center">
+                    {!noSearch && <div className="TableSearch d-flex align-items-center">
                         <Input
                             label="Search"
                             compact
@@ -327,7 +212,7 @@ function Component({
                             inputValue={search}
                             setInputValue={setSearch}
                         />
-                    </div>
+                    </div>}
                 </div>
             </div>}
             {filters.length > 0 && <div className={"FilterContainer" + (filter ? ' down' : '')}>
@@ -344,7 +229,7 @@ function Component({
                         }}
                         onClickDelete={el.delete} />
                 )}
-            </div>} */}
+            </div>}
             <div className="Table-content scroller">
                 <table {...getTableProps()}>
                     {loading &&
@@ -358,9 +243,9 @@ function Component({
                     }
                     <thead>
                         {headerGroups.map((headerGroup, i) => (
-                            <tr {...headerGroup.getHeaderGroupProps()}>
-                                {headerGroup.headers.map(column => (
-                                    <th {...column.getHeaderProps()}><div className="TableHeader">
+                            <tr {...headerGroup.getHeaderGroupProps()} key={i}>
+                                {headerGroup.headers.map((column, i) => (
+                                    <th {...column.getHeaderProps()} key={i}><div className="TableHeader">
                                         {column.render('Header')}
                                         {column.isSorted
                                             ? column.isSortedDesc
@@ -420,21 +305,43 @@ function Component({
                                         name: "Edit",
                                         icon: <FiEdit />,
                                     } : ""),
+                                    (onClickChange ? {
+                                        onClick: () => onClickChange(row.original),
+                                        name: "Change",
+                                        icon: <FiCalendar />,
+                                    } : ""),
+                                    (onClickStop ? {
+                                        onClick: () => onClickStop(row.original),
+                                        name: "Stop Promo",
+                                        icon: <FiStopCircle />,
+                                    } : ""),
                                     (onClickDelete ? {
                                         name: "Delete",
                                         onClick: () => onClickDelete(row.original),
                                         color: "Danger",
                                         icon: <FiTrash />,
                                     } : ""),
+                                    (onClickApproved && !(row.original.approved_status == "approved" || row.original.approved_status == "disapprove") ? {
+                                        name: "Approved",
+                                        onClick: () => onClickApproved(row.original),
+                                        color: "Details",
+                                        icon: <FiCheck />,
+                                    } : ""),
+                                    (onClickDisapproved && !(row.original.approved_status == "approved" || row.original.approved_status == "disapprove") ? {
+                                        name: "Disapprove",
+                                        onClick: () => onClickDisapproved(row.original),
+                                        color: "Danger",
+                                        icon: <FiX />,
+                                    } : ""),
                                 ].filter(x => x !== "")
 
                                 return (
                                     <>
-                                        <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} >
+                                        <tr {...row.getRowProps()} className={row.isSelected ? 'SelectedRow' : ''} key={i}>
 
-                                            {row.cells.map(cell => {
+                                            {row.cells.map((cell, i) => {
                                                 return (
-                                                    <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                                                    <td {...cell.getCellProps()} key={i}>{cell.render("Cell")}</td>
                                                 );
                                             })}
 
@@ -539,22 +446,4 @@ function Component({
     )
 }
 
-const IndeterminateCheckbox = forwardRef(
-    ({ indeterminate, ...rest }, ref) => {
-        const defaultRef = useRef()
-        const resolvedRef = ref || defaultRef
-
-        // console.log('LOG', resolvedRef)
-
-
-        useEffect(() => {
-            resolvedRef.current.indeterminate = indeterminate
-        }, [resolvedRef, indeterminate])
-
-        return (
-            <input type="checkbox" ref={resolvedRef} {...rest} />
-        )
-    }
-);
-
-export default Component;
+export default Table;

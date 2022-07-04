@@ -40,7 +40,13 @@ function Component({
                         </button>}
                     {' '}
                     {!disableSecondary &&
-                        <Button color="secondary" onClick={onClickSecondary !== null ? onClickSecondary : toggle}>
+                        <Button 
+                            style={{ 
+                                borderRadius: "6px",
+                                border: "1px solid #838383"
+                            }}
+                            color="secondary" onClick={onClickSecondary !== null ? onClickSecondary : toggle}
+                        >
                             {cancelLabel === '' ? "Cancel" : cancelLabel}
                         </Button>}
                 </ModalFooter>)}

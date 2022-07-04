@@ -70,6 +70,14 @@ const columns = [
         sorting: "g.name"
     },
     {
+        Header: "Power", 
+        // accessor: "power", 
+        accessor: (row) => (
+          row.power === "" ? "-" : row.power
+        ),
+        sorting: "g.power"
+    },
+    {
         Header: "Image", 
         accessor: (row) => (
             <a target="_blank" rel="noopener noreferrer" href={row.image}>
@@ -188,11 +196,23 @@ function Component({ view, canAdd }) {
               ]
             : []
         }
-        actions={
+        // onClickEdit={
+        //   view
+        //     ? null
+        //     : (row) => {
+              
+        //       dispatch(setSelected(row));
+        //       history.push(url + "/edit");
+        //       console.log(row);
+        //     }
+              
+        // }
+        actionDownloads={
           view
             ? null
             : 
               <Button
+                  color="Download"
                   label="Download Catat Meter .csv"
                   icon={<FiDownload />}
                   onClick={() => {

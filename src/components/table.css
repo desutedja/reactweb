@@ -98,6 +98,36 @@
   padding-bottom: 8px;
 }
 
+.TableActionBil {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Container .TableActionBil,
+.ReactModalPortal .TableActionBil {
+  padding: 0;
+  padding-top: 24px;
+  padding-bottom: 8px;
+}
+
+.TableActionBilTop {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Container .TableActionBilTop,
+.ReactModalPortal .TableActionBilTop {
+  padding: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f3f3fa;
+}
+
 .TableAction-right {
   display: flex;
   flex-wrap: wrap;
@@ -108,15 +138,24 @@
   color: #ffffff;
 }
 
+.TableAction-new {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.TableAction-new button {
+  margin-right: 8px;
+  color: #ffffff;
+}
+
 .TableHeader {
   display: flex;
   align-items: center;
 }
 
 .TableDatePicker input {
-  padding: 4px;
+  padding: 4px 8px 4px 8px;
   width: 120px;
-  margin-right: 4px;
 }
 
 .TableDatePicker-2 input {
@@ -128,7 +167,7 @@
 }
 
 .TableSearch input {
-  padding: 4px;
+  padding: 4px 8px 4px 8px;
 }
 
 .TableSearch .InputIcon {
@@ -242,6 +281,26 @@
   min-height: 48px;
   height: auto;
   padding-top: 8px;
+  visibility: visible;
+}
+
+.FilterContainerNew {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border-bottom: 1px solid #f3f3fa;
+  min-height: 0px;
+  height: 0px;
+  overflow: hidden;
+  visibility: hidden;
+  transition: .2s;
+}
+
+.FilterContainerNew.down {
+  min-height: 48px;
+  height: auto;
+  padding-top: 8px;
+  margin-bottom: 8px;
   visibility: visible;
 }
 

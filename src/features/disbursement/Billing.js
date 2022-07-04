@@ -13,7 +13,7 @@ import Modal from '../../components/Modal';
 import Pill from '../../components/Pill';
 import Input from '../../components/Input';
 import Filter from '../../components/Filter';
-import { toMoney, dateTimeFormatterCell, toSentenceCase, isRangeToday, monthStart, monthEnd, isRangeThisMonth } from '../../utils';
+import { toMoney, dateTimeFormatterCell, toSentenceCase, isRangeToday, monthStart, monthEnd, isRangeThisMonth, toSentenceCase2 } from '../../utils';
 import { getBillingDisbursement, refresh } from '../slices/billing';
 import { endpointBilling } from '../../settings';
 import { get, post, getFile } from '../slice';
@@ -35,6 +35,7 @@ const payment_channel = [
     { label: "BRI", value: "bri" },
     { label: "BNI", value: "bni" },
     { label: "LinkAja", value: "linkaja" },
+    { label: "LinkAja Direct", value: "linkaja-direct" },
     { label: "Gopay", value: "gopay" },
     { label: "Mandiri", value: "mandiri" },
 ];
@@ -350,7 +351,7 @@ function Component({ view }) {
                                         setSelected(data.filter(el => el && !el.disbursement_date));
                                         setModal(true);
                                     }} />}
-                                <Button label="Download .csv" icon={<FiDownload />}
+                                <Button className="Download" label="Download .csv" icon={<FiDownload />}
                                     onClick={() => dispatch(getFile(endpointBilling + '/management/billing/disbursement/list/transaction'
                                         + '?management_id=' + selectedManagement.map(item => item.id).join(',')
                                         + '&disbursement_date_min=' + (status === 'disbursed' ? disbursedStart : '')
@@ -465,7 +466,8 @@ function Component({ view }) {
                                         hidex: paymentChannel === '',
                                         label: "Payment Channel: ",
                                         delete: () => { setPaymentChannel('') },
-                                        value: paymentChannel ? toSentenceCase(paymentChannel) : 'All',
+                                        // value: paymentChannel ? toSentenceCase(paymentChannel) : 'All',
+                                        value: paymentChannel ? toSentenceCase2(paymentChannel) : 'All',
                                         component: (toggleModal) =>
                                             <Filter
                                                 data={payment_channel}

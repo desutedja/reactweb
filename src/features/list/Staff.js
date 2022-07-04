@@ -421,6 +421,30 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
           ),
         },
       ]}
+      actionDownloads={
+        view
+          ? null
+          : [
+            <Button
+                color="Download"
+                key="Download Staff"
+                label="Download Staff.csv"
+                icon={<FiDownload />}
+                onClick={() =>
+                  dispatch(downloadStaff(search, building, role, building, shift, management, department ))
+                }
+              />,
+            <Button
+                color="Download"
+                key="Download Staff Log"
+                label="Download Staff Log.csv"
+                icon={<FiDownload />}
+                onClick={() =>
+                  dispatch(downloadStaffLog(search, building, role, building, shift, management, department ))
+                }
+              />,
+          ]
+      }
       actions={
         view
           ? null
@@ -436,22 +460,6 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
                   history.push(url + "/add");
                 }}
               />,
-              <Button
-                  key="Download Staff"
-                  label="Download Staff.csv"
-                  icon={<FiDownload />}
-                  onClick={() =>
-                    dispatch(downloadStaff(search, building, role, building, shift, management, department ))
-                  }
-                />,
-              <Button
-                  key="Download Staff Log"
-                  label="Download Staff Log.csv"
-                  icon={<FiDownload />}
-                  onClick={() =>
-                    dispatch(downloadStaffLog(search, building, role, building, shift, management, department ))
-                  }
-                />,
             ]
       }
       // deleteAction={deleteStaff}

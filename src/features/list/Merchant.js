@@ -251,6 +251,40 @@ function Component({ view }) {
                             />
                     },
                 ]}
+                actionDownloads={
+                  view
+                    ? null
+                    : [
+                        <Button
+                            color="Download"
+                            key="Download Merchant"
+                            label="Download Merchant.csv"
+                            icon={<FiDownload />}
+                            // onClick={() =>
+                            //   dispatch(downloadMerchant(search, type, cat, stat ))
+                            // }
+                            onClick={() => {
+                                dispatch(getFile(endpointMerchant + "/admin/list?" +
+                                "?page=" +
+                                1 +
+                                "&limit=" +
+                                10 +
+                                "&type=" +
+                                type +
+                                "&category=" +
+                                cat +
+                                "&sort_field=created_on&sort_type=DESC" +
+                                "&search=" +
+                                search +
+                                "&is_open=" +
+                                stat + 
+                                "&is_download=1",
+                                "Data Merchant.csv",
+                                ))}
+                              }
+                          />,
+                    ]
+                }
                 renderActions={view ? null : (selectedRowIds) => {
                     return [
                     <Button key="Add Merchant" label="Add Merchant" icon={<FiPlus />}
@@ -287,33 +321,6 @@ function Component({ view }) {
                         //   }
                         }
                     />,
-                    <Button
-                        key="Download Merchant"
-                        label="Download Merchant.csv"
-                        icon={<FiDownload />}
-                        // onClick={() =>
-                        //   dispatch(downloadMerchant(search, type, cat, stat ))
-                        // }
-                        onClick={() => {
-                            dispatch(getFile(endpointMerchant + "/admin/list?" +
-                            "?page=" +
-                            1 +
-                            "&limit=" +
-                            10 +
-                            "&type=" +
-                            type +
-                            "&category=" +
-                            cat +
-                            "&sort_field=created_on&sort_type=DESC" +
-                            "&search=" +
-                            search +
-                            "&is_open=" +
-                            stat + 
-                            "&is_download=1",
-                            "Data Merchant.csv",
-                            ))}
-                          }
-                      />,
                 ]}
             }
             />

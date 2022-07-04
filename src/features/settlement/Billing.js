@@ -455,6 +455,17 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     }
                            
                         ]}
+                    actionDownloads={
+                      view
+                        ? null
+                        : [
+                            <Button color="Download" label="Download .csv" icon={<FiDownload />}
+                                onClick={() => dispatch(downloadBillingSettlement(
+                                    search, building, settled, ...(settled === '1' ? [settlementStart, settlementEnd] : [])
+                                    ))}
+                            />
+                        ]
+                    }
                     renderActions={(selectedRowIds, page) => {
                         return ([
                             view ? null : auth.role === 'sa' && <Button
@@ -472,11 +483,6 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                 icon={<FiFile />}
                                 label="Upload Settlement"
                             />,
-                            <Button label="Download .csv" icon={<FiDownload />}
-                                onClick={() => dispatch(downloadBillingSettlement(
-                                    search, building, settled, ...(settled === '1' ? [settlementStart, settlementEnd] : [])
-                                    ))}
-                            />
                         ])
                     }}
                 />
