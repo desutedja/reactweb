@@ -11,7 +11,7 @@ import { get } from "../../slice";
 import { endpointAdmin } from "../../../settings";
 import { toMoney, toSentenceCase } from "../../../utils";
 import Table from "../../../components/Table";
-import { distributeVoucher, setSelected } from "../../slices/vouchers";
+import { distributeVoucher, refresh, setSelected } from "../../slices/vouchers";
 
 const columnsCategories = [
   { Header: "ID", accessor: (row) => row.category_id },
@@ -93,8 +93,6 @@ function Component({ view }) {
   const [categories, setCategories] = useState([]);
   const [codes, setCodes] = useState([]);
   const { loading, refreshToggle } = useSelector((state) => state.vouchers);
-
-  const reload=()=>window.location.reload();
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -185,8 +183,8 @@ function Component({ view }) {
         disableHeader={true}
         onClick={() => {
           dispatch(distributeVoucher(voucherCodeId, id, history));
-          // reload();
           setConfirmDistribute(false);
+          dispatch(refresh());
         }}
         toggle={() => setConfirmDistribute(false)}
         okLabel={"Distribute"}

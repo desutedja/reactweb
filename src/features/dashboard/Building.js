@@ -592,7 +592,10 @@ function Component() {
                                   className="Group2"
                                   onClick={() => setOpenModalBuilding(true) }
                               >
-                                  { buildingName ? buildingLabel : 
+                                  { buildingName ? 
+                                  <div>
+                                    Building: <b>{buildingLabel}</b>
+                                  </div> : 
                                   <div>Building: <b>All</b></div>}
                               </div>
                               {buildingName ?
@@ -601,7 +604,10 @@ function Component() {
                                   className="Group2"
                                   onClick={() => setOpenModalUnit(true) }
                               >
-                                  { tower ? unitLabel : 
+                                  { tower ? 
+                                  <div>
+                                    Section: <b>{unitLabel}</b>
+                                  </div> : 
                                   <div>Section: <b>All</b></div>}
                               </div>
                               : []}
@@ -3299,6 +3305,77 @@ function Component() {
     {auth.role !== "sa" && (
       <>
       <div className="row no-gutters">
+        <div className="col-12">
+          <div
+            className=" flex-column"
+            style={{ overflow: "visible", borderRadius: 10 }}
+          >
+            <div className="row no-gutters">
+              <div className="col-12">
+                <div className="row pl-3 mb-0">
+                  <div className="row no-gutters w-100" style={{ justifyContent: 'space-between' }}>
+                    <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
+                      <h2 className="mt-2 mb-4 no-wrap" style={{marginLeft:20, fontWeight:600}}>Building Overview</h2>
+                    </div>
+                            
+                        <div className="col-auto d-flex flex-column mt-2 mr-3" style={{marginLeft:20}}>
+                        { (auth.role === "bm") ? 
+                          <div style={{
+                              display: 'flex',
+                          }}>
+                              <div
+                                  style={{ marginLeft: 5 }}
+                                  className="Group2"
+                                  onClick={() => setOpenModalUnit(true) }
+                              >
+                                  { tower ? unitLabel : 'Section'}
+                              </div>
+                          </div> 
+                          : 
+                          <div style={{
+                              display: 'flex',
+                          }}>
+                              <div
+                                  className="Group2"
+                                  onClick={() => setOpenModalBuilding(true) }
+                              >
+                                  { buildingName ? 
+                                  <div>
+                                    Building: <b>{buildingLabel}</b>
+                                  </div> : 
+                                  <div>Building: <b>All</b></div>}
+                              </div>
+                              {buildingName ?
+                              <div
+                                  style={{ marginLeft: 5 }}
+                                  className="Group2"
+                                  onClick={() => setOpenModalUnit(true) }
+                              >
+                                  { tower ? 
+                                  <div>
+                                    Section: <b>{unitLabel}</b>
+                                  </div> : 
+                                  <div>Section: <b>All</b></div>}
+                              </div>
+                              : []}
+                          </div>
+                          }
+                        </div>
+                    </div>
+                  {/* <div className="p-3 col-6 text-right">
+                      <Button
+                        className="btn-cancel"
+                        label="Download Report"
+                        icon={<FiDownload />}
+                      />
+                    </div> */}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="row no-gutters">
         {/* {auth.role === "sa" && (
           <div className="col">
             <div
@@ -3665,7 +3742,7 @@ function Component() {
           </div>
         </div>
       </div>
-      <div className="Row">
+      <div className="Row mb-4">
         {auth.role !== "sa" && (
           <div className="col-6">
             <div className="Container flex-column m-0">
@@ -3724,7 +3801,7 @@ function Component() {
                         )
                       ].map(({ summary_name, total_amount, year, month }) => {
                         return (
-                          <div className="row no-gutters">
+                          <div className="row no-gutters" style={{paddingBottom: "8px"}}>
                             <div className="col-8">
                               <strong>{summary_name} </strong>:{" "}
                             </div>

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FiChevronDown, FiX } from "react-icons/fi";
+import { FiChevronDown, FiImage, FiX } from "react-icons/fi";
 import MoonLoader from "react-spinners/MoonLoader";
 // import ComboBox from './ComboBox';
 import { rangeNumber } from "../utils";
 import Editor from "../features/form/input/Editor";
 
-import { storageRef } from "../firebase";
+import { storageRef } from "../firebase"; 
 
 const MultiSelectItem = ({ value, onClickDelete }) => {
   return (
@@ -62,6 +62,7 @@ function Component({
     inputValue ? inputValue : hours + ":" + minutes
   );
   const [modalTime, setModalTime] = useState(false);
+  const [image, setImage] = useState({preview: "", raw: ""});
 
   let uploader = useRef();
 
@@ -292,7 +293,7 @@ function Component({
                   <MoonLoader size={14} color={"grey"} loading={uploading} />
                 </div>
               )}
-              <input
+              {/* <input
                 className="w-100"
                 type="url"
                 id={label}
@@ -306,13 +307,24 @@ function Component({
                   setInputValue && setInputValue(e.target.value);
                 }}
                 onClick={onClick}
-              />
+              /> */}
+              
+              <label htmlFor={label}>
+                {value ? (
+                  <img src={value} alt="Uploading.." width="80" height="80" style={{borderRadius: 10}} />
+                ) : (
+                  <>
+                    <img src={require('./../assets/imageDefault.jpg')} width="80" height="80" />
+                  </>
+                )}
+              </label>
               <input
                 className="w-100"
                 ref={uploader}
                 accept="image/*"
                 type="file"
                 id={label}
+                style={{ display: "none" }}
                 name="uploader"
                 required={false}
                 onChange={async (e) => {
@@ -337,7 +349,6 @@ function Component({
                   });
                 }}
                 onClick={onClick}
-                multiple
               />
             </div>
           );

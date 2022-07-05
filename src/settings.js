@@ -51,19 +51,19 @@ export const kyccolor = {
 };
 
 export const trx_status = [
-  { label: "requested", value: "requested" },
-  { label: "ask_resident", value: "ask_resident" },
-  { label: "ask_merchant", value: "ask_merchant" },
-  { label: "paid", value: "paid" },
-  { label: "in_progress", value: "in_progress" },
-  { label: "accepted", value: "accepted" },
-  { label: "canceled", value: "canceled" },
-  { label: "expired", value: "expired" },
-  { label: "on_delivery", value: "on_delivery" },
-  { label: "delivered", value: "delivered" },
-  { label: "completed", value: "completed" },
-  { label: "rejected", value: "rejected" },
-  { label: "ready_for_pickup", value: "ready_for_pickup" },
+  { label: "Requested", value: "requested" },
+  { label: "Ask Resident", value: "ask_resident" },
+  { label: "Ask Merchant", value: "ask_merchant" },
+  { label: "Paid", value: "paid" },
+  { label: "In Progress", value: "in_progress" },
+  { label: "Accepted", value: "accepted" },
+  { label: "Canceled", value: "canceled" },
+  { label: "Expired", value: "expired" },
+  { label: "On Delivery", value: "on_delivery" },
+  { label: "Delivered", value: "delivered" },
+  { label: "Completed", value: "completed" },
+  { label: "Rejected", value: "rejected" },
+  { label: "Ready For Pickup", value: "ready_for_pickup" },
   // { label: "requested", value: "requested" },
 ];
 

@@ -412,37 +412,50 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           setInputValue={setDescriptionReport}
         />
         <br />
-        <InputDash
-          type="fileImages"
-          label="Attachment"
-          placeholder="Insert File"
-          inputValue={attachmentReport1}
-          setInputValue={setAttachmentReport1}
-          hint="Unggah Gambar (Maks. 3)"
-        />
+        <div className="row">
+        <div className="col">
+          <h5>
+            Unggah Gambar (Maks. 3)
+          </h5>
+        </div>
+        </div>
+        <div className="row">
+        <div className="col" style={{maxWidth: 88}}>
+          <InputDash
+            type="fileImages"
+            label="Attachment"
+            placeholder="Insert File"
+            inputValue={attachmentReport1}
+            setInputValue={setAttachmentReport1}
+          />
+        </div>
         <br />
         {
           attachmentReport1 != "" &&
-          <InputDash
-            type="fileImages"
-            label="Attachment 2"
-            placeholder="Insert File"
-            inputValue={attachmentReport2}
-            setInputValue={setAttachmentReport2}
-          />
-          
+          <div className="col" style={{maxWidth: 88}}>
+            <InputDash
+              type="fileImages"
+              label="Attachment 2"
+              placeholder="Insert File"
+              inputValue={attachmentReport2}
+              setInputValue={setAttachmentReport2}
+            />
+          </div>          
         }
         <br />
         {
           attachmentReport1 != "" && attachmentReport2 != "" &&
-          <InputDash
-            type="fileImages"
-            label="Attachment 3"
-            placeholder="Insert File"
-            inputValue={attachmentReport3}
-            setInputValue={setAttachmentReport3}
-          />
+          <div className="col" style={{maxWidth: 88}}>
+            <InputDash
+              type="fileImages"
+              label="Attachment 3"
+              placeholder="Insert File"
+              inputValue={attachmentReport3}
+              setInputValue={setAttachmentReport3}
+            />
+          </div>
         }
+        </div>
       </Modal>
       <Modal
         title="Assign Staff"
@@ -768,7 +781,9 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                                     </small>
                                   </div>
                                 </Row>
-                                <Row>{parse(el.description)}</Row>
+                                <Row>
+                                  <div>{parse(el.description)}</div>
+                                </Row>
                                 <hr />
                                 <Row>
                                   {el.attachments > 0 &&

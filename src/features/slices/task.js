@@ -413,7 +413,7 @@ export const addReportAttachment = (data) => (dispatch) => {
         dispatch(
           setInfo({
             message:
-              "Report has been succesfully add for task with id" +
+              "Report has been succesfully add for task with id " +
               data.task_id,
           })
         );
