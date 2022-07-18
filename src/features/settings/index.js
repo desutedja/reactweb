@@ -190,7 +190,7 @@ function Settings() {
                         }}>None</p>}
                 </div>
             </div>
-            <button onClick={() => {
+            <button style={{ color: '#FFFFFF'}} onClick={() => {
                 setID(data.id);
                 setTitle(data.name);
                 setPG(true);
@@ -243,7 +243,7 @@ function Settings() {
                                     marginRight: 16,
                                 }}>{data.admin_fee} %</p>
                             </div>
-                            <button onClick={() => {
+                            <button style={{ color: '#FFFFFF'}} onClick={() => {
                                 setAdmin(true);
                                 setAdminData(data.admin_fee);
                                 setTitle('Admin Fee');
