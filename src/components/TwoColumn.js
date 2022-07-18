@@ -4,7 +4,7 @@ import Column from './Column';
 
 function Component({ first, second, noborder=false }) {
     return (
-        <Row style={{ padding: '4px', alignItems: 'center'}}>
+        <Row style={{ padding: '0', alignItems: 'center'}}>
             <Column flex={6} style={{ textAlign: 'left' }}>
                 {first || " "}
             </Column>

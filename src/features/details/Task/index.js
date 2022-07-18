@@ -413,48 +413,48 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         />
         <br />
         <div className="row">
-        <div className="col">
-          <h5>
-            Unggah Gambar (Maks. 3)
-          </h5>
-        </div>
+          <div className="col">
+            <h5>
+              Unggah Gambar (Maks. 3)
+            </h5>
+          </div>
         </div>
         <div className="row">
-        <div className="col" style={{maxWidth: 88}}>
-          <InputDash
-            type="fileImages"
-            label="Attachment"
-            placeholder="Insert File"
-            inputValue={attachmentReport1}
-            setInputValue={setAttachmentReport1}
-          />
-        </div>
-        <br />
-        {
-          attachmentReport1 != "" &&
           <div className="col" style={{maxWidth: 88}}>
             <InputDash
               type="fileImages"
-              label="Attachment 2"
+              label="Attachment"
               placeholder="Insert File"
-              inputValue={attachmentReport2}
-              setInputValue={setAttachmentReport2}
-            />
-          </div>          
-        }
-        <br />
-        {
-          attachmentReport1 != "" && attachmentReport2 != "" &&
-          <div className="col" style={{maxWidth: 88}}>
-            <InputDash
-              type="fileImages"
-              label="Attachment 3"
-              placeholder="Insert File"
-              inputValue={attachmentReport3}
-              setInputValue={setAttachmentReport3}
+              inputValue={attachmentReport1}
+              setInputValue={setAttachmentReport1}
             />
           </div>
-        }
+          <br />
+          {
+            attachmentReport1 != "" &&
+            <div className="col" style={{maxWidth: 88}}>
+              <InputDash
+                type="fileImages"
+                label="Attachment 2"
+                placeholder="Insert File"
+                inputValue={attachmentReport2}
+                setInputValue={setAttachmentReport2}
+              />
+            </div>          
+          }
+          <br />
+          {
+            attachmentReport1 != "" && attachmentReport2 != "" &&
+            <div className="col" style={{maxWidth: 88}}>
+              <InputDash
+                type="fileImages"
+                label="Attachment 3"
+                placeholder="Insert File"
+                inputValue={attachmentReport3}
+                setInputValue={setAttachmentReport3}
+              />
+            </div>
+          }
         </div>
       </Modal>
       <Modal

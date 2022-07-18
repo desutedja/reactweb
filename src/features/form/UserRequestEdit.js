@@ -7,7 +7,7 @@ import { get } from "../slice";
 
 import Template from "./components/TemplateInternet";
 import { Form } from "formik";
-import { providerSchema } from "./services/schemas";
+import { userRequestSchema } from "./services/schemas";
 import Input from "./input";
 import SubmitButton from "./components/SubmitButton";
 import Button from "../../components/Button";
@@ -16,47 +16,49 @@ import { editInternetProvider } from "../slices/internet";
 import { RiLightbulbLine, RiCalendarEventLine } from "react-icons/ri"
 
 import { toSentenceCase } from "../../utils";
+import { editUserRequest } from "../slices/userRequest";
 
-const internetPayloads = {
-  provider_name: "",
-  image: "",
-  pic_name: "",
-  pic_email: "",
-  pic_phone: "",
-  coverage_area: "",
+const userRequestPayload = {
+  category: "",
+  sub_category: "",
+  title: "",
+  description: "",
+  status: "",
+  attachments: [],
 };
 
 const listCate = [
-  {label:"Billing", value:"billing"},
-  {label:"Account", value:"account"},
-  {label:"Others", value:"other"},
+  {label:"Billing", value:1},
+  {label:"Account", value:2},
+  {label:"Others", value:3},
 ];
 
 const subBilling = [
-  {label:"Settlement", value:"settlement"},
-  {label:"Disburshment", value:"disburshment"},
+  {label:"Paid/Unpaid", value:1},
+  {label:"Hilangkan Denda", value:2},
+  {label:"Hapus Billing Item", value:3},
 ];
 
 const subAccount = [
-  {label:"Login Error", value:"login_error"},
-  {label:"Data Hilang", value:"data_hilang"},
+  {label:"Tidak menerima OTP", value:4},
+  {label:"Tidak bisa Upgrade Permium User", value:5},
 ];
 
 function Component() {
 
   // const { banks } = useSelector((state) => state.main);
-  const { loading, selected } = useSelector((state) => state.internet);
+  const { loading, selected } = useSelector((state) => state.userRequest);
 
   let dispatch = useDispatch();
   let history = useHistory();
 
   return (
     <Template
-      slice="internet"
+      slice="userRequest"
       payload={
         selected.id
           ? {
-              ...internetPayloads,
+              ...userRequestPayload,
               ...selected,
               // building_management_id:
               // selected.building_management_id &&
@@ -65,18 +67,21 @@ function Component() {
               //   label: el.name,
               // })),
             }
-          : internetPayloads
+          : userRequestPayload
       }
-      schema={providerSchema}
+      // schema={userRequestSchema}
       formatValues={(values) => ({
         
         ...values,
+        status: values.category === 1 ? "wfa" : "wfp",
+        attachments: [values.attachments],
       })}
-      // edit={(data) => {
-      //   delete data["deleted"];
-      //   delete data["created_on"];
-      //   dispatch(editInternetProvider(data, history, selected.id))
-      // }}
+      edit={(data) => {
+        delete data[undefined];
+        delete data['category_label'];
+        delete data['sub_category_label'];
+        dispatch(editUserRequest(data, history, selected.id))
+      }}
       renderChild={(props) => {
         const { setFieldValue, values, errors } = props;
         return (
@@ -90,23 +95,23 @@ function Component() {
               placeholder="Select Category"
               autoComplete="off"
             />
-            {values.category === "billing" ?
+            {values.category === 1 ?
             <Input
               {...props}
               type="select"
               label="Sub Category"
-              name="sub_category_billing"
+              name="sub_category"
               options={subBilling}
               placeholder="Select Sub Category"
               autoComplete="off"
             />
             :
-            values.category === "account" ?
+            values.category === 2 ?
             <Input
               {...props}
               type="select"
               label="Sub Category"
-              name="sub_category_account"
+              name="sub_category"
               options={subAccount}
               placeholder="Select Sub Category"
               autoComplete="off"
@@ -123,6 +128,7 @@ function Component() {
             <Input
               {...props}
               label="Description"
+              type="textarea"
               name="description"
               autoComplete="off"
             />
@@ -130,7 +136,7 @@ function Component() {
               {...props}
               type="file"
               label="Attachment"
-              name="attachment"
+              name="attachments"
             />
             <div className="card" style={{ padding: 15, borderRadius: 10, background: "#F0F6FF"}}>
               <p style={{ color: "#244091" }}><RiLightbulbLine /> Pastikan semua form terisi dengan benar. Silakan cek kembali terlebih dahulu semua data yang telah <br />

@@ -459,7 +459,7 @@ function Component({ view }) {
             dispatch(post(endpointBilling+"/management/billing/publish-billing", {
               data: multiActionRows,
               "with_image": selectWithImage,
-              "published_date": inputDateTimeFormatter(schedule)
+              "published_date": inputDateTimeFormatter24(schedule)
             }, res => {
                 console.log(res.data.data);
                 dispatch(

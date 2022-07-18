@@ -397,7 +397,7 @@ function Component({ view }) {
                                             setDataLoading(false);
                                     }))
                                     dispatch(get(endpointBilling + '/management/billing/disbursement/management/amount'
-                                    + '?management_id=' + selectedManagement.map(item => item.id).join(','),
+                                    + '?management_id=' + selectedManagement.map(item => item.id).join(',') + '&payment_channel=' + paymentChannel + '&filter=' + status,
                                     res => {
                                         setAmount(res.data.data.undisburse_amount);
                                     }))

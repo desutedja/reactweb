@@ -211,6 +211,15 @@ export const providerSchema = Yup.object().shape({
   coverage_area: Text,
 });
 
+export const userRequestSchema = Yup.object().shape({
+  category: Number,
+  sub_category: Number,
+  title: Text,
+  description: Text,
+  // status: Text,
+  // attachments: Text,
+});
+
 export const promoVaSchema = Yup.object().shape({
   // account_bank: Text,
   // building_management_id: Text,

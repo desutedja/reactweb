@@ -75,6 +75,8 @@ function Input({ optional = false, ...props }) {
         return <RadioInput name={fixedName} {...inputProps} />;
       case "file":
         return <FileInput name={fixedName} {...inputProps} />;
+        case "files":
+          return <FileInput name={fixedName} {...inputProps} />;
       case "textarea":
         return <TextInput as="textarea" name={fixedName} {...inputProps} />;
       case "select":

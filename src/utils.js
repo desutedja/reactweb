@@ -132,6 +132,19 @@ export function dateTimeFormatter(serverDateTime, whenzero = "-") {
 }
 
 // all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
+export function dateTimeFormatterstriped(serverDateTime, whenzero = "-") {
+  if (!serverDateTime) return whenzero;
+  if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
+
+  return (
+    moment.utc(serverDateTime).format("DD-MM-yyyy") +
+    " " +
+    moment.utc(serverDateTime).format("HH:mm") +
+    " WIB"
+  );
+}
+
+// all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function dateTimeFormatterScheduler(serverDateTime, whenzero = "-") {
   if (!serverDateTime) return whenzero;
   if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
@@ -174,7 +187,25 @@ export function updateDateTimeFormatter(serverDateTime, whenzero = "-") {
   if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
 
   return (
-    moment.utc(serverDateTime).format("YYYY-MM-DDThh:mm:ss")
+    moment.utc(serverDateTime).format("YYYY-MM-DDTHH:mm:ss")
+  );
+}
+
+export function updateDateTimeFormatterEx(serverDateTime, whenzero = "-") {
+  if (!serverDateTime) return whenzero;
+  if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
+
+  return (
+    moment.utc(serverDateTime).format("YYYY-MM-DD")
+  );
+}
+
+export function dateFormaterEx(serverDateTime, whenzero = "-") {
+  if (!serverDateTime) return whenzero;
+  if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
+
+  return (
+    moment.utc(serverDateTime).format("DD MMM yyyy")
   );
 }
 

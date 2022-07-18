@@ -92,31 +92,9 @@ const columns = [
 ];
 
 function Component({ view, title = '', pagetitle, canDelete }) {
-  const [startdate, setStartDate] = useState("");
-  const [enddate, setEndDate] = useState("");
-  const [buildingid, setBuildingid] = useState("");
-  const [bank, setBank] = useState("");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ items: [] });
-  const [type, setType] = useState("");
-  const [typeLabel, setTypeLabel] = useState("");
-  const [toggle, setToggle] = useState(false);
-  const { role } = useSelector((state) => state.auth);
-  const [updatePromoModal, setUpdatePromoModal] = useState(false);
-  const [startPromo, setStartPromo] = useState("");
-  const [endPromo, setEndPromo] = useState("");
-  const [dataPromo, setDataPromo] = useState({ items: [] });
-  const [bManagements, setBManagements] = useState([]);
-  const [dataBanks, setDataBanks] = useState([]);
-  const [inBuildings, setBuildings] = useState([]);
   const [provider, setProvider] = useState("");
-
-  const [search, setSearch] = useState("");
-  const [limit, setLimit] = useState(10);
-
-  const [cat, setCat] = useState("");
-  const [catName, setCatName] = useState("");
-  const [cats, setCats] = useState("");
 
   let dispatch = useDispatch();
   let history = useHistory();

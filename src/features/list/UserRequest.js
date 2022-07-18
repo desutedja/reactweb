@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { dateTimeFormatterCell, toMoney, toSentenceCase } from "../../utils";
-import { endpointAdmin, endpointInternet } from "../../settings";
+import { endpointAdmin, endpointInternet, endpointUserRequest } from "../../settings";
 import { get, setConfirmDelete, post, del } from "../slice";
 
 import Table from "../../components/Table";
@@ -11,9 +11,9 @@ import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
 import UserRequest from "../../components/cells/UserRequest";
-import { deleteInternetProvider, setSelected, getInternetProvider } from "../slices/internet";
 import Avatar from "react-avatar";
-
+import { setSelected, deleteUserRequest } from "../slices/userRequest";
+import Pill from "../../components/Pill";
 
 const columns = [
   
@@ -26,7 +26,7 @@ const columns = [
         data={row}
         items={[
           <>
-          <b>Unpaid billing karna ada kesalahan</b>
+          <b>{row.title}</b>
           </>
         ]}
       />       
@@ -36,7 +36,17 @@ const columns = [
     accessor: (row) => {
       return (
         <div>
-            Billing
+            {toSentenceCase(row.category_name)}
+        </div>
+      );
+    },
+  },
+  {
+    Header: "Sub Category",
+    accessor: (row) => {
+      return (
+        <div>
+            {toSentenceCase(row.sub_category_name)}
         </div>
       );
     },
@@ -46,7 +56,25 @@ const columns = [
     accessor: (row) =>{
       return (
         <div>
-              Waiting for Approval
+          <Pill color={row.status === 'wfa' ? 'secondary' 
+          :
+            row.status === 'wfp' ? 'info' 
+          :
+            row.status === 'on_process' ? 'warning text-white'
+          : 
+            row.status === 'done' ? 'success' 
+          : 
+           'danger' 
+          }
+          >
+            {
+            row.status === 'wfa' ? "Waiting for Approval"
+            :
+            row.status === 'wfp' ? "Waiting for Pickup"
+            :
+            toSentenceCase(row.status)
+            }
+          </Pill>
         </div>
       );
     },
@@ -60,7 +88,7 @@ const columns = [
             {row.created_on ? dateTimeFormatterCell(row.created_on) : "-"}
           </div>
           <div>
-            by System
+            by {row.created_by_name}
           </div>
         </div>
       );
@@ -100,7 +128,7 @@ function Component({ view, title = '', pagetitle, canDelete }) {
   let { url } = useRouteMatch();
   const {
     refreshToggle
-  } = useSelector(state => state['internet']);
+  } = useSelector(state => state['userRequest']);
 
   return (
     <>
@@ -124,12 +152,7 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                         setLoading(true);
                         dispatch(
                           get(
-                            endpointInternet +
-                            "/admin/provider?" +
-                            'page=' + (page + 1) +
-                            '&limit=' + limit +
-                            '&search=' + searchItem +
-                            '&provider_id=' + provider,
+                            endpointUserRequest + "/data/list",
 
                             (res) => {
                               console.log(res.data.data);
@@ -160,11 +183,11 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                         : (row) => {
                             dispatch(
                               setConfirmDelete(
-                                // "Are you sure you want to delete this internet provider?",
-                                "Feature still under development",
+                                "Are you sure you want to delete this user request?",
+                                // "Feature still under development",
                                 () => {
                                   console.log(row);
-                                  // dispatch(deleteInternetProvider(row, history));
+                                  dispatch(deleteUserRequest(row, history));
                                 }
                               )
                             );

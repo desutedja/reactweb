@@ -470,7 +470,7 @@ function Component() {
         subtitle="Choose building to set filter"
         isOpen={openModalBuilding}
         toggle={() => setOpenModalBuilding(false)}
-        cancelLabel="Cancel"
+        disableFooter="true"
         onClickSecondary={() => {
         setBuildingName({});
         setOpenModalBuilding(false);
@@ -521,7 +521,7 @@ function Component() {
         subtitle="Choose unit section to set filter"
         isOpen={openModalUnit}
         toggle={() => setOpenModalUnit(false)}
-        cancelLabel="Cancel"
+        disableFooter="true"
         onClickSecondary={() => {
         setTower({});
         setOpenModalUnit(false);
@@ -554,6 +554,8 @@ function Component() {
         </p>
         )}
     </Modal>
+
+{/* Start of SA Section */}
 
     {auth.role === "sa" && (
       <>
@@ -851,36 +853,6 @@ function Component() {
                                 )}
                             </div>
                           )}
-                          {auth.role !== "sa" && (
-                            <div
-                              className="Container color-4 d-flex flex-column cursor-pointer"
-                              onClick={() => {
-                                auth.role === "bm"
-                                  ? history.push(
-                                      "/" + auth.role + "/building/" + auth.user.building_id,
-                                      { tab: 2 }
-                                    )
-                                  : history.push("/" + auth.role + "/building");
-                              }}
-                            >
-                              <div className="row no-gutters align-items-center">
-                                <div className="col">
-                                  <AnimatedNumber
-                                    className="h2 font-weight-bold white"
-                                    // value={unitStatistic.registered_unit}
-                                    value={unitStatistic.registered_unit}
-                                    formatValue={formatValue}
-                                  />
-                                  <div className="text-nowrap">Total Unit</div>
-                                </div>
-                                <div className="col-auto">
-                                  <div className="w-auto">
-                                    <RiBuilding4Line className="BigIcon white my-0" />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          )}
                         </div>
                         
                         {auth.role === "sa" && (
@@ -1089,8 +1061,6 @@ function Component() {
                           </>
                         )}
                       </div>
-
-                      
 
                       {auth.role !== "sa" && (
                         <div className="row no-gutters">
@@ -3302,6 +3272,11 @@ function Component() {
     </>
     )}
 
+{/* End of SA Section */}
+
+
+{/* Start of BM Section */}
+
     {auth.role !== "sa" && (
       <>
       <div className="row no-gutters">
@@ -3328,7 +3303,11 @@ function Component() {
                                   className="Group2"
                                   onClick={() => setOpenModalUnit(true) }
                               >
-                                  { tower ? unitLabel : 'Section'}
+                                  { tower ? 
+                                  <div>
+                                    Section: <b>{unitLabel}</b>
+                                  </div> : 
+                                  <div>Section: <b>All</b></div>}
                               </div>
                           </div> 
                           : 
@@ -3376,351 +3355,529 @@ function Component() {
         </div>
       </div>
       <div className="row no-gutters">
-        {/* {auth.role === "sa" && (
-          <div className="col">
-            <div
-              className="Container border-1 d-flex flex-column cursor-pointer"
-              onClick={() => {
-                history.push("/" + auth.role + "/building");
-              }}
-            >
-              <div className="row no-gutters align-items-center">
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <img src={require('./../../assets/Group 2311.jpg')} />
-                  </div>
-                </div>
-                <div className="col">
-                  <div className="text-nowrap ml-3">Total Building</div>
-                  <AnimatedNumber
-                    className="h2 font-weight-bold black ml-3"
-                    value={staffData.num_of_building}
-                    formatValue={formatValue}
-                  />
-                </div>
-              </div>
-            </div>
+        <div className="Container-dashboard flex-column">
+          <div className="col mt-2 mb-4">
+              <h5>Building Statistics</h5>
           </div>
-        )} */}
-        {auth.role === "sa" && (
-          <div className="col">
-            <div
-              className="Container color-2 d-flex flex-column cursor-pointer"
-              onClick={() => {
-                history.push("/" + auth.role + "/building");
-              }}
-            >
-              <div className="row no-gutters align-items-center">
-                <div className="col">
-                  <AnimatedNumber
-                    className="h2 font-weight-bold white"
-                    value={staffData.num_of_building}
-                    formatValue={formatValue}
-                  />
-                  <div className="text-nowrap">Total Building</div>
-                </div>
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiBuilding2Line className="BigIcon white my-0" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        <div className="col">
-          <div
-            className="Container color-4 d-flex flex-column cursor-pointer"
-            onClick={() => {
-              auth.role === "bm"
-                ? history.push(
-                    "/" + auth.role + "/building/" + auth.user.building_id,
-                    { tab: 2 }
-                  )
-                : history.push("/" + auth.role + "/building");
-            }}
-          >
-            <div className="row no-gutters align-items-center">
-              <div className="col">
-                <AnimatedNumber
-                  className="h2 font-weight-bold white"
-                  // value={unitStatistic.registered_unit}
-                  value={staffData.num_of_unit}
-                  formatValue={formatValue}
-                />
-                <div className="text-nowrap">Total Unit</div>
-              </div>
-              <div className="col-auto">
-                <div className="w-auto">
-                  <RiBuilding4Line className="BigIcon white my-0" />
-                </div>
-              </div>
-            </div>
-              {/* <div className="row no-gutters align-items-center">
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiBuilding4Line className="BigIcon red my-0" />
-                  </div>
-                </div>
-                <div className="col">
-                  <div className="text-nowrap ml-3">Total Unit</div>
-                  <AnimatedNumber
-                    className="h2 font-weight-bold black ml-3"
-                    value={unitStatistic.registered_unit}
-                    formatValue={formatValue}
-                  />
-                </div>
-              </div> */}
-          </div>
-        </div>
-        {auth.role === "sa" && (
-          <>
+          <div className="row no-gutters">
             <div className="col">
               <div
-                className="Container color-5 d-flex flex-column cursor-pointer"
+                className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer"
                 onClick={() => {
-                  history.push("/" + auth.role + "/building");
+                  auth.role === "bm"
+                    ? history.push(
+                        "/" + auth.role + "/building/" + auth.user.building_id,
+                        { tab: 2 }
+                      )
+                    : history.push("/" + auth.role + "/building");
                 }}
               >
-                <div className="row no-gutters align-items-center">
-                  <div className="col">
-                    <AnimatedNumber
-                      className="h2 font-weight-bold white"
-                      value={
-                        unitStatistic.registered_unit / staffData.num_of_building + ""
-                      }
-                      // value={
-                      //   staffData.num_of_unit / staffData.num_of_building + ""
-                      // }
-                      formatValue={formatValue}
-                    />
-                    <div className="text-nowrap">Average Unit</div>
-                  </div>
+                <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                   <div className="col-auto">
                     <div className="w-auto">
-                      <RiHotelLine className="BigIcon white my-0" />
+                      <img src={require('./../../assets/Total Unit 2.jpg')} />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="text-nowrap ml-3">Registered Unit</div>
+                    <AnimatedNumber
+                      className="h2 font-weight-bold black ml-3"
+                      value={unitStatistic.registered_unit}
+                      formatValue={formatValue}
+                    />
+                  </div>
+                </div>
+                {periode != "all" && (
+                <div className="row no-gutters align-items-center mt-2">
+                  <div className="col-auto">
+                    <div style={{ fontSize:12 }} className="text-nowrap">
+                    <font style={{color:"#C4C4C4"}}>vs
+                    {
+                    periode === "year" ? " Tahun" 
+                    :
+                    periode === "month"? " Bulan"
+                    :
+                    periode === "day" ? " Hari"
+                    :
+                    " " + toSentenceCase(periode)} Lalu:
+                    </font>
+                    <AnimatedNumber
+                      className="font-weight-bold black ml-2"
+                      value={unitStatistic.registered_unit_previous}
+                      formatValue={formatValue}
+                    />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
+                        {
+                        unitStatistic.registered_unit_previous != 0 ?
+                        <font 
+                        style={{ 
+                          color: `${((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100 < 0 ?
+                          '#E12029'
+                        :
+                          '#52A452'}`}}
+                        >
+                        {
+                          ((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100 < 0 ?
+                          <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                          :
+                          ((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100 > 0 ?
+                          <FiChevronUp style={{ marginBottom: "6px"}}/>
+                          :
+                          []
+                        }
+                        {
+                          ((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100 < 0 ?
+                          " " + (decimal(((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100*(-1))) + "%" + " ( -" + ((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)*(-1)) + " )"
+                          :
+                          " " + decimal(((unitStatistic.registered_unit-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100) + "%" + " ( +" + (unitStatistic.registered_unit-unitStatistic.registered_unit_previous) + " )"
+                        }
+                        </font>
+                        :
+                        0
+                        }
                     </div>
                   </div>
                 </div>
+                )}
               </div>
             </div>
             <div className="col">
-              <div className="Container color-7 d-flex flex-column cursor-pointer">
-                <div className="row no-gutters align-items-center">
-                  <div className="col">
-                    <AnimatedNumber
-                      className="h2 font-weight-bold white"
-                      // value={staffStatistic.num_of_login_staff}
-                      value={staffData.num_of_login_staff}
-                      formatValue={formatValue}
-                    />
-                    <div className="text-nowrap">Online Staff(s)</div>
-                  </div>
+              <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                <div className="row no-gutters align-items-center" style={{minWidth:220}}>
                   <div className="col-auto">
                     <div className="w-auto">
-                      <RiUserStarLine className="BigIcon white my-0" />
+                      <img src={require('./../../assets/Online Staff 1.jpg')} />
                     </div>
                   </div>
+                  <div className="col">
+                    <div className="text-nowrap ml-3">Online Staff</div>
+                    <AnimatedNumber
+                      className="h2 font-weight-bold black ml-3"
+                      value={staffStatistic.num_of_login_staff}
+                      // value={staffData.num_of_login_staff}
+                      formatValue={formatValue}
+                    />
+                  </div>
                 </div>
+                  {periode != "all" && (
+                  <div className="row no-gutters align-items-center mt-2">
+                    <div className="col-auto">
+                      <div style={{ fontSize:12 }} className="text-nowrap">
+                      <font style={{color:"#C4C4C4"}}>vs
+                      {
+                      periode === "year" ? " Tahun" 
+                      :
+                      periode === "month"? " Bulan"
+                      :
+                      periode === "day" ? " Hari"
+                      :
+                      " " + toSentenceCase(periode)} Lalu:
+                      </font>
+                      <AnimatedNumber
+                        className="font-weight-bold black ml-2"
+                        value={staffStatistic.num_of_login_staff_previous}
+                        formatValue={formatValue}
+                      />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
+                        <font style={{color:"#52A452"}}>
+                          {
+                          staffStatistic.num_of_login_staff < staffStatistic.num_of_login_staff_previous ?
+                          decimal(((staffStatistic.num_of_login_staff - staffStatistic.num_of_login_staff_previous)/staffStatistic.num_of_login_staff_previous)*100)
+                          :
+                          ((staffStatistic.num_of_login_staff > staffStatistic.num_of_login_staff_previous) && (staffStatistic.num_of_login_staff_previous != 0))?
+                          decimal(((unitStatistic.registered_unit_previous / staffStatistic.num_of_login_staff))*100)
+                          :
+                          0
+                          }%
+                        </font>
+                      </div>
+                    </div>
+                  </div>
+                  )}
               </div>
             </div>
-          </>
-        )}
-        {auth.role !== "sa" && (
-          <>
+          </div>
+          <div className="row no-gutters">
             <div className="col">
-              <div className="Container color-7 d-flex flex-column cursor-pointer">
+              {/* <div className="Container color-6 d-flex flex-column cursor-pointer">
                 <div className="row no-gutters align-items-center">
                   <div className="col">
                     <AnimatedNumber
                       className="h2 font-weight-bold white"
-                      // value={staffStatistic.num_of_login_staff}
-                      value={staffData.num_of_login_staff}
+                      // value={residentStatistic.online_resident + residentStatistic.online_resident_basic}
+                      value={staffData.num_of_login_resident}
                       formatValue={formatValue}
                     />
-                    <div className="text-nowrap">Online Staff(s)</div>
+                    <div className="text-nowrap">Online Resident(s)</div>
                   </div>
                   <div className="col-auto">
                     <div className="w-auto">
-                      <RiUserStarLine className="BigIcon white my-0" />
+                      <RiUserFollowLine className="BigIcon white my-0" />
                     </div>
                   </div>
                 </div>
+              </div> */}
+              <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                <div className="row no-gutters align-items-center" style={{minWidth:220}}>
+                  <div className="col-auto">
+                    <div className="w-auto">
+                      <img src={require('./../../assets/Online Resident.jpg')} />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="text-nowrap ml-3">Online Resident</div>
+                    <AnimatedNumber
+                      className="h2 font-weight-bold black ml-3"
+                      // value={residentStatistic.online_resident + residentStatistic.online_resident_basic}
+                      value={staffData.num_of_login_resident}
+                      formatValue={formatValue}
+                    />
+                  </div>
+                </div>
+                    {periode != "all" && (
+                    <div className="row no-gutters align-items-center mt-2">
+                      <div className="col-auto">
+                        <div style={{ fontSize:12 }} className="text-nowrap">
+                        <font style={{color:"#C4C4C4"}}>vs
+                        {
+                        periode === "year" ? " Tahun" 
+                        :
+                        periode === "month"? " Bulan"
+                        :
+                        periode === "day" ? " Hari"
+                        :
+                        " " + toSentenceCase(periode)} Lalu:
+                        </font>
+                        <AnimatedNumber
+                          className="font-weight-bold black ml-2"
+                          value={residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev}
+                          formatValue={formatValue}
+                        />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
+                            {
+                            residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev != 0 ?
+                            <font 
+                            style={{ 
+                              color: `${(((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
+                              '#E12029'
+                            :
+                              '#52A452'}`}}
+                            >
+                            {
+                              (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
+                              <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                              :
+                              (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 > 0 ?
+                              <FiChevronUp style={{ marginBottom: "6px"}}/>
+                              :
+                              []
+                            }
+                            {
+                              (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
+                              " " + (decimal((((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100*(-1))) + "%" + " ( -" + (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*(-1)) + " )"
+                              :
+                              " " + decimal((((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100) + "%" + " ( +" + ((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))
+                            }
+                            </font>
+                            :
+                            <font style={{color: "#52A452"}}>
+                            0%
+                            </font>
+                            }
+                          {/* <font style={{color:"#52A452"}}>
+                            {
+                            (residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev) != 0 ?
+                            decimal((((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100)
+                            :
+                            0
+                            }%
+                          </font> */}
+                        </div>
+                      </div>
+                    </div>
+                    )}
               </div>
             </div>
-          </>
-        )}
+            <div className="col">
+              {/* <div className="Container color-6 d-flex flex-column cursor-pointer">
+                <div className="row no-gutters align-items-center">
+                  <div className="col">
+                    <AnimatedNumber
+                      className="h2 font-weight-bold white"
+                      value={staffData.num_of_login_unit}
+                      formatValue={formatValue}
+                    />
+                    <div className="text-nowrap">Online Unit(s)</div>
+                  </div>
+                  <div className="col-auto">
+                    <div className="w-auto">
+                      <RiBuilding4Line className="BigIcon white my-0" />
+                    </div>
+                  </div>
+                </div>
+              </div> */}
+              <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                <div className="row no-gutters align-items-center" style={{minWidth:220}}>
+                  <div className="col-auto">
+                    <div className="w-auto">
+                      <img src={require('./../../assets/Group 2311.jpg')} />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="text-nowrap ml-3">Online Unit(s)</div>
+                    <AnimatedNumber
+                      className="h2 font-weight-bold black ml-3"
+                      value={staffData.num_of_login_unit}
+                      // value={staffData.num_of_login_resident}
+                      formatValue={formatValue}
+                    />
+                  </div>
+                </div>
+                    {/* {periode != "all" && (
+                    <div className="row no-gutters align-items-center mt-2">
+                      <div className="col-auto">
+                        <div style={{ fontSize:12 }} className="text-nowrap">
+                        <font style={{color:"#C4C4C4"}}>vs
+                        {
+                        periode === "year" ? " Tahun" 
+                        :
+                        periode === "month"? " Bulan"
+                        :
+                        periode === "day" ? " Hari"
+                        :
+                        " " + toSentenceCase(periode)} Lalu:
+                        </font>
+                        <AnimatedNumber
+                          className="font-weight-bold black ml-2"
+                          value={residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev}
+                          formatValue={formatValue}
+                        />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
+                            {
+                            residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev != 0 ?
+                            <font 
+                            style={{ 
+                              color: `${(((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
+                              '#E12029'
+                            :
+                              '#52A452'}`}}
+                            >
+                            {
+                              (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
+                              <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                              :
+                              (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 > 0 ?
+                              <FiChevronUp style={{ marginBottom: "6px"}}/>
+                              :
+                              []
+                            }
+                            {
+                              (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
+                              " " + (decimal((((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100*(-1))) + "%" + " ( -" + (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*(-1)) + " )"
+                              :
+                              " " + decimal((((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100) + "%" + " ( +" + ((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))
+                            }
+                            </font>
+                            :
+                            <font style={{color: "#52A452"}}>
+                            0%
+                            </font>
+                            }
+                        </div>
+                      </div>
+                    </div>
+                    )} */}
+              </div>
+            </div>
+            <div className="col">
+            <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                <div className="row no-gutters align-items-center" style={{minWidth:220}}>
+                  <div className="col-auto">
+                    <div className="w-auto">
+                      <img src={require('./../../assets/Onboarding Resident.jpg')} />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="text-nowrap ml-3">Onboarded Resident</div>
+                    <AnimatedNumber
+                      className="h2 font-weight-bold black ml-3"
+                      value={residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic}
+                      // value={staffData.num_of_onboarded_resident}
+                      formatValue={formatValue}
+                    />
+                  </div>
+                </div>
+                    {/* {periode != "all" && (
+                    <div className="row no-gutters align-items-center mt-2">
+                      <div className="col-auto">
+                        <div style={{ fontSize:12 }} className="text-nowrap">
+                        <font style={{color:"#C4C4C4"}}>vs
+                        {
+                        periode === "year" ? " Tahun" 
+                        :
+                        periode === "month"? " Bulan"
+                        :
+                        periode === "day" ? " Hari"
+                        :
+                        " " + toSentenceCase(periode)} Lalu:
+                        </font>
+                        <AnimatedNumber
+                          className="font-weight-bold black ml-2"
+                          value={residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev}
+                          formatValue={formatValue}
+                        />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
+                            {
+                            residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev != 0 ?
+                            <font 
+                            style={{ 
+                              color: `${(((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100 < 0 ?
+                              '#E12029'
+                            :
+                              '#52A452'}`}}
+                            >
+                            {
+                              (((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100 < 0 ?
+                              <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                              :
+                              (((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100 > 0 ?
+                              <FiChevronUp style={{ marginBottom: "6px"}}/>
+                              :
+                              []
+                            }
+                            {
+                              (((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100 < 0 ?
+                              " " + (decimal((((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100*(-1))) + "%" + " ( -" + (((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*(-1)) + " )"
+                              :
+                              " " + decimal((((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))/(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev))*100) + "%" + " ( +" + ((residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)-(residentStatistic.onboard_resident_prev + residentStatistic.onboard_resident_basic_prev)) + " )"
+                            }
+                            </font>
+                            :
+                            <font style={{color: "#52A452"}}>
+                            0%
+                            </font>
+                            }
+                        </div>
+                      </div>
+                    </div>
+                    )} */}
+              </div>
+            </div>
+            <div className="col">
+              {/* <div className="Container color-8 d-flex flex-column cursor-pointer">
+                <div className="row no-gutters align-items-center">
+                  <div className="col">
+                    <AnimatedNumber
+                      className="h2 font-weight-bold white"
+                      // value={unitStatistic.onboard_unit}
+                      value={staffData.num_of_onboarded_unit}
+                      formatValue={formatValue}
+                    />
+                    <div className="text-nowrap">Onboarded Unit(s)</div>
+                  </div>
+                  <div className="col-auto">
+                    <div className="w-auto">
+                      <RiBuilding4Line className="BigIcon white my-0" />
+                    </div>
+                  </div>
+                </div>
+              </div> */}
+              <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                <div className="row no-gutters align-items-center" style={{minWidth:220}}>
+                  <div className="col-auto">
+                    <div className="w-auto">
+                      <img src={require('./../../assets/Onboarding Unit 2.jpg')} />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div className="text-nowrap ml-3">Onboarded Unit</div>
+                    <AnimatedNumber
+                      className="h2 font-weight-bold black ml-3"
+                      value={unitStatistic.onboard_unit}
+                      // value={staffData.num_of_onboarded_unit}
+                      formatValue={formatValue}
+                    />
+                  </div>
+                </div>
+                {periode != "all" && (
+                <div className="row no-gutters align-items-center mt-2">
+                  <div className="col-auto">
+                    <div style={{ fontSize:12 }} className="text-nowrap">
+                    <font style={{color:"#C4C4C4"}}>vs
+                    {
+                    periode === "year" ? " Tahun" 
+                    :
+                    periode === "month"? " Bulan"
+                    :
+                    periode === "day" ? " Hari"
+                    :
+                    " " + toSentenceCase(periode)} Lalu:
+                    </font>
+                    <AnimatedNumber
+                      className="font-weight-bold black ml-2"
+                      value={unitStatistic.onboard_unit_previous}
+                      formatValue={formatValue}
+                    />
+                    </div>
+                  </div>
+                  <div className="col">
+                    <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
+                        {
+                        unitStatistic.onboard_unit_previous != 0 ?
+                        <font 
+                        style={{ 
+                          color: `${(((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100 < 0 ?
+                          '#E12029'
+                        :
+                          '#52A452'}`}}
+                        >
+                        {
+                          (((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100 < 0 ?
+                          <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                          :
+                          (((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100 > 0 ?
+                          <FiChevronUp style={{ marginBottom: "6px"}}/>
+                          :
+                          []
+                        }
+                        {
+                          (((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100 < 0 ?
+                          " " + (decimal((((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100)*(-1)) + "%" + " ( -" + ((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous) + " )"
+                          :
+                          " " + decimal((((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous)/unitStatistic.onboard_unit_previous)*100) + "%" + " ( +" + ((unitStatistic.onboard_unit)-unitStatistic.onboard_unit_previous) + " )"
+                        }
+                        </font>
+                        :
+                        0
+                        }
+                    </div>
+                  </div>
+                </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      {auth.role !== "sa" && (
-        <div className="row no-gutters">
-          <div className="col">
-            <div className="Container color-6 d-flex flex-column cursor-pointer">
-              <div className="row no-gutters align-items-center">
-                <div className="col">
-                  <AnimatedNumber
-                    className="h2 font-weight-bold white"
-                    // value={residentStatistic.online_resident + residentStatistic.online_resident_basic}
-                    value={staffData.num_of_login_resident}
-                    formatValue={formatValue}
-                  />
-                  <div className="text-nowrap">Online Resident(s)</div>
-                </div>
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiUserFollowLine className="BigIcon white my-0" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="Container color-6 d-flex flex-column cursor-pointer">
-              <div className="row no-gutters align-items-center">
-                <div className="col">
-                  <AnimatedNumber
-                    className="h2 font-weight-bold white"
-                    value={staffData.num_of_login_unit}
-                    formatValue={formatValue}
-                  />
-                  <div className="text-nowrap">Online Unit(s)</div>
-                </div>
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiBuilding4Line className="BigIcon white my-0" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="Container color-8 d-flex flex-column cursor-pointer">
-              <div className="row no-gutters align-items-center">
-                <div className="col">
-                  <AnimatedNumber
-                    className="h2 font-weight-bold white"
-                    // value={(residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)}
-                    value={staffData.num_of_onboarded_resident}
-                    formatValue={formatValue}
-                  />
-                  <div className="text-nowrap">Onboarded Resident(s)</div>
-                </div>
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiUserLocationLine className="BigIcon white my-0" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="Container color-8 d-flex flex-column cursor-pointer">
-              <div className="row no-gutters align-items-center">
-                <div className="col">
-                  <AnimatedNumber
-                    className="h2 font-weight-bold white"
-                    // value={unitStatistic.onboard_unit}
-                    value={staffData.num_of_onboarded_unit}
-                    formatValue={formatValue}
-                  />
-                  <div className="text-nowrap">Onboarded Unit(s)</div>
-                </div>
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiBuilding4Line className="BigIcon white my-0" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      {auth.role === "sa" && (
-        <div class="row no-gutters">
-          <div className="col">
-            <div className="Container color-6 d-flex flex-column cursor-pointer">
-              <div className="row no-gutters align-items-center">
-                <div className="col">
-                  <AnimatedNumber
-                    className="h2 font-weight-bold white"
-                    // value={residentStatistic.online_resident + residentStatistic.online_resident_basic}
-                    value={staffData.num_of_login_resident}
-                    formatValue={formatValue}
-                  />
-                  <div className="text-nowrap">Online Resident(s)</div>
-                </div>
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiUserFollowLine className="BigIcon white my-0" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="Container color-6 d-flex flex-column cursor-pointer">
-              <div className="row no-gutters align-items-center">
-                <div className="col">
-                  <AnimatedNumber
-                    className="h2 font-weight-bold white"
-                    value={staffData.num_of_login_unit}
-                    formatValue={formatValue}
-                  />
-                  <div className="text-nowrap">Online Unit(s)</div>
-                </div>
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiBuilding4Line className="BigIcon white my-0" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="Container color-8 d-flex flex-column cursor-pointer">
-              <div className="row no-gutters align-items-center">
-                <div className="col">
-                  <AnimatedNumber
-                    className="h2 font-weight-bold white"
-                    // value={(residentStatistic.onboard_resident + residentStatistic.onboard_resident_basic)}
-                    value={staffData.num_of_onboarded_resident}
-                    formatValue={formatValue}
-                  />
-                  <div className="text-nowrap">Onboarded Resident(s)</div>
-                </div>
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiUserLocationLine className="BigIcon white my-0" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="col">
-            <div className="Container color-8 d-flex flex-column cursor-pointer">
-              <div className="row no-gutters align-items-center">
-                <div className="col">
-                  <AnimatedNumber
-                    className="h2 font-weight-bold white"
-                    // value={unitStatistic.onboard_unit}
-                    value={staffData.num_of_onboarded_unit}
-                    formatValue={formatValue}
-                  />
-                  <div className="text-nowrap">Onboarded Unit(s)</div>
-                </div>
-                <div className="col-auto">
-                  <div className="w-auto">
-                    <RiBuilding4Line className="BigIcon white my-0" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
       <div className="row no-gutters">
         <div className="col-12">
-          <div className="Container flex-column pr-4">
-            <BarChartDMY
+          <div className="Container-dashboard flex-column pr-4">
+            <BarChartDMYAdm
               headTitle="Billing Statistics"
               dataChart={billingGraphFormatted}
               range={range}
@@ -3745,7 +3902,7 @@ function Component() {
       <div className="Row mb-4">
         {auth.role !== "sa" && (
           <div className="col-6">
-            <div className="Container flex-column m-0">
+            <div className="Container-dashboard flex-column m-0">
               <div className="mb-4">
                 <h5>Billing Summary</h5>
               </div>
@@ -3830,7 +3987,7 @@ function Component() {
           }
         >
           <div
-            className="Container cursor-pointer mr-0"
+            className="Container-dashboard cursor-pointer mr-0"
             style={{
               // marginLeft: 16,
               marginRight: 0,
@@ -3930,12 +4087,12 @@ function Component() {
       >
         <div className="row no-gutters">
           <div className="col-6 col-md-4 col-lg">
-            <div
+            {/* <div
               className="Container align-items-center color-1 cursor-pointer"
               onClick={() => {
                 history.push("/" + auth.role + "/resident");
               }}
-            >
+              >
               <div
                 style={{
                   width: "auto",
@@ -3944,14 +4101,7 @@ function Component() {
                 <FiUsers className="h1 mr-4 my-0" />
               </div>
               <div
-                style={
-                  {
-                    // padding: 16,
-                    // borderRight: '1px solid #f3f3fa',
-                  }
-                }
               >
-                {/* <FiUsers className="h3 mr-2" /> */}
                 <AnimatedNumber
                   className="BigNumber white"
                   value={residentStatistic.registered_resident || "0"}
@@ -3959,118 +4109,360 @@ function Component() {
                 />
                 <p className="white">Resident</p>
               </div>
+            </div> */}
+            <div className="Container-dashboard-ns border-2 d-flex flex-column cursor-pointer"
+            onClick={() => {
+              history.push("/" + auth.role + "/resident");
+            }}
+            >
+              <div className="row no-gutters align-items-center" style={{minWidth:220}}>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <img src={require('./../../assets/Resident.jpg')} />
+                  </div>
+                </div>
+                <div className="col">
+                  {/* <div className="text-nowrap ml-3">Registered Resident</div>
+                  <AnimatedNumber
+                    className="h2 font-weight-bold black ml-3"
+                    value={residentStatistic.registered_resident}
+                    // value={staffData.num_of_onboarded_resident}
+                    formatValue={formatValue}
+                  /> */}
+                  <AnimatedNumber
+                    className="BigNumber2 black ml-3"
+                    value={residentStatistic.registered_resident}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap ml-3">Registered Resident</div>
+                </div>
+              </div>
+                  {periode != "all" && (
+                  <div className="row no-gutters align-items-center mt-2">
+                    <div className="col-auto">
+                      <div style={{ fontSize:12 }} className="text-nowrap">
+                      <font style={{color:"#C4C4C4"}}>vs
+                      {
+                      periode === "year" ? " Tahun" 
+                      :
+                      periode === "month"? " Bulan"
+                      :
+                      periode === "day" ? " Hari"
+                      :
+                      " " + toSentenceCase(periode)} Lalu:
+                      </font>
+                      <AnimatedNumber
+                        className="font-weight-bold black ml-2"
+                        value={residentStatistic.registered_resident_prev}
+                        formatValue={formatValue}
+                      />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
+                          {
+                          residentStatistic.registered_resident_prev != 0 ?
+                          <font 
+                          style={{ 
+                            color: `${((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100 < 0 ?
+                            '#E12029'
+                          :
+                            '#52A452'}`}}
+                          >
+                          {
+                            ((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100 < 0 ?
+                            <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
+                            :
+                            ((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100 > 0 ?
+                            <FiChevronUp style={{ marginBottom: "6px"}}/>
+                            :
+                            []
+                          }
+                          {
+                            ((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100 < 0 ?
+                            " " + (decimal(((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100*(-1))) + "%" + " ( -" + (unitStatistic.registered_unit-unitStatistic.registered_unit_previous) + " )"
+                            :
+                            " " + decimal(((residentStatistic.registered_resident-residentStatistic.registered_resident_prev)/residentStatistic.registered_resident_prev)*100) + "%" + " ( +" + (unitStatistic.registered_unit-unitStatistic.registered_unit_previous) + " )"
+                          }
+                          </font>
+                          :
+                          <font style={{color: "#52A452"}}>
+                          0%
+                          </font>
+                          }
+                        {/* <font style={{color:"#52A452"}}>
+                          {
+                          (residentStatistic.registered_resident_prev) != 0 ?
+                          decimal((residentStatistic.registered_resident-residentStatistic.registered_resident_prev/residentStatistic.registered_resident_prev)*100)
+                          :
+                          0
+                          }%
+                        </font> */}
+                      </div>
+                    </div>
+                  </div>
+                  )}
             </div>
           </div>
           {!isTechnician && (
-            <div className="col-6 col-md-4 col-lg">
-              <div
-                className="Container align-items-center color-1 cursor-pointer"
-                onClick={() => {
-                  history.push("/" + auth.role + "/staff", {
-                    role: "technician",
-                    roleLabel: "Technician",
-                  });
-                }}
-              >
-                <div
-                  style={{
-                    width: "auto",
-                  }}
-                >
-                  <FaTools className="h2 mr-4 my-0" />
+          <div className="col">
+            <div className="Container-dashboard-ns border-2 d-flex flex-column cursor-pointer"
+              onClick={() => {
+                history.push("/" + auth.role + "/staff", {
+                  role: "technician",
+                  roleLabel: "Technician",
+                });
+              }}
+            >
+              <div className="row no-gutters align-items-center" style={{minWidth:150}}>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <img src={require('./../../assets/Technician.jpg')} />
+                  </div>
                 </div>
-                <div
-                  style={{
-                    flex: 1,
-                    // padding: 16,
-                    // borderRight: '1px solid #f3f3fa',
-                  }}
-                >
+                <div className="col">
                   <AnimatedNumber
-                    className="BigNumber white"
+                    className="BigNumber2 black ml-3"
                     value={staffStatistic.staff_role_data?.num_of_technician || "0"}
                     formatValue={formatValue}
                   />
-                  <p className="white">Technician</p>
+                  <div className="text-nowrap ml-3">Technician</div>
                 </div>
               </div>
+                  {periode != "all" && (
+                  <div className="row no-gutters align-items-center mt-2">
+                    <div className="col-auto">
+                      <div style={{ fontSize:12 }} className="text-nowrap">
+                      <font style={{color:"#C4C4C4"}}>vs
+                      {
+                      periode === "year" ? " Tahun" 
+                      :
+                      periode === "month"? " Bulan"
+                      :
+                      periode === "day" ? " Hari"
+                      :
+                      " " + toSentenceCase(periode)} Lalu:
+                      </font>
+                      <AnimatedNumber
+                        className="font-weight-bold black ml-2"
+                        value={staffStatistic.staff_role_data_prev?.num_of_technician}
+                        formatValue={formatValue}
+                      />
+                      </div>
+                    </div>
+                  </div>
+                  )}
             </div>
+          </div>
+            // <div className="col-6 col-md-4 col-lg">
+            //   <div
+            //     className="Container align-items-center border-2 cursor-pointer"
+            //     onClick={() => {
+            //       history.push("/" + auth.role + "/staff", {
+            //         role: "technician",
+            //         roleLabel: "Technician",
+            //       });
+            //     }}
+            //   >
+            //     <div
+            //       style={{
+            //         width: "auto",
+            //         marginRight: 4,
+            //       }}
+            //     >
+            //       <img src={require('./../../assets/Technician.jpg')} />
+            //     </div>
+            //     <div
+            //       style={{
+            //         flex: 1,
+            //         // padding: 16,
+            //         // borderRight: '1px solid #f3f3fa',
+            //       }}
+            //     >
+            //       <AnimatedNumber
+            //         className="BigNumber2 black"
+            //         value={staffStatistic.staff_role_data?.num_of_technician || "0"}
+            //         formatValue={formatValue}
+            //       />
+            //       <p className="black">Technician</p>
+            //     </div>
+            //   </div>
+            // </div>
           )}
           {!isSecurity && (
-            <div className="col-6 col-md-4 col-lg">
-              <div
-                className="Container align-items-center color-1 cursor-pointer"
-                onClick={() => {
-                  history.push("/" + auth.role + "/staff", {
-                    role: "security",
-                    roleLabel: "Security",
-                  });
-                }}
-              >
-                <div
-                  style={{
-                    width: "auto",
-                  }}
-                >
-                  <MdSecurity className="h1 mr-4 my-0" />
+          <div className="col">
+            <div className="Container-dashboard-ns border-2 d-flex flex-column cursor-pointer"
+              onClick={() => {
+                history.push("/" + auth.role + "/staff", {
+                  role: "security",
+                  roleLabel: "Security",
+                });
+              }}
+            >
+              <div className="row no-gutters align-items-center" style={{minWidth:150}}>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <img src={require('./../../assets/Security.jpg')} />
+                  </div>
                 </div>
-                <div
-                  style={{
-                    flex: 1,
-                    // padding: 16,
-                    // borderRight: '1px solid #f3f3fa',
-                  }}
-                >
+                <div className="col">
                   <AnimatedNumber
-                    className="BigNumber white"
+                    className="BigNumber2 black ml-3"
                     value={staffStatistic.staff_role_data?.num_of_security || "0"}
                     formatValue={formatValue}
                   />
-                  <p className="white">Security</p>
+                  <div className="text-nowrap ml-3">Security</div>
                 </div>
               </div>
+                  {periode != "all" && (
+                  <div className="row no-gutters align-items-center mt-2">
+                    <div className="col-auto">
+                      <div style={{ fontSize:12 }} className="text-nowrap">
+                      <font style={{color:"#C4C4C4"}}>vs
+                      {
+                      periode === "year" ? " Tahun" 
+                      :
+                      periode === "month"? " Bulan"
+                      :
+                      periode === "day" ? " Hari"
+                      :
+                      " " + toSentenceCase(periode)} Lalu:
+                      </font>
+                      <AnimatedNumber
+                        className="font-weight-bold black ml-2"
+                        value={staffStatistic.staff_role_data_prev?.num_of_security}
+                        formatValue={formatValue}
+                      />
+                      </div>
+                    </div>
+                  </div>
+                  )}
             </div>
+          </div>
+            // <div className="col-6 col-md-4 col-lg">
+            //   <div
+            //     className="Container align-items-center border-2 cursor-pointer"
+            //     onClick={() => {
+            //       history.push("/" + auth.role + "/staff", {
+            //         role: "security",
+            //         roleLabel: "Security",
+            //       });
+            //     }}
+            //   >
+            //     <div
+            //       style={{
+            //         width: "auto",
+            //         marginRight: 4,
+            //       }}
+            //     >
+            //       <img src={require('./../../assets/Security.jpg')} />
+            //     </div>
+            //     <div
+            //       style={{
+            //         flex: 1,
+            //         // padding: 16,
+            //         // borderRight: '1px solid #f3f3fa',
+            //       }}
+            //     >
+            //       <AnimatedNumber
+            //         className="BigNumber2 black"
+            //         value={staffStatistic.staff_role_data?.num_of_security || "0"}
+            //         formatValue={formatValue}
+            //       />
+            //       <p className="black">Security</p>
+            //     </div>
+            //   </div>
+            // </div>
           )}
           {!isCourier && (
-            <div className="col-6 col-md-4 col-lg">
-              <div
-                className="Container align-items-center color-1 cursor-pointer"
-                onClick={() => {
-                  history.push("/" + auth.role + "/staff", {
-                    role: "courier",
-                    roleLabel: "Courier",
-                  });
-                }}
-              >
-                <div
-                  style={{
-                    width: "auto",
-                  }}
-                >
-                  <FaBoxOpen className="h1 mr-4 my-0" />
+          <div className="col">
+            <div className="Container-dashboard-ns border-2 d-flex flex-column cursor-pointer"
+              onClick={() => {
+                history.push("/" + auth.role + "/staff", {
+                  role: "courier",
+                  roleLabel: "Courier",
+                });
+              }}
+            >
+              <div className="row no-gutters align-items-center" style={{minWidth:150}}>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <img src={require('./../../assets/Courier.jpg')} />
+                  </div>
                 </div>
-                <div
-                  style={{
-                    flex: 1,
-                    // padding: 16,
-                    // borderRight: '1px solid #f3f3fa',
-                  }}
-                >
+                <div className="col">
                   <AnimatedNumber
-                    className="BigNumber white"
-                    value={
-                      staffStatistic.staff_role_data?.num_of_courier || "0"
-                    }
+                    className="BigNumber2 black ml-3"
+                    value={staffStatistic.staff_role_data?.num_of_courier || "0"}
                     formatValue={formatValue}
                   />
-                  <p className="white">Courier</p>
+                  <div className="text-nowrap ml-3">Courier</div>
                 </div>
               </div>
+                  {periode != "all" && (
+                  <div className="row no-gutters align-items-center mt-2">
+                    <div className="col-auto">
+                      <div style={{ fontSize:12 }} className="text-nowrap">
+                      <font style={{color:"#C4C4C4"}}>vs
+                      {
+                      periode === "year" ? " Tahun" 
+                      :
+                      periode === "month"? " Bulan"
+                      :
+                      periode === "day" ? " Hari"
+                      :
+                      " " + toSentenceCase(periode)} Lalu:
+                      </font>
+                      <AnimatedNumber
+                        className="font-weight-bold black ml-2"
+                        value={staffStatistic.staff_role_data_prev?.num_of_courier}
+                        formatValue={formatValue}
+                      />
+                      </div>
+                    </div>
+                  </div>
+                  )}
             </div>
+          </div>
+            // <div className="col-6 col-md-4 col-lg">
+            //   <div
+            //     className="Container align-items-center border-2 cursor-pointer"
+            //     onClick={() => {
+            //       history.push("/" + auth.role + "/staff", {
+            //         role: "courier",
+            //         roleLabel: "Courier",
+            //       });
+            //     }}
+            //   >
+            //     <div
+            //       style={{
+            //         width: "auto",
+            //         marginRight: 4,
+            //       }}
+            //     >
+            //       <img src={require('./../../assets/Courier.jpg')} />
+            //     </div>
+            //     <div
+            //       style={{
+            //         flex: 1,
+            //         // padding: 16,
+            //         // borderRight: '1px solid #f3f3fa',
+            //       }}
+            //     >
+            //       <AnimatedNumber
+            //         className="BigNumber2 black"
+            //         value={
+            //           staffStatistic.staff_role_data?.num_of_courier || "0"
+            //         }
+            //         formatValue={formatValue}
+            //       />
+            //       <p className="black">Courier</p>
+            //     </div>
+            //   </div>
+            // </div>
           )}
-          <div className="col-6 col-md-4 col-lg">
-            <div
-              className="Container align-items-center color-1 cursor-pointer"
+          <div className="col">
+            <div className="Container-dashboard-ns border-2 d-flex flex-column cursor-pointer"
               onClick={() => {
                 history.push("/" + auth.role + "/staff", {
                   role: "pic_bm",
@@ -4078,8 +4470,63 @@ function Component() {
                 });
               }}
             >
-              <div className="w-auto">
-                <RiBuilding2Line className="h1 mr-4 my-0" />
+              <div className="row no-gutters align-items-center" style={{minWidth:150}}>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <img src={require('./../../assets/BM Admin.jpg')} />
+                  </div>
+                </div>
+                <div className="col">
+                  <AnimatedNumber
+                    className="BigNumber2 black ml-3"
+                    value={staffStatistic.staff_role_data?.num_of_pic_bm || "0"}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap ml-3">BM Admin</div>
+                </div>
+              </div>
+                  {periode != "all" && (
+                  <div className="row no-gutters align-items-center mt-2">
+                    <div className="col-auto">
+                      <div style={{ fontSize:12 }} className="text-nowrap">
+                      <font style={{color:"#C4C4C4"}}>vs
+                      {
+                      periode === "year" ? " Tahun" 
+                      :
+                      periode === "month"? " Bulan"
+                      :
+                      periode === "day" ? " Hari"
+                      :
+                      " " + toSentenceCase(periode)} Lalu:
+                      </font>
+                      <AnimatedNumber
+                        className="font-weight-bold black ml-2"
+                        value={staffStatistic.staff_role_data_prev?.num_of_pic_bm}
+                        formatValue={formatValue}
+                      />
+                      </div>
+                    </div>
+                  </div>
+                  )}
+            </div>
+          </div>
+          {/* <div className="col-6 col-md-4 col-lg">
+            <div
+              className="Container align-items-center border-2 cursor-pointer"
+              onClick={() => {
+                history.push("/" + auth.role + "/staff", {
+                  role: "pic_bm",
+                  roleLabel: "PIC BM",
+                });
+              }}
+            >
+              <div
+                style={{
+                  width: "auto",
+                  marginRight: 4,
+                }}
+              >
+                <img src={require('./../../assets/BM Admin.jpg')} />
               </div>
               <div
                 style={{
@@ -4089,17 +4536,67 @@ function Component() {
                 }}
               >
                 <AnimatedNumber
-                  className="BigNumber white"
+                  className="BigNumber2 black"
                   value={staffStatistic.staff_role_data?.num_of_pic_bm || "0"}
                   formatValue={formatValue}
                 />
-                <p className="text-nowrap white">BM Admin</p>
+                <p className="text-nowrap black">BM Admin</p>
               </div>
             </div>
+          </div> */}
+          
+          <div className="col">
+            <div className="Container-dashboard-ns border-2 d-flex flex-column cursor-pointer"
+              onClick={() => {
+                history.push("/" + auth.role + "/staff", {
+                  role: "gm_bm",
+                  roleLabel: "BM Manager",
+                });
+              }}
+            >
+              <div className="row no-gutters align-items-center" style={{minWidth:150}}>
+                <div className="col-auto">
+                  <div className="w-auto">
+                    <img src={require('./../../assets/BM Manager.jpg')} />
+                  </div>
+                </div>
+                <div className="col">
+                  <AnimatedNumber
+                    className="BigNumber2 black ml-3"
+                    value={staffStatistic.staff_role_data?.num_of_gm_bm || "0"}
+                    formatValue={formatValue}
+                  />
+                  <div className="text-nowrap ml-3">BM Manager</div>
+                </div>
+              </div>
+                  {periode != "all" && (
+                  <div className="row no-gutters align-items-center mt-2">
+                    <div className="col-auto">
+                      <div style={{ fontSize:12 }} className="text-nowrap">
+                      <font style={{color:"#C4C4C4"}}>vs
+                      {
+                      periode === "year" ? " Tahun" 
+                      :
+                      periode === "month"? " Bulan"
+                      :
+                      periode === "day" ? " Hari"
+                      :
+                      " " + toSentenceCase(periode)} Lalu:
+                      </font>
+                      <AnimatedNumber
+                        className="font-weight-bold black ml-2"
+                        value={staffStatistic.staff_role_data_prev?.num_of_gm_bm}
+                        formatValue={formatValue}
+                      />
+                      </div>
+                    </div>
+                  </div>
+                  )}
+            </div>
           </div>
-          <div className="col-6 col-md-4 col-lg">
+          {/* <div className="col-6 col-md-4 col-lg">
             <div
-              className="Container align-items-center color-1 cursor-pointer"
+              className="Container align-items-center border-2 cursor-pointer"
               onClick={() => {
                 history.push("/" + auth.role + "/staff", {
                   role: "gm_bm",
@@ -4110,9 +4607,10 @@ function Component() {
               <div
                 style={{
                   width: "auto",
+                  marginRight: 4,
                 }}
               >
-                <FiBriefcase className="h1 mr-4 my-0" />
+                <img src={require('./../../assets/BM Manager.jpg')} />
               </div>
               <div
                 style={{
@@ -4122,20 +4620,20 @@ function Component() {
                 }}
               >
                 <AnimatedNumber
-                  className="BigNumber white"
+                  className="BigNumber2 black"
                   value={staffStatistic.staff_role_data?.num_of_gm_bm || "0"}
                   formatValue={formatValue}
                 />
-                <p className="text-nowrap white">BM Manager</p>
+                <p className="text-nowrap black">BM Manager</p>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
       <div className="row">
         <div className="col-12">
-          <div className="Container flex-column">
+          <div className="Container-dashboard flex-column">
             <div className="mb-4">
               <h5>List of Announcements</h5>
             </div>
@@ -4177,6 +4675,9 @@ function Component() {
       </div>
       </>
     )}
+
+{/* End of BM Section */}
+
     </Loading>
   );
 }

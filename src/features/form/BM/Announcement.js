@@ -15,7 +15,9 @@ import { Form } from "formik";
 import { announcementSchema } from "../services/schemas";
 import SubmitButton from "../components/SubmitButton";
 import moment from "moment";
-import { inputDateTimeFormatter24, toSentenceCase, updateDateTimeFormatter } from "../../../utils";
+import { inputDateTimeFormatter24, toSentenceCase, updateDateTimeFormatter, updateDateTimeFormatterEx } from "../../../utils";
+
+const today = moment().format("YYYY-MM-DDTHH:mm:ss", 'day');
 
 const announcementPayload = {
   title: "",
@@ -29,8 +31,9 @@ const announcementPayload = {
   description: "",
   building_unit: [],
   merchant: [],
-  publish_schedule: "",
+  publish_schedule: updateDateTimeFormatter(today),
   scheduled: "n",
+  expired_date: "",
 };
 
 const roles = [
@@ -215,7 +218,8 @@ function Component() {
             )}` + ', Floor ' + el.floor,
             value: el.building_section_floor_id,
           })),
-        publish_schedule: selected.publish_schedule ? updateDateTimeFormatter(selected.publish_schedule) : "2022-01-01T06:00:01",
+        publish_schedule: selected.publish_schedule ? updateDateTimeFormatter(selected.publish_schedule) : updateDateTimeFormatter(today),
+        expired_date: updateDateTimeFormatterEx(selected.expired_date),
       }
     : {
         ...announcementPayload,
@@ -263,7 +267,8 @@ function Component() {
             values.consumer_role === "merchant"
               ? values.merchant.map((el) => el.value)
               : [],
-          publish_schedule: inputDateTimeFormatter24(values.publish_schedule),
+          publish_schedule: values.scheduled === "y" ? inputDateTimeFormatter24(values.publish_schedule) : "",
+          expired_date: values.expired_date
         })}
         edit={(data) => {
           //console.log(data);
@@ -378,6 +383,12 @@ function Component() {
                 optional
                 placeholder="Image URL"
                 hint="Preferred size for maximum result is 1:2"
+              />
+              <Input
+                {...props}
+                label="Expired Date"
+                type="date"
+                name="expired_date"
               />
               <Input
                 {...props}

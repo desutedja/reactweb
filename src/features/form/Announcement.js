@@ -11,9 +11,10 @@ import Input from "./input";
 import { Form } from "formik";
 import { announcementSchema } from "./services/schemas";
 import SubmitButton from "./components/SubmitButton";
-import { dateTimeFormatter, inputDateTimeFormatter, inputDateTimeFormatter24, toSentenceCase, updateDateTimeFormatter } from "../../utils";
+import { dateTimeFormatter, inputDateTimeFormatter, inputDateTimeFormatter24, toSentenceCase, updateDateTimeFormatter, updateDateTimeFormatterEx } from "../../utils";
 import moment from "moment";
 
+const today = moment().format("YYYY-MM-DDTHH:mm:ss", 'day');
 
 const announcementPayload = {
   title: "",
@@ -26,8 +27,9 @@ const announcementPayload = {
   description: "",
   building_unit: [],
   merchant: [],
-  publish_schedule: "",
+  publish_schedule: updateDateTimeFormatter(today),
   scheduled: "n",
+  expired_date: "",
 };
 
 const roles = [
@@ -69,8 +71,6 @@ function Component() {
 
   const [searchmerchant, setSearchmerchant] = useState("");
   const [merchants, setMerchants] = useState([]);
-
-  const today = moment().format("YYYY-MM-DDTHH:mm:ss", 'day');
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -248,7 +248,8 @@ function Component() {
             )}`,
             value: el.building_section_id,
           })),
-        publish_schedule: selected.publish_schedule ? updateDateTimeFormatter(selected.publish_schedule) : "2022-01-01T06:00:01",
+        publish_schedule: selected.publish_schedule ? updateDateTimeFormatter(selected.publish_schedule) : updateDateTimeFormatter(today),
+        expired_date: updateDateTimeFormatterEx(selected.expired_date),
       }
     : announcementPayload;
 
@@ -285,8 +286,8 @@ function Component() {
             values.consumer_role === "merchant"
               ? values.merchant.map((el) => el.value)
               : [],
-          publish_schedule: inputDateTimeFormatter24(values.publish_schedule),
-          modified_on: inputDateTimeFormatter(today),
+          publish_schedule: values.scheduled === "y" ? inputDateTimeFormatter24(values.publish_schedule) : "",
+          expired_date: values.expired_date
         })}
         edit={(data) => {
           console.log(data);
@@ -434,6 +435,12 @@ function Component() {
                 optional
                 placeholder="Image URL"
                 hint="Preferred size for maximum result is 1:2"
+              />
+              <Input
+                {...props}
+                label="Expired Date"
+                type="date"
+                name="expired_date"
               />
               <Input
                 {...props}

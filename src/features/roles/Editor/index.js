@@ -9,6 +9,7 @@ import {
   FiShoppingBag,
   FiWifi,
   FiFile,
+  FiCalendar,
 } from "react-icons/fi";
 import {
   RiStore2Line,
@@ -30,6 +31,7 @@ import Management from "./Management";
 import Vouchers from "./Vouchers";
 import PromoVA from "./PromoVA";
 import Internet from "./Internet";
+import Booking from "./Booking";
 import Merchant from "./Merchant";
 import Product from "./Product";
 import Resident from "./Resident";
@@ -147,6 +149,12 @@ const menu = [
     label: "Internet",
     path: "/internet",
     component: <Internet />,
+  },
+  {
+    icon: <FiCalendar className="MenuItem-icon" />,
+    label: "Facility Booking",
+    path: "/facility booking",
+    component: <Booking />,
   },
   {
     icon: <FiShoppingCart className="MenuItem-icon" />,

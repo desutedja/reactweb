@@ -559,3 +559,21 @@ input[type="button"]:disabled {
   background-color: var(--primary-color);
   color: white;
 }
+
+.radio-booking { 
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* IMAGE STYLES */
+.radio-booking + img {
+  cursor: pointer;
+}
+
+/* CHECKED STYLES */
+.radio-booking:checked + img {
+  outline: 2px solid #e12029;
+  border-radius: 8px;
+}

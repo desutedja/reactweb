@@ -11,7 +11,7 @@ import {
   setSelected,
   deleteAnnouncement,
 } from "../slices/announcement";
-import { dateTimeFormatterScheduler, toSentenceCase } from "../../utils";
+import { dateFormaterEx, dateTimeFormatterScheduler, toSentenceCase } from "../../utils";
 import Template from "./components/Template";
 import { endpointAdmin } from "../../settings";
 import { get } from "../slice";
@@ -93,6 +93,10 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
         row.publisher_role === "gm_bm" ? "BM Manager"
         : 
         "PIC Admin",
+    },
+    {
+      Header: "Expired Date",
+      accessor: (row) => dateFormaterEx(row.expired_date),
     },
     {
       Header: "Status",
