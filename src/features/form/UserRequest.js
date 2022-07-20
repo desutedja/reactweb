@@ -20,7 +20,7 @@ import { createUserRequest } from "../slices/userRequest";
 
 const userRequestPayload = {
   category: "",
-  sub_category: "",
+  sub_category: parseInt(""),
   title: "",
   description: "",
   status: "",
@@ -137,9 +137,8 @@ function Component() {
             <Input
               {...props}
               label="Description"
-              type="textarea"
+              type="editor"
               name="description"
-              autoComplete="off"
             />
             <Input
               {...props}

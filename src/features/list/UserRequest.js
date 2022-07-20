@@ -14,6 +14,32 @@ import UserRequest from "../../components/cells/UserRequest";
 import Avatar from "react-avatar";
 import { setSelected, deleteUserRequest } from "../slices/userRequest";
 import Pill from "../../components/Pill";
+import Filter from "../../components/Filter";
+
+const listCate = [
+  {label:"Billing", value:1},
+  {label:"Account", value:2},
+  {label:"Others", value:3},
+];
+
+const subBilling = [
+  {label:"Paid/Unpaid", value:1},
+  {label:"Hilangkan Denda", value:2},
+  {label:"Hapus Billing Item", value:3},
+];
+
+const subAccount = [
+  {label:"Tidak menerima OTP", value:4},
+  {label:"Tidak bisa Upgrade Permium User", value:5},
+];
+
+const listStat = [
+  {label:"Waiting for Approval", value:"wfa"},
+  {label:"Waiting for Pickup", value:"wfp"},
+  {label:"On Process", value:"on_process"},
+  {label:"Done", value:"done"},
+  {label:"Rejected", value:"rejected"},
+];
 
 const columns = [
   
@@ -121,7 +147,10 @@ function Component({ view, title = '', pagetitle, canDelete }) {
 
   const [cat, setCat] = useState("");
   const [catName, setCatName] = useState("");
-  const [cats, setCats] = useState("");
+  const [subCat, setSubCat] = useState("");
+  const [subCatName, setSubCatName] = useState("");
+  const [stat, setStat] = useState("");
+  const [statName, setStatName] = useState("");
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -152,7 +181,19 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                         setLoading(true);
                         dispatch(
                           get(
-                            endpointUserRequest + "/data/list",
+                            endpointUserRequest + "/data/list" +
+                            "?page=" +
+                            (page+1) +
+                            "&limit=" +
+                            limit +
+                            "&category_id=" +
+                            cat +
+                            "&sub_category_id=" +
+                            subCat +
+                            "&search=" +
+                            searchItem +
+                            "&status=" +
+                            stat,
 
                             (res) => {
                               console.log(res.data.data);
@@ -163,7 +204,7 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                         );
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                       },
-                      [dispatch, provider, refreshToggle]
+                      [dispatch, cat, subCat, stat, refreshToggle]
                     )}
                     loading={loading}
                     onClickEdit={
@@ -209,37 +250,98 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                           ]
                     }
                     pageCount={data?.total_pages}
-                    totalItems={data?.total_items}
-                    // filters={[
-                    //   {
-                    //     label: (
-                    //       <p>
-                    //         {"Status: " +
-                    //           (status ? toSentenceCase(status) : "All")}
-                    //       </p>
-                    //     ),
-                    //     hidex: status === "",
-                    //     delete: () => setStatus(""),
-                    //     component: (toggleModal) => (
-                    //       <>
-                    //         <Filter
-                    //           data={[
-                    //             { label: "Paid", value: "paid" },
-                    //             { label: "Unpaid", value: "unpaid" },
-                    //           ]}
-                    //           onClick={(el) => {
-                    //             setStatus(el.value);
-                    //             toggleModal(false);
-                    //           }}
-                    //           onClickAll={() => {
-                    //             setStatus("");
-                    //             toggleModal(false);
-                    //           }}
-                    //         />
-                    //       </>
-                    //     ),
-                    //   },
-                    // ]}
+                    totalItems={data?.filtered_item}
+                    filters={[
+                      {
+                        label: (
+                          <p>
+                            {"Category: " +
+                              (cat ? toSentenceCase(catName) : "All")}
+                          </p>
+                        ),
+                        hidex: cat === "",
+                        delete: () => setCat(""),
+                        component: (toggleModal) => (
+                          <>
+                            <Filter
+                              data={listCate}
+                              onClick={(el) => {
+                                setCat(el.value);
+                                setCatName(el.label);
+                                setSubCat("");
+                                setSubCatName("");
+                                toggleModal(false);
+                              }}
+                              onClickAll={() => {
+                                setCat("");
+                                setCatName("");
+                                setSubCat("");
+                                setSubCatName("");
+                                toggleModal(false);
+                              }}
+                            />
+                          </>
+                        ),
+                      },
+                      ...(cat && cat != 3 ?
+                        [
+                          {
+                            label: (
+                              <p>
+                                {"Sub Category: " +
+                                  (subCat ? toSentenceCase(subCatName) : "All")}
+                              </p>
+                            ),
+                            hidex: subCat === "",
+                            delete: () => setSubCat(""),
+                            component: (toggleModal) => (
+                              <>
+                                <Filter
+                                  data={cat === 1 ? subBilling : subAccount}
+                                  onClick={(el) => {
+                                    setSubCat(el.value);
+                                    setSubCatName(el.label);
+                                    toggleModal(false);
+                                  }}
+                                  onClickAll={() => {
+                                    setSubCat("");
+                                    setSubCatName("");
+                                    toggleModal(false);
+                                  }}
+                                />
+                              </>
+                            ),
+                          },
+                        ]
+                      : []),
+                      {
+                        label: (
+                          <p>
+                            {"Status: " +
+                              (stat ? toSentenceCase(statName) : "All")}
+                          </p>
+                        ),
+                        hidex: stat === "",
+                        delete: () => setStat(""),
+                        component: (toggleModal) => (
+                          <>
+                            <Filter
+                              data={listStat}
+                              onClick={(el) => {
+                                setStat(el.value);
+                                setStatName(el.label);
+                                toggleModal(false);
+                              }}
+                              onClickAll={() => {
+                                setStat("");
+                                setStatName("");
+                                toggleModal(false);
+                              }}
+                            />
+                          </>
+                        ),
+                      },
+                    ]}
                     // actions={[
                     //   <>
                     //     {view ? null : role === "bm" && !canAdd ? null : (

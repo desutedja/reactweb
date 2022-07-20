@@ -128,9 +128,8 @@ function Component() {
             <Input
               {...props}
               label="Description"
-              type="textarea"
+              type="editor"
               name="description"
-              autoComplete="off"
             />
             <Input
               {...props}
