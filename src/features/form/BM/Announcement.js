@@ -412,7 +412,7 @@ function Component() {
               }
               <Input
                 {...props}
-                type="editor"
+                type="editorBM"
                 label="Description"
                 placeholder="Insert Announcement Description"
               />
