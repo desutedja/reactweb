@@ -369,7 +369,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             dispatch(
                 put(endpointAdmin + "/building/settings?building_id",
                   {
-                    building_id: settingData.building_id,
+                    building_id: settingData.building_id ? settingData.building_id : parseInt(id),
                     main_color: mainColor
                       ? mainColor
                       : settingData.main_color,

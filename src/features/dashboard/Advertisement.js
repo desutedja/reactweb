@@ -1315,7 +1315,7 @@ function Component() {
               <div className="col-sm-1 mt-1 ml-3 text-nowrap" style={{minWidth:100}}>
                   Periode Data:
               </div>
-              <div className="col-sm-2 w-100" style={{minWidth:170, marginRight:"8px"}}>
+              <div className="col-sm-2 w-100" style={{minWidth:170}}>
                   <InputDash type="select" options={[
                       { label: 'Semua Data', value: 'all' },
                       { label: 'Berdasarkan Tahun', value: 'year' },
