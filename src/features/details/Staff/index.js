@@ -8,6 +8,7 @@ import { useParams, useHistory } from "react-router-dom";
 import { get, setConfirmDelete } from "../../slice";
 import Pill from "../../../components/Pill";
 import Table from "../../../components/Table";
+import TableRating from "../../../components/TableRating";
 import {
   dateTimeFormatter,
   toSentenceCase,
@@ -17,6 +18,8 @@ import {
 import { endpointManagement } from "../../../settings";
 import { deleteStaff, setSelected } from "../../slices/staff";
 import { setAccess } from "../../auth/slice";
+import { FaStar } from "react-icons/fa";
+import Avatar from "react-avatar";
 
 const columnsDepartments = [
   { Header: "ID", accessor: (row) => row.id },
@@ -24,6 +27,34 @@ const columnsDepartments = [
   {
     Header: "Department Type",
     accessor: (row) => toSentenceCase(row.department_type),
+  },
+];
+
+const columnsRatings = [
+  { Header: "Resident", accessor: (row) =>
+    <>
+      <div className="Item">
+        <Avatar className="Item-avatar" size="40" src={""}
+          name={"Dadang Jordan"} round />
+        <div >
+            <b>{"Dadang Jordan"}</b>
+            <p className="Item-subtext">{"dadangjodan#1@djordan.ay"}</p>
+        </div> 
+      </div>
+    </>
+  },
+  { Header: "Rating", accessor: (row) => 
+    <>
+      <FaStar color={'#FFCE2A'} style={{ marginRight: 2 }} />
+      <FaStar color={'#FFCE2A'} style={{ marginRight: 2 }} />
+      <FaStar color={'#FFCE2A'} style={{ marginRight: 2 }} />
+      <FaStar color={'#FFCE2A'} style={{ marginRight: 2 }} />
+      <FaStar color={'#FFCE2A'} style={{ marginRight: 2 }} />
+    </>
+  },
+  {
+    Header: "Department Type",
+    accessor: (row) => "Ulasan Resident",
   },
 ];
 
@@ -110,7 +141,7 @@ function Component({ view, canUpdate, canDelete }) {
       email={data.email}
       phone={data.phone}
       loading={!data.id}
-      labels={["Details"]}
+      labels={["Details", "Rating Staff"]}
       contents={[
         <>
           <Detail
@@ -159,6 +190,13 @@ function Component({ view, canUpdate, canDelete }) {
             data={data.departments}
           />
         </>,
+        <TableRating
+          expander={false}
+          noSearch={true}
+          pagination={false}
+          columns={columnsRatings}
+          data={data.departments}
+        />
       ]}
     />
   );

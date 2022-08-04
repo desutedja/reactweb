@@ -21,7 +21,7 @@ const SubmitButton = ({ loading = false, errors }) => {
                 paddingBottom: 5,
                 paddingLeft: 20,
                 paddingRight: 20,
-                color: 'white'
+                color: 'white',
             }} onClick={() => {
                 console.log(errors)
             }}><b>Submit</b></button>

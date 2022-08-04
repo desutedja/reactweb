@@ -6,10 +6,10 @@ import { createMemoryHistory } from 'history'
 import { Router } from 'react-router-dom'
 
 it("renders without crashing", () => {
-    // const title = 'Test'
+    const title = 'Test'
   
     const history = createMemoryHistory()
-    const { container, getByText } = render(
+    render(
       <Router history={history}>
           <Template />
       </Router>

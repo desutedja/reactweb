@@ -178,7 +178,7 @@ function Component({view}) {
                 onClick={() => {
                     dispatch(patch(endpointMerchant+"/admin/items/bulk/setdiscount", {
                     "product_id": multiActionRows,
-                    "discount": parseInt(discount),
+                    "discount": parseFloat(discount),
                     }, res => {
                         dispatch(
                         setInfo({
