@@ -17,7 +17,7 @@ import {
   RiUserLocationLine,
 } from "react-icons/ri";
 
-import { toMoney, getDatesRange, toMoneyRP, toSentenceCase, decimal } from "../../utils";
+import { toMoney, getDatesRange, toMoneyRP, toSentenceCase, decimal, monthEnd, monthStart } from "../../utils";
 import { endpointAdmin, endpointBilling, endpointManagement, endpointResident } from "../../settings";
 
 import "./style.css";
@@ -88,6 +88,10 @@ function Component() {
   const [selectedMonth, setSelectedMonth] = useState("Time");
   const [periode, setPeriode] = useState('all');
   const [periodeTime, setPeriodeTime] = useState(today);
+  const [startDateFrom, setStartDateFrom] = useState(monthStart());
+  const [endDateFrom, setEndDateFrom] = useState(monthEnd());
+  const [startDateTo, setStartDateTo] = useState(monthStart());
+  const [endDateTo, setEndDateTo] = useState(monthEnd());
   const [selectedYear, setSelectedYear] = useState("");
   // const [toggle, setToggle] = useState(false)
   const toggle = () => setDropdownOpen(!dropdownOpen);
@@ -236,7 +240,7 @@ function Component() {
       //   :
       //   periodeByYear
       // ) + 
-      "&filter=" + periode,
+      "&filter=" + (periode === "periode" ? 'all' : periode),
       (res) => {
         setUnitStatistic(res.data.data);
       })
@@ -256,7 +260,7 @@ function Component() {
       //   :
       //   periodeByYear
       // ) + 
-      "&filter=" + periode,
+      "&filter=" + (periode === "periode" ? 'all' : periode),
       (res) => {
         setStaffStatistic(res.data.data);
       })
@@ -266,22 +270,18 @@ function Component() {
   // Resident Statistic
   useEffect(() => {
     dispatch(
-      get(endpointResident + "/management/resident/data?building_id=" + buildingName + "&building_section="  + tower +  
-      "&date=" + periodeTime +
-      // ( periode === "year" ? periodeByYear 
-      //   :
-      //   periode === "month" ? periodeByMonth
-      //   :
-      //   periode === "day" ? periodeTime
-      //   :
-      //   periodeByYear
-      // ) + 
-      "&filter=" + periode,
+      get(endpointResident + "/management/resident/data?building_id=" + buildingName +
+      "&building_section=" + tower +
+      "&filter=" + (periode !== "periode" ? "all" : periode) +
+      "&start_date_from=" + startDateFrom +
+      "&end_date_from=" + endDateFrom +
+      "&start_date_to=" + startDateTo +
+      "&end_date_to=" + endDateTo,
       (res) => {
         setResidentStatistic(res.data.data);
       })
     );
-  }, [dispatch, tower, buildingName, periode, periodeTime, periodeByMonth, periodeByYear]);
+  }, [dispatch, tower, buildingName, periode, startDateFrom, endDateFrom, startDateTo, endDateTo ]);
 
   useEffect(() => {
     dispatch(
@@ -634,18 +634,45 @@ function Component() {
         <div className="Container-dashboard flex-column">
           <div className="row no-gutters">
             <div className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap" style={{minWidth:100}}>
-                Periode Data:
+                Periode Data
             </div>
-            <div className="col-sm-2 w-100" style={{minWidth:170, marginRight:"8px"}}>
+            <div className="col-sm-2 w-100" style={{minWidth:170, marginBottom: 8}}>
                 <InputDash type="select" options={[
                     { label: 'Semua Data', value: 'all' },
                     { label: 'Berdasarkan Tahun', value: 'year' },
                     { label: 'Berdasarkan Bulan', value: 'month' },
                     { label: 'Berdasarkan Hari', value: 'day' },
+                    { label: 'Berdasarkan Periode', value: 'periode' },
                 ]} 
                 inputValue={periode} setInputValue={setPeriode}
                 />
             </div>
+            {/* {periode === "periode" ?
+              <>
+                <div className="col-sm-2" style={{minWidth:150}}>
+                    <InputDash type="date" 
+                    inputValue={startDateFrom} setInputValue={setStartDateFrom}
+                    />
+                </div>
+                <div className="col-sm-2" style={{minWidth:150}}>
+                    <InputDash type="date" 
+                    inputValue={endDateFrom} setInputValue={setEndDateFrom}
+                    />
+                </div>
+                <div className="col-sm-2" style={{minWidth:150}}>
+                    <InputDash type="date" 
+                    inputValue={startDateTo} setInputValue={setStartDateTo}
+                    />
+                </div>
+                <div className="col-sm-2" style={{minWidth:150}}>
+                    <InputDash type="date" 
+                    inputValue={endDateTo} setInputValue={setEndDateTo}
+                    />
+                </div>
+              </>
+              :
+              []
+            } */}
             {periode === "year" ?
               // <div className="col-sm-2" style={{minWidth:100}}>
               //     <InputDash type="select" options={years}
@@ -676,6 +703,44 @@ function Component() {
                   inputValue={periodeTime} setInputValue={setPeriodeTime}
                   />
               </div>
+              // <>
+              //   <div className="row">
+              //     <div className="col-12">
+              //       <div className="row" style={{ marginBottom: 8 }}>
+              //         <div className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap" style={{minWidth:100}}>
+              //             Mulai Dari:
+              //         </div>
+              //         <div className="col-sm-3" style={{minWidth:150}}>
+              //             <InputDash type="date" 
+              //             inputValue={startDateFrom} setInputValue={setStartDateFrom}
+              //             />
+              //         </div>
+              //         <div className="col-sm-3" style={{minWidth:150}}>
+              //             <InputDash type="date" 
+              //             inputValue={endDateFrom} setInputValue={setEndDateFrom}
+              //             />
+              //         </div>
+              //       </div>
+              //     </div>
+              //     <div className="col-12">
+              //       <div className="row">
+              //         <div className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap" style={{minWidth:100}}>
+              //             Sampai:
+              //         </div>
+              //         <div className="col-sm-3" style={{minWidth:150}}>
+              //             <InputDash type="date" 
+              //             inputValue={startDateTo} setInputValue={setStartDateTo}
+              //             />
+              //         </div>
+              //         <div className="col-sm-3" style={{minWidth:150}}>
+              //             <InputDash type="date" 
+              //             inputValue={endDateTo} setInputValue={setEndDateTo}
+              //             />
+              //         </div>
+              //       </div>
+              //     </div>
+              //   </div>
+              // </>
               :
               periode === "month" ?
               <div className="col-sm-2" style={{minWidth:150}}>
@@ -683,6 +748,52 @@ function Component() {
                   inputValue={periodeTime} setInputValue={setPeriodeTime}
                   />
               </div>
+              :
+              periode === "periode" ?
+              <>
+                <div className="row">
+                  <div className="col-12">
+                    <div className="row" style={{ marginBottom: 8 }}>
+                      <div className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap" style={{minWidth:100}}>
+                          Mulai Dari
+                      </div>
+                      <div className="col-sm-3" style={{minWidth:150}}>
+                          <InputDash type="date" 
+                          inputValue={startDateFrom} setInputValue={setStartDateFrom}
+                          />
+                      </div>
+                      <div className="col-sm-1 mt-1 mr-5 text-nowrap" style={{maxWidth:10}}>
+                          s/d
+                      </div>
+                      <div className="col-sm-3" style={{minWidth:150}}>
+                          <InputDash type="date" 
+                          inputValue={endDateFrom} setInputValue={setEndDateFrom}
+                          />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-12">
+                    <div className="row">
+                      <div className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap" style={{minWidth:100}}>
+                          Sampai
+                      </div>
+                      <div className="col-sm-3" style={{minWidth:150}}>
+                          <InputDash type="date" 
+                          inputValue={startDateTo} setInputValue={setStartDateTo}
+                          />
+                      </div>
+                      <div className="col-sm-1 mt-1 mr-5 text-nowrap" style={{maxWidth:10}}>
+                          s/d
+                      </div>
+                      <div className="col-sm-3" style={{minWidth:150}}>
+                          <InputDash type="date" 
+                          inputValue={endDateTo} setInputValue={setEndDateTo}
+                          />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </>
               :
               <div className="col-sm-2" style={{minWidth:150}}>
                   <InputDash type="date"
@@ -845,7 +956,9 @@ function Component() {
                                         }
                                         </font>
                                         :
-                                        0
+                                        <font style={{color: "#52A452"}}>
+                                        0%
+                                        </font>
                                         }
                                     </div>
                                   </div>
@@ -934,7 +1047,9 @@ function Component() {
                                         }
                                         </font>
                                         :
-                                        0
+                                        <font style={{color: "#52A452"}}>
+                                        0%
+                                        </font>
                                         }
                                       {/* <font style={{color:"#52A452"}}>
                                         {
@@ -1018,7 +1133,9 @@ function Component() {
                                         }
                                         </font>
                                         :
-                                        0
+                                        <font style={{color: "#52A452"}}>
+                                        0%
+                                        </font>
                                         }
                                       {/* <font style={{color:"#52A452"}}>
                                         {
@@ -1248,7 +1365,7 @@ function Component() {
                                   <div className="col">
                                     <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
                                         {
-                                        staffStatistic.registered_staff != 0 ?
+                                        staffStatistic.registered_staff != 0 && periode != "periode" ?
                                         <font 
                                         style={{ 
                                           color: `${(((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100 < 0 ?
@@ -1708,7 +1825,7 @@ function Component() {
                                   <div className="col">
                                     <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
                                         {
-                                        staffStatistic.registered_staff != 0 ?
+                                        staffStatistic.registered_staff != 0 && periode != "periode" ?
                                         <font 
                                         style={{ 
                                           color: `${(((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100 < 0 ?

@@ -128,6 +128,33 @@
   border-bottom: 1px solid #f3f3fa;
 }
 
+.TableActionRating {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Container .TableActionBilRating,
+.ReactModalPortal .TableActionBilRating {
+  padding: 0;
+  padding-bottom: 8px;
+}
+
+.TableActionRatingTop {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Container .TableActionRatingTop,
+.ReactModalPortal .TableActionRatingTop {
+  padding: 0;
+}
+
 .TableAction-right {
   display: flex;
   flex-wrap: wrap;
