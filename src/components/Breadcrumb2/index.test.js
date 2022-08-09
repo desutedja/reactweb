@@ -5,14 +5,17 @@ import {render, fireEvent, screen} from '@testing-library/react'
 import Breadcrumb from './index'
 
 test('shows the title', () => {
-  const title = 'Test'
 
   const history = createMemoryHistory()
-  const { container, getByText } = render(
+  render(
     <Router history={history}>
-        <Breadcrumb title={title} />
+        <Breadcrumb title="Text-Title" />
     </Router>
   )
 
-  expect(screen.getByText(title)).toBeInTheDocument()
+  const titleElement = screen.getByTestId("title")
+
+  expect(titleElement).toBeInTheDocument();
+  expect(titleElement).toHaveTextContent("Text-Title");
+  expect(titleElement).toHaveClass("Breadcrumb");
 })

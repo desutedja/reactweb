@@ -167,7 +167,7 @@ function Component({
                 </option>
               ))}
             </select>
-            <div className="InputIcon-dashboard">
+            <div className="InputIcon-dashboard mr-2">
               <FiChevronDown />
             </div>
           </div>

@@ -10,6 +10,7 @@ import {
   FiWifi,
   FiFile,
   FiCalendar,
+  FiBell,
 } from "react-icons/fi";
 import {
   RiStore2Line,
@@ -43,6 +44,7 @@ import UserRequest from "./UserRequest";
 import Transaction from "./Transaction";
 import Admin from "./Admin";
 import Xenplatform from "./Xenplatform";
+import PushNotif from "./PushNotif";
 
 import Settings from "../../settings";
 import Chat from "../../chat";
@@ -89,12 +91,12 @@ const menu = [
     subpaths: ["/unit","/category", "/settlement", "/disbursement"],
     component: <Billing />,
   },
-  {
-    icon: <RiTaskLine className="MenuItem-icon" />,
-    label: "XenPlatform",
-    path: "/xenplatform",
-    component: <Xenplatform />,
-  },
+  // {
+  //   icon: <RiTaskLine className="MenuItem-icon" />,
+  //   label: "XenPlatform",
+  //   path: "/xenplatform",
+  //   component: <Xenplatform />,
+  // },
   
   {
     icon: <RiTaskLine className="MenuItem-icon" />,
@@ -174,6 +176,12 @@ const menu = [
     label: "Announcement",
     path: "/announcement",
     component: <Announcement />,
+  },
+  {
+    icon: <FiBell className="MenuItem-icon" />,
+    label: "Push Notification",
+    path: "/push notification",
+    component: <PushNotif />,
   },
   {
     icon: <FaIdBadge className="MenuItem-icon" />,

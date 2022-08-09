@@ -8,7 +8,7 @@ function Breadcrumb({ title }) {
     let location = useLocation();
 
     return (
-        <div className="Breadcrumb">
+        <div className="Breadcrumb" data-testid="title">
             {location.pathname.split('/').length === 3 ?
                 toSentenceCase(location.pathname.split('/')[2]) :
                 location.pathname.split('/').map((el, index) =>

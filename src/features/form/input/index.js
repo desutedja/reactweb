@@ -5,6 +5,7 @@ import MultiSelectInput from "./MultiSelect";
 import RadioInput from "./Radio";
 import FileInput from "./File";
 import Editor from "./Editor";
+import EditorBM from "./EditorBM";
 import MultiSelectTable from "./MultiSelectTable";
 
 function Input({ optional = false, ...props }) {
@@ -61,6 +62,8 @@ function Input({ optional = false, ...props }) {
     switch (type) {
       case "editor":
         return <Editor name={fixedName} {...inputProps} />;
+      case "editorBM":
+        return <EditorBM name={fixedName} {...inputProps} />;
       case "multiselect":
         return <MultiSelectInput name={fixedName} {...inputProps} />;
       case "multiselecttable":
