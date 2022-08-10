@@ -109,7 +109,6 @@ function Component({ id, view }) {
   return (
     <div>
       <Table
-        pagination={false}
         columns={columns}
         data={data?.items || []}
         fetchData={useCallback(
@@ -137,8 +136,8 @@ function Component({ id, view }) {
           },
           [dispatch, id, building, refreshToggle]
         )}
-        pageCount={data?.TotalItem}
-        totalItems={data?.TotalItemFiltered}
+        pageCount={data?.TotalPage}
+        totalItems={data?.TotalItem}
         filters={[
           {
             label: "Building: ",

@@ -297,12 +297,21 @@ function Component() {
                 hint="Only use Youtube links."
               />
             )}
-            <Input
-              {...props}
-              label="Content"
-              name="content_description"
-              type="editor"
-            />
+            {auth.role === "sa" ?
+              <Input
+                {...props}
+                label="Content"
+                name="content_description"
+                type="editor"
+              />
+              :
+              <Input
+                {...props}
+                label="Content"
+                name="content_description"
+                type="editorBM"
+              />
+            }
             {auth.role === "sa" && (
               <Input
                 {...props}
