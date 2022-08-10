@@ -48,7 +48,7 @@ function Component({ id, view}) {
   const [data, setData] = useState({ items: [] });
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState("");
-  const [catName, setCatName] = useState('');
+  const [catName, setCatName] = useState("");
   const [type, setType] = useState("");
   const [limitCats, setLimitCats] = useState(5);
   const [multiActionRows, setMultiActionRows] = useState([]);

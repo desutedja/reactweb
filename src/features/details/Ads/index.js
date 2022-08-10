@@ -21,6 +21,7 @@ import Template from "../components/Template";
 
 import Content from "./contents/Content";
 import Schedule from "./contents/Schedule";
+import Impression from "./contents/Impression";
 import { get, setConfirmDelete } from "../../slice";
 import { endpointAds } from "../../../settings";
 import { dateTimeFormatter, toSentenceCase } from "../../../utils";
@@ -255,7 +256,7 @@ function Component({ view }) {
       </Modal>
       <Template
         loading={!data.id}
-        labels={["Details", "Schedules"]}
+        labels={["Details", "Schedules", "Impression"]}
         contents={[
           <div style={{ display: "flex" }}>
             <div style={{ marginRight: "20px" }}>
@@ -319,6 +320,7 @@ function Component({ view }) {
             />
           </div>,
           <Schedule view={view} />,
+          <Impression view={view} id={id} />
         ]}
       />
     </>
