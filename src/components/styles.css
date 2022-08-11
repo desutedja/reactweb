@@ -577,3 +577,94 @@ input[type="button"]:disabled {
   outline: 2px solid #e12029;
   border-radius: 8px;
 }
+
+.wizard-header {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.wizard-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin-top: 50px;
+  margin-bottom: 10px;
+}
+
+.wizard-body {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.wizard-title-container {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.wizard-body-container {
+  font-size: 14px;
+  font-weight: 400;
+  color: #5A5A5A;
+}
+
+.wizard-step-body {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #000000;
+}
+
+.wizard-step-body-icon {
+  color: #000000;
+}
+
+.wizard-step-body-inactive {
+  margin-top: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #C1C9D2;
+}
+
+.wizard-step-body-icon-inactive {
+  color: #C1C9D2;
+}
+
+.Container-wizard {
+  background-color: white;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  flex: 1;
+  margin-top: 30px;
+  margin-right: 30px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.border-wizard {
+  border: 1px solid #E9E9E9;
+  border-radius: 8px;
+}
+
+.border-wizard:hover {
+  border: 1px solid #E12029;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.Container-step-wizard {
+  background-color: white;
+  padding: 0;
+  display: flex;
+  flex: 1;
+}
+
+.border-step-wizard {
+  border-top: 4px solid #E12029;
+}
+
+.border-step-wizard-inactive {
+  border-top: 4px solid #C1C9D2;
+}
+
+.border-step-wizard-done {
+  border-top: 4px solid #000000;
+}
