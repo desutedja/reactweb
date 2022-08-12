@@ -593,6 +593,7 @@ input[type="button"]:disabled {
 .wizard-body {
   font-size: 14px;
   font-weight: 400;
+  animation: fadeIn 1s;
 }
 
 .wizard-title-container {
@@ -636,7 +637,6 @@ input[type="button"]:disabled {
   flex: 1;
   margin-top: 30px;
   margin-right: 30px;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
 .border-wizard {
@@ -667,4 +667,30 @@ input[type="button"]:disabled {
 
 .border-step-wizard-done {
   border-top: 4px solid #000000;
+}
+
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@-moz-keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@-webkit-keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@-o-keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@-ms-keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
 }

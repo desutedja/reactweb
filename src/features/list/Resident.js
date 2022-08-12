@@ -246,8 +246,7 @@ function Component({ view, canAdd }) {
         isOpen={openWizard}
         disableFooter
         disableHeader
-        toggle={() =>
-          setOpenWizard(false)}
+        toggle={() => setOpenWizard(false)}
       >
         {wizardStep === 1 && (
           <>
@@ -322,6 +321,7 @@ function Component({ view, canAdd }) {
             </div>
           </>
         )}
+        {/* Start of Wizard Add Resident */}
         {wizardStep === 2 && (
           <>
             <div className="row">
@@ -432,7 +432,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="col-auto mt-5 mb-5">
-              <div className="w-auto text-center">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
                 <img
                   src={require("../../assets/wizard/step_1.gif")}
                   width="100%"
@@ -440,20 +443,22 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right">
+              <div className="col">
                 <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(3);
+                  }}
+                />
+                <Button
+                  className="float-right"
                   color="Secondary"
                   key="?"
                   label="Previous"
                   onClick={() => {
                     setWizardStep(1);
-                  }}
-                />
-                <Button
-                  key="?"
-                  label="Next"
-                  onClick={() => {
-                    setWizardStep(3);
                   }}
                 />
               </div>
@@ -569,7 +574,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="col-auto mt-5 mb-5">
-              <div className="w-auto text-center">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
                 <img
                   src={require("../../assets/wizard/step_2.gif")}
                   width="100%"
@@ -579,18 +587,20 @@ function Component({ view, canAdd }) {
             <div className="row">
               <div className="col text-right">
                 <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(4);
+                  }}
+                />
+                <Button
+                  className="float-right"
                   color="Secondary"
                   key="?"
                   label="Previous"
                   onClick={() => {
                     setWizardStep(2);
-                  }}
-                />
-                <Button
-                  key="?"
-                  label="Next"
-                  onClick={() => {
-                    setWizardStep(4);
                   }}
                 />
               </div>
@@ -707,7 +717,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="col-auto mt-5 mb-5">
-              <div className="w-auto text-center">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
                 <img
                   src={require("../../assets/wizard/step_3.gif")}
                   width="100%"
@@ -717,18 +730,20 @@ function Component({ view, canAdd }) {
             <div className="row">
               <div className="col text-right">
                 <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(5);
+                  }}
+                />
+                <Button
+                  className="float-right"
                   color="Secondary"
                   key="?"
                   label="Previous"
                   onClick={() => {
                     setWizardStep(3);
-                  }}
-                />
-                <Button
-                  key="?"
-                  label="Next"
-                  onClick={() => {
-                    setWizardStep(5);
                   }}
                 />
               </div>
@@ -844,7 +859,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="col-auto mt-5 mb-5">
-              <div className="w-auto text-center">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
                 <img
                   src={require("../../assets/wizard/step_4.gif")}
                   width="100%"
@@ -854,18 +872,20 @@ function Component({ view, canAdd }) {
             <div className="row">
               <div className="col text-right">
                 <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(6);
+                  }}
+                />
+                <Button
+                  className="float-right"
                   color="Secondary"
                   key="?"
                   label="Previous"
                   onClick={() => {
                     setWizardStep(4);
-                  }}
-                />
-                <Button
-                  key="?"
-                  label="Next"
-                  onClick={() => {
-                    setWizardStep(6);
                   }}
                 />
               </div>
@@ -981,7 +1001,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="col-auto mt-5 mb-5">
-              <div className="w-auto text-center">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
                 <img
                   src={require("../../assets/wizard/step_5.gif")}
                   width="100%"
@@ -991,18 +1014,20 @@ function Component({ view, canAdd }) {
             <div className="row">
               <div className="col text-right">
                 <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(7);
+                  }}
+                />
+                <Button
+                  className="float-right"
                   color="Secondary"
                   key="?"
                   label="Previous"
                   onClick={() => {
                     setWizardStep(5);
-                  }}
-                />
-                <Button
-                  key="?"
-                  label="Next"
-                  onClick={() => {
-                    setWizardStep(7);
                   }}
                 />
               </div>
@@ -1139,14 +1164,7 @@ function Component({ view, canAdd }) {
             <div className="row">
               <div className="col text-right">
                 <Button
-                  color="Secondary"
-                  key="?"
-                  label="Previous"
-                  onClick={() => {
-                    setWizardStep(6);
-                  }}
-                />
-                <Button
+                  className="float-right"
                   key="?"
                   label="Done"
                   onClick={() => {
@@ -1154,11 +1172,21 @@ function Component({ view, canAdd }) {
                     setOpenWizard(false);
                   }}
                 />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(6);
+                  }}
+                />
               </div>
             </div>
           </>
         )}
-        {/* Start of Wizard Upload Bulk Resident */}
+        {/* End of Wizard Add Resident */}
+        {/* Start of Wizard Add Resident Bulk */}
         {wizardStep === 8 && (
           <>
             <div className="row">
@@ -1239,7 +1267,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="col-auto mt-5 mb-5">
-              <div className="w-auto text-center">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
                 <img
                   src={require("../../assets/wizard/uploadBulkRes/step_1.gif")}
                   width="100%"
@@ -1249,18 +1280,20 @@ function Component({ view, canAdd }) {
             <div className="row">
               <div className="col text-right">
                 <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(9);
+                  }}
+                />
+                <Button
+                  className="float-right"
                   color="Secondary"
                   key="?"
                   label="Previous"
                   onClick={() => {
                     setWizardStep(1);
-                  }}
-                />
-                <Button
-                  key="?"
-                  label="Next"
-                  onClick={() => {
-                    setWizardStep(9);
                   }}
                 />
               </div>
@@ -1347,7 +1380,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="col-auto mt-5 mb-5">
-              <div className="w-auto text-center">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
                 <img
                   src={require("../../assets/wizard/uploadBulkRes/step_2.gif")}
                   width="100%"
@@ -1357,18 +1393,20 @@ function Component({ view, canAdd }) {
             <div className="row">
               <div className="col text-right">
                 <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(10);
+                  }}
+                />
+                <Button
+                  className="float-right"
                   color="Secondary"
                   key="?"
                   label="Previous"
                   onClick={() => {
                     setWizardStep(8);
-                  }}
-                />
-                <Button
-                  key="?"
-                  label="Next"
-                  onClick={() => {
-                    setWizardStep(10);
                   }}
                 />
               </div>
@@ -1455,7 +1493,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="col-auto mt-5 mb-5">
-              <div className="w-auto text-center">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
                 <img
                   src={require("../../assets/wizard/uploadBulkRes/step_3.gif")}
                   width="100%"
@@ -1465,18 +1506,20 @@ function Component({ view, canAdd }) {
             <div className="row">
               <div className="col text-right">
                 <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(11);
+                  }}
+                />
+                <Button
+                  className="float-right"
                   color="Secondary"
                   key="?"
                   label="Previous"
                   onClick={() => {
                     setWizardStep(9);
-                  }}
-                />
-                <Button
-                  key="?"
-                  label="Next"
-                  onClick={() => {
-                    setWizardStep(11);
                   }}
                 />
               </div>
@@ -1486,7 +1529,9 @@ function Component({ view, canAdd }) {
         {wizardStep === 11 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-3 mb-2">Add Resident Bulk</div>
+              <div className="col wizard-header ml-3 mb-2">
+                Add Resident Bulk
+              </div>
             </div>
             <div className="row">
               <div className="col ml-3">
@@ -1584,14 +1629,7 @@ function Component({ view, canAdd }) {
             <div className="row">
               <div className="col text-right">
                 <Button
-                  color="Secondary"
-                  key="?"
-                  label="Previous"
-                  onClick={() => {
-                    setWizardStep(10);
-                  }}
-                />
-                <Button
+                  className="float-right"
                   key="?"
                   label="Done"
                   onClick={() => {
@@ -1599,11 +1637,20 @@ function Component({ view, canAdd }) {
                     setOpenWizard(false);
                   }}
                 />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(10);
+                  }}
+                />
               </div>
             </div>
           </>
         )}
-        {/* End of Wizard Upload Bulk */}
+        {/* End of Wizard Add Resident Bulk */}
       </Modal>
       {/* End of Web Wizard */}
       <Modal
