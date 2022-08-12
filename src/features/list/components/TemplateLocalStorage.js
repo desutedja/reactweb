@@ -24,7 +24,7 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
         <>
             <h2 style={{ marginLeft: '16px' }}>{pagetitle}</h2>
             <Breadcrumb title={title} />
-            <div className="Container">
+            <div className="Container-dashboard">
                 <TableLocalStorage
                     filterExpanded={filterExpanded}
                     totalItems={total_items}

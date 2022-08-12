@@ -564,7 +564,6 @@ input[type="button"]:disabled {
   position: absolute;
   top: 100%;
   left: 50%;
-  z-index: 9999;
   border-radius: 3px;
   background-color: white;
   border: 1px solid var(--primary-color);
@@ -573,6 +572,36 @@ input[type="button"]:disabled {
 }
 
 .list-modal-hover.on {
+  display: block;
+}
+
+.list-modal-hover-wizard {
+  position: absolute;
+  padding: 10px 20px 10px 20px;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -100px;
+  border-radius: 8px;
+  background-color: hsla(0, 0%, 35%, 0.9);
+  display: none;
+  text-align: center;
+  min-width: 200px;
+  animation: fadeIn 1s;
+}
+
+.list-modal-hover-wizard::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: hsla(0, 0%, 35%, 0.9) transparent transparent transparent;
+}
+
+.list-modal-hover-wizard.on {
   display: block;
 }
 
