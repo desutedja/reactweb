@@ -12,6 +12,20 @@
   transition: .2s;
 }
 
+.ButtonWizard {
+  background-color: var(--primary-color)!important;
+  min-width: 50px;
+  /* max-width: 100px; */
+  min-height: 2.4rem;
+  border-radius: 6px;
+  margin: 8px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .2s;
+}
+
 .Button.Secondary {
   background-color: white !important;
   color: var(--primary-color) !important;
@@ -27,7 +41,14 @@
 .Button.Download {
   background-color: #FFFFFF !important;
   color: #000000 !important;
-  border: 1px solid #F3F3FA !important;
+  border: 1px solid #E9E9E9 !important;
+  font-weight: 500;
+}
+
+.ButtonWizard.Download {
+  background-color: #FFFFFF !important;
+  color: #000000 !important;
+  border: 1px solid #E9E9E9 !important;
   font-weight: 500;
 }
 

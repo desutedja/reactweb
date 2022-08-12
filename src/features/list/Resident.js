@@ -12,6 +12,7 @@ import {
 } from "react-icons/fi";
 
 import Button from "../../components/Button";
+import ButtonWizard from "../../components/ButtonWizard";
 import Modal from "../../components/Modal";
 import Pill from "../../components/Pill";
 import Loading from "../../components/Loading";
@@ -1821,6 +1822,13 @@ function Component({ view, canAdd }) {
           view
             ? null
             : [
+                <ButtonWizard
+                  color="Download"
+                  icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                  onClick={() => {
+                    setOpenWizard(true);
+                  }}
+                />,
                 <Button
                   color="Download"
                   key="Download Data Resident"
@@ -1846,16 +1854,6 @@ function Component({ view, canAdd }) {
                         }
                       )
                     );
-                  }}
-                />,
-                <FiHelpCircle
-                  style={{
-                    cursor: "pointer",
-                    marginLeft: 8,
-                    marginRight: 8,
-                  }}
-                  onClick={() => {
-                    setOpenWizard(true);
                   }}
                 />,
               ]
