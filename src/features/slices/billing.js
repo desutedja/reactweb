@@ -119,7 +119,7 @@ export const getBillingUnit =
     dispatch(
       get(
         billingEndpoint +
-          "/unitv3" +
+          "/unit" +
           "?page=" +
           (pageIndex + 1) +
           "&limit=" +

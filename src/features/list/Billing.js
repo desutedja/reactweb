@@ -2,16 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FiSearch, FiDownload, FiUpload, FiCheck } from "react-icons/fi";
-import { confirmAlert } from 'react-confirm-alert';
-import CustomAlert from '../../components/CustomAlert';
-import { closeAlert } from '../slice';
-import 'react-confirm-alert/src/react-confirm-alert.css';
+import { confirmAlert } from "react-confirm-alert";
+import CustomAlert from "../../components/CustomAlert";
+import PillBilling from "../../components/PillBilling";
+import { closeAlert } from "../slice";
+import "react-confirm-alert/src/react-confirm-alert.css";
 
-import Modal from '../../components/Modal';
+import Modal from "../../components/Modal";
 
 import Input from "../../components/Input";
 import Filter from "../../components/Filter";
-import Dropdown from "../../components/DropDown";
 import Button from "../../components/Button";
 import { ListGroup, ListGroupItem } from "reactstrap";
 import {
@@ -24,11 +24,16 @@ import {
   updateSetAsPaidSelected,
   refresh,
   startAsync,
-  stopAsync
+  stopAsync,
 } from "../slices/billing";
-import { endpointAdmin, endpointBilling, online_status} from "../../settings";
-import { toSentenceCase, toMoney, inputDateTimeFormatter, inputDateTimeFormatter24 } from "../../utils";
-import { get,post,setInfo } from "../slice";
+import { endpointAdmin, endpointBilling, online_status } from "../../settings";
+import {
+  toSentenceCase,
+  toMoney,
+  inputDateTimeFormatter,
+  inputDateTimeFormatter24,
+} from "../../utils";
+import { get, post, setInfo } from "../slice";
 
 import TemplateWithSelectionAndDate from "./components/TemplateWithSelectionAndDate";
 import UploadModal from "../../components/UploadModal";
@@ -59,7 +64,7 @@ function Component({ view }) {
   });
 
   const [buildings, setBuildings] = useState("");
-  const [buildinglist, setBuildingList] = useState("");
+  const [buildingList, setBuildingList] = useState("");
   const [released, setReleased] = useState(() => {
     const savedReleased = localStorage.getItem("filter_released");
     const initialReleased = savedReleased;
@@ -68,23 +73,23 @@ function Component({ view }) {
   const [multiActionRows, setMultiActionRows] = useState([]);
   const [columns, setColumns] = useState([]);
   const [alert, setAlert] = useState("");
-  const [fileUpload, setFileUpload] = useState('');
+  const [fileUpload, setFileUpload] = useState("");
   const fileInput = useRef();
 
   const [limit, setLimit] = useState(5);
   const [upload, setUpload] = useState(false);
   const [uploadSetAsPaid, setUploadSetAsPaid] = useState(false);
 
-  const yearnow = (new Date()).getFullYear();
+  const yearnow = new Date().getFullYear();
   const years = [];
 
-  for(let i = yearnow-1; i <= yearnow+1; i++) {
-    years.push({"value":i,"label":i});
+  for (let i = yearnow - 1; i <= yearnow + 1; i++) {
+    years.push({ value: i, label: i });
   }
 
   const [year, setYear] = useState(yearnow);
 
-  const monthnow = (new Date()).getMonth();
+  const monthnow = new Date().getMonth();
   const months = [
     { value: 1, label: "January" },
     { value: 2, label: "February" },
@@ -106,7 +111,7 @@ function Component({ view }) {
   ];
   const [withImage, setWithImage] = useState("");
 
-  const [month, setMonth] = useState(monthnow+1);
+  const [month, setMonth] = useState(monthnow + 1);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -158,20 +163,22 @@ function Component({ view }) {
     dispatch(
       get(
         endpointAdmin +
-          "/building" +
-          "?limit=10" +
-          "&page=1" +
+          "/management/building" +
+          "?limit=10&page=1" +
           "&search=",
         (res) => {
-          let databuilding = res.data.data.items;
-          let formatted = databuilding.map((el) => ({ label: el.name, value: el.id }));
+          let data = res.data.data.items;
+
+          let formatted = data.map((el) => ({
+            label: el.building_name,
+            value: el.id,
+          }));
 
           setBuildingList(formatted);
         }
       )
     );
   }, [dispatch]);
-
 
   useEffect(() => {
     if (role) {
@@ -198,7 +205,7 @@ function Component({ view }) {
               <span>{row.building_name}</span>
             </span>
           ),
-        },    
+        },
         {
           Header: "Resident",
           accessor: (row) => (row.resident_name ? row.resident_name : "-"),
@@ -206,12 +213,22 @@ function Component({ view }) {
         { Header: "Year", accessor: (row) => row.year },
         { Header: "Month", accessor: (row) => row.month },
         {
-          Header: "Total Unpaid",
-          accessor: (row) => toMoney(row.total_unpaid),
-        },
-        {
-          Header: "Total Paid",
-          accessor: (row) => toMoney(row.total_paid),
+          Header: "Status",
+          accessor: (row) => (
+            <PillBilling
+              color={
+                row.status === "paid"
+                  ? "success"
+                  : row.status == "some paid"
+                  ? "warning text-white"
+                  : row.status == "unpaid"
+                  ? "danger"
+                  : ""
+              }
+            >
+              {toSentenceCase(row.status)}
+            </PillBilling>
+          ),
         },
         {
           Header: "Total",
@@ -331,11 +348,11 @@ function Component({ view }) {
   function uploadResultSetAsPaid(result) {
     return (
       <>
-       {result.status=="Success" ? (
+        {result.status == "Success" ? (
           <>
-          <div>
-            <h5>{result.message}</h5>
-          </div>
+            <div>
+              <h5>{result.message}</h5>
+            </div>
           </>
         ) : (
           <>
@@ -351,18 +368,24 @@ function Component({ view }) {
   return (
     <>
       <Modal
-          isOpen={modalPublish}
-          toggle={() => { toggleModalPublish(false) }}
-          title="Publish All"
-          okLabel={"Submit"}
-          onClick={() => {
-            dispatch(post(endpointBilling+"/management/billing/publish-billing-building", {
-              "building_id": buildingRelease,
-              "year": "" + year,
-              "month": "" + month,
-              "with_image": selectWithImage,
-              "published_date": inputDateTimeFormatter24(schedule),
-            }, res => {
+        isOpen={modalPublish}
+        toggle={() => {
+          toggleModalPublish(false);
+        }}
+        title="Publish All"
+        okLabel={"Submit"}
+        onClick={() => {
+          dispatch(
+            post(
+              endpointBilling + "/management/billing/publish-billing-building",
+              {
+                building_id: buildingRelease,
+                year: "" + year,
+                month: "" + month,
+                with_image: selectWithImage,
+                published_date: inputDateTimeFormatter24(schedule),
+              },
+              (res) => {
                 console.log(res.data.data);
                 dispatch(
                   setInfo({
@@ -371,178 +394,195 @@ function Component({ view }) {
                   })
                 );
                 // resultComponent ? setOpenRes(true) : toggle();
-            }, err => {
-              dispatch(
-                setInfo({
-                  color: "error",
-                  message: `Error to released.`,
-                })
-              );
-              console.log("error");
-            }))
+              },
+              (err) => {
+                dispatch(
+                  setInfo({
+                    color: "error",
+                    message: `Error to released.`,
+                  })
+                );
+                console.log("error");
+              }
+            )
+          );
 
-            dispatch(refresh());
-            dispatch(stopAsync());
-            toggleModalPublish(false)
+          dispatch(refresh());
+          dispatch(stopAsync());
+          toggleModalPublish(false);
         }}
       >
-        
         <Input
-            label="Building" inputValue={buildingRelease}
-            type="select" options={buildinglist} setInputValue={setBuildingRelease}
-            title='Building List'
-            hidden={role!=="sa"}
+          label="Building"
+          inputValue={buildingRelease}
+          type="select"
+          options={buildingList}
+          setInputValue={setBuildingRelease}
+          title="Building List"
+          hidden={role !== "sa"}
         />
 
         <Input
-            label="Month" inputValue={month}
-            type="select" options={months} setInputValue={setMonth}
-            title='Month List'
+          label="Month"
+          inputValue={month}
+          type="select"
+          options={months}
+          setInputValue={setMonth}
+          title="Month List"
         />
 
         <Input
-            label="Year" inputValue={year}
-            type="select" options={years} setInputValue={setYear}
-            title='Year List'
+          label="Year"
+          inputValue={year}
+          type="select"
+          options={years}
+          setInputValue={setYear}
+          title="Year List"
         />
 
-        {/* <Input
-            label="With Image" inputValue={withImage}
-            type="select" options={yesno} setInputValue={setWithImage}
-            title='With Image'
-        /> */}
-
         <Input
-            label="Choose Release Schedule"
-            type="radio"
-            name="release_type"
-            options={[
-              { value: "now", label: "Now" },
-              { value: "other", label: "Other" },
-            ]}
-            inputValue={type}
-            setInputValue={setType}
-        /> 
+          label="Choose Release Schedule"
+          type="radio"
+          name="release_type"
+          options={[
+            { value: "now", label: "Now" },
+            { value: "other", label: "Other" },
+          ]}
+          inputValue={type}
+          setInputValue={setType}
+        />
 
-        {type === "now" ? null :    
-        <Input
+        {type === "now" ? null : (
+          <Input
             type="datetime-local"
             label="Schedule"
             name="published_date"
             inputValue={schedule}
             setInputValue={setSchedule}
-        />
-        }  
+          />
+        )}
 
         <Input
-            label="Release with image from catat meter?"
-            type="radio"
-            name="with_image"
-            options={[
-              { value: "y", label: "Yes" },
-              { value: "n", label: "No" },
-            ]}
-            inputValue={selectWithImage}
-            setInputValue={setSelectWithImage}
-        /> 
-
+          label="Release with image from catat meter?"
+          type="radio"
+          name="with_image"
+          options={[
+            { value: "y", label: "Yes" },
+            { value: "n", label: "No" },
+          ]}
+          inputValue={selectWithImage}
+          setInputValue={setSelectWithImage}
+        />
       </Modal>
 
       <Modal
-          isOpen={openReleaseWithSchedule}
-          toggle={() => { setOpenReleaseWithSchedule(false) }}
-          title="Release Billing"
-          okLabel={"Yes, Submit"}
-          onClick={() => {
-            dispatch(startAsync());
-            type !== "now" ? 
-            dispatch(post(endpointBilling+"/management/billing/publish-billing", {
-              data: multiActionRows,
-              "with_image": selectWithImage,
-              "published_date": inputDateTimeFormatter24(schedule)
-            }, res => {
-                console.log(res.data.data);
-                dispatch(
-                  setInfo({
-                    color: "success",
-                    message: `${res.data.data} billing has been set to released.`,
-                  })
-                );
-                // resultComponent ? setOpenRes(true) : toggle();
-            dispatch(refresh());
-            dispatch(stopAsync());
-            }, err => {
-              dispatch(
-                setInfo({
-                  color: "error",
-                  message: `Error to released.`,
-                })
+        isOpen={openReleaseWithSchedule}
+        toggle={() => {
+          setOpenReleaseWithSchedule(false);
+        }}
+        title="Release Billing"
+        okLabel={"Yes, Submit"}
+        onClick={() => {
+          dispatch(startAsync());
+          type !== "now"
+            ? dispatch(
+                post(
+                  endpointBilling + "/management/billing/publish-billing",
+                  {
+                    data: multiActionRows,
+                    with_image: selectWithImage,
+                    published_date: inputDateTimeFormatter24(schedule),
+                  },
+                  (res) => {
+                    console.log(res.data.data);
+                    dispatch(
+                      setInfo({
+                        color: "success",
+                        message: `${res.data.data} billing has been set to released.`,
+                      })
+                    );
+                    // resultComponent ? setOpenRes(true) : toggle();
+                    dispatch(refresh());
+                    dispatch(stopAsync());
+                  },
+                  (err) => {
+                    dispatch(
+                      setInfo({
+                        color: "error",
+                        message: `Error to released.`,
+                      })
+                    );
+                    console.log("error");
+                  }
+                )
+              )
+            : dispatch(
+                post(
+                  endpointBilling + "/management/billing/publish-billing",
+                  {
+                    data: multiActionRows,
+                    with_image: selectWithImage,
+                  },
+                  (res) => {
+                    console.log(res.data.data);
+                    dispatch(
+                      setInfo({
+                        color: "success",
+                        message: `${res.data.data} billing has been set to released.`,
+                      })
+                    );
+                    // resultComponent ? setOpenRes(true) : toggle();
+                    dispatch(refresh());
+                    dispatch(stopAsync());
+                  },
+                  (err) => {
+                    dispatch(
+                      setInfo({
+                        color: "error",
+                        message: `Error to released.`,
+                      })
+                    );
+                    console.log("error");
+                  }
+                )
               );
-              console.log("error");
-            }))
-            : 
-            dispatch(post(endpointBilling+"/management/billing/publish-billing", {
-              data: multiActionRows,
-              "with_image": selectWithImage,
-            }, res => {
-                console.log(res.data.data);
-                dispatch(
-                  setInfo({
-                    color: "success",
-                    message: `${res.data.data} billing has been set to released.`,
-                  })
-                );
-                // resultComponent ? setOpenRes(true) : toggle();
-            dispatch(refresh());
-            dispatch(stopAsync());
-            }, err => {
-              dispatch(
-                setInfo({
-                  color: "error",
-                  message: `Error to released.`,
-                })
-              );
-              console.log("error");
-            }))
 
-            setOpenReleaseWithSchedule(false)
+          setOpenReleaseWithSchedule(false);
         }}
       >
-
         <Input
-            label="Choose Release Schedule"
-            type="radio"
-            name="release_type"
-            options={[
-              { value: "now", label: "Now" },
-              { value: "other", label: "Other" },
-            ]}
-            inputValue={type}
-            setInputValue={setType}
-        /> 
+          label="Choose Release Schedule"
+          type="radio"
+          name="release_type"
+          options={[
+            { value: "now", label: "Now" },
+            { value: "other", label: "Other" },
+          ]}
+          inputValue={type}
+          setInputValue={setType}
+        />
 
-        {type === "now" ? null :    
-        <Input
+        {type === "now" ? null : (
+          <Input
             type="datetime-local"
             label="Schedule"
             name="published_date"
             inputValue={schedule}
             setInputValue={setSchedule}
-        />
-        }  
+          />
+        )}
 
         <Input
-            label="Release with image from catat meter?"
-            type="radio"
-            name="with_image"
-            options={[
-              { value: "y", label: "Yes" },
-              { value: "n", label: "No" },
-            ]}
-            inputValue={selectWithImage}
-            setInputValue={setSelectWithImage}
-        />  
-
+          label="Release with image from catat meter?"
+          type="radio"
+          name="with_image"
+          options={[
+            { value: "y", label: "Yes" },
+            { value: "n", label: "No" },
+          ]}
+          inputValue={selectWithImage}
+          setInputValue={setSelectWithImage}
+        />
       </Modal>
 
       <UploadModal
@@ -559,9 +599,15 @@ function Component({ view }) {
       <UploadModalV2
         open={uploadSetAsPaid}
         toggle={() => setUploadSetAsPaid(false)}
-        templateLink={"https://api.yipy.id/yipy-assets/asset-storage/document/8D23E9158CBE5501CFDBD34E4B132C54.xlsx"}
+        templateLink={
+          "https://api.yipy.id/yipy-assets/asset-storage/document/8D23E9158CBE5501CFDBD34E4B132C54.xlsx"
+        }
         filename="set_as_paid_template.xlsx"
-        uploadLink={endpointBilling + "/management/billing/setaspaidbulk?building_id="+building}
+        uploadLink={
+          endpointBilling +
+          "/management/billing/setaspaidbulk?building_id=" +
+          building
+        }
         uploadDataName="file_upload"
         resultComponent={uploadResultSetAsPaid}
       />
@@ -582,14 +628,14 @@ function Component({ view }) {
         selectAction={(selectedRows) => {
           const selectedRowIds = [];
           selectedRows.map((row) => {
-            if (row !== undefined){
+            if (row !== undefined) {
               selectedRowIds.push({
-                unit_id:row.id,
-                month:row.month,
-                year:row.year,
+                unit_id: row.id,
+                month: row.month,
+                year: row.year,
               });
             }
-          });    
+          });
           setMultiActionRows([...selectedRowIds]);
           console.log(selectedRowIds);
         }}
@@ -599,11 +645,21 @@ function Component({ view }) {
             ? [
                 {
                   hidex: building === "",
-                  label: <p>Building: {building ? buildingName : "All"}</p>,
+                  label: (
+                    <p>
+                      Building: {building ? <b>{buildingName}</b> : <b>All</b>}
+                    </p>
+                  ),
                   delete: () => setBuilding(""),
                   component: (toggleModal) => (
                     <>
-                      
+                      <Input
+                        label="Search Building"
+                        compact
+                        icon={<FiSearch />}
+                        inputValue={search}
+                        setInputValue={setSearch}
+                      />
                       <Filter
                         data={buildings}
                         onClick={(el) => {
@@ -630,7 +686,16 @@ function Component({ view }) {
                 },
                 {
                   hidex: released === "",
-                  label: <p>{released ? "Released: " + toSentenceCase(released) : "Released: All"}</p>,
+                  label: (
+                    <p>
+                      Released:
+                      {released ? 
+                        <b> {toSentenceCase(released)}</b>
+                       : 
+                        <b> All</b>
+                      }
+                    </p>
+                  ),
                   delete: () => {
                     setReleased("");
                   },
@@ -650,27 +715,31 @@ function Component({ view }) {
                 },
               ]
             : [
-            {
-              hidex: released === "",
-              label: <p>{released ? "Released: " + released : "Released: All"}</p>,
-              delete: () => {
-                setReleased("");
-              },
-              component: (toggleModal) => (
-                <Filter
-                  data={online_status}
-                  onClickAll={() => {
+                {
+                  hidex: released === "",
+                  label: (
+                    <p>
+                      {released ? "Released: " + released : "Released: All"}
+                    </p>
+                  ),
+                  delete: () => {
                     setReleased("");
-                    toggleModal(false);
-                  }}
-                  onClick={(el) => {
-                    setReleased(el.value);
-                    toggleModal(false);
-                  }}
-                />
-              ),
-            },
-          ]
+                  },
+                  component: (toggleModal) => (
+                    <Filter
+                      data={online_status}
+                      onClickAll={() => {
+                        setReleased("");
+                        toggleModal(false);
+                      }}
+                      onClick={(el) => {
+                        setReleased(el.value);
+                        toggleModal(false);
+                      }}
+                    />
+                  ),
+                },
+              ]
         }
         actionDownloads={
           view
@@ -697,102 +766,30 @@ function Component({ view }) {
                     icon={<FiUpload />}
                     onClick={() => setUpload(true)}
                   />,
-                  // <Button
-                  //   label="Download Billing Units .csv"
-                  //   icon={<FiDownload />}
-                  //   onClick={() =>
-                  //     dispatch(downloadBillingUnit(search, building))
-                  //   }
-                  // />,
 
                   <Button
                     color="Activated"
                     label="Upload Bulk Set As Paid"
                     icon={<FiUpload />}
                     onClick={() => {
-                        if (role === "sa" && building == ""){
-                          setAlert(true)
-                          return
-                        }
-
-                        setUploadSetAsPaid(true)
+                      if (role === "sa" && building == "") {
+                        setAlert(true);
+                        return;
                       }
-                    }
+
+                      setUploadSetAsPaid(true);
+                    }}
                   />,
 
-                  <Button
-                    label="Release All"
-                    // icon={<FiUpload />}
-                    onClick={handleShow}
-                  />,
+                  <Button label="Release All" onClick={handleShow} />,
 
                   <Button
                     color="Activated"
                     label="Release Selected"
                     disabled={Object.keys(selectedRowIds).length === 0}
-                    // icon={<FiUpload />}
-                    onClick={() => 
-                      {
-                        setOpenReleaseWithSchedule(true)
-                        // confirmAlert({
-                        //   title: 'Release Billing',
-                        //   message:
-                        //   <>
-                        //       <Input
-                        //           label="Choose Release Schedule"
-                        //           type="radio"
-                        //           name="release_type"
-                        //           options={[
-                        //             { value: "now", label: "Now" },
-                        //             { value: "othe", label: "Other" },
-                        //           ]}
-                        //       />     
-                        //       {/* {values.release_type === "other" ? */}
-                        //       <Input
-                        //           type="datetime-local"
-                        //           label="Schedule"
-                        //           name="published_date"
-                        //           inputValue={schedule}
-                        //           setInputValue={setSchedule}
-                        //       />  
-                        //       {/* : null
-                        //       } */}
-                        //       <Input
-                        //           label="Release with image from catat meter?"
-                        //           type="radio"
-                        //           name="release_type"
-                        //           options={[
-                        //             { value: "yes", label: "Yes" },
-                        //             { value: "no", label: "No" },
-                        //           ]}
-                        //           inputValue={selectWithImage}
-                        //           setInputValue={setSelectWithImage}
-                        //       />     
-                        //   </>,
-                        //   buttons: [
-                        //     {
-                        //       label: 'Yes, with image',
-                        //       onClick: () => {
-                        //         // dispatch(updateBillingPublish(multiActionRows,"yes"));
-                        //         dispatch(updateBillingPublish(multiActionRows,with_image = selectWithImage,schedule_publish = schedule));
-                        //       },
-                        //       className:"Button btn btn-secondary"
-                        //     },
-                        //     // {
-                        //     //   label: 'No, without image',
-                        //     //   onClick: () => {
-                        //     //     dispatch(updateBillingPublish(multiActionRows,"no"));
-                        //     //   },
-                        //     //   className:"Button btn btn-custom"
-                        //     // },
-                        //     {
-                        //       label: 'Cancel',
-                        //       className:"Button btn btn-cancel"
-                        //     }
-                        //   ]
-                        // });
-                      }
-                    }
+                    onClick={() => {
+                      setOpenReleaseWithSchedule(true);
+                    }}
                   />,
 
                   <Button
@@ -800,28 +797,28 @@ function Component({ view }) {
                     label="Set as Paid Selected"
                     disabled={Object.keys(selectedRowIds).length === 0}
                     icon={<FiCheck />}
-                    onClick={() => 
-                      {
-                        confirmAlert({
-                          title: 'Set as Paid Billing',
-                          message: 'Do you want to set selected unit as Paid?',
-                          buttons: [
-                            {
-                              label: 'Yes',
-                              onClick: () => {
-                                dispatch(updateSetAsPaidSelected(multiActionRows));
-                              },
-                              className:"Button btn btn-secondary"
+                    onClick={() => {
+                      confirmAlert({
+                        title: "Set as Paid Billing",
+                        message: "Do you want to set selected unit as Paid?",
+                        buttons: [
+                          {
+                            label: "Yes",
+                            onClick: () => {
+                              dispatch(
+                                updateSetAsPaidSelected(multiActionRows)
+                              );
                             },
-                            {
-                              label: 'Cancel',
-                              className:"Button btn btn-cancel"
-                            }
-                          ]
-                        });
-                      }
-                    }
-                  />
+                            className: "Button btn btn-secondary",
+                          },
+                          {
+                            label: "Cancel",
+                            className: "Button btn btn-cancel",
+                          },
+                        ],
+                      });
+                    }}
+                  />,
                 ];
               }
         }
