@@ -52,6 +52,7 @@ export default slice.reducer;
 export const getAnnoucement = (
    pageIndex, pageSize,
   search = '', consumer,
+  publisherRole = '',
 ) => dispatch => {
   dispatch(startAsync());
 
@@ -61,7 +62,8 @@ export const getAnnoucement = (
     '&sort_field=created_on&sort_type=DESC' +
     '&topic=announcement' +
     '&consumer_role=' + consumer +
-    '&search=' + search,
+    '&search=' + search +
+    '&publisher_role=' + publisherRole,
     
     res => {
       dispatch(setData(res.data.data));

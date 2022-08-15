@@ -1,13 +1,23 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { FiDownload, FiPlus } from "react-icons/fi";
+import {
+  FiCheckCircle,
+  FiCircle,
+  FiDisc,
+  FiDownload,
+  FiHelpCircle,
+  FiPlus,
+  FiSearch,
+} from "react-icons/fi";
 
 import Button from "../../components/Button";
+import ButtonWizard from "../../components/ButtonWizard";
 import Modal from "../../components/Modal";
 import Pill from "../../components/Pill";
 import Loading from "../../components/Loading";
 import Filter from "../../components/Filter";
+import Input from "../../components/Input";
 
 import Resident from "../../components/cells/Resident";
 
@@ -23,6 +33,7 @@ import {
   online_status,
   kyccolor,
   onboarding_status,
+  endpointAdmin,
 } from "../../settings";
 
 const columns = [
@@ -30,6 +41,10 @@ const columns = [
     Header: "Resident",
     accessor: (row) => <Resident id={row.id} data={row} />,
     sorting: "firstname",
+  },
+  {
+    Header: "Building",
+    accessor: (row) => row.building_name,
   },
   {
     Header: "Status",
@@ -91,6 +106,8 @@ function Component({ view, canAdd }) {
   const [file, setFile] = useState();
   const [data, setData] = useState();
   const [res, setRes] = useState();
+  const [search, setSearch] = useState("");
+  const [limit, setLimit] = useState(5);
 
   const [status, setStatus] = useState(() => {
     const savedStatus = localStorage.getItem("filter_status");
@@ -132,12 +149,58 @@ function Component({ view, canAdd }) {
     const initialOnboardingLabel = savedOnboardingLabel;
     return initialOnboardingLabel || "";
   });
+  const [building, setBuilding] = useState("");
+  const [buildingLabel, setBuildingLabel] = useState("");
+  const [buildingList, setBuildingList] = useState("");
+
+  const [openWizard, setOpenWizard] = useState(false);
+  const [wizardStep, setWizardStep] = useState(1);
+
+  const wizardBackFunction = useCallback(
+    () => setWizardStep(wizardStep != 1 ? wizardStep - 1 : wizardStep),
+    [wizardStep]
+  );
 
   let fileInput = useRef();
 
   let dispatch = useDispatch();
   let history = useHistory();
   let { url } = useRouteMatch();
+
+  useEffect(() => {
+    (!search || search.length >= 1) &&
+      dispatch(
+        get(
+          endpointAdmin +
+            "/building" +
+            "?limit=" +
+            limit +
+            "&page=1" +
+            "&search=" +
+            search,
+          (res) => {
+            let data = res.data.data.items;
+            let totalItems = Number(res.data.data.total_items);
+            let restTotal = totalItems - data.length;
+
+            let formatted = data.map((el) => ({
+              label: el.name,
+              value: el.id,
+            }));
+
+            if (data.length < totalItems && search.length === 0) {
+              formatted.push({
+                label: "Load " + (restTotal > 5 ? 5 : restTotal) + " more",
+                restTotal: restTotal > 5 ? 5 : restTotal,
+                className: "load-more",
+              });
+            }
+
+            setBuildingList(formatted);
+          }
+        )
+      );
+  }, [dispatch, search, limit]);
 
   useEffect(() => {
     // storing input status
@@ -163,7 +226,6 @@ function Component({ view, canAdd }) {
     localStorage.setItem("label_onboarding", onboardingStatusLabel);
   }, [onboardingStatus, onboardingStatusLabel]);
   useEffect(() => {
-
     // console.log(file);
 
     let form = new FormData();
@@ -179,6 +241,1419 @@ function Component({ view, canAdd }) {
 
   return (
     <>
+      {/* Start of Web Wizard */}
+      <Modal
+        width="1080px"
+        isOpen={openWizard}
+        disableFooter
+        disableHeader
+        toggle={() => setOpenWizard(false)}
+      >
+        {wizardStep === 1 && (
+          <>
+            <div className="row">
+              <div className="col-4">
+                <img src={require("../../assets/quick_start.jpg")} />
+              </div>
+              <div className="col-8">
+                <div className="wizard-title">
+                  Apa yang ingin kamu pelajari?
+                </div>
+                <div className="wizard-body">
+                  Kamu dapat mempelajari berbagai fitur yang ada di menu ini.
+                </div>
+                <div className="wizard-body">
+                  Silahkan pilih salah satu untuk melanjutkan.
+                </div>
+                {/* <div className="Container-wizard border-wizard">Resident</div> */}
+                <div className="col">
+                  <div
+                    className="Container-wizard border-wizard d-flex flex-column"
+                    onClick={() => {
+                      setWizardStep(2);
+                    }}
+                  >
+                    <div className="row no-gutters align-items-center">
+                      <div className="col-auto">
+                        <div className="w-auto">
+                          <img
+                            src={require("../../assets/Resident_Wizard.jpg")}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="text-nowrap ml-3 wizard-title-container">
+                          Add Resident
+                        </div>
+                        <div className="text-nowrap ml-3 wizard-body-container">
+                          Tambah resident dengan input data satu per satu.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="col">
+                  <div
+                    className="Container-wizard border-wizard d-flex flex-column"
+                    onClick={() => {
+                      setWizardStep(8);
+                    }}
+                  >
+                    <div className="row no-gutters align-items-center">
+                      <div className="col-auto">
+                        <div className="w-auto">
+                          <img
+                            src={require("../../assets/Resident_Wizard_Group.jpg")}
+                          />
+                        </div>
+                      </div>
+                      <div className="col">
+                        <div className="text-nowrap ml-3 wizard-title-container">
+                          Add Resident Bulk
+                        </div>
+                        <div className="text-nowrap ml-3 wizard-body-container">
+                          Tambah resident dengan input data dalam jumlah banyak.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+        {/* Start of Wizard Add Resident */}
+        {wizardStep === 2 && (
+          <>
+            <div className="row">
+              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+            </div>
+            <div className="row">
+              <div className="col ml-3">
+                <div className="Container-step-wizard border-step-wizard d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Check Email/No. HP
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Full Name
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Profile
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Address
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Bank Account
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col mr-3">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Information
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body ml-3 mt-4">
+                Klik tombol “<b>+ Add Resident</b>”. Lalu kamu dapat memasukkan
+                email atau no. HP saja atau memasukkan keduanya.{" "}
+              </div>
+            </div>
+            <div className="col-auto mt-5 mb-5">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
+                <img
+                  src={require("../../assets/wizard/step_1.gif")}
+                  width="100%"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col">
+                <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(3);
+                  }}
+                />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(1);
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {wizardStep === 3 && (
+          <>
+            <div className="row">
+              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+            </div>
+            <div className="row">
+              <div className="col ml-3">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Check Email/No. HP
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Full Name
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Profile
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Address
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Bank Account
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col mr-3">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Information
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body ml-3 mt-4">
+                Masukkan nama depan dan nama belakang pada form yang tersedia.{" "}
+              </div>
+            </div>
+            <div className="col-auto mt-5 mb-5">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
+                <img
+                  src={require("../../assets/wizard/step_2.gif")}
+                  width="100%"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col text-right">
+                <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(4);
+                  }}
+                />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(2);
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {wizardStep === 4 && (
+          <>
+            <div className="row">
+              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+            </div>
+            <div className="row">
+              <div className="col ml-3">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Check Email/No. HP
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Full Name
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Profile
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Address
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Bank Account
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col mr-3">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Information
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body ml-3 mt-4">
+                Isi data kewarganegaraan, tempat dan tanggal lahir, jenis
+                kelamin, status pernikahan dan pekerjaan.{" "}
+              </div>
+            </div>
+            <div className="col-auto mt-5 mb-5">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
+                <img
+                  src={require("../../assets/wizard/step_3.gif")}
+                  width="100%"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col text-right">
+                <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(5);
+                  }}
+                />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(3);
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {wizardStep === 5 && (
+          <>
+            <div className="row">
+              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+            </div>
+            <div className="row">
+              <div className="col ml-3">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Check Email/No. HP
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Full Name
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Profile
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Address
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Bank Account
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col mr-3">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Information
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body ml-3 mt-4">
+                Masukkan alamat rumah dengan lengkap.{" "}
+              </div>
+            </div>
+            <div className="col-auto mt-5 mb-5">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
+                <img
+                  src={require("../../assets/wizard/step_4.gif")}
+                  width="100%"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col text-right">
+                <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(6);
+                  }}
+                />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(4);
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {wizardStep === 6 && (
+          <>
+            <div className="row">
+              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+            </div>
+            <div className="row">
+              <div className="col ml-3">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Check Email/No. HP
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Full Name
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Profile
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Address
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Bank Account
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col mr-3">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Information
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body ml-3 mt-4">
+                Masukkan nama bank, nomor rekening, dan nama pemilik rekening.{" "}
+              </div>
+            </div>
+            <div className="col-auto mt-5 mb-5">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
+                <img
+                  src={require("../../assets/wizard/step_5.gif")}
+                  width="100%"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col text-right">
+                <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(7);
+                  }}
+                />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(5);
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {wizardStep === 7 && (
+          <>
+            <div className="row">
+              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+            </div>
+            <div className="row">
+              <div className="col ml-3">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Check Email/No. HP
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Full Name
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Profile
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Address
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Bank Account
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col mr-3">
+                <div className="Container-step-wizard border-step-wizard d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Information
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body ml-3 mt-4">
+                <b>Apa yang dapat dilakukan selanjutnya?</b>{" "}
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body mt-4">
+                <ul>
+                  <li>
+                    Setelah berhasil melakukan Add Resident, kamu dapat melihat
+                    detail informasi resident tersebut di Menu Resident.
+                  </li>
+                  <li>Kamu dapat menambahkan unit pada resident tersebut.</li>
+                  <li>
+                    Kamu dapat mengedit detail informasi resident tersebut jika
+                    ada kesalahan saat input data.
+                  </li>
+                  <li>
+                    Kamu dapat menghapus resident jika resident tersebut sudah
+                    tidak berada di building kamu.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col text-right">
+                <Button
+                  className="float-right"
+                  key="?"
+                  label="Done"
+                  onClick={() => {
+                    setWizardStep(1);
+                    setOpenWizard(false);
+                  }}
+                />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(6);
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {/* End of Wizard Add Resident */}
+        {/* Start of Wizard Add Resident Bulk */}
+        {wizardStep === 8 && (
+          <>
+            <div className="row">
+              <div className="col wizard-header ml-3 mb-2">
+                Add Resident Bulk
+              </div>
+            </div>
+            <div className="row">
+              <div className="col ml-3">
+                <div className="Container-step-wizard border-step-wizard d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Download Template
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Isi Form Data Resident
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Upload Bulk File
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Information
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body ml-3 mt-4">
+                Klik tombol “<b>+ Add Resident</b>”. Lalu klik tombol “Download
+                Template”.{" "}
+              </div>
+            </div>
+            <div className="col-auto mt-5 mb-5">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
+                <img
+                  src={require("../../assets/wizard/uploadBulkRes/step_1.gif")}
+                  width="100%"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col text-right">
+                <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(9);
+                  }}
+                />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(1);
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {wizardStep === 9 && (
+          <>
+            <div className="row">
+              <div className="col wizard-header ml-3 mb-2">
+                Add Resident Bulk
+              </div>
+            </div>
+            <div className="row">
+              <div className="col ml-3">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Download Template
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Isi Form Data Resident
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Upload Bulk File
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Information
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body ml-3 mt-4">
+                Buka file resident template yang sudah kamu download tadi. Lalu
+                isi data resident sesuai dengan tabel yang sudah disediakan.{" "}
+              </div>
+            </div>
+            <div className="col-auto mt-5 mb-5">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
+                <img
+                  src={require("../../assets/wizard/uploadBulkRes/step_2.gif")}
+                  width="100%"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col text-right">
+                <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(10);
+                  }}
+                />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(8);
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {wizardStep === 10 && (
+          <>
+            <div className="row">
+              <div className="col wizard-header ml-3 mb-2">
+                Add Resident Bulk
+              </div>
+            </div>
+            <div className="row">
+              <div className="col ml-3">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Download Template
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Isi Form Data Resident
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Upload Bulk File
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon-inactive">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body-inactive">
+                        Information
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body ml-3 mt-4">
+                Setelah mengisi data resident di template tadi, upload kembali
+                file tersebut lalu submit.{" "}
+              </div>
+            </div>
+            <div className="col-auto mt-5 mb-5">
+              <div
+                className="w-auto text-center"
+                style={{ animation: "fadeIn 3s" }}
+              >
+                <img
+                  src={require("../../assets/wizard/uploadBulkRes/step_3.gif")}
+                  width="100%"
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col text-right">
+                <Button
+                  className="float-right"
+                  key="?"
+                  label="Next"
+                  onClick={() => {
+                    setWizardStep(11);
+                  }}
+                />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(9);
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {wizardStep === 11 && (
+          <>
+            <div className="row">
+              <div className="col wizard-header ml-3 mb-2">
+                Add Resident Bulk
+              </div>
+            </div>
+            <div className="row">
+              <div className="col ml-3">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Download Template
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Isi Form Data Resident
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiCheckCircle />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Upload Bulk File
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="col">
+                <div className="Container-step-wizard border-step-wizard d-flex flex-column">
+                  <div className="row no-gutters align-items-center">
+                    <div className="col-auto">
+                      <div className="w-auto wizard-step-body-icon">
+                        <FiDisc />
+                      </div>
+                    </div>
+                    <div className="col">
+                      <div className="text-nowrap ml-1 wizard-step-body">
+                        Information
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body ml-3 mt-4">
+                <b>Apa yang dapat dilakukan selanjutnya?</b>{" "}
+              </div>
+            </div>
+            <div className="row">
+              <div className="col wizard-body mt-4">
+                <ul>
+                  <li>
+                    Setelah berhasil melakukan Add Resident Bulk, kamu dapat
+                    melihat detail informasi resident tersebut di Menu Resident.
+                  </li>
+                  <li>
+                    Kamu dapat menambahkan unit tambahan jika diperlukan pada
+                    resident tersebut.
+                  </li>
+                  <li>
+                    Kamu dapat mengedit detail informasi resident tersebut jika
+                    ada kesalahan saat input data.
+                  </li>
+                  <li>
+                    Kamu dapat menghapus resident jika resident tersebut sudah
+                    tidak berada di building kamu.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col text-right">
+                <Button
+                  className="float-right"
+                  key="?"
+                  label="Done"
+                  onClick={() => {
+                    setWizardStep(1);
+                    setOpenWizard(false);
+                  }}
+                />
+                <Button
+                  className="float-right"
+                  color="Secondary"
+                  key="?"
+                  label="Previous"
+                  onClick={() => {
+                    setWizardStep(10);
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+        {/* End of Wizard Add Resident Bulk */}
+      </Modal>
+      {/* End of Web Wizard */}
       <Modal
         isOpen={bulk}
         toggle={() => {
@@ -222,9 +1697,7 @@ function Component({ view, canAdd }) {
               }}
             >
               {res.data ? res.data.length : 0} rows{" "}
-              {res.error.length === 0
-                ? "added succesfully."
-                : "in correct format."}
+              {res.error === null ? "added succesfully." : "in correct format."}
             </p>
             <p
               style={{
@@ -233,18 +1706,29 @@ function Component({ view, canAdd }) {
               }}
             >
               {res.error ? res.error.length : 0} rows{" "}
-              {res.error.length === 0 ? "failed to add." : "in wrong format."}
+              {res.error === null ? "failed to add." : "in wrong format."}
             </p>
-            {res.error.map((el) => (
+            {res.error != null ? (
+              res.error.map((el) => (
+                <p
+                  style={{
+                    color: "crimson",
+                    marginBottom: 4,
+                  }}
+                >
+                  {el}
+                </p>
+              ))
+            ) : (
               <p
                 style={{
-                  color: "crimson",
+                  color: "seagreen",
                   marginBottom: 4,
                 }}
               >
-                {el}
+                {res.data.length} Resident(s) successfully added.
               </p>
-            ))}
+            )}
           </div>
         ) : (
           <Loading loading={loading}>
@@ -268,7 +1752,8 @@ function Component({ view, canAdd }) {
                   setLoading(true);
                   dispatch(
                     getFile(
-                      user.resident_bulk_template,
+                      // user.resident_bulk_template,
+                      "https://api.yipy.id/yipy-assets/asset-storage/document/ABB45E5DDEC4AF95D0960C2EB88CFC57.xlsx",
                       "resident_template.xlsx",
                       (res) => {
                         setLoading(false);
@@ -278,6 +1763,7 @@ function Component({ view, canAdd }) {
                 }}
                 style={{
                   marginTop: 16,
+                  color: "white",
                 }}
               >
                 Download Template
@@ -291,7 +1777,7 @@ function Component({ view, canAdd }) {
         disableHeader={true}
         btnDanger
         onClick={() => {
-        // dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
+          // dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
           setDownloadResident(false);
         }}
         toggle={() => {
@@ -301,7 +1787,7 @@ function Component({ view, canAdd }) {
         cancelLabel={"Cancel"}
       >
         This Feature is under development. Stay Tuned..
-      </Modal>      
+      </Modal>
       <TemplateLocalStorage
         view={view}
         columns={columns}
@@ -330,28 +1816,56 @@ function Component({ view, canAdd }) {
                     setBulk(true);
                   }}
                 />,
+              ]
+        }
+        actionDownloads={
+          view
+            ? null
+            : [
+                <ButtonWizard
+                  color="Download"
+                  icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                  onClick={() => {
+                    setOpenWizard(true);
+                  }}
+                />,
                 <Button
+                  color="Download"
                   key="Download Data Resident"
                   label="Download Resident.csv"
                   icon={<FiDownload />}
                   onClick={() => {
                     setLoading(true);
-                    dispatch(getFile(endpointResident + "/management/resident/download?onboarding=" +
-                    onboardingStatus,
-                    "Data_Resident_Onboarding="+(onboardingStatus ? toSentenceCase(onboardingStatus) : "All")+".csv",
-                    (res) => {
-                      setLoading(false);
-                    },
-                    (err) => {
-                      setLoading(false);
-                    }
-                    ))}
-                  }
+                    dispatch(
+                      getFile(
+                        endpointResident +
+                          "/management/resident/download?onboarding=" +
+                          onboardingStatus,
+                        "Data_Resident_Onboarding=" +
+                          (onboardingStatus
+                            ? toSentenceCase(onboardingStatus)
+                            : "All") +
+                          ".csv",
+                        (res) => {
+                          setLoading(false);
+                        },
+                        (err) => {
+                          setLoading(false);
+                        }
+                      )
+                    );
+                  }}
                 />,
               ]
         }
         deleteAction={view ? null : role === "sa" && deleteResident}
-        filterVars={[status, KYCStatus, onlineStatus, onboardingStatus]}
+        filterVars={[
+          status,
+          KYCStatus,
+          onlineStatus,
+          onboardingStatus,
+          building,
+        ]}
         filters={[
           {
             hidex: status === "",
@@ -457,6 +1971,42 @@ function Component({ view, canAdd }) {
                   toggleModal(false);
                 }}
               />
+            ),
+          },
+          {
+            label: "Building: ",
+            value: building ? buildingLabel : "All",
+            hidex: building === "",
+            delete: () => setBuilding(""),
+            component: (toggleModal) => (
+              <>
+                <Input
+                  label="Search Building"
+                  compact
+                  icon={<FiSearch />}
+                  inputValue={search}
+                  setInputValue={setSearch}
+                />
+                <Filter
+                  data={buildingList}
+                  onClick={(el) => {
+                    if (!el.value) {
+                      setLimit(limit + el.restTotal);
+                      return;
+                    }
+                    setBuilding(el.value);
+                    setBuildingLabel(el.label);
+                    setLimit(5);
+                    toggleModal(false);
+                  }}
+                  onClickAll={() => {
+                    setBuilding("");
+                    setBuildingLabel("");
+                    setLimit(5);
+                    toggleModal(false);
+                  }}
+                />
+              </>
             ),
           },
         ]}

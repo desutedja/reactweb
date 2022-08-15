@@ -5,6 +5,17 @@
     color: var(--primary-color);
     line-height: 1;
 }
+
+.BigNumber2 {
+    /* margin: 16px; */
+    padding-top: 4px;
+    padding-bottom: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary-color);
+    line-height: 1;
+}
+
 .cctv-list-scroll {
     margin-bottom: 10px;
     overflow: scroll;
@@ -57,10 +68,19 @@
     font-size: 2rem;
     text-align: center;
 }
+
 .ads-summary-data-text {
     font-weight: bolder;
     font-size: 1.75rem;
     text-align: left;
+}
+
+.ads-summary-data-text2 {
+    font-weight: bolder;
+    font-size: 2rem;
+    text-align: left;
+    padding-left: 15px;
+    margin-bottom: 20px;
 }
 
 .ads-summary-label-text {
@@ -68,6 +88,15 @@
     font-size: 1.25rem;
     color: #FFF;
     text-align: left;
+}
+
+.ads-summary-label-text2 {
+    font-weight: 100;
+    font-size: 1.25rem;
+    color: #000000;
+    text-align: left;
+    padding-top: 10px;
+    padding-left: 15px;
 }
 
 .ads-summary-icon {
@@ -198,12 +227,12 @@
   }
   
   /* On mouse-over, add a deeper shadow */
-  .container:hover {
+  .container-ads:hover {
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
   }
   
   /* Add some padding inside the card container */
-  .container {
+  .container-ads {
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
     transition: 0.3s;
     padding: 20px;

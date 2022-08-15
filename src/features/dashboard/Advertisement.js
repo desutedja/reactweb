@@ -6,6 +6,7 @@ import { endpointAds } from "../../settings";
 import LineCharts from "./Components/LineCharts";
 import Piecharts from "./Components/PieCharts";
 import moment from "moment";
+import AnimatedNumber from "animated-number-react";
 
 import "./style_new.css";
 import { get } from "../slice";
@@ -24,13 +25,16 @@ import Button from "../../components/Button";
 import { FiSearch, FiEye, FiDownload  } from "react-icons/fi";
 import { GiClick } from "react-icons/gi";
 import { AiOutlineFundProjectionScreen } from "react-icons/ai"
-import SummaryItem from "./Components/SummaryItem";
+import SummaryItemNew from "./Components/SummaryItemNew";
 import { downloadAdsReport } from "../slices/ads";
 import Loading from "../../components/Loading";
+import InputDash from "../../components/InputDash";
 
 import ico1 from "../../assets/Impression 1.png"
 import ico2 from "../../assets/Views 1.png"
 import ico3 from "../../assets/Clicks 1.png"
+import BGAds from "../../assets/BG_Ads.jpg"
+
 
 const monthConst = [
   "Jan",
@@ -67,14 +71,16 @@ const tabsTimeline = [
 ];
 
 const colorList = [
-  "#DDF2F6",
-  "#F7DFED",
-  "#DDF6F2",
-  "#FBF7D7",
-  "#FBD9D7",
-  "#E1F3E4",
-  "#E3E2F9",
+  // "#DDF2F6",
+  // "#F7DFED",
+  // "#DDF6F2",
+  // "#FBF7D7",
+  // "#FBD9D7",
+  // "#E1F3E4",
+  // "#E3E2F9",
+  "#E12029","#254091","#F58113","#88B5E4","#52A452","#5464B6","#FFCE2A","#9F6633","#471172","#204657","#D09CB1","#D33B7E"
 ];
+
 
 function Component() {
   const { auth } = useSelector((state) => state);
@@ -105,11 +111,15 @@ function Component() {
   const [selectedType, setSelectedType] = useState("");
   const [dataKeys, setDataKeys] = useState([]);
 
+  const today = moment().format("yyyy-MM-DD", 'day');
+  const [periode, setPeriode] = useState('all');
+  const [periodeTime, setPeriodeTime] = useState(today);
+
   const [range, setRange] = useState("")
 
   const [impressionDetail, setImpressionDetail] = useState([
-    { name: "", value: 1 },
-    { name: "", value: 2 },
+    { name: "Click", value: 0 },
+    { name: "Views", value: 0 },
   ]);
   const [platformDetail, setPlatformDetail] = useState([
     { name: "", value: 1 },
@@ -147,25 +157,25 @@ function Component() {
       icon: ico1,
       data: 0,
     },
-    {
-      label: "Views",
-      icon: ico2,
-      data: 0,
-    },
-    {
-      label: "Click",
-      icon: ico3,
-      data: 0,
-    },
+    // {
+    //   label: "Views",
+    //   icon: ico2,
+    //   data: 0,
+    // },
+    // {
+    //   label: "Click",
+    //   icon: ico3,
+    //   data: 0,
+    // },
     // {
     //   label: "Download Report",
     //   data: "https://api.yipy.id/yipy-assets/asset-storage/img/F8F140A85BA88A1B61C6855ECD9E04E6.png",
     // },
   ]);
 
-  const [limitPopup, setLimitPopup] = useState(5);
-  const [limitAdvertiser, setLimitAdvertiser] = useState(5);
-  const [limitBanner, setLimitBanner] = useState(5);
+  const [limitPopup, setLimitPopup] = useState(100);
+  const [limitAdvertiser, setLimitAdvertiser] = useState(100);
+  const [limitBanner, setLimitBanner] = useState(100);
   const data = [
     { month: "Jan 2020", view: 1000, click: 700, amt: 2400 },
     { month: "Feb 2020", view: 200, click: 200, amt: 2400 },
@@ -254,16 +264,16 @@ function Component() {
         icon: ico1,
         data: data.summary.total_repeated_impression,
       },
-      {
-        label: "Views",
-        icon: ico2,
-        data: data.summary.total_repeated_view,
-      },
-      {
-        label: "Click",
-        icon: ico3,
-        data: data.summary.total_repeated_click,
-      },
+      // {
+      //   label: "Views",
+      //   icon: ico2,
+      //   data: data.summary.total_repeated_view,
+      // },
+      // {
+      //   label: "Click",
+      //   icon: ico3,
+      //   data: data.summary.total_repeated_click,
+      // },
       // {
       //   label: "Download Report",
       //   data: "<https://api.yipy.id/yipy-assets/asset-storage/img/F8F140A85BA88A1B61C6855ECD9E04E6.png>",
@@ -1294,7 +1304,75 @@ function Component() {
   const datenow = curr.toISOString().substr(0,10);
   return (
     <Loading loading={loading}>
-      <div className="row no-gutters">
+        <div className="row no-gutters">
+          <div className="col-12">
+            <h2 className="mt-2 no-wrap" style={{ marginLeft:20, marginBottom:24, fontWeight:600 }}>Advertisement Overview</h2>
+          </div>
+        </div>
+        <div className="row no-gutters">
+          <div className="Container-dashboard flex-column">
+            <div className="row no-gutters">
+              <div className="col-sm-1 mt-1 ml-3 text-nowrap" style={{minWidth:100}}>
+                  Periode Data:
+              </div>
+              <div className="col-sm-2 w-100" style={{minWidth:170}}>
+                  <InputDash type="select" options={[
+                      { label: 'Semua Data', value: 'all' },
+                      { label: 'Berdasarkan Tahun', value: 'year' },
+                      { label: 'Berdasarkan Bulan', value: 'month' },
+                      { label: 'Berdasarkan Hari', value: 'day' },
+                  ]} 
+                  inputValue={periode} setInputValue={setPeriode}
+                  />
+              </div>
+              {periode === "year" ?
+                // <div className="col-sm-2" style={{minWidth:100}}>
+                //     <InputDash type="select" options={years}
+                //     inputValue={periodeByYear} setInputValue={setPeriodeByYear}
+                //     />
+                // </div>
+                // :
+                // periode === "month" ?
+                // <div className="col-sm-2" style={{minWidth:100}}>
+                //     <div className="TableDatePicker-2 d-flex align-items-center">
+                //       <DatePicker
+                //           selected={startDate}
+                //           onChange={(periodeByMonth) => setStartDate(periodeByMonth)}
+                //           maxDate={endDate}
+                //           dateFormat="MMM-yyyy"
+                //           showMonthYearPicker
+                //       />
+                //     </div>
+                // </div>
+                // :
+                // <div className="col-sm-2" style={{minWidth:150}}>
+                //     <InputDash type="date"
+                //     inputValue={periodeTime} setInputValue={setPeriodeTime}
+                //     />
+                // </div>
+                <div className="col-sm-2" style={{minWidth:150}}>
+                    <InputDash type="date" 
+                    inputValue={periodeTime} setInputValue={setPeriodeTime}
+                    />
+                </div>
+                :
+                periode === "month" ?
+                <div className="col-sm-2" style={{minWidth:150}}>
+                    <InputDash type="date" 
+                    inputValue={periodeTime} setInputValue={setPeriodeTime}
+                    />
+                </div>
+                :
+                <div className="col-sm-2" style={{minWidth:150}}>
+                    <InputDash type="date"
+                    inputValue={periodeTime} setInputValue={setPeriodeTime}
+                    />
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      {/* <div className="row no-gutters">
         <div className="col-12">
           <h2 className="mt-4 mb-5 pl-4"><strong>Advertisement Overview</strong></h2>
           <div
@@ -1304,7 +1382,8 @@ function Component() {
             <div className="row">
               <div className="col-12">
                 <div className="row pl-3 mb-0">
-                  <div className="col-6">
+                  <div className="row no-gutters w-100" style={{ justifyContent: 'space-between' }}>
+                        <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
                     <h4
                       className="p-3"
                       style={{ display: "flex", flexDirection: "row" }}
@@ -1323,12 +1402,14 @@ function Component() {
                       )}
                     </h4>
                   </div>
-                  <div className="p-3 col-6 text-right">
-                      <Button
-                        className="btn-cancel"
-                        label="Download Report"
-                        icon={<FiDownload />}
-                      />
+                            
+                        <div className="col-auto d-flex flex-column mt-2 mr-3">
+                          <Button
+                            className="btn-cancel"
+                            label="Download Report"
+                            icon={<FiDownload />}
+                          />
+                        </div>
                     </div>
                 </div>
                 <div className="row">
@@ -1336,7 +1417,7 @@ function Component() {
                     summary.map((el, index) => {
                       return (
                         <div key={`summary-${index}`} className="ads-card col-4" style={{border: 0}}>
-                          <div className="container">
+                          <div className="container-ads">
                           <SummaryItem
                             label={el.label}
                             icon={el.icon}
@@ -1360,7 +1441,7 @@ function Component() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
       {/* <h5 className="pl-4 ads-card-title">Timeline</h5>
       <div className="row no-gutters">
         <div
@@ -1459,11 +1540,14 @@ function Component() {
       </div> */}
       <div className="row no-gutters">
         <div className="col-12">
-          <h4 className="pl-4 ads-card-title">Timeline</h4>
+          {/* <h4 className="pl-4 ads-card-title">Timeline</h4> */}
           <div
             className="Container flex-column pb-5 pr-4"
-            style={{ maxHeight: 628, height: 628, borderRadius: 10 }}
+            style={{ borderRadius: 10 }}
           >
+            <div className="col" style={{paddingBottom:"16px", paddingTop:"5px"}}>
+                <h5>All Campaign</h5>
+            </div>
             <div className="row mb-4 p-3">
               <Tab
                 labels={tabsTimeline}
@@ -1471,6 +1555,54 @@ function Component() {
                 activeTab={0}
                 contents={[
                   <>
+                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                      {summary.length > 0 &&
+                        summary.map((el, index) => {
+                          return (
+                            <div key={`summary-${index}`} className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
+                              <div className="border-ads" style={{borderBottom: `4px solid ${colorList[(index) % colorList.length]}`}}>
+                              <SummaryItemNew
+                                label={el.label}
+                                icon={el.icon}
+                                // icon="https://api.yipy.id/yipy-assets/asset-storage/img/9EC3211E8CCDA375F28D2166BCD066C1.png"
+                                data={el.data}
+                                download={() => {
+                                  const idList = selectedId
+                                    .map((el) => el.id)
+                                    .join(",");
+                                  return dispatch(
+                                    downloadAdsReport(idList, selectedType)
+                                  );
+                                }}
+                              />
+                              </div>
+                            </div>
+                          );
+                        })}
+                      {impressionDetail.length > 0 &&
+                        impressionDetail.map((el, index) => {
+                          return (
+                            <div key={`summary-${index}`} className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
+                              <div className="border-ads" style={{borderBottom: `4px solid ${colorList[(index) % colorList.length]}`}}>
+                              <SummaryItemNew
+                                label={el.name}
+                                icon={el.icon}
+                                // icon="https://api.yipy.id/yipy-assets/asset-storage/img/9EC3211E8CCDA375F28D2166BCD066C1.png"
+                                data={el.value}
+                                download={() => {
+                                  const idList = selectedId
+                                    .map((el) => el.id)
+                                    .join(",");
+                                  return dispatch(
+                                    downloadAdsReport(idList, selectedType)
+                                  );
+                                }}
+                              />
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </div>
                     <div className="row mt-4 mb-4">
                       <div className="col-8">
                         <div className="row mb-4">
@@ -1565,51 +1697,39 @@ function Component() {
                         </div>
                       </div>
                       <div className="col-4 ads-detail-container">
-                        <div className="row mb-5 justify-content-between right">
-                          <div className="col-auto">
-                              <div style={{
-                                  display: 'flex',
-                              }}>
-                                  <div
-                                      className={range === 'dtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('dtd') }
-                                  >
-                                      Week
-                                  </div>
-                                  <div
-                                      className={range === 'mtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('mtd')}
-                                  >
-                                      Month
-                                  </div>
-                                  <div
-                                      className={range === 'ytd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('ytd')}
-                                  >
-                                      Year
-                                  </div>
-                              </div>
-                          </div>
-                        </div>
                         <Piecharts data={impressionDetail} color={colorList} />
-                        {impressionDetail.map((el, index) => {
-                          return (
-                            <div key={`impression-${index}`}>
-                              <span>
-                                {toSentenceCase(el.name.replace(/_/g, " "))}
-                              </span>{" "}
-                              :
-                              <span className="pl-1">
-                                {toThousand(el.value)}
-                              </span>
-                            </div>
-                          );
-                        })}
                       </div>
                     </div>
                   </>,
                   
                   <>
+                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                      {platformDetail.map((el, index) => {
+                        return (
+                          <div className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
+                            <div className="border-ads" style={{borderBottom: `4px solid ${colorList[index % colorList.length]}`}}>
+                              <div className="row">
+                                <div className={typeof icon !== "undefined" ? "col-8" : "col-12"}>
+                                  <div
+                                    className="ads-summary-label-text2 mt-1"
+                                    style={{ textAlign: "left" }}
+                                  >
+                                    {toSentenceCase(el.name.replace(/_/g, " "))}
+                                  </div>
+                                    <div className="ads-summary-data-text2">
+                                      <AnimatedNumber
+                                        className="h2 font-weight-bold black"
+                                        value={el.value}
+                                        formatValue={toThousand}
+                                      />
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                     <div className="row mt-4 mb-4">
                       <div className="col-8">
                         <div className="row mb-4">
@@ -1690,46 +1810,39 @@ function Component() {
                         </div>
                       </div>
                       <div className="col-4 ads-detail-container">
-                        <div className="row mb-5 justify-content-between right">
-                          <div className="col-auto">
-                              <div style={{
-                                  display: 'flex',
-                              }}>
-                                  <div
-                                      className={range === 'dtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('dtd') }
-                                  >
-                                      Week
-                                  </div>
-                                  <div
-                                      className={range === 'mtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('mtd')}
-                                  >
-                                      Month
-                                  </div>
-                                  <div
-                                      className={range === 'ytd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('ytd')}
-                                  >
-                                      Year
-                                  </div>
-                              </div>
-                          </div>
-                        </div>
-                      <Piecharts data={platformDetail} color={colorList} />
-                        {platformDetail.map((el) => {
-                          return (
-                            <div>
-                              <span>{toSentenceCase(el.name.replace(/_/g, " "))}</span>{" "}
-                              :<span className="pl-1">{toThousand(el.value)}</span>
-                            </div>
-                          );
-                        })}
+                        <Piecharts data={platformDetail} color={colorList} />
                       </div>
                     </div>
                   </>,
                   
                   <>
+                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                      {genderDetail.map((el, index) => {
+                        return (
+                          <div className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
+                            <div className="border-ads" style={{borderBottom: `4px solid ${colorList[index % colorList.length]}`}}>
+                              <div className="row">
+                                <div className={typeof icon !== "undefined" ? "col-8" : "col-12"}>
+                                  <div
+                                    className="ads-summary-label-text2 mt-1"
+                                    style={{ textAlign: "left" }}
+                                  >
+                                    {el.name === "" ? "Others" : toSentenceCase(el.name.replace(/_/g, " "))}
+                                  </div>
+                                    <div className="ads-summary-data-text2">
+                                      <AnimatedNumber
+                                        className="h2 font-weight-bold black"
+                                        value={el.value}
+                                        formatValue={toThousand}
+                                      />
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                     <div className="row mt-4 mb-4">
                       <div className="col-8">
                         <div className="row mb-4">
@@ -1810,46 +1923,39 @@ function Component() {
                         </div>
                       </div>
                       <div className="col-4 ads-detail-container">
-                        <div className="row mb-5 justify-content-between right">
-                          <div className="col-auto">
-                              <div style={{
-                                  display: 'flex',
-                              }}>
-                                  <div
-                                      className={range === 'dtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('dtd') }
-                                  >
-                                      Week
-                                  </div>
-                                  <div
-                                      className={range === 'mtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('mtd')}
-                                  >
-                                      Month
-                                  </div>
-                                  <div
-                                      className={range === 'ytd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('ytd')}
-                                  >
-                                      Year
-                                  </div>
-                              </div>
-                          </div>
-                        </div>
-                          <Piecharts data={genderDetail} color={colorList} />
-                          {genderDetail.map((el) => {
-                            return (
-                              <div>
-                                <span>{toSentenceCase(el.name.replace(/_/g, " "))}</span>{" "}
-                                :<span className="pl-1">{toThousand(el.value)}</span>
-                              </div>
-                            );
-                          })}
+                        <Piecharts data={genderDetail} color={colorList} />
                       </div>
                     </div>
                   </>,
                   
                   <>
+                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                      {ageDetail.map((el, index) => {
+                        return (
+                          <div className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
+                            <div className="border-ads" style={{borderBottom: `4px solid ${colorList[index % colorList.length]}`}}>
+                              <div className="row">
+                                <div className={typeof icon !== "undefined" ? "col-8" : "col-12"}>
+                                  <div
+                                    className="ads-summary-label-text2 mt-1"
+                                    style={{ textAlign: "left" }}
+                                  >
+                                    {toSentenceCase(el.name.replace(/_/g, " "))}
+                                  </div>
+                                    <div className="ads-summary-data-text2">
+                                      <AnimatedNumber
+                                        className="h2 font-weight-bold black"
+                                        value={el.value}
+                                        formatValue={toThousand}
+                                      />
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                     <div className="row mt-4 mb-4">
                       <div className="col-8">
                         <div className="row mb-4">
@@ -1930,46 +2036,39 @@ function Component() {
                         </div>
                       </div>
                       <div className="col-4 ads-detail-container">
-                        <div className="row mb-5 justify-content-between right">
-                          <div className="col-auto">
-                              <div style={{
-                                  display: 'flex',
-                              }}>
-                                  <div
-                                      className={range === 'dtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('dtd') }
-                                  >
-                                      Week
-                                  </div>
-                                  <div
-                                      className={range === 'mtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('mtd')}
-                                  >
-                                      Month
-                                  </div>
-                                  <div
-                                      className={range === 'ytd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('ytd')}
-                                  >
-                                      Year
-                                  </div>
-                              </div>
-                          </div>
-                        </div>
-                          <Piecharts data={ageDetail} color={colorList} />
-                          {ageDetail.map((el) => {
-                            return (
-                              <div>
-                                <span>{toSentenceCase(el.name.replace(/_/g, " "))}</span>{" "}
-                                :<span className="pl-1">{toThousand(el.value)}</span>
-                              </div>
-                            );
-                          })}
+                        <Piecharts data={ageDetail} color={colorList} />
                       </div>
                     </div>
                   </>,
                   
                   <>
+                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                      {occupationDetail.map((el, index) => {
+                        return (
+                          <div className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
+                            <div className="border-ads" style={{borderBottom: `4px solid ${colorList[index % colorList.length]}`}}>
+                              <div className="row">
+                                <div className={typeof icon !== "undefined" ? "col-8" : "col-12"}>
+                                  <div
+                                    className="ads-summary-label-text2 mt-1"
+                                    style={{ textAlign: "left" }}
+                                  >
+                                    {toSentenceCase(el.name.replace(/_/g, " "))}
+                                  </div>
+                                    <div className="ads-summary-data-text2">
+                                      <AnimatedNumber
+                                        className="h2 font-weight-bold black"
+                                        value={el.value}
+                                        formatValue={toThousand}
+                                      />
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                     <div className="row mt-4 mb-4">
                       <div className="col-8">
                         <div className="row mb-4">
@@ -2050,47 +2149,40 @@ function Component() {
                         </div>
                       </div>
                       <div className="col-4 ads-detail-container">
-                        <div className="row mb-5 justify-content-between right">
-                          <div className="col-auto">
-                              <div style={{
-                                  display: 'flex',
-                              }}>
-                                  <div
-                                      className={range === 'dtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('dtd') }
-                                  >
-                                      Week
-                                  </div>
-                                  <div
-                                      className={range === 'mtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('mtd')}
-                                  >
-                                      Month
-                                  </div>
-                                  <div
-                                      className={range === 'ytd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('ytd')}
-                                  >
-                                      Year
-                                  </div>
-                              </div>
-                          </div>
-                        </div>
-                          <Piecharts data={occupationDetail} color={colorList} />
-                          {occupationDetail.map((el) => {
-                            return (
-                              <div>
-                                <span>{toSentenceCase(el.name.replace(/_/g, " "))}</span>{" "}
-                                :<span className="pl-1">{toThousand(el.value)}</span>
-                              </div>
-                            );
-                          })}
+                        <Piecharts data={occupationDetail} color={colorList} />
                       </div>
                     </div>
                   </>,
                   
                   <>
-                    <div className="row mt-4 mb-4">
+                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                      {buildingDetail.map((el, index) => {
+                        return (
+                          <div className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
+                            <div className="border-ads" style={{borderBottom: `4px solid ${colorList[index % colorList.length]}`}}>
+                              <div className="row">
+                                <div className={typeof icon !== "undefined" ? "col-8" : "col-12"}>
+                                  <div
+                                    className="ads-summary-label-text2 mt-1"
+                                    style={{ textAlign: "left" }}
+                                  >
+                                    {toSentenceCase(el.name.replace(/_/g, " "))}
+                                  </div>
+                                    <div className="ads-summary-data-text2">
+                                      <AnimatedNumber
+                                        className="h2 font-weight-bold black"
+                                        value={el.value}
+                                        formatValue={toThousand}
+                                      />
+                                    </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="row mt-4 mb-4 no-gutters">
                       <div className="col-8">
                         <div className="row mb-4">
                           <div className="col-12">
@@ -2170,45 +2262,7 @@ function Component() {
                         </div>
                       </div>
                       <div className="col-4 ads-detail-container">
-                        <div className="row mb-5 justify-content-between right">
-                          <div className="col-auto">
-                              <div style={{
-                                  display: 'flex',
-                              }}>
-                                  <div
-                                      className={range === 'dtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('dtd') }
-                                  >
-                                      Week
-                                  </div>
-                                  <div
-                                      className={range === 'mtd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('mtd')}
-                                  >
-                                      Month
-                                  </div>
-                                  <div
-                                      className={range === 'ytd' ? "GroupActive color-1 wmy" : "Group red wmy"}
-                                      onClick={() => setRange('ytd')}
-                                  >
-                                      Year
-                                  </div>
-                              </div>
-                          </div>
-                        </div>
-                          <Piecharts data={buildingDetail} color={colorList} />
-                          {buildingDetail.map((el) => {
-                            return (
-                              <div>
-                                <span>
-                                  {toSentenceCase(
-                                    el.name.toLowerCase().replace(/_/g, " ")
-                                  )}
-                                </span>{" "}
-                                :<span className="pl-1">{toThousand(el.value)}</span>
-                              </div>
-                            );
-                          })}
+                        <Piecharts data={buildingDetail} color={colorList} />
                       </div>
                     </div>
                   </>,
@@ -2311,8 +2365,7 @@ function Component() {
         </div>
       </div> */}
       <div className="row no-gutters">
-        <div className="col-8">
-          <h4 className="pl-4 ads-card-title">Campaign</h4>
+        <div className="col-12">
           <div
             className="Container flex-column pb-5 pr-4"
             style={{ maxHeight: 628, height: 628, borderRadius: 10 }}
@@ -2533,15 +2586,17 @@ function Component() {
             </div>
           </div>
         </div>
-        <div className="col-4">
+        <div className="col-12">
           {group !== "vas_advertiser" && (
             <>
-              <h4 className="pl-4 ads-card-title">Advertiser Account</h4>
               <div
                 className="Container flex-column pb-5 pr-4"
                 style={{ maxHeight: 628, height: 628, borderRadius: 10 }}
               >
                 <>
+                  <div style={{paddingBottom:"16px", paddingTop:"10px", paddingLeft:"16px"}}>
+                      <h5>Advertiser Account</h5>
+                  </div>
                   <InputSearch
                     value={searchAdvertiser}
                     onChange={(e) => setSearchAdvertiser(e.target.value)}
@@ -2639,7 +2694,7 @@ function Component() {
 export default Component;
 
 const InputSearch = (props) => (
-  <div className="search-input mb-3">
+  <div className="search-input mb-3" style={{ width: "40%"}}>
     <label htmlFor="search">
       <FiSearch />
     </label>

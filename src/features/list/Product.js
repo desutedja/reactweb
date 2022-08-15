@@ -8,17 +8,21 @@ import Pill from '../../components/Pill';
 import {
     getProduct,
     setSelected,
+    activateProduct,
+    inactivateProduct,
+    refresh
 } from '../slices/product';
 import { merchant_types, endpointMerchant } from '../../settings';
 import { toSentenceCase, toMoney } from '../../utils';
 import { FiSearch, FiPlus, FiCheck, FiPercent } from 'react-icons/fi';
-import { get } from '../slice';
+import { get, patch, post, setInfo } from '../slice';
 import Product from '../../components/cells/Product'; 
 
 import TemplateWithSelection from './components/TemplateWithSelection';
 import Button from '../../components/Button';
 import Modal from '../../components/Modal';
 import { FaMoneyBillWaveAlt } from 'react-icons/fa';
+import { confirmAlert } from 'react-confirm-alert';
 
 const columns = [
     { Header: 'ID', accessor: 'id' },
@@ -61,6 +65,9 @@ function Component({view}) {
 
     const [multiActionRows, setMultiActionRows] = useState([]);
     const [modalOnOff, setModalOnOff] = useState(false);
+    const [productStatus, setProductStatus] = useState("active");
+    const [adminFee, setAdminFee] = useState(0);
+    const [discount, setDiscount] = useState(0);
     const [modalDiscount, setModalDiscount] = useState(false);
     const [modalAdminFee, setModalAdminFee] = useState(false);
 
@@ -120,51 +127,146 @@ function Component({view}) {
         <>
             <Modal
                 isOpen={modalOnOff}
-                title="Set Product(s) to On/Off"
-                btnDanger
+                toggle={() => { setModalOnOff(false) }}
+                title="Set status"
+                okLabel={"Submit"}
                 onClick={() => {
-                // dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
-                setModalOnOff(false);
+                    dispatch(patch(endpointMerchant+"/admin/items/bulk/setstatus", {
+                    "product_id": multiActionRows,
+                    "status": productStatus,
+                    }, res => {
+                        dispatch(
+                        setInfo({
+                            color: "success",
+                            message: `Product(s) status has been updated.`,
+                        })
+                        );
+                        // resultComponent ? setOpenRes(true) : toggle();
+                    }, err => {
+                    dispatch(
+                        setInfo({
+                        color: "error",
+                        message: `Set product status error.`,
+                        })
+                    );
+                    console.log("error");
+                    }))
+
+                    // dispatch(stopAsync());
+                    setModalOnOff(false)
+                    dispatch(refresh());
                 }}
-                toggle={() => {
-                setModalOnOff(false);
-                }}
-                okLabel={"Yes"}
-                cancelLabel={"Cancel"}
-            >
-                This Feature is under development. Stay Tuned..
+            > 
+                <Input
+                    label="Set product status"
+                    type="radio"
+                    name="status"
+                    options={[
+                    { value: "active", label: "Active" },
+                    { value: "inactive", label: "Inactive" },
+                    ]}
+                    inputValue={productStatus}
+                    setInputValue={setProductStatus}
+                /> 
+
             </Modal>
             <Modal
                 isOpen={modalDiscount}
-                title="Set Discount product(s)"
-                btnDanger
+                toggle={() => { setModalDiscount(false) }}
+                title="Set discount"
+                okLabel={"Submit"}
                 onClick={() => {
-                // dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
-                setModalDiscount(false);
+                    dispatch(patch(endpointMerchant+"/admin/items/bulk/setdiscount", {
+                    "product_id": multiActionRows,
+                    "discount": parseFloat(discount),
+                    }, res => {
+                        dispatch(
+                        setInfo({
+                            color: "success",
+                            message: `Product(s) dicount has been updated.`,
+                        })
+                        );
+                        // resultComponent ? setOpenRes(true) : toggle();
+                    }, err => {
+                    dispatch(
+                        setInfo({
+                        color: "error",
+                        message: `Set product discount error.`,
+                        })
+                    );
+                    console.log("error");
+                    }))
+
+                    // dispatch(stopAsync());
+                    setModalDiscount(false)
+                    dispatch(refresh());
                 }}
-                toggle={() => {
-                setModalDiscount(false);
-                }}
-                okLabel={"Yes"}
-                cancelLabel={"Cancel"}
-            >
-                This Feature is under development. Stay Tuned..
+            > 
+                <Input
+                    label="Set product(s) discount"
+                    name="discount"
+                    type="text"
+                    placeholder="0"
+                    inputValue={discount}
+                    setInputValue={setDiscount}
+                    addons="%"
+                    onKeyPress={(event) => {
+                        if (!/[0-9]/.test(event.key)) {
+                        event.preventDefault();
+                        }
+                    }}
+                    hint="input value 0 to 100"
+                /> 
+
             </Modal>
             <Modal
                 isOpen={modalAdminFee}
-                title="Set Admin Fee product(s)"
-                btnDanger
+                toggle={() => { setModalAdminFee(false) }}
+                title="Set admin fee"
+                okLabel={"Submit"}
                 onClick={() => {
-                // dispatch(updateSetAsPaidSelectedDetail(multiActionRows));
-                setModalAdminFee(false);
+                    dispatch(patch(endpointMerchant+"/admin/items/bulk/setadminfee", {
+                    "product_id": multiActionRows,
+                    "admin_fee": parseInt(adminFee),
+                    }, res => {
+                        dispatch(
+                        setInfo({
+                            color: "success",
+                            message: `Product(s) admin fee's has been updated.`,
+                        })
+                        );
+                        // resultComponent ? setOpenRes(true) : toggle();
+                    }, err => {
+                    dispatch(
+                        setInfo({
+                        color: "error",
+                        message: `Set admin fee error.`,
+                        })
+                    );
+                    console.log("error");
+                    }))
+
+                    // dispatch(stopAsync());
+                    setModalAdminFee(false)
+                    dispatch(refresh());
                 }}
-                toggle={() => {
-                setModalAdminFee(false);
-                }}
-                okLabel={"Yes"}
-                cancelLabel={"Cancel"}
-            >
-                This Feature is under development. Stay Tuned..
+            > 
+                <Input
+                    label="Set product(s) admin fee"
+                    name="admin_fee"
+                    type="text"
+                    placeholder="0"
+                    inputValue={adminFee}
+                    setInputValue={setAdminFee}
+                    addons="%"
+                    onKeyPress={(event) => {
+                        if (!/[0-9]/.test(event.key)) {
+                        event.preventDefault();
+                        }
+                    }}
+                    hint="input value 0 to 100"
+                /> 
+
             </Modal>
             <TemplateWithSelection
                 columns={columns}
@@ -174,9 +276,7 @@ function Component({view}) {
                     const selectedRowIds = [];
                     selectedRows.map((row) => {
                     if (row !== undefined){
-                        selectedRowIds.push({
-                        merchant_id:row.id,
-                        });
+                        selectedRowIds.push(row.id);
                     }
                     });    
                     setMultiActionRows([...selectedRowIds]);
@@ -285,25 +385,30 @@ function Component({view}) {
                         icon={<FiCheck />}
                         onClick={() =>
                                 setModalOnOff(true)
-                        //   {
-                        //     confirmAlert({
-                        //       title: 'Set as Paid Billing',
-                        //       message: 'Do you want to set selected unit as Paid?',
-                        //       buttons: [
-                        //         {
-                        //           label: 'Yes',
-                        //           onClick: () => {
-                        //             dispatch(updateSetAsPaidSelected(multiActionRows));
-                        //           },
-                        //           className:"Button btn btn-secondary"
-                        //         },
-                        //         {
-                        //           label: 'Cancel',
-                        //           className:"Button btn btn-cancel"
-                        //         }
-                        //       ]
-                        //     });
-                        //   }
+                                  
+                                    // confirmAlert({
+                                    //   title: 'Set product(s) status',
+                                    //   message: 'Do you want to set product',
+                                    //   buttons: [
+                                    //     {
+                                    //       label: 'Active',
+                                    //       onClick: () => {
+                                    //         dispatch(activateProduct(multiActionRows));
+                                    //         console.log(multiActionRows);
+                                    //       },
+                                    //       className:"Button btn btn-secondary"
+                                    //     },
+                                    //     {
+                                    //       label: 'Inactive',
+                                    //       onClick: () => {
+                                    //         dispatch(inactivateProduct(multiActionRows));
+                                    //         console.log(multiActionRows);
+                                    //       },
+                                    //       className:"Button btn btn-cancel"
+                                    //     }
+                                    //   ]
+                                    // })
+                                  
                         }
                     />,
                     <Button

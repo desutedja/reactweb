@@ -11,7 +11,7 @@ import { get } from "../../slice";
 import { endpointAdmin } from "../../../settings";
 import { toMoney, toSentenceCase } from "../../../utils";
 import Table from "../../../components/Table";
-import { distributeVoucher, setSelected } from "../../slices/vouchers";
+import { distributeVoucher, refresh, setSelected } from "../../slices/vouchers";
 
 const columnsCategories = [
   { Header: "ID", accessor: (row) => row.category_id },
@@ -184,6 +184,7 @@ function Component({ view }) {
         onClick={() => {
           dispatch(distributeVoucher(voucherCodeId, id, history));
           setConfirmDistribute(false);
+          dispatch(refresh());
         }}
         toggle={() => setConfirmDistribute(false)}
         okLabel={"Distribute"}

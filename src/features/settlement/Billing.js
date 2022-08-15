@@ -48,8 +48,13 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
     const [loadingUpload, setLoadingUpload] = useState(false);
 
     const today = moment().format('yyyy-MM-DD', 'day');
-    const [settlementStart, setSettlementStart] = useState(today);
+    const monthStart = moment().startOf("month").format("yyyy-MM-DD");
+    const monthStartAdmin = moment().subtract("month",3).format("yyyy-MM-DD");
+    const monthEnd = moment().endOf("month").format("yyyy-MM-DD");
+    const [settlementStart, setSettlementStart] = useState(monthStartAdmin);
     const [settlementEnd, setSettlementEnd] = useState(today);
+    const [startDate, setStartDate] = useState(monthStart);
+    const [endDate, setEndDate] = useState(monthEnd);
 
     let dispatch = useDispatch();
 
@@ -132,7 +137,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     setUploadModal(false);
                 }}
                 title="Upload Settlement"
-                subtitle="Upload file type .xlsx for bulk setllement"
+                subtitle="Upload file type .xlsx for bulk settlement"
                 okLabel={uploadResult ? "Done" : "Submit"}
                 disablePrimary={loading}
                 disableSecondary={loading}
@@ -224,7 +229,8 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                 setLoadingUpload(false);
                             }))
                         }} style={{
-                            marginTop: 16
+                            marginTop: 16,
+                            color: 'white'
                         }}>Download Template</button>
                     </Loading>
                 }
@@ -326,15 +332,19 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     pageCount={settlement.total_pages}
                     fetchData={useCallback((pageIndex, pageSize, search) => {
                         dispatch(getBillingSettlement(pageIndex, pageSize, search,
-                            building, settled,
-                            ...(settled === '1' ? [settlementStart, settlementEnd] : [])
+                            building, settled, 
+                            ...(auth.role === 'sa' ? [settlementStart, settlementEnd] 
+                                : auth.role === 'bm' ? [startDate, endDate] 
+                                : [today, today])
+
                         ));
                         // eslint-disable-next-line react-hooks/exhaustive-deps
-                    }, [dispatch, refreshToggle, building, settled, settlementStart, settlementEnd])}
-                    filters={auth.role === 'sa' ? [
-                        ...settled === '1' ? [{
+                    }, [dispatch, auth.role, refreshToggle, building, settled, settlementStart, settlementEnd, startDate, endDate])}
+                    filters={auth.role === 'sa' ? 
+                    [
+                        {
                             hidex: isRangeToday(settlementStart, settlementEnd),
-                            label: "Settlement Date: ",
+                            label: "Date: ",
                             delete: () => { setSettlementStart(today); setSettlementEnd(today); },
                             value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
                                 moment(settlementStart).format('DD-MM-yyyy') + ' - '
@@ -348,24 +358,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                         setSettlementEnd(end);
                                         toggleModal();
                                     }} />
-                        }] :
-                        settled === '0' ? [{
-                            hidex: isRangeToday(settlementStart, settlementEnd),
-                            label: "Transaction Date: ",
-                            delete: () => { setSettlementStart(today); setSettlementEnd(today); },
-                            value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
-                                moment(settlementStart).format('DD-MM-yyyy') + ' - '
-                                + moment(settlementEnd).format('DD-MM-yyyy'),
-                            component: (toggleModal) =>
-                                <DateRangeFilter
-                                    startDate={settlementStart}
-                                    endDate={settlementEnd}
-                                    onApply={(start, end) => {
-                                        setSettlementStart(start);
-                                        setSettlementEnd(end);
-                                        toggleModal();
-                                    }} />
-                        }] : [],
+                        },
                         {
                             hidex: settled === "",
                             label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
@@ -420,23 +413,26 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                     />
                                 </>
                         }
-                    ] : [ ...settled === '1' ? [{
-                        hidex: isRangeToday(settlementStart, settlementEnd),
-                        label: "Settlement Date: ",
-                        delete: () => { setSettlementStart(today); setSettlementEnd(today); },
-                        value: isRangeToday(settlementStart, settlementEnd) ? 'Today' :
-                            moment(settlementStart).format('DD-MM-yyyy') + ' - '
-                            + moment(settlementEnd).format('DD-MM-yyyy'),
+                    ] 
+                    : 
+                    [
+                    {
+                        hidex: isRangeToday(startDate, endDate),
+                        label: "Date: ",
+                        delete: () => { setStartDate(monthStart); setEndDate(monthEnd); },
+                        value: isRangeToday(startDate, endDate) ? 'Today' :
+                            moment(startDate).format('DD-MM-yyyy') + ' - '
+                            + moment(endDate).format('DD-MM-yyyy'),
                         component: (toggleModal) =>
                             <DateRangeFilter
-                                startDate={settlementStart}
-                                endDate={settlementEnd}
+                                startDate={startDate}
+                                endDate={endDate}
                                 onApply={(start, end) => {
-                                    setSettlementStart(start);
-                                    setSettlementEnd(end);
+                                    setStartDate(start);
+                                    setEndDate(end);
                                     toggleModal();
                                 }} />
-                    }] : [],
+                    },
                     {
                         hidex: settled === "",
                         label: <p>Status: {settled ? (settled === '1' ? 'Settled' : "Unsettled") : "All"}</p>,
@@ -459,6 +455,17 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     }
                            
                         ]}
+                    actionDownloads={
+                      view
+                        ? null
+                        : [
+                            <Button color="Download" label="Download .csv" icon={<FiDownload />}
+                                onClick={() => dispatch(downloadBillingSettlement(
+                                    search, building, settled, ...(settled === '1' ? [settlementStart, settlementEnd] : [])
+                                    ))}
+                            />
+                        ]
+                    }
                     renderActions={(selectedRowIds, page) => {
                         return ([
                             view ? null : auth.role === 'sa' && <Button
@@ -476,11 +483,6 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                                 icon={<FiFile />}
                                 label="Upload Settlement"
                             />,
-                            <Button label="Download .csv" icon={<FiDownload />}
-                                onClick={() => dispatch(downloadBillingSettlement(
-                                    search, building, settled, ...(settled === '1' ? [settlementStart, settlementEnd] : [])
-                                    ))}
-                            />
                         ])
                     }}
                 />

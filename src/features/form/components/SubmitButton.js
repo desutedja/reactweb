@@ -17,9 +17,14 @@ const SubmitButton = ({ loading = false, errors }) => {
             }
             <button type="submit" style={{
                 marginTop: 16,
+                paddingTop: 5,
+                paddingBottom: 5,
+                paddingLeft: 20,
+                paddingRight: 20,
+                color: 'white',
             }} onClick={() => {
                 console.log(errors)
-            }}>Submit</button>
+            }}><b>Submit</b></button>
         </Loading>
     )
 }

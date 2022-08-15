@@ -10,6 +10,7 @@ import Input from "../../../components/Input";
 import Modal from "../../../components/Modal";
 import { endpointResident } from '../../../settings';
 import { toSentenceCase } from '../../../utils';
+import { refresh } from '../../slices/requestpremium';
 
 function Component({ view = false, columns, slice, title = '', getAction, filterVars = [],
     filters = [], actions = [], approved_status, approvedAction, disapprovedAction, sortBy, pagetitle, withSelection = false, filterExpanded = false, ...props }) {
@@ -22,8 +23,8 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
         refreshToggle
     } = useSelector(state => state[slice]);
 
-    const [from, setFrom] = useState("");
-    const [to, setTo] = useState("");
+    const [from, setFrom] = useState();
+    const [to, setTo] = useState();
     const [openModal, setOpenModal] = useState(false);
     const [datas, setDatas] = useState([])
 
@@ -64,27 +65,30 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
                     );
                     console.log("error");
                     }))
-
                     setOpenModal(false)
+                    dispatch(refresh());
                 }}
             >
                 <label><b>Status</b></label><br />
                 {toSentenceCase(datas.status)}
+                
+                {datas.status === "own" ? null :
+                <>
+                    <Input
+                        label="Period From"
+                        type="date"
+                        inputValue={from}
+                        setInputValue={setFrom}
+                    /> 
 
-                <Input
-                    label="Period From"
-                    type="date"
-                    inputValue={from}
-                    setInputValue={setFrom}
-                /> 
-
-                <Input
-                    label="Period To"
-                    type="date"
-                    inputValue={to}
-                    setInputValue={setTo}
-                /> 
-
+                    <Input
+                        label="Period To"
+                        type="date"
+                        inputValue={to}
+                        setInputValue={setTo}
+                    />
+                </> 
+                }
             </Modal>
                 <Table
                     filterExpanded={filterExpanded}

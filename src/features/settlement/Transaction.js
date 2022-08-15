@@ -384,6 +384,7 @@ function Component({ view }) {
               }}
               style={{
                 marginTop: 16,
+                color: 'white'
               }}
             >
               Download Template
@@ -715,9 +716,8 @@ function Component({ view }) {
                   pageSize,
                   search,
                   statusSettlement.value,
-                  ...(statusSettlement.value === "settled"
-                    ? [settlementStart, settlementEnd]
-                    : [today, today])
+                  settlementStart,
+                  settlementEnd,
                 )
               );
               // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -731,62 +731,112 @@ function Component({ view }) {
             ]
           )}
           filters={[
-            ...(statusSettlement.value === "settled"
-              ? [
-                  {
-                    hidex: isRangeToday(settlementStart, settlementEnd),
-                    label: "Settlement Date: ",
-                    delete: () => {
-                      setSettlementStart(today);
-                      setSettlementEnd(today);
-                    },
-                    value: isRangeToday(settlementStart, settlementEnd)
-                      ? "Today"
-                      : moment(settlementStart).format("DD-MM-yyyy") +
-                        " - " +
-                        moment(settlementEnd).format("DD-MM-yyyy"),
-                    component: (toggleModal) => (
-                      <DateRangeFilter
-                        startDate={settlementStart}
-                        endDate={settlementEnd}
-                        onApply={(start, end) => {
-                          setSettlementStart(start);
-                          setSettlementEnd(end);
-                          toggleModal();
-                        }}
-                      />
-                    ),
-                  },
-                ]
-              :
-              statusSettlement.value === "unsettled"
-              ? [
-                  {
-                    hidex: isRangeToday(settlementStart, settlementEnd),
-                    label: "Transaction Date: ",
-                    delete: () => {
-                      setSettlementStart(today);
-                      setSettlementEnd(today);
-                    },
-                    value: isRangeToday(settlementStart, settlementEnd)
-                      ? "Today"
-                      : moment(settlementStart).format("DD-MM-yyyy") +
-                        " - " +
-                        moment(settlementEnd).format("DD-MM-yyyy"),
-                    component: (toggleModal) => (
-                      <DateRangeFilter
-                        startDate={settlementStart}
-                        endDate={settlementEnd}
-                        onApply={(start, end) => {
-                          setSettlementStart(start);
-                          setSettlementEnd(end);
-                          toggleModal();
-                        }}
-                      />
-                    ),
-                  },
-                ]
-              : []),
+            // ...(statusSettlement.value === "settled"
+            //   ? [
+            //       {
+            //         hidex: isRangeToday(settlementStart, settlementEnd),
+            //         label: "Date: ",
+            //         delete: () => {
+            //           setSettlementStart(today);
+            //           setSettlementEnd(today);
+            //         },
+            //         value: isRangeToday(settlementStart, settlementEnd)
+            //           ? "Today"
+            //           : moment(settlementStart).format("DD-MM-yyyy") +
+            //             " - " +
+            //             moment(settlementEnd).format("DD-MM-yyyy"),
+            //         component: (toggleModal) => (
+            //           <DateRangeFilter
+            //             startDate={settlementStart}
+            //             endDate={settlementEnd}
+            //             onApply={(start, end) => {
+            //               setSettlementStart(start);
+            //               setSettlementEnd(end);
+            //               toggleModal();
+            //             }}
+            //           />
+            //         ),
+            //       },
+            //     ]
+            //   :
+            //   statusSettlement.value === "unsettled"
+            //   ? [
+            //       {
+            //         hidex: isRangeToday(settlementStart, settlementEnd),
+            //         label: "Date: ",
+            //         delete: () => {
+            //           setSettlementStart(today);
+            //           setSettlementEnd(today);
+            //         },
+            //         value: isRangeToday(settlementStart, settlementEnd)
+            //           ? "Today"
+            //           : moment(settlementStart).format("DD-MM-yyyy") +
+            //             " - " +
+            //             moment(settlementEnd).format("DD-MM-yyyy"),
+            //         component: (toggleModal) => (
+            //           <DateRangeFilter
+            //             startDate={settlementStart}
+            //             endDate={settlementEnd}
+            //             onApply={(start, end) => {
+            //               setSettlementStart(start);
+            //               setSettlementEnd(end);
+            //               toggleModal();
+            //             }}
+            //           />
+            //         ),
+            //       },
+            //     ]
+            //   : 
+            //     [
+            //       {
+            //         hidex: isRangeToday(settlementStart, settlementEnd),
+            //         label: "Date: ",
+            //         delete: () => {
+            //           setSettlementStart(today);
+            //           setSettlementEnd(today);
+            //         },
+            //         value: isRangeToday(settlementStart, settlementEnd)
+            //           ? "Today"
+            //           : moment(settlementStart).format("DD-MM-yyyy") +
+            //             " - " +
+            //             moment(settlementEnd).format("DD-MM-yyyy"),
+            //         component: (toggleModal) => (
+            //           <DateRangeFilter
+            //             startDate={settlementStart}
+            //             endDate={settlementEnd}
+            //             onApply={(start, end) => {
+            //               setSettlementStart(start);
+            //               setSettlementEnd(end);
+            //               toggleModal();
+            //             }}
+            //           />
+            //         ),
+            //       },
+            //     ]),
+            {
+              hidex: isRangeToday(settlementStart, settlementEnd),
+              label: "Date: ",
+              delete: () => {
+                setSettlementStart(today);
+                setSettlementEnd(today);
+              },
+              value: isRangeToday(settlementStart, settlementEnd)
+                ? "Today"
+                : moment(settlementStart).format("DD-MM-yyyy") +
+                  " - " +
+                  moment(settlementEnd).format("DD-MM-yyyy"),
+              component: (toggleModal) => (
+                <DateRangeFilter
+                  startDate={settlementStart}
+                  endDate={settlementEnd}
+                  onApply={(start, end) => {
+                    setSettlementStart(start);
+                    setSettlementEnd(end);
+                    toggleModal();
+                  }}
+                />
+              ),
+            },
             {
               hidex: statusSettlement === "",
               label: "Status: ",
@@ -812,6 +862,24 @@ function Component({ view }) {
             },
           ]}
           actions={[]}
+          actionDownloads={
+            view
+              ? null
+              : [
+                <MyButton
+                  color="Download"
+                  label="Download.csv"
+                  icon={<FiDownload />}
+                  onClick={() => {
+                    dispatch(downloadTransactionSettlement(
+                      statusSettlement.value,
+                      settlementStart,
+                      settlementEnd,
+                      ));
+                  }}
+                />,
+              ]
+          }
           renderActions={(selectedRowIds, page) => {
             // console.log(selectedRowIds);
             return [
@@ -834,13 +902,6 @@ function Component({ view }) {
                   }}
                 />
               ),
-              <MyButton
-                label="Download .csv"
-                icon={<FiDownload />}
-                onClick={() => {
-                  dispatch(downloadTransactionSettlement(statusSettlement));
-                }}
-              />,
             ];
           }}
         />

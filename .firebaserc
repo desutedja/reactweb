@@ -10,11 +10,6 @@
         ],
         "build-sa": [
           "yipy-dev-admin"
-        ],
-        "ignore" : [
-          "firebase.json",
-          "**/.*",
-          "**/node_modules/**"
         ]
       }
     }

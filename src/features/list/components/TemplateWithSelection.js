@@ -9,7 +9,7 @@ import Breadcrumb from '../../../components/Breadcrumb';
 import { setConfirmDelete } from '../../slice';
 
 function Component({ view = false, columns, slice, title = '', getAction, filterVars = [],
-    filters = [], selectAction, actions = [], deleteAction, sortBy, pagetitle, ...props }) {
+    filters = [], selectAction, actions = [], actionDownloads = [], deleteAction, sortBy, pagetitle, ...props }) {
 
     const {
         loading,
@@ -44,6 +44,7 @@ function Component({ view = false, columns, slice, title = '', getAction, filter
                     filters={filters}
                     sortBy={sortBy}
                     actions={view ? null : actions}
+                    actionDownloads={view ? null : actionDownloads}
                     onClickDelete={view ? null : deleteAction ? row => {
                         dispatch(setConfirmDelete("Are you sure to delete this item?",
                             () => dispatch(deleteAction(row))

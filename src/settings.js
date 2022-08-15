@@ -9,6 +9,8 @@ import {
   _endpointMerchant,
   _endpointTransaction,
   _endpointAds,
+  _endpointInternet,
+  _endpointUserReqeust,
 } from "./endpoints";
 
 export const endpointBase = _endpointBase;
@@ -22,6 +24,8 @@ export const endpointTask = _endpointTask;
 export const endpointMerchant = _endpointMerchant;
 export const endpointTransaction = _endpointTransaction;
 export const endpointAds = _endpointAds;
+export const endpointInternet = _endpointInternet;
+export const endpointUserRequest = _endpointUserReqeust;
 
 export const mainColor = "#2f78e9";
 
@@ -49,20 +53,20 @@ export const kyccolor = {
 };
 
 export const trx_status = [
-  { label: "requested", value: "requested" },
-  { label: "ask_resident", value: "ask_resident" },
-  { label: "ask_merchant", value: "ask_merchant" },
-  { label: "paid", value: "paid" },
-  { label: "in_progress", value: "in_progress" },
-  { label: "accepted", value: "accepted" },
-  { label: "canceled", value: "canceled" },
-  { label: "expired", value: "expired" },
-  { label: "on_delivery", value: "on_delivery" },
-  { label: "delivered", value: "delivered" },
-  { label: "completed", value: "completed" },
-  { label: "rejected", value: "rejected" },
-  { label: "ready_for_pickup", value: "ready_for_pickup" },
-  { label: "requested", value: "requested" },
+  { label: "Requested", value: "requested" },
+  { label: "Ask Resident", value: "ask_resident" },
+  { label: "Ask Merchant", value: "ask_merchant" },
+  { label: "Paid", value: "paid" },
+  { label: "In Progress", value: "in_progress" },
+  { label: "Accepted", value: "accepted" },
+  { label: "Canceled", value: "canceled" },
+  { label: "Expired", value: "expired" },
+  { label: "On Delivery", value: "on_delivery" },
+  { label: "Delivered", value: "delivered" },
+  { label: "Completed", value: "completed" },
+  { label: "Rejected", value: "rejected" },
+  { label: "Ready For Pickup", value: "ready_for_pickup" },
+  // { label: "requested", value: "requested" },
 ];
 
 export const trxStatusColor = {
@@ -91,6 +95,11 @@ export const taskPriorityColor = {
 export const merchant_types = [
   { label: "Services", value: "Services" },
   { label: "Goods", value: "Goods" },
+];
+
+export const merchant_status = [
+  { label: "Open", value: "1" },
+  { label: "Close", value: "0" },
 ];
 
 export const resident_statuses = [

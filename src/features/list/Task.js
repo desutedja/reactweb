@@ -267,7 +267,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
             (selectedRow?.department_id
               ? "&department_id=" + selectedRow.department_id
               : "") +
@@ -657,6 +657,18 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
             ),
           },
         ]}
+        actionDownloads={
+          view
+            ? null
+            : [
+              <Button
+                color="Download"
+                label="Download Tasks .csv"
+                icon={<FiDownload />}
+                onClick={() => dispatch(downloadTasks(1,10000,search,type,prio,status,building,unit,createdStart,createdEnd,resolvedStart,resolvedEnd,"true"))}
+              />,
+            ]
+        }
         renderActions={
           view
             ? null
@@ -675,11 +687,6 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
                         />
                       )}
                   </>,
-                  <Button
-                  label="Download Tasks .csv"
-                  icon={<FiDownload />}
-                  onClick={() => dispatch(downloadTasks(1,10000,search,type,prio,status,building,unit,createdStart,createdEnd,resolvedStart,resolvedEnd,"true"))}
-                />,
                   role === "bm" && (role === "bm" ? canAdd : false) && (
                     <Button
                       key="Add Task"

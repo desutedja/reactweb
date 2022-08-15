@@ -59,6 +59,28 @@ function Component({ role, children }) {
   let { url } = useRouteMatch();
 
   useEffect(() => {
+    if (!messaging) return
+    messaging.requestPermission()
+    //   .then((currentToken) => {
+    //   if (currentToken) {
+    //     console.log("Current token: ", currentToken);
+
+    //     dispatch(
+    //       post(endpointAdmin + "/management/update_fcm", {
+    //         fcm_id: currentToken,
+    //         user_id: user.id,
+    //       })
+    //     );
+    //   } else {
+    //     console.log(
+    //       "No Instance ID token available. Request permission to generate one."
+    //     );
+    //   }
+    // })
+    // .catch((err) => {
+    //   console.log("An error occurred while retrieving token. ", err);
+    // });
+    
     messaging
       .getToken()
       .then((currentToken) => {

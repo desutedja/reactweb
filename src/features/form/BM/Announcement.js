@@ -15,20 +15,25 @@ import { Form } from "formik";
 import { announcementSchema } from "../services/schemas";
 import SubmitButton from "../components/SubmitButton";
 import moment from "moment";
-import { inputDateTimeFormatter, toSentenceCase, updateDateTimeFormatter } from "../../../utils";
+import { inputDateTimeFormatter24, toSentenceCase, updateDateTimeFormatter, updateDateTimeFormatterEx } from "../../../utils";
+
+const today = moment().format("YYYY-MM-DDTHH:mm:ss", 'day');
 
 const announcementPayload = {
   title: "",
   target_building: "specificbuilding",
   target_merchant: "allmerchant",
   target_unit: "allunit",
+  building_section_floor: [],
   building: [],
   consumer_role: "",
   image: "",
   description: "",
   building_unit: [],
   merchant: [],
-  publish_schedule: "2022-01-01T06:00:01",
+  publish_schedule: updateDateTimeFormatter(today),
+  scheduled: "n",
+  expired_date: "",
 };
 
 const roles = [
@@ -44,6 +49,7 @@ const roles = [
 const target_units = [
   { label: "All Unit", value: "allunit" },
   { label: "Specific Unit(s)", value: "specificunit" },
+  { label: "Specific Section(s) & Floor(s)", value: "specificsectionandfloor" },
 ];
 
 function Component() {
@@ -54,8 +60,14 @@ function Component() {
   const [sections, setSections] = useState([]);
   const [searchSection, setSearchSection] = useState("");
 
+  const [selectedSectionsFloors, setSelectedSectionsFloors] = useState([]);
+  const [sectionsFloors, setSectionsFloors] = useState([]);
+  const [searchSectionFloor, setSearchSectionFloor] = useState("");
+
   const [units, setUnits] = useState([]);
   const [searchUnit, setSearchUnit] = useState("");
+
+  // const [floor, setFloor] = useState([]);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -120,6 +132,34 @@ function Component() {
     );
   }, [dispatch, searchSection, user]);
 
+  // section floor
+  useEffect(() => {
+    dispatch(
+      get(
+        endpointAdmin +
+          "/building/sectionfloor?building_id=" +
+          user.building_id +
+          "&limit=100&page=1" +
+          "&search=" +
+          searchSectionFloor,
+        (res) => {
+          let data = res.data.data.items;
+
+          let formatted = data.map((el) => ({
+            label: `${toSentenceCase(el.section_type)} ${toSentenceCase(
+              el.section_name
+            )}` + ', Floor ' + el.floor,
+            value: el.id,
+            section_value: el.section_id,
+            floor_value: el.floor,
+          }));
+
+          setSectionsFloors(formatted);
+        }
+      )
+    );
+  }, [dispatch, searchSectionFloor, user]);
+
   const payload = selected.id
     ? {
         ...announcementPayload,
@@ -139,7 +179,10 @@ function Component() {
             : "allmerchant",
         target_unit:
           selected.building_unit && selected.building_unit.length > 0
-            ? "specificunit"
+            ? "specificunit" 
+            :
+            selected.building_section_floor && selected.building_section_floor.length > 0
+            ? "specificsectionandfloor"
             : "allunit",
         merchant:
           selected.merchant &&
@@ -167,7 +210,16 @@ function Component() {
             )}`,
             value: el.building_section_id,
           })),
-        publish_schedule: selected.publish_schedule ? updateDateTimeFormatter(selected.publish_schedule) : "2022-01-01T06:00:01",
+        building_section_floor:
+          selected.building_section_floor &&
+          selected.building_section_floor.map((el) => ({
+            label: `${toSentenceCase(el.section_type)} ${toSentenceCase(
+              el.section_name
+            )}` + ', Floor ' + el.floor,
+            value: el.building_section_floor_id,
+          })),
+        publish_schedule: selected.publish_schedule ? updateDateTimeFormatter(selected.publish_schedule) : updateDateTimeFormatter(today),
+        expired_date: updateDateTimeFormatterEx(selected.expired_date),
       }
     : {
         ...announcementPayload,
@@ -200,11 +252,23 @@ function Component() {
                   building_section_id: el.value,
                 }))
               : [],
+          building_section_floor:
+            values.consumer_role !== "resident" || values.building.length !== 1
+              ? []
+              : typeof values.building_section_floor !== "undefined"
+              ? values.building_section_floor.map((el) => ({
+                  building_section_floor_id : el.value,
+                  building_id: values.building[0].value,
+                  building_section_id: el.section_value,
+                  floor: el.floor_value,
+                }))
+              : [],
           merchant:
             values.consumer_role === "merchant"
               ? values.merchant.map((el) => el.value)
               : [],
-          publish_schedule: inputDateTimeFormatter(values.publish_schedule),
+          publish_schedule: values.scheduled === "y" ? inputDateTimeFormatter24(values.publish_schedule) : "",
+          expired_date: values.expired_date
         })}
         edit={(data) => {
           //console.log(data);
@@ -212,6 +276,7 @@ function Component() {
         }}
         add={(data) => {
           //console.log(data);
+          delete data[undefined];
           dispatch(createAnnouncement(data, history, "bm"));
         }}
         renderChild={(props) => {
@@ -278,6 +343,32 @@ function Component() {
                     options={units}
                   />
                 )}
+                {values.consumer_role === "resident" &&
+                values.target_unit === "specificsectionandfloor" && (
+                  <Input
+                    {...props}
+                    type="multiselect"
+                    label="Select Section(s) & Floor(s)"
+                    name="building_section_floor"
+                    onInputChange={(e, value) =>
+                      value === "" ? setSectionsFloors([]) : setSearchSectionFloor(value)
+                    }
+                    defaultValue={values.building_section_floor_id}
+                    // hint={
+                    //   "Selecting section is only valid when consumer is resident and not selecting any unit on below form.  " +
+                    //   "Not specifying section means targeting the announcement for all resident on all section."
+                    // }
+                    placeholder="Start typing section name to add"
+                    options={sectionsFloors}
+                    onChange={(e, value) => {
+                      // if there's change in selected buildings, clear units
+                      //   if (value !== selectedSections) {
+                      //     setFieldValue("building_unit", []);
+                      //   }
+                      setSelectedSectionsFloors(value);
+                    }}
+                  />
+                )}
               <Input
                 {...props}
                 label="Title"
@@ -289,18 +380,39 @@ function Component() {
                 type="file"
                 label="Image Header"
                 name="image"
+                optional
                 placeholder="Image URL"
                 hint="Preferred size for maximum result is 1:2"
               />
               <Input
                 {...props}
-                type="datetime-local"
-                label="Schedule"
-                name="publish_schedule"
+                label="Expired Date"
+                type="date"
+                name="expired_date"
               />
               <Input
                 {...props}
-                type="editor"
+                type="radio"
+                label="Scheduling"
+                name="scheduled"
+                options={[
+                  { value: "y", label: "Yes"},
+                  { value: "n", label: "No"},
+                ]} 
+              />
+              {values.scheduled === "y" ?
+              <Input
+                {...props}
+                type="datetime-local"
+                label="Publish Schedule"
+                name="publish_schedule"
+              />
+              :
+              []
+              }
+              <Input
+                {...props}
+                type="editorBM"
                 label="Description"
                 placeholder="Insert Announcement Description"
               />

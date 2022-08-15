@@ -135,8 +135,8 @@ function Component() {
                 phone: '62' + values.phone,
                 birthdate: values.birthdate ? values.birthdate + ' 00:00:00' : null,
             })}
-            edit={data => state?.email ? dispatch(createResident(data, history)) :
-                dispatch(editResident(data, history, selected.id))}
+            // edit={data => state?.email ? dispatch(createResident(data, history)) :
+            //     dispatch(editResident(data, history, selected.id))}
             renderChild={props => {
                 const { values, errors } = props;
 
@@ -246,41 +246,42 @@ function Component() {
                                         phone: '62' + values.phone,
                                         birthdate: values.birthdate ? values.birthdate + ' 00:00:00' : null,
                                         update_reason: reason,
-                                  }, res => {
-                                    history.push(`${selected.id}`);
+                                    }, res => {
+                                        history.push(`${selected.id}`);
 
-                                        dispatch(
-                                        setInfo({
-                                            color: "success",
-                                            message: "Resident has been updated.",
-                                        })
-                                        );
-                                  }, err => {
+                                            dispatch(
+                                            setInfo({
+                                                color: "success",
+                                                message: "Resident has been updated.",
+                                            })
+                                            );
+                                    }, err => {
+                                        
+                                        setModalReason(false)
+                                    }))
                                     
-                                    setModalReason(false)
-                                  }))
-                                  :  
-                                  dispatch(put(endpointResident+"/management/resident/edit", {
-                                    ...residentPayload, ...selected,
-                                    phone: selected.phone.slice(2),
-                                    birthdate: selected.birthdate?.split('T')[0] + ' 00:00:00',
-                                    update_reason: reason,
-                              }, res => {
-                                history.push(`${selected.id}`);
+                                    :  
+                                        dispatch(put(endpointResident+"/management/resident/edit", {
+                                        ...residentPayload, ...selected,
+                                        phone: selected.phone.slice(2),
+                                        birthdate: selected.birthdate?.split('T')[0] + ' 00:00:00',
+                                        update_reason: reason,
+                                    }, res => {
+                                        history.push(`${selected.id}`);
 
-                                    dispatch(
-                                    setInfo({
-                                        color: "success",
-                                        message: "Resident has been updated.",
-                                    })
-                                    );
-                              }, err => {
-                                
-                                setModalReason(false)
-                              }))
-                    
-                                setModalReason(false)
-                            }}
+                                            dispatch(
+                                            setInfo({
+                                                color: "success",
+                                                message: "Resident has been updated.",
+                                            })
+                                            );
+                                    }, err => {
+                                        
+                                        setModalReason(false)
+                                    }))
+                            
+                                        setModalReason(false)
+                                    }}
                             >
                                 <Inputs type="textarea" limit={120} label="Reason" name="update_reason" inputValue={reason} setInputValue={setReason} />
                             </Modal>

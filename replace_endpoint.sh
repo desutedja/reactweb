@@ -13,6 +13,8 @@
 # export const _endpointMerchant = _endpointBase + ":" + root + "6005";
 # export const _endpointTransaction = _endpointBase + ":" + root + "6006";
 # export const _endpointAds = _endpointBase + ":" + root + "6007";
+# export const _endpointInternet = _endpointBase + ":" + root + "6009";
+# export const _endpointUserReqeust = _endpointBase + ":" + root + "6011";
 # EOF`
 
 # echo "$TEMPLATE" > src/endpoints.js
@@ -30,6 +32,8 @@ export const _endpointTask = _endpointBase + '/' + root + '-task';
 export const _endpointMerchant = _endpointBase + '/' + root + '-merchant';
 export const _endpointTransaction = _endpointBase + '/' + root + '-transaction';
 export const _endpointAds = _endpointBase + '/' + root + '-advertisement';
+export const _endpointInternet = _endpointBase + '/' + root + '-internet';
+export const _endpointUserReqeust = _endpointBase + '/' + root + '-user-request';
 EOF`
 
 echo "$TEMPLATE" > src/endpoints.js

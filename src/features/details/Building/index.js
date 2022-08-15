@@ -14,11 +14,12 @@ import Module from "./contents/Module";
 import CustomSetting from "./contents/CustomSetting";
 import { endpointAdmin } from "../../../settings";
 import { useParams, useHistory } from "react-router-dom";
-import { get } from "../../slice";
-import { setSelected, deleteBuilding} from "../../slices/building";
+import { get, getErr, put, setInfo } from "../../slice";
+import { setSelected, deleteBuilding, refresh, startAsync, stopAsync} from "../../slices/building";
 import {setting} from "./contents/data";
 import Input from "../../../components/Input";
 import { FiBell, FiMessageSquare } from "react-icons/fi";
+import { toSentenceCase } from "../../../utils";
 
 const labels = {
   Information: [
@@ -41,11 +42,11 @@ const labels = {
 
 const settings = {
   "Custom Setting" : [
-    "created_on",
-    "legal_name",
-    "owner_name",
-    "code_name",
-    "email",
+    "main_color",
+    "secondary_color",
+    "logo_url",
+    "logo_url_white",
+    "splash_background",
   ],
 };
 
@@ -74,10 +75,17 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   const [openLogo, setOpenLogo] = useState(false);
   const [openLW, setOpenLW] = useState(false);
   const [openSplash, setOpenSplash] = useState(false);
+  const [mainColor, setMainColor] = useState();
+  const [secondaryColor, setSecondaryColor] = useState();
+  const [logoURL, setLogoURL] = useState();
+  const [logoURLWhite, setlogoURLWhite] = useState();
+  const [splashScreen, setSplashScreen] = useState();
 
   let dispatch = useDispatch();
   let history = useHistory();
   let { id } = useParams();
+
+  const reload=()=>window.location.reload();
 
   const contents = [
     <Detail
@@ -127,7 +135,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
     />,
     <CustomSetting
       view={view}
-      data={data}
+      data={settingData}
       labels={settings}
       editModal={setOpenEdit}
       logoModal={setOpenLogo}
@@ -169,6 +177,19 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         dispatch(setSelected(res.data.data));
       })
     );
+  }, [id, dispatch]);
+
+  useEffect(() => {
+
+  if (auth.role === 'sa') {
+      dispatch(
+        getErr(endpointAdmin + "/building/settings?building_id=" + id, (res) => {
+          setSettingData(res.data.data);
+          dispatch(setSelected(res.data.data));
+        })
+      );
+  } else {
+  }
   }, [id, dispatch]);
 
   return (
@@ -220,8 +241,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                 left: "30px",
                 position: "absolute",
               }}
-              src={require("../../../assets/yipy-logo-color.png")}
-              alt="clinklogo"
+              src={settingData.logo_url}
+              alt="logo"
             />
             <FiMessageSquare
               size="45"
@@ -241,7 +262,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               transform: "translate(-50%, -50%)",
               marginRight: "-50%",
             }}
-            // src={data.content_image}
             src="https://api-dev.yipy.id/yipy-assets/asset-storage/img/F34D997E4CE07657D5A0EC38304E6BE8.png"
             alt="content_image"
           />
@@ -253,7 +273,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         disableFooter={true}
         toggle={() => setOpenLW(false)}
         title="Preview"
-        subtitle="How the logo would look on mobile apps"
+        subtitle="How the logo white would look on mobile apps"
       >
         <div
           style={{
@@ -271,7 +291,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               right: 0,
               left: 0,
               zIndex: 99,
-              backgroundColor: "#fafafaaa",
               fontWeight: "bold",
               display: "flex",
             }}
@@ -283,8 +302,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                 left: "30px",
                 position: "absolute",
               }}
-              src={require("../../../assets/yipy-logo-white.png")}
-              alt="clinklogo"
+              src={settingData.logo_url_white}
+              alt="logo_white"
             />
             <FiMessageSquare
               size="45"
@@ -304,7 +323,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               transform: "translate(-50%, -50%)",
               marginRight: "-50%",
             }}
-            // src={data.content_image}
             src="https://api-dev.yipy.id/yipy-assets/asset-storage/img/F34D997E4CE07657D5A0EC38304E6BE8.png"
             alt="content_image"
           />
@@ -316,7 +334,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         disableFooter={true}
         toggle={() => setOpenSplash(false)}
         title="Preview"
-        subtitle="How the logo would look on mobile apps"
+        subtitle="How the splash screen would look on mobile apps"
       >
         <div
           style={{
@@ -326,20 +344,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             position: "relative",
           }}
         >
-          <div
-            style={{
-              height: "calc(164 / 1024 * 720px)",
-              flex: 1,
-              position: "absolute",
-              right: 0,
-              left: 0,
-              zIndex: 99,
-              backgroundColor: "#fafafaaa",
-              fontWeight: "bold",
-              display: "flex",
-            }}
-          >
-          </div>
           <img
             style={{
               height: "100%",
@@ -349,8 +353,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
               transform: "translate(-50%, -50%)",
               marginRight: "-50%",
             }}
-            // src={data.content_image}
-            alt="content_image"
+            src={settingData.splash_background}
+            alt="splash_screen"
           />
         </div>
       </Modal>
@@ -361,18 +365,43 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         title="Edit Custom Setting"
         okLabel="Save"
         onClick={() => {
+          dispatch(startAsync());
             dispatch(
-                setSelected(
-                  // {
-                  //   building_id: selected.id,
-                  //   section_type: sectionType
-                  //     ? sectionType
-                  //     : selectedRow.section_type,
-                  //   section_name: sectionName
-                  //     ? sectionName
-                  //     : selectedRow.section_name,
-                  // },
-                  // selectedRow.id
+                put(endpointAdmin + "/building/settings?building_id",
+                  {
+                    building_id: settingData.building_id ? settingData.building_id : parseInt(id),
+                    main_color: mainColor
+                      ? mainColor
+                      : settingData.main_color,
+                    secondary_color: secondaryColor
+                      ? secondaryColor
+                      : settingData.secondary_color,
+                    logo_url: logoURL
+                      ? logoURL
+                      : settingData.logo_url,
+                    logo_url_white: logoURLWhite
+                      ? logoURLWhite
+                      : settingData.logo_url_white,
+                    splash_background: splashScreen
+                      ? splashScreen
+                      : settingData.splash_background,
+                  },
+                  (res) => {
+                    // dispatch(refresh());
+            
+                    dispatch(
+                      setInfo({
+                        color: "success",
+                        message: "Custom setting building has been updated.",
+                      })
+                    );
+                    reload();
+            
+                    dispatch(stopAsync());
+                  },
+                  (err) => {
+                    dispatch(stopAsync());
+                  }
                 )
               );
           setOpenEdit(false);
@@ -382,51 +411,51 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         <form>
           <Input
             label="Main Color"
-            // inputValue={
-            //   selectedRow.section_name
-            //     ? toSentenceCase(selectedRow.section_name)
-            //     : sectionName
-            // }
-            // setInputValue={setSectionName}
+            inputValue={
+              settingData.main_color
+                ? toSentenceCase(settingData.main_color)
+                : mainColor
+            }
+            setInputValue={setMainColor}
           />
           <Input
             label="Second Color"
-            // inputValue={
-            //   selectedRow.section_type ? selectedRow.section_type : sectionType
-            // }
-            // setInputValue={setSectionType}
-            // type="select"
-            // options={sectionTypes}
+            inputValue={
+              settingData.secondary_color
+                ? toSentenceCase(settingData.secondary_color)
+                : secondaryColor
+            }
+            setInputValue={setSecondaryColor}
           />
           <Input
             label="Logo URL"
             type="file"
-            // inputValue={
-            //   selectedRow.section_type ? selectedRow.section_type : sectionType
-            // }
-            // setInputValue={setSectionType}
-            // type="select"
-            // options={sectionTypes}
+            inputValue={
+              settingData.logo_url
+                ? settingData.logo_url
+                : logoURL
+            }
+            setInputValue={setLogoURL}
           />
           <Input
             label="Logo White URL"
             type="file"
-            // inputValue={
-            //   selectedRow.section_type ? selectedRow.section_type : sectionType
-            // }
-            // setInputValue={setSectionType}
-            // type="select"
-            // options={sectionTypes}
+            inputValue={
+              settingData.logo_url_white
+                ? settingData.logo_url_white
+                : logoURLWhite
+            }
+            setInputValue={setlogoURLWhite}
           />
           <Input
             label="Splash Screen"
             type="file"
-            // inputValue={
-            //   selectedRow.section_type ? selectedRow.section_type : sectionType
-            // }
-            // setInputValue={setSectionType}
-            // type="select"
-            // options={sectionTypes}
+            inputValue={
+              settingData.splash_background
+                ? settingData.splash_background
+                : splashScreen
+            }
+            setInputValue={setSplashScreen}
           />
           <div
             style={{

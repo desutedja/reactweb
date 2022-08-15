@@ -111,6 +111,7 @@ function Component() {
       formatValues={(values) => ({
         
         ...values,
+        building_management_id: values.building_management_id ? values.building_management_id : 10001,
         limit: parseInt(values.limit),
         discount: parseFloat(values.discount),
         minimum_transaction: parseFloat(values.minimum_transaction),

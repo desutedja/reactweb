@@ -137,6 +137,7 @@ function Component({
         return (
           <div className="Input-container w-100">
             <select
+              className="select"
               disabled={disabled}
               style={{
                 color: !value && "grey",

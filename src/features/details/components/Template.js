@@ -33,8 +33,8 @@ function Component({image, title, website, phone, merchant, transparent=false,
                 }}>
                     {imgLoading &&
                         <div style={{
-                            height: 400,
-                            objectFit: 'cover',
+                            height: 330,
+                            // objectFit: 'cover',
                             width: '100%',
                             marginBottom: 16,
                         }} className="shine" />
@@ -44,8 +44,8 @@ function Component({image, title, website, phone, merchant, transparent=false,
                         src={image && image !== "placeholder" ? image :
                             require('../../../assets/fallback.jpg')}
                         style={{
-                            height: imgLoading ? 0 : 400,
-                            objectFit: 'cover',
+                            height: imgLoading ? 0 : 330,
+                            // objectFit: 'cover',
                             width: '100%',
                             marginBottom: 16,
                         }}

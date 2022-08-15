@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Badge } from "reactstrap";
@@ -11,8 +11,10 @@ import {
   setSelected,
   deleteAnnouncement,
 } from "../slices/announcement";
-import { toSentenceCase } from "../../utils";
+import { dateFormaterEx, dateTimeFormatterScheduler, toSentenceCase } from "../../utils";
 import Template from "./components/Template";
+import { endpointAdmin } from "../../settings";
+import { get } from "../slice";
 
 const cons = [
   "centratama",
@@ -25,8 +27,20 @@ const cons = [
   "merchant",
 ];
 
+const publisherRoles = [
+  {value:"sa", label:"Super Admin"},
+  {value:"gm_bm", label:"BM Manager"},
+  {value:"pic_bm", label:"PIC Admin"}
+];
+
+const publisherRolesBM = [
+  {value:"gm_bm", label:"BM Manager"},
+  {value:"pic_bm", label:"PIC Admin"}
+];
+
 function Component({ view, canAdd, canUpdate, canDelete }) {
   const [con, setCon] = useState("");
+  const [publisherRole, setPublisherRole] = useState("");
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -43,6 +57,10 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
           <b>{row.title}</b>
         </a>
       ),
+    },
+    {
+      Header: "Publish Schedule",
+      accessor: (row) => dateTimeFormatterScheduler(row.publish_schedule),
     },
     {
       Header: "Consumer",
@@ -70,7 +88,15 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
     {
       Header: "Publisher Role",
       accessor: (row) =>
-        row.publisher_role === "sa" ? "Super Admin" : "PIC Admin",
+        row.publisher_role === "sa" ? "Super Admin" 
+        :
+        row.publisher_role === "gm_bm" ? "BM Manager"
+        : 
+        "PIC Admin",
+    },
+    {
+      Header: "Expired Date",
+      accessor: (row) => dateFormaterEx(row.expired_date),
     },
     {
       Header: "Status",
@@ -100,7 +126,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
       deleteAction={
         (role === "bm" ? canDelete : true) ? deleteAnnouncement : undefined
       }
-      filterVars={[con]}
+      filterVars={[con, publisherRole.value]}
       filters={[
         {
           hidex: con === "",
@@ -118,6 +144,27 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
               }}
               onClickAll={() => {
                 setCon("");
+                toggleModal(false);
+              }}
+            />
+          ),
+        },
+        {
+          hidex: publisherRole === "",
+          label: "Publisher Role: ",
+          value: publisherRole ? publisherRole.label : "All",
+          delete: () => {
+            setPublisherRole("");
+          },
+          component: (toggleModal) => (
+            <Filter
+              data={role === "bm" ? publisherRolesBM : publisherRoles}
+              onClick={(el) => {
+                setPublisherRole(el);
+                toggleModal(false);
+              }}
+              onClickAll={() => {
+                setPublisherRole("");
                 toggleModal(false);
               }}
             />

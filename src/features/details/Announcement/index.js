@@ -17,6 +17,7 @@ import {
 } from "../../slices/announcement";
 
 import Content from "./contents/Content";
+import ContentDescription from "./contents/ContentDescription";
 import Impression from "./contents/Impression";
 import { get } from "../../slice";
 import { endpointAdmin } from "../../../settings";
@@ -27,6 +28,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [publishing, setPublishing] = useState(false);
   const [impression, setImpression] = useState(false);
+  const [preview, setPreview] = useState(false);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -165,7 +167,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
       >
         Are you sure you want to delete this announcement?
       </Modal>
-      <Modal
+      {/* <Modal
         width="900px"
         isOpen={impression}
         disableSecondary
@@ -174,7 +176,24 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
         okLabel={"Close"}
         onClick={() => setImpression(false)}
       >
-        <Impression data={data} />
+        <Impression data={data} /> */}
+
+        {/* {typeof data.impression != "undefined" &&
+         
+          data.impression.map((el) => {
+            return <div>{el.resident_name}</div>;
+          })} */}
+      {/* </Modal> */}
+      <Modal
+        width="720"
+        isOpen={preview}
+        disableSecondary
+        title="Announcement Preview"
+        toggle={() => setPreview(false)}
+        okLabel={"Close"}
+        onClick={() => setPreview(false)}
+      >
+        <ContentDescription data={data} />
 
         {/* {typeof data.impression != "undefined" &&
          
@@ -182,10 +201,21 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
             return <div>{el.resident_name}</div>;
           })} */}
       </Modal>
+      <Modal
+        isOpen={confirmDelete}
+        disableHeader={true}
+        btnDanger
+        onClick={() => dispatch(deleteAnnouncement(data, history))}
+        toggle={() => setConfirmDelete(false)}
+        okLabel={"Delete"}
+        cancelLabel={"Cancel"}
+      >
+        Are you sure you want to delete this announcement?
+      </Modal>
       <Template
         title={data.title}
         loading={!data.id}
-        labels={["Details"]}
+        labels={["Details", "Impression"]}
         contents={[
           <div style={{ display: "flex" }}>
             <div style={{ marginRight: "20px" }}>
@@ -210,20 +240,27 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     />
                   )}
                 </Loading>,
+                // <Button
+                //   label="Preview"
+                //   icon={<FiImage />}
+                //   onClick={() => {
+                //     history.push(url + "/view");
+                //   }}
+                // />,
                 <Button
                   label="Preview"
                   icon={<FiImage />}
                   onClick={() => {
-                    history.push(url + "/view");
+                    setPreview(true);
                   }}
                 />,
-                <Button
-                  label="Impression"
-                  icon={<FiImage />}
-                  onClick={() => {
-                    setImpression(true);
-                  }}
-                />,
+                // <Button
+                //   label="Impression"
+                //   icon={<FiImage />}
+                //   onClick={() => {
+                //     setImpression(true);
+                //   }}
+                // />,
                 (role === "bm" ? canAdd : true) ? (
                   <Button
                     label="Duplicate"
@@ -248,6 +285,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
               ]}
             />
           </div>,
+          <Impression data={data} />
         ]}
       />
     </>

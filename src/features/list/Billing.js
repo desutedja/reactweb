@@ -27,7 +27,7 @@ import {
   stopAsync
 } from "../slices/billing";
 import { endpointAdmin, endpointBilling, online_status} from "../../settings";
-import { toSentenceCase, toMoney, inputDateTimeFormatter } from "../../utils";
+import { toSentenceCase, toMoney, inputDateTimeFormatter, inputDateTimeFormatter24 } from "../../utils";
 import { get,post,setInfo } from "../slice";
 
 import TemplateWithSelectionAndDate from "./components/TemplateWithSelectionAndDate";
@@ -361,7 +361,7 @@ function Component({ view }) {
               "year": "" + year,
               "month": "" + month,
               "with_image": selectWithImage,
-              "published_date": inputDateTimeFormatter(schedule),
+              "published_date": inputDateTimeFormatter24(schedule),
             }, res => {
                 console.log(res.data.data);
                 dispatch(
@@ -459,7 +459,7 @@ function Component({ view }) {
             dispatch(post(endpointBilling+"/management/billing/publish-billing", {
               data: multiActionRows,
               "with_image": selectWithImage,
-              "published_date": inputDateTimeFormatter(schedule)
+              "published_date": inputDateTimeFormatter24(schedule)
             }, res => {
                 console.log(res.data.data);
                 dispatch(
@@ -549,6 +549,7 @@ function Component({ view }) {
         open={upload}
         toggle={() => setUpload(false)}
         templateLink={user.billing_bulk_template}
+        // templateLink={"https://api.yipy.id/yipy-assets/asset-storage/document/ABB45E5DDEC4AF95D0960C2EB88CFC57.xlsx"}
         filename="billing_unit_template.xlsx"
         uploadLink={endpointBilling + "/management/billing/upload"}
         uploadDataName="file_upload"
@@ -671,28 +672,65 @@ function Component({ view }) {
             },
           ]
         }
+        actionDownloads={
+          view
+            ? null
+            : [
+                <Button
+                  color="Download"
+                  label="Download Billing Units .csv"
+                  icon={<FiDownload />}
+                  onClick={() =>
+                    dispatch(downloadBillingUnit(search, building))
+                  }
+                />,
+              ]
+        }
         renderActions={
           view
             ? null
             : (selectedRowIds, page) => {
                 return [
                   <Button
+                    color="Activated"
                     label="Upload Bulk"
                     icon={<FiUpload />}
                     onClick={() => setUpload(true)}
                   />,
+                  // <Button
+                  //   label="Download Billing Units .csv"
+                  //   icon={<FiDownload />}
+                  //   onClick={() =>
+                  //     dispatch(downloadBillingUnit(search, building))
+                  //   }
+                  // />,
+
                   <Button
-                    label="Download Billing Units .csv"
-                    icon={<FiDownload />}
-                    onClick={() =>
-                      dispatch(downloadBillingUnit(search, building))
+                    color="Activated"
+                    label="Upload Bulk Set As Paid"
+                    icon={<FiUpload />}
+                    onClick={() => {
+                        if (role === "sa" && building == ""){
+                          setAlert(true)
+                          return
+                        }
+
+                        setUploadSetAsPaid(true)
+                      }
                     }
                   />,
 
                   <Button
+                    label="Release All"
+                    // icon={<FiUpload />}
+                    onClick={handleShow}
+                  />,
+
+                  <Button
+                    color="Activated"
                     label="Release Selected"
                     disabled={Object.keys(selectedRowIds).length === 0}
-                    icon={<FiUpload />}
+                    // icon={<FiUpload />}
                     onClick={() => 
                       {
                         setOpenReleaseWithSchedule(true)
@@ -758,26 +796,7 @@ function Component({ view }) {
                   />,
 
                   <Button
-                    label="Release All"
-                    icon={<FiUpload />}
-                    onClick={handleShow}
-                  />,
-
-                  <Button
-                    label="Upload Bulk Set As Paid"
-                    icon={<FiUpload />}
-                    onClick={() => {
-                        if (role === "sa" && building == ""){
-                          setAlert(true)
-                          return
-                        }
-
-                        setUploadSetAsPaid(true)
-                      }
-                    }
-                  />,
-
-                  <Button
+                    color="Activated"
                     label="Set as Paid Selected"
                     disabled={Object.keys(selectedRowIds).length === 0}
                     icon={<FiCheck />}

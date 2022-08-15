@@ -11,8 +11,9 @@ import {
 import Loading from '../../../components/Loading';
 import Tab from '../../../components/Tab';
 import Breadcrumb from '../../../components/Breadcrumb';
+import { toSentenceCase } from '../../../utils';
 
-function Component({image, title, website, phone, merchant, transparent, reason=false,
+function Component({image, title, website, phone, merchant, transparent, reason,
     email, labels, contents, activeTab, pagetitle= '',  imageTitle = '', loading = true }) {
 
     const [imgLoading, setImgLoading] = useState(true);
@@ -81,25 +82,19 @@ function Component({image, title, website, phone, merchant, transparent, reason=
                         </div>
                     </div>}
                 </div>}
-                {<div className="Container" style={{
+                {reason && <div className="Container" style={{
                     flexDirection: 'column',
                     maxWidth: 360,
                 }}>
                     <div className="row" style={{ borderBottom: '1px solid #E9E9E9', marginBottom: 10 }}>
                         <div className="col">
-                            <h5>Last Update</h5>
+                            <h5>Update Reason Message</h5>
                         </div>
-                        <div className="col">
+                        {/* <div className="col">
                             <p style={{ textAlign: 'right', fontSize: '12px' }}><a style={{ color: '#E12029' }} href=''>See history</a></p>
-                        </div>
+                        </div> */}
                     </div>
-                    {website && <div className="row">
-                        <div className="col d-flex">
-                            <FiGlobe className="mr-3 h4" />
-                            <h5><a href={website}>{website}</a></h5>
-                        </div>
-                    </div>}
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col d-flex">
                             <h5>Edited by</h5>
                         </div>
@@ -111,14 +106,14 @@ function Component({image, title, website, phone, merchant, transparent, reason=
                         <div className="col">
                             <p style={{ textAlign: 'right', fontSize: '12px' }}>18 January 2022 12:23</p>
                         </div>
-                    </div>
-                    <div className="row" style={{ borderBottom: '1px solid #E9E9E9', marginRight: 1, marginLeft: 1, marginBottom: 10 }}>
-                    </div>
-                    {title && <div className="row">
+                    </div> */}
+                    {/* <div className="row" style={{ borderBottom: '1px solid #E9E9E9', marginRight: 1, marginLeft: 1, marginBottom: 10 }}>
+                    </div> */}
+                    <div className="row">
                         <div className="col d-flex reason-container">
-                            <p style={{ fontSize: '12px' }}>Expected to return a value in arrow function expected to return a value</p>
+                            <p style={{ fontSize: '12px' }}>{toSentenceCase(reason)}</p>
                         </div>
-                    </div>}
+                    </div>
                 </div>}
                 </div>
                 <div className={ transparent ? "Container-transparent" : "Container" } style={{

@@ -95,7 +95,8 @@ const UploadModalV2 = ({
                                 setLoading(false);
                             }))
                         }} style={{
-                            marginTop: 16
+                            marginTop: 16, 
+                            color: 'white'
                         }}>Download Template</button>
                     </div>
                 </Loading>

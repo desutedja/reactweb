@@ -42,11 +42,6 @@ function Component({ view }) {
     let dispatch = useDispatch();
     let history = useHistory();
     let { url } = useRouteMatch();
-  
-    
-    
-
-    
 
     return (
         <>

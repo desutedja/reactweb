@@ -200,7 +200,7 @@ export const distributeVoucher = (id, voucherId, history) => (
       voucherEndpoint + "/distribute/" + id,
       (res) => {
         history && history.push("/" + auth.role + "/vouchers/" + voucherId);
-        dispatch(refresh());
+        // dispatch(refresh());
 
         dispatch(
           setInfo({

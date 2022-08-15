@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouteMatch, useHistory, Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { FiPlus } from "react-icons/fi";
+import { FiDownload, FiPlus } from "react-icons/fi";
 
 import { toSentenceCase } from "../../utils";
 import { endpointAdmin, endpointManagement } from "../../settings";
@@ -12,7 +12,7 @@ import Input from "../../components/Input";
 import Filter from "../../components/Filter";
 import Pill from "../../components/Pill";
 import Staff from "../../components/cells/Staff";
-import { getStaff, setSelected } from "../slices/staff";
+import { downloadStaff, downloadStaffLog, getStaff, setSelected } from "../slices/staff";
 import { get } from "../slice";
 
 import Template from "./components/Template";
@@ -24,6 +24,7 @@ const ListDepartment = ({ data }) => {
   return (
     <div className="modal-hover">
       <button
+        style={{ color: 'white' }}
         onClick={() => history.push("/" + role + "/staff/" + data.id)}
         className="ml-2"
         onMouseEnter={() => setModalHover(true)}
@@ -86,7 +87,8 @@ const columns = [
         )
       ) : row.staff_role === "gm_bm" || row.staff_role === "pic_bm" ? (
         <Pill color="success">Always</Pill>
-      ) : row.current_shift_status ? (
+      // ) : row.current_shift_status === 1 ? (
+      ) : row.is_shift === 1 ? (
         <Pill color="success">On Shift</Pill>
       ) : (
         <Pill color="secondary">No</Pill>
@@ -420,6 +422,30 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
           ),
         },
       ]}
+      actionDownloads={
+        view
+          ? null
+          : [
+            <Button
+                color="Download"
+                key="Download Staff"
+                label="Download Staff.csv"
+                icon={<FiDownload />}
+                onClick={() =>
+                  dispatch(downloadStaff(search, building, role, building, shift, management, department ))
+                }
+              />,
+            <Button
+                color="Download"
+                key="Download Staff Log"
+                label="Download Staff Log.csv"
+                icon={<FiDownload />}
+                onClick={() =>
+                  dispatch(downloadStaffLog(search, building, role, building, shift, management, department ))
+                }
+              />,
+          ]
+      }
       actions={
         view
           ? null

@@ -117,3 +117,73 @@ export const patchAdminFee = (data, item) => dispatch => {
     }
   ))
 }
+
+// export const updateStatusProducts = (data, productStatus) => dispatch => {
+//   dispatch(startAsync());
+
+//   dispatch(patch(merchantEndpoint + 'items/bulk/setstatus', data,
+//     res => {
+//       // dispatch(setAdminFee(res.data.data.admin_fee));
+//       // dispatch(setDiscountFee(res.data.data.discount_fee));
+
+//       dispatch(setInfo({
+//         color: 'success',
+//         message: 'Admin fee has been updated.'
+//       }));
+
+//       dispatch(refresh());
+//     },
+//     err => {
+//       dispatch(stopAsync());
+//     }
+//   ))
+// }
+
+export const activateProduct =
+  (data) => (dispatch) => {
+    dispatch(startAsync());
+
+    dispatch(patch(merchantEndpoint + 'items/bulk/setstatus', {data, status:"on"},
+        (res) => {
+
+          dispatch(
+            setInfo({
+              color: "success",
+              message: "Product(s) has been set to active.",
+            })
+          );
+
+          dispatch(refresh());
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
+
+export const inactivateProduct =
+  (row) => (dispatch) => {
+    dispatch(startAsync());
+
+    dispatch(patch(merchantEndpoint + 'items/bulk/setstatus', {product_id: row.id, status:"off"},
+        (res) => {
+
+          dispatch(
+            setInfo({
+              color: "success",
+              message: "Product(s) has been set to active.",
+            })
+          );
+
+          dispatch(refresh());
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
+

@@ -31,6 +31,7 @@ function Component({
                 </ModalBody>
                 {!disableFooter && (<ModalFooter>
                     {!disablePrimary && <button
+                        style={{ color: 'white' }}
                         disabled={disabledOk}
                         className={btnDanger ? "Button Danger" : "Button"}
                         // color={btnDanger ? "danger" : "primary"}
@@ -39,7 +40,13 @@ function Component({
                         </button>}
                     {' '}
                     {!disableSecondary &&
-                        <Button color="secondary" onClick={onClickSecondary !== null ? onClickSecondary : toggle}>
+                        <Button 
+                            style={{ 
+                                borderRadius: "6px",
+                                border: "1px solid #838383"
+                            }}
+                            color="secondary" onClick={onClickSecondary !== null ? onClickSecondary : toggle}
+                        >
                             {cancelLabel === '' ? "Cancel" : cancelLabel}
                         </Button>}
                 </ModalFooter>)}

@@ -15,7 +15,7 @@ function Component({
         flex: 1,
         width: "100%",
         overflow: "auto",
-        fontWeight: "bolder"
+        // fontWeight: "bolder"
       }}
     >
       {labels.length > 1 && (
@@ -35,6 +35,7 @@ function Component({
                 className={
                   active === index ? "TabItem-Text" : "TabItem-Text-inactive"
                 }
+                style={{ fontWeight: "bolder"}}
               >
                 {el}
               </div>

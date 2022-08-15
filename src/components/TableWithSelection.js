@@ -30,6 +30,7 @@ function Component({
     loading,
     pageCount: controlledPageCount,
     actions = [],
+    actionDownloads = [],
     onClickChat,
     onClickReassign,
     onClickResolve,
@@ -198,7 +199,88 @@ function Component({
                     { label: 'Descending', value: 'DESC' },
                 ]} inputValue={sortType} setInputValue={setSortTypeInput} />
             </Modal>
-            {tableAction && <div className="TableAction">
+            {tableAction && 
+            <>
+                <div className="TableActionBilTop">
+
+                    <div className="TableAction-new d-flex align-items-center">
+                        <div className="TableSearch d-flex align-items-center" style={{marginLeft: "4px"}}>
+                            <Input
+                                label="Search"
+                                compact
+                                fullwidth={true}
+                                icon={<FiSearch />}
+                                inputValue={search}
+                                setInputValue={setSearch}
+                            />
+                        </div>
+                    
+                        {filters.length > 0 && <div className="Button" style={{
+                            cursor: 'pointer',
+                            color: 'white',
+                            marginRight: 8,
+                        }} onClick={() => {
+                            toggleFilter(!filter);
+                        }}>
+                            <FiFilter />
+                            <b style={{
+                                marginRight: 8,
+                                marginLeft: 8,
+                            }}>Filter</b>
+                            {filter ? <FiChevronUp /> : <FiChevronDown />}
+                        </div>}
+                        {sortBy.length > 0 && <div className="Button Secondary" style={{
+                            cursor: 'pointer',
+                            marginRight: 8,
+                        }} onClick={() => {
+                            toggleSort(!sort);
+                        }}>
+                            <FiList />
+                            <b style={{
+                                marginRight: 8,
+                                marginLeft: 8,
+                            }}>Sort by: {toSentenceCase(sortField)}</b>
+                            {sortType === 'DESC' ? <FiArrowDown /> : <FiArrowUp />}
+                        </div>}
+        
+                        {countactivefilter > 0 && <span style={{ paddingRight: '10px' }}>
+                            {countactivefilter} filter{countactivefilter > 1 ? 's' : ''} applied
+                        </span>}
+                    
+                    </div>
+                    <div className="TableAction-new d-flex align-items-center">
+                    
+                        {actionDownloads}
+                        
+                    </div>
+        
+                </div>
+                {filters.length > 0 && <div className={"FilterContainerNew" + (filter ? ' down' : '')}>
+                    {filters.map((el, index) => !el.hidden &&
+                        <FilterButton
+                            key={index}
+                            label={el.label}
+                            value={el.value}
+                            hideX={el.hidex}
+                            onClick={() => {
+                                el.onClick && el.onClick();
+                                el.component && toggleModal(true);
+                                setFilter(index);
+                            }}
+                            onClickDelete={el.delete} />
+                    )}
+                </div>}
+                <div className="TableActionBil">
+                    <div style={{
+                        display: 'flex',
+                    }}
+                    >
+                        {actions}
+                        {renderActions != null ? renderActions(selectedRowIds, page) : []}
+                    </div>
+                </div>
+            </>}
+            {/* {tableAction && <div className="TableAction">
                 <div style={{
                     display: 'flex',
                 }}>
@@ -262,7 +344,7 @@ function Component({
                         }}
                         onClickDelete={el.delete} />
                 )}
-            </div>}
+            </div>} */}
             <div className="Table-content scroller">
                 <table {...getTableProps()}>
                     {loading &&

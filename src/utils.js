@@ -132,6 +132,19 @@ export function dateTimeFormatter(serverDateTime, whenzero = "-") {
 }
 
 // all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
+export function dateTimeFormatterstriped(serverDateTime, whenzero = "-") {
+  if (!serverDateTime) return whenzero;
+  if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
+
+  return (
+    moment.utc(serverDateTime).format("DD-MM-yyyy") +
+    " " +
+    moment.utc(serverDateTime).format("HH:mm") +
+    " WIB"
+  );
+}
+
+// all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function dateTimeFormatterScheduler(serverDateTime, whenzero = "-") {
   if (!serverDateTime) return whenzero;
   if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
@@ -151,8 +164,20 @@ export function inputDateTimeFormatter(serverDateTime, whenzero = "") {
 
   return (
     moment.utc(serverDateTime).format("YYYY-MM-DD") +
+    "T" +
+    moment.utc(serverDateTime).format("HH:mm:ss") +
+    "Z"
+  );
+}
+
+export function inputDateTimeFormatter24(serverDateTime, whenzero = "") {
+  if (!serverDateTime) return whenzero;
+  if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
+
+  return (
+    moment.utc(serverDateTime).format("YYYY-MM-DD") +
     " " +
-    moment.utc(serverDateTime).format("hh:mm:ss")
+    moment.utc(serverDateTime).format("HH:mm:ss")
   );
 }
 
@@ -162,7 +187,25 @@ export function updateDateTimeFormatter(serverDateTime, whenzero = "-") {
   if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
 
   return (
-    moment.utc(serverDateTime).format("YYYY-MM-DDThh:mm:ss")
+    moment.utc(serverDateTime).format("YYYY-MM-DDTHH:mm:ss")
+  );
+}
+
+export function updateDateTimeFormatterEx(serverDateTime, whenzero = "-") {
+  if (!serverDateTime) return whenzero;
+  if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
+
+  return (
+    moment.utc(serverDateTime).format("YYYY-MM-DD")
+  );
+}
+
+export function dateFormaterEx(serverDateTime, whenzero = "-") {
+  if (!serverDateTime) return whenzero;
+  if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
+
+  return (
+    moment.utc(serverDateTime).format("DD MMM yyyy")
   );
 }
 
@@ -203,6 +246,16 @@ export function toSentenceCase(sentence) {
   }, "");
 }
 
+export function toSentenceCase2(sentence) {
+  if (!sentence) return "-";
+  let words = sentence.replace(/-/g, " ").split(" ");
+
+  return words.reduce((result, el) => {
+    let newEl = el.slice(0, 1).toUpperCase() + el.slice(1) + " ";
+    return result + newEl;
+  }, "");
+}
+
 export function toMoney(money) {
   // money = Math.floor(money);
   if (typeof money === "undefined") {
@@ -214,6 +267,36 @@ export function toMoney(money) {
   });
   return (
     "Rp " + moneyFormat
+    // (!money ? "0" : money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"))
+  );
+}
+
+export function toMoneyRP(money) {
+  // money = Math.floor(money);
+  if (typeof money === "undefined") {
+    return "Rp 0";
+  }
+  let moneyFormat = new Number(money).toLocaleString("id-ID", {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+  return (
+     moneyFormat
+    // (!money ? "0" : money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"))
+  );
+}
+
+export function decimal(money) {
+  // money = Math.floor(money);
+  if (typeof money === "undefined") {
+    return "Rp 0";
+  }
+  let moneyFormat = new Number(money).toLocaleString("id-ID", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  return (
+     moneyFormat
     // (!money ? "0" : money.toString().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,"))
   );
 }

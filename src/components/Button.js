@@ -8,10 +8,13 @@ function MyButton({ icon, label, onClick, selected, color, disabled, className})
             disabled={disabled}
             onClick={onClick}
             style={{
+                paddingRight: 10,
+                paddingLeft: 10,
                 marginRight: 4,
                 marginLeft: 4,
                 marginBottom: 8,
                 backgroundColor: color ? '' : '#244091',
+                borderRadius: 6,
             }}
             type="submit"
         >

@@ -217,10 +217,10 @@ export const getTransactionSettlement = (
       settlementStatus +
       "&status=completed" +
       "&sort_field=created_on&sort_type=DESC" +
-      "&settlement_start_date=" +
+      "&start_date=" +
       start +
       "T00:00:00" +
-      "&settlement_end_date=" +
+      "&end_date=" +
       end +
       "T23:59:59" +
       "&search=" +
@@ -238,18 +238,30 @@ export const getTransactionSettlement = (
   );
 };
 
-export const downloadTransactionSettlement = (settlementStatus = "") => (
-  dispatch
-) => {
+export const downloadTransactionSettlement = (
+    settlementStatus = "",
+    start,
+    end
+  ) => (dispatch) => {
   dispatch(startAsync());
 
   dispatch(
     getFile(
       transactionEndpoint +
       "/list" +
-      "?settlement_status=" +
+      "?page=1" +
+      "&limit=10" +
+      "&settlement_status=" +
       settlementStatus +
       "&status=completed" +
+      "&sort_field=created_on&sort_type=DESC" +
+      "&start_date=" +
+      start +
+      "T00:00:00" +
+      "&end_date=" +
+      end +
+      "T23:59:59" +
+      "&search=" +
       "&export=true",
       "transaction_settlement.csv",
       (res) => {

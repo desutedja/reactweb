@@ -11,21 +11,25 @@ import Input from "./input";
 import { Form } from "formik";
 import { announcementSchema } from "./services/schemas";
 import SubmitButton from "./components/SubmitButton";
-import { dateTimeFormatter, inputDateTimeFormatter, toSentenceCase, updateDateTimeFormatter } from "../../utils";
+import { dateTimeFormatter, inputDateTimeFormatter, inputDateTimeFormatter24, toSentenceCase, updateDateTimeFormatter, updateDateTimeFormatterEx } from "../../utils";
 import moment from "moment";
 
+const today = moment().format("YYYY-MM-DDTHH:mm:ss", 'day');
 
 const announcementPayload = {
   title: "",
   target_building: "allbuilding",
   target_merchant: "allmerchant",
   building: [],
+  building_section_floor: [],
   consumer_role: "",
   image: "",
   description: "",
   building_unit: [],
   merchant: [],
-  publish_schedule: "2022-01-01T06:00:01",
+  publish_schedule: updateDateTimeFormatter(today),
+  scheduled: "n",
+  expired_date: "",
 };
 
 const roles = [
@@ -244,7 +248,8 @@ function Component() {
             )}`,
             value: el.building_section_id,
           })),
-        publish_schedule: selected.publish_schedule ? updateDateTimeFormatter(selected.publish_schedule) : "2022-01-01T06:00:01",
+        publish_schedule: selected.publish_schedule ? updateDateTimeFormatter(selected.publish_schedule) : updateDateTimeFormatter(today),
+        expired_date: updateDateTimeFormatterEx(selected.expired_date),
       }
     : announcementPayload;
 
@@ -281,7 +286,8 @@ function Component() {
             values.consumer_role === "merchant"
               ? values.merchant.map((el) => el.value)
               : [],
-          publish_schedule: inputDateTimeFormatter(values.publish_schedule),
+          publish_schedule: values.scheduled === "y" ? inputDateTimeFormatter24(values.publish_schedule) : "",
+          expired_date: values.expired_date
         })}
         edit={(data) => {
           console.log(data);
@@ -426,20 +432,46 @@ function Component() {
                 type="file"
                 label="Image Header"
                 name="image"
+                optional
                 placeholder="Image URL"
                 hint="Preferred size for maximum result is 1:2"
               />
               <Input
                 {...props}
+                label="Expired Date"
+                type="date"
+                name="expired_date"
+              />
+              <Input
+                {...props}
+                type="radio"
+                label="Scheduling"
+                name="scheduled"
+                options={[
+                  { value: "y", label: "Yes"},
+                  { value: "n", label: "No"},
+                ]} 
+              />
+              {values.scheduled === "y" ?
+              <Input
+                {...props}
                 type="datetime-local"
-                label="Schedule"
+                label="Publish Schedule"
                 name="publish_schedule"
               />
+              :
+              []
+              }
               <Input
                 {...props}
                 type="editor"
                 label="Description"
                 placeholder="Insert Announcement Description"
+              />
+              <Input
+                {...props}
+                type="hidden"
+                name="modified_on"
               />
               <SubmitButton loading={loading} errors={errors} />
             </Form>

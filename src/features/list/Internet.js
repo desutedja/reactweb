@@ -2,21 +2,17 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { dateTimeFormatterCell, toMoney, toSentenceCase } from "../../utils";
-import { endpointAdmin } from "../../settings";
+import { endpointAdmin, endpointInternet } from "../../settings";
 import { get, setConfirmDelete, post, del } from "../slice";
 
 import Table from "../../components/Table";
 import Breadcrumb from "../../components/Breadcrumb";
-import Pill from "../../components/Pill";
-import { setSelected } from "../slices/vouchers";
 import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
-import PromoVA from "../../components/cells/PromoVA";
-import { deleteVA, editVA } from "../slices/promova";
-import Modal from "../../components/Modal"
-import Input from "../../components/Input"
-import MultiSelectInput from "../form/input/MultiSelect";
+import Internet from "../../components/cells/Internet";
+import { deleteInternetProvider, setSelected, getInternetProvider } from "../slices/internet";
+import Avatar from "react-avatar";
 
 
 const columns = [
@@ -25,27 +21,58 @@ const columns = [
   {
     Header: "Provider Name",
     accessor: (row) => 
-      <b>Globenet</b>        
+    <Internet
+        id={row.id}
+        data={row}
+        items={[
+          <>
+          <Avatar
+            className="Item-avatar"
+            size="40"
+            src={row.image}
+            name='L O G O'
+          />
+          <b>{row.provider_name}</b>
+          </>
+        ]}
+      />       
   },
   {
     Header: "PIC",
-    accessor: (row) =>{
+    accessor: (row) => {
       return (
         <div>
-          <div>
-            <b>Dadang Jordan</b>
-          </div>
-          <div>
-            dadangjordan@gmail.com
-          </div>
+            <> 
+              <div>
+                <b>
+                {
+                  row.pic_name ? row.pic_name : '-'
+                }
+                </b>
+              </div> 
+              <div>
+                {
+                  row.pic_email ? row.pic_email : '-'
+                }
+              </div>
+            </>
         </div>
       );
     },
   },
   {
     Header: "Phone",
-    accessor: (row) =>
-    "6281289089898"
+    accessor: (row) =>{
+      return (
+        <div>
+              <div>
+                {
+                  row.pic_phone ? '62'+row.pic_phone : '-'
+                }
+              </div> 
+        </div>
+      );
+    },
   },
   {
     Header: "Created On",
@@ -53,8 +80,7 @@ const columns = [
       return (
         <div>
           <div>
-            {
-      row.created_on ? dateTimeFormatterCell(row.created_on) : "-"}
+            {row.created_on ? dateTimeFormatterCell(row.created_on) : "-"}
           </div>
           <div>
             by System
@@ -66,210 +92,19 @@ const columns = [
 ];
 
 function Component({ view, title = '', pagetitle, canDelete }) {
-  const [startdate, setStartDate] = useState("");
-  const [enddate, setEndDate] = useState("");
-  const [buildingid, setBuildingid] = useState("");
-  const [bank, setBank] = useState("");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ items: [] });
-  const [type, setType] = useState("");
-  const [typeLabel, setTypeLabel] = useState("");
-  const [toggle, setToggle] = useState(false);
-  const { role } = useSelector((state) => state.auth);
-  const [updatePromoModal, setUpdatePromoModal] = useState(false);
-  const [startPromo, setStartPromo] = useState("");
-  const [endPromo, setEndPromo] = useState("");
-  const [dataPromo, setDataPromo] = useState({ items: [] });
-  const [bManagements, setBManagements] = useState([]);
-  const [dataBanks, setDataBanks] = useState([]);
-  const [inBuildings, setBuildings] = useState([]);
-
-  const [search, setSearch] = useState("");
-  const [limit, setLimit] = useState(10);
-
-  const [cat, setCat] = useState("");
-  const [catName, setCatName] = useState("");
-  const [cats, setCats] = useState("");
+  const [provider, setProvider] = useState("");
 
   let dispatch = useDispatch();
   let history = useHistory();
   let { url } = useRouteMatch();
-
-  // useEffect(() => {
-  //   dispatch(
-  //     get(endpointAdmin + "/centratama/vouchers/list?name=" + search, (res) => {
-  //       let data = res.data.data;
-  //       let formatted = data.map((el) => ({ label: el.name, value: el.name }));
-  //       let limited = formatted.slice(0, limit);
-
-  //       const restTotal = formatted.length - limited.length;
-  //       const valueLimit = 5;
-
-  //       if (limited.length < formatted.length) {
-  //         limited.push({
-  //           label:
-  //             "load " +
-  //             (restTotal > valueLimit ? valueLimit : restTotal) +
-  //             " more",
-  //           className: "load-more",
-  //           restTotal: restTotal > valueLimit ? valueLimit : restTotal,
-  //         });
-  //       }
-
-  //       setCats(limited);
-  //     })
-  //   );
-  // }, [dispatch, limit, search]);
-
-  // useEffect(() => {
-  //   if (search.length === 0) {
-  //     setLimit(5);
-  //   }
-  // }, [search]);
-
-  useEffect(() => {
-    dispatch(
-      get(
-        endpointAdmin +
-          "/management/building" +
-          "?limit=10&page=1" +
-          "&search=",
-        (res) => {
-          let data = res.data.data.items;
-
-          let formatted = data.map((el) => ({
-            label: el.building_name + " by " + el.management_name,
-            value: el.id,
-          }));
-
-          setBManagements(formatted);
-        }
-      )
-    );
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(
-      get(endpointAdmin + "/paymentperbuilding/list/payment_method", (res) => {
-        const banks = res.data.data.items.map((el) => ({
-          value: el.id,
-          label: toSentenceCase(el.provider),
-        }));
-
-        // console.log(banks)
-
-        dispatch(setDataBanks(banks));
-      })
-    );
-  }, [dispatch]);
-
-  useEffect(() => {
-    
-    dispatch(
-      get(
-        endpointAdmin +
-        "/paymentperbuilding/list?status=all" +
-        "&start_date=" +
-        startdate +
-        "&end_date=" +
-        enddate + 
-        "&building_id=" + 
-        buildingid +
-        "&bank=" +
-        bank +
-        "&sort_field=created_on&sort_type=DESC" +
-        "&limit=" + 
-        limit,
-
-        (res) => {
-          console.log(res.data.data);
-          setDataPromo(res.data.data);
-        }
-      )
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  const {
+    refreshToggle
+  } = useSelector(state => state['internet']);
 
   return (
     <>
-      <Modal
-        title="Update Promo"
-        isOpen={updatePromoModal}
-        toggle={() => setUpdatePromoModal(false)}
-        okLabel="Submit"
-        onClick={() => {
-          setUpdatePromoModal(false);
-          dispatch(
-            editVA({
-              // payment_perbuilding_id: dataPromo.id,
-              // start_date: startPromo,
-              // end_date: endPromo,
-            })
-          );
-        }}
-        cancelLabel="Cancel"
-        onClickSecondary={() => {
-          setUpdatePromoModal(false);
-        }}
-      >
-        Change data for this promo
-            {/* <MultiSelectInput    
-              // type="multiselect"
-              label="Bank"
-              name="account_bank"
-              autoComplete="off"
-              placeholder={dataPromo.provider}
-              options={dataBanks}
-            />
-            <MultiSelectInput
-            
-              // type="multiselect"
-              label="Building Management"
-              name="building_management_id"
-              autoComplete="off"
-              placeholder={dataPromo.name}
-              options={bManagements}
-            />
-            <MultiSelectInput
-            
-              label="Fee Type"
-              name="fee_type"
-              autoComplete="off"
-              placeholder={dataPromo.fee_type}
-              options={[
-                { value: "fee", label: "Fee" },
-                { value: "percentage", label: "Percentage" },
-                { value: "combination", label: "Combination" },
-              ]}
-            />
-            {(dataPromo.fee_type) === "fee" ?
-              <>
-                <Input label="Fee" name="fee" autoComplete="off" suffix="Rp" />
-              </>
-              : (dataPromo.fee_type) === "percentage" ?
-              <>
-                <Input label="Percentage" name="percentage" autoComplete="off" suffix="%" />
-              </>
-              : (dataPromo.fee_type) === "combination" ?
-              <>
-                <Input label="Fee" name="fee" autoComplete="off" suffix="Rp" />
-                <Input label="Percentage" name="percentage" autoComplete="off" suffix="%" />
-              </>
-              : null
-            }
-        <Input 
-            label="Start Date"
-            type="date"
-            inputValue={startPromo}
-            setInputValue={setStartPromo}
-        />
-        <Input 
-            label="End Date"
-            type="date"
-            inputValue={endPromo}
-            setInputValue={setEndPromo}
-        /> */}
-      </Modal>
       <h2 style={{ marginLeft: '16px' }}>{pagetitle}</h2>
             <Breadcrumb title={title} />
             <div className="Container">
@@ -290,19 +125,12 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                         setLoading(true);
                         dispatch(
                           get(
-                            endpointAdmin +
-                            "/paymentperbuilding/list?status=all" +
-                            "&start_date=" +
-                            startdate +
-                            "&end_date=" +
-                            enddate + 
-                            "&building_id=" + 
-                            buildingid +
-                            "&bank=" +
-                            bank +
-                            "&sort_field=created_on&sort_type=DESC" +
-                            "&limit=" + 
-                            limit,
+                            endpointInternet +
+                            "/admin/provider?" +
+                            'page=' + (page + 1) +
+                            '&limit=' + limit +
+                            '&search=' + searchItem +
+                            '&provider_id=' + provider,
 
                             (res) => {
                               console.log(res.data.data);
@@ -313,32 +141,31 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                         );
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                       },
-                      [dispatch, buildingid, bank, startdate, enddate]
+                      [dispatch, provider, refreshToggle]
                     )}
                     loading={loading}
-                    onClickChange={
+                    onClickEdit={
                       view
                         ? null
                         : (row) => {
                           
                           dispatch(setSelected(row));
                           history.push(url + "/edit");
-                          console.log(row)
+                          console.log(row);
                         }
                           
                     }
-                    onClickStop={
+                    onClickDelete={
                       view
-                        ? null
-                        : role === "bm" && !canDelete
                         ? null
                         : (row) => {
                             dispatch(
                               setConfirmDelete(
-                                // "Are you sure to end this promo?",
-                                "Feature still under development",
+                                "Are you sure you want to delete this internet provider?",
+                                // "Feature still under development",
                                 () => {
-                                  // dispatch(deleteVA(row));
+                                  console.log(row);
+                                  dispatch(deleteInternetProvider(row, history));
                                 }
                               )
                             );
@@ -359,8 +186,8 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                             />,
                           ]
                     }
-                    // pageCount={data?.total_pages}
-                    // totalItems={data?.total_items}
+                    pageCount={data?.total_pages}
+                    totalItems={data?.total_items}
                     // filters={[
                     //   {
                     //     label: (
@@ -457,6 +284,100 @@ function Component({ view, title = '', pagetitle, canDelete }) {
                     //       }
                     // }
                   />
+                  {/* <TemplateInternet
+                    view={view}
+                    columns={columns}
+                    slice='internet'
+                    getAction={getInternetProvider}
+                    deleteAction={deleteInternetProvider}
+                    selectAction={(selectedRows) => {
+                        const selectedRowIds = [];
+                        selectedRows.map((row) => {
+                        if (row !== undefined){
+                            selectedRowIds.push({
+                            merchant_id:row.id,
+                            });
+                        }
+                        });    
+                        setMultiActionRows([...selectedRowIds]);
+                        console.log(selectedRowIds);
+                    }}
+                    filterVars={[type, cat]}
+                    filters={[
+                        {
+                            hidex: type === "",
+                            label: <p>{type ? "Type: " + typeLabel : "Type: All"}</p>,
+                            delete: () => { setType(""); },
+                            component: toggleModal =>
+                                <Filter
+                                    data={merchant_types}
+                                    onClickAll={() => {
+                                        setType("");
+                                        setTypeLabel("");
+                                        toggleModal(false);
+                                    }}
+                                    onClick={el => {
+                                        setType(el.value);
+                                        setTypeLabel(el.label);
+                                        toggleModal(false);
+                                    }}
+                                />
+                        },
+                        {
+                            button: <Button key="Catgeory: All"
+                                label={cat ? catName : "Category: All"}
+                                selected={cat}
+                            />,
+                            hidex: cat === "",
+                            label: <p>{cat ? "Category: " + catName : "Category: All"}</p>,
+                            delete: () => { setCat(""); },
+                            component: (toggleModal) =>
+                                <>
+                                    <Input
+                                        label="Search"
+                                        compact
+                                        icon={<FiSearch />}
+                                        inputValue={search}
+                                        setInputValue={setSearch}
+                                    />
+                                    <Filter
+                                        data={cats}
+                                        onClick={(el) => {
+                                            if (!el.value) {
+                                                setLimit(limit + el.restTotal);
+                                                return;
+                                            }
+                                            setCat(el.value);
+                                            setCatName(el.label);
+                                            setLimit(5);
+                                            toggleModal(false);
+                                            setSearch("");
+                                        }}
+                                        onClickAll={() => {
+                                            setCat("");
+                                            setCatName("");
+                                            setLimit(5);
+                                            toggleModal(false);
+                                            setSearch("");
+                                        }}
+                                    />
+                                </>
+                        },
+                    ]}
+                    renderActions={view ? null : (selectedRowIds) => {
+                        return [
+                          <Button
+                            key="Add Provider"
+                            label="Add Provider"
+                            icon={<FiPlus />}
+                            onClick={() => {
+                              dispatch(setSelected({}));
+                              history.push(url + "/add");
+                            }}
+                          />,
+                    ]}
+                }
+            /> */}
             </div>
     </>              
   );

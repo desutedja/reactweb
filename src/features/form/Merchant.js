@@ -427,7 +427,7 @@ function Component() {
                 console.log(el);
               }}
             />
-            <button type="button" onClick={() => setModal(true)}>
+            <button type="button" style={{ color: 'white' }} onClick={() => setModal(true)}>
               Select Location
             </button>
             <Input {...props} label="Latitude" name="lat" />
@@ -440,7 +440,7 @@ function Component() {
               onChange={(el) => setProvince(el.value)}
               required
             />
-            {values.province && (
+            {values.province != 0 && (
               <Input
                 {...props}
                 label="City"
@@ -449,7 +449,7 @@ function Component() {
                 required
               />
             )}
-            {values.city && (
+            {values.city != 0  && (
               <Input {...props} label="District" options={districts} required/>
             )}
 

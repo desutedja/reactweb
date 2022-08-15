@@ -187,8 +187,8 @@ export const announcementSchema = Yup.object().shape({
   title: Text,
   building: TextOptional,
   consumer_role: Text,
-  image: Text,
-  publish_schedule: Text,
+  image: TextOptional,
+  publish_schedule: TextOptional,
   description: Text,
 });
 
@@ -199,7 +199,25 @@ export const voucherSchema = Yup.object().shape({
   limit: Number,
   usage_limit: Number,
   expired_date: Text,
-  building_management_id: Number,
+  building_management_id: NumberOptional,
+});
+
+export const providerSchema = Yup.object().shape({
+  provider_name: Text,
+  image: Text,
+  pic_name: Text,
+  pic_email: Text,
+  pic_phone: Phone,
+  coverage_area: Text,
+});
+
+export const userRequestSchema = Yup.object().shape({
+  category: Number,
+  sub_category: Number,
+  title: Text,
+  description: Text,
+  // status: Text,
+  // attachments: Text,
 });
 
 export const promoVaSchema = Yup.object().shape({
@@ -211,6 +229,14 @@ export const promoVaSchema = Yup.object().shape({
   markup: Number,
   start_date: Text,
   endd_ate: Text,
+});
+
+export const internetPackageSchema = Yup.object().shape({
+  package_name: Text,
+  speed: Text,
+  price: Text,
+  notes: Text,
+  tv_channel: Text,
 });
 
 export const adsSchema = Yup.object().shape({

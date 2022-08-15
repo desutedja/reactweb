@@ -26,7 +26,8 @@ function AgeRangeInput({ start, end, setStart, setEnd, toggle }) {
             </div>}
             <button
                 style={{
-                    marginTop: 16
+                    marginTop: 16,
+                    color: 'white'
                 }}
                 onClick={() => {
                     if (startInput < 10 || endInput > 85) { setError(true) } else {

@@ -18,7 +18,7 @@ const Component = ({ data, dataKeys }) => {
   if (dataKeys.length > 0) {
     dtKey = dataKeys;
   }
-  const COLOR = ["#e12029", "#244091", "#2e1029", "#412dee"];
+  const COLOR = ["#E12029","#254091","#F58113","#88B5E4","#52A452","#5464B6","#FFCE2A","#9F6633","#471172","#204657","#D09CB1","#D33B7E"];
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>

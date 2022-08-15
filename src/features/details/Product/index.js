@@ -5,7 +5,7 @@ import Modal from '../../../components/Modal';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 
-import Detail from '../components/Detail';
+import DetailProduct from '../components/DetailProduct';
 import Template from '../components/Template';
 import { patchAdminFee, setSelected, refresh } from '../../slices/product';
 import { toMoney } from '../../../utils.js';
@@ -177,7 +177,7 @@ function Component({ view }) {
                 loading={!data.id}
                 labels={["Details", "Images"]}
                 contents={[
-                    <Detail view={view} data={data} labels={labels} editable={false}
+                    <DetailProduct view={view} data={data} labels={labels} editable={false}
                         renderButtons={() => [
                             <Button label="Adjust Fees & Discount" onClick={() => {
                                 setModalFee(true);

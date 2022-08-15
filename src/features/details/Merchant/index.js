@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 import Detail from "../components/Detail";
+import DetailAdminMerchant from "../components/DetailAdminMerchant";
+import Products from "./contents/Products";
 import Template from "../components/Template";
 import Modal from "../../../components/Modal";
 import { useHistory, useParams } from "react-router-dom";
@@ -70,6 +72,7 @@ const account = {
 
 function Component({ view }) {
   const [data, setData] = useState({});
+  const [merchantStaff, setMerchantStaff] = useState([]);
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   let dispatch = useDispatch();
@@ -82,6 +85,14 @@ function Component({ view }) {
         res.data.data.free_deliv = res.data.data.free_deliv.toString();
         setData(res.data.data);
         dispatch(setSelected(res.data.data));
+      })
+    );
+  }, [id, dispatch]);
+
+  useEffect(() => {
+    dispatch(
+      get(endpointMerchant + "/admin/staff/list?merchant_id=" + id, (res) => {
+        setMerchantStaff(res.data.data);
       })
     );
   }, [id, dispatch]);
@@ -104,7 +115,7 @@ function Component({ view }) {
         image={data.logo || "placeholder"}
         title={data.name}
         phone={data.phone}
-        labels={["Details", "Contact Person", "Bank Account"]}
+        labels={["Details", "Contact Person", "Bank Account", "Product"]}
         contents={[
           <Detail
             view={view}
@@ -112,8 +123,14 @@ function Component({ view }) {
             labels={info}
             onDelete={() => setConfirmDelete(true)}
           />,
-          <Detail view={view} data={data} labels={pic} />,
+          <DetailAdminMerchant
+            view={view}
+            data={data}
+            dataStaff={merchantStaff}
+            labels={pic}
+          />,
           <Detail view={view} data={data} labels={account} />,
+          <Products view={view} id={id} />,
         ]}
       />
     </>

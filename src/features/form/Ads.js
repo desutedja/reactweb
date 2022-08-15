@@ -297,12 +297,21 @@ function Component() {
                 hint="Only use Youtube links."
               />
             )}
-            <Input
-              {...props}
-              label="Content"
-              name="content_description"
-              type="editor"
-            />
+            {auth.role === "sa" ?
+              <Input
+                {...props}
+                label="Content"
+                name="content_description"
+                type="editor"
+              />
+              :
+              <Input
+                {...props}
+                label="Content"
+                name="content_description"
+                type="editorBM"
+              />
+            }
             {auth.role === "sa" && (
               <Input
                 {...props}
@@ -505,6 +514,7 @@ function Component() {
                             type="button"
                             style={{
                               marginLeft: 16,
+                              color: 'white'
                             }}
                             onClick={() => {
                               setFieldValue(
@@ -523,6 +533,7 @@ function Component() {
                             type="button"
                             style={{
                               marginLeft: 16,
+                              color: 'white'
                             }}
                             onClick={() => {
                               setFieldValue(

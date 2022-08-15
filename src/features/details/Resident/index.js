@@ -83,11 +83,12 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
         Are you sure you want to delete resident{" "}
         <b>{data.firstname + " " + data.lastname}</b>?
       </Modal>
-      <Template
+      <TemplateResident
         image={data.photo || "placeholder"}
         title={data.firstname + " " + data.lastname}
         email={data.email}
         phone={data.phone}
+        reason={data.update_reason}
         loading={!data.id}
         labels={["Details", "Unit"]}
         activeTab={0}

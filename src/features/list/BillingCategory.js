@@ -283,6 +283,20 @@ function Component({ view, canAdd }) {
               ]
             : []
         }
+        actionDownloads={
+          view
+            ? null
+            : [
+              <Button
+              color="Download"
+              label="Download .csv"
+              icon={<FiDownload />}
+              onClick={() =>
+                dispatch(downloadBillingCategory(search, building))
+              }
+            />,
+            ]
+        }
         actions={
           view
             ? null
@@ -294,13 +308,6 @@ function Component({ view, canAdd }) {
                     onClick={() => setUpload(true)}
                   />
                 ),
-                <Button
-                  label="Download .csv"
-                  icon={<FiDownload />}
-                  onClick={() =>
-                    dispatch(downloadBillingCategory(search, building))
-                  }
-                />,
               ]
         }
         onClickAddBilling={

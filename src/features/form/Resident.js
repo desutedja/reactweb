@@ -217,6 +217,7 @@ function Component() {
                         }} />
                         {exist && <button
                             type="button"
+                            style={{ color: 'white' }}
                             onClick={() => {
                                 dispatch(post(endpointResident + '/management/resident/check', {
                                     email: values.email,
@@ -245,6 +246,7 @@ function Component() {
                         </span>
                                 <button type="button" style={{
                                     marginBottom: 16,
+                                    color: 'white'
                                 }} onClick={() => {
                                     console.log(emailRegistered);
                                     history.push(emailRegistered + '');

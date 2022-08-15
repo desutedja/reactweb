@@ -18,7 +18,7 @@ import TwoColumn from "../../../components/TwoColumn";
 import Pill from "../../../components/Pill";
 import { dateTimeFormatter, toSentenceCase, toMoney } from "../../../utils";
 import { MdChatBubble } from "react-icons/md";
-import { FiCheck, FiUserPlus } from "react-icons/fi";
+import { FiCheck, FiFile, FiFileText, FiUserPlus } from "react-icons/fi";
 
 import Button from "../../../components/Button";
 import Filter from "../../../components/Filter";
@@ -26,15 +26,17 @@ import Modal from "../../../components/Modal";
 
 import { Form } from "reactstrap";
 import { Input } from "reactstrap";
+import InputDash from "../../../components/InputDash";
 import SubmitButton from "../../form/components/SubmitButton";
 
 import Template from "../components/Template";
+import parse from 'html-react-parser';
 
 import { Card, CardHeader, CardFooter, CardTitle, CardBody } from "reactstrap";
 
 import { useParams } from "react-router-dom";
 import { get } from "../../slice";
-import { resolveTask, reassignTask, setSelected, delegateTask, rejectDelegate, acceptAssignHelper, rejectHelper } from "../../slices/task";
+import { resolveTask, reassignTask, setSelected, delegateTask, rejectDelegate, acceptAssignHelper, rejectHelper, addReportAttachment } from "../../slices/task";
 import {
   endpointTask,
   endpointManagement,
@@ -72,6 +74,12 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   const [staffDelegate, setStaffDelegate] = useState({});
   const [staffDelegates, setStaffDelegates] = useState([]);
   const [rejectMessage, setRejectMessage] = useState("");
+  const [reportAttachment, setReportAttachment] = useState(false);
+  const [descriptionReport, setDescriptionReport] = useState("");
+  const [attachmentReport, setAttachmentReport] = useState();
+  const [attachmentReport1, setAttachmentReport1] = useState("");
+  const [attachmentReport2, setAttachmentReport2] = useState("");
+  const [attachmentReport3, setAttachmentReport3] = useState("");
   const [staffRejectDelegates, setStaffRejectDelegates] = useState([]);
   const [staffRejectHelper, setStaffRejectHelper] = useState([]);
   const [
@@ -102,6 +110,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         : data.task_type === "service"
         ? "technician"
         : "courier";
+    let department = 
+      data.department?.id
 
     assign &&
       (!search || search.length >= 1) &&
@@ -109,11 +119,14 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
+            "&department_id=" + 
+            // department +
             "&task_id=" +
             id +
             "&staff_role=" +
-            staffRole +
+            "all_staff" +
+            // staffRole +
             "&status=active" +
             (data.priority === "emergency"
               ? "&is_ongoing_emergency=true"
@@ -142,6 +155,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         : data.task_type === "service"
         ? "technician"
         : "courier";
+    let department = 
+      data.department?.id
 
     assignHelper &&
       (!search || search.length >= 1) &&
@@ -149,11 +164,14 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
+            "&department_id=" + 
+            // department +
             "&task_id=" +
             id +
             "&staff_role=" +
-            staffRole +
+            "all_staff" +
+            // staffRole +
             "&status=active" +
             (data.priority === "emergency"
               ? "&is_ongoing_emergency=true"
@@ -182,6 +200,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         : data.task_type === "service"
         ? "technician"
         : "courier";
+    let department = 
+      data.department?.id
 
     delegate &&
       (!search || search.length >= 1) &&
@@ -189,11 +209,14 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
+            "&department_id=" + 
+            // department +
             "&task_id=" +
             id +
             "&staff_role=" +
-            staffRole +
+            "all_staff" +
+            // staffRole +
             "&status=active" +
             (data.priority === "emergency"
               ? "&is_ongoing_emergency=true"
@@ -222,6 +245,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         : data.task_type === "service"
         ? "technician"
         : "courier";
+    let department = 
+      data.department?.id
 
     reject &&
       (!search || search.length >= 1) &&
@@ -229,11 +254,14 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
+            "&department_id=" + 
+            // department +
             "&task_id=" +
             id +
             "&staff_role=" +
-            staffRole +
+            "all_staff" +
+            // staffRole +
             "&status=active" +
             (data.priority === "emergency"
               ? "&is_ongoing_emergency=true"
@@ -262,6 +290,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         : data.task_type === "service"
         ? "technician"
         : "courier";
+    let department = 
+      data.department?.id
 
     rejectingHelper &&
       (!search || search.length >= 1) &&
@@ -269,11 +299,14 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         get(
           endpointManagement +
             "/admin/staff/list" +
-            "?limit=5&page=1&max_ongoing_task=1" +
+            "?limit=5&page=1" +
+            "&department_id=" + 
+            // department +
             "&task_id=" +
             id +
             "&staff_role=" +
-            staffRole +
+            "all_staff" +
+            // staffRole +
             "&status=active" +
             (data.priority === "emergency"
               ? "&is_ongoing_emergency=true"
@@ -346,6 +379,83 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         }}
       >
         Are you sure you want to resolve this task?
+      </Modal>
+      <Modal
+        title="Add Report & Attachment"
+        isOpen={reportAttachment}
+        toggle={() => setReportAttachment(false)}
+        okLabel="Submit"
+        onClick={() => {
+          setReportAttachment(false);
+          dispatch(addReportAttachment({
+            task_id: data.task_id, 
+            "description": descriptionReport,
+            "attachment_1": attachmentReport1 != "" ? attachmentReport1 : null,
+            "attachment_2": attachmentReport2 != "" ? attachmentReport2 : null,
+            "attachment_3": attachmentReport3 != "" ? attachmentReport3 : null,
+            "attachments": attachmentReport1 != "" && attachmentReport2 == "" && attachmentReport3 == "" ? 1 
+                          : attachmentReport1 != "" && attachmentReport2 != "" && attachmentReport3 == "" ? 2 
+                          : attachmentReport1 != "" && attachmentReport2 != "" && attachmentReport3 != "" ? 3 
+                          : null,
+          }));
+        }}
+        cancelLabel="Cancel"
+        onClickSecondary={() => {
+          setReportAttachment(false);
+        }}
+      >
+        <InputDash
+          type="textarea"
+          label="Masukkan Deskripsi"
+          name="description"
+          inputValue={descriptionReport}
+          setInputValue={setDescriptionReport}
+        />
+        <br />
+        <div className="row">
+          <div className="col">
+            <h5>
+              Unggah Gambar (Maks. 3)
+            </h5>
+          </div>
+        </div>
+        <div className="row">
+          <div className="col" style={{maxWidth: 88}}>
+            <InputDash
+              type="fileImages"
+              label="Attachment"
+              placeholder="Insert File"
+              inputValue={attachmentReport1}
+              setInputValue={setAttachmentReport1}
+            />
+          </div>
+          <br />
+          {
+            attachmentReport1 != "" &&
+            <div className="col" style={{maxWidth: 88}}>
+              <InputDash
+                type="fileImages"
+                label="Attachment 2"
+                placeholder="Insert File"
+                inputValue={attachmentReport2}
+                setInputValue={setAttachmentReport2}
+              />
+            </div>          
+          }
+          <br />
+          {
+            attachmentReport1 != "" && attachmentReport2 != "" &&
+            <div className="col" style={{maxWidth: 88}}>
+              <InputDash
+                type="fileImages"
+                label="Attachment 3"
+                placeholder="Insert File"
+                inputValue={attachmentReport3}
+                setInputValue={setAttachmentReport3}
+              />
+            </div>
+          }
+        </div>
       </Modal>
       <Modal
         title="Assign Staff"
@@ -507,8 +617,8 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
             <Column style={{ width: "100%" }}>
               <Row>
                 <Column style={{ flex: "6", display: "block" }}>
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
-                    <CardHeader>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
+                    <CardHeader style={{ borderTopRightRadius: 10, borderTopLeftRadius: 10 }}>
                       <TwoColumn
                         first={data.ref_code}
                         second={
@@ -553,7 +663,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       </div>
                     </CardBody>
                     {role === "bm" && (
-                      <CardFooter>
+                      <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                         <div style={{ textAlign: "right", padding: "5px" }}>
                           <Link
                             to={"/" + role + "/chat/" + data.ref_code}
@@ -570,10 +680,25 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       </CardFooter>
                     )}
                   </Card>
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
+                    <CardHeader style={{ background: "Transparent" }}>
+                      <TwoColumn
+                        first={"Attachment"}
+                        second={" "
+                          // <div>
+                          //   <Link
+                          //     to="#"
+                          //     onClick={() => {
+                          //       setAttachmentModal(true);
+                          //     }}
+                          //   >
+                          //     + Add Attachment
+                          //   </Link>
+                          // </div>
+                        }
+                      />
+                    </CardHeader>
                     <CardBody>
-                      <h5>Attachment</h5>
-                      <hr />
                       {data.attachment_1 ? (
                         attachments.map(
                           (el) =>
@@ -588,6 +713,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                                 style={{
                                   height: 80,
                                   aspectRatio: 1,
+                                  maxWidth: 80,
                                 }}
                               />
                             )
@@ -603,10 +729,39 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       )}
                     </CardBody>
                   </Card>
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
+                    <CardHeader style={{ background: "Transparent" }}>
+                      <TwoColumn
+                        first={"Reports"}
+                        // second={" "}
+                        second={
+                          data.status === "in_progress" ?
+                          <div>
+                            <Link
+                              to="#"
+                              onClick={() => {
+                                setReportAttachment(true);
+                              }}
+                              style={{color: "#E12029"}}
+                            >
+                              + Add Report & Attachment
+                            </Link>
+                          </div>
+                          :
+                          <div>
+                            <Link
+                              to="#"
+                              style={{color: "#808080"}}
+                            >
+                              + Add Report & Attachment
+                            </Link>
+                          </div>
+                        }
+                      />
+                    </CardHeader>
                     <CardBody>
-                      <h5>Reports</h5>
-                      <hr />
+                      {/* <h5>Reports</h5>
+                      <hr /> */}
                       <Column style={{ lineHeight: "1.5em" }}>
                         {data.task_reports?.length > 0 ? (
                           <>
@@ -617,7 +772,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                                     <div>
                                       <b>
                                         {" "}
-                                        Report {index + 1} by {el.assignee_name}{" "}
+                                        Report {index + 1} by {el.assignee_name}{" "} {el.assignee_name === "Administrator" ? null : "as"} {toSentenceCase(el.role)}
                                       </b>
                                     </div>
                                     <small>
@@ -626,7 +781,9 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                                     </small>
                                   </div>
                                 </Row>
-                                <Row>{el.description}</Row>
+                                <Row>
+                                  <div>{parse(el.description)}</div>
+                                </Row>
                                 <hr />
                                 <Row>
                                   {el.attachments > 0 &&
@@ -643,6 +800,9 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                                             style={{
                                               height: 80,
                                               aspectRatio: 1,
+                                              marginRight: "8px",
+                                              borderRadius: 10,
+                                              maxWidth: 80,
                                             }}
                                           />
                                         )
@@ -663,7 +823,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                 <Column
                   style={{ flex: "4", display: "block", maxWidth: "700px" }}
                 >
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
                     <CardBody>
                       <TwoColumn
                         first={<h5>Status</h5>}
@@ -691,7 +851,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       : (role === "bm" ? canUpdate : true)
                       ? data.status !== "completed" &&
                         data.status !== "canceled" && (
-                          <CardFooter>
+                          <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                             <Button
                               onClick={() => setResolve(true)}
                               icon={<FiCheck />}
@@ -701,7 +861,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                         )
                       : null}
                   </Card>
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
                     <CardBody>
                       <TwoColumn
                         first={<h5>Requester</h5>}
@@ -761,7 +921,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                   </Card>
                   {view ? null : (data.request_delegate === null && data.request_helper === null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
                     <CardBody>
                       <h5>Assignee</h5>
                       <div
@@ -820,7 +980,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     </CardBody>
                     {view ? null : (data.status === "created" || data.status === "rejected") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                      <CardFooter>
+                      <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                         <Button
                           onClick={() => setAssign(true)}
                           icon={<FiUserPlus />}
@@ -831,7 +991,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     }
                     {view ? null : (data.status === "in_progress") && (data.request_delegate?.status !== "requested" || data.request_delegate?.status === "reject" || data.request_delegate === null) && (data.request_helper === null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                        <CardFooter>
+                        <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                           <Button
                             onClick={() => setAssignHelper(true)}
                             icon={<FiUserPlus />}
@@ -843,7 +1003,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                   </Card>
                       ) : view ? null : (data.status === "completed") && ((data.request_delegate === null || data.request_helper === null) || (data.request_delegate === null && data.request_helper === null)) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
                     <CardBody>
                       <h5>Assignee</h5>
                       <div
@@ -902,7 +1062,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     </CardBody>
                     {view ? null : (data.status === "created" || data.status === "rejected") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                      <CardFooter>
+                      <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                         <Button
                           onClick={() => setAssign(true)}
                           icon={<FiUserPlus />}
@@ -913,7 +1073,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     }
                     {view ? null : (data.status === "in_progress") && (data.request_delegate?.status !== "requested" || data.request_delegate?.status === "reject" || data.request_delegate === null) && (data.request_helper === null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                        <CardFooter>
+                        <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                           <Button
                             onClick={() => setAssignHelper(true)}
                             icon={<FiUserPlus />}
@@ -925,7 +1085,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                   </Card>
                       ) : view ? null : (data.status !== null ) && (data.request_delegate === null && data.request_helper === null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
                     <CardBody>
                       <h5>Assignee</h5>
                       <div
@@ -984,7 +1144,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     </CardBody>
                     {view ? null : (data.status === "created" || data.status === "rejected") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                      <CardFooter>
+                      <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                         <Button
                           onClick={() => setAssign(true)}
                           icon={<FiUserPlus />}
@@ -995,7 +1155,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     }
                     {view ? null : (data.status === "in_progress") && (data.request_delegate?.status !== "requested" || data.request_delegate?.status === "reject" || data.request_delegate === null) && (data.request_helper === null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                        <CardFooter>
+                        <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                           <Button
                             onClick={() => setAssignHelper(true)}
                             icon={<FiUserPlus />}
@@ -1008,7 +1168,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       ) :
                       view ? null : (data.request_delegate !== null || data.request_helper !== null) && (data.request_delegate?.status === "requested") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
                     <CardBody>
                       <h5>Assignee</h5>
                       <div
@@ -1067,7 +1227,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     </CardBody>
                     {view ? null : (data.status === "created" || data.status === "rejected") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                      <CardFooter>
+                      <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                         <Button
                           onClick={() => setAssign(true)}
                           icon={<FiUserPlus />}
@@ -1078,7 +1238,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     }
                     {view ? null : (data.status === "in_progress") && (data.request_delegate?.status !== "requested" || data.request_delegate?.status === "reject" || data.request_delegate === null) && (data.request_helper !== null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                        <CardFooter>
+                        <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                           <Button
                             onClick={() => setAssignHelper(true)}
                             icon={<FiUserPlus />}
@@ -1091,7 +1251,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                       ) : 
                       view ? null : (data.status === "in_progress" || data.status === "rejected") && (data.request_helper?.status === "requested") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
                     <CardBody>
                       <h5>Assignee</h5>
                       <div
@@ -1205,7 +1365,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     {view ? null : (data.status === "rejected" ||
                         data.status === "created") && (data.request_delegate?.status !== "requested" && data.request_delegate?.status !== "rejected") && (data.request_helper?.status !== null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                      <CardFooter>
+                      <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                         <Button
                           onClick={() => setAssign(true)}
                           icon={<FiUserPlus />}
@@ -1216,7 +1376,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     }
                     {view ? null : (data.status === "in_progress") && (data.request_delegate?.status !== "requested" || data.request_delegate?.status !== "rejected") && (data.request_helper?.status !== "rejected" || data.request_helper?.status === "requested") && (data.request_helper !== null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                        <CardFooter>
+                        <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                           <Button
                             onClick={() => setAssignHelper(true)}
                             icon={<FiUserPlus />}
@@ -1233,7 +1393,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                   </Card>
                       ) : view ? null : (data.status === "in_progress" || data.status === "rejected") && (data.request_helper?.status === "ask_staff") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
                     <CardBody>
                       <h5>Assignee</h5>
                       <div
@@ -1348,7 +1508,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                   </Card>
                       ) : view ? null : (data.status === "in_progress" || data.status === "rejected" || data.status === "completed" || data.status === "reported" || data.status === "approved") && ((data.request_helper?.status === "approved") && (data.request_delegate === null || data.request_delegate?.status === "rejected")) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
                     <CardBody>
                       <h5>Assignee</h5>
                       <div
@@ -1463,7 +1623,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                   </Card>
                       ) : view ? null : (data.status === "in_progress" || data.status === "rejected") && (data.request_helper?.status === "rejected") &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
                     <CardBody>
                       <h5>Assignee</h5>
                       <div
@@ -1584,7 +1744,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     {view ? null : (data.status === "rejected" ||
                         data.status === "created") && (data.request_delegate?.status !== "requested" && data.request_delegate?.status !== "rejected") && (data.request_helper?.status === "rejected") && (data.request_helper?.status !== null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                      <CardFooter>
+                      <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                         <Button
                           onClick={() => setAssignHelper(true)}
                           icon={<FiUserPlus />}
@@ -1595,7 +1755,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     }
                     {view ? null : (data.status === "in_progress") && (data.request_delegate?.status !== "requested" || data.request_delegate?.status !== "rejected") && (data.request_helper?.status !== "rejected" || data.request_helper?.status === "requested") && (data.request_helper !== null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
-                        <CardFooter>
+                        <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                           <Button
                             onClick={() => setAssignHelper(true)}
                             icon={<FiUserPlus />}
@@ -1615,7 +1775,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                   {view ? null : (data.request_delegate?.status !== "approved") && (data.request_delegate !== null) && 
                   (data.request_helper?.status !== "requested") && (data.request_helper === null) &&
                   (role === "bm" ? canUpdate && canAdd : true) ? (
-                  <Card style={{ marginRight: "20px", marginBottom: "20px" }}>
+                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10 }}>
                     <CardBody>
                       <h5>Request Delegate</h5>
                       <div
@@ -1680,7 +1840,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
                     {view ? null : (data.request_delegate?.status !== "approved" && data.request_delegate?.status !== "ask_staff") && (data.request_delegate !== null) &&
                       (role === "bm" ? canUpdate && canAdd : true) ? (
                         <div>
-                          <CardFooter>
+                          <CardFooter style={{ borderBottomRightRadius: 10, borderBottomLeftRadius: 10 }}>
                             <Button
                               onClick={() => setDelegate(true)} 
                               label="Accept"

@@ -41,8 +41,8 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.filtered_item;
-      state.total_pages = data.filtered_page;
+      state.total_items = data.TotalItemFiltered;
+      state.total_pages = data.TotalPage;
     },
     setUnitData: (state, action) => {
       const data = action.payload;
@@ -77,47 +77,52 @@ export const {
   refresh,
 } = slice.actions;
 
-export const getResident = (
-  pageIndex,
-  pageSize,
-  search = search,
-  status = "",
-  kyc = kyc,
-  online = "",
-  onboarding = ""
-) => (dispatch) => {
-  dispatch(startAsync());
+export const getResident =
+  (
+    pageIndex,
+    pageSize,
+    search = search,
+    status = "",
+    kyc = kyc,
+    online = "",
+    onboarding = "",
+    building ="",
+  ) =>
+  (dispatch) => {
+    dispatch(startAsync());
 
-  dispatch(
-    get(
-      residentEndpoint +
-        "/read" +
-        "?page=" +
-        (pageIndex + 1) +
-        "&limit=" +
-        pageSize +
-        "&search=" +
-        search +
-        "&kyc=" +
-        kyc +
-        "&status=" +
-        status +
-        "&sort_field=created_on&sort_type=DESC" +
-        "&online=" +
-        online +
-        "&onboarding=" +
-        onboarding,
-      (res) => {
-        dispatch(setData(res.data.data));
+    dispatch(
+      get(
+        residentEndpoint +
+          "/read" +
+          "?page=" +
+          (pageIndex + 1) +
+          "&limit=" +
+          pageSize +
+          "&search=" +
+          search +
+          "&kyc=" +
+          kyc +
+          "&status=" +
+          status +
+          "&sort_field=created_on&sort_type=DESC" +
+          "&online=" +
+          online +
+          "&onboarding=" +
+          onboarding +
+          "&building_id=" +
+          building,
+        (res) => {
+          dispatch(setData(res.data.data));
 
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
 export const createResident = (data, history) => (dispatch, getState) => {
   dispatch(startAsync());
@@ -163,7 +168,7 @@ export const editResident = (data, history, id) => (dispatch) => {
             message: "Resident has been updated.",
           })
         );
-        
+
         dispatch(stopAsync());
       },
       (err) => {
@@ -220,69 +225,67 @@ export const getResidentDetails = (row, history, url) => (dispatch) => {
   );
 };
 
-export const getSubaccount = (pageIndex, pageSize, search, id) => (
-  dispatch
-) => {
-  dispatch(startAsync());
+export const getSubaccount =
+  (pageIndex, pageSize, search, id) => (dispatch) => {
+    dispatch(startAsync());
 
-  dispatch(
-    get(
-      residentEndpoint +
-        "/subaccount" +
-        "?page=" +
-        (pageIndex + 1) +
-        "&id=" +
-        id +
-        "&limit=" +
-        pageSize +
-        "&sort_field=created_on&sort_type=DESC" +
-        "&search=" +
-        search,
+    dispatch(
+      get(
+        residentEndpoint +
+          "/subaccount" +
+          "?page=" +
+          (pageIndex + 1) +
+          "&id=" +
+          id +
+          "&limit=" +
+          pageSize +
+          "&sort_field=created_on&sort_type=DESC" +
+          "&search=" +
+          search,
 
-      (res) => {
-        dispatch(setSubaccountData(res.data.data));
-        console.log("->", res);
+        (res) => {
+          dispatch(setSubaccountData(res.data.data));
+          console.log("->", res);
 
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
-export const getResidentUnit = (pageIndex, pageSize, search, id) => (
-  dispatch
-) => {
-  dispatch(startAsync());
+export const getResidentUnit =
+  (pageIndex, pageSize, search, id) => (dispatch) => {
+    dispatch(startAsync());
 
-  dispatch(
-    get(
-      residentEndpoint +
-        "/unit" +
-        "?page=" +
-        (pageIndex + 1) +
-        "&id=" +
-        id +
-        "&limit=" +
-        pageSize +
-        "&sort_field=created_on&sort_type=DESC" +
-        "&search=" +
-        search,
+    dispatch(
+      get(
+        residentEndpoint +
+          "/unit" +
+          "?page=" +
+          (pageIndex + 1) +
+          "&id=" +
+          id +
+          "&limit=" +
+          pageSize +
+          "&sort_field=created_on&sort_type=DESC" +
+          "&search=" +
+          search,
 
-      (res) => {
-        console.log(res.data.data);
-        dispatch(setUnitData(res.data.data));
+        (res) => {
+          console.log(res.data.data);
+          dispatch(setUnitData(res.data.data));
 
-        dispatch(stopAsync());
-      },
-      (err) => {
-        dispatch(stopAsync());
-      }
-    )
-  );
-};
+          dispatch(stopAsync());
+        },
+        (err) => {
+          dispatch(stopAsync());
+        }
+      )
+    );
+  };
 
 export const addResidentUnit = (data) => (dispatch) => {
   dispatch(startAsync());

@@ -231,94 +231,94 @@ function Component() {
     return (
         <Loading loading={loading}>
             <Modal
-        title="Choose Building"
-        subtitle="Choose building to set filter"
-        isOpen={openModalBuilding}
-        toggle={() => setOpenModalBuilding(false)}
-        cancelLabel="Cancel"
-        onClickSecondary={() => {
-          setBuildingName({});
-          setOpenModalBuilding(false);
-        }}
-      >
-        <>
-              <Input
-                label="Search Building"
-                compact
-                icon={<FiSearch />}
-                inputValue={search}
-                setInputValue={setSearch}
-              />
-              <Filter
-                data={buildingDatas}
-                onClick={(el) => {
-                  if (!el.value) {
-                    setLimit(limit + el.restTotal);
-                    return;
-                  }
-                  setBuildingName(el.value);
-                  setBuildingLabel(el.label);
-                  setTower("");
-                  setLimit(5);
-                  setOpenModalBuilding(false);
+                title="Choose Building"
+                subtitle="Choose building to set filter"
+                isOpen={openModalBuilding}
+                toggle={() => setOpenModalBuilding(false)}
+                cancelLabel="Cancel"
+                onClickSecondary={() => {
+                setBuildingName({});
+                setOpenModalBuilding(false);
                 }}
-                onClickAll={() => {
-                  setBuildingName("");
-                  setBuildingLabel("");
-                  setTower("");
-                  setLimit(5);
-                  setOpenModalBuilding(false);
+            >
+                <>
+                <Input
+                    label="Search Building"
+                    compact
+                    icon={<FiSearch />}
+                    inputValue={search}
+                    setInputValue={setSearch}
+                />
+                <Filter
+                    data={buildingDatas}
+                    onClick={(el) => {
+                    if (!el.value) {
+                        setLimit(limit + el.restTotal);
+                        return;
+                    }
+                    setBuildingName(el.value);
+                    setBuildingLabel(el.label);
+                    setTower("");
+                    setLimit(5);
+                    setOpenModalBuilding(false);
+                    }}
+                    onClickAll={() => {
+                    setBuildingName("");
+                    setBuildingLabel("");
+                    setTower("");
+                    setLimit(5);
+                    setOpenModalBuilding(false);
+                    }}
+                />
+                </>
+                {buildingDatas.length === 0 && (
+                <p
+                    style={{
+                    fontStyle: "italic",
+                    }}
+                >
+                    No building data found.
+                </p>
+                )}
+            </Modal>
+            <Modal
+                title="Choose Unit Section"
+                subtitle="Choose unit section to set filter"
+                isOpen={openModalUnit}
+                toggle={() => setOpenModalUnit(false)}
+                cancelLabel="Cancel"
+                onClickSecondary={() => {
+                setTower({});
+                setOpenModalUnit(false);
                 }}
-              />
-            </>
-        {buildingDatas.length === 0 && (
-          <p
-            style={{
-              fontStyle: "italic",
-            }}
-          >
-            No building data found.
-          </p>
-        )}
-      </Modal>
-      <Modal
-        title="Choose Unit Section"
-        subtitle="Choose unit section to set filter"
-        isOpen={openModalUnit}
-        toggle={() => setOpenModalUnit(false)}
-        cancelLabel="Cancel"
-        onClickSecondary={() => {
-          setTower({});
-          setOpenModalUnit(false);
-        }}
-      >
-        <>
-              <Filter
-                data={sectionDatas}
-                onClick={(el) => {
-                  setTower(el.value);
-                  setUnitLabel(el.label);
-                  setLimit(5);
-                  setOpenModalUnit(false);
-                }}
-                onClickAll={() => {
-                  setTower("");
-                  setUnitLabel("");
-                  setLimit(5);
-                  setOpenModalUnit(false);
-                }}
-              />
-            </>
-        {sectionDatas.length === 0 && (
-          <p
-            style={{
-              fontStyle: "italic",
-            }}
-          >
-            No section data found.
-          </p>
-        )}
-      </Modal>
+            >
+                <>
+                <Filter
+                    data={sectionDatas}
+                    onClick={(el) => {
+                    setTower(el.value);
+                    setUnitLabel(el.label);
+                    setLimit(5);
+                    setOpenModalUnit(false);
+                    }}
+                    onClickAll={() => {
+                    setTower("");
+                    setUnitLabel("");
+                    setLimit(5);
+                    setOpenModalUnit(false);
+                    }}
+                />
+                </>
+                {sectionDatas.length === 0 && (
+                <p
+                    style={{
+                    fontStyle: "italic",
+                    }}
+                >
+                    No section data found.
+                </p>
+                )}
+            </Modal>
             <div className="row no-gutters">
                 <div className="col">
                     <div className="Container color-4 d-flex flex-column cursor-pointer"
