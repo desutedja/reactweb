@@ -5,7 +5,6 @@ import { FiSearch, FiDownload, FiUpload, FiCheck } from "react-icons/fi";
 import { confirmAlert } from "react-confirm-alert";
 import CustomAlert from "../../components/CustomAlert";
 import PillBilling from "../../components/PillBilling";
-import { closeAlert } from "../slice";
 import "react-confirm-alert/src/react-confirm-alert.css";
 
 import Modal from "../../components/Modal";
@@ -216,6 +215,9 @@ function Component({ view }) {
           Header: "Status",
           accessor: (row) => (
             <PillBilling
+              minWidth="80px"
+              paddingTop="6px"
+              paddingBottom="6px"
               color={
                 row.status === "paid"
                   ? "success"
@@ -386,7 +388,6 @@ function Component({ view }) {
                 published_date: inputDateTimeFormatter24(schedule),
               },
               (res) => {
-                console.log(res.data.data);
                 dispatch(
                   setInfo({
                     color: "success",
@@ -494,7 +495,6 @@ function Component({ view }) {
                     published_date: inputDateTimeFormatter24(schedule),
                   },
                   (res) => {
-                    console.log(res.data.data);
                     dispatch(
                       setInfo({
                         color: "success",
@@ -524,7 +524,6 @@ function Component({ view }) {
                     with_image: selectWithImage,
                   },
                   (res) => {
-                    console.log(res.data.data);
                     dispatch(
                       setInfo({
                         color: "success",
@@ -637,7 +636,6 @@ function Component({ view }) {
             }
           });
           setMultiActionRows([...selectedRowIds]);
-          console.log(selectedRowIds);
         }}
         filterVars={[building, released]}
         filters={
@@ -689,11 +687,11 @@ function Component({ view }) {
                   label: (
                     <p>
                       Released:
-                      {released ? 
+                      {released ? (
                         <b> {toSentenceCase(released)}</b>
-                       : 
+                      ) : (
                         <b> All</b>
-                      }
+                      )}
                     </p>
                   ),
                   delete: () => {
