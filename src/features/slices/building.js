@@ -287,8 +287,8 @@ export const getBuildingUnit = (
         "&search=" +
         search +
         "&sort_field=created_on&sort_type=DESC" +
-        "&limit=" +
-        pageSize +
+        "&limit=9999" +
+        // pageSize +
         (hasResident ? "&has_resident=true" : ""),
 
       (res) => {

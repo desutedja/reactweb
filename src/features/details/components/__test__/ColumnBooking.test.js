@@ -3,7 +3,7 @@ import React from "react";
 import ColumnBooking from "./../ColumnBooking";
 
 describe("Template Component", () => {
-  test("render Image Output true", () => {
+  test("renderImageOutputTrue", () => {
     const { getByTestId } = render(<ColumnBooking image="image" />);
 
     const imageOutput = getByTestId("image-output");
@@ -12,7 +12,7 @@ describe("Template Component", () => {
     expect(imageOutput.src).toContain("image");
   });
 
-  test("render Image Output false", () => {
+  test("renderImageOutputFalse", () => {
     const { getByTestId } = render(<ColumnBooking image={false} />);
 
     const imageOutput = getByTestId("image-output");
@@ -21,7 +21,7 @@ describe("Template Component", () => {
     expect(imageOutput.src).toContain("http://localhost/default_img.jpg");
   });
 
-  test("render Link Output true", () => {
+  test("renderLinkOutputTrue", () => {
     const { queryByTestId } = render(<ColumnBooking link="site-link" />);
 
     const linkOutput = queryByTestId("link-avail");
@@ -30,7 +30,7 @@ describe("Template Component", () => {
     expect(linkOutput.innerHTML).toContain("site-link");
   });
 
-  test("render Link Output false", () => {
+  test("renderLinkOutputFalse", () => {
     const { queryByTestId } = render(<ColumnBooking link={false} />);
 
     const linkOutput = queryByTestId("link-avail");
