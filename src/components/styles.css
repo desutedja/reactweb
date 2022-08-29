@@ -12,6 +12,21 @@
   transition: .2s;
 }
 
+.ButtonNew {
+  background-color: var(--primary-color)!important;
+  min-width: 100px;
+  /* max-width: 100px; */
+  min-height: 2.4rem;
+  border-radius: 6px;
+  /* margin: 8px; */
+  margin: 4px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .2s;
+}
+
 .ButtonWizard {
   background-color: var(--primary-color)!important;
   min-width: 50px;
