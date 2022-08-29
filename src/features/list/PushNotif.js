@@ -10,9 +10,10 @@ import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
 import PushNotif from "../../components/cells/PushNotif";
-import { setSelected, } from "../slices/userRequest";
+import { setSelected } from "../slices/userRequest";
 import Badge from "../../components/Badge";
 import Filter from "../../components/Filter";
+import { endpointNotification } from "../../settings";
 
 const listCate = [
   { label: "Billing", value: 1 },
@@ -58,15 +59,7 @@ const columns = [
                 : "warning text-white"
             }
           >
-            {row.status === "draft"
-              ? "Draft"
-              : row.status === "inactive"
-              ? "Inavtive"
-              : row.status === "ended"
-              ? "Ended"
-              : row.status === "active"
-              ? "Active"
-              : toSentenceCase(row.status)}
+            {toSentenceCase(row.status)}
           </Badge>
         </div>
       );
@@ -83,9 +76,7 @@ const columns = [
             <div>
               <b style={{ fontSize: 14 }}>{row.title}</b>
               <br />
-              <small style={{ color: "#C4C4C4" }}>
-                {row.scheduling_option}
-              </small>
+              <small style={{ color: "#C4C4C4" }}>{row.description}</small>
             </div>
           </>,
         ]}
@@ -97,7 +88,8 @@ const columns = [
     accessor: (row) => {
       return (
         <div>
-          {row.filters.map((item) => (
+          {row.filter}
+          {/* {row.filters.map((item) => (
             <div>
               {(item.building_name &&
               !item.age_from &&
@@ -125,7 +117,7 @@ const columns = [
                   : []) +
                 (item.billing ? "Billing" : [])}
             </div>
-          ))}
+          ))} */}
         </div>
       );
     },
@@ -133,7 +125,7 @@ const columns = [
   {
     Header: "Deliveries",
     accessor: (row) => {
-      return <div>{row.deliveries}</div>;
+      return <div>{row.remarks}</div>;
     },
   },
 ];
@@ -166,8 +158,16 @@ function Component({ view, title = "", pagetitle }) {
             (page, limit, searchItem, sortField, sortType) => {
               setLoading(true);
               dispatch(
-                get("https://demo9353390.mockable.io/pushNotif",
-
+                get(
+                  endpointNotification +
+                    "/pushnotif?page=" +
+                    (page + 1) +
+                    "&limit=" +
+                    limit +
+                    "&filter=" +
+                    stat +
+                    "&search=" +
+                    searchItem,
                   (res) => {
                     console.log(res.data.data);
                     setData(res.data.data);
