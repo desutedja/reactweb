@@ -55,14 +55,14 @@
 
 .Button.Download {
   background-color: #FFFFFF !important;
-  color: #000000 !important;
+  color: #3E414C !important;
   border: 1px solid #E9E9E9 !important;
   font-weight: 500;
 }
 
 .ButtonWizard.Download {
   background-color: #FFFFFF !important;
-  color: #000000 !important;
+  color: #3E414C !important;
   border: 1px solid #E9E9E9 !important;
   font-weight: 500;
 }
@@ -509,7 +509,7 @@ input[type="button"]:disabled {
 } */
 .radio-box label.high {
   /* background-color: #ffc107; */
-  color: #212529;
+  color: #3E414C;
   transition: 0.1s;
 }
 .radio-box label.normal {
@@ -689,11 +689,11 @@ input[type="button"]:disabled {
   margin-top: 4px;
   font-size: 12px;
   font-weight: 500;
-  color: #000000;
+  color: #3E414C;
 }
 
 .wizard-step-body-icon {
-  color: #000000;
+  color: #3E414C;
 }
 
 .wizard-step-body-inactive {
@@ -770,7 +770,7 @@ input[type="button"]:disabled {
 }
 
 .border-step-wizard-done {
-  border-top: 4px solid #000000;
+  border-top: 4px solid #3E414C;
 }
 
 .special_modal .modal-content{
