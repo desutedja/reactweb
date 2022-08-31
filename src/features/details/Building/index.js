@@ -14,9 +14,12 @@ import Module from "./contents/Module";
 import CustomSetting from "./contents/CustomSetting";
 import { endpointAdmin } from "../../../settings";
 import { useParams, useHistory } from "react-router-dom";
-import { get, getErr, put, setInfo } from "../../slice";
-import { setSelected, deleteBuilding, refresh, startAsync, stopAsync} from "../../slices/building";
-import {setting} from "./contents/data";
+import { get, getErr } from "../../slice";
+import {
+  setSelected,
+  deleteBuilding,
+  editCustomSetting,
+} from "../../slices/building";
 import Input from "../../../components/Input";
 import { FiBell, FiMessageSquare } from "react-icons/fi";
 import { toSentenceCase } from "../../../utils";
@@ -41,7 +44,7 @@ const labels = {
 };
 
 const settings = {
-  "Custom Setting" : [
+  "Custom Setting": [
     "main_color",
     "secondary_color",
     "logo_url",
@@ -71,7 +74,6 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const [openEdit, setOpenEdit] = useState(false);
-  const [selectedRow, setRow] = useState({});
   const [openLogo, setOpenLogo] = useState(false);
   const [openLW, setOpenLW] = useState(false);
   const [openSplash, setOpenSplash] = useState(false);
@@ -85,7 +87,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   let history = useHistory();
   let { id } = useParams();
 
-  const reload=()=>window.location.reload();
+  const { refreshToggle } = useSelector((state) => state.building);
 
   const contents = [
     <Detail
@@ -145,7 +147,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
       canUpdate={auth.role === "bm" ? canUpdate : true}
       canAdd={auth.role === "bm" ? canAdd : true}
       canDelete={auth.role === "bm" ? canDelete : true}
-    />
+    />,
   ];
   const contentsBM = [
     <Section
@@ -180,17 +182,18 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   }, [id, dispatch]);
 
   useEffect(() => {
-
-  if (auth.role === 'sa') {
+    if (auth.role === "sa") {
       dispatch(
-        getErr(endpointAdmin + "/building/settings?building_id=" + id, (res) => {
-          setSettingData(res.data.data);
-          dispatch(setSelected(res.data.data));
-        })
+        getErr(
+          endpointAdmin + "/building/settings?building_id=" + id,
+          (res) => {
+            setSettingData(res.data.data);
+          }
+        )
       );
-  } else {
-  }
-  }, [id, dispatch]);
+    } else {
+    }
+  }, [dispatch, id, refreshToggle]);
 
   return (
     <>
@@ -365,47 +368,25 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         title="Edit Custom Setting"
         okLabel="Save"
         onClick={() => {
-          dispatch(startAsync());
-            dispatch(
-                put(endpointAdmin + "/building/settings?building_id",
-                  {
-                    building_id: settingData.building_id ? settingData.building_id : parseInt(id),
-                    main_color: mainColor
-                      ? mainColor
-                      : settingData.main_color,
-                    secondary_color: secondaryColor
-                      ? secondaryColor
-                      : settingData.secondary_color,
-                    logo_url: logoURL
-                      ? logoURL
-                      : settingData.logo_url,
-                    logo_url_white: logoURLWhite
-                      ? logoURLWhite
-                      : settingData.logo_url_white,
-                    splash_background: splashScreen
-                      ? splashScreen
-                      : settingData.splash_background,
-                  },
-                  (res) => {
-                    // dispatch(refresh());
-            
-                    dispatch(
-                      setInfo({
-                        color: "success",
-                        message: "Custom setting building has been updated.",
-                      })
-                    );
-                    reload();
-            
-                    dispatch(stopAsync());
-                  },
-                  (err) => {
-                    dispatch(stopAsync());
-                  }
-                )
-              );
+          dispatch(
+            editCustomSetting({
+              building_id: settingData.building_id
+                ? settingData.building_id
+                : parseInt(id),
+              main_color: mainColor ? mainColor : settingData.main_color,
+              secondary_color: secondaryColor
+                ? secondaryColor
+                : settingData.secondary_color,
+              logo_url: logoURL ? logoURL : settingData.logo_url,
+              logo_url_white: logoURLWhite
+                ? logoURLWhite
+                : settingData.logo_url_white,
+              splash_background: splashScreen
+                ? splashScreen
+                : settingData.splash_background,
+            })
+          );
           setOpenEdit(false);
-          setRow({});
         }}
       >
         <form>
@@ -430,11 +411,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
           <Input
             label="Logo URL"
             type="file"
-            inputValue={
-              settingData.logo_url
-                ? settingData.logo_url
-                : logoURL
-            }
+            inputValue={settingData.logo_url ? settingData.logo_url : logoURL}
             setInputValue={setLogoURL}
           />
           <Input
