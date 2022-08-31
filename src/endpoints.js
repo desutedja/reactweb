@@ -12,3 +12,4 @@ export const _endpointTransaction = _endpointBase + '/' + root + '-transaction';
 export const _endpointAds = _endpointBase + '/' + root + '-advertisement';
 export const _endpointInternet = _endpointBase + '/' + root + '-internet';
 export const _endpointUserReqeust = _endpointBase + '/' + root + '-user-request';
+export const _endpointNotification = _endpointBase + '/' + root + '-notification';
