@@ -14,6 +14,7 @@ import {
 import Button from "../../components/Button";
 import ButtonWizard from "../../components/ButtonWizard";
 import Modal from "../../components/Modal";
+import ModalWizard from "../../components/ModalWizard";
 import Pill from "../../components/Pill";
 import Loading from "../../components/Loading";
 import Filter from "../../components/Filter";
@@ -242,8 +243,11 @@ function Component({ view, canAdd }) {
   return (
     <>
       {/* Start of Web Wizard */}
-      <Modal
+      <ModalWizard
         width="1080px"
+        padding="0px"
+        margin="90px"
+        className="special_modal"
         isOpen={openWizard}
         disableFooter
         disableHeader
@@ -253,7 +257,7 @@ function Component({ view, canAdd }) {
           <>
             <div className="row">
               <div className="col-4">
-                <img src={require("../../assets/quick_start.jpg")} />
+                <img src={require("../../assets/quick_start.jpg")} width="280px" height="480px" style={{ borderTopLeftRadius: "10px", borderBottomLeftRadius: "10px"}} />
               </div>
               <div className="col-8">
                 <div className="wizard-title">
@@ -282,10 +286,10 @@ function Component({ view, canAdd }) {
                         </div>
                       </div>
                       <div className="col">
-                        <div className="text-nowrap ml-3 wizard-title-container">
+                        <div className="text-nowrap ml-4 wizard-title-container">
                           Add Resident
                         </div>
-                        <div className="text-nowrap ml-3 wizard-body-container">
+                        <div className="text-nowrap ml-4 wizard-body-container">
                           Tambah resident dengan input data satu per satu.
                         </div>
                       </div>
@@ -308,10 +312,10 @@ function Component({ view, canAdd }) {
                         </div>
                       </div>
                       <div className="col">
-                        <div className="text-nowrap ml-3 wizard-title-container">
+                        <div className="text-nowrap ml-4 wizard-title-container">
                           Add Resident Bulk
                         </div>
-                        <div className="text-nowrap ml-3 wizard-body-container">
+                        <div className="text-nowrap ml-4 wizard-body-container">
                           Tambah resident dengan input data dalam jumlah banyak.
                         </div>
                       </div>
@@ -326,10 +330,10 @@ function Component({ view, canAdd }) {
         {wizardStep === 2 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
             </div>
             <div className="row">
-              <div className="col ml-3">
+              <div className="col ml-4">
                 <div className="Container-step-wizard border-step-wizard d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -409,7 +413,7 @@ function Component({ view, canAdd }) {
                   </div>
                 </div>
               </div>
-              <div className="col mr-3">
+              <div className="col mr-4">
                 <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -427,7 +431,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col wizard-body ml-3 mt-4">
+              <div className="col wizard-body ml-4 mt-4">
                 Klik tombol “<b>+ Add Resident</b>”. Lalu kamu dapat memasukkan
                 email atau no. HP saja atau memasukkan keduanya.{" "}
               </div>
@@ -444,7 +448,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col">
+              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
                 <Button
                   className="float-right"
                   key="?"
@@ -469,10 +473,10 @@ function Component({ view, canAdd }) {
         {wizardStep === 3 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
             </div>
             <div className="row">
-              <div className="col ml-3">
+              <div className="col ml-4">
                 <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -552,7 +556,7 @@ function Component({ view, canAdd }) {
                   </div>
                 </div>
               </div>
-              <div className="col mr-3">
+              <div className="col mr-4">
                 <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -570,7 +574,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col wizard-body ml-3 mt-4">
+              <div className="col wizard-body ml-4 mt-4">
                 Masukkan nama depan dan nama belakang pada form yang tersedia.{" "}
               </div>
             </div>
@@ -586,7 +590,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right">
+              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
                 <Button
                   className="float-right"
                   key="?"
@@ -611,10 +615,10 @@ function Component({ view, canAdd }) {
         {wizardStep === 4 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
             </div>
             <div className="row">
-              <div className="col ml-3">
+              <div className="col ml-4">
                 <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -694,7 +698,7 @@ function Component({ view, canAdd }) {
                   </div>
                 </div>
               </div>
-              <div className="col mr-3">
+              <div className="col mr-4">
                 <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -712,7 +716,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col wizard-body ml-3 mt-4">
+              <div className="col wizard-body ml-4 mt-4">
                 Isi data kewarganegaraan, tempat dan tanggal lahir, jenis
                 kelamin, status pernikahan dan pekerjaan.{" "}
               </div>
@@ -729,7 +733,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right">
+              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
                 <Button
                   className="float-right"
                   key="?"
@@ -754,10 +758,10 @@ function Component({ view, canAdd }) {
         {wizardStep === 5 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
             </div>
             <div className="row">
-              <div className="col ml-3">
+              <div className="col ml-4">
                 <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -837,7 +841,7 @@ function Component({ view, canAdd }) {
                   </div>
                 </div>
               </div>
-              <div className="col mr-3">
+              <div className="col mr-4">
                 <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -855,7 +859,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col wizard-body ml-3 mt-4">
+              <div className="col wizard-body ml-4 mt-4">
                 Masukkan alamat rumah dengan lengkap.{" "}
               </div>
             </div>
@@ -871,7 +875,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right">
+              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
                 <Button
                   className="float-right"
                   key="?"
@@ -896,10 +900,10 @@ function Component({ view, canAdd }) {
         {wizardStep === 6 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
             </div>
             <div className="row">
-              <div className="col ml-3">
+              <div className="col ml-4">
                 <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -979,7 +983,7 @@ function Component({ view, canAdd }) {
                   </div>
                 </div>
               </div>
-              <div className="col mr-3">
+              <div className="col mr-4">
                 <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -997,7 +1001,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col wizard-body ml-3 mt-4">
+              <div className="col wizard-body ml-4 mt-4">
                 Masukkan nama bank, nomor rekening, dan nama pemilik rekening.{" "}
               </div>
             </div>
@@ -1013,7 +1017,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right">
+              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
                 <Button
                   className="float-right"
                   key="?"
@@ -1038,10 +1042,10 @@ function Component({ view, canAdd }) {
         {wizardStep === 7 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-3 mb-2">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
             </div>
             <div className="row">
-              <div className="col ml-3">
+              <div className="col ml-4">
                 <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -1121,7 +1125,7 @@ function Component({ view, canAdd }) {
                   </div>
                 </div>
               </div>
-              <div className="col mr-3">
+              <div className="col mr-4">
                 <div className="Container-step-wizard border-step-wizard d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -1139,7 +1143,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col wizard-body ml-3 mt-4">
+              <div className="col wizard-body ml-4 mt-4">
                 <b>Apa yang dapat dilakukan selanjutnya?</b>{" "}
               </div>
             </div>
@@ -1163,7 +1167,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right">
+              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
                 <Button
                   className="float-right"
                   key="?"
@@ -1191,12 +1195,12 @@ function Component({ view, canAdd }) {
         {wizardStep === 8 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-3 mb-2">
+              <div className="col wizard-header ml-4 mb-4 mt-4">
                 Add Resident Bulk
               </div>
             </div>
             <div className="row">
-              <div className="col ml-3">
+              <div className="col ml-4">
                 <div className="Container-step-wizard border-step-wizard d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -1244,7 +1248,7 @@ function Component({ view, canAdd }) {
                   </div>
                 </div>
               </div>
-              <div className="col">
+              <div className="col mr-4">
                 <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -1262,7 +1266,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col wizard-body ml-3 mt-4">
+              <div className="col wizard-body ml-4 mt-4">
                 Klik tombol “<b>+ Add Resident</b>”. Lalu klik tombol “Download
                 Template”.{" "}
               </div>
@@ -1279,7 +1283,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right">
+              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
                 <Button
                   className="float-right"
                   key="?"
@@ -1304,12 +1308,12 @@ function Component({ view, canAdd }) {
         {wizardStep === 9 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-3 mb-2">
+              <div className="col wizard-header ml-4 mb-4 mt-4">
                 Add Resident Bulk
               </div>
             </div>
             <div className="row">
-              <div className="col ml-3">
+              <div className="col ml-4">
                 <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -1357,7 +1361,7 @@ function Component({ view, canAdd }) {
                   </div>
                 </div>
               </div>
-              <div className="col">
+              <div className="col mr-4">
                 <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -1375,7 +1379,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col wizard-body ml-3 mt-4">
+              <div className="col wizard-body ml-4 mt-4">
                 Buka file resident template yang sudah kamu download tadi. Lalu
                 isi data resident sesuai dengan tabel yang sudah disediakan.{" "}
               </div>
@@ -1392,7 +1396,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right">
+              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
                 <Button
                   className="float-right"
                   key="?"
@@ -1417,12 +1421,12 @@ function Component({ view, canAdd }) {
         {wizardStep === 10 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-3 mb-2">
+              <div className="col wizard-header ml-4 mb-4 mt-4">
                 Add Resident Bulk
               </div>
             </div>
             <div className="row">
-              <div className="col ml-3">
+              <div className="col ml-4">
                 <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -1470,7 +1474,7 @@ function Component({ view, canAdd }) {
                   </div>
                 </div>
               </div>
-              <div className="col">
+              <div className="col mr-4">
                 <div className="Container-step-wizard border-step-wizard-inactive d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -1488,7 +1492,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col wizard-body ml-3 mt-4">
+              <div className="col wizard-body ml-4 mt-4">
                 Setelah mengisi data resident di template tadi, upload kembali
                 file tersebut lalu submit.{" "}
               </div>
@@ -1505,7 +1509,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right">
+              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
                 <Button
                   className="float-right"
                   key="?"
@@ -1530,12 +1534,12 @@ function Component({ view, canAdd }) {
         {wizardStep === 11 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-3 mb-2">
+              <div className="col wizard-header ml-4 mb-4 mt-4">
                 Add Resident Bulk
               </div>
             </div>
             <div className="row">
-              <div className="col ml-3">
+              <div className="col ml-4">
                 <div className="Container-step-wizard border-step-wizard-done d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -1583,7 +1587,7 @@ function Component({ view, canAdd }) {
                   </div>
                 </div>
               </div>
-              <div className="col">
+              <div className="col mr-4">
                 <div className="Container-step-wizard border-step-wizard d-flex flex-column">
                   <div className="row no-gutters align-items-center">
                     <div className="col-auto">
@@ -1601,7 +1605,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col wizard-body ml-3 mt-4">
+              <div className="col wizard-body ml-4 mt-4">
                 <b>Apa yang dapat dilakukan selanjutnya?</b>{" "}
               </div>
             </div>
@@ -1628,7 +1632,7 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right">
+              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
                 <Button
                   className="float-right"
                   key="?"
@@ -1652,7 +1656,7 @@ function Component({ view, canAdd }) {
           </>
         )}
         {/* End of Wizard Add Resident Bulk */}
-      </Modal>
+      </ModalWizard>
       {/* End of Web Wizard */}
       <Modal
         isOpen={bulk}

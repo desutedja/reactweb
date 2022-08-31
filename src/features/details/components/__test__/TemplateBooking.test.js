@@ -5,56 +5,56 @@ import { createMemoryHistory } from "history";
 import TemplateBooking from "./../TemplateBooking";
 
 describe("TemplateBooking Component", () => {
-    test("render Title not null", () => {
-        const history = createMemoryHistory()
-        const {} = render(
-            <Router history={history}>
-                <TemplateBooking title="Booking" />
-            </Router>
-        );
+  test("renderTitleNotNull", () => {
+    const history = createMemoryHistory();
+    const {} = render(
+      <Router history={history}>
+        <TemplateBooking title="Booking" />
+      </Router>
+    );
 
-        const outputElement = screen.getByText('Booking');
+    const outputElement = screen.getByText("Booking");
 
-        expect(outputElement).toBeInTheDocument();
-    });
+    expect(outputElement).toBeInTheDocument();
+  });
 
-    test("render Title is null", () => {
-        const history = createMemoryHistory()
-        const {} = render(
-            <Router history={history}>
-                <TemplateBooking title={false} />
-            </Router>
-        );
+  test("renderTitleIsNull", () => {
+    const history = createMemoryHistory();
+    const {} = render(
+      <Router history={history}>
+        <TemplateBooking title={false} />
+      </Router>
+    );
 
-        const outputElement = screen.getByText('Details');
+    const outputElement = screen.getByText("Details");
 
-        expect(outputElement).toBeInTheDocument();
-    });
+    expect(outputElement).toBeInTheDocument();
+  });
 
-    test("render PageTitle not null", () => {
-        const history = createMemoryHistory()
-        const {} = render(
-            <Router history={history}>
-                <TemplateBooking pagetitle="Booking Page" />
-            </Router>
-        );
+  test("renderPageTitleNotNull", () => {
+    const history = createMemoryHistory();
+    const {} = render(
+      <Router history={history}>
+        <TemplateBooking pagetitle="Booking Page" />
+      </Router>
+    );
 
-        const outputElement = screen.getByTestId('page-title');
+    const outputElement = screen.getByTestId("page-title");
 
-        expect(outputElement).toBeTruthy();
-        expect(outputElement.innerHTML).toBe("Booking Page");
-    })
+    expect(outputElement).toBeTruthy();
+    expect(outputElement.innerHTML).toBe("Booking Page");
+  });
 
-    test("render PageTitle is null", () => {
-        const history = createMemoryHistory()
-        const {} = render(
-            <Router history={history}>
-                <TemplateBooking pagetitle={false} />
-            </Router>
-        );
+  test("renderPageTitleIsNull", () => {
+    const history = createMemoryHistory();
+    const {} = render(
+      <Router history={history}>
+        <TemplateBooking pagetitle={false} />
+      </Router>
+    );
 
-        const outputElement = screen.getByTestId('page-title');
+    const outputElement = screen.getByTestId("page-title");
 
-        expect(outputElement.innerHTML).toBeFalsy();
-    })
-})
+    expect(outputElement.innerHTML).toBeFalsy();
+  });
+});
