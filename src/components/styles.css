@@ -646,6 +646,7 @@ input[type="button"]:disabled {
 }
 
 .wizard-title-container {
+  margin: 5px;
   font-size: 16px;
   font-weight: 700;
 }
@@ -654,6 +655,19 @@ input[type="button"]:disabled {
   font-size: 14px;
   font-weight: 400;
   color: #5A5A5A;
+}
+
+.wizard-title-container-bil {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.wizard-body-container-bil {
+  font-size: 10px;
+  font-weight: 400;
+  color: #5A5A5A;
+  text-align: center;
 }
 
 .wizard-step-body {
@@ -688,13 +702,39 @@ input[type="button"]:disabled {
   margin-right: 30px;
 }
 
+.Container-wizard-bil {
+  background-color: white;
+  padding: 20px 10px 20px 10px;
+  border-radius: 8px;
+  display: flex;
+  flex: 1;
+  margin-top: 30px;
+  max-width: 200px;
+  min-width: 190px;
+  min-height: 90px;
+  max-height: 100px;
+}
+
 .border-wizard {
-  border: 1px solid #E9E9E9;
+  border: 2px solid #E9E9E9;
   border-radius: 8px;
 }
 
 .border-wizard:hover {
-  border: 1px solid #E12029;
+  border: 2px solid #E12029;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.border-wizard-bil {
+  border: 2px solid #E9E9E9;
+  border-radius: 8px;
+}
+
+.border-wizard-bil:hover {
+  border: 2px solid #E12029;
   border-radius: 8px;
   cursor: pointer;
 }
@@ -718,6 +758,10 @@ input[type="button"]:disabled {
   border-top: 4px solid #000000;
 }
 
+.special_modal .modal-content{
+  border-radius: 10px;
+  border: 0px;
+}
 
 @keyframes fadeIn {
   0% { opacity: 0; }
