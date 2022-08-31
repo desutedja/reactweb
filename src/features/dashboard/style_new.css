@@ -33,7 +33,7 @@
 }
 
 .recharts-text.recharts-pie-label-text > tspan{
-    color: "#000" !important;
+    color: #3E414C !important;
 }
 
 
@@ -93,7 +93,7 @@
 .ads-summary-label-text2 {
     font-weight: 100;
     font-size: 1.25rem;
-    color: #000000;
+    color: #3E414C;
     text-align: left;
     padding-top: 10px;
     padding-left: 15px;
@@ -204,7 +204,7 @@
 }
 
 .black {
-    color: #212529;
+    color: #3E414C;
 }
 
 .blue {
@@ -245,7 +245,7 @@
     margin-left: 10px;
     margin-right: 10px;
     padding: 10px;
-    color: #000000;
+    color: #3E414C;
     background: #F4F4F4;
     border-radius: 8px;  
 }

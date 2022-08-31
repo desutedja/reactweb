@@ -33,7 +33,7 @@
 }
 
 .recharts-text.recharts-pie-label-text > tspan{
-    color: "#000" !important;
+    color: #3E414C !important;
 }
 
 
@@ -241,7 +241,7 @@
 }
 
 .black {
-    color: #212529;
+    color: #3E414C;
 }
 
 .blue {
@@ -249,7 +249,7 @@
 }
 
 .task-text-h5 {
-    color: #000000;
+    color: #3E414C;
     font-weight: 700;
     font-size: 16px;
 }
