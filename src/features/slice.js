@@ -103,7 +103,7 @@ export const setInfo = data => dispatch => {
 
   setTimeout(() => dispatch(setInfoData({
     message: '',
-  })), 5000);
+  })), 3000);
 }
 
 export const setInfoSetAsPaid = data => dispatch => {
