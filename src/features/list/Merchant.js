@@ -256,6 +256,7 @@ function Component({ view }) {
                     ? null
                     : [
                         <Button
+                            fontWeight={500}
                             color="Download"
                             key="Download Merchant"
                             label="Download Merchant.csv"

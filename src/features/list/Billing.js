@@ -3283,8 +3283,9 @@ function Component({ view }) {
                   }}
                 />,
                 <Button
+                  fontWeight={500}
                   color="Download"
-                  label="Download Billing Units .csv"
+                  label="Download Billing Units.csv"
                   icon={<FiDownload />}
                   onClick={() =>
                     dispatch(downloadBillingUnit(search, building))

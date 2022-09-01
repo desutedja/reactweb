@@ -221,21 +221,18 @@ function Table({
 
               {filters.length > 0 && (
                 <div
-                  className="Button"
+                  className="Button Download"
                   style={{
                     cursor: "pointer",
                     color: "white",
-                    marginRight: 8,
                   }}
                   onClick={() => {
                     toggleFilter(!filter);
                   }}
                 >
-                  <FiFilter />
                   <b
                     style={{
-                      marginRight: 8,
-                      marginLeft: 8,
+                      marginRight: 16,
                     }}
                   >
                     Filter
@@ -409,7 +406,12 @@ function Table({
                 {(onClickDelete ||
                   onClickDetails ||
                   onClickEdit ||
-                  onClickResolve) && <th key={i} />}
+                  onClickResolve ||
+                  onClickAddBilling ||
+                  onClickApproved ||
+                  onClickDisapproved ||
+                  onClickChange ||
+                  onClickStop) && <th key={i} />}
               </tr>
             ))}
           </thead>

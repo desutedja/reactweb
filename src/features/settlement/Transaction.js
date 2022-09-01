@@ -867,6 +867,7 @@ function Component({ view }) {
               ? null
               : [
                 <MyButton
+                  fontWeight={500}
                   color="Download"
                   label="Download.csv"
                   icon={<FiDownload />}

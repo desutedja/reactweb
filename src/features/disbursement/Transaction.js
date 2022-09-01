@@ -903,6 +903,7 @@ function Component({ view }) {
                 />
               )}
               <Button
+                fontWeight={500}
                 color="Download"
                 label="Download XLSX"
                 icon={<FiDownload />}
