@@ -427,6 +427,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
           ? null
           : [
             <Button
+                fontWeight={500}
                 color="Download"
                 key="Download Staff"
                 label="Download Staff.csv"
@@ -436,6 +437,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
                 }
               />,
             <Button
+                fontWeight={500}
                 color="Download"
                 key="Download Staff Log"
                 label="Download Staff Log.csv"

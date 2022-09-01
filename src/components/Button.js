@@ -15,7 +15,7 @@ function MyButton({ icon, label, onClick, selected, color, disabled, className, 
                 marginBottom: 8,
                 backgroundColor: color ? '' : '#244091',
                 borderRadius: 6,
-                fontWeight: fontWeight,
+                fontWeight: fontWeight ? fontWeight : 700,
             }}
             type="submit"
         >

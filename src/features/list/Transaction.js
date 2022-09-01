@@ -192,8 +192,9 @@ function Component() {
       ]}
       actionDownloads={[
         <MyButton
+          fontWeight={500}
           color="Download"
-          label="Download .csv"
+          label="Download.csv"
           icon={<FiDownload />}
           onClick={() => {
             dispatch(downloadTransaction(status, statusPayment, type));

@@ -1138,8 +1138,9 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                     }}
                   />,
                   <Button
+                    fontWeight={500}
                     color="Download"
-                    label="Download .csv"
+                    label="Download.csv"
                     icon={<FiDownload />}
                     onClick={() =>
                       dispatch(

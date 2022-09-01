@@ -1834,6 +1834,7 @@ function Component({ view, canAdd }) {
                   }}
                 />,
                 <Button
+                  fontWeight={500}
                   color="Download"
                   key="Download Data Resident"
                   label="Download Resident.csv"

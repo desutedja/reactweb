@@ -351,7 +351,7 @@ function Component({ view }) {
                                         setSelected(data.filter(el => el && !el.disbursement_date));
                                         setModal(true);
                                     }} />}
-                                <Button className="Download" label="Download .csv" icon={<FiDownload />}
+                                <Button fontWeight={500} className="Download" label="Download.csv" icon={<FiDownload />}
                                     onClick={() => dispatch(getFile(endpointBilling + '/management/billing/disbursement/list/transaction'
                                         + '?management_id=' + selectedManagement.map(item => item.id).join(',')
                                         + '&disbursement_date_min=' + (status === 'disbursed' ? disbursedStart : '')

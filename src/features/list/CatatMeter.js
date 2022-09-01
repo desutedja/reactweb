@@ -212,8 +212,9 @@ function Component({ view, canAdd }) {
             ? null
             : 
               <Button
+                  fontWeight={500}
                   color="Download"
-                  label="Download Catat Meter .csv"
+                  label="Download Catat Meter.csv"
                   icon={<FiDownload />}
                   onClick={() => {
                       dispatch(downloadCatatMeter(document.getElementById("Search").value,building))

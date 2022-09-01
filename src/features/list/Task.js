@@ -662,8 +662,9 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
             ? null
             : [
               <Button
+                fontWeight={500}
                 color="Download"
-                label="Download Tasks .csv"
+                label="Download Tasks.csv"
                 icon={<FiDownload />}
                 onClick={() => dispatch(downloadTasks(1,10000,search,type,prio,status,building,unit,createdStart,createdEnd,resolvedStart,resolvedEnd,"true"))}
               />,
