@@ -17,11 +17,9 @@ import { Card, CardHeader, CardFooter, CardTitle, CardBody } from "reactstrap";
 
 import { useParams } from "react-router-dom";
 import { get } from "../../slice";
-import parse from "html-react-parser"
+import parse from "html-react-parser";
 import { setSelected } from "../../slices/userRequest";
-import {
-  endpointUserRequest,
-} from "../../../settings";
+import { endpointUserRequest } from "../../../settings";
 
 function UserRequest({ view, canUpdate, canAdd, canDelete }) {
   const [modal, setModal] = useState(false);
@@ -56,15 +54,23 @@ function UserRequest({ view, canUpdate, canAdd, canDelete }) {
 
       <Template
         transparent
+        pagetitle="User Request Information"
         loading={!data.id}
         labels={["Details"]}
         contents={[
           <>
             <Column style={{ width: "100%" }}>
               <Row>
-              {/* Column Description and Attachments */}
+                {/* Column Description and Attachments */}
                 <Column style={{ flex: "6", display: "block" }}>
-                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10, border: 0 }}>
+                  <Card
+                    style={{
+                      marginRight: "20px",
+                      marginBottom: "20px",
+                      borderRadius: 10,
+                      border: 0,
+                    }}
+                  >
                     <CardHeader style={{ background: "transparent" }}>
                       <TwoColumn
                         first={
@@ -72,9 +78,7 @@ function UserRequest({ view, canUpdate, canAdd, canDelete }) {
                             <b>{data.title}</b>
                           </div>
                         }
-                        second={
-                          " "
-                        }
+                        second={" "}
                       />
                     </CardHeader>
                     <CardBody>
@@ -91,56 +95,66 @@ function UserRequest({ view, canUpdate, canAdd, canDelete }) {
                       <div style={{ display: "column", lineHeight: "1.5em" }}>
                         <div>
                           <small style={{ fontSize: 14 }}>
-                            {data.description !== "" ?
+                            {data.description !== "" ? (
                               parse(data.description || "")
-                              :
+                            ) : (
                               <i>No Description</i>
-                            }
+                            )}
                           </small>
                         </div>
                       </div>
-                      <div style={{ display: "column", lineHeight: "2.5em", paddingTop: 18 }}>
+                      <div
+                        style={{
+                          display: "column",
+                          lineHeight: "2.5em",
+                          paddingTop: 18,
+                        }}
+                      >
                         <h5>Attachment</h5>
-                          {data.attachments?.length > 0 && (
-                            data.attachments.map((el, index) =>
-                            (el.url != "" ?
-                              ( //
-                                <img
-                                  src={el.url}
-                                  alt="attachment"
-                                  onClick={() => {
-                                    setModal(true);
-                                    setImage(el.url);
-                                  }}
-                                  style={{
-                                    height: 80,
-                                    aspectRatio: 1,
-                                    marginRight: 8,
-                                  }}
-                                />
-                              )
-                              : 
-                              (
-                                <div
-                                  style={{
-                                    color: "silver",
-                                  }}
-                                >
-                                  <i>No Attachment</i>
-                                </div>
-                              )
-                            ))
+                        {data.attachments?.length > 0 &&
+                          data.attachments.map((el, index) =>
+                            el.url != "" ? (
+                              //
+                              <img
+                                src={el.url}
+                                alt="attachment"
+                                onClick={() => {
+                                  setModal(true);
+                                  setImage(el.url);
+                                }}
+                                style={{
+                                  height: 80,
+                                  aspectRatio: 1,
+                                  marginRight: 8,
+                                }}
+                              />
+                            ) : (
+                              <div
+                                style={{
+                                  color: "silver",
+                                }}
+                              >
+                                <i>No Attachment</i>
+                              </div>
+                            )
                           )}
                       </div>
                     </CardBody>
                   </Card>
                 </Column>
-              {/* Column Status and Details */}
+                {/* Column Status and Details */}
                 <Column
                   style={{ flex: "4", display: "block", maxWidth: "700px" }}
                 >
-              {/* Status Section */}
-                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10, border: 0}}>
+                  {/* Status Section */}
+                  <Card
+                    style={{
+                      marginRight: "20px",
+                      marginBottom: "20px",
+                      borderRadius: 10,
+                      border: 0,
+                    }}
+                  >
                     <CardHeader style={{ background: "Transparent" }}>
                       <TwoColumn
                         first={
@@ -150,24 +164,24 @@ function UserRequest({ view, canUpdate, canAdd, canDelete }) {
                         }
                         second={
                           <div>
-                            <Pill color={data.status === 'wfa' ? 'secondary' 
-                            :
-                              data.status === 'wfp' ? 'info' 
-                            :
-                              data.status === 'on_process' ? 'warning text-white'
-                            : 
-                              data.status === 'done' ? 'success' 
-                            : 
-                            'danger' 
-                            }
-                            >
-                              {
-                              data.status === 'wfa' ? "Waiting for Approval"
-                              :
-                              data.status === 'wfp' ? "Waiting for Pickup"
-                              :
-                              toSentenceCase(data.status)
+                            <Pill
+                              color={
+                                data.status === "wfa"
+                                  ? "secondary"
+                                  : data.status === "wfp"
+                                  ? "info"
+                                  : data.status === "on_process"
+                                  ? "warning text-white"
+                                  : data.status === "done"
+                                  ? "success"
+                                  : "danger"
                               }
+                            >
+                              {data.status === "wfa"
+                                ? "Waiting for Approval"
+                                : data.status === "wfp"
+                                ? "Waiting for Pickup"
+                                : toSentenceCase(data.status)}
                             </Pill>
                           </div>
                         }
@@ -176,17 +190,27 @@ function UserRequest({ view, canUpdate, canAdd, canDelete }) {
                     <CardBody>
                       <div style={{ display: "column", lineHeight: "1.5em" }}>
                         <div>
-                          <small style={{ fontSize:14 }}>
-                            Approved by: Admin, {dateTimeFormatter(data.created_on)}
+                          <small style={{ fontSize: 14 }}>
+                            Approved by: Admin,{" "}
+                            {dateTimeFormatter(data.created_on)}
                             <br />
-                            Created on: {dateTimeFormatter(data.created_on)} by {data.created_by_name}
+                            Created on: {dateTimeFormatter(
+                              data.created_on
+                            )} by {data.created_by_name}
                           </small>
                         </div>
                       </div>
                     </CardBody>
                   </Card>
-              {/* Details Section */}
-                  <Card style={{ marginRight: "20px", marginBottom: "20px", borderRadius: 10, border: 0}}>
+                  {/* Details Section */}
+                  <Card
+                    style={{
+                      marginRight: "20px",
+                      marginBottom: "20px",
+                      borderRadius: 10,
+                      border: 0,
+                    }}
+                  >
                     <CardHeader style={{ background: "Transparent" }}>
                       <TwoColumn
                         first={
@@ -200,7 +224,10 @@ function UserRequest({ view, canUpdate, canAdd, canDelete }) {
                     <CardBody>
                       <div style={{ display: "column", lineHeight: "2em" }}>
                         <div className="row">
-                          <div className="col" style={{paddingLeft:20, fontWeight: 500}}>
+                          <div
+                            className="col"
+                            style={{ paddingLeft: 20, fontWeight: 500 }}
+                          >
                             Category
                           </div>
                           <div className="col">
@@ -210,7 +237,10 @@ function UserRequest({ view, canUpdate, canAdd, canDelete }) {
                           </div>
                         </div>
                         <div className="row">
-                          <div className="col" style={{paddingLeft:20, fontWeight: 500}}>
+                          <div
+                            className="col"
+                            style={{ paddingLeft: 20, fontWeight: 500 }}
+                          >
                             Sub Category
                           </div>
                           <div className="col">
@@ -220,40 +250,51 @@ function UserRequest({ view, canUpdate, canAdd, canDelete }) {
                           </div>
                         </div>
                         <div className="row">
-                          <div className="col" style={{paddingLeft:20, fontWeight: 500}}>
+                          <div
+                            className="col"
+                            style={{ paddingLeft: 20, fontWeight: 500 }}
+                          >
                             Requester
                           </div>
                           <div className="col">
                             <small style={{ fontSize: 14, fontWeight: 400 }}>
-                              {data.requester === undefined ? "-" :
-                              <UserRequester
-                                id={data.requester}
-                                data={{
-                                  id: data.requester,
-                                  photo: data.resident_photo,
-                                  firstname: data.requester_name,
-                                  lastname: "",
-                                }}
-                              />
-                              }
+                              {data.requester === undefined ? (
+                                "-"
+                              ) : (
+                                <UserRequester
+                                  id={data.requester}
+                                  data={{
+                                    id: data.requester,
+                                    photo: data.resident_photo,
+                                    firstname: data.requester_name,
+                                    lastname: "",
+                                  }}
+                                />
+                              )}
                             </small>
                           </div>
                         </div>
                       </div>
                     </CardBody>
-                    <CardFooter style={{ background:"transparent" }}>
-                    <div style={{ display: "column", lineHeight: "2em", display: "flex", justifyContent: "center" }}>
+                    <CardFooter style={{ background: "transparent" }}>
+                      <div
+                        style={{
+                          display: "column",
+                          lineHeight: "2em",
+                          display: "flex",
+                          justifyContent: "center",
+                        }}
+                      >
                         <div className="row">
-                          <div className="col" style={{ paddingLeft:20 }}>
-                              <Button
-                                color="Danger"
-                                // onClick={() => setAssign(true)}
-                                label="Reject"
-                              />
+                          <div className="col" style={{ paddingLeft: 20 }}>
+                            <Button
+                              color="Danger"
+                              // onClick={() => setAssign(true)}
+                              label="Reject"
+                            />
                           </div>
                           <div className="col">
                             <small style={{ fontSize: 14 }}>
-                              
                               <Button
                                 // onClick={() => setAssign(true)}
                                 label="Approve"

@@ -31,6 +31,7 @@ function AdminDetails() {
     return (
         <Template
             title={data ? data.firstname + ' ' + data.lastname : data.firstname + ' ' + data.lastname}
+            pagetitle="Admin Information"
             phone={data ? data.phone : data.phone}
             loading={!data.id}
             labels={["Details"]}

@@ -1,7 +1,11 @@
 import React, { useCallback, useState, useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useRouteMatch, useParams } from "react-router-dom";
-import { dateTimeFormatter, dateTimeFormatterScheduler, toSentenceCase } from "../../../utils";
+import {
+  dateTimeFormatter,
+  dateTimeFormatterScheduler,
+  toSentenceCase,
+} from "../../../utils";
 
 import { FiCopy, FiArrowUpCircle, FiTrash, FiImage } from "react-icons/fi";
 import Detail from "../components/Detail";
@@ -178,7 +182,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
       >
         <Impression data={data} /> */}
 
-        {/* {typeof data.impression != "undefined" &&
+      {/* {typeof data.impression != "undefined" &&
          
           data.impression.map((el) => {
             return <div>{el.resident_name}</div>;
@@ -213,6 +217,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
         Are you sure you want to delete this announcement?
       </Modal>
       <Template
+        pagetitle="Announcement Information"
         title={data.title}
         loading={!data.id}
         labels={["Details", "Impression"]}
@@ -285,7 +290,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
               ]}
             />
           </div>,
-          <Impression data={data} />
+          <Impression data={data} />,
         ]}
       />
     </>

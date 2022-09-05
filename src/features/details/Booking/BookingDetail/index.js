@@ -12,19 +12,9 @@ import { setSelected, deleteMerchant } from "../../../slices/merchant";
 import { toMoney } from "../../../../utils";
 
 const info = {
-  "Booking Details": [
-    "id",
-    "created_on",
-  ],
-  "Resident Information": [
-    "name",
-    "type",
-    "legal",
-  ],
-  "Schedule Information": [
-    "open_at",
-    "closed_at",
-  ],
+  "Booking Details": ["id", "created_on"],
+  "Resident Information": ["name", "type", "legal"],
+  "Schedule Information": ["open_at", "closed_at"],
 };
 
 const pic = {
@@ -70,14 +60,9 @@ function Component({ view }) {
         loading={!data.id}
         image={data.logo || "placeholder"}
         title={data.name}
+        pagetitle="Booking Information"
         phone={data.phone}
-        contents={[
-          <DetailBooking
-            view={view}
-            data={data}
-            labels={info}
-          />
-        ]}
+        contents={[<DetailBooking view={view} data={data} labels={info} />]}
       />
     </>
   );

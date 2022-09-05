@@ -28,8 +28,14 @@ function Component({ view, canUpdate, canDelete }) {
 
   const details = useMemo(() => {
     return {
-      "": ["package_name", "speed", "price", "coverage_area",
-          "notes", "tv_channel"],
+      "": [
+        "package_name",
+        "speed",
+        "price",
+        "coverage_area",
+        "notes",
+        "tv_channel",
+      ],
     };
   }, [data]);
 
@@ -45,14 +51,11 @@ function Component({ view, canUpdate, canDelete }) {
     <TemplateInternetPackage
       loading={!data.id}
       title={data.package_name}
+      pagetitle="Package Information"
       labels={["Details"]}
       contents={[
         <>
-          <DetailPackage
-            view={view}
-            data={data}
-            labels={details}
-          />
+          <DetailPackage view={view} data={data} labels={details} />
         </>,
       ]}
     />
