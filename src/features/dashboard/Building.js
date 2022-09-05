@@ -635,10 +635,7 @@ function Component() {
                         style={{ justifyContent: "space-between" }}
                       >
                         <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
-                          <h2
-                            className="mt-2 mb-4 no-wrap"
-                            style={{ marginLeft: 20, fontWeight: 600 }}
-                          >
+                          <h2 className="mt-3 PageTitle no-wrap">
                             Building Overview
                           </h2>
                         </div>
@@ -4586,10 +4583,7 @@ function Component() {
                         style={{ justifyContent: "space-between" }}
                       >
                         <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
-                          <h2
-                            className="mt-2 mb-4 no-wrap"
-                            style={{ marginLeft: 20, fontWeight: 600 }}
-                          >
+                          <h2 className="mt-3 PageTitle no-wrap">
                             Building Overview
                           </h2>
                         </div>
