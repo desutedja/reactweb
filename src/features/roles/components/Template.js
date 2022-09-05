@@ -251,7 +251,7 @@ function Component({ role, children }) {
   }, [dispatch]);
 
   function isSelected(path) {
-    return "/" + history.location.pathname.split("/")[2] === path.slice(1);
+    return "/" + history.location.pathname.split("/")[2] === path;
   }
 
   return (
@@ -497,11 +497,9 @@ function Component({ role, children }) {
           <div
             style={{
               height: "auto",
-              width: "100%"
+              width: "100%",
             }}
-            className={
-              menuWide ? "menu-size" : "menu-size compact"
-            }
+            className={menuWide ? "menu-size" : "menu-size compact"}
             onClick={() => {
               setMenuWide(!menuWide);
               setExpanded("");
@@ -548,11 +546,13 @@ function Component({ role, children }) {
                         : () => {
                             history.push(path);
                             console.log(path);
+                            // console.log(history.location.pathname);
                             setExpanded("");
                           }
                     }
                     className={
-                      (history.location.pathname === path ||
+                      (history.location.pathname.split("/")[2] ===
+                        path.split("/")[2] ||
                       "/" + history.location.pathname.split("/")[3] === subpaths
                         ? "MenuItem-active"
                         : "MenuItem") + (menuWide ? "" : " compact")
@@ -563,7 +563,8 @@ function Component({ role, children }) {
                       <div
                         className={
                           menuWide
-                            ? history.location.pathname === path ||
+                            ? history.location.pathname.split("/")[2] ===
+                                path.split("/")[2] ||
                               "/" + history.location.pathname.split("/")[3] ===
                                 subpaths
                               ? "MenuItem-label-active"
