@@ -1296,7 +1296,7 @@ function Component() {
     <Loading loading={loading}>
       <div className="row no-gutters">
         <div className="col-12">
-          <h2 className="mt-4 mb-5 pl-4"><strong>Advertisement Overview</strong></h2>
+          <h2 className="mt-4 mb-5 pl-4">Advertisement Overview</h2>
           <div
             className="Container flex-column pb-5 pr-4"
             style={{ overflow: "visible", borderRadius: 10 }}
