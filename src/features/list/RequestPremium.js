@@ -21,63 +21,67 @@ import {
   kyccolor,
   onboarding_status,
 } from "../../settings";
-import { getRequestPremium, approvedResident, disapprovedResident } from "../slices/requestpremium";
+import {
+  getRequestPremium,
+  approvedResident,
+  disapprovedResident,
+} from "../slices/requestpremium";
 
 const columns = [
-    {
-      Header: "Resident Name", 
-      accessor: "resident_name", 
-      sorting: "resident_name"
-    },
-    {
-      Header: "Unit Number", 
-      accessor: "number", 
-      sorting: "number"
-    },
-    // {
-    //   Header: "Building", 
-    //   accessor: "building", 
-    //   sorting: "building"
-    // },
-    {
-      Header: "ID Number", 
-      accessor: "id_number", 
-      sorting: "id_number"
-    },
-    {
-      Header: "Phone", 
-      accessor: "phone", 
-      sorting: "phone"
-    },
-    {
-      Header: "Status", 
-      accessor: (row) => (
-        toSentenceCase(row.status)
-      ),
-      sorting: "status"
-    },
-    {
-      Header: "Approved",
-      accessor: (row) => (
-        <Pill color={row.approved_status === "approved" ? "success" : "secondary"}>
-          {toSentenceCase(row.approved_status) === "-" ? "Pending" : toSentenceCase(row.approved_status)}
-        </Pill>
-      ),
-      sorting: "approved_status",
-    },
-    { 
-      Header: "Approved By", 
-      accessor: "staff_name", 
-      sorting: "staff_name" 
-    },
-    { 
-      Header: "Approved Date", 
-      accessor: (row) => (
-        dateTimeFormatter(row.approved_on)
-      ),
-      sorting: "approved_on" 
-    },
-  ];
+  {
+    Header: "Resident Name",
+    accessor: "resident_name",
+    sorting: "resident_name",
+  },
+  {
+    Header: "Unit Number",
+    accessor: "number",
+    sorting: "number",
+  },
+  // {
+  //   Header: "Building",
+  //   accessor: "building",
+  //   sorting: "building"
+  // },
+  {
+    Header: "ID Number",
+    accessor: "id_number",
+    sorting: "id_number",
+  },
+  {
+    Header: "Phone",
+    accessor: "phone",
+    sorting: "phone",
+  },
+  {
+    Header: "Status",
+    accessor: (row) => toSentenceCase(row.status),
+    sorting: "status",
+  },
+  {
+    Header: "Approved",
+    accessor: (row) => (
+      <Pill
+        color={row.approved_status === "approved" ? "success" : "secondary"}
+      >
+        {toSentenceCase(row.approved_status) === "-"
+          ? "Pending"
+          : toSentenceCase(row.approved_status)}
+      </Pill>
+    ),
+    sorting: "approved_status",
+  },
+  {
+    Header: "Approved By",
+    accessor: "staff_name",
+    sorting: "staff_name",
+  },
+  {
+    Header: "Approved Date",
+    accessor: (row) => dateTimeFormatter(row.approved_on),
+    sorting: "approved_on",
+  },
+];
 
 function Component({ view, canAdd }) {
   const { role, user } = useSelector((state) => state.auth);
@@ -122,23 +126,28 @@ function Component({ view, canAdd }) {
     <>
       <TemplateRequestPremium
         view={view}
+        pagetitle="Request Premium List"
         columns={columns}
         slice={"requestpremium"}
         getAction={getRequestPremium}
-        actions={
-          view
-            ? null
-            : (role === "bm" ? !canAdd : false)
-            ? null
-            : []
+        actions={view ? null : (role === "bm" ? !canAdd : false) ? null : []}
+        approvedAction={
+          view ? null : (role === "sa" || role === "bm") && approvedResident
         }
-        approvedAction={view ? null : (role === "sa" || role === "bm") && approvedResident}
-        disapprovedAction={view ? null : (role === "sa" || role === "bm") && disapprovedResident}
+        disapprovedAction={
+          view ? null : (role === "sa" || role === "bm") && disapprovedResident
+        }
         filterVars={[approved_status]}
         filters={[
           {
             hidex: approved_status === "",
-            label: <p>{approved_status ? "Approved Status: " + approved_status : "Approved Status: All"}</p>,
+            label: (
+              <p>
+                {approved_status
+                  ? "Approved Status: " + approved_status
+                  : "Approved Status: All"}
+              </p>
+            ),
             delete: () => {
               setApprovedStatus("");
             },

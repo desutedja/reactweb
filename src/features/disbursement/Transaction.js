@@ -88,7 +88,7 @@ function Component({ view }) {
     { label: "Disbursed Transaction", value: "disbursed" },
     { label: "Undisbursed Transaction", value: "undisbursed" },
   ];
-  
+
   const payment_channel = [
     { label: "OVO", value: "ovo" },
     { label: "Credit Card", value: "credit_card" },
@@ -98,7 +98,7 @@ function Component({ view }) {
     { label: "LinkAja", value: "linkaja" },
     { label: "Gopay", value: "gopay" },
     { label: "Mandiri", value: "mandiri" },
-];
+  ];
 
   const columns = useMemo(() => {
     if (type === "merchant")
@@ -277,6 +277,7 @@ function Component({ view }) {
   return (
     <>
       <Breadcrumb title="Disbursement" />
+      <h2 className="PageTitle">Transaction Disbursement</h2>
       <Modal
         isOpen={disburseModal}
         toggle={() => setDisburseModal(!disburseModal)}
@@ -952,7 +953,7 @@ function Component({ view }) {
                         ? [disbursedStart, disbursedEnd]
                         : [today, today]),
                       settledStart,
-                      settledEnd,
+                      settledEnd
                       // paymentChannel
                     )
                   );

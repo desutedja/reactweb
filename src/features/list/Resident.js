@@ -257,7 +257,15 @@ function Component({ view, canAdd }) {
           <>
             <div className="row">
               <div className="col-4">
-                <img src={require("../../assets/quick_start.jpg")} width="280px" height="480px" style={{ borderTopLeftRadius: "10px", borderBottomLeftRadius: "10px"}} />
+                <img
+                  src={require("../../assets/quick_start.jpg")}
+                  width="280px"
+                  height="480px"
+                  style={{
+                    borderTopLeftRadius: "10px",
+                    borderBottomLeftRadius: "10px",
+                  }}
+                />
               </div>
               <div className="col-8">
                 <div className="wizard-title">
@@ -330,7 +338,9 @@ function Component({ view, canAdd }) {
         {wizardStep === 2 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">
+                Add Resident
+              </div>
             </div>
             <div className="row">
               <div className="col ml-4">
@@ -448,7 +458,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
+              <div
+                className="col text-right"
+                style={{ marginBottom: "10px", marginRight: "5px" }}
+              >
                 <Button
                   className="float-right"
                   key="?"
@@ -473,7 +486,9 @@ function Component({ view, canAdd }) {
         {wizardStep === 3 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">
+                Add Resident
+              </div>
             </div>
             <div className="row">
               <div className="col ml-4">
@@ -590,7 +605,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
+              <div
+                className="col text-right"
+                style={{ marginBottom: "10px", marginRight: "5px" }}
+              >
                 <Button
                   className="float-right"
                   key="?"
@@ -615,7 +633,9 @@ function Component({ view, canAdd }) {
         {wizardStep === 4 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">
+                Add Resident
+              </div>
             </div>
             <div className="row">
               <div className="col ml-4">
@@ -733,7 +753,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
+              <div
+                className="col text-right"
+                style={{ marginBottom: "10px", marginRight: "5px" }}
+              >
                 <Button
                   className="float-right"
                   key="?"
@@ -758,7 +781,9 @@ function Component({ view, canAdd }) {
         {wizardStep === 5 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">
+                Add Resident
+              </div>
             </div>
             <div className="row">
               <div className="col ml-4">
@@ -875,7 +900,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
+              <div
+                className="col text-right"
+                style={{ marginBottom: "10px", marginRight: "5px" }}
+              >
                 <Button
                   className="float-right"
                   key="?"
@@ -900,7 +928,9 @@ function Component({ view, canAdd }) {
         {wizardStep === 6 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">
+                Add Resident
+              </div>
             </div>
             <div className="row">
               <div className="col ml-4">
@@ -1017,7 +1047,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
+              <div
+                className="col text-right"
+                style={{ marginBottom: "10px", marginRight: "5px" }}
+              >
                 <Button
                   className="float-right"
                   key="?"
@@ -1042,7 +1075,9 @@ function Component({ view, canAdd }) {
         {wizardStep === 7 && (
           <>
             <div className="row">
-              <div className="col wizard-header ml-4 mb-4 mt-4">Add Resident</div>
+              <div className="col wizard-header ml-4 mb-4 mt-4">
+                Add Resident
+              </div>
             </div>
             <div className="row">
               <div className="col ml-4">
@@ -1167,7 +1202,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
+              <div
+                className="col text-right"
+                style={{ marginBottom: "10px", marginRight: "5px" }}
+              >
                 <Button
                   className="float-right"
                   key="?"
@@ -1283,7 +1321,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
+              <div
+                className="col text-right"
+                style={{ marginBottom: "10px", marginRight: "5px" }}
+              >
                 <Button
                   className="float-right"
                   key="?"
@@ -1396,7 +1437,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
+              <div
+                className="col text-right"
+                style={{ marginBottom: "10px", marginRight: "5px" }}
+              >
                 <Button
                   className="float-right"
                   key="?"
@@ -1509,7 +1553,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
+              <div
+                className="col text-right"
+                style={{ marginBottom: "10px", marginRight: "5px" }}
+              >
                 <Button
                   className="float-right"
                   key="?"
@@ -1632,7 +1679,10 @@ function Component({ view, canAdd }) {
               </div>
             </div>
             <div className="row">
-              <div className="col text-right" style={{ marginBottom: "10px", marginRight: "5px" }}>
+              <div
+                className="col text-right"
+                style={{ marginBottom: "10px", marginRight: "5px" }}
+              >
                 <Button
                   className="float-right"
                   key="?"
@@ -1794,6 +1844,7 @@ function Component({ view, canAdd }) {
       </Modal>
       <TemplateLocalStorage
         view={view}
+        pagetitle="Resident List"
         columns={columns}
         slice={"resident"}
         getAction={getResident}

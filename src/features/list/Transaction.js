@@ -82,6 +82,7 @@ function Component() {
 
   return (
     <Template
+      pagetitle="Transaction List"
       columns={columns}
       slice="transaction"
       getAction={getTransaction}
