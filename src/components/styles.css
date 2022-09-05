@@ -330,11 +330,12 @@ input[type="button"]:disabled {
 .Breadcrumb {
   display: flex;
   align-items: center;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  margin-left: 16px;
-  font-size: 1.3rem;
-  color: grey;
+  margin-top: 12px;
+  margin-bottom: 14px;
+  margin-left: 18px;
+  font-size: 14px;
+  color: var(--secondary-color);
+  font-weight: 500;
 }
 
 .search-input {

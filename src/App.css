@@ -81,12 +81,15 @@
 }
 
 .PageTitle {
-  margin-left: 12px;
+  margin-left: 18px;
   display: flex;
+  font-weight: 700;
+  margin-bottom: 18px;
 }
 
 .Crumbs {
   cursor: pointer;
+  color: var(--primary-color);
 }
 
 .Crumbs:hover {
@@ -247,7 +250,7 @@
 .Container {
   background-color: white;
   padding: 16px;
-  border-radius: 4px;
+  border-radius: 8px;
   display: flex;
   flex: 1;
   /* margin-bottom: 32px;
