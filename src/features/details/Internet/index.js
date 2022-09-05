@@ -29,7 +29,7 @@
 // import InternetPackage from "../../../components/cells/InternetPackage";
 
 // const columnsUnit = [
-//   { Header: "Package Name", accessor: (row) => 
+//   { Header: "Package Name", accessor: (row) =>
 //   <InternetPackage
 //     id={row.id}
 //     data={row}
@@ -43,12 +43,12 @@
 //       // </p>,
 //       // <p>{toSentenceCase(row.type)}</p>
 //     ]}
-//   />      
+//   />
 //   },
-//   { Header: "Speed", accessor: (row) => 
+//   { Header: "Speed", accessor: (row) =>
 //     <b>10 Mbps</b>,
 //   },
-//   { Header: "Price", accessor: (row) => 
+//   { Header: "Price", accessor: (row) =>
 //     "Rp. 250.000",
 //   },
 //   { Header: "Coverage Area", accessor: (row) =>
@@ -219,7 +219,7 @@
 //         level: level,
 //         status: status,
 //         period_from: periodFrom,
-//         period_to: periodTo, 
+//         period_to: periodTo,
 //       })
 //     );
 //     setAddUnit(false);
@@ -349,7 +349,7 @@
 //                   <td>
 //                     <div className="row no-gutters w-100" style={{ justifyContent: 'space-between' }}>
 //                         <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
-                            
+
 //                         </div>
 //                         <div className="col-auto d-flex flex-column">
 //                             <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
@@ -382,7 +382,7 @@
 //                 </tr>
 //                 <tr style={{ textAlign: "center"}}>
 //                   <td style={{borderBottom: "0px solid #ffffff"}}>
-                    
+
 //                   </td>
 //                   <td style={{borderBottom: "0px solid #ffffff"}}>
 //                       Globenet
@@ -420,13 +420,13 @@
 //                 "&start_date=" +
 //                 "" +
 //                 "&end_date=" +
-//                 "" + 
-//                 "&building_id=" + 
+//                 "" +
+//                 "&building_id=" +
 //                 "" +
 //                 "&bank=" +
 //                 "" +
 //                 "&sort_field=created_on&sort_type=DESC" +
-//                 "&limit=" + 
+//                 "&limit=" +
 //                 limit,
 
 //                 (res) => {
@@ -465,12 +465,12 @@
 //           view
 //             ? null
 //             : (row) => {
-              
+
 //               dispatch(setSelected(row));
 //               history.push(url + "/package/edit");
 //               // console.log(row)
 //             }
-              
+
 //         }
 //         onClickDelete={
 //           view
@@ -516,7 +516,11 @@ import {
   ageFromBirthdate,
 } from "../../../utils";
 import { get } from "../../slice";
-import { endpointInternet, endpointResident, kyccolor } from "../../../settings";
+import {
+  endpointInternet,
+  endpointResident,
+  kyccolor,
+} from "../../../settings";
 import { deleteResident, setSelected } from "../../slices/resident";
 
 const details = {
@@ -561,10 +565,13 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
 
   useEffect(() => {
     dispatch(
-      get(endpointInternet + "/admin/providerdetail?provider_id=" + id, (res) => {
-        setData(res.data.data);
-        dispatch(setSelected(res.data.data));
-      })
+      get(
+        endpointInternet + "/admin/providerdetail?provider_id=" + id,
+        (res) => {
+          setData(res.data.data);
+          dispatch(setSelected(res.data.data));
+        }
+      )
     );
   }, [dispatch, id]);
 
@@ -586,6 +593,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
       <TemplateInternet
         loading={!data.id}
         title={data.provider_name}
+        pagetitle="Provider Information"
         labels={["Details", "Package"]}
         activeTab={0}
         contents={[
@@ -595,10 +603,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
             // data={data}
             labels={details}
           />,
-          <InternetPackages
-            view={view}
-            id={id}
-          />,
+          <InternetPackages view={view} id={id} />,
         ]}
       />
     </>

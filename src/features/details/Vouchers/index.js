@@ -59,14 +59,14 @@ const info = {
       label: "minimum_transaction",
       lfmt: (v) => "Minimum Transaction",
       vfmt: (v) => {
-        return (v);
+        return v;
       },
     },
     {
       label: "maximum_discount",
       lfmt: (v) => "Maximum Discount",
       vfmt: (v) => {
-        return (v);
+        return v;
       },
     },
     {
@@ -195,6 +195,7 @@ function Component({ view }) {
       <Template
         // image={data.logo || "placeholder"}
         title={data.name}
+        pagetitle="Voucher Information"
         phone={data.phone}
         loading={!data.id}
         labels={["Details", "Voucher Codes"]}

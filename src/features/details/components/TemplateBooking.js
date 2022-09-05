@@ -29,8 +29,10 @@ function Component({
 
   return (
     <>
-      <h2 data-testid="page-title" style={{ marginLeft: "16px" }}>{pagetitle}</h2>
       <Breadcrumb2 title={title ? title : "Details"} />
+      <h2 data-testid="page-title" className="PageTitle">
+        {pagetitle}
+      </h2>
       <Loading loading={loading}>
         <ColumnBooking
           image={image}

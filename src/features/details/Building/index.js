@@ -450,6 +450,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         activeTab={history.location.state ? history.location.state.tab : 0}
         image={auth.role === "sa" && data.logo}
         title={data.name}
+        pagetitle="Building Information"
         website={data.website}
         phone={data.phone}
         loading={!data.id}

@@ -59,14 +59,14 @@ const info = {
       label: "minimum_transaction",
       lfmt: (v) => "Minimum Transaction",
       vfmt: (v) => {
-        return (v);
+        return v;
       },
     },
     {
       label: "maximum_discount",
       lfmt: (v) => "Maximum Discount",
       vfmt: (v) => {
-        return (v);
+        return v;
       },
     },
     {
@@ -80,7 +80,6 @@ const info = {
     "total_distributed",
   ],
 };
-
 
 function Component({ view, canUpdate }) {
   const [data, setData] = useState({});
@@ -149,6 +148,7 @@ function Component({ view, canUpdate }) {
       <Template
         // image={data.logo || "placeholder"}
         title={data.name}
+        pagetitle="Promo VA Information"
         phone={data.phone}
         loading={!data.id}
         labels={["Details"]}

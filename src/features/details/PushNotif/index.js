@@ -10,25 +10,9 @@ import { endpointMerchant } from "../../../settings";
 import { setSelected, deleteMerchant } from "../../slices/merchant";
 
 const info = {
-  "Information": [
-    "id",
-    "created_on",
-    "status",
-    "title",
-    "caption",
-  ],
-  "Filters": [
-    "age_from",
-    "building_name",
-    "gender",
-    "billing"
-  ],
-  "Schedule": [
-    "scheduling_option",
-    "delivery_schedule",
-    "send_on",
-    "close_at",
-  ],
+  Information: ["id", "created_on", "status", "title", "caption"],
+  Filters: ["age_from", "building_name", "gender", "billing"],
+  Schedule: ["scheduling_option", "delivery_schedule", "send_on", "close_at"],
 };
 
 function Component({ view }) {
@@ -55,13 +39,8 @@ function Component({ view }) {
         loading={!data.id}
         image={data.image || "placeholder"}
         link={data.link}
-        contents={[
-          <DetailPushNotif
-            view={view}
-            data={data}
-            labels={info}
-          />
-        ]}
+        pagetitle="Push Notif Information"
+        contents={[<DetailPushNotif view={view} data={data} labels={info} />]}
       />
     </>
   );

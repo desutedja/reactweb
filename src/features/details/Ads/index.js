@@ -256,6 +256,7 @@ function Component({ view }) {
       </Modal>
       <Template
         loading={!data.id}
+        pagetitle="Advertisement Information"
         labels={["Details", "Schedules", "Impression"]}
         contents={[
           <div style={{ display: "flex" }}>
@@ -320,7 +321,7 @@ function Component({ view }) {
             />
           </div>,
           <Schedule view={view} />,
-          <Impression view={view} id={id} />
+          <Impression view={view} id={id} />,
         ]}
       />
     </>
