@@ -96,6 +96,7 @@ function Component({ view }) {
   return (
     <Template
       view={view}
+      pagetitle="Advertisement List"
       columns={role === "sa" ? columnsSA : columnsBM}
       slice={"ads"}
       getAction={getAds}

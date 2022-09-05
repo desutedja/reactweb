@@ -938,7 +938,7 @@ function Component({ view, canAdd }) {
       />
       <Template
         pagetitle="Billing List Category"
-        title="Unit"
+        title="Category"
         columns={columns}
         slice="billing"
         getAction={getBillingCategory}

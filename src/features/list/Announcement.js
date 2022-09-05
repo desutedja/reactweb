@@ -11,7 +11,11 @@ import {
   setSelected,
   deleteAnnouncement,
 } from "../slices/announcement";
-import { dateFormaterEx, dateTimeFormatterScheduler, toSentenceCase } from "../../utils";
+import {
+  dateFormaterEx,
+  dateTimeFormatterScheduler,
+  toSentenceCase,
+} from "../../utils";
 import Template from "./components/Template";
 import { endpointAdmin } from "../../settings";
 import { get } from "../slice";
@@ -28,14 +32,14 @@ const cons = [
 ];
 
 const publisherRoles = [
-  {value:"sa", label:"Super Admin"},
-  {value:"gm_bm", label:"BM Manager"},
-  {value:"pic_bm", label:"PIC Admin"}
+  { value: "sa", label: "Super Admin" },
+  { value: "gm_bm", label: "BM Manager" },
+  { value: "pic_bm", label: "PIC Admin" },
 ];
 
 const publisherRolesBM = [
-  {value:"gm_bm", label:"BM Manager"},
-  {value:"pic_bm", label:"PIC Admin"}
+  { value: "gm_bm", label: "BM Manager" },
+  { value: "pic_bm", label: "PIC Admin" },
 ];
 
 function Component({ view, canAdd, canUpdate, canDelete }) {
@@ -88,11 +92,11 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
     {
       Header: "Publisher Role",
       accessor: (row) =>
-        row.publisher_role === "sa" ? "Super Admin" 
-        :
-        row.publisher_role === "gm_bm" ? "BM Manager"
-        : 
-        "PIC Admin",
+        row.publisher_role === "sa"
+          ? "Super Admin"
+          : row.publisher_role === "gm_bm"
+          ? "BM Manager"
+          : "PIC Admin",
     },
     {
       Header: "Expired Date",
@@ -120,6 +124,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
   return (
     <Template
       view={view}
+      pagetitle="Announcement List"
       columns={columns}
       slice="announcement"
       getAction={getAnnoucement}

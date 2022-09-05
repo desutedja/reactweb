@@ -148,8 +148,10 @@ function Component({ view, title = "", pagetitle }) {
 
   return (
     <>
-      <h2 style={{ marginLeft: "16px" }}>{pagetitle}</h2>
       <Breadcrumb title={title} />
+      <h2 className="PageTitle">
+        Push Notification List
+      </h2>
       <div className="Container">
         <Table
           columns={columns}

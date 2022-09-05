@@ -205,10 +205,8 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
 
   return (
     <div>
-      <h2 style={{ marginLeft: "16px", marginTop: "10px" }}>
-        Billing Settlement
-      </h2>
       <Breadcrumb title="Settlement" />
+      <h2 className="PageTitle">Billing Settlement</h2>
       {/* Start of Web Wizard */}
       <ModalWizard
         width="1080px"

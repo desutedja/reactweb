@@ -3153,6 +3153,8 @@ function Component({ view }) {
 
       <TemplateWithSelectionAndDate
         view={view}
+        title="Unit"
+        pagetitle="Billing List Unit"
         columns={columns}
         slice="billing"
         getAction={getBillingUnit}
