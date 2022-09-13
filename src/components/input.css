@@ -93,8 +93,8 @@
   margin-bottom: 32px;
   margin-right: 8px;
   margin-left: 8px;
-  min-width: calc(100% / 1.2 - 16px);
-  max-width: calc(100% / 1.2 - 16px);
+  max-width: calc(100% / 1 - 16px);
+  min-width: calc(100% / 1 - 16px);
   position: relative;
   text-align: left;
 }
@@ -198,6 +198,12 @@
   border-style: solid;
   padding: 12px;
   background-color: #f3f3fa;
+}
+
+.Input-pretext {
+  border: 0;
+  padding: 12px;
+  min-width: 60px;
 }
 
 .Input-prefix {
