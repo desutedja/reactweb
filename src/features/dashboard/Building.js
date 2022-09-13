@@ -848,36 +848,6 @@ function Component() {
                   <>
                     <div className="row">
                       <div className="col-12">
-                        <div className="row" style={{ marginBottom: 8 }}>
-                          <div
-                            className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap"
-                            style={{ minWidth: 120 }}
-                          >
-                            Periode Lalu
-                          </div>
-                          <div className="col-sm-3" style={{ minWidth: 150 }}>
-                            <InputDash
-                              type="date"
-                              inputValue={startDateFrom}
-                              setInputValue={setStartDateFrom}
-                            />
-                          </div>
-                          <div
-                            className="col-sm-1 mt-1 mr-5 text-nowrap"
-                            style={{ maxWidth: 10 }}
-                          >
-                            s/d
-                          </div>
-                          <div className="col-sm-3" style={{ minWidth: 150 }}>
-                            <InputDash
-                              type="date"
-                              inputValue={endDateFrom}
-                              setInputValue={setEndDateFrom}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-12">
                         <div className="row">
                           <div
                             className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap"
@@ -914,6 +884,36 @@ function Component() {
                                 setCheck("yes");
                                 setLoading(true);
                               }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-12">
+                        <div className="row" style={{ marginBottom: 8 }}>
+                          <div
+                            className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap"
+                            style={{ minWidth: 120 }}
+                          >
+                            Periode Lalu
+                          </div>
+                          <div className="col-sm-3" style={{ minWidth: 150 }}>
+                            <InputDash
+                              type="date"
+                              inputValue={startDateFrom}
+                              setInputValue={setStartDateFrom}
+                            />
+                          </div>
+                          <div
+                            className="col-sm-1 mt-1 mr-5 text-nowrap"
+                            style={{ maxWidth: 10 }}
+                          >
+                            s/d
+                          </div>
+                          <div className="col-sm-3" style={{ minWidth: 150 }}>
+                            <InputDash
+                              type="date"
+                              inputValue={endDateFrom}
+                              setInputValue={setEndDateFrom}
                             />
                           </div>
                         </div>
