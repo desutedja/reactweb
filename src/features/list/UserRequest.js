@@ -240,7 +240,7 @@ function Component({ view, title = "", pagetitle, canDelete }) {
                   />,
                 ]
           }
-          pageCount={data?.total_pages}
+          pageCount={data?.filtered_page}
           totalItems={data?.filtered_item}
           filters={[
             {
@@ -248,7 +248,10 @@ function Component({ view, title = "", pagetitle, canDelete }) {
                 <p>{"Category: " + (cat ? toSentenceCase(catName) : "All")}</p>
               ),
               hidex: cat === "",
-              delete: () => setCat(""),
+              delete: () => {
+                setCat("");
+                setSubCat("");
+              },
               component: (toggleModal) => (
                 <>
                   <Filter
