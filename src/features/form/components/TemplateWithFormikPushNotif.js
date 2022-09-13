@@ -9,6 +9,7 @@ function FormTemplate({
   slice,
   payload,
   schema,
+  pagetitle,
   renderChild = () => {},
   formatValues = () => {},
   edit = () => {},
@@ -22,6 +23,7 @@ function FormTemplate({
   return (
     <>
       <Breadcrumb2 title={toSentenceCase(path.split("/").reverse()[0])} />
+      <h2 className="PageTitle">{pagetitle}</h2>
       <div>
         <Formik
           initialValues={payload}
