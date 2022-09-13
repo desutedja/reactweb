@@ -3,7 +3,7 @@ import { FiAlertCircle } from 'react-icons/fi';
 import { Field } from 'formik';
 
 function TextInput({
-    as, label, name, prefix, suffix, options, externalValue,
+    as, label, name, preText, prefix, suffix, options, externalValue,
     onChange = () => { }, ...rest
 }) {
     const [isFocused, setFocus] = useState(false);
@@ -34,6 +34,9 @@ function TextInput({
     return (
         <>
             <div className="Input-container">
+                {preText && <div className="Input-pretext">
+                    {preText}
+                </div>}
                 {prefix && <div className="Input-prefix">
                     {prefix}
                 </div>}
