@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { toSentenceCase } from "../../utils";
-import { get, setConfirmDelete, post, del } from "../slice";
+import { dateFormaterEx, dateFormatter, toSentenceCase } from "../../../utils";
+import { get, setConfirmDelete } from "../../slice";
 
-import Table from "../../components/Table";
-import Breadcrumb from "../../components/Breadcrumb";
+import Table from "../../../components/Table";
+import Breadcrumb from "../../../components/Breadcrumb";
 import { FiPlus } from "react-icons/fi";
 
-import Button from "../../components/Button";
-import PushNotif from "../../components/cells/PushNotif";
-import { setSelected } from "../slices/userRequest";
-import Badge from "../../components/Badge";
-import Filter from "../../components/Filter";
-import { endpointNotification } from "../../settings";
+import Button from "../../../components/Button";
+import PushNotif from "../../../components/cells/PushNotif";
+import Badge from "../../../components/Badge";
+import Filter from "../../../components/Filter";
+import { endpointNotification } from "../../../settings";
+import { deletePushNotif, setSelected } from "../../slices/pushnotification";
 
 const listCate = [
   { label: "Billing", value: 1 },
@@ -33,11 +33,10 @@ const subAccount = [
 ];
 
 const listStat = [
-  { label: "Waiting for Approval", value: "wfa" },
-  { label: "Waiting for Pickup", value: "wfp" },
-  { label: "On Process", value: "on_process" },
-  { label: "Done", value: "done" },
-  { label: "Rejected", value: "rejected" },
+  { label: "Active", value: "active" },
+  { label: "Inactive", value: "inactive" },
+  { label: "Ended", value: "ended" },
+  { label: "Draft", value: "draft" },
 ];
 
 const columns = [
@@ -56,7 +55,7 @@ const columns = [
                 ? "danger"
                 : row.status === "active"
                 ? "success"
-                : "warning text-white"
+                : "info text-white"
             }
           >
             {toSentenceCase(row.status)}
@@ -76,7 +75,32 @@ const columns = [
             <div>
               <b style={{ fontSize: 14 }}>{row.title}</b>
               <br />
-              <small style={{ color: "#C4C4C4" }}>{row.description}</small>
+              {/* <small style={{ color: "#C4C4C4" }}>
+                {toSentenceCase(row.remarks)}
+              </small> */}
+              <small style={{ color: "#C4C4C4" }}>
+                {row.remarks === "once"
+                  ? toSentenceCase(row.remarks) +
+                    ", " +
+                    dateFormaterEx(row.schedule_start) +
+                    " at " +
+                    (row.schedule_time ? row.schedule_time : "12:00")
+                  : row.remarks === "daily" || row.remarks === "weekly"
+                  ? toSentenceCase(row.remarks) +
+                    " recurring at " +
+                    (row.schedule_time ? row.schedule_time : "12:00") +
+                    " from " +
+                    dateFormaterEx(row.schedule_start) +
+                    " to " +
+                    dateFormaterEx(row.schedule_end)
+                  : row.remarks === "h-3"
+                  ? "Due Date Billing H-3"
+                  : row.remarks === "h-1"
+                  ? "Due Date Billing H-1"
+                  : row.remarks === "h-h"
+                  ? "Due Date Billing H-H"
+                  : "Send as soon as campaign is launched."}
+              </small>
             </div>
           </>,
         ]}
@@ -86,72 +110,33 @@ const columns = [
   {
     Header: "Filters",
     accessor: (row) => {
-      return (
-        <div>
-          {row.filter}
-          {/* {row.filters.map((item) => (
-            <div>
-              {(item.building_name &&
-              !item.age_from &&
-              !item.gender &&
-              !item.billing
-                ? "Building"
-                : item.building_name && item.age_from
-                ? "Building, "
-                : item.building_name && item.gender
-                ? "Building, "
-                : item.building_name && item.billing
-                ? "Building, "
-                : []) +
-                (item.age_from && !item.gender && !item.billing
-                  ? "Age"
-                  : item.age_from && item.gender
-                  ? "Age, "
-                  : item.age_from && item.billing
-                  ? "Age, "
-                  : []) +
-                (item.gender && !item.billing
-                  ? "Gender"
-                  : item.gender && item.billing
-                  ? "Gender, "
-                  : []) +
-                (item.billing ? "Billing" : [])}
-            </div>
-          ))} */}
-        </div>
-      );
+      return <div>{toSentenceCase(row.filter)}</div>;
     },
   },
-  {
-    Header: "Deliveries",
-    accessor: (row) => {
-      return <div>{row.remarks}</div>;
-    },
-  },
+  // {
+  //   Header: "Deliveries",
+  //   accessor: (row) => {
+  //     return <div>{row.deliveries ? row.deliveries : "-"}</div>;
+  //   },
+  // },
 ];
 
-function Component({ view, title = "", pagetitle }) {
+function Component({ view, title = "" }) {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ items: [] });
 
-  const [cat, setCat] = useState("");
-  const [catName, setCatName] = useState("");
-  const [subCat, setSubCat] = useState("");
-  const [subCatName, setSubCatName] = useState("");
   const [stat, setStat] = useState("");
   const [statName, setStatName] = useState("");
 
   let dispatch = useDispatch();
   let history = useHistory();
   let { url } = useRouteMatch();
-  const { refreshToggle } = useSelector((state) => state["userRequest"]);
+  const { refreshToggle } = useSelector((state) => state["pushnotification"]);
 
   return (
     <>
       <Breadcrumb title={title} />
-      <h2 className="PageTitle">
-        Push Notification List
-      </h2>
+      <h2 className="PageTitle">Push Notification List</h2>
       <div className="Container">
         <Table
           columns={columns}
@@ -178,28 +163,29 @@ function Component({ view, title = "", pagetitle }) {
                 )
               );
             },
-            [dispatch, cat, subCat, stat, refreshToggle]
+            [dispatch, stat, refreshToggle]
           )}
           loading={loading}
-          onClickEdit={
-            view
-              ? null
-              : (row) => {
-                  dispatch(setSelected(row));
-                  history.push(url + "/edit");
-                  console.log(row);
-                }
-          }
+          // onClickEdit={
+          //   view
+          //     ? null
+          //     : (row) => {
+          //         dispatch(setSelected(row));
+          //         history.push(url + "/edit");
+          //         console.log(row);
+          //       }
+          // }
           onClickDelete={
             view
               ? null
               : (row) => {
                   dispatch(
                     setConfirmDelete(
-                      "Are you sure you want to delete this user request?",
+                      "Are you sure you want to delete this notification?",
                       // "Feature still under development",
                       () => {
-                        // dispatch(deleteUserRequest(row, history));
+                        console.log(row.id);
+                        dispatch(deletePushNotif(row, history));
                       }
                     )
                   );
@@ -223,65 +209,6 @@ function Component({ view, title = "", pagetitle }) {
           pageCount={data?.total_pages}
           totalItems={data?.filtered_item}
           filters={[
-            {
-              label: (
-                <p>{"Category: " + (cat ? toSentenceCase(catName) : "All")}</p>
-              ),
-              hidex: cat === "",
-              delete: () => setCat(""),
-              component: (toggleModal) => (
-                <>
-                  <Filter
-                    data={listCate}
-                    onClick={(el) => {
-                      setCat(el.value);
-                      setCatName(el.label);
-                      setSubCat("");
-                      setSubCatName("");
-                      toggleModal(false);
-                    }}
-                    onClickAll={() => {
-                      setCat("");
-                      setCatName("");
-                      setSubCat("");
-                      setSubCatName("");
-                      toggleModal(false);
-                    }}
-                  />
-                </>
-              ),
-            },
-            ...(cat && cat != 3
-              ? [
-                  {
-                    label: (
-                      <p>
-                        {"Sub Category: " +
-                          (subCat ? toSentenceCase(subCatName) : "All")}
-                      </p>
-                    ),
-                    hidex: subCat === "",
-                    delete: () => setSubCat(""),
-                    component: (toggleModal) => (
-                      <>
-                        <Filter
-                          data={cat === 1 ? subBilling : subAccount}
-                          onClick={(el) => {
-                            setSubCat(el.value);
-                            setSubCatName(el.label);
-                            toggleModal(false);
-                          }}
-                          onClickAll={() => {
-                            setSubCat("");
-                            setSubCatName("");
-                            toggleModal(false);
-                          }}
-                        />
-                      </>
-                    ),
-                  },
-                ]
-              : []),
             {
               label: (
                 <p>{"Status: " + (stat ? toSentenceCase(statName) : "All")}</p>
