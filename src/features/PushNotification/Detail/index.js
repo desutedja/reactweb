@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-import TemplateBooking from "../components/TemplateBooking";
+import TemplatePushNotif from "../../../features/details/components/TemplatePushNotif";
 import { useHistory, useParams } from "react-router-dom";
 import { get } from "../../slice";
 import { endpointNotification } from "../../../settings";
@@ -14,7 +14,6 @@ import { FiEdit } from "react-icons/fi";
 function Component({ view, editPath = "edit" }) {
   const [data, setData] = useState({});
   const [content, setContent] = useState("");
-  const [confirmDelete, setConfirmDelete] = useState(false);
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -32,7 +31,7 @@ function Component({ view, editPath = "edit" }) {
 
   return (
     <>
-      <TemplateBooking
+      <TemplatePushNotif
         loading={!data.id}
         image={data.image || "placeholder"}
         link={data.link_url}

@@ -2,21 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { endpointAdmin } from "../../settings";
-import { get } from "../slice";
+import { endpointAdmin } from "../../../settings";
+import { get } from "../../slice";
 
-import Template from "./components/TemplateWithFormikPushNotif";
+import Template from "../../form/components/TemplateWithFormikPushNotif";
 import { Form } from "formik";
-import Input from "./inputBooking";
-import SubmitButton from "./components/SubmitButton";
+import Input from "../../form/inputBooking";
+import SubmitButton from "../../form/components/SubmitButton";
 
-import SectionSeparator2 from "../../components/SectionSeparator2";
-import Column from "../../components/Column";
-import Row from "../../components/Row";
+import SectionSeparator2 from "../../../components/SectionSeparator2";
+import Column from "../../../components/Column";
+import Row from "../../../components/Row";
 import { Card, CardBody } from "reactstrap";
 
 import moment from "moment";
-import { editPushNotif } from "../slices/pushnotification";
+import { editPushNotif } from "../../slices/pushnotification";
 
 const pushNotifPayload = {
   title: "",
@@ -64,7 +64,6 @@ const dueDate = [
   { value: 0, label: "H-H Due Date" },
 ];
 function Component() {
-  // const { banks } = useSelector((state) => state.main);
   const { loading, selected } = useSelector((state) => state.pushnotification);
 
   const [buildings, setBuildings] = useState([]);
@@ -255,7 +254,7 @@ function Component() {
             }
           : pushNotifPayload
       }
-      // schema={providerSchema}
+      // schema={}
       formatValues={(values) => ({
         ...values,
         filter:
@@ -416,6 +415,10 @@ function Component() {
         delete data["day"];
         delete data["due_date"];
         delete data["status"];
+        delete data["created_on"];
+        delete data["created_by"];
+        delete data["modified_on"];
+        delete data["modified_by"];
 
         dispatch(editPushNotif(data, history, selected.id));
       }}
@@ -1214,7 +1217,7 @@ function Component() {
                           {values.preview == "android" ? (
                             <div className="text-center">
                               <img
-                                src={require("./../../assets/adnroid_prev.jpg")}
+                                src={require("./../../../assets/adnroid_prev.jpg")}
                                 style={{
                                   maxHeight: 300,
                                   width: "auto",
@@ -1227,7 +1230,7 @@ function Component() {
                           ) : (
                             <div className="text-center">
                               <img
-                                src={require("./../../assets/ios_prev.jpg")}
+                                src={require("./../../../assets/ios_prev.jpg")}
                                 style={{
                                   maxHeight: 300,
                                   width: "auto",
