@@ -2,21 +2,21 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { endpointAdmin } from "../../settings";
-import { get } from "../slice";
+import { endpointAdmin } from "../../../settings";
+import { get } from "../../slice";
 
-import Template from "./components/TemplateWithFormikPushNotif";
+import Template from "../../form/components/TemplateWithFormikPushNotif";
 import { Form } from "formik";
-import Input from "./inputBooking";
-import SubmitButton from "./components/SubmitButton";
+import Input from "../../form/inputBooking";
+import SubmitButton from "../../form/components/SubmitButton";
 
-import SectionSeparator2 from "../../components/SectionSeparator2";
-import Column from "../../components/Column";
-import Row from "../../components/Row";
+import SectionSeparator2 from "../../../components/SectionSeparator2";
+import Column from "../../../components/Column";
+import Row from "../../../components/Row";
 import { Card, CardBody } from "reactstrap";
 
 import moment from "moment";
-import { createPushNotif } from "../slices/pushnotification";
+import { createPushNotif, editPushNotif } from "../../slices/pushnotification";
 
 const pushNotifPayload = {
   title: "",
@@ -64,16 +64,7 @@ const dueDate = [
   { value: 0, label: "H-H Due Date" },
 ];
 function Component() {
-  // const { banks } = useSelector((state) => state.main);
   const { loading, selected } = useSelector((state) => state.pushnotification);
-
-  const [bManagements, setBManagements] = useState([]);
-  const [dataBanks, setDataBanks] = useState([]);
-
-  const [merchant, setMerchant] = useState([]);
-
-  const [inBuildings, setInBuildings] = useState([]);
-  const [categories, setCategories] = useState([]);
 
   const [buildings, setBuildings] = useState([]);
 
@@ -110,131 +101,10 @@ function Component() {
           ? {
               ...pushNotifPayload,
               ...selected,
-              // building_management_id:
-              // selected.building_management_id &&
-              // selected.building_management_id.map((el) => ({
-              //   value: el.id,
-              //   label: el.name,
-              // })),
-              is_active: true,
-              // filter:
-              //   ((selected.age_from && selected.age_to) === null ||
-              //     (selected.age_from && selected.age_to) === "") &&
-              //   selected.gender === "" &&
-              //   (selected.building_id === null ||
-              //     selected.building_id === "") &&
-              //   selected.billing === ""
-              //     ? selected.filter
-              //     : ((selected.age_from && selected.age_to) !== null ||
-              //         (selected.age_from && selected.age_to) !== "") &&
-              //       (selected.building_id === null ||
-              //         selected.building_id === "") &&
-              //       selected.gender === "" &&
-              //       selected.billing === ""
-              //     ? "age"
-              //     : ((selected.age_from && selected.age_to) === null ||
-              //         (selected.age_from && selected.age_to) === "") &&
-              //       (selected.building_id !== null ||
-              //         selected.building_id === "") &&
-              //       selected.gender === "" &&
-              //       selected.billing === ""
-              //     ? "building"
-              //     : ((selected.age_from && selected.age_to) === null ||
-              //         (selected.age_from && selected.age_to) === "") &&
-              //       (selected.building_id === null ||
-              //         selected.building_id === "") &&
-              //       selected.gender !== "" &&
-              //       selected.billing === ""
-              //     ? "gender"
-              //     : ((selected.age_from && selected.age_to) === null ||
-              //         (selected.age_from && selected.age_to) === "") &&
-              //       (selected.building_id === null ||
-              //         selected.building_id === "") &&
-              //       selected.gender === "" &&
-              //       selected.billing !== ""
-              //     ? "billing"
-              //     : ((selected.age_from && selected.age_to) !== null ||
-              //         (selected.age_from && selected.age_to) !== "") &&
-              //       (selected.building_id !== null ||
-              //         selected.building_id === "") &&
-              //       selected.gender === "" &&
-              //       selected.billing === ""
-              //     ? "age, building"
-              //     : ((selected.age_from && selected.age_to) !== null ||
-              //         (selected.age_from && selected.age_to) !== "") &&
-              //       (selected.building_id === null ||
-              //         selected.building_id === "") &&
-              //       selected.gender !== "" &&
-              //       selected.billing === ""
-              //     ? "age, gender"
-              //     : ((selected.age_from && selected.age_to) !== null ||
-              //         (selected.age_from && selected.age_to) !== "") &&
-              //       (selected.building_id === null ||
-              //         selected.building_id === "") &&
-              //       selected.gender === "" &&
-              //       selected.billing !== ""
-              //     ? "age, billing"
-              //     : ((selected.age_from && selected.age_to) === null ||
-              //         (selected.age_from && selected.age_to) === "") &&
-              //       (selected.building_id !== null ||
-              //         selected.building_id === "") &&
-              //       selected.gender !== "" &&
-              //       selected.billing === ""
-              //     ? "building, gender"
-              //     : ((selected.age_from && selected.age_to) === null ||
-              //         (selected.age_from && selected.age_to) === "") &&
-              //       (selected.building_id !== null ||
-              //         selected.building_id === "") &&
-              //       selected.gender === "" &&
-              //       selected.billing !== ""
-              //     ? "building, billing"
-              //     : ((selected.age_from && selected.age_to) === null ||
-              //         (selected.age_from && selected.age_to) === "") &&
-              //       (selected.building_id === null ||
-              //         selected.building_id === "") &&
-              //       selected.gender !== "" &&
-              //       selected.billing !== ""
-              //     ? "gender, billing"
-              //     : ((selected.age_from && selected.age_to) !== null ||
-              //         (selected.age_from && selected.age_to) !== "") &&
-              //       (selected.building_id !== null ||
-              //         selected.building_id === "") &&
-              //       selected.gender !== "" &&
-              //       selected.billing === ""
-              //     ? "age, building, gender"
-              //     : ((selected.age_from && selected.age_to) !== null ||
-              //         (selected.age_from && selected.age_to) !== "") &&
-              //       (selected.building_id !== null ||
-              //         selected.building_id === "") &&
-              //       selected.gender === "" &&
-              //       selected.billing !== ""
-              //     ? "age, building, billing"
-              //     : ((selected.age_from && selected.age_to) !== null ||
-              //         (selected.age_from && selected.age_to) !== "") &&
-              //       (selected.building_id === null ||
-              //         selected.building_id === "") &&
-              //       selected.gender !== "" &&
-              //       selected.billing !== ""
-              //     ? "age, gender, billing"
-              //     : ((selected.age_from && selected.age_to) === null ||
-              //         (selected.age_from && selected.age_to) === "") &&
-              //       (selected.building_id !== null ||
-              //         selected.building_id === "") &&
-              //       selected.gender !== "" &&
-              //       selected.billing !== ""
-              //     ? "building, gender, billing"
-              //     : ((selected.age_from && selected.age_to) !== null ||
-              //         (selected.age_from && selected.age_to) !== "") &&
-              //       (selected.building_id !== null ||
-              //         selected.building_id === "") &&
-              //       selected.gender !== "" &&
-              //       selected.billing !== ""
-              //     ? "age, building, gender, billing"
-              //     : "",
             }
           : pushNotifPayload
       }
-      // schema={providerSchema}
+      // schema={}
       formatValues={(values) => ({
         ...values,
         filter:
@@ -348,7 +218,18 @@ function Component() {
           values.scheduling_type === "due_date"
             ? true
             : false,
-        remarks: values.scheduling_delivery ? values.scheduling_delivery : "",
+        remarks:
+          values.scheduling_type === "due_date_type" && values.due_date === 0
+            ? "h-h"
+            : values.scheduling_type === "due_date_type" &&
+              values.due_date === 1
+            ? "h-1"
+            : values.scheduling_type === "due_date_type" &&
+              values.due_date === 3
+            ? "h-3"
+            : values.scheduling_delivery
+            ? values.scheduling_delivery
+            : "",
         due_date: values.due_date !== "" ? values.due_date : null,
         day: values.scheduling_delivery === "weekly" ? values.day : null,
         schedule_start:
@@ -1344,7 +1225,7 @@ function Component() {
                           {values.preview == "android" ? (
                             <div className="text-center">
                               <img
-                                src={require("./../../assets/adnroid_prev.jpg")}
+                                src={require("./../../../assets/adnroid_prev.jpg")}
                                 style={{
                                   maxHeight: 300,
                                   width: "auto",
@@ -1357,7 +1238,7 @@ function Component() {
                           ) : (
                             <div className="text-center">
                               <img
-                                src={require("./../../assets/ios_prev.jpg")}
+                                src={require("./../../../assets/ios_prev.jpg")}
                                 style={{
                                   maxHeight: 300,
                                   width: "auto",
