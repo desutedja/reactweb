@@ -142,3 +142,55 @@ export const deletePushNotif = (row, history) => (dispatch, getState) => {
     )
   );
 };
+
+export const activatePushNotif = (id) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    put(
+      endpointNotification + "/pushnotif/status",
+      {id, is_active: true},
+      (res) => {
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Push notification has ben set to active.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const inActivatePushNotif = (id) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    put(
+      endpointNotification + "/pushnotif/status",
+      {id, is_active: false},
+      (res) => {
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Push notification has ben set to inactive.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};

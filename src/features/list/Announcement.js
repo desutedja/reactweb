@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Badge } from "reactstrap";
-import { FiPlus } from "react-icons/fi";
+import { FiMapPin, FiPlus } from "react-icons/fi";
+import { GiPin } from "react-icons/gi";
 
 import Button from "../../components/Button";
 import Filter from "../../components/Filter";
@@ -61,6 +62,10 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
           <b>{row.title}</b>
         </a>
       ),
+    },
+    {
+      Header: " ",
+      accessor: (row) => (row.pinned ? <GiPin /> : " "),
     },
     {
       Header: "Publish Schedule",

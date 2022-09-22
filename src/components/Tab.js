@@ -6,6 +6,7 @@ function Component({
   activeTab = 0,
   setTab = null,
   tabActive = null,
+  title,
 }) {
   const [active, setActive] = useState(activeTab);
 
@@ -18,6 +19,7 @@ function Component({
         // fontWeight: "bolder"
       }}
     >
+      {title && <div className="Title">{title}</div>}
       {labels.length > 1 && (
         <div className="Tab">
           {labels.map((el, index) => (
@@ -35,7 +37,7 @@ function Component({
                 className={
                   active === index ? "TabItem-Text" : "TabItem-Text-inactive"
                 }
-                style={{ fontWeight: "bolder"}}
+                style={{ fontWeight: "bolder" }}
               >
                 {el}
               </div>

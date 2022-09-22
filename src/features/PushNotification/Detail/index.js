@@ -7,7 +7,7 @@ import { get } from "../../slice";
 import { endpointNotification } from "../../../settings";
 import { setSelected } from "../../slices/pushnotification";
 import parse from "html-react-parser";
-import { dateFormatter, toSentenceCase } from "../../../utils";
+import { dateFormatter, dateTimeFormatter, toSentenceCase } from "../../../utils";
 import Button from "../../../components/Button";
 import { FiEdit } from "react-icons/fi";
 
@@ -108,7 +108,7 @@ function Component({ view, editPath = "edit" }) {
                       flex={9}
                       style={{ fontWeight: "normal" }}
                     >
-                      {data.created_on ? data.created_on : "-"}
+                      {data.created_on ? dateTimeFormatter(data.created_on) : "-"}
                     </div>
                   </div>
                   <div
