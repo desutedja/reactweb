@@ -658,6 +658,32 @@ export const editCustomSetting = (data, id) => (dispatch) => {
   );
 };
 
+export const resetCustomSetting = (id) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    put(
+      buildingEndpoint + "/settings/reset_setting",
+      id,
+      (res) => {
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Custom setting building has been reset.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
 export const editBuildingUnitType = (data, id) => (dispatch) => {
   dispatch(startAsync());
 

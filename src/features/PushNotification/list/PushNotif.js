@@ -13,7 +13,7 @@ import PushNotif from "../../../components/cells/PushNotif";
 import Badge from "../../../components/Badge";
 import Filter from "../../../components/Filter";
 import { endpointNotification } from "../../../settings";
-import { deletePushNotif, setSelected } from "../../slices/pushnotification";
+import { activatePushNotif, deletePushNotif, inActivatePushNotif, setSelected } from "../../slices/pushnotification";
 
 const listCate = [
   { label: "Billing", value: 1 },
@@ -175,6 +175,40 @@ function Component({ view, title = "" }) {
           //         console.log(row);
           //       }
           // }
+          onClickActive={
+            view
+              ? null
+              : (row) => {
+                  dispatch(
+                    setConfirmDelete(
+                      <>
+                        Are you sure you want to set this notification to <b>Active</b>?
+                      </>,
+                      () => {
+                        console.log(row.id);
+                        dispatch(activatePushNotif(row.id, history));
+                      }
+                    )
+                  );
+                }
+          }
+          onClickInactive={
+            view
+              ? null
+              : (row) => {
+                  dispatch(
+                    setConfirmDelete(
+                      <>
+                        Are you sure you want to set this notification to <b>Inactive</b>?
+                      </>,
+                      () => {
+                        console.log(row.id);
+                        dispatch(inActivatePushNotif(row.id, history));
+                      }
+                    )
+                  );
+                }
+          }
           onClickDelete={
             view
               ? null
@@ -182,7 +216,6 @@ function Component({ view, title = "" }) {
                   dispatch(
                     setConfirmDelete(
                       "Are you sure you want to delete this notification?",
-                      // "Feature still under development",
                       () => {
                         console.log(row.id);
                         dispatch(deletePushNotif(row, history));

@@ -12,16 +12,29 @@
 .Message,
 .Message-own {
   background-color: white;
-  padding: 4px 8px 4px 8px;
-  border-radius: 4px;
+  font-size: 12px;
+  padding: 8px 12px 8px 12px;
+  border-radius: 0 6px 6px 6px;
   margin: 4px;
   max-width: 500px;
   color: #3E414C;
 }
 
 .Message-own {
-  background-color: var(--primary-color);
-  color: white;
+  /* background-color: var(--primary-color); */
+  /* color: white; */
+  border-radius: 6px 0 6px 6px;
+}
+
+.Message-attached {
+  background-color: white;
+  font-size: 12px;
+  padding: 4px 8px 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #E5E7E9;
+  margin: 4px;
+  max-width: 500px;
+  color: #3E414C;
 }
 
 .MessageAvatar {
@@ -39,6 +52,13 @@
   font-size: 0.8rem;
   display: flex;
   align-items: flex-end;
+}
+
+.MessageTimeNow{
+  font-size: 12px;
+  display: flex;
+  align-items: flex-end;
+  padding-top: 8px;
 }
 
 .Participant {
@@ -93,13 +113,24 @@
   font-weight: bold;
 }
 
+.Chat-title {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.Chat-subtitle {
+  font-size: 12px;
+  font-weight: 500;
+  text-align: center;
+}
+
 .Room-subtitle {
   font-size: small;
   text-align: left;
 }
 
 .Room-message {
-  color: grey;
+  color: #3E414C;
   width: 240px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -108,4 +139,25 @@
 
 .Room-unread {
   color: white;
+}
+
+.Room-container-info {
+  color: #838799 !important;
+  background: #FFFFFF;
+  border: 1px solid #E5E7E9;
+  margin-top: 4px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: default;
+}
+
+.Room-gray-text {
+  color: #838799 !important;
+  font-weight: 500;
 }

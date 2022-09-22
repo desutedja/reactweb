@@ -23,8 +23,6 @@ import {
   FiX,
   FiCalendar,
   FiStopCircle,
-  FiBell,
-  FiBellOff,
 } from "react-icons/fi";
 import { FaCaretRight, FaCaretDown } from "react-icons/fa";
 import IconButton from "./IconButton";
@@ -40,6 +38,7 @@ import {
 import { toSentenceCase } from "../utils";
 
 function Table({
+  searchField = true,
   noSearch = false,
   expander = true,
   tableAction = true,
@@ -62,8 +61,6 @@ function Table({
   onClickEdit,
   onClickChange,
   onClickStop,
-  onClickActive,
-  onClickInactive,
   onClickAddBilling,
   onClickApproved,
   onClickDisapproved,
@@ -209,19 +206,21 @@ function Table({
         <>
           <div className="TableActionBilTop">
             <div className="TableAction-new d-flex align-items-center">
-              <div
-                className="TableSearch d-flex align-items-center"
-                style={{ marginLeft: "4px" }}
-              >
-                <Input
-                  label="Search"
-                  compact
-                  fullwidth={true}
-                  icon={<FiSearch />}
-                  inputValue={search}
-                  setInputValue={setSearch}
-                />
-              </div>
+              {searchField && (
+                <div
+                  className="TableSearch d-flex align-items-center"
+                  style={{ marginLeft: "4px" }}
+                >
+                  <Input
+                    label="Search"
+                    compact
+                    fullwidth={true}
+                    icon={<FiSearch />}
+                    inputValue={search}
+                    setInputValue={setSearch}
+                  />
+                </div>
+              )}
 
               {filters.length > 0 && (
                 <div
@@ -505,21 +504,6 @@ function Table({
                         icon: <FiTrash />,
                       }
                     : "",
-                    onClickActive
-                      ? {
-                          onClick: () => onClickActive(row.original),
-                          name: "Set Active",
-                          icon: <FiBell />,
-                        }
-                      : "",
-                    onClickInactive
-                      ? {
-                          name: "Set Inactive",
-                          onClick: () => onClickInactive(row.original),
-                          color: "Danger",
-                          icon: <FiBellOff />,
-                        }
-                      : "",
                   onClickApproved &&
                   !(
                     row.original.approved_status == "approved" ||
