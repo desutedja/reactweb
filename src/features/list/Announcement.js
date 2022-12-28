@@ -11,6 +11,8 @@ import {
   getAnnoucement,
   setSelected,
   deleteAnnouncement,
+  pinAnnoucement,
+  unpinAnnoucement,
 } from "../slices/announcement";
 import {
   dateFormaterEx,
@@ -19,7 +21,8 @@ import {
 } from "../../utils";
 import Template from "./components/Template";
 import { endpointAdmin } from "../../settings";
-import { get } from "../slice";
+import { get, setConfirmDelete } from "../slice";
+import { RiPushpinFill } from "react-icons/ri";
 
 const cons = [
   "centratama",
@@ -65,7 +68,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
     },
     {
       Header: " ",
-      accessor: (row) => (row.pinned ? <GiPin /> : " "),
+      accessor: (row) => (row.is_pin === true ? <RiPushpinFill /> : " "),
     },
     {
       Header: "Publish Schedule",
@@ -181,6 +184,48 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
           ),
         },
       ]}
+      onClickPin={
+        view
+          ? null
+          : (role === "bm" && !canUpdate) || role === "sa" 
+          ? null
+          : (row) => {
+              dispatch(
+                setConfirmDelete(
+                  <>
+                    Are you sure you want to <b>Pin</b> this announcement ?{" "}
+                    <br />
+                    <i>
+                      *Other pinned announcement will be <b>overwritten</b>
+                    </i>
+                  </>,
+                  () => {
+                    console.log(row.id);
+                    dispatch(pinAnnoucement(row.id, history));
+                  }
+                )
+              );
+            }
+      }
+      onClickUnpin={
+        view
+          ? null
+          : (role === "bm" && !canUpdate) || role === "sa" 
+          ? null
+          : (row) => {
+              dispatch(
+                setConfirmDelete(
+                  <>
+                    Are you sure you want to <b>Unpin</b> this announcement?
+                  </>,
+                  () => {
+                    console.log(row.id);
+                    dispatch(unpinAnnoucement(row.id, history));
+                  }
+                )
+              );
+            }
+      }
       actions={
         view
           ? null

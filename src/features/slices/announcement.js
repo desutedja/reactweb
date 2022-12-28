@@ -57,7 +57,7 @@ export const getAnnoucement = (
   dispatch(startAsync());
 
   dispatch(get(announcementEndpoint +
-    '?page=' + (pageIndex + 1) +
+    '/getlist?page=' + (pageIndex + 1) +
     '&limit=' + pageSize +
     '&sort_field=created_on&sort_type=DESC' +
     '&topic=announcement' +
@@ -168,3 +168,56 @@ export const publishAnnouncement = ( data, history, role) => dispatch => {
       dispatch(stopAsync());
     }))
 }
+
+export const pinAnnoucement = (id) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      announcementEndpoint + "/pin",
+      // {id, is_active: true},
+      {announcement_id: id, status: "pin"},
+      (res) => {
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Announcement has ben pinned.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const unpinAnnoucement = (id) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      announcementEndpoint + "/pin",
+      {announcement_id: id, status: "unpin"},
+      (res) => {
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Announcement has ben unpinned.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
