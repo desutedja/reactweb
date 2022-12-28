@@ -1,19 +1,19 @@
 import React, { useState, useCallback } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { dateFormaterEx, dateFormatter, toSentenceCase } from "../../../utils";
-import { get, setConfirmDelete } from "../../slice";
+import { dateFormaterEx, dateFormatter, toSentenceCase } from "../../../../utils";
+import { get, setConfirmDelete } from "../../../slice";
 
-import Table from "../../../components/Table";
-import Breadcrumb from "../../../components/Breadcrumb";
+import Table from "../../../../components/Table";
+import Breadcrumb from "../../../../components/Breadcrumb";
 import { FiPlus } from "react-icons/fi";
 
-import Button from "../../../components/Button";
-import PushNotif from "../../../components/cells/PushNotif";
-import Badge from "../../../components/Badge";
-import Filter from "../../../components/Filter";
-import { endpointNotification } from "../../../settings";
-import { activatePushNotif, deletePushNotif, inActivatePushNotif, setSelected } from "../../slices/pushnotification";
+import Button from "../../../../components/Button";
+import PushNotif from "../../../../components/cells/PushNotif";
+import Badge from "../../../../components/Badge";
+import Filter from "../../../../components/Filter";
+import { endpointNotification } from "../../../../settings";
+import { activatePushNotif, deletePushNotif, inActivatePushNotif, setSelected } from "../../../slices/pushnotification";
 
 const listCate = [
   { label: "Billing", value: 1 },

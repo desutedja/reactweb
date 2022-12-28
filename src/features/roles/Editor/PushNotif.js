@@ -1,10 +1,10 @@
 import React, {  } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
-import List from '../../PushNotification/list/PushNotif';
-import Add from '../../PushNotification/Form/PushNotif';
-import Edit from '../../PushNotification/Form/PushNotifEdit';
-import Details from '../../PushNotification/Detail';
+import List from '../../feature/PushNotification/list/PushNotif';
+import Add from '../../feature/PushNotification/Form/PushNotif';
+import Edit from '../../feature/PushNotification/Form/PushNotifEdit';
+import Details from '../../feature/PushNotification/Detail';
 
 function Component() {
     let { path } = useRouteMatch();

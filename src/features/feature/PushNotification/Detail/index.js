@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-import TemplatePushNotif from "../../../features/details/components/TemplatePushNotif";
+import TemplatePushNotif from "../../../../features/details/components/TemplatePushNotif";
 import { useHistory, useParams } from "react-router-dom";
-import { get } from "../../slice";
-import { endpointNotification } from "../../../settings";
-import { setSelected } from "../../slices/pushnotification";
+import { get } from "../../../slice";
+import { endpointNotification } from "../../../../settings";
+import { setSelected } from "../../../slices/pushnotification";
 import parse from "html-react-parser";
-import { dateFormatter, dateTimeFormatter, toSentenceCase } from "../../../utils";
-import Button from "../../../components/Button";
+import { dateFormatter, dateTimeFormatter, toSentenceCase } from "../../../../utils";
+import Button from "../../../../components/Button";
 import { FiEdit } from "react-icons/fi";
 
 function Component({ view, editPath = "edit" }) {
