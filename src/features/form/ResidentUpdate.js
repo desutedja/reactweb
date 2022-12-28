@@ -174,7 +174,7 @@ function Component() {
                                 <span style={{
                                     marginTop: 24,
                                     marginBottom: 12,
-                                }}>Email is already registered. Go to Resident details to add unit to this
+                                }}><b>Email</b> or <b>Phone Number</b> is already registered. Go to Resident details to add unit to this
                                     Resident?
                         </span>
                                 <button type="button" style={{
