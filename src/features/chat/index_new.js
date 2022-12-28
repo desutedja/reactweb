@@ -12,6 +12,8 @@ import IconButton from "../../components/IconButton";
 import Tab from "../../components/Tab";
 import Task from "../../components/cells/Task";
 import Pill from "../../components/Pill";
+import Row from "../../components/Row";
+import TwoColumnNew from "../../components/TwoColumnNew";
 import {
   updateMessages,
   setMessages,
@@ -21,17 +23,20 @@ import {
   getPICBMChat,
   setReloadList,
 } from "./slice";
-import { FiSend } from "react-icons/fi";
+import { FiCircle, FiSend } from "react-icons/fi";
 
 import "./style.css";
 import { post, get } from "../slice";
 import { endpointAsset, endpointAdmin } from "../../settings";
 import { RiTaskLine } from "react-icons/ri";
 import { toSentenceCase } from "../../utils";
+import { FaCircle, FaUser, FaUsers } from "react-icons/fa";
+import Avatar from "react-avatar";
+import { AvatarGroup } from "@material-ui/lab";
 
 const topics = [
   {
-    label: "All",
+    label: "All Category",
     value: "merchant_trx,service,security,billing,personal,help",
   },
   { label: "Service", value: "service" },
@@ -52,6 +57,7 @@ function Component() {
   const [refresh, setRefresh] = useState(false);
   const [message, setMessage] = useState("");
   const [preview, setPreview] = useState(false);
+  const [roomInfoPrev, setRoomInfoPrev] = useState(false);
   const [image, setImage] = useState("");
   const [search, setSearch] = useState(params?.rf ? params.rf : "");
 
@@ -244,6 +250,58 @@ function Component() {
           }}
         />
       </Modal>
+      <Modal
+        disableFooter
+        disableHeader
+        isOpen={roomInfoPrev}
+        toggle={() => setRoomInfoPrev(false)}
+      >
+        <>
+          <p
+            style={{
+              fontWeight: "bold",
+              marginBottom: 8,
+            }}
+          >
+            Room
+          </p>
+          <p
+            style={{
+              marginBottom: 24,
+            }}
+          >
+            {" "}
+            QiscusID: {roomID}
+          </p>
+          <p
+            style={{
+              fontWeight: "bold",
+              marginBottom: 8,
+            }}
+          >
+            Participants
+          </p>
+          <Loading loading={loadingParticipants}>
+            {typeof participants !== "undefined" &&
+              participants !== null &&
+              participants.map((el, index) => (
+                <div key={index} className="Participant">
+                  <img
+                    alt="avatar"
+                    className="MessageAvatar"
+                    src={el.avatar_url}
+                    style={{
+                      marginRight: 8,
+                      marginBottom: 4,
+                      borderRadius: 4,
+                    }}
+                  />
+                  {el.username}
+                </div>
+              ))}
+          </Loading>
+        </>
+      </Modal>
       <div
         style={{
           display: "flex",
@@ -266,6 +324,54 @@ function Component() {
             }}
           >
             <Loading loading={loadingMessages}>
+              {messages.length > 0 && (
+                <div className="Container mt-4 mb-5">
+                  <div className="row no-gutter w-100">
+                    <div className="col-10">
+                      <div className="col Chat-title">{room.room_name}</div>
+                      <div className="col Room-gray-text">
+                        ID Task: {room.task_id ? room.task_id : "-"}
+                      </div>
+                    </div>
+                    <div
+                      className="col-2 float-right Chat-subtitle cursor-pointer"
+                      onClick={() => {
+                        setRoomInfoPrev(true);
+                      }}
+                      style={{ margin: "0px", padding: "0px" }}
+                    >
+                      <div
+                        style={{ justifyContent: "center", display: "flex" }}
+                      >
+                        <AvatarGroup max={3}>
+                          <Avatar
+                            style={{ borderWidth: 2, borderColor: "#000080" }}
+                            round
+                            size="24"
+                            alt="Geeksforgeeks"
+                            src={require("./../../assets/avatar_default.jpg")}
+                          />
+                          <Avatar
+                            style={{ borderWidth: 2, borderColor: "#000080" }}
+                            round
+                            size="24"
+                            alt="Random Name"
+                            src={require("./../../assets/avatar_default.jpg")}
+                          />
+                          <Avatar
+                            style={{ borderWidth: 2, borderColor: "#000080" }}
+                            round
+                            size="24"
+                            alt="Random Name"
+                            src={require("./../../assets/avatar_default.jpg")}
+                          />
+                        </AvatarGroup>
+                      </div>
+                      <div>Room Info</div>
+                    </div>
+                  </div>
+                </div>
+              )}
               {messages.length > 0 ? (
                 messages.map((el, index) => {
                   const ownName = user.firstname + " " + user.lastname;
@@ -304,10 +410,12 @@ function Component() {
                             currentName === ownName ? "flex-end" : "flex-start",
                         }}
                       >
-                        {index > 0 && beforeName === currentName ? null : (
+                        {index > 0 &&
+                        beforeName === currentName ? null : currentName ===
+                          ownName ? (
                           <div
                             className="MessageUsername"
-                            style={{ cursor: "pointer" }}
+                            style={{ cursor: "pointer", display: "flex" }}
                             onClick={() => {
                               const userrole = el.email.split("-")[0];
                               const userid = el.email.split("-")[2];
@@ -325,11 +433,46 @@ function Component() {
                               }
                             }}
                           >
-                            {currentName + " "}(
-                            {el.email.split("-")[0] === "centratama"
-                              ? currentName
-                              : el.email.split("-")[0]}
-                            )
+                            <span className="roleFlag">
+                              {el.email.split("-")[0] === "centratama"
+                                ? toSentenceCase(currentName)
+                                : toSentenceCase(el.email.split("-")[0])}
+                            </span>
+                            <span className="dotIcon">
+                              <FaCircle />
+                            </span>
+                            {currentName}
+                          </div>
+                        ) : (
+                          <div
+                            className="MessageUsername"
+                            style={{ cursor: "pointer", display: "flex" }}
+                            onClick={() => {
+                              const userrole = el.email.split("-")[0];
+                              const userid = el.email.split("-")[2];
+
+                              if (userrole === "resident") {
+                                history.push(
+                                  "/" + role + "/resident/" + userid
+                                );
+                              }
+                              if (userrole === "staff") {
+                                history.push("/" + role + "/staff/" + userid);
+                              }
+                              if (userrole === "centratama") {
+                                history.push("/" + role + "/admin/" + userid);
+                              }
+                            }}
+                          >
+                            {currentName}
+                            <span className="dotIcon">
+                              <FaCircle />
+                            </span>
+                            <span className="roleFlag">
+                              {el.email.split("-")[0] === "centratama"
+                                ? toSentenceCase(currentName)
+                                : toSentenceCase(el.email.split("-")[0])}
+                            </span>
                           </div>
                         )}
                         <div
@@ -344,23 +487,51 @@ function Component() {
                           {el.type === "text" && (
                             <div>
                               {el.extras.task_id && (
-                                <div
-                                  className={
-                                    currentName === ownName
-                                      ? "Message-own"
-                                      : "Message"
-                                  }
-                                >
-                                  <RiTaskLine />
-                                  <Task
-                                    id={el.extras.task_id}
-                                    data={el.extras}
-                                    items={[
-                                      el.extras.title,
-                                      <small>{el.extras.ref_code}</small>,
-                                    ]}
-                                  />
-                                </div>
+                                <>
+                                  <div>
+                                    <div className="Message-attached">
+                                      <div className="row no-gutters align-items-center">
+                                        <div className="col-auto">
+                                          <div
+                                            className="w-auto h-auto"
+                                            style={{ fontSize: "30px" }}
+                                          >
+                                            <RiTaskLine />
+                                          </div>
+                                        </div>
+                                        <div className="col">
+                                          <Task
+                                            id={el.extras.task_id}
+                                            data={el.extras}
+                                            items={[
+                                              el.extras.title,
+                                              <small className="roleFlag">
+                                                {el.extras.ref_code}
+                                              </small>,
+                                            ]}
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  {/* <div
+                                    className={
+                                      currentName === ownName
+                                        ? "Message-own"
+                                        : "Message"
+                                    }
+                                  >
+                                    <RiTaskLine />
+                                    <Task
+                                      id={el.extras.task_id}
+                                      data={el.extras}
+                                      items={[
+                                        el.extras.title,
+                                        <small>{el.extras.ref_code}</small>,
+                                      ]}
+                                    />
+                                  </div> */}
+                                </>
                               )}
                               <div
                                 className={
@@ -370,6 +541,9 @@ function Component() {
                                 }
                               >
                                 {el.message}
+                                <div className="MessageTimeNow">
+                                  {moment.unix(el.unix_timestamp).fromNow()}
+                                </div>
                               </div>
                             </div>
                           )}
@@ -418,9 +592,6 @@ function Component() {
                               )}
                             </div>
                           )}
-                          <div className="MessageTime">
-                            {moment.unix(el.unix_timestamp).fromNow()}
-                          </div>
                         </div>
                         {messages[index + 1]?.username !== el.username && (
                           <div
@@ -559,7 +730,7 @@ function Component() {
           }}
         >
           <Tab
-            labels={["Room List", "Room Info"]}
+            title={"Chat"}
             contents={[
               <>
                 <Loading
@@ -618,15 +789,30 @@ function Component() {
                     >
                       <div className="Room-left">
                         <div className="Room-title">
-                          <p className="Room-name">{el.room_name}</p>
-                          {opt && opt.ref_code && (
+                          <p className="Room-name">
+                            {el.room_name > el.room_name.substring(0, 30)
+                              ? el.room_name.substring(0, 30) + "..."
+                              : el.room_name}
+                          </p>
+                          {/* <p className="Room-subtitle">
+                            {el.last_message_user ? el.last_message_user + ": " : ""} 
+                            {el.last_message
+                              ? el.last_message >
+                                el.last_message.substring(0, 30)
+                                ? el.last_message.substring(0, 30) + "..."
+                                : el.last_message
+                              : "Message not found"}
+                          </p> */}
+                          {/* {opt && opt.ref_code && (
                             <p className="Room-subtitle">
                               Task Code:{" "}
                               <a href={"/" + role + "/task/" + opt.task_id}>
-                                {opt.ref_code}
+                                {opt.ref_code > opt.ref_code.substring(0, 15)
+                                  ? opt.ref_code.substring(0, 15) + "..."
+                                  : opt.ref_code}
                               </a>
                             </p>
-                          )}
+                          )} */}
                         </div>
                         {/* TODO: get information about user in last_comment.extras */}
                         <p className="Room-message">
@@ -636,7 +822,7 @@ function Component() {
                                 (el.last_message?.length > 20
                                   ? el.last_message?.slice(0, 20) + "..."
                                   : el.last_message)
-                              : "") +
+                              : "Message not found") +
                             (el.last_message_timestamp === 0
                               ? ""
                               : " (" +
@@ -645,7 +831,25 @@ function Component() {
                                   .fromNow() +
                                 ")")}
                         </p>
-                        <Pill color="success">{toSentenceCase(el.topic)}</Pill>
+                        <Row>
+                          <TwoColumnNew
+                            first={
+                              <div className="Room-container-info">
+                                {toSentenceCase(el.topic)}
+                              </div>
+                            }
+                            second={
+                              <div className="Room-container-info">
+                                <a
+                                  className="Room-gray-text"
+                                  href={"/" + role + "/task/" + opt.task_id}
+                                >
+                                  ID Task: {opt.ref_code}
+                                </a>
+                              </div>
+                            }
+                          />
+                        </Row>
                       </div>
                       <div className="Room-right">
                         {el.unread_message !== "0" && (
