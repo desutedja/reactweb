@@ -193,10 +193,8 @@ function Component({ view }) {
 
   return (
     <>
-      <h2 style={{ marginLeft: "16px", marginTop: "10px" }}>
-        Transaction Settlement
-      </h2>
       <Breadcrumb title="Settlement" />
+      <h2 className="PageTitle">Transaction Settlement</h2>
       <Modal
         width="700px"
         isOpen={uploadModal}
@@ -384,7 +382,7 @@ function Component({ view }) {
               }}
               style={{
                 marginTop: 16,
-                color: 'white'
+                color: "white",
               }}
             >
               Download Template
@@ -717,7 +715,7 @@ function Component({ view }) {
                   search,
                   statusSettlement.value,
                   settlementStart,
-                  settlementEnd,
+                  settlementEnd
                 )
               );
               // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -786,7 +784,7 @@ function Component({ view }) {
             //         ),
             //       },
             //     ]
-            //   : 
+            //   :
             //     [
             //       {
             //         hidex: isRangeToday(settlementStart, settlementEnd),
@@ -866,19 +864,22 @@ function Component({ view }) {
             view
               ? null
               : [
-                <MyButton
-                  color="Download"
-                  label="Download.csv"
-                  icon={<FiDownload />}
-                  onClick={() => {
-                    dispatch(downloadTransactionSettlement(
-                      statusSettlement.value,
-                      settlementStart,
-                      settlementEnd,
-                      ));
-                  }}
-                />,
-              ]
+                  <MyButton
+                    fontWeight={500}
+                    color="Download"
+                    label="Download.csv"
+                    icon={<FiDownload />}
+                    onClick={() => {
+                      dispatch(
+                        downloadTransactionSettlement(
+                          statusSettlement.value,
+                          settlementStart,
+                          settlementEnd
+                        )
+                      );
+                    }}
+                  />,
+                ]
           }
           renderActions={(selectedRowIds, page) => {
             // console.log(selectedRowIds);

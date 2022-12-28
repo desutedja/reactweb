@@ -117,6 +117,7 @@ function Component({ view }) {
   return (
     <Template
       view={view}
+      pagetitle="Voucher List"
       columns={columns}
       slice="vouchers"
       getAction={getVoucher}

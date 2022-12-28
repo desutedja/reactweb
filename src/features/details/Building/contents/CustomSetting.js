@@ -8,10 +8,10 @@ import { FaPhone } from 'react-icons/fa';
 import Button from '../../../../components/Button';
 
 import { toSentenceCase, dateFormatter, getCountryFromCode, getBank, dateTimeFormatter } from '../../../../utils';
-import { FiTrash, FiEdit, FiImage } from 'react-icons/fi';
+import { FiTrash, FiEdit, FiImage, FiRefreshCw } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
 
-function Component({ view = false, imgPreview = false, editModal, logoModal, logoWhiteModal, splashModal, data, labels, type = "", horizontal=false,
+function Component({ view = false, imgPreview = false, editModal, logoModal, logoWhiteModal, splashModal, resetModal, data, labels, type = "", horizontal=false,
     editable = true, editPath = 'edit', onDelete, renderButtons = () => { } }) {
 
     const { banks } = useSelector(state => state.main);
@@ -102,6 +102,7 @@ function Component({ view = false, imgPreview = false, editModal, logoModal, log
                 {<Button icon={<FiImage />} label="Preview Logo" color="Danger" onClick={() => logoModal(true)} />}
                 {<Button icon={<FiImage />} label="Preview Logo White" color="Danger" onClick={() => logoWhiteModal(true)} />}
                 {<Button icon={<FiImage />} label="Preview Splash Screen" color="Danger" onClick={() => splashModal(true)} />}
+                {<Button icon={<FiRefreshCw />} label="Reset Custom Setting" onClick={() => resetModal(true)} />}
                 {renderButtons()}
                 {/* {onDelete && <Button icon={<FiTrash />} color="Danger" label="Delete" onClick={onDelete} />} */}
             </div>}

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 
-function MyButton({ icon, label, onClick, selected, color, disabled, className}) {
+function MyButton({ icon, label, onClick, selected, color, disabled, className, fontWeight}) {
     return (
         <Button
             className={('Button ' + (disabled ? 'inactive' : color ? color : '')) + (className ? ' ' + className : '')}
@@ -15,6 +15,7 @@ function MyButton({ icon, label, onClick, selected, color, disabled, className})
                 marginBottom: 8,
                 backgroundColor: color ? '' : '#244091',
                 borderRadius: 6,
+                fontWeight: fontWeight ? fontWeight : 700,
             }}
             type="submit"
         >

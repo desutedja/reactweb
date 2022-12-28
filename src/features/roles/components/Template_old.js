@@ -1,22 +1,8 @@
 import React, { useState, Fragment, useEffect, Children } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import parser from "html-react-parser";
-import {
-  FiMenu,
-  FiLogOut,
-  FiChevronDown,
-  FiChevronUp,
-  FiBell,
-  FiSettings,
-  FiChevronsLeft,
-  FiChevronsRight,
-} from "react-icons/fi";
-import {
-  MdChatBubble,
-  MdChatBubbleOutline,
-  MdNotifications,
-  MdSettings,
-} from "react-icons/md";
+import { FiMenu, FiLogOut, FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { MdChatBubble, MdNotifications, MdSettings } from "react-icons/md";
 import { Switch, useHistory, useRouteMatch, Route } from "react-router-dom";
 import QiscusSDKCore from "qiscus-sdk-core";
 import { Toast, ToastHeader, ToastBody } from "reactstrap";
@@ -73,8 +59,8 @@ function Component({ role, children }) {
   let { url } = useRouteMatch();
 
   useEffect(() => {
-    if (!messaging) return;
-    messaging.requestPermission();
+    if (!messaging) return
+    messaging.requestPermission()
     //   .then((currentToken) => {
     //   if (currentToken) {
     //     console.log("Current token: ", currentToken);
@@ -94,7 +80,7 @@ function Component({ role, children }) {
     // .catch((err) => {
     //   console.log("An error occurred while retrieving token. ", err);
     // });
-
+    
     messaging
       .getToken()
       .then((currentToken) => {
@@ -251,7 +237,7 @@ function Component({ role, children }) {
   }, [dispatch]);
 
   function isSelected(path) {
-    return "/" + history.location.pathname.split("/")[2] === path.slice(1);
+    return "/" + history.location.pathname.split("/")[2] === path;
   }
 
   return (
@@ -372,18 +358,22 @@ function Component({ role, children }) {
       />
       <div className={menuWide ? "TopBar shadow" : "TopBar-wide shadow"}>
         <div className="TopBar-left">
-          <div
-            className="user-container"
-            style={{ cursor: "pointer" }}
+          <IconButton
+            className="MenuToggle"
             onClick={() => {
               setMenuWide(!menuWide);
               setExpanded("");
             }}
           >
+            <FiMenu
+              style={{
+                marginRight: 16,
+              }}
+            />
             {role === "sa"
               ? "Superadmin - " + toSentenceCase(user.group)
               : "Building Manager - " + toSentenceCase(user.building_name)}
-          </div>
+          </IconButton>
         </div>
         <div
           style={{
@@ -399,7 +389,7 @@ function Component({ role, children }) {
           >
             {user.group !== "vas_advertiser" && user.group !== "vas_sales" && (
               <IconButton onClick={() => history.push("/" + role + "/chat")}>
-                <MdChatBubbleOutline />
+                <MdChatBubble />
               </IconButton>
             )}
             {!!unread &&
@@ -421,7 +411,7 @@ function Component({ role, children }) {
                   setLoadingNotif(true);
                 }}
               >
-                <FiBell />
+                <MdNotifications />
               </IconButton>
             )}
           </div>
@@ -435,7 +425,7 @@ function Component({ role, children }) {
               <IconButton
                 onClick={() => history.push("/" + role + "/settings")}
               >
-                <FiSettings />
+                <MdSettings />
               </IconButton>
             )}
           </div>
@@ -500,42 +490,11 @@ function Component({ role, children }) {
               overflowY: "auto",
             }}
           >
-            <div
-              className={
-                menuWide ? "menu-size MenuItem" : "menu-size compact MenuItem"
-              }
-              onClick={() => {
-                setMenuWide(!menuWide);
-                setExpanded("");
-              }}
-            >
-              {menuWide ? (
-                <>
-                  <FiChevronsLeft className="MenuItem-icon" /> <b>Hide Menu</b>
-                </>
-              ) : (
-                <FiChevronsRight className="MenuItem-icon" />
-              )}
-            </div>
             {Children.map(children, (child) => {
-              const { icon, group, label, path, subpaths, separator } =
-                child.props;
+              const { icon, label, path, subpaths } = child.props;
 
               return label ? (
                 <Fragment key={path}>
-                  {group ? (
-                    <>
-                      <div
-                        className={
-                          menuWide ? "groupItem" : " compact"
-                        }
-                      >
-                        {menuWide ? <>{group}</> : []}
-                      </div>
-                    </>
-                  ) : (
-                    []
-                  )}
                   <div
                     onClick={
                       expanded === label
@@ -547,28 +506,19 @@ function Component({ role, children }) {
                           }
                         : () => {
                             history.push(path);
-                            console.log(path);
                             setExpanded("");
                           }
                     }
                     className={
-                      (history.location.pathname === path ||
-                      "/" + history.location.pathname.split("/")[3] === subpaths
-                        ? "MenuItem-active"
-                        : "MenuItem") + (menuWide ? "" : " compact")
+                      (isSelected(path) ? "MenuItem-active" : "MenuItem") +
+                      (menuWide ? "" : " compact")
                     }
                   >
                     <div className="MenuItem-icon">{icon}</div>
                     {menuWide && (
                       <div
                         className={
-                          menuWide
-                            ? history.location.pathname === path ||
-                              "/" + history.location.pathname.split("/")[3] ===
-                                subpaths
-                              ? "MenuItem-label-active"
-                              : "MenuItem-label"
-                            : "MenuItem-label-hidden"
+                          menuWide ? "MenuItem-label" : "MenuItem-label-hidden"
                         }
                       >
                         {label}
@@ -628,15 +578,6 @@ function Component({ role, children }) {
                           ))
                         : null}
                     </div>
-                  )}
-                  {separator ? (
-                    <>
-                      <div className={menuWide ? "menu-separator" : "compact "}>
-                        {/* {menuWide ? <>{separator}</> : []} */}
-                      </div>
-                    </>
-                  ) : (
-                    []
                   )}
                 </Fragment>
               ) : null;

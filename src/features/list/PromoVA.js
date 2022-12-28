@@ -14,23 +14,19 @@ import { FiPlus } from "react-icons/fi";
 import Button from "../../components/Button";
 import PromoVA from "../../components/cells/PromoVA";
 import { deleteVA, editVA } from "../slices/promova";
-import Modal from "../../components/Modal"
-import Input from "../../components/Input"
+import Modal from "../../components/Modal";
+import Input from "../../components/Input";
 import MultiSelectInput from "../form/input/MultiSelect";
 
-
 const columns = [
-  
   // { Header: "ID", accessor: "id" },
   {
     Header: "Bank",
-    accessor: (row) => 
-      <b>{toSentenceCase(row.provider)}</b>        
+    accessor: (row) => <b>{toSentenceCase(row.provider)}</b>,
   },
   {
     Header: "Target Building",
-    accessor: (row) =>
-      row.name
+    accessor: (row) => row.name,
   },
   {
     Header: "Fee/Percentage/Markup",
@@ -38,16 +34,15 @@ const columns = [
       return (
         <div>
           <div>
-          {
-          row.fee_type === "percentage" ?
-            toSentenceCase(row.fee_type) + " : " + row.percentage + "%"
-          :
-          row.fee_type === "fee" ?
-            toSentenceCase(row.fee_type) + " : " + toMoney(row.fee)
-          :
-            toSentenceCase(row.fee_type) + " : " + toMoney((parseInt(row.fee) + parseInt(row.fee * (row.percentage / 100))))
-          }
-          
+            {row.fee_type === "percentage"
+              ? toSentenceCase(row.fee_type) + " : " + row.percentage + "%"
+              : row.fee_type === "fee"
+              ? toSentenceCase(row.fee_type) + " : " + toMoney(row.fee)
+              : toSentenceCase(row.fee_type) +
+                " : " +
+                toMoney(
+                  parseInt(row.fee) + parseInt(row.fee * (row.percentage / 100))
+                )}
           </div>
         </div>
       );
@@ -55,7 +50,7 @@ const columns = [
   },
   {
     Header: "Start Date",
-    accessor: (row) => 
+    accessor: (row) =>
       row.start_date ? dateTimeFormatterCell(row.start_date) : "-",
   },
   {
@@ -65,16 +60,13 @@ const columns = [
   },
   {
     Header: "Created On",
-    accessor: (row) =>{
+    accessor: (row) => {
       return (
         <div>
           <div>
-            {
-      row.created_on ? dateTimeFormatterCell(row.created_on) : "-"}
+            {row.created_on ? dateTimeFormatterCell(row.created_on) : "-"}
           </div>
-          <div>
-            by System
-          </div>
+          <div>by System</div>
         </div>
       );
     },
@@ -82,23 +74,17 @@ const columns = [
   {
     Header: "Status",
     accessor: (row) =>
-      row.status === "scheduled" ?
-        <Pill color="secondary">
-          {toSentenceCase(row.status)}
-        </Pill>
-        :
-      row.status === "ongoing" ?
-        <Pill color="warning">
-          {toSentenceCase(row.status)}
-        </Pill>
-        :
-        <Pill color="primary">
-          {toSentenceCase(row.status)}
-        </Pill> 
+      row.status === "scheduled" ? (
+        <Pill color="secondary">{toSentenceCase(row.status)}</Pill>
+      ) : row.status === "ongoing" ? (
+        <Pill color="warning">{toSentenceCase(row.status)}</Pill>
+      ) : (
+        <Pill color="primary">{toSentenceCase(row.status)}</Pill>
+      ),
   },
 ];
 
-function Component({ view, title = '', pagetitle, canDelete }) {
+function Component({ view, title = "", pagetitle, canDelete }) {
   const [startdate, setStartDate] = useState("");
   const [enddate, setEndDate] = useState("");
   const [buildingid, setBuildingid] = useState("");
@@ -197,22 +183,21 @@ function Component({ view, title = '', pagetitle, canDelete }) {
   }, [dispatch]);
 
   useEffect(() => {
-    
     dispatch(
       get(
         endpointAdmin +
-        "/paymentperbuilding/list?status=all" +
-        "&start_date=" +
-        startdate +
-        "&end_date=" +
-        enddate + 
-        "&building_id=" + 
-        buildingid +
-        "&bank=" +
-        bank +
-        "&sort_field=created_on&sort_type=DESC" +
-        "&limit=" + 
-        limit,
+          "/paymentperbuilding/list?status=all" +
+          "&start_date=" +
+          startdate +
+          "&end_date=" +
+          enddate +
+          "&building_id=" +
+          buildingid +
+          "&bank=" +
+          bank +
+          "&sort_field=created_on&sort_type=DESC" +
+          "&limit=" +
+          limit,
 
         (res) => {
           console.log(res.data.data);
@@ -246,7 +231,7 @@ function Component({ view, title = '', pagetitle, canDelete }) {
         }}
       >
         Change data for this promo
-            {/* <MultiSelectInput    
+        {/* <MultiSelectInput    
               // type="multiselect"
               label="Bank"
               name="account_bank"
@@ -303,195 +288,193 @@ function Component({ view, title = '', pagetitle, canDelete }) {
             setInputValue={setEndPromo}
         /> */}
       </Modal>
-      <h2 style={{ marginLeft: '16px' }}>{pagetitle}</h2>
-            <Breadcrumb title={title} />
-            <div className="Container">
-                <Table
-                    columns={columns}
-                    data={data?.items || []}
-                    // onSelection={(selectedRows) => {
-                    //   const selectedRowIds = [];
-                    //   selectedRows.map((row) => {
-                    //     if (row !== undefined){
-                    //       selectedRowIds.push(row.id);
-                    //       setMultiActionRows([...selectedRowIds]);
-                    //     }
-                    //   });    
-                    // }}
-                    fetchData={useCallback(
-                      (page, limit, searchItem, sortField, sortType) => {
-                        setLoading(true);
-                        dispatch(
-                          get(
-                            endpointAdmin +
-                            "/paymentperbuilding/list?status=all" +
-                            "&start_date=" +
-                            startdate +
-                            "&end_date=" +
-                            enddate + 
-                            "&building_id=" + 
-                            buildingid +
-                            "&bank=" +
-                            bank +
-                            "&sort_field=created_on&sort_type=DESC" +
-                            "&limit=" + 
-                            limit,
+      <Breadcrumb title={title} />
+      <h2 className="PageTitle">Promo VA List</h2>
+      <div className="Container">
+        <Table
+          columns={columns}
+          data={data?.items || []}
+          // onSelection={(selectedRows) => {
+          //   const selectedRowIds = [];
+          //   selectedRows.map((row) => {
+          //     if (row !== undefined){
+          //       selectedRowIds.push(row.id);
+          //       setMultiActionRows([...selectedRowIds]);
+          //     }
+          //   });
+          // }}
+          fetchData={useCallback(
+            (page, limit, searchItem, sortField, sortType) => {
+              setLoading(true);
+              dispatch(
+                get(
+                  endpointAdmin +
+                    "/paymentperbuilding/list?status=all" +
+                    "&start_date=" +
+                    startdate +
+                    "&end_date=" +
+                    enddate +
+                    "&building_id=" +
+                    buildingid +
+                    "&bank=" +
+                    bank +
+                    "&sort_field=created_on&sort_type=DESC" +
+                    "&limit=" +
+                    limit,
 
-                            (res) => {
-                              console.log(res.data.data);
-                              setData(res.data.data);
-                              setLoading(false);
-                            }
-                          )
-                        );
-                        // eslint-disable-next-line react-hooks/exhaustive-deps
-                      },
-                      [dispatch, buildingid, bank, startdate, enddate]
-                    )}
-                    loading={loading}
-                    onClickChange={
-                      view
-                        ? null
-                        : (row) => {
-                          
-                          dispatch(setSelected(row));
-                          history.push(url + "/edit");
-                          console.log(row)
-                        }
-                          
-                    }
-                    onClickStop={
-                      view
-                        ? null
-                        : role === "bm" && !canDelete
-                        ? null
-                        : (row) => {
-                            dispatch(
-                              setConfirmDelete(
-                                // "Are you sure to end this promo?",
-                                "Feature still under development",
-                                () => {
-                                  // dispatch(deleteVA(row));
-                                }
-                              )
-                            );
-                          }
-                    }
-                    actions={
-                      view
-                        ? null
-                        : [
-                            <Button
-                              key="Add Promo VA"
-                              label="Add Promo VA"
-                              icon={<FiPlus />}
-                              onClick={() => {
-                                dispatch(setSelected({}));
-                                history.push(url + "/add");
-                              }}
-                            />,
-                          ]
-                    }
-                    // pageCount={data?.total_pages}
-                    // totalItems={data?.total_items}
-                    // filters={[
-                    //   {
-                    //     label: (
-                    //       <p>
-                    //         {"Status: " +
-                    //           (status ? toSentenceCase(status) : "All")}
-                    //       </p>
-                    //     ),
-                    //     hidex: status === "",
-                    //     delete: () => setStatus(""),
-                    //     component: (toggleModal) => (
-                    //       <>
-                    //         <Filter
-                    //           data={[
-                    //             { label: "Paid", value: "paid" },
-                    //             { label: "Unpaid", value: "unpaid" },
-                    //           ]}
-                    //           onClick={(el) => {
-                    //             setStatus(el.value);
-                    //             toggleModal(false);
-                    //           }}
-                    //           onClickAll={() => {
-                    //             setStatus("");
-                    //             toggleModal(false);
-                    //           }}
-                    //         />
-                    //       </>
-                    //     ),
-                    //   },
-                    // ]}
-                    // actions={[
-                    //   <>
-                    //     {view ? null : role === "bm" && !canAdd ? null : (
-                    //       <Button
-                    //         key="Add Billing"
-                    //         label="Add Billing"
-                    //         icon={<FiPlus />}
-                    //         onClick={() => {
-                    //           dispatch(setSelectedItem({}));
-                    //           history.push({
-                    //             pathname: url + "/add",
-                    //             state: {
-                    //               year: parseInt(bmonths[active]?.year),
-                    //               month: parseInt(bmonths[active]?.month),
-                    //             },
-                    //           });
-                    //         }}
-                    //       />
-                    //     )}
-                    //   </>,
-                    // ]}
-                    // deleteSelection={(selectedRows, rows) => {
-                    //   Object.keys(selectedRows).map((el) =>
-                    //     dispatch(deleteBillingUnitItem(rows[el].original.id))
-                    //   );
-                    // }}
-                    // renderActions={
-                    //   view
-                    //     ? null
-                    //     : (selectedRowIds, page) => {
-                    //         return [
-                    //           <>
-                    //             <Button
-                    //               label="Set as Paid Selected"
-                    //               disabled={
-                    //                 Object.keys(selectedRowIds).length === 0
-                    //               }
-                    //               icon={<FiCheck />}
-                    //               onClick={() => {
-                    //                 confirmAlert({
-                    //                   title: "Set as Paid Billing",
-                    //                   message:
-                    //                     "Do you want to set selected billing as Paid?",
-                    //                   buttons: [
-                    //                     {
-                    //                       label: "Yes",
-                    //                       onClick: () => {
-                    //                         dispatch(
-                    //                           updateSetAsPaidSelectedDetail(multiActionRows)
-                    //                         );
-                    //                       },
-                    //                       className: "Button btn btn-secondary",
-                    //                     },
-                    //                     {
-                    //                       label: "Cancel",
-                    //                       className: "Button btn btn-cancel",
-                    //                     },
-                    //                   ],
-                    //                 });
-                    //               }}
-                    //             />
-                    //           </>,
-                    //         ];
-                    //       }
-                    // }
-                  />
-            </div>
-    </>              
+                  (res) => {
+                    console.log(res.data.data);
+                    setData(res.data.data);
+                    setLoading(false);
+                  }
+                )
+              );
+              // eslint-disable-next-line react-hooks/exhaustive-deps
+            },
+            [dispatch, buildingid, bank, startdate, enddate]
+          )}
+          loading={loading}
+          onClickChange={
+            view
+              ? null
+              : (row) => {
+                  dispatch(setSelected(row));
+                  history.push(url + "/edit");
+                  console.log(row);
+                }
+          }
+          onClickStop={
+            view
+              ? null
+              : role === "bm" && !canDelete
+              ? null
+              : (row) => {
+                  dispatch(
+                    setConfirmDelete(
+                      // "Are you sure to end this promo?",
+                      "Feature still under development",
+                      () => {
+                        // dispatch(deleteVA(row));
+                      }
+                    )
+                  );
+                }
+          }
+          actions={
+            view
+              ? null
+              : [
+                  <Button
+                    key="Add Promo VA"
+                    label="Add Promo VA"
+                    icon={<FiPlus />}
+                    onClick={() => {
+                      dispatch(setSelected({}));
+                      history.push(url + "/add");
+                    }}
+                  />,
+                ]
+          }
+          // pageCount={data?.total_pages}
+          // totalItems={data?.total_items}
+          // filters={[
+          //   {
+          //     label: (
+          //       <p>
+          //         {"Status: " +
+          //           (status ? toSentenceCase(status) : "All")}
+          //       </p>
+          //     ),
+          //     hidex: status === "",
+          //     delete: () => setStatus(""),
+          //     component: (toggleModal) => (
+          //       <>
+          //         <Filter
+          //           data={[
+          //             { label: "Paid", value: "paid" },
+          //             { label: "Unpaid", value: "unpaid" },
+          //           ]}
+          //           onClick={(el) => {
+          //             setStatus(el.value);
+          //             toggleModal(false);
+          //           }}
+          //           onClickAll={() => {
+          //             setStatus("");
+          //             toggleModal(false);
+          //           }}
+          //         />
+          //       </>
+          //     ),
+          //   },
+          // ]}
+          // actions={[
+          //   <>
+          //     {view ? null : role === "bm" && !canAdd ? null : (
+          //       <Button
+          //         key="Add Billing"
+          //         label="Add Billing"
+          //         icon={<FiPlus />}
+          //         onClick={() => {
+          //           dispatch(setSelectedItem({}));
+          //           history.push({
+          //             pathname: url + "/add",
+          //             state: {
+          //               year: parseInt(bmonths[active]?.year),
+          //               month: parseInt(bmonths[active]?.month),
+          //             },
+          //           });
+          //         }}
+          //       />
+          //     )}
+          //   </>,
+          // ]}
+          // deleteSelection={(selectedRows, rows) => {
+          //   Object.keys(selectedRows).map((el) =>
+          //     dispatch(deleteBillingUnitItem(rows[el].original.id))
+          //   );
+          // }}
+          // renderActions={
+          //   view
+          //     ? null
+          //     : (selectedRowIds, page) => {
+          //         return [
+          //           <>
+          //             <Button
+          //               label="Set as Paid Selected"
+          //               disabled={
+          //                 Object.keys(selectedRowIds).length === 0
+          //               }
+          //               icon={<FiCheck />}
+          //               onClick={() => {
+          //                 confirmAlert({
+          //                   title: "Set as Paid Billing",
+          //                   message:
+          //                     "Do you want to set selected billing as Paid?",
+          //                   buttons: [
+          //                     {
+          //                       label: "Yes",
+          //                       onClick: () => {
+          //                         dispatch(
+          //                           updateSetAsPaidSelectedDetail(multiActionRows)
+          //                         );
+          //                       },
+          //                       className: "Button btn btn-secondary",
+          //                     },
+          //                     {
+          //                       label: "Cancel",
+          //                       className: "Button btn btn-cancel",
+          //                     },
+          //                   ],
+          //                 });
+          //               }}
+          //             />
+          //           </>,
+          //         ];
+          //       }
+          // }
+        />
+      </div>
+    </>
   );
 }
 

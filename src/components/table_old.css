@@ -1,0 +1,345 @@
+.Table {
+  border-radius: 4px;
+  /* background-color: white; */
+  width: 100%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.react-datepicker-popper {
+  z-index: 9999 !important;
+  background-color: #f0f0f3;
+  padding: 4px;
+}
+
+.react-datepicker__month-text, .react-datepicker-year-header {
+  text-align: center;
+}
+
+.Table-content {
+  position: relative;
+  overflow: auto;
+  border-top: 1px solid #f3f3fa;
+  flex: 1;
+}
+
+.Table table {
+  position: relative;
+  z-index: 1;
+}
+
+.TableLoading {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffffffc5;
+  z-index: 2;
+}
+
+.Pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  flex-wrap: wrap;
+}
+
+.Container .Pagination,
+.ReactModalPortal .Pagination {
+  padding: 0;
+  padding-top: 16px;
+}
+
+.Pagination-range {
+  display: flex;
+  align-items: center;
+}
+
+.Pagination-control {
+  display: flex;
+  align-items: center;
+}
+
+.SelectRange {
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.PageControl {
+  margin-left: 4px;
+  margin-right: 4px;
+}
+
+.PageInfo {
+  display: flex;
+  margin-left: 8px;
+  margin-right: 8px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.TableAction {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Container .TableAction,
+.ReactModalPortal .TableAction {
+  padding: 0;
+  padding-bottom: 8px;
+}
+
+.TableActionBil {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Container .TableActionBil,
+.ReactModalPortal .TableActionBil {
+  padding: 0;
+  padding-top: 24px;
+  padding-bottom: 8px;
+}
+
+.TableActionBilTop {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Container .TableActionBilTop,
+.ReactModalPortal .TableActionBilTop {
+  padding: 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f3f3fa;
+}
+
+.TableActionRating {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Container .TableActionBilRating,
+.ReactModalPortal .TableActionBilRating {
+  padding: 0;
+  padding-bottom: 8px;
+}
+
+.TableActionRatingTop {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Container .TableActionRatingTop,
+.ReactModalPortal .TableActionRatingTop {
+  padding: 0;
+}
+
+.TableAction-right {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.TableAction-right button {
+  margin-right: 8px;
+  color: #ffffff;
+}
+
+.TableAction-new {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.TableAction-new button {
+  margin-right: 8px;
+  color: #ffffff;
+}
+
+.TableHeader {
+  display: flex;
+  align-items: center;
+}
+
+.TableDatePicker input {
+  padding: 4px 8px 4px 8px;
+  width: 120px;
+}
+
+.TableDatePicker-2 input {
+  padding: 5px;
+  width: 100%;
+  margin-right: 4px;
+  margin-left: 2px;
+  font-size: 12px;
+}
+
+.TableSearch input {
+  padding: 4px 8px 4px 8px;
+}
+
+.TableSearch .InputIcon {
+  top: 4px;
+}
+
+.TableEmpty {
+  display: flex;
+  align-self: center;
+  justify-content: center;
+  padding: 16px;
+  width: 100%;
+  border-bottom: 1px solid #f3f3fa;
+  color: grey;
+}
+
+.SortIcon {
+  margin-left: 8px;
+}
+
+.SelectActions {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 4px;
+}
+
+.SelectActions-toggle {
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  border-radius: 4px;
+  padding: 4px 8px 4px 8px;
+  cursor: pointer;
+  height: 2.4rem;
+  align-items: center;
+  display: flex;
+}
+
+.SelectActions-options,
+.SelectActions-options-hide {
+  position: absolute;
+  top: 36px;
+  background-color: white;
+  box-shadow: 0px 1px 4px grey;
+  z-index: 99;
+  /* width: 100%; */
+  border-radius: 4px;
+  transition: all 0.1s ease;
+  height: auto;
+  overflow: hidden;
+}
+
+.SelectActions-options-hide {
+  height: 0;
+}
+
+.SelectActions-item {
+  padding: 4px 8px 4px 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.SelectActions-item:hover {
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 4px;
+}
+
+.SelectedRow {
+  background-color: #f0f0f3;
+  /* background-color: var(--primary-yellow-color); */
+}
+
+.SubRowComponent {
+  background-color: #f0f0f3;
+  padding: 20px;
+}
+
+.selectable:hover {
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.048);
+}
+
+.AlignRight {
+  text-align: right;
+}
+
+.More {
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.More:hover {
+  background-color: #f0f0f3;
+}
+
+.FilterContainer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border-top: 1px solid #f3f3fa;
+  min-height: 0px;
+  height: 0px;
+  overflow: hidden;
+  visibility: hidden;
+  transition: .2s;
+}
+
+.FilterContainer.down {
+  min-height: 48px;
+  height: auto;
+  padding-top: 8px;
+  visibility: visible;
+}
+
+.FilterContainerNew {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border-bottom: 1px solid #f3f3fa;
+  min-height: 0px;
+  height: 0px;
+  overflow: hidden;
+  visibility: hidden;
+  transition: .2s;
+}
+
+.FilterContainerNew.down {
+  min-height: 48px;
+  height: auto;
+  padding-top: 8px;
+  margin-bottom: 8px;
+  visibility: visible;
+}
+
+.FilterButton {
+  background-color: #f0f0f3;
+  height: 28px;
+  margin-left: 8px;
+  margin-bottom: 8px;
+  padding: 4px 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  cursor: pointer;
+}

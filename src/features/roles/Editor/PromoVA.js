@@ -1,9 +1,9 @@
 import React from "react";
 import { useRouteMatch, Switch, Route } from "react-router-dom";
 
-import List from "../../list/PromoVA";
-import Add from "../../form/PromoVa";
-import Edit from "../../form/PromoVAEdit";
+import List from "../../feature/PromoVA/List/PromoVA";
+import Add from "../../feature/PromoVA/Form/PromoVa";
+import Edit from "../../feature/PromoVA/Form/PromoVAEdit";
 import Details from "../../details/PromoVA";
 
 function Component() {

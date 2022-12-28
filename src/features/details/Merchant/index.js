@@ -115,6 +115,7 @@ function Component({ view }) {
         image={data.logo || "placeholder"}
         title={data.name}
         phone={data.phone}
+        pagetitle="Merchant Information"
         labels={["Details", "Contact Person", "Bank Account", "Product"]}
         contents={[
           <Detail

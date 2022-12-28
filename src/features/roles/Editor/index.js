@@ -53,12 +53,14 @@ import Template from "../components/Template";
 import { Route, Redirect } from "react-router-dom";
 
 const menu = [
+  // Overview Start
   {
     icon: <FiBarChart2 className="MenuItem-icon" />,
     label: "Dashboard",
     path: "/dashboard",
     subpaths: ["/building", "/transaction", "/task", "/advertisement", "/CCTV"],
     component: <Dashboard />,
+    group: "Overview",
   },
   {
     icon: <FiBriefcase className="MenuItem-icon" />,
@@ -71,38 +73,17 @@ const menu = [
     label: "Building",
     path: "/building",
     component: <Building />,
+    separator: true,
   },
+  // Overview End
+
+  // Building Start
   {
     icon: <FiUsers className="MenuItem-icon" />,
     label: "Resident",
     path: "/resident",
     component: <Resident />,
-  },
-  {
-    icon: <FiUsers className="MenuItem-icon" />,
-    label: "Basic User Request",
-    path: "/basicuserrequest",
-    component: <RequestPremium />,
-  },
-  {
-    icon: <FiZap className="MenuItem-icon" />,
-    label: "Billing",
-    path: "/billing",
-    subpaths: ["/unit","/category", "/settlement", "/disbursement"],
-    component: <Billing />,
-  },
-  // {
-  //   icon: <RiTaskLine className="MenuItem-icon" />,
-  //   label: "XenPlatform",
-  //   path: "/xenplatform",
-  //   component: <Xenplatform />,
-  // },
-  
-  {
-    icon: <RiTaskLine className="MenuItem-icon" />,
-    label: "Catat Meter",
-    path: "/catatmeter",
-    component: <CatatMeter />
+    group: "Building",
   },
   {
     icon: <RiCustomerService2Line className="MenuItem-icon" />,
@@ -117,16 +98,63 @@ const menu = [
     component: <Task />,
   },
   {
-    icon: <FiFile className="MenuItem-icon" />,
-    label: "User Request",
-    path: "/user request",
-    component: <UserRequest />,
+    icon: <FiUsers className="MenuItem-icon" />,
+    label: "Basic User Request",
+    path: "/basicuserrequest",
+    component: <RequestPremium />,
+    separator: true,
   },
+  // Building End
+
+  // Billing Start
+  {
+    icon: <FiZap className="MenuItem-icon" />,
+    label: "Billing",
+    path: "/billing",
+    subpaths: ["/unit", "/category", "/settlement", "/disbursement"],
+    component: <Billing />,
+    group: "Billing",
+  },
+  // {
+  //   icon: <RiTaskLine className="MenuItem-icon" />,
+  //   label: "XenPlatform",
+  //   path: "/xenplatform",
+  //   component: <Xenplatform />,
+  // },
+
+  {
+    icon: <RiTaskLine className="MenuItem-icon" />,
+    label: "Catat Meter",
+    path: "/catatmeter",
+    component: <CatatMeter />,
+    separator: true,
+  },
+  // Billing End
+
+  // Promo Start
+  {
+    icon: <RiCoupon2Line className="MenuItem-icon" />,
+    label: "Vouchers",
+    path: "/vouchers",
+    component: <Vouchers />,
+    group: "Promo",
+  },
+  {
+    icon: <RiBankCardLine className="MenuItem-icon" />,
+    label: "Promo VA",
+    path: "/promo VA",
+    component: <PromoVA />,
+    separator: true,
+  },
+  // Promo End
+
+  // Shop Start
   {
     icon: <RiStore2Line className="MenuItem-icon" />,
     label: "Merchant",
     path: "/merchant",
     component: <Merchant />,
+    group: "Shop",
   },
   {
     icon: <FiShoppingBag className="MenuItem-icon" />,
@@ -135,22 +163,22 @@ const menu = [
     component: <Product />,
   },
   {
-    icon: <RiCoupon2Line className="MenuItem-icon" />,
-    label: "Vouchers",
-    path: "/vouchers",
-    component: <Vouchers />,
+    icon: <FiShoppingCart className="MenuItem-icon" />,
+    label: "Transaction",
+    path: "/transaction",
+    subpaths: ["/list", "/settlement", "/disbursement"],
+    component: <Transaction />,
+    separator: true,
   },
-  {
-    icon: <RiBankCardLine className="MenuItem-icon" />,
-    label: "Promo VA",
-    path: "/promo VA",
-    component: <PromoVA />,
-  },
+  // Shop End
+
+  // Features Start
   {
     icon: <FiWifi className="MenuItem-icon" />,
     label: "Internet",
     path: "/internet",
     component: <Internet />,
+    group: "Features",
   },
   {
     icon: <FiCalendar className="MenuItem-icon" />,
@@ -159,17 +187,21 @@ const menu = [
     component: <Booking />,
   },
   {
-    icon: <FiShoppingCart className="MenuItem-icon" />,
-    label: "Transaction",
-    path: "/transaction",
-    subpaths: ["/list", "/settlement", "/disbursement"],
-    component: <Transaction />,
+    icon: <FiFile className="MenuItem-icon" />,
+    label: "User Request",
+    path: "/user request",
+    component: <UserRequest />,
+    separator: true,
   },
+  // Featires End
+
+  // Information Start
   {
     icon: <RiAdvertisementLine className="MenuItem-icon" />,
     label: "Advertisement",
     path: "/advertisement",
     component: <Ads />,
+    group: "Information",
   },
   {
     icon: <FiVolume2 className="MenuItem-icon" />,
@@ -182,13 +214,19 @@ const menu = [
     label: "Push Notification",
     path: "/push notification",
     component: <PushNotif />,
+    separator: true,
   },
+  // Information End
+
+  // Settings Start
   {
     icon: <FaIdBadge className="MenuItem-icon" />,
     label: "Admin",
     path: "/admin",
     component: <Admin />,
+    group: "Settings",
   },
+  // Settings End
 ];
 
 function Component() {
@@ -202,6 +240,8 @@ function Component() {
           icon={el.icon}
           path={"/sa" + el.path}
           subpaths={el.subpaths}
+          group={el.group}
+          separator={el.separator}
         >
           {el.component}
         </Route>

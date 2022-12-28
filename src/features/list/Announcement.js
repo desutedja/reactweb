@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Badge } from "reactstrap";
-import { FiPlus } from "react-icons/fi";
+import { FiMapPin, FiPlus } from "react-icons/fi";
+import { GiPin } from "react-icons/gi";
 
 import Button from "../../components/Button";
 import Filter from "../../components/Filter";
@@ -10,11 +11,18 @@ import {
   getAnnoucement,
   setSelected,
   deleteAnnouncement,
+  pinAnnoucement,
+  unpinAnnoucement,
 } from "../slices/announcement";
-import { dateFormaterEx, dateTimeFormatterScheduler, toSentenceCase } from "../../utils";
+import {
+  dateFormaterEx,
+  dateTimeFormatterScheduler,
+  toSentenceCase,
+} from "../../utils";
 import Template from "./components/Template";
 import { endpointAdmin } from "../../settings";
-import { get } from "../slice";
+import { get, setConfirmDelete } from "../slice";
+import { RiPushpinFill } from "react-icons/ri";
 
 const cons = [
   "centratama",
@@ -28,14 +36,14 @@ const cons = [
 ];
 
 const publisherRoles = [
-  {value:"sa", label:"Super Admin"},
-  {value:"gm_bm", label:"BM Manager"},
-  {value:"pic_bm", label:"PIC Admin"}
+  { value: "sa", label: "Super Admin" },
+  { value: "gm_bm", label: "BM Manager" },
+  { value: "pic_bm", label: "PIC Admin" },
 ];
 
 const publisherRolesBM = [
-  {value:"gm_bm", label:"BM Manager"},
-  {value:"pic_bm", label:"PIC Admin"}
+  { value: "gm_bm", label: "BM Manager" },
+  { value: "pic_bm", label: "PIC Admin" },
 ];
 
 function Component({ view, canAdd, canUpdate, canDelete }) {
@@ -57,6 +65,10 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
           <b>{row.title}</b>
         </a>
       ),
+    },
+    {
+      Header: " ",
+      accessor: (row) => (row.is_pin === true ? <RiPushpinFill /> : " "),
     },
     {
       Header: "Publish Schedule",
@@ -88,11 +100,11 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
     {
       Header: "Publisher Role",
       accessor: (row) =>
-        row.publisher_role === "sa" ? "Super Admin" 
-        :
-        row.publisher_role === "gm_bm" ? "BM Manager"
-        : 
-        "PIC Admin",
+        row.publisher_role === "sa"
+          ? "Super Admin"
+          : row.publisher_role === "gm_bm"
+          ? "BM Manager"
+          : "PIC Admin",
     },
     {
       Header: "Expired Date",
@@ -120,6 +132,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
   return (
     <Template
       view={view}
+      pagetitle="Announcement List"
       columns={columns}
       slice="announcement"
       getAction={getAnnoucement}
@@ -171,6 +184,48 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
           ),
         },
       ]}
+      onClickPin={
+        view
+          ? null
+          : (role === "bm" && !canUpdate) || role === "sa" 
+          ? null
+          : (row) => {
+              dispatch(
+                setConfirmDelete(
+                  <>
+                    Are you sure you want to <b>Pin</b> this announcement ?{" "}
+                    <br />
+                    <i>
+                      *Other pinned announcement will be <b>overwritten</b>
+                    </i>
+                  </>,
+                  () => {
+                    console.log(row.id);
+                    dispatch(pinAnnoucement(row.id, history));
+                  }
+                )
+              );
+            }
+      }
+      onClickUnpin={
+        view
+          ? null
+          : (role === "bm" && !canUpdate) || role === "sa" 
+          ? null
+          : (row) => {
+              dispatch(
+                setConfirmDelete(
+                  <>
+                    Are you sure you want to <b>Unpin</b> this announcement?
+                  </>,
+                  () => {
+                    console.log(row.id);
+                    dispatch(unpinAnnoucement(row.id, history));
+                  }
+                )
+              );
+            }
+      }
       actions={
         view
           ? null

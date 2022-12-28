@@ -31,26 +31,37 @@ const columnsDepartments = [
 ];
 
 const columnsRatings = [
-  { Header: "Resident", accessor: (row) =>
-    <>
-      <div className="Item">
-        <Avatar className="Item-avatar" size="40" src={""}
-          name={"Dadang Jordan"} round />
-        <div >
+  {
+    Header: "Resident",
+    accessor: (row) => (
+      <>
+        <div className="Item">
+          <Avatar
+            className="Item-avatar"
+            size="40"
+            src={""}
+            name={"Dadang Jordan"}
+            round
+          />
+          <div>
             <b>{"Dadang Jordan"}</b>
             <p className="Item-subtext">{"dadangjodan#1@djordan.ay"}</p>
-        </div> 
-      </div>
-    </>
+          </div>
+        </div>
+      </>
+    ),
   },
-  { Header: "Rating", accessor: (row) => 
-    <>
-      <FaStar color={'#FFCE2A'} style={{ marginRight: 2 }} />
-      <FaStar color={'#FFCE2A'} style={{ marginRight: 2 }} />
-      <FaStar color={'#FFCE2A'} style={{ marginRight: 2 }} />
-      <FaStar color={'#FFCE2A'} style={{ marginRight: 2 }} />
-      <FaStar color={'#FFCE2A'} style={{ marginRight: 2 }} />
-    </>
+  {
+    Header: "Rating",
+    accessor: (row) => (
+      <>
+        <FaStar color={"#FFCE2A"} style={{ marginRight: 2 }} />
+        <FaStar color={"#FFCE2A"} style={{ marginRight: 2 }} />
+        <FaStar color={"#FFCE2A"} style={{ marginRight: 2 }} />
+        <FaStar color={"#FFCE2A"} style={{ marginRight: 2 }} />
+        <FaStar color={"#FFCE2A"} style={{ marginRight: 2 }} />
+      </>
+    ),
   },
   {
     Header: "Department Type",
@@ -138,10 +149,12 @@ function Component({ view, canUpdate, canDelete }) {
     <Template
       image={data.photo || "placeholder"}
       title={data.firstname + " " + data.lastname}
+      pagetitle="Staff Information"
       email={data.email}
       phone={data.phone}
       loading={!data.id}
-      labels={["Details", "Rating Staff"]}
+      // labels={["Details", "Rating Staff"]}
+      labels={["Details"]}
       contents={[
         <>
           <Detail
@@ -196,7 +209,7 @@ function Component({ view, canUpdate, canDelete }) {
           pagination={false}
           columns={columnsRatings}
           data={data.departments}
-        />
+        />,
       ]}
     />
   );

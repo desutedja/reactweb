@@ -23,6 +23,8 @@ import {
   FiX,
   FiCalendar,
   FiStopCircle,
+  FiBell,
+  FiBellOff,
 } from "react-icons/fi";
 import { FaCaretRight, FaCaretDown } from "react-icons/fa";
 import IconButton from "./IconButton";
@@ -60,6 +62,8 @@ function Table({
   onClickEdit,
   onClickChange,
   onClickStop,
+  onClickActive,
+  onClickInactive,
   onClickAddBilling,
   onClickApproved,
   onClickDisapproved,
@@ -221,21 +225,18 @@ function Table({
 
               {filters.length > 0 && (
                 <div
-                  className="Button"
+                  className="Button Download"
                   style={{
                     cursor: "pointer",
                     color: "white",
-                    marginRight: 8,
                   }}
                   onClick={() => {
                     toggleFilter(!filter);
                   }}
                 >
-                  <FiFilter />
                   <b
                     style={{
-                      marginRight: 8,
-                      marginLeft: 8,
+                      marginRight: 16,
                     }}
                   >
                     Filter
@@ -409,7 +410,12 @@ function Table({
                 {(onClickDelete ||
                   onClickDetails ||
                   onClickEdit ||
-                  onClickResolve) && <th key={i} />}
+                  onClickResolve ||
+                  onClickAddBilling ||
+                  onClickApproved ||
+                  onClickDisapproved ||
+                  onClickChange ||
+                  onClickStop) && <th key={i} />}
               </tr>
             ))}
           </thead>
@@ -499,6 +505,21 @@ function Table({
                         icon: <FiTrash />,
                       }
                     : "",
+                    onClickActive
+                      ? {
+                          onClick: () => onClickActive(row.original),
+                          name: "Set Active",
+                          icon: <FiBell />,
+                        }
+                      : "",
+                    onClickInactive
+                      ? {
+                          name: "Set Inactive",
+                          onClick: () => onClickInactive(row.original),
+                          color: "Danger",
+                          icon: <FiBellOff />,
+                        }
+                      : "",
                   onClickApproved &&
                   !(
                     row.original.approved_status == "approved" ||

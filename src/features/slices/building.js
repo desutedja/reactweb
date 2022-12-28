@@ -632,6 +632,58 @@ export const editBuildingUnit = (data, id) => (dispatch) => {
   );
 };
 
+export const editCustomSetting = (data, id) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    put(
+      buildingEndpoint + "/settings?building_id",
+      { ...data, id: id },
+      (res) => {
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Custom setting building has been updated.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const resetCustomSetting = (id) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    put(
+      buildingEndpoint + "/settings/reset_setting",
+      id,
+      (res) => {
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Custom setting building has been reset.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
 export const editBuildingUnitType = (data, id) => (dispatch) => {
   dispatch(startAsync());
 
