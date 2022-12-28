@@ -1,23 +1,23 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { dateTimeFormatterCell, toMoney, toSentenceCase } from "../../../utils";
-import { endpointAdmin } from "../../../settings";
-import { get, setConfirmDelete } from "../../slice";
+import { dateTimeFormatterCell, toMoney, toSentenceCase } from "../../../../utils";
+import { endpointAdmin } from "../../../../settings";
+import { get, setConfirmDelete } from "../../../slice";
 
-import TablePromoVA from "../../../components/TablePromoVA";
-import Breadcrumb from "../../../components/Breadcrumb";
-import Pill from "../../../components/Pill";
-import { setSelected } from "../../slices/vouchers";
+import TablePromoVA from "../../../../components/TablePromoVA";
+import Breadcrumb from "../../../../components/Breadcrumb";
+import Pill from "../../../../components/Pill";
+import { setSelected } from "../../../slices/vouchers";
 import { FiPlus, FiSearch } from "react-icons/fi";
 
-import Button from "../../../components/Button";
-import Filter from "../../../components/Filter";
-import PromoVA from "../../../components/cells/PromoVA";
-import { deleteVA, editVA } from "../../slices/promova";
-import Modal from "../../../components/Modal";
-import Input from "../../../components/Input";
-import MultiSelectInput from "../../form/input/MultiSelect";
+import Button from "../../../../components/Button";
+import Filter from "../../../../components/Filter";
+import PromoVA from "../../../../components/cells/PromoVA";
+import { deleteVA, editVA } from "../../../slices/promova";
+import Modal from "../../../../components/Modal";
+import Input from "../../../../components/Input";
+import MultiSelectInput from "../../../form/input/MultiSelect";
 
 const columns = [
   // { Header: "ID", accessor: "id" },

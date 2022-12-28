@@ -2,41 +2,40 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { endpointAdmin, endpointMerchant } from "../../../settings";
-import { get } from "../../slice";
+import { endpointAdmin, endpointMerchant } from "../../../../settings";
+import { get } from "../../../slice";
 
-import Template from "../../form/components/TemplateWithFormik";
+import Template from "../../../form/components/TemplateWithFormik";
 import { Form } from "formik";
-import { promoVaSchema } from "../../form/services/schemas";
-import Input from "../../form/input";
-import SubmitButton from "../../form/components/SubmitButton";
+import { promoVaSchema } from "../../../form/services/schemas";
+import Input from "../../../form/input";
+import SubmitButton from "../../../form/components/SubmitButton";
 
-import { RiLightbulbLine, RiCalendarEventLine } from "react-icons/ri"
-import { createVA, editVA } from "../../slices/promova";
+import { RiLightbulbLine, RiCalendarEventLine } from "react-icons/ri";
+import { createVA, editVA } from "../../../slices/promova";
 
-import { toSentenceCase } from "../../../utils";
+import { toSentenceCase } from "../../../../utils";
 
-const promoPayload = {
+const voucherPayload = {
   account_bank: "",
   building_management_id: "",
   fee_type: "",
   fee: "",
   percentage: "",
-  markup_fee: "",
+  markup: "",
   start_date: "",
-  end_date: ""
+  end_date: "",
 };
 
 function Component() {
-
   // const { banks } = useSelector((state) => state.main);
   const { loading, selected } = useSelector((state) => state.vouchers);
 
   const [bManagements, setBManagements] = useState([]);
   const [dataBanks, setDataBanks] = useState([]);
-  
+
   const [merchant, setMerchant] = useState([]);
-  
+
   const [inBuildings, setBuildings] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -83,7 +82,16 @@ function Component() {
       get(endpointAdmin + "/paymentperbuilding/list/payment_method", (res) => {
         const banks = res.data.data.items.map((el) => ({
           value: el.id,
-          label: toSentenceCase(el.provider),
+          label:
+            el.id === 5
+              ? "BCA Xendit"
+              : el.provider === "bca"
+              ? "BCA"
+              : el.provider === "bni"
+              ? "BNI"
+              : el.provider === "bri"
+              ? "BRI"
+              : toSentenceCase(el.provider),
         }));
 
         // console.log(banks)
@@ -95,21 +103,16 @@ function Component() {
 
   useEffect(() => {
     dispatch(
-      get(
-        endpointMerchant +
-          "/admin/listmerchantname?search=",
-        (res) => {
-          
-          let formatted = res.data.data.map((el) => {
-            return {
-              id: el.id,
-              label: el.name,
-              value: el.name,
-            };
-          });
-          setMerchant(formatted);
-        }
-      )
+      get(endpointMerchant + "/admin/listmerchantname?search=", (res) => {
+        let formatted = res.data.data.map((el) => {
+          return {
+            id: el.id,
+            label: el.name,
+            value: el.name,
+          };
+        });
+        setMerchant(formatted);
+      })
     );
   }, [dispatch]);
 
@@ -119,7 +122,7 @@ function Component() {
       payload={
         selected.id
           ? {
-              ...promoPayload,
+              ...voucherPayload,
               ...selected,
               // building_management_id:
               // selected.building_management_id &&
@@ -127,39 +130,27 @@ function Component() {
               //   value: el.id,
               //   label: el.name,
               // })),
-              account_bank: toSentenceCase(selected.provider),
-              building_management_id: selected.name,
-              building_id: parseInt(selected.building_id),
-              payment_perbuilding_id: parseInt(selected.id),
-              start_date: selected.start_date?.split('T')[0],
-              end_date: selected.end_date?.split('T')[0],
+              start_date: selected.start_date?.split("T")[0],
+              end_date: selected.end_date?.split("T")[0],
             }
-          : promoPayload
+          : voucherPayload
       }
       // schema={promoVaSchema}
       formatValues={(values) => ({
-        
         ...values,
         fee: parseInt(values.fee),
         fee_type: values.fee_type,
         percentage: parseFloat(values.percentage),
-        markup_fee: 0,
+        markup: 0,
         start_date: values.start_date,
         end_date: values.end_date,
         // building_management_id: values.building_management_id,
         // account_bank: values.account_bank,
       })}
-      edit={(data) => {
+      add={(data) => {
         delete data[undefined];
         delete data["fee_type_label"];
-        delete data["account_bank"];
-        delete data["building_management_id"];
-        delete data["id"];
-        delete data["created_on"];
-        delete data["name"];
-        delete data["status"];
-        delete data["provider"];
-        dispatch(editVA(data, history, selected.id))
+        dispatch(createVA(data, history));
       }}
       renderChild={(props) => {
         const { setFieldValue, values, errors } = props;
@@ -167,15 +158,21 @@ function Component() {
           <Form className="Form">
             <Input
               {...props}
+              type="multiselect"
               label="Bank"
               name="account_bank"
-              readOnly
+              autoComplete="off"
+              placeholder="Pilih Bank"
+              options={dataBanks}
             />
             <Input
               {...props}
+              type="multiselect"
               label="Building Management"
               name="building_management_id"
-              readOnly
+              autoComplete="off"
+              placeholder="Start typing to add Building"
+              options={bManagements}
             />
             <Input
               {...props}
@@ -188,44 +185,78 @@ function Component() {
                 { value: "combination", label: "Combination" },
               ]}
             />
-            {values["fee_type"] === "fee" ?
+            {values["fee_type"] === "fee" ? (
               <>
-                <Input {...props} label="Fee" name="fee" autoComplete="off" suffix="Rp" />
+                <Input
+                  {...props}
+                  label="Fee"
+                  name="fee"
+                  autoComplete="off"
+                  suffix="Rp"
+                />
               </>
-              : values["fee_type"] === "percentage" ?
+            ) : values["fee_type"] === "percentage" ? (
               <>
-                <Input {...props} label="Percentage" name="percentage" autoComplete="off" suffix="%" />
+                <Input
+                  {...props}
+                  label="Percentage"
+                  name="percentage"
+                  autoComplete="off"
+                  suffix="%"
+                />
               </>
-              : values["fee_type"] === "combination" ?
+            ) : values["fee_type"] === "combination" ? (
               <>
-                <Input {...props} label="Fee" name="fee" autoComplete="off" suffix="Rp" />
-                <Input {...props} label="Percentage" name="percentage" autoComplete="off" suffix="%" />
+                <Input
+                  {...props}
+                  label="Fee"
+                  name="fee"
+                  autoComplete="off"
+                  suffix="Rp"
+                />
+                <Input
+                  {...props}
+                  label="Percentage"
+                  name="percentage"
+                  autoComplete="off"
+                  suffix="%"
+                />
               </>
-              : null
-            }
-            {/* <Input {...props} label="Markup" name="markup_fee" type="hidden" value="0" autoComplete="off" /> */}
+            ) : null}
+            {/* <Input {...props} label="Markup" name="markup" type="hidden" value="0" autoComplete="off" /> */}
             <div class="Input" style={{ marginBottom: 0 }}>
               <label class="Input-label">Period</label>
             </div>
-            <Input {...props} label="Start Date" name="start_date" type="date" suffix={<RiCalendarEventLine />} />
-            <Input {...props} label="End Date" name="end_date" type="date" suffix={<RiCalendarEventLine />} />
-            <div className="card" style={{ padding: 15, borderRadius: 10, background: "#F0F6FF"}}>
-              <p style={{ color: "#244091" }}><RiLightbulbLine /> Pastikan semua form terisi dengan benar. Silakan cek kembali terlebih dahulu semua data yang telah <br />
-              diisi sebelum melakukan submit.</p>
+            <Input
+              {...props}
+              label="Start Date"
+              name="start_date"
+              type="date"
+              suffix={<RiCalendarEventLine />}
+            />
+            <Input
+              {...props}
+              label="End Date"
+              name="end_date"
+              type="date"
+              suffix={<RiCalendarEventLine />}
+            />
+            <div
+              className="card"
+              style={{ padding: 15, borderRadius: 10, background: "#F0F6FF" }}
+            >
+              <p style={{ color: "#244091" }}>
+                <RiLightbulbLine /> Pastikan semua form terisi dengan benar.
+                Silakan cek kembali terlebih dahulu semua data yang telah <br />
+                diisi sebelum melakukan submit.
+              </p>
             </div>
             <SubmitButton loading={loading} errors={errors} />
-            {/* <Input
-              {...props}
-              name="payment_perbuilding_id"
-              type="hidden"
-              readOnly
-            /> */}
           </Form>
         );
       }}
     />
   );
 }
-
 
 export default Component;

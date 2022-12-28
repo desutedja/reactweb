@@ -2,27 +2,27 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { endpointAdmin, endpointMerchant } from "../../../settings";
-import { get } from "../../slice";
+import { endpointAdmin, endpointMerchant } from "../../../../settings";
+import { get } from "../../../slice";
 
-import Template from "../../form/components/TemplateWithFormik";
+import Template from "../../../form/components/TemplateWithFormik";
 import { Form } from "formik";
-import { promoVaSchema } from "../../form/services/schemas";
-import Input from "../../form/input";
-import SubmitButton from "../../form/components/SubmitButton";
+import { promoVaSchema } from "../../../form/services/schemas";
+import Input from "../../../form/input";
+import SubmitButton from "../../../form/components/SubmitButton";
 
 import { RiLightbulbLine, RiCalendarEventLine } from "react-icons/ri"
-import { createVA, editVA } from "../../slices/promova";
+import { createVA, editVA } from "../../../slices/promova";
 
-import { toSentenceCase } from "../../../utils";
+import { toSentenceCase } from "../../../../utils";
 
-const voucherPayload = {
+const promoPayload = {
   account_bank: "",
   building_management_id: "",
   fee_type: "",
   fee: "",
   percentage: "",
-  markup: "",
+  markup_fee: "",
   start_date: "",
   end_date: ""
 };
@@ -119,7 +119,7 @@ function Component() {
       payload={
         selected.id
           ? {
-              ...voucherPayload,
+              ...promoPayload,
               ...selected,
               // building_management_id:
               // selected.building_management_id &&
@@ -127,10 +127,14 @@ function Component() {
               //   value: el.id,
               //   label: el.name,
               // })),
+              account_bank: toSentenceCase(selected.provider),
+              building_management_id: selected.name,
+              building_id: parseInt(selected.building_id),
+              payment_perbuilding_id: parseInt(selected.id),
               start_date: selected.start_date?.split('T')[0],
               end_date: selected.end_date?.split('T')[0],
             }
-          : voucherPayload
+          : promoPayload
       }
       // schema={promoVaSchema}
       formatValues={(values) => ({
@@ -139,16 +143,23 @@ function Component() {
         fee: parseInt(values.fee),
         fee_type: values.fee_type,
         percentage: parseFloat(values.percentage),
-        markup: 0,
+        markup_fee: 0,
         start_date: values.start_date,
         end_date: values.end_date,
         // building_management_id: values.building_management_id,
         // account_bank: values.account_bank,
       })}
-      add={(data) => {
+      edit={(data) => {
         delete data[undefined];
         delete data["fee_type_label"];
-        dispatch(createVA(data, history))
+        delete data["account_bank"];
+        delete data["building_management_id"];
+        delete data["id"];
+        delete data["created_on"];
+        delete data["name"];
+        delete data["status"];
+        delete data["provider"];
+        dispatch(editVA(data, history, selected.id))
       }}
       renderChild={(props) => {
         const { setFieldValue, values, errors } = props;
@@ -156,21 +167,15 @@ function Component() {
           <Form className="Form">
             <Input
               {...props}
-              type="multiselect"
               label="Bank"
               name="account_bank"
-              autoComplete="off"
-              placeholder="Pilih Bank"
-              options={dataBanks}
+              readOnly
             />
             <Input
               {...props}
-              type="multiselect"
               label="Building Management"
               name="building_management_id"
-              autoComplete="off"
-              placeholder="Start typing to add Building"
-              options={bManagements}
+              readOnly
             />
             <Input
               {...props}
@@ -198,7 +203,7 @@ function Component() {
               </>
               : null
             }
-            {/* <Input {...props} label="Markup" name="markup" type="hidden" value="0" autoComplete="off" /> */}
+            {/* <Input {...props} label="Markup" name="markup_fee" type="hidden" value="0" autoComplete="off" /> */}
             <div class="Input" style={{ marginBottom: 0 }}>
               <label class="Input-label">Period</label>
             </div>
@@ -209,6 +214,12 @@ function Component() {
               diisi sebelum melakukan submit.</p>
             </div>
             <SubmitButton loading={loading} errors={errors} />
+            {/* <Input
+              {...props}
+              name="payment_perbuilding_id"
+              type="hidden"
+              readOnly
+            /> */}
           </Form>
         );
       }}
