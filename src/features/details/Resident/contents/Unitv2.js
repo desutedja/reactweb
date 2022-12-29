@@ -8,7 +8,12 @@ import Table from "../../../../components/Table";
 import Modal from "../../../../components/Modal";
 import Input from "../../../../components/Input";
 import Filter from "../../../../components/Filter";
-import { toSentenceCase, removeLastFromPath, dateFormatter } from "../../../../utils";
+import TwoColumnResident from "../../../../components/TwoColumnResident";
+import {
+  toSentenceCase,
+  removeLastFromPath,
+  dateFormatter,
+} from "../../../../utils";
 import SectionSeparator from "../../../../components/SectionSeparator";
 import Resident from "../../../../components/cells/Resident";
 
@@ -24,16 +29,7 @@ import { get, post } from "../../../slice";
 import Loading from "../../../../components/Loading";
 import { RiCalendarEventLine } from "react-icons/ri";
 import { dateTimeFormatter } from "../../../../utils";
-
-const columnsUnit = [
-  { Header: "ID", accessor: "unit_id" },
-  { Header: "Building", accessor: "building_name" },
-  { Header: "Unit Number", accessor: "number" },
-  { Header: "Level", accessor: "level" },
-  { Header: "Status", accessor: "status" },
-  { Header: "Period", accessor: (row) => (row.period_from && row.period_to) ? dateFormatter(row.period_from) + " - " + dateFormatter(row.period_to) : "-" },
-  { Header: "Type", accessor: (row) => row.unit_type + " - " + row.unit_size },
-];
+import Avatar from "react-avatar";
 
 function Component({ id, view, canAdd, canUpdate, canDelete }) {
   const [addUnit, setAddUnit] = useState(false);
@@ -50,6 +46,9 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
   const [residents, setResidents] = useState([]);
   const [subAccount, setSubAccount] = useState({});
   const [ownershipStatus, setOwnershipStatus] = useState("");
+
+  const [detailResident, setDetailResident] = useState([]);
+  const [residentModal, setResidentModal] = useState(false);
 
   const [mainOwner, setMainOwner] = useState();
 
@@ -82,6 +81,37 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
   let dispatch = useDispatch();
   let history = useHistory();
   let { path } = useRouteMatch();
+
+  const columnsUnit = [
+    { Header: "ID", accessor: "unit_id" },
+    { Header: "Building", accessor: "building_name" },
+    {
+      Header: "Unit Number",
+      accessor: (row) => (
+        <div
+          style={{ cursor: "pointer" }}
+          onClick={() => setResidentModal(true)}
+        >
+          {row.number}
+        </div>
+      ),
+    },
+    { Header: "Level", accessor: "level" },
+    { Header: "Status", accessor: "status" },
+    {
+      Header: "Period",
+      accessor: (row) =>
+        row.period_from && row.period_to
+          ? dateFormatter(row.period_from) +
+            " - " +
+            dateFormatter(row.period_to)
+          : "-",
+    },
+    {
+      Header: "Type",
+      accessor: (row) => row.unit_type + " - " + row.unit_size,
+    },
+  ];
 
   const fetchData = useCallback(
     (pageIndex, pageSize, search) => {
@@ -178,6 +208,18 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
       );
   }, [addUnit, search, addUnitStep, selectedBuilding, dispatch]);
 
+  useEffect(() => {
+    dispatch(
+      get(
+        endpointAdmin + "/building/list/resident_unit?" + "unit_id=" + id,
+
+        (res) => {
+          setDetailResident(res.data.data.items);
+        }
+      )
+    );
+  }, [dispatch]);
+
   const addUnitBackFunction = useCallback(
     () => setAddUnitStep(addUnitStep - 1),
     [addUnitStep]
@@ -195,7 +237,7 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
         level: level,
         status: status,
         period_from: periodFrom,
-        period_to: periodTo, 
+        period_to: periodTo,
       })
     );
     setAddUnit(false);
@@ -211,7 +253,7 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
         parent_id: parseInt(id),
         status: ownershipStatus.value,
         period_from: periodFrom,
-        period_to: periodTo
+        period_to: periodTo,
       })
     );
     setAddSubAccount(false);
@@ -439,25 +481,24 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
               inputValue={ownershipStatus.label}
               onClick={() => {}}
             />
-            {ownershipStatus.label === "Own" ? null
-            :
-            <>
-              <Input 
-                label="Period From"
-                type="date"
-                name="period_from"
-                inputValue={periodFrom}
-                setInputValue={setPeriodFrom}
-              />
-              <Input 
-                label="Period To"
-                type="date"
-                name="period_to"
-                inputValue={periodTo}
-                setInputValue={setPeriodTo}
-              />
-            </>
-            }
+            {ownershipStatus.label === "Own" ? null : (
+              <>
+                <Input
+                  label="Period From"
+                  type="date"
+                  name="period_from"
+                  inputValue={periodFrom}
+                  setInputValue={setPeriodFrom}
+                />
+                <Input
+                  label="Period To"
+                  type="date"
+                  name="period_to"
+                  inputValue={periodTo}
+                  setInputValue={setPeriodTo}
+                />
+              </>
+            )}
           </>
         )}
       </Modal>
@@ -561,36 +602,36 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
               />
               <SectionSeparator />
               {!mainOwner ? (
-              <>
-                <Input
-                  label="Status"
-                  type="radio"
-                  inputValue={status}
-                  setInputValue={setStatus}
-                  options={[
-                    { value: "own", label: "Own" },
-                    { value: "rent", label: "Rent" },
-                  ]}
-                />
-                {status === "own" ? null : 
                 <>
-                  <Input 
-                    label="Period From"
-                    type="date"
-                    name="period_from"
-                    inputValue={periodFrom}
-                    setInputValue={setPeriodFrom}
+                  <Input
+                    label="Status"
+                    type="radio"
+                    inputValue={status}
+                    setInputValue={setStatus}
+                    options={[
+                      { value: "own", label: "Own" },
+                      { value: "rent", label: "Rent" },
+                    ]}
                   />
-                  <Input 
-                    label="Period To"
-                    type="date"
-                    name="period_to"
-                    inputValue={periodTo}
-                    setInputValue={setPeriodTo}
-                  />
+                  {status === "own" ? null : (
+                    <>
+                      <Input
+                        label="Period From"
+                        type="date"
+                        name="period_from"
+                        inputValue={periodFrom}
+                        setInputValue={setPeriodFrom}
+                      />
+                      <Input
+                        label="Period To"
+                        type="date"
+                        name="period_to"
+                        inputValue={periodTo}
+                        setInputValue={setPeriodTo}
+                      />
+                    </>
+                  )}
                 </>
-                }
-              </>
               ) : mainOwner.id === id ? (
                 <p>This resident is already the owner of this unit.</p>
               ) : (
@@ -614,8 +655,112 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
           </>
         )}
       </Modal>
+      <Modal
+        width="660px"
+        isOpen={residentModal}
+        title="Resident Unit"
+        toggle={() => setResidentModal(false)}
+        cancelLabel={"Close"}
+        disablePrimary
+      >
+        <div className="p-2">
+          <div
+            style={{
+              paddingBottom: 10,
+              fontSize: 12,
+              fontWeight: 600,
+              color: "#838799",
+            }}
+            className="title-resident-detail"
+          >
+            Main Account
+          </div>
+          {detailResident.map((item) => (
+            <div>
+              {item.status === "Owner" ? (
+                <>
+                  <div className="Item-resident">
+                    <Avatar
+                      className="Item-avatar"
+                      size="40"
+                      src={item.photo}
+                      name={item.firstname + " " + item.lastname}
+                      round
+                      email={item.photo ? null : item.email}
+                    />
+                    <>
+                      <span> </span>
+                      <TwoColumnResident
+                        first={
+                          <div>
+                            <b>{item.firstname + " " + item.lastname}</b>
+                            <p className="Item-subtext-resident">
+                              {item.phone} {item.phone ? "|" : []} {item.email}
+                            </p>
+                          </div>
+                        }
+                        second={<Button color="Activated" label={item.status ? item.status : "-"} />}
+                      />
+                    </>
+                  </div>
+                </>
+              ) : (
+                []
+              )}
+            </div>
+          ))}
+          <hr />
+        </div>
+        <div className="p-2">
+          <div
+            style={{
+              paddingBottom: 10,
+              fontSize: 12,
+              fontWeight: 600,
+              color: "#838799",
+            }}
+            className="title-resident-detail"
+          >
+            Sub Account
+          </div>
+          {detailResident.map((item) => (
+            <div>
+              {(detailResident.length > 0 && item.status !== "Owner") ? (
+                <>
+                  <div className="Item-resident">
+                    <Avatar
+                      className="Item-avatar"
+                      size="40"
+                      src={item.photo}
+                      name={item.firstname + " " + item.lastname}
+                      round
+                      email={item.photo ? null : item.email}
+                    />
+                    <>
+                      <span> </span>
+                      <TwoColumnResident
+                        first={
+                          <div>
+                            <b>{item.firstname + " " + item.lastname}</b>
+                            <p className="Item-subtext-resident">
+                              {item.phone} {item.phone ? "|" : []} {item.email}
+                            </p>
+                          </div>
+                        }
+                        second={<Button color="Activated" label={item.status ? item.status : "-"} />}
+                      />
+                    </>
+                  </div>
+                </>
+              ) : (
+                "No Unit Data Found"
+              )}
+            </div>
+          ))}
+        </div>
+      </Modal>
       <Table
-        totalItems={unit.total_items}
+        totalItems={unit.items.length}
         noContainer={true}
         columns={columnsUnit}
         data={unit.items.map((el) =>
