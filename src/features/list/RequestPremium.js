@@ -1,18 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiSearch } from "react-icons/fi";
 
 import Button from "../../components/Button";
 import Modal from "../../components/Modal";
 import Pill from "../../components/Pill";
 import Loading from "../../components/Loading";
 import Filter from "../../components/Filter";
+import Input from "../../components/Input";
 
 import { dateTimeFormatter, toSentenceCase } from "../../utils";
 
 import TemplateRequestPremium from "./components/TemplateRequestPremium";
-import { post, getFile } from "../slice";
+import { post, getFile, get } from "../slice";
 import {
   endpointResident,
   resident_statuses,
@@ -20,6 +21,7 @@ import {
   online_status,
   kyccolor,
   onboarding_status,
+  endpointAdmin,
 } from "../../settings";
 import {
   getRequestPremium,
@@ -38,11 +40,11 @@ const columns = [
     accessor: "number",
     sorting: "number",
   },
-  // {
-  //   Header: "Building",
-  //   accessor: "building",
-  //   sorting: "building"
-  // },
+  {
+    Header: "Building",
+    accessor: "building_name",
+    sorting: "building",
+  },
   {
     Header: "ID Number",
     accessor: "id_number",
@@ -77,6 +79,11 @@ const columns = [
     sorting: "staff_name",
   },
   {
+    Header: "Request Date",
+    accessor: (row) => dateTimeFormatter(row.created_on),
+    sorting: "created_on",
+  },
+  {
     Header: "Approved Date",
     accessor: (row) => dateTimeFormatter(row.approved_on),
     sorting: "approved_on",
@@ -102,6 +109,12 @@ function Component({ view, canAdd }) {
   const [onboardingStatus, setOnboardingStatus] = useState("");
   const [onboardingStatusLabel, setOnboardingStatusLabel] = useState("");
 
+  const [buildings, setBuildings] = useState("");
+  const [building, setBuilding] = useState("");
+  const [buildingName, setBuildingName] = useState("");
+  const [buildingSearch, setBuildingSearch] = useState("");
+  const [buildingLimit, setBuildingLimit] = useState(5);
+
   let fileInput = useRef();
 
   let dispatch = useDispatch();
@@ -122,11 +135,46 @@ function Component({ view, canAdd }) {
     // console.log(data);
   }, [data]);
 
+  useEffect(() => {
+    (!buildingSearch || buildingSearch.length >= 1) &&
+      dispatch(
+        get(
+          endpointAdmin +
+            "/building" +
+            "?limit=" +
+            buildingLimit +
+            "&page=1" +
+            "&search=" +
+            buildingSearch,
+          (res) => {
+            let data = res.data.data.items;
+            let totalItems = Number(res.data.data.total_items);
+            let restTotal = totalItems - data.length;
+
+            let formatted = data.map((el) => ({
+              label: el.name,
+              value: el.id,
+            }));
+
+            if (data.length < totalItems && buildingSearch.length === 0) {
+              formatted.push({
+                label: "Load " + (restTotal > 5 ? 5 : restTotal) + " more",
+                restTotal: restTotal > 5 ? 5 : restTotal,
+                className: "load-more",
+              });
+            }
+
+            setBuildings(formatted);
+          }
+        )
+      );
+  }, [dispatch, buildingSearch, buildingLimit]);
+
   return (
     <>
       <TemplateRequestPremium
         view={view}
-        pagetitle="Request Premium List"
+        pagetitle="Request Premium User List"
         columns={columns}
         slice={"requestpremium"}
         getAction={getRequestPremium}
@@ -137,8 +185,50 @@ function Component({ view, canAdd }) {
         disapprovedAction={
           view ? null : (role === "sa" || role === "bm") && disapprovedResident
         }
-        filterVars={[approved_status]}
+        filterVars={[approved_status, building]}
         filters={[
+          ...(role !== "bm"
+            ? [
+                {
+                  hidex: building === "",
+                  label: "Building: ",
+                  value: building ? buildingName : "All",
+                  delete: () => {
+                    setBuilding("");
+                  },
+                  component: (toggleModal) => (
+                    <>
+                      <Input
+                        label="Search Building"
+                        compact
+                        icon={<FiSearch />}
+                        inputValue={buildingSearch}
+                        setInputValue={setBuildingSearch}
+                      />
+                      <Filter
+                        data={buildings}
+                        onClick={(el) => {
+                          if (!el.value) {
+                            setBuildingLimit(buildingLimit + el.restTotal);
+                            return;
+                          }
+                          setBuilding(el.value);
+                          setBuildingName(el.label);
+                          setBuildingLimit(5);
+                          toggleModal(false);
+                        }}
+                        onClickAll={() => {
+                          setBuilding("");
+                          setBuildingName("");
+                          setBuildingLimit(5);
+                          toggleModal(false);
+                        }}
+                      />
+                    </>
+                  ),
+                },
+              ]
+            : []),
           {
             hidex: approved_status === "",
             label: (
