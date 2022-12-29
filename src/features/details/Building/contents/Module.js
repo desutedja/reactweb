@@ -10,7 +10,7 @@ import ClinkLoader from '../../../../components/ClinkLoader';
 const modules = [
   {label: 'Merchant', value: 'merchant'},
   {label: 'Billing', value: 'billing'},
-  {label: 'Advertisement', value: 'advertisement'},
+  // {label: 'Advertisement', value: 'advertisement'},
   {label: 'Security', value: 'security'},
   {label: 'Technician', value: 'technician'},
   {label: 'Internal Courier', value: 'internal_courier'},
