@@ -6,14 +6,12 @@ import { FiCheck } from "react-icons/fi";
 import Detail from "../components/Detail";
 import Template from "../components/Template";
 import Modal from "../../../components/Modal";
-import Pill from "../../../components/Pill";
 import { useHistory, useParams } from "react-router-dom";
 import { get } from "../../slice";
 import { endpointAdmin } from "../../../settings";
-import { dateTimeFormatter, toMoney, toSentenceCase } from "../../../utils";
+import { toMoney, toSentenceCase } from "../../../utils";
 import Table from "../../../components/Table";
 import { distributeVoucher, refresh, setSelected } from "../../slices/vouchers";
-import parser from "html-react-parser";
 
 const columnsCategories = [
   { Header: "ID", accessor: (row) => row.category_id },
@@ -23,6 +21,65 @@ const columnsCategories = [
     accessor: "limit",
   },
 ];
+const info = {
+  Information: [
+    "id",
+    {
+      label: "prefix",
+      lfmt: (v) => "Campaign Name ",
+      vfmt: (v) => {
+        return v;
+      },
+    },
+    {
+      label: "name",
+      lfmt: (v) => "Specific Merchant ",
+      vfmt: (v) => {
+        return v;
+      },
+    },
+    {
+      label: "discount_type",
+      lfmt: (v) => "Discount Type",
+      vfmt: (v) => {
+        return toSentenceCase(v);
+      },
+    },
+    {
+      label: "discount",
+      lfmt: (v) => "Discount",
+      vfmt: (v) => {
+        if (v < 100) {
+          return `${v} %`;
+        }
+        return toMoney(v);
+      },
+    },
+    {
+      label: "minimum_transaction",
+      lfmt: (v) => "Minimum Transaction",
+      vfmt: (v) => {
+        return v;
+      },
+    },
+    {
+      label: "maximum_discount",
+      lfmt: (v) => "Maximum Discount",
+      vfmt: (v) => {
+        return v;
+      },
+    },
+    {
+      label: "building_name",
+      lfmt: (v) => "Target Building",
+      vfmt: (v) => {
+        return toSentenceCase(v);
+      },
+    },
+    "total_voucher_codes",
+    "total_distributed",
+  ],
+};
 
 const voucherCodes = {
   Information: ["copic_name", "pic_phone", "pic_mail"],
@@ -85,7 +142,7 @@ function Component({ view }) {
 
   useEffect(() => {
     dispatch(
-      get(endpointAdmin + "/centratama/v2/vouchers/" + id, (res) => {
+      get(endpointAdmin + "/centratama/vouchers/" + id, (res) => {
         // res.data.data.free_deliv = res.data.data.free_deliv.toString();
         setData(res.data.data);
         dispatch(setSelected(res.data.data));
@@ -118,132 +175,6 @@ function Component({ view }) {
     console.log(codes);
   }, [codes]);
 
-  const info = {
-    "Voucher Information": [
-      "id",
-      {
-        label: "category",
-        lfmt: (v) => "Category Voucher ",
-        vfmt: (v) => {
-          return toSentenceCase(v);
-        },
-      },
-      {
-        label: "type",
-        lfmt: (v) => "Target Voucher ",
-        vfmt: (v) => {
-          return toSentenceCase(v);
-        },
-      },
-      {
-        label: "voucher_name",
-        lfmt: (v) => "Voucher Name ",
-        vfmt: (v) => {
-          return toSentenceCase(v);
-        },
-      },
-      {
-        label: "voucher_code",
-        disabled: data.type !== "special",
-        lfmt: (v) => "Voucher Code ",
-        vfmt: (v) => {
-          return toSentenceCase(v);
-        },
-      },
-      {
-        label: "target_buildings",
-        lfmt: (v) => "Target Building ",
-        vfmt: (v) =>
-          v && v.length > 0
-            ? v.map((el) => <Pill color="primary">{el.building_name}</Pill>)
-            : " - ",
-      },
-      {
-        label: "target_merchants",
-        lfmt: (v) => "Target Merchant ",
-        vfmt: (v) =>
-          v && v.length > 0
-            ? v.map((el) => <Pill color="primary">{el.merchant_name}</Pill>)
-            : " - ",
-      },
-    ],
-    "Voucher Settings": [
-      {
-        label: "discount_type",
-        lfmt: (v) => "Discount Type ",
-        vfmt: (v) => {
-          return toSentenceCase(v);
-        },
-      },
-      {
-        label: "discount",
-        disabled: data.discount_type === "fee",
-        lfmt: (v) => "Nominal Discount ",
-        vfmt: (v) => {
-          return v + "%";
-        },
-      },
-      {
-        label: "discount",
-        disabled: data.discount_type === "percentage",
-        lfmt: (v) => "Nominal Discount ",
-        vfmt: (v) => {
-          return toMoney(v);
-        },
-      },
-      {
-        label: "maximum_discount",
-        disabled: data.discount_type === "fee",
-        lfmt: (v) => "Maximum Discount ",
-        vfmt: (v) => {
-          return v === 0 ? " - " : toMoney(v);
-        },
-      },
-      {
-        label: "minimum_transaction",
-        lfmt: (v) => "Minimum Transaction ",
-        vfmt: (v) => {
-          return toMoney(v);
-        },
-      },
-      {
-        label: "total_voucher",
-        lfmt: (v) => "Total Voucher ",
-        vfmt: (v) => {
-          return v;
-        },
-      },
-      {
-        label: "max_voucher_peruser",
-        lfmt: (v) => "Total Usage ",
-        vfmt: (v) => {
-          return v;
-        },
-      },
-      {
-        label: "start_date",
-        lfmt: (v) => "Start Date ",
-        vfmt: (v) => {
-          return dateTimeFormatter(v);
-        },
-      },
-      {
-        label: "expired_date",
-        lfmt: (v) => "Expired Date ",
-        vfmt: (v) => {
-          return dateTimeFormatter(v);
-        },
-      },
-      {
-        label: "remark",
-        lfmt: (v) => "Srayat & Ketentuan ",
-        vfmt: (v) => {
-          return parser(v);
-        },
-      },
-    ],
-  };
-
   return (
     <>
       <Modal
@@ -267,7 +198,7 @@ function Component({ view }) {
         pagetitle="Voucher Information"
         phone={data.phone}
         loading={!data.id}
-        labels={["Details", "Voucher Usage"]}
+        labels={["Details", "Voucher Codes"]}
         contents={[
           <>
             <Detail
