@@ -244,7 +244,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
           },
           [dispatch, refreshToggle, sGroupFilter]
         )}
-        totalItems={service.items.length}
+        totalItems={service.total_items}
         filters={[
           {
             button: (
