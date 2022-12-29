@@ -22,6 +22,17 @@
   overflow: hidden;
 }
 
+.Item-resident {
+  display: flex;
+  /* align-items: center; */
+  /* border: 1px solid #f0f0f3; */
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+  overflow: hidden;
+}
+
 .Item-compact {
   cursor: pointer;
   align-items: center;
@@ -49,4 +60,11 @@
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
+}
+
+.Item-subtext-resident {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+  color: #838799;
 }

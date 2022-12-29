@@ -579,12 +579,13 @@ input[type="button"]:disabled {
 .list-modal-hover {
   position: absolute;
   top: 100%;
-  left: 50%;
+  left: 90%;
   border-radius: 3px;
   background-color: white;
   border: 1px solid var(--primary-color);
   display: none;
   min-width: 250px;
+  text-align: left;
 }
 
 .list-modal-hover.on {
@@ -641,6 +642,55 @@ input[type="button"]:disabled {
 .radio-booking:checked + img {
   outline: 2px solid #e12029;
   border-radius: 8px;
+}
+
+.radio-voucher { 
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* IMAGE STYLES */
+.radio-voucher + div {
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 14px 20px 14px 20px;
+  border: 1px solid rgba(233, 233, 233, 1);
+}
+
+/* CHECKED STYLES */
+.radio-voucher:checked + div {
+  outline: 1px solid #e12029;
+  border-radius: 8px;
+  padding: 14px 20px 14px 20px;
+  max-width: 300px;
+}
+
+.radio-voucher-box { 
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* RADIO STYLES DISCOUNT TYPE */
+.radio-voucher-box + div {
+  cursor: pointer;
+  padding: 10px 20px 10px 20px;
+  outline: 1px solid #E9E9E9;
+  opacity: 60%;
+  border-radius: 8px;
+}
+
+/* CHECKED STYLES DISCOUNT TYPE */
+.radio-voucher-box:checked + div {
+  background: #FDE9EC;
+  color: #E12029;
+  outline: 1px solid #e12029;
+  border-radius: 8px;
+  padding: 10px 20px 10px 20px;
+  opacity: 100%;
 }
 
 .wizard-header {
