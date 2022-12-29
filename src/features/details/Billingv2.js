@@ -9,7 +9,7 @@ import Template from "./components/Template";
 import Modal from "../../components/Modal";
 
 import { endpointBilling } from "../../settings";
-import { get } from "../slice";
+import { get, setConfirmDelete } from "../slice";
 import ThreeColumn from "../../components/ThreeColumn";
 import Button from "../../components/Button";
 import Popover from "../../components/Popover";
@@ -34,6 +34,8 @@ import {
   deleteBillingUnitItem,
   setSelected,
   updateSetAsPaidSelectedDetail,
+  releaseSelectedBillingDetail,
+  deleteBillingDetail,
 } from "../slices/billing";
 import { ListGroupItem, ListGroup } from "reactstrap";
 import Pill from "../../components/Pill";
@@ -73,9 +75,7 @@ function Component({ view, canAdd, canUpdate }) {
 
   const { role } = useSelector((state) => state.auth);
 
-  const { selected, unit, refreshToggle } = useSelector(
-    (state) => state.billing
-  );
+  const { selected, refreshToggle } = useSelector((state) => state.billing);
 
   const columns = useMemo(() => {
     function isLate(payment, due_date, payment_date) {
@@ -138,6 +138,20 @@ function Component({ view, canAdd, canUpdate }) {
           ),
       },
       {
+        Header: "Release Date",
+        accessor: (row) =>
+          row.release_date ? dateTimeFormatterCell(row.release_date) : "-",
+      },
+      {
+        Header: "Released",
+        accessor: (row) =>
+          row.released_status === "yes" ? (
+            <Pill color={"success"}>Yes</Pill>
+          ) : (
+            <Pill color={"danger"}>No</Pill>
+          ),
+      },
+      {
         Header: "Payment",
         accessor: (row) =>
           row.payment_method === "cash" ? (
@@ -189,7 +203,7 @@ function Component({ view, canAdd, canUpdate }) {
 
   return (
     <>
-    {/* <Modal
+      {/* <Modal
         isOpen={settleModal}
         toggle={() => {
           setSettleModal(!settleModal);
@@ -564,11 +578,11 @@ function Component({ view, canAdd, canUpdate }) {
                     onSelection={(selectedRows) => {
                       const selectedRowIds = [];
                       selectedRows.map((row) => {
-                        if (row !== undefined){
+                        if (row !== undefined) {
                           selectedRowIds.push(row.id);
                           setMultiActionRows([...selectedRowIds]);
                         }
-                      });    
+                      });
                     }}
                     fetchData={useCallback(
                       (page, limit, searchItem, sortField, sortType) => {
@@ -600,7 +614,15 @@ function Component({ view, canAdd, canUpdate }) {
                         );
                         // eslint-disable-next-line react-hooks/exhaustive-deps
                       },
-                      [dispatch, month, year, status, unitid, active]
+                      [
+                        dispatch,
+                        month,
+                        year,
+                        status,
+                        unitid,
+                        active,
+                        refreshToggle,
+                      ]
                     )}
                     loading={loading}
                     pageCount={data?.total_pages}
@@ -635,6 +657,30 @@ function Component({ view, canAdd, canUpdate }) {
                         ),
                       },
                     ]}
+                    onClickDelete={
+                      view
+                        ? null
+                        : (row) => {
+                            row.published === "yes"
+                              ? dispatch(
+                                  setConfirmDelete(
+                                    <>
+                                      Can't delete billing <b>{row.id}</b>. Billing has
+                                      been released!
+                                    </>,
+                                    () => {}
+                                  )
+                                )
+                              : dispatch(
+                                  setConfirmDelete(
+                                    "Are you sure you want to delete this billing?",
+                                    () => {
+                                      dispatch(deleteBillingDetail(row));
+                                    }
+                                  )
+                                );
+                          }
+                    }
                     actions={[
                       <>
                         {view ? null : role === "bm" && !canAdd ? null : (
@@ -668,6 +714,39 @@ function Component({ view, canAdd, canUpdate }) {
                             return [
                               <>
                                 <Button
+                                  label="Release Selected Billing"
+                                  disabled={
+                                    Object.keys(selectedRowIds).length === 0
+                                  }
+                                  icon={<FiCheck />}
+                                  onClick={() => {
+                                    confirmAlert({
+                                      title: "Release Billing",
+                                      message:
+                                        "Do you want to publish selected billing?",
+                                      buttons: [
+                                        {
+                                          label: "Yes",
+                                          onClick: () => {
+                                            dispatch(
+                                              releaseSelectedBillingDetail(
+                                                multiActionRows
+                                              )
+                                            );
+                                          },
+                                          className: "Button btn btn-secondary",
+                                        },
+                                        {
+                                          label: "Cancel",
+                                          className: "Button btn btn-cancel",
+                                        },
+                                      ],
+                                    });
+                                  }}
+                                />
+                              </>,
+                              <>
+                                <Button
                                   label="Set as Paid Selected"
                                   disabled={
                                     Object.keys(selectedRowIds).length === 0
@@ -683,7 +762,9 @@ function Component({ view, canAdd, canUpdate }) {
                                           label: "Yes",
                                           onClick: () => {
                                             dispatch(
-                                              updateSetAsPaidSelectedDetail(multiActionRows)
+                                              updateSetAsPaidSelectedDetail(
+                                                multiActionRows
+                                              )
                                             );
                                           },
                                           className: "Button btn btn-secondary",
