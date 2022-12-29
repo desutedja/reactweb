@@ -25,8 +25,10 @@ import {
   FiStopCircle,
   FiBell,
   FiBellOff,
+  FiEye,
 } from "react-icons/fi";
 import { FaCaretRight, FaCaretDown } from "react-icons/fa";
+import { RiPushpinFill, RiPushpinLine } from "react-icons/ri";
 import IconButton from "./IconButton";
 import Input from "./Input";
 import Modal from "./Modal";
@@ -59,17 +61,21 @@ function Table({
   onClickResolve,
   onClickDelete,
   onClickDetails,
+  onClickList,
   onClickEdit,
   onClickChange,
   onClickStop,
   onClickActive,
   onClickInactive,
+  onClickPin,
+  onClickUnpin,
   onClickAddBilling,
   onClickApproved,
   onClickDisapproved,
   renderActions,
   deleteSelection,
   sortBy = [],
+  titleList,
 }) {
   const {
     getTableProps,
@@ -409,6 +415,7 @@ function Table({
                 ))}
                 {(onClickDelete ||
                   onClickDetails ||
+                  onClickList ||
                   onClickEdit ||
                   onClickResolve ||
                   onClickAddBilling ||
@@ -476,6 +483,13 @@ function Table({
                         icon: <FiMoreHorizontal />,
                       }
                     : "",
+                  onClickList
+                    ? {
+                        onClick: () => onClickList(row.original),
+                        name: "Lihat Resident",
+                        icon: <FiEye />,
+                      }
+                    : "",
                   onClickEdit
                     ? {
                         onClick: () => onClickEdit(row.original),
@@ -505,21 +519,36 @@ function Table({
                         icon: <FiTrash />,
                       }
                     : "",
-                    onClickActive
-                      ? {
-                          onClick: () => onClickActive(row.original),
-                          name: "Set Active",
-                          icon: <FiBell />,
-                        }
-                      : "",
-                    onClickInactive
-                      ? {
-                          name: "Set Inactive",
-                          onClick: () => onClickInactive(row.original),
-                          color: "Danger",
-                          icon: <FiBellOff />,
-                        }
-                      : "",
+                  onClickActive
+                    ? {
+                        onClick: () => onClickActive(row.original),
+                        name: "Set Active",
+                        icon: <FiBell />,
+                      }
+                    : "",
+                  onClickInactive
+                    ? {
+                        name: "Set Inactive",
+                        onClick: () => onClickInactive(row.original),
+                        color: "Danger",
+                        icon: <FiBellOff />,
+                      }
+                    : "",
+                  onClickPin
+                    ? {
+                        onClick: () => onClickPin(row.original),
+                        name: "Pin",
+                        icon: <RiPushpinFill />,
+                      }
+                    : "",
+                  onClickUnpin
+                    ? {
+                        name: "Unpin",
+                        onClick: () => onClickUnpin(row.original),
+                        color: "Danger",
+                        icon: <RiPushpinLine />,
+                      }
+                    : "",
                   onClickApproved &&
                   !(
                     row.original.approved_status == "approved" ||
