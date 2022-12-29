@@ -359,6 +359,7 @@ export const getBillingUnitItem =
     );
   };
 
+// V1
 export const createBillingUnitItem =
   (data, selected, history, role) => (dispatch) => {
     dispatch(startAsync());
@@ -551,6 +552,101 @@ export const updateSetAsPaidSelectedDetail = (id, billing_items) => (dispatch) =
     )
   );
 };
+
+export const releaseSelectedBillingDetail = (id) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    post(
+      billingEndpoint + "/publish_item",
+        {billing_item: id},
+        (res) => {
+        dispatch(
+          setInfo({
+            color: "success",
+            message: `Selected billing has been published.`,
+          })
+        );
+
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(
+          setInfo({
+            color: "error",
+            message: `Error to set as paid billing.`,
+          })
+        );
+
+        dispatch(refresh());
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const deleteBillingDetail = (row) => (dispatch) => {
+  dispatch(startAsync());
+
+  dispatch(
+    del(
+      billingEndpoint + "/" + row.id,
+        (res) => {
+        dispatch(
+          setInfo({
+            color: "success",
+            message: `Billing has been deleted.`,
+          })
+        );
+
+        dispatch(refresh());
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(
+          setInfo({
+            color: "error",
+            message: `Billing can't be deleted.`,
+          })
+        );
+
+        dispatch(refresh());
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+// export const deleteBillingDetail = (row, history) => (dispatch, getState) => {
+//   dispatch(startAsync());
+
+//   const { auth } = getState();
+
+//   dispatch(
+//     del(
+//       billingEndpoint + '/' + row.id,
+//       row.id,
+//       (res) => {
+//         history && history.push("/" + auth.role + "/billing/unit/" + row.resident_unit);
+
+//         dispatch(refresh());
+
+//         dispatch(
+//           setInfo({
+//             color: "danger",
+//             message: "Billing has been deleted.",
+//           })
+//         );
+
+//         dispatch(stopAsync());
+//       },
+//       (err) => {
+//         dispatch(stopAsync());
+//       }
+//     )
+//   );
+// };
 
 export const getBillingCategory =
   (pageIndex, pageSize, search = "", building, unit) =>
