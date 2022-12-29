@@ -635,10 +635,7 @@ function Component() {
                         style={{ justifyContent: "space-between" }}
                       >
                         <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
-                          <h2
-                            className="mt-2 mb-4 no-wrap"
-                            style={{ marginLeft: 20, fontWeight: 600 }}
-                          >
+                          <h2 className="mt-3 PageTitle no-wrap">
                             Building Overview
                           </h2>
                         </div>
@@ -851,36 +848,6 @@ function Component() {
                   <>
                     <div className="row">
                       <div className="col-12">
-                        <div className="row" style={{ marginBottom: 8 }}>
-                          <div
-                            className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap"
-                            style={{ minWidth: 120 }}
-                          >
-                            Periode Lalu
-                          </div>
-                          <div className="col-sm-3" style={{ minWidth: 150 }}>
-                            <InputDash
-                              type="date"
-                              inputValue={startDateFrom}
-                              setInputValue={setStartDateFrom}
-                            />
-                          </div>
-                          <div
-                            className="col-sm-1 mt-1 mr-5 text-nowrap"
-                            style={{ maxWidth: 10 }}
-                          >
-                            s/d
-                          </div>
-                          <div className="col-sm-3" style={{ minWidth: 150 }}>
-                            <InputDash
-                              type="date"
-                              inputValue={endDateFrom}
-                              setInputValue={setEndDateFrom}
-                            />
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-12">
                         <div className="row">
                           <div
                             className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap"
@@ -917,6 +884,36 @@ function Component() {
                                 setCheck("yes");
                                 setLoading(true);
                               }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-12">
+                        <div className="row" style={{ marginBottom: 8 }}>
+                          <div
+                            className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap"
+                            style={{ minWidth: 120 }}
+                          >
+                            Periode Lalu
+                          </div>
+                          <div className="col-sm-3" style={{ minWidth: 150 }}>
+                            <InputDash
+                              type="date"
+                              inputValue={startDateFrom}
+                              setInputValue={setStartDateFrom}
+                            />
+                          </div>
+                          <div
+                            className="col-sm-1 mt-1 mr-5 text-nowrap"
+                            style={{ maxWidth: 10 }}
+                          >
+                            s/d
+                          </div>
+                          <div className="col-sm-3" style={{ minWidth: 150 }}>
+                            <InputDash
+                              type="date"
+                              inputValue={endDateFrom}
+                              setInputValue={setEndDateFrom}
                             />
                           </div>
                         </div>
@@ -4586,10 +4583,7 @@ function Component() {
                         style={{ justifyContent: "space-between" }}
                       >
                         <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
-                          <h2
-                            className="mt-2 mb-4 no-wrap"
-                            style={{ marginLeft: 20, fontWeight: 600 }}
-                          >
+                          <h2 className="mt-3 PageTitle no-wrap">
                             Building Overview
                           </h2>
                         </div>

@@ -82,6 +82,7 @@ function Component() {
 
   return (
     <Template
+      pagetitle="Transaction List"
       columns={columns}
       slice="transaction"
       getAction={getTransaction}
@@ -192,8 +193,9 @@ function Component() {
       ]}
       actionDownloads={[
         <MyButton
+          fontWeight={500}
           color="Download"
-          label="Download .csv"
+          label="Download.csv"
           icon={<FiDownload />}
           onClick={() => {
             dispatch(downloadTransaction(status, statusPayment, type));

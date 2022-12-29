@@ -216,7 +216,6 @@ function Component({ view }) {
               right: 0,
               left: 0,
               zIndex: 99,
-              backgroundColor: "#fafafaaa",
               fontWeight: "bold",
               display: "flex",
             }}
@@ -228,21 +227,22 @@ function Component({ view }) {
                 left: "30px",
                 position: "absolute",
               }}
-              src={require("../../../assets/yipy-logo-color.png")}
+              src={require("../../../assets/yipy-logo-white.png")}
               alt="clinklogo"
             />
             <FiMessageSquare
               size="45"
-              style={{ top: "45px", position: "absolute", right: "140px" }}
+              style={{ top: "45px", position: "absolute", right: "145px", color: "#fff" }}
             />
             <FiBell
               size="45"
-              style={{ top: "45px", position: "absolute", right: "45px" }}
+              style={{ top: "45px", position: "absolute", right: "45px", color: "#fff" }}
             />
           </div>
           <img
             style={{
-              height: "100%",
+              height: "calc(614 / 1024 * 720px)",
+              maxWidth: "700px",
               position: "absolute",
               top: "50%",
               left: "50%",
@@ -256,6 +256,7 @@ function Component({ view }) {
       </Modal>
       <Template
         loading={!data.id}
+        pagetitle="Advertisement Information"
         labels={["Details", "Schedules", "Impression"]}
         contents={[
           <div style={{ display: "flex" }}>
@@ -320,7 +321,7 @@ function Component({ view }) {
             />
           </div>,
           <Schedule view={view} />,
-          <Impression view={view} id={id} />
+          <Impression view={view} id={id} />,
         ]}
       />
     </>

@@ -22,19 +22,18 @@ import {
   ListGroupItem,
 } from "reactstrap";
 import Button from "../../components/Button";
-import { FiSearch, FiEye, FiDownload  } from "react-icons/fi";
+import { FiSearch, FiEye, FiDownload } from "react-icons/fi";
 import { GiClick } from "react-icons/gi";
-import { AiOutlineFundProjectionScreen } from "react-icons/ai"
+import { AiOutlineFundProjectionScreen } from "react-icons/ai";
 import SummaryItemNew from "./Components/SummaryItemNew";
 import { downloadAdsReport } from "../slices/ads";
 import Loading from "../../components/Loading";
 import InputDash from "../../components/InputDash";
 
-import ico1 from "../../assets/Impression 1.png"
-import ico2 from "../../assets/Views 1.png"
-import ico3 from "../../assets/Clicks 1.png"
-import BGAds from "../../assets/BG_Ads.jpg"
-
+import ico1 from "../../assets/Impression 1.png";
+import ico2 from "../../assets/Views 1.png";
+import ico3 from "../../assets/Clicks 1.png";
+import BGAds from "../../assets/BG_Ads.jpg";
 
 const monthConst = [
   "Jan",
@@ -78,9 +77,19 @@ const colorList = [
   // "#FBD9D7",
   // "#E1F3E4",
   // "#E3E2F9",
-  "#E12029","#254091","#F58113","#88B5E4","#52A452","#5464B6","#FFCE2A","#9F6633","#471172","#204657","#D09CB1","#D33B7E"
+  "#E12029",
+  "#254091",
+  "#F58113",
+  "#88B5E4",
+  "#52A452",
+  "#5464B6",
+  "#FFCE2A",
+  "#9F6633",
+  "#471172",
+  "#204657",
+  "#D09CB1",
+  "#D33B7E",
 ];
-
 
 function Component() {
   const { auth } = useSelector((state) => state);
@@ -90,7 +99,7 @@ function Component() {
 
   const [platform, setPlatform] = useState([]);
   const [dKeysPlatform, setDKeysPlatform] = useState([]);
-  
+
   const [gender, setGender] = useState([]);
   const [dKeysGender, setDKeysGender] = useState([]);
 
@@ -111,11 +120,11 @@ function Component() {
   const [selectedType, setSelectedType] = useState("");
   const [dataKeys, setDataKeys] = useState([]);
 
-  const today = moment().format("yyyy-MM-DD", 'day');
-  const [periode, setPeriode] = useState('all');
+  const today = moment().format("yyyy-MM-DD", "day");
+  const [periode, setPeriode] = useState("all");
   const [periodeTime, setPeriodeTime] = useState(today);
 
-  const [range, setRange] = useState("")
+  const [range, setRange] = useState("");
 
   const [impressionDetail, setImpressionDetail] = useState([
     { name: "Click", value: 0 },
@@ -278,7 +287,7 @@ function Component() {
       //   label: "Download Report",
       //   data: "<https://api.yipy.id/yipy-assets/asset-storage/img/F8F140A85BA88A1B61C6855ECD9E04E6.png>",
       // },
-      
+
       // {
       //   label: "Impression",
       //   icon: "https://api.yipy.id/yipy-assets/asset-storage/img/76695B6C63524E46A289758114CF2609.png",
@@ -1301,15 +1310,15 @@ function Component() {
   const now = moment().format(`DDMMyyyy${parseInt(Math.random() * 100000)}`);
   const curr = new Date();
   curr.setDate(curr.getDate() + 3);
-  const datenow = curr.toISOString().substr(0,10);
+  const datenow = curr.toISOString().substr(0, 10);
   return (
     <Loading loading={loading}>
-        <div className="row no-gutters">
-          <div className="col-12">
-            <h2 className="mt-2 no-wrap" style={{ marginLeft:20, marginBottom:24, fontWeight:600 }}>Advertisement Overview</h2>
-          </div>
+      <div className="row no-gutters">
+        <div className="col-12 col-md-5 col-lg-3 mb-4 mb-md-0 mr-4">
+          <h2 className="mt-3 PageTitle no-wrap">Advertisement Overview</h2>
         </div>
-        {/* <div className="row no-gutters">
+      </div>
+      {/* <div className="row no-gutters">
           <div className="Container-dashboard flex-column">
             <div className="row no-gutters">
               <div className="col-sm-1 mt-1 ml-3 text-nowrap" style={{minWidth:100}}>
@@ -1379,8 +1388,11 @@ function Component() {
             className="Container flex-column pb-5 pr-4"
             style={{ borderRadius: 10 }}
           >
-            <div className="col" style={{paddingBottom:"16px", paddingTop:"5px"}}>
-                <h5>All Campaign</h5>
+            <div
+              className="col"
+              style={{ paddingBottom: "16px", paddingTop: "5px" }}
+            >
+              <h5>All Campaign</h5>
             </div>
             <div className="row mb-4 p-3">
               <Tab
@@ -1389,26 +1401,41 @@ function Component() {
                 activeTab={0}
                 contents={[
                   <>
-                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                    <div className="row no-gutters" style={{ marginLeft: 20 }}>
                       {summary.length > 0 &&
                         summary.map((el, index) => {
                           return (
-                            <div key={`summary-${index}`} className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
-                              <div className="border-ads" style={{borderBottom: `4px solid ${colorList[(index) % colorList.length]}`}}>
-                              <SummaryItemNew
-                                label={el.label}
-                                icon={el.icon}
-                                // icon="https://api.yipy.id/yipy-assets/asset-storage/img/9EC3211E8CCDA375F28D2166BCD066C1.png"
-                                data={el.data}
-                                download={() => {
-                                  const idList = selectedId
-                                    .map((el) => el.id)
-                                    .join(",");
-                                  return dispatch(
-                                    downloadAdsReport(idList, selectedType)
-                                  );
+                            <div
+                              key={`summary-${index}`}
+                              className="ads-card col-4"
+                              style={{
+                                border: 0,
+                                maxWidth: 230,
+                                marginLeft: 10,
+                              }}
+                            >
+                              <div
+                                className="border-ads"
+                                style={{
+                                  borderBottom: `4px solid ${
+                                    colorList[index % colorList.length]
+                                  }`,
                                 }}
-                              />
+                              >
+                                <SummaryItemNew
+                                  label={el.label}
+                                  icon={el.icon}
+                                  // icon="https://api.yipy.id/yipy-assets/asset-storage/img/9EC3211E8CCDA375F28D2166BCD066C1.png"
+                                  data={el.data}
+                                  download={() => {
+                                    const idList = selectedId
+                                      .map((el) => el.id)
+                                      .join(",");
+                                    return dispatch(
+                                      downloadAdsReport(idList, selectedType)
+                                    );
+                                  }}
+                                />
                               </div>
                             </div>
                           );
@@ -1416,22 +1443,37 @@ function Component() {
                       {impressionDetail.length > 0 &&
                         impressionDetail.map((el, index) => {
                           return (
-                            <div key={`summary-${index}`} className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
-                              <div className="border-ads" style={{borderBottom: `4px solid ${colorList[(index) % colorList.length]}`}}>
-                              <SummaryItemNew
-                                label={el.name}
-                                icon={el.icon}
-                                // icon="https://api.yipy.id/yipy-assets/asset-storage/img/9EC3211E8CCDA375F28D2166BCD066C1.png"
-                                data={el.value}
-                                download={() => {
-                                  const idList = selectedId
-                                    .map((el) => el.id)
-                                    .join(",");
-                                  return dispatch(
-                                    downloadAdsReport(idList, selectedType)
-                                  );
+                            <div
+                              key={`summary-${index}`}
+                              className="ads-card col-4"
+                              style={{
+                                border: 0,
+                                maxWidth: 230,
+                                marginLeft: 10,
+                              }}
+                            >
+                              <div
+                                className="border-ads"
+                                style={{
+                                  borderBottom: `4px solid ${
+                                    colorList[index % colorList.length]
+                                  }`,
                                 }}
-                              />
+                              >
+                                <SummaryItemNew
+                                  label={el.name}
+                                  icon={el.icon}
+                                  // icon="https://api.yipy.id/yipy-assets/asset-storage/img/9EC3211E8CCDA375F28D2166BCD066C1.png"
+                                  data={el.value}
+                                  download={() => {
+                                    const idList = selectedId
+                                      .map((el) => el.id)
+                                      .join(",");
+                                    return dispatch(
+                                      downloadAdsReport(idList, selectedType)
+                                    );
+                                  }}
+                                />
                               </div>
                             </div>
                           );
@@ -1535,28 +1577,44 @@ function Component() {
                       </div>
                     </div>
                   </>,
-                  
+
                   <>
-                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                    <div className="row no-gutters" style={{ marginLeft: 20 }}>
                       {platformDetail.map((el, index) => {
                         return (
-                          <div className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
-                            <div className="border-ads" style={{borderBottom: `4px solid ${colorList[index % colorList.length]}`}}>
+                          <div
+                            className="ads-card col-4"
+                            style={{ border: 0, maxWidth: 230, marginLeft: 10 }}
+                          >
+                            <div
+                              className="border-ads"
+                              style={{
+                                borderBottom: `4px solid ${
+                                  colorList[index % colorList.length]
+                                }`,
+                              }}
+                            >
                               <div className="row">
-                                <div className={typeof icon !== "undefined" ? "col-8" : "col-12"}>
+                                <div
+                                  className={
+                                    typeof icon !== "undefined"
+                                      ? "col-8"
+                                      : "col-12"
+                                  }
+                                >
                                   <div
                                     className="ads-summary-label-text2 mt-1"
                                     style={{ textAlign: "left" }}
                                   >
                                     {toSentenceCase(el.name.replace(/_/g, " "))}
                                   </div>
-                                    <div className="ads-summary-data-text2">
-                                      <AnimatedNumber
-                                        className="h2 font-weight-bold black"
-                                        value={el.value}
-                                        formatValue={toThousand}
-                                      />
-                                    </div>
+                                  <div className="ads-summary-data-text2">
+                                    <AnimatedNumber
+                                      className="h2 font-weight-bold black"
+                                      value={el.value}
+                                      formatValue={toThousand}
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -1639,7 +1697,10 @@ function Component() {
                                 })} */}
                               </div>
                             </div>
-                            <LineCharts data={platform} dataKeys={dKeysPlatform} />
+                            <LineCharts
+                              data={platform}
+                              dataKeys={dKeysPlatform}
+                            />
                           </div>
                         </div>
                       </div>
@@ -1648,28 +1709,48 @@ function Component() {
                       </div>
                     </div>
                   </>,
-                  
+
                   <>
-                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                    <div className="row no-gutters" style={{ marginLeft: 20 }}>
                       {genderDetail.map((el, index) => {
                         return (
-                          <div className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
-                            <div className="border-ads" style={{borderBottom: `4px solid ${colorList[index % colorList.length]}`}}>
+                          <div
+                            className="ads-card col-4"
+                            style={{ border: 0, maxWidth: 230, marginLeft: 10 }}
+                          >
+                            <div
+                              className="border-ads"
+                              style={{
+                                borderBottom: `4px solid ${
+                                  colorList[index % colorList.length]
+                                }`,
+                              }}
+                            >
                               <div className="row">
-                                <div className={typeof icon !== "undefined" ? "col-8" : "col-12"}>
+                                <div
+                                  className={
+                                    typeof icon !== "undefined"
+                                      ? "col-8"
+                                      : "col-12"
+                                  }
+                                >
                                   <div
                                     className="ads-summary-label-text2 mt-1"
                                     style={{ textAlign: "left" }}
                                   >
-                                    {el.name === "" ? "Others" : toSentenceCase(el.name.replace(/_/g, " "))}
+                                    {el.name === ""
+                                      ? "Others"
+                                      : toSentenceCase(
+                                          el.name.replace(/_/g, " ")
+                                        )}
                                   </div>
-                                    <div className="ads-summary-data-text2">
-                                      <AnimatedNumber
-                                        className="h2 font-weight-bold black"
-                                        value={el.value}
-                                        formatValue={toThousand}
-                                      />
-                                    </div>
+                                  <div className="ads-summary-data-text2">
+                                    <AnimatedNumber
+                                      className="h2 font-weight-bold black"
+                                      value={el.value}
+                                      formatValue={toThousand}
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -1761,28 +1842,44 @@ function Component() {
                       </div>
                     </div>
                   </>,
-                  
+
                   <>
-                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                    <div className="row no-gutters" style={{ marginLeft: 20 }}>
                       {ageDetail.map((el, index) => {
                         return (
-                          <div className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
-                            <div className="border-ads" style={{borderBottom: `4px solid ${colorList[index % colorList.length]}`}}>
+                          <div
+                            className="ads-card col-4"
+                            style={{ border: 0, maxWidth: 230, marginLeft: 10 }}
+                          >
+                            <div
+                              className="border-ads"
+                              style={{
+                                borderBottom: `4px solid ${
+                                  colorList[index % colorList.length]
+                                }`,
+                              }}
+                            >
                               <div className="row">
-                                <div className={typeof icon !== "undefined" ? "col-8" : "col-12"}>
+                                <div
+                                  className={
+                                    typeof icon !== "undefined"
+                                      ? "col-8"
+                                      : "col-12"
+                                  }
+                                >
                                   <div
                                     className="ads-summary-label-text2 mt-1"
                                     style={{ textAlign: "left" }}
                                   >
                                     {toSentenceCase(el.name.replace(/_/g, " "))}
                                   </div>
-                                    <div className="ads-summary-data-text2">
-                                      <AnimatedNumber
-                                        className="h2 font-weight-bold black"
-                                        value={el.value}
-                                        formatValue={toThousand}
-                                      />
-                                    </div>
+                                  <div className="ads-summary-data-text2">
+                                    <AnimatedNumber
+                                      className="h2 font-weight-bold black"
+                                      value={el.value}
+                                      formatValue={toThousand}
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -1874,28 +1971,44 @@ function Component() {
                       </div>
                     </div>
                   </>,
-                  
+
                   <>
-                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                    <div className="row no-gutters" style={{ marginLeft: 20 }}>
                       {occupationDetail.map((el, index) => {
                         return (
-                          <div className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
-                            <div className="border-ads" style={{borderBottom: `4px solid ${colorList[index % colorList.length]}`}}>
+                          <div
+                            className="ads-card col-4"
+                            style={{ border: 0, maxWidth: 230, marginLeft: 10 }}
+                          >
+                            <div
+                              className="border-ads"
+                              style={{
+                                borderBottom: `4px solid ${
+                                  colorList[index % colorList.length]
+                                }`,
+                              }}
+                            >
                               <div className="row">
-                                <div className={typeof icon !== "undefined" ? "col-8" : "col-12"}>
+                                <div
+                                  className={
+                                    typeof icon !== "undefined"
+                                      ? "col-8"
+                                      : "col-12"
+                                  }
+                                >
                                   <div
                                     className="ads-summary-label-text2 mt-1"
                                     style={{ textAlign: "left" }}
                                   >
                                     {toSentenceCase(el.name.replace(/_/g, " "))}
                                   </div>
-                                    <div className="ads-summary-data-text2">
-                                      <AnimatedNumber
-                                        className="h2 font-weight-bold black"
-                                        value={el.value}
-                                        formatValue={toThousand}
-                                      />
-                                    </div>
+                                  <div className="ads-summary-data-text2">
+                                    <AnimatedNumber
+                                      className="h2 font-weight-bold black"
+                                      value={el.value}
+                                      formatValue={toThousand}
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -1978,7 +2091,10 @@ function Component() {
                                 })} */}
                               </div>
                             </div>
-                            <LineCharts data={ocupation} dataKeys={dKeysOcupation} />
+                            <LineCharts
+                              data={ocupation}
+                              dataKeys={dKeysOcupation}
+                            />
                           </div>
                         </div>
                       </div>
@@ -1987,28 +2103,44 @@ function Component() {
                       </div>
                     </div>
                   </>,
-                  
+
                   <>
-                    <div className="row no-gutters" style={{ marginLeft: 20}}>
+                    <div className="row no-gutters" style={{ marginLeft: 20 }}>
                       {buildingDetail.map((el, index) => {
                         return (
-                          <div className="ads-card col-4" style={{border: 0, maxWidth:230, marginLeft:10}}>
-                            <div className="border-ads" style={{borderBottom: `4px solid ${colorList[index % colorList.length]}`}}>
+                          <div
+                            className="ads-card col-4"
+                            style={{ border: 0, maxWidth: 230, marginLeft: 10 }}
+                          >
+                            <div
+                              className="border-ads"
+                              style={{
+                                borderBottom: `4px solid ${
+                                  colorList[index % colorList.length]
+                                }`,
+                              }}
+                            >
                               <div className="row">
-                                <div className={typeof icon !== "undefined" ? "col-8" : "col-12"}>
+                                <div
+                                  className={
+                                    typeof icon !== "undefined"
+                                      ? "col-8"
+                                      : "col-12"
+                                  }
+                                >
                                   <div
                                     className="ads-summary-label-text2 mt-1"
                                     style={{ textAlign: "left" }}
                                   >
                                     {toSentenceCase(el.name.replace(/_/g, " "))}
                                   </div>
-                                    <div className="ads-summary-data-text2">
-                                      <AnimatedNumber
-                                        className="h2 font-weight-bold black"
-                                        value={el.value}
-                                        formatValue={toThousand}
-                                      />
-                                    </div>
+                                  <div className="ads-summary-data-text2">
+                                    <AnimatedNumber
+                                      className="h2 font-weight-bold black"
+                                      value={el.value}
+                                      formatValue={toThousand}
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -2091,7 +2223,10 @@ function Component() {
                                 })} */}
                               </div>
                             </div>
-                            <LineCharts data={building} dataKeys={dKeysBuilding} />
+                            <LineCharts
+                              data={building}
+                              dataKeys={dKeysBuilding}
+                            />
                           </div>
                         </div>
                       </div>
@@ -2428,8 +2563,14 @@ function Component() {
                 style={{ maxHeight: 628, height: 628, borderRadius: 10 }}
               >
                 <>
-                  <div style={{paddingBottom:"16px", paddingTop:"10px", paddingLeft:"16px"}}>
-                      <h5>Advertiser Account</h5>
+                  <div
+                    style={{
+                      paddingBottom: "16px",
+                      paddingTop: "10px",
+                      paddingLeft: "16px",
+                    }}
+                  >
+                    <h5>Advertiser Account</h5>
                   </div>
                   <InputSearch
                     value={searchAdvertiser}
@@ -2528,7 +2669,7 @@ function Component() {
 export default Component;
 
 const InputSearch = (props) => (
-  <div className="search-input mb-3" style={{ width: "40%"}}>
+  <div className="search-input mb-3" style={{ width: "40%" }}>
     <label htmlFor="search">
       <FiSearch />
     </label>
@@ -2543,7 +2684,7 @@ const InputSearch = (props) => (
 );
 
 const InputSearchAds = (props) => (
-  <div className="search-input mb-3" style={{ width: "40%"}}>
+  <div className="search-input mb-3" style={{ width: "40%" }}>
     <label htmlFor="search">
       <FiSearch />
     </label>

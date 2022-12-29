@@ -186,6 +186,7 @@ function Component() {
       <Template
         transparent
         title={data.trx_code}
+        pagetitle="Transaction Information"
         loading={!data.id}
         labels={["Details"]}
         contents={[

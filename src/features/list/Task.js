@@ -438,6 +438,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
       <Template
         filterExpanded={history.location.state}
         view={view}
+        pagetitle="Task List"
         columns={columns}
         slice="task"
         getAction={getTask}
@@ -661,13 +662,32 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
           view
             ? null
             : [
-              <Button
-                color="Download"
-                label="Download Tasks .csv"
-                icon={<FiDownload />}
-                onClick={() => dispatch(downloadTasks(1,10000,search,type,prio,status,building,unit,createdStart,createdEnd,resolvedStart,resolvedEnd,"true"))}
-              />,
-            ]
+                <Button
+                  fontWeight={500}
+                  color="Download"
+                  label="Download Tasks.csv"
+                  icon={<FiDownload />}
+                  onClick={() =>
+                    dispatch(
+                      downloadTasks(
+                        1,
+                        10000,
+                        search,
+                        type,
+                        prio,
+                        status,
+                        building,
+                        unit,
+                        createdStart,
+                        createdEnd,
+                        resolvedStart,
+                        resolvedEnd,
+                        "true"
+                      )
+                    )
+                  }
+                />,
+              ]
         }
         renderActions={
           view

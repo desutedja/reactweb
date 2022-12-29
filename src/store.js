@@ -28,6 +28,7 @@ import requestpremium from "./features/slices/requestpremium";
 import catatmeter from "./features/slices/catatmeter";
 import internet from "./features/slices/internet";
 import userRequest from "./features/slices/userRequest";
+import pushnotification from "./features/slices/pushnotification";
 
 const logger = createLogger({
   predicate: (getState, action) =>
@@ -57,6 +58,7 @@ const reducers = combineReducers({
   vouchers,
   internet,
   userRequest,
+  pushnotification,
 });
 
 const persistConfig = {

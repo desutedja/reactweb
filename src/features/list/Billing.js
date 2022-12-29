@@ -3153,6 +3153,8 @@ function Component({ view }) {
 
       <TemplateWithSelectionAndDate
         view={view}
+        title="Unit"
+        pagetitle="Billing List Unit"
         columns={columns}
         slice="billing"
         getAction={getBillingUnit}
@@ -3283,8 +3285,9 @@ function Component({ view }) {
                   }}
                 />,
                 <Button
+                  fontWeight={500}
                   color="Download"
-                  label="Download Billing Units .csv"
+                  label="Download Billing Units.csv"
                   icon={<FiDownload />}
                   onClick={() =>
                     dispatch(downloadBillingUnit(search, building))

@@ -15,10 +15,12 @@ import {
   getBuildingManagement,
   deleteBuildingManagement,
   changeBuildingManagement,
+  setSelected,
 } from "../../../slices/building";
 import { endpointAdmin } from "../../../../settings";
 import { toMoney } from "../../../../utils";
 import { get } from "../../../slice";
+import { useHistory, useRouteMatch } from "react-router-dom";
 
 const dateArray = (() => {
   const array = Array(31).fill({});
@@ -53,6 +55,8 @@ function Component({ view }) {
   );
 
   let dispatch = useDispatch();
+  let history = useHistory();
+  let { url } = useRouteMatch();
 
   const columnsManagement = [
     { Header: "ID", accessor: "id" },
@@ -457,9 +461,11 @@ function Component({ view }) {
                   label="Add Building Management"
                   icon={<FiPlus />}
                   onClick={() => {
-                    setEdit(false);
-                    setRow({});
-                    setAddManagement(true);
+                    // setEdit(false);
+                    // setRow({});
+                    // setAddManagement(true);
+                    dispatch(setSelected({}));
+                    history.push(url + "/add");
                   }}
                 />,
               ]
@@ -476,10 +482,12 @@ function Component({ view }) {
           view
             ? null
             : (row) => {
-                setRow(row);
-                setEdit(true);
-                setAddManagement(true);
-                setManagementChose(row);
+                // setRow(row);
+                // setEdit(true);
+                // setAddManagement(true);
+                // setManagementChose(row);
+                dispatch(setSelected(row));
+                history.push(url + "/edit");
               }
         }
       />

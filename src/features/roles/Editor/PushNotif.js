@@ -1,9 +1,10 @@
 import React, {  } from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 
-import List from '../../list/PushNotif';
-import Add from '../../form/PushNotif';
-import Details from '../../details/PushNotif';
+import List from '../../feature/PushNotification/list/PushNotif';
+import Add from '../../feature/PushNotification/Form/PushNotif';
+import Edit from '../../feature/PushNotification/Form/PushNotifEdit';
+import Details from '../../feature/PushNotification/Detail';
 
 function Component() {
     let { path } = useRouteMatch();
@@ -17,7 +18,7 @@ function Component() {
                 <Add />
             </Route>
             <Route path={`${path}/edit`}>
-                <Add />
+                <Edit />
             </Route>
             <Route path={`${path}/:id`}>
                 <Details />

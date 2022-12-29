@@ -39,6 +39,7 @@ function Component() {
     <Template
       columns={columns}
       slice="admin"
+      pagetitle="Admin List"
       getAction={group === "vas_sales" ? getAdminVasSales : getAdmin}
       actions={[
         <Button

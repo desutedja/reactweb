@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { dateTimeFormatterCell, dateTimeFormatterstriped, toMoney, toSentenceCase } from "../../utils";
+import {
+  dateTimeFormatterCell,
+  dateTimeFormatterstriped,
+  toMoney,
+  toSentenceCase,
+} from "../../utils";
 import { endpointAdmin } from "../../settings";
 import { get, setConfirmDelete, post, del } from "../slice";
 
@@ -13,8 +18,8 @@ import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
 import { deleteVA, editVA } from "../slices/promova";
-import Modal from "../../components/Modal"
-import Input from "../../components/Input"
+import Modal from "../../components/Modal";
+import Input from "../../components/Input";
 import MultiSelectInput from "../form/input/MultiSelect";
 import Tab from "../../components/Tab";
 import Filter from "../../components/Filter";
@@ -22,33 +27,30 @@ import Booking from "../../components/cells/Booking";
 import Facilities from "../../components/cells/Facilities";
 
 const residentColumns = [
-  
   // { Header: "ID", accessor: "id" },
   // {
   //   Header: "Resident Name",
-  //   accessor: (row) => 
-  //     <b>Dadang Jordan</b>        
+  //   accessor: (row) =>
+  //     <b>Dadang Jordan</b>
   // },
   {
     Header: "Resident Name",
-    accessor: (row) => 
-    <Booking
+    accessor: (row) => (
+      <Booking
         // id={row.id}
         id={1}
         data={row}
-        items={[
-          <b>Dadang Jordan</b>
-        ]}
-      />       
+        items={[<b>Dadang Jordan</b>]}
+      />
+    ),
   },
   {
     Header: "Facilities",
-    accessor: (row) =>
-      <b>Yipy Gym</b>
+    accessor: (row) => <b>Yipy Gym</b>,
   },
   {
     Header: "Status",
-    accessor: (row) =>
+    accessor: (row) => (
       // row.status === "scheduled" ?
       //   <Pill color="secondary">
       //     {toSentenceCase(row.status)}
@@ -61,18 +63,22 @@ const residentColumns = [
       //   :
       //   <Pill color="primary">
       //     {toSentenceCase(row.status)}
-      //   </Pill> 
-      <font style={{color: "#FFC200"}}><b>Booked</b></font>
+      //   </Pill>
+      <font style={{ color: "#FFC200" }}>
+        <b>Booked</b>
+      </font>
+    ),
   },
   {
     Header: "Created Date",
-    accessor: (row) =>{
+    accessor: (row) => {
       return (
         <div>
-          <div><b>
-            {
-      row.created_on ? dateTimeFormatterstriped(row.created_on) : "-"}
-          </b></div>
+          <div>
+            <b>
+              {row.created_on ? dateTimeFormatterstriped(row.created_on) : "-"}
+            </b>
+          </div>
         </div>
       );
     },
@@ -80,38 +86,34 @@ const residentColumns = [
 ];
 
 const facilityColumns = [
-  
   // { Header: "ID", accessor: "id" },
   // {
   //   Header: "Facility Name",
-  //   accessor: (row) => 
-  //     <b>Yipy Gym</b>        
+  //   accessor: (row) =>
+  //     <b>Yipy Gym</b>
   // },
   {
     Header: "Facility Name",
-    accessor: (row) => 
-    <Facilities
+    accessor: (row) => (
+      <Facilities
         // id={row.id}
         id={102}
         data={row}
-        items={[
-          <b>Yipy Gym</b>
-        ]}
-      />       
+        items={[<b>Yipy Gym</b>]}
+      />
+    ),
   },
   {
     Header: "Quota",
-    accessor: (row) =>
-      <b>100</b>
+    accessor: (row) => <b>100</b>,
   },
   {
     Header: "Duration",
-    accessor: (row) =>
-      <b>1 hour</b>
+    accessor: (row) => <b>1 hour</b>,
   },
   {
     Header: "Status",
-    accessor: (row) =>
+    accessor: (row) => (
       // row.status === "scheduled" ?
       //   <Pill color="secondary">
       //     {toSentenceCase(row.status)}
@@ -124,18 +126,22 @@ const facilityColumns = [
       //   :
       //   <Pill color="primary">
       //     {toSentenceCase(row.status)}
-      //   </Pill> 
-      <font style={{color: "#52A452"}}><b>Open</b></font>
+      //   </Pill>
+      <font style={{ color: "#52A452" }}>
+        <b>Open</b>
+      </font>
+    ),
   },
   {
     Header: "Created Date",
-    accessor: (row) =>{
+    accessor: (row) => {
       return (
         <div>
-          <div><b>
-            {
-      row.created_on ? dateTimeFormatterstriped(row.created_on) : "-"}
-          </b></div>
+          <div>
+            <b>
+              {row.created_on ? dateTimeFormatterstriped(row.created_on) : "-"}
+            </b>
+          </div>
         </div>
       );
     },
@@ -160,7 +166,7 @@ const listFacStat = [
   { label: "Closed", value: "closed" },
 ];
 
-function Component({ view, title = '', pagetitle, canDelete }) {
+function Component({ view, title = "", pagetitle, canDelete }) {
   const [startdate, setStartDate] = useState("");
   const [enddate, setEndDate] = useState("");
   const [buildingid, setBuildingid] = useState("");
@@ -265,22 +271,21 @@ function Component({ view, title = '', pagetitle, canDelete }) {
   }, [dispatch]);
 
   useEffect(() => {
-    
     dispatch(
       get(
         endpointAdmin +
-        "/paymentperbuilding/list?status=all" +
-        "&start_date=" +
-        startdate +
-        "&end_date=" +
-        enddate + 
-        "&building_id=" + 
-        buildingid +
-        "&bank=" +
-        bank +
-        "&sort_field=created_on&sort_type=DESC" +
-        "&limit=" + 
-        limit,
+          "/paymentperbuilding/list?status=all" +
+          "&start_date=" +
+          startdate +
+          "&end_date=" +
+          enddate +
+          "&building_id=" +
+          buildingid +
+          "&bank=" +
+          bank +
+          "&sort_field=created_on&sort_type=DESC" +
+          "&limit=" +
+          limit,
 
         (res) => {
           console.log(res.data.data);
@@ -293,439 +298,455 @@ function Component({ view, title = '', pagetitle, canDelete }) {
 
   return (
     <>
-      <h2 style={{ marginLeft: '16px' }}>{pagetitle}</h2>
-            <Breadcrumb title={title} />
-            <div className="Container">
-            <Tab
-                  labels={tabs}
-                  setTab={setType}
-                  activeTab={0}
-                  contents={[
-                    <Table
-                        columns={residentColumns}
-                        data={data?.items || []}
-                        // onSelection={(selectedRows) => {
-                        //   const selectedRowIds = [];
-                        //   selectedRows.map((row) => {
-                        //     if (row !== undefined){
-                        //       selectedRowIds.push(row.id);
-                        //       setMultiActionRows([...selectedRowIds]);
-                        //     }
-                        //   });    
-                        // }}
-                        fetchData={useCallback(
-                          (page, limit, searchItem, sortField, sortType) => {
-                            setLoading(true);
-                            dispatch(
-                              get(
-                                endpointAdmin +
-                                "/paymentperbuilding/list?status=all" +
-                                "&start_date=" +
-                                startdate +
-                                "&end_date=" +
-                                enddate + 
-                                "&building_id=" + 
-                                buildingid +
-                                "&bank=" +
-                                bank +
-                                "&sort_field=created_on&sort_type=DESC" +
-                                "&limit=" + 
-                                limit,
+      <Breadcrumb title={title} />
+      <h2 className="PageTitle">Booking</h2>
+      <div className="Container">
+        <Tab
+          labels={tabs}
+          setTab={setType}
+          activeTab={0}
+          contents={[
+            <Table
+              columns={residentColumns}
+              data={data?.items || []}
+              // onSelection={(selectedRows) => {
+              //   const selectedRowIds = [];
+              //   selectedRows.map((row) => {
+              //     if (row !== undefined){
+              //       selectedRowIds.push(row.id);
+              //       setMultiActionRows([...selectedRowIds]);
+              //     }
+              //   });
+              // }}
+              fetchData={useCallback(
+                (page, limit, searchItem, sortField, sortType) => {
+                  setLoading(true);
+                  dispatch(
+                    get(
+                      endpointAdmin +
+                        "/paymentperbuilding/list?status=all" +
+                        "&start_date=" +
+                        startdate +
+                        "&end_date=" +
+                        enddate +
+                        "&building_id=" +
+                        buildingid +
+                        "&bank=" +
+                        bank +
+                        "&sort_field=created_on&sort_type=DESC" +
+                        "&limit=" +
+                        limit,
 
-                                (res) => {
-                                  console.log(res.data.data);
-                                  setData(res.data.data);
-                                  setLoading(false);
-                                }
-                              )
-                            );
-                            // eslint-disable-next-line react-hooks/exhaustive-deps
-                          },
-                          [dispatch, buildingid, bank, startdate, enddate]
-                        )}
-                        loading={loading}
-                        // onClickChange={
-                        //   view
-                        //     ? null
-                        //     : (row) => {
-                              
-                        //       dispatch(setSelected(row));
-                        //       history.push(url + "/edit");
-                        //       console.log(row)
-                        //     }
-                              
-                        // }
-                        // onClickStop={
-                        //   view
-                        //     ? null
-                        //     : role === "bm" && !canDelete
-                        //     ? null
-                        //     : (row) => {
-                        //         dispatch(
-                        //           setConfirmDelete(
-                        //             // "Are you sure to end this promo?",
-                        //             "Feature still under development",
-                        //             () => {
-                        //               // dispatch(deleteVA(row));
-                        //             }
-                        //           )
-                        //         );
-                        //       }
-                        // }
-                        // actions={
-                        //   view
-                        //     ? null
-                        //     : [
-                        //         <Button
-                        //           key="Add Promo VA"
-                        //           label="Add Promo VA"
-                        //           icon={<FiPlus />}
-                        //           onClick={() => {
-                        //             dispatch(setSelected({}));
-                        //             history.push(url + "/add");
-                        //           }}
-                        //         />,
-                        //       ]
-                        // }
-                        // pageCount={data?.total_pages}
-                        // totalItems={data?.total_items}
-                        filters={[
-                          {
-                            label: (
-                              <p>
-                                { faci ? 
-                                <div>
-                                  Facility: <b>{faciLabel}</b>
-                                </div> : 
-                                <div>Facility: <b>All</b></div>}
-                              </p>
-                            ),
-                            hidex: faci === "",
-                            delete: () => setFaci(""),
-                            component: (toggleModal) => (
-                              <>
-                                <Filter
-                                  data={listFacilities}
-                                  onClick={(el) => {
-                                    setFaci(el.value);
-                                    setFaciLabel(el.label);
-                                    toggleModal(false);
-                                  }}
-                                  onClickAll={() => {
-                                    setFaci("");
-                                    setFaciLabel("");
-                                    toggleModal(false);
-                                  }}
-                                />
-                              </>
-                            ),
-                          },
-                          {
-                            label: (
-                              <p>
-                                { stat ? 
-                                <div>
-                                  Status: <b>{statLabel}</b>
-                                </div> : 
-                                <div>Status: <b>All</b></div>}
-                              </p>
-                            ),
-                            hidex: stat === "",
-                            delete: () => setStat(""),
-                            component: (toggleModal) => (
-                              <>
-                                <Filter
-                                  data={listBookingStat}
-                                  onClick={(el) => {
-                                    setStat(el.value);
-                                    setStatLabel(el.label);
-                                    toggleModal(false);
-                                  }}
-                                  onClickAll={() => {
-                                    setStat("");
-                                    setStatLabel("");
-                                    toggleModal(false);
-                                  }}
-                                />
-                              </>
-                            ),
-                          },
-                        ]}
-                        // actions={[
-                        //   <>
-                        //     {view ? null : role === "bm" && !canAdd ? null : (
-                        //       <Button
-                        //         key="Add Billing"
-                        //         label="Add Billing"
-                        //         icon={<FiPlus />}
-                        //         onClick={() => {
-                        //           dispatch(setSelectedItem({}));
-                        //           history.push({
-                        //             pathname: url + "/add",
-                        //             state: {
-                        //               year: parseInt(bmonths[active]?.year),
-                        //               month: parseInt(bmonths[active]?.month),
-                        //             },
-                        //           });
-                        //         }}
-                        //       />
-                        //     )}
-                        //   </>,
-                        // ]}
-                        // deleteSelection={(selectedRows, rows) => {
-                        //   Object.keys(selectedRows).map((el) =>
-                        //     dispatch(deleteBillingUnitItem(rows[el].original.id))
-                        //   );
-                        // }}
-                        // renderActions={
-                        //   view
-                        //     ? null
-                        //     : (selectedRowIds, page) => {
-                        //         return [
-                        //           <>
-                        //             <Button
-                        //               label="Set as Paid Selected"
-                        //               disabled={
-                        //                 Object.keys(selectedRowIds).length === 0
-                        //               }
-                        //               icon={<FiCheck />}
-                        //               onClick={() => {
-                        //                 confirmAlert({
-                        //                   title: "Set as Paid Billing",
-                        //                   message:
-                        //                     "Do you want to set selected billing as Paid?",
-                        //                   buttons: [
-                        //                     {
-                        //                       label: "Yes",
-                        //                       onClick: () => {
-                        //                         dispatch(
-                        //                           updateSetAsPaidSelectedDetail(multiActionRows)
-                        //                         );
-                        //                       },
-                        //                       className: "Button btn btn-secondary",
-                        //                     },
-                        //                     {
-                        //                       label: "Cancel",
-                        //                       className: "Button btn btn-cancel",
-                        //                     },
-                        //                   ],
-                        //                 });
-                        //               }}
-                        //             />
-                        //           </>,
-                        //         ];
-                        //       }
-                        // }
-                      />,
-                      <Table
-                        columns={facilityColumns}
-                        data={data?.items || []}
-                        // onSelection={(selectedRows) => {
-                        //   const selectedRowIds = [];
-                        //   selectedRows.map((row) => {
-                        //     if (row !== undefined){
-                        //       selectedRowIds.push(row.id);
-                        //       setMultiActionRows([...selectedRowIds]);
-                        //     }
-                        //   });    
-                        // }}
-                        fetchData={useCallback(
-                          (page, limit, searchItem, sortField, sortType) => {
-                            setLoading(true);
-                            dispatch(
-                              get(
-                                endpointAdmin +
-                                "/paymentperbuilding/list?status=all" +
-                                "&start_date=" +
-                                startdate +
-                                "&end_date=" +
-                                enddate + 
-                                "&building_id=" + 
-                                buildingid +
-                                "&bank=" +
-                                bank +
-                                "&sort_field=created_on&sort_type=DESC" +
-                                "&limit=" + 
-                                limit,
+                      (res) => {
+                        console.log(res.data.data);
+                        setData(res.data.data);
+                        setLoading(false);
+                      }
+                    )
+                  );
+                  // eslint-disable-next-line react-hooks/exhaustive-deps
+                },
+                [dispatch, buildingid, bank, startdate, enddate]
+              )}
+              loading={loading}
+              // onClickChange={
+              //   view
+              //     ? null
+              //     : (row) => {
 
-                                (res) => {
-                                  console.log(res.data.data);
-                                  setData(res.data.data);
-                                  setLoading(false);
-                                }
-                              )
-                            );
-                            // eslint-disable-next-line react-hooks/exhaustive-deps
-                          },
-                          [dispatch, buildingid, bank, startdate, enddate]
-                        )}
-                        loading={loading}
-                        onClickDelete={
-                          view
-                            ? null
-                            : role === "bm" && !canDelete
-                            ? null
-                            : (row) => {
-                                dispatch(
-                                  setConfirmDelete(
-                                    // "Are you sure to end this promo?",
-                                    "Feature still under development",
-                                    () => {
-                                      // dispatch(deleteVA(row));
-                                    }
-                                  )
-                                );
-                              }
-                        }
-                        actions={
-                          view
-                            ? null
-                            : [
-                                <Button
-                                  key="Add Facilities"
-                                  label="Add Facilities"
-                                  icon={<FiPlus />}
-                                  onClick={() => {
-                                    dispatch(setSelected({}));
-                                    history.push(url + "/add");
-                                  }}
-                                />,
-                              ]
-                        }
-                        // pageCount={data?.total_pages}
-                        // totalItems={data?.total_items}
-                        filters={[
-                          {
-                            label: (
-                              <p>
-                                { faci ? 
-                                <div>
-                                  Facility: <b>{faciLabel}</b>
-                                </div> : 
-                                <div>Facility: <b>All</b></div>}
-                              </p>
-                            ),
-                            hidex: faci === "",
-                            delete: () => setFaci(""),
-                            component: (toggleModal) => (
-                              <>
-                                <Filter
-                                  data={listFacilities}
-                                  onClick={(el) => {
-                                    setFaci(el.value);
-                                    setFaciLabel(el.label);
-                                    toggleModal(false);
-                                  }}
-                                  onClickAll={() => {
-                                    setFaci("");
-                                    setFaciLabel("");
-                                    toggleModal(false);
-                                  }}
-                                />
-                              </>
-                            ),
-                          },
-                          {
-                            label: (
-                              <p>
-                                { stat ? 
-                                <div>
-                                  Status: <b>{statLabel}</b>
-                                </div> : 
-                                <div>Status: <b>All</b></div>}
-                              </p>
-                            ),
-                            hidex: stat === "",
-                            delete: () => setStat(""),
-                            component: (toggleModal) => (
-                              <>
-                                <Filter
-                                  data={listFacStat}
-                                  onClick={(el) => {
-                                    setStat(el.value);
-                                    setStatLabel(el.label);
-                                    toggleModal(false);
-                                  }}
-                                  onClickAll={() => {
-                                    setStat("");
-                                    setStatLabel("");
-                                    toggleModal(false);
-                                  }}
-                                />
-                              </>
-                            ),
-                          },
-                        ]}
-                        // actions={[
-                        //   <>
-                        //     {view ? null : role === "bm" && !canAdd ? null : (
-                        //       <Button
-                        //         key="Add Billing"
-                        //         label="Add Billing"
-                        //         icon={<FiPlus />}
-                        //         onClick={() => {
-                        //           dispatch(setSelectedItem({}));
-                        //           history.push({
-                        //             pathname: url + "/add",
-                        //             state: {
-                        //               year: parseInt(bmonths[active]?.year),
-                        //               month: parseInt(bmonths[active]?.month),
-                        //             },
-                        //           });
-                        //         }}
-                        //       />
-                        //     )}
-                        //   </>,
-                        // ]}
-                        // deleteSelection={(selectedRows, rows) => {
-                        //   Object.keys(selectedRows).map((el) =>
-                        //     dispatch(deleteBillingUnitItem(rows[el].original.id))
-                        //   );
-                        // }}
-                        // renderActions={
-                        //   view
-                        //     ? null
-                        //     : (selectedRowIds, page) => {
-                        //         return [
-                        //           <>
-                        //             <Button
-                        //               label="Set as Paid Selected"
-                        //               disabled={
-                        //                 Object.keys(selectedRowIds).length === 0
-                        //               }
-                        //               icon={<FiCheck />}
-                        //               onClick={() => {
-                        //                 confirmAlert({
-                        //                   title: "Set as Paid Billing",
-                        //                   message:
-                        //                     "Do you want to set selected billing as Paid?",
-                        //                   buttons: [
-                        //                     {
-                        //                       label: "Yes",
-                        //                       onClick: () => {
-                        //                         dispatch(
-                        //                           updateSetAsPaidSelectedDetail(multiActionRows)
-                        //                         );
-                        //                       },
-                        //                       className: "Button btn btn-secondary",
-                        //                     },
-                        //                     {
-                        //                       label: "Cancel",
-                        //                       className: "Button btn btn-cancel",
-                        //                     },
-                        //                   ],
-                        //                 });
-                        //               }}
-                        //             />
-                        //           </>,
-                        //         ];
-                        //       }
-                        // }
+              //       dispatch(setSelected(row));
+              //       history.push(url + "/edit");
+              //       console.log(row)
+              //     }
+
+              // }
+              // onClickStop={
+              //   view
+              //     ? null
+              //     : role === "bm" && !canDelete
+              //     ? null
+              //     : (row) => {
+              //         dispatch(
+              //           setConfirmDelete(
+              //             // "Are you sure to end this promo?",
+              //             "Feature still under development",
+              //             () => {
+              //               // dispatch(deleteVA(row));
+              //             }
+              //           )
+              //         );
+              //       }
+              // }
+              // actions={
+              //   view
+              //     ? null
+              //     : [
+              //         <Button
+              //           key="Add Promo VA"
+              //           label="Add Promo VA"
+              //           icon={<FiPlus />}
+              //           onClick={() => {
+              //             dispatch(setSelected({}));
+              //             history.push(url + "/add");
+              //           }}
+              //         />,
+              //       ]
+              // }
+              // pageCount={data?.total_pages}
+              // totalItems={data?.total_items}
+              filters={[
+                {
+                  label: (
+                    <p>
+                      {faci ? (
+                        <div>
+                          Facility: <b>{faciLabel}</b>
+                        </div>
+                      ) : (
+                        <div>
+                          Facility: <b>All</b>
+                        </div>
+                      )}
+                    </p>
+                  ),
+                  hidex: faci === "",
+                  delete: () => setFaci(""),
+                  component: (toggleModal) => (
+                    <>
+                      <Filter
+                        data={listFacilities}
+                        onClick={(el) => {
+                          setFaci(el.value);
+                          setFaciLabel(el.label);
+                          toggleModal(false);
+                        }}
+                        onClickAll={() => {
+                          setFaci("");
+                          setFaciLabel("");
+                          toggleModal(false);
+                        }}
+                      />
+                    </>
+                  ),
+                },
+                {
+                  label: (
+                    <p>
+                      {stat ? (
+                        <div>
+                          Status: <b>{statLabel}</b>
+                        </div>
+                      ) : (
+                        <div>
+                          Status: <b>All</b>
+                        </div>
+                      )}
+                    </p>
+                  ),
+                  hidex: stat === "",
+                  delete: () => setStat(""),
+                  component: (toggleModal) => (
+                    <>
+                      <Filter
+                        data={listBookingStat}
+                        onClick={(el) => {
+                          setStat(el.value);
+                          setStatLabel(el.label);
+                          toggleModal(false);
+                        }}
+                        onClickAll={() => {
+                          setStat("");
+                          setStatLabel("");
+                          toggleModal(false);
+                        }}
+                      />
+                    </>
+                  ),
+                },
+              ]}
+              // actions={[
+              //   <>
+              //     {view ? null : role === "bm" && !canAdd ? null : (
+              //       <Button
+              //         key="Add Billing"
+              //         label="Add Billing"
+              //         icon={<FiPlus />}
+              //         onClick={() => {
+              //           dispatch(setSelectedItem({}));
+              //           history.push({
+              //             pathname: url + "/add",
+              //             state: {
+              //               year: parseInt(bmonths[active]?.year),
+              //               month: parseInt(bmonths[active]?.month),
+              //             },
+              //           });
+              //         }}
+              //       />
+              //     )}
+              //   </>,
+              // ]}
+              // deleteSelection={(selectedRows, rows) => {
+              //   Object.keys(selectedRows).map((el) =>
+              //     dispatch(deleteBillingUnitItem(rows[el].original.id))
+              //   );
+              // }}
+              // renderActions={
+              //   view
+              //     ? null
+              //     : (selectedRowIds, page) => {
+              //         return [
+              //           <>
+              //             <Button
+              //               label="Set as Paid Selected"
+              //               disabled={
+              //                 Object.keys(selectedRowIds).length === 0
+              //               }
+              //               icon={<FiCheck />}
+              //               onClick={() => {
+              //                 confirmAlert({
+              //                   title: "Set as Paid Billing",
+              //                   message:
+              //                     "Do you want to set selected billing as Paid?",
+              //                   buttons: [
+              //                     {
+              //                       label: "Yes",
+              //                       onClick: () => {
+              //                         dispatch(
+              //                           updateSetAsPaidSelectedDetail(multiActionRows)
+              //                         );
+              //                       },
+              //                       className: "Button btn btn-secondary",
+              //                     },
+              //                     {
+              //                       label: "Cancel",
+              //                       className: "Button btn btn-cancel",
+              //                     },
+              //                   ],
+              //                 });
+              //               }}
+              //             />
+              //           </>,
+              //         ];
+              //       }
+              // }
+            />,
+            <Table
+              columns={facilityColumns}
+              data={data?.items || []}
+              // onSelection={(selectedRows) => {
+              //   const selectedRowIds = [];
+              //   selectedRows.map((row) => {
+              //     if (row !== undefined){
+              //       selectedRowIds.push(row.id);
+              //       setMultiActionRows([...selectedRowIds]);
+              //     }
+              //   });
+              // }}
+              fetchData={useCallback(
+                (page, limit, searchItem, sortField, sortType) => {
+                  setLoading(true);
+                  dispatch(
+                    get(
+                      endpointAdmin +
+                        "/paymentperbuilding/list?status=all" +
+                        "&start_date=" +
+                        startdate +
+                        "&end_date=" +
+                        enddate +
+                        "&building_id=" +
+                        buildingid +
+                        "&bank=" +
+                        bank +
+                        "&sort_field=created_on&sort_type=DESC" +
+                        "&limit=" +
+                        limit,
+
+                      (res) => {
+                        console.log(res.data.data);
+                        setData(res.data.data);
+                        setLoading(false);
+                      }
+                    )
+                  );
+                  // eslint-disable-next-line react-hooks/exhaustive-deps
+                },
+                [dispatch, buildingid, bank, startdate, enddate]
+              )}
+              loading={loading}
+              onClickDelete={
+                view
+                  ? null
+                  : role === "bm" && !canDelete
+                  ? null
+                  : (row) => {
+                      dispatch(
+                        setConfirmDelete(
+                          // "Are you sure to end this promo?",
+                          "Feature still under development",
+                          () => {
+                            // dispatch(deleteVA(row));
+                          }
+                        )
+                      );
+                    }
+              }
+              actions={
+                view
+                  ? null
+                  : [
+                      <Button
+                        key="Add Facilities"
+                        label="Add Facilities"
+                        icon={<FiPlus />}
+                        onClick={() => {
+                          dispatch(setSelected({}));
+                          history.push(url + "/add");
+                        }}
                       />,
-                    ]}
-                  />
-            </div>
-    </>              
+                    ]
+              }
+              // pageCount={data?.total_pages}
+              // totalItems={data?.total_items}
+              filters={[
+                {
+                  label: (
+                    <p>
+                      {faci ? (
+                        <div>
+                          Facility: <b>{faciLabel}</b>
+                        </div>
+                      ) : (
+                        <div>
+                          Facility: <b>All</b>
+                        </div>
+                      )}
+                    </p>
+                  ),
+                  hidex: faci === "",
+                  delete: () => setFaci(""),
+                  component: (toggleModal) => (
+                    <>
+                      <Filter
+                        data={listFacilities}
+                        onClick={(el) => {
+                          setFaci(el.value);
+                          setFaciLabel(el.label);
+                          toggleModal(false);
+                        }}
+                        onClickAll={() => {
+                          setFaci("");
+                          setFaciLabel("");
+                          toggleModal(false);
+                        }}
+                      />
+                    </>
+                  ),
+                },
+                {
+                  label: (
+                    <p>
+                      {stat ? (
+                        <div>
+                          Status: <b>{statLabel}</b>
+                        </div>
+                      ) : (
+                        <div>
+                          Status: <b>All</b>
+                        </div>
+                      )}
+                    </p>
+                  ),
+                  hidex: stat === "",
+                  delete: () => setStat(""),
+                  component: (toggleModal) => (
+                    <>
+                      <Filter
+                        data={listFacStat}
+                        onClick={(el) => {
+                          setStat(el.value);
+                          setStatLabel(el.label);
+                          toggleModal(false);
+                        }}
+                        onClickAll={() => {
+                          setStat("");
+                          setStatLabel("");
+                          toggleModal(false);
+                        }}
+                      />
+                    </>
+                  ),
+                },
+              ]}
+              // actions={[
+              //   <>
+              //     {view ? null : role === "bm" && !canAdd ? null : (
+              //       <Button
+              //         key="Add Billing"
+              //         label="Add Billing"
+              //         icon={<FiPlus />}
+              //         onClick={() => {
+              //           dispatch(setSelectedItem({}));
+              //           history.push({
+              //             pathname: url + "/add",
+              //             state: {
+              //               year: parseInt(bmonths[active]?.year),
+              //               month: parseInt(bmonths[active]?.month),
+              //             },
+              //           });
+              //         }}
+              //       />
+              //     )}
+              //   </>,
+              // ]}
+              // deleteSelection={(selectedRows, rows) => {
+              //   Object.keys(selectedRows).map((el) =>
+              //     dispatch(deleteBillingUnitItem(rows[el].original.id))
+              //   );
+              // }}
+              // renderActions={
+              //   view
+              //     ? null
+              //     : (selectedRowIds, page) => {
+              //         return [
+              //           <>
+              //             <Button
+              //               label="Set as Paid Selected"
+              //               disabled={
+              //                 Object.keys(selectedRowIds).length === 0
+              //               }
+              //               icon={<FiCheck />}
+              //               onClick={() => {
+              //                 confirmAlert({
+              //                   title: "Set as Paid Billing",
+              //                   message:
+              //                     "Do you want to set selected billing as Paid?",
+              //                   buttons: [
+              //                     {
+              //                       label: "Yes",
+              //                       onClick: () => {
+              //                         dispatch(
+              //                           updateSetAsPaidSelectedDetail(multiActionRows)
+              //                         );
+              //                       },
+              //                       className: "Button btn btn-secondary",
+              //                     },
+              //                     {
+              //                       label: "Cancel",
+              //                       className: "Button btn btn-cancel",
+              //                     },
+              //                   ],
+              //                 });
+              //               }}
+              //             />
+              //           </>,
+              //         ];
+              //       }
+              // }
+            />,
+          ]}
+        />
+      </div>
+    </>
   );
 }
 

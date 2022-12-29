@@ -114,7 +114,7 @@ function Input({ optional = false, ...props }) {
                     color: "grey",
                   }}
                 >
-                  (optional)
+                  (Optional)
                 </span>
               )}
             </div>
@@ -138,7 +138,7 @@ function Input({ optional = false, ...props }) {
             ))}
           </div>
           {hint && (
-            <div style={{ fontStyle: "italic", marginBottom: "8px" }}>
+            <div style={{ marginBottom: "8px" }}>
               *{hint}
             </div>
           )}

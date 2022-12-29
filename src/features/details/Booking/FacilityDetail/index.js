@@ -12,24 +12,10 @@ import { setSelected, deleteMerchant } from "../../../slices/merchant";
 import { toMoney } from "../../../../utils";
 
 const info = {
-  "Information": [
-    "id",
-    "created_on",
-    "name",
-    "type",
-    "legal",
-  ],
-  "Other Facilities": [
-    "open_at",
-    "closed_at",
-  ],
-  "Description": [
-    "description",
-  ],
-  "More Info": [
-    "district",
-    "city",
-  ],
+  Information: ["id", "created_on", "name", "type", "legal"],
+  "Other Facilities": ["open_at", "closed_at"],
+  Description: ["description"],
+  "More Info": ["district", "city"],
 };
 
 function Component({ view, canDelete }) {
@@ -69,6 +55,7 @@ function Component({ view, canDelete }) {
         image={data.logo || "placeholder"}
         title={data.name}
         phone={data.phone}
+        pagetitle="Facility Information"
         labels={["Details", "Operational Hour"]}
         contents={[
           <DetailFacility

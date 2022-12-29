@@ -93,8 +93,8 @@
   margin-bottom: 32px;
   margin-right: 8px;
   margin-left: 8px;
-  min-width: calc(100% / 1.2 - 16px);
-  max-width: calc(100% / 1.2 - 16px);
+  max-width: calc(100% / 1 - 16px);
+  min-width: calc(100% / 1 - 16px);
   position: relative;
   text-align: left;
 }
@@ -161,6 +161,14 @@
   margin-left: 16px;
 }
 
+.InputIcon-search {
+  position: absolute;
+  left: 4px;
+  top: 3px;
+  color: gray;
+  margin-left: 8px;
+}
+
 .InputIcon-dashboard {
   position: absolute;
   right: 8px;
@@ -186,10 +194,16 @@
   border-bottom: 0.5px;
   border-right: 0.5px;
   border-left: 0.5px;
-  border-color: silver;
+  border-color: #E9E9E9;
   border-style: solid;
   padding: 12px;
   background-color: #f3f3fa;
+}
+
+.Input-pretext {
+  border: 0;
+  padding: 12px;
+  min-width: 60px;
 }
 
 .Input-prefix {
@@ -260,7 +274,7 @@
 }
 
 .MultiSelectItem svg {
-  color: black;
+  color: #3E414C;
   cursor: pointer;
   margin-left: 5px;
 }
@@ -307,7 +321,7 @@
   max-height: 250px;
   border-width: 0px;
   border-style: solid;
-  border-color: #000;
+  border-color: #3E414C;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 4;
 }
@@ -340,7 +354,7 @@
 }
 
 .MultiSelectDropDown li[data-focus="true"] svg {
-  color: #000;
+  color: #3E414C;
 }
 
 .MultiSelectItemWrapper {
@@ -421,5 +435,5 @@
 
 .css-table-header div {
   text-align: center;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #3E414C;
 }

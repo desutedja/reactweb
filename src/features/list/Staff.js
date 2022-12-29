@@ -12,7 +12,12 @@ import Input from "../../components/Input";
 import Filter from "../../components/Filter";
 import Pill from "../../components/Pill";
 import Staff from "../../components/cells/Staff";
-import { downloadStaff, downloadStaffLog, getStaff, setSelected } from "../slices/staff";
+import {
+  downloadStaff,
+  downloadStaffLog,
+  getStaff,
+  setSelected,
+} from "../slices/staff";
 import { get } from "../slice";
 
 import Template from "./components/Template";
@@ -24,7 +29,7 @@ const ListDepartment = ({ data }) => {
   return (
     <div className="modal-hover">
       <button
-        style={{ color: 'white' }}
+        style={{ color: "white" }}
         onClick={() => history.push("/" + role + "/staff/" + data.id)}
         className="ml-2"
         onMouseEnter={() => setModalHover(true)}
@@ -87,8 +92,8 @@ const columns = [
         )
       ) : row.staff_role === "gm_bm" || row.staff_role === "pic_bm" ? (
         <Pill color="success">Always</Pill>
-      // ) : row.current_shift_status === 1 ? (
-      ) : row.is_shift === 1 ? (
+      ) : // ) : row.current_shift_status === 1 ? (
+      row.is_shift === 1 ? (
         <Pill color="success">On Shift</Pill>
       ) : (
         <Pill color="secondary">No</Pill>
@@ -145,7 +150,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
     const initialBuilding = savedBuilding;
     return initialBuilding || "";
   });
-  
+
   const [department, setDepartment] = useState(() => {
     const savedDepartment = localStorage.getItem("filter_department");
     const initialDepartment = savedDepartment;
@@ -190,7 +195,6 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
     localStorage.setItem("filter_shift", shift);
     localStorage.setItem("label_shift", shiftLabel);
   }, [shift, shiftLabel]);
-
 
   useEffect(() => {
     (!search || search.length >= 1) &&
@@ -243,7 +247,11 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
             let restTotal = totalItems - data.length;
 
             const formatted = res.data.data.map((el) => ({
-              label: toSentenceCase(el.department_name) + "( " + toSentenceCase(el.department_type) + ")",
+              label:
+                toSentenceCase(el.department_name) +
+                "( " +
+                toSentenceCase(el.department_type) +
+                ")",
               value: el.id,
             }));
 
@@ -289,6 +297,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
   return (
     <Template
       view={view}
+      pagetitle="Staf List"
       columns={columns}
       slice="staff"
       getAction={getStaff}
@@ -299,7 +308,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
               {
                 hidex: department === "",
                 label: "Department: ",
-                value: department ? departmentType : "All" ,
+                value: department ? departmentType : "All",
                 delete: () => {
                   setDepartment("");
                 },
@@ -426,25 +435,47 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
         view
           ? null
           : [
-            <Button
+              <Button
+                fontWeight={500}
                 color="Download"
                 key="Download Staff"
                 label="Download Staff.csv"
                 icon={<FiDownload />}
                 onClick={() =>
-                  dispatch(downloadStaff(search, building, role, building, shift, management, department ))
+                  dispatch(
+                    downloadStaff(
+                      search,
+                      building,
+                      role,
+                      building,
+                      shift,
+                      management,
+                      department
+                    )
+                  )
                 }
               />,
-            <Button
+              <Button
+                fontWeight={500}
                 color="Download"
                 key="Download Staff Log"
                 label="Download Staff Log.csv"
                 icon={<FiDownload />}
                 onClick={() =>
-                  dispatch(downloadStaffLog(search, building, role, building, shift, management, department ))
+                  dispatch(
+                    downloadStaffLog(
+                      search,
+                      building,
+                      role,
+                      building,
+                      shift,
+                      management,
+                      department
+                    )
+                  )
                 }
               />,
-          ]
+            ]
       }
       actions={
         view

@@ -171,3 +171,93 @@ export const deleteUserRequest = (row, history) => (dispatch, getState) => {
     )
   );
 };
+
+export const rejectUserRequest = (data, history, id) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    put(
+      endpointUserRequest + '/data/action',
+      data,
+      (res) => {
+        history && history.push("/" + auth.role + "/user request/" + id);
+
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "User request has been rejected.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const approveUserRequest = (data, history, id) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    put(
+      endpointUserRequest + '/data/action',
+      data,
+      (res) => {
+        history && history.push("/" + auth.role + "/user request/" + id);
+
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "User request has been approved and is in process.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const settledUserRequest = (data, history, id) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    put(
+      endpointUserRequest + '/data/action',
+      data,
+      (res) => {
+        history && history.push("/" + auth.role + "/user request/" + id);
+
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "User request has been settled.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};

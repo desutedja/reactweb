@@ -19,6 +19,7 @@ import {
   setSelected,
   deleteBuilding,
   editCustomSetting,
+  resetCustomSetting,
 } from "../../slices/building";
 import Input from "../../../components/Input";
 import { FiBell, FiMessageSquare } from "react-icons/fi";
@@ -77,6 +78,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
   const [openLogo, setOpenLogo] = useState(false);
   const [openLW, setOpenLW] = useState(false);
   const [openSplash, setOpenSplash] = useState(false);
+  const [resetModal, setResetModal] = useState(false);
   const [mainColor, setMainColor] = useState();
   const [secondaryColor, setSecondaryColor] = useState();
   const [logoURL, setLogoURL] = useState();
@@ -143,6 +145,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
       logoModal={setOpenLogo}
       logoWhiteModal={setOpenLW}
       splashModal={setOpenSplash}
+      resetModal={setResetModal}
       onDelete={() => setConfirmDelete(true)}
       canUpdate={auth.role === "bm" ? canUpdate : true}
       canAdd={auth.role === "bm" ? canAdd : true}
@@ -207,6 +210,21 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         cancelLabel={"Cancel"}
       >
         Are you sure you want to delete building <b>{data.name}</b>?
+      </Modal>
+      <Modal
+        isOpen={resetModal}
+        disableHeader={true}
+        btnDanger
+        onClick={() => {
+          dispatch(resetCustomSetting({ building_id: parseInt(id) }, history));
+          setResetModal(false);
+        }}
+        toggle={() => setResetModal(false)}
+        okLabel={"Reset"}
+        cancelLabel={"Cancel"}
+      >
+        Are you sure you want to reset setting for building{" "}
+        <b>{data.legal_name}</b>?
       </Modal>
       <Modal
         width={"720px"}
@@ -450,6 +468,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         activeTab={history.location.state ? history.location.state.tab : 0}
         image={auth.role === "sa" && data.logo}
         title={data.name}
+        pagetitle="Building Information"
         website={data.website}
         phone={data.phone}
         loading={!data.id}

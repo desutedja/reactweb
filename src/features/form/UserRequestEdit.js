@@ -2,20 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import { endpointAdmin, endpointMerchant, endpointResident } from "../../settings";
-import { get } from "../slice";
-
 import Template from "./components/TemplateInternet";
 import { Form } from "formik";
-import { userRequestSchema } from "./services/schemas";
 import Input from "./input";
 import SubmitButton from "./components/SubmitButton";
-import Button from "../../components/Button";
-import { editInternetProvider } from "../slices/internet";
 
 import { RiLightbulbLine, RiCalendarEventLine } from "react-icons/ri"
 
-import { toSentenceCase } from "../../utils";
 import { editUserRequest } from "../slices/userRequest";
 
 const userRequestPayload = {
@@ -147,7 +140,7 @@ function Component() {
                 marginTop: 16,
                 marginLeft: 10,
                 background: "#F4F4F4",
-                color: "#000000",
+                color: "#3E414C",
                 paddingTop: 6,
                 paddingBottom: 6,
                 paddingLeft: 21,

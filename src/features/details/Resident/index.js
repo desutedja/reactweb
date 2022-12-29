@@ -86,6 +86,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
       <TemplateResident
         image={data.photo || "placeholder"}
         title={data.firstname + " " + data.lastname}
+        pagetitle="Resident Information"
         email={data.email}
         phone={data.phone}
         reason={data.update_reason}
