@@ -105,7 +105,7 @@ function Component({ view }) {
       actions={
         view
           ? null
-          : group === "vas_advertiser"
+          : group === "vas_advertiser" || role === "bm"
           ? null
           : [
               <Button
