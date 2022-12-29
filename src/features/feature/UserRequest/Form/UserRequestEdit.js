@@ -2,17 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import Template from "./components/TemplateInternet";
+import TemplateInternet from "../../../form/components/TemplateInternet";
 import { Form } from "formik";
-import Input from "./input";
-import SubmitButton from "./components/SubmitButton";
+import Input from "../../../form/input";
+import SubmitButton from "../../../form/components/SubmitButton";
 
 import { RiLightbulbLine, RiCalendarEventLine } from "react-icons/ri"
-import { createUserRequest } from "../slices/userRequest";
+
+import { editUserRequest } from "../../../slices/userRequest";
 
 const userRequestPayload = {
   category: "",
-  sub_category: parseInt(""),
+  sub_category: "",
   title: "",
   description: "",
   status: "",
@@ -41,19 +42,11 @@ function Component() {
   // const { banks } = useSelector((state) => state.main);
   const { loading, selected } = useSelector((state) => state.userRequest);
 
-  const [bManagements, setBManagements] = useState([]);
-  const [dataBanks, setDataBanks] = useState([]);
-  
-  const [merchant, setMerchant] = useState([]);
-  
-  const [inBuildings, setBuildings] = useState([]);
-  const [categories, setCategories] = useState([]);
-
   let dispatch = useDispatch();
   let history = useHistory();
 
   return (
-    <Template
+    <TemplateInternet
       slice="userRequest"
       payload={
         selected.id
@@ -66,7 +59,6 @@ function Component() {
               //   value: el.id,
               //   label: el.name,
               // })),
-              status: selected.category === 1 ? "wfa" : "wfp", 
             }
           : userRequestPayload
       }
@@ -77,11 +69,11 @@ function Component() {
         status: values.category === 1 ? "wfa" : "wfp",
         attachments: [values.attachments],
       })}
-      add={(data) => {
+      edit={(data) => {
         delete data[undefined];
         delete data['category_label'];
         delete data['sub_category_label'];
-        dispatch(createUserRequest(data, history))
+        dispatch(editUserRequest(data, history, selected.id))
       }}
       renderChild={(props) => {
         const { setFieldValue, values, errors } = props;
@@ -134,7 +126,7 @@ function Component() {
             />
             <Input
               {...props}
-              type="files"
+              type="file"
               label="Attachment"
               name="attachments"
             />

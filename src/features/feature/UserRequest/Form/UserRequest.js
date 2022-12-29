@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 
-import Template from "./components/TemplateInternet";
+import TemplateInternet from "../../../form/components/TemplateInternet";
 import { Form } from "formik";
-import Input from "./input";
-import SubmitButton from "./components/SubmitButton";
+import Input from "../../../form/input";
+import SubmitButton from "../../../form/components/SubmitButton";
 
 import { RiLightbulbLine, RiCalendarEventLine } from "react-icons/ri"
-import { createUserRequest } from "../slices/userRequest";
+import { createUserRequest } from "../../../slices/userRequest";
 
 const userRequestPayload = {
   category: "",
@@ -53,7 +53,7 @@ function Component() {
   let history = useHistory();
 
   return (
-    <Template
+    <TemplateInternet
       slice="userRequest"
       payload={
         selected.id
