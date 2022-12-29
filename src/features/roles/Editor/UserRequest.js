@@ -1,10 +1,10 @@
 import React from "react";
 import { useRouteMatch, Switch, Route } from "react-router-dom";
 
-import List from "../../list/UserRequest";
-import Add from "../../form/UserRequest";
-import Edit from "../../form/UserRequestEdit";
-import Details from "../../details/UserRequest";
+import List from "../../feature/UserRequest/List/UserRequest";
+import Add from "../../feature/UserRequest/Form/UserRequest";
+import Edit from "../../feature/UserRequest/Form/UserRequestEdit";
+import Details from "../../feature/UserRequest/Detail";
 
 function Component() {
   let { path } = useRouteMatch();
