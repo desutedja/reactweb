@@ -1,14 +1,20 @@
 import React from "react";
 import { Badge } from "reactstrap";
 
-function Component({ color, children, minWidth, paddingTop, paddingBottom }) {
+function Component({
+  color,
+  children,
+  minWidth,
+  padding,
+  borderRadius,
+}) {
   return (
     <h5 style={{ marginBottom: "0" }}>
       <Badge
         style={{
           minWidth: minWidth,
-          paddingTop: paddingTop,
-          paddingBottom: paddingBottom,
+          padding: padding,
+          borderRadius: borderRadius,
         }}
         pill
         color={color}
