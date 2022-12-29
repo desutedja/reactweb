@@ -202,6 +202,21 @@ export const voucherSchema = Yup.object().shape({
   building_management_id: NumberOptional,
 });
 
+export const voucherSchemaV2 = Yup.object().shape({
+  voucher_name: Text,
+  category: Text,
+  type: Text,
+  target_user: Text,
+  discount: Number,
+  discount_type: Text,
+  minimum_transaction: Text,
+  total_voucher: Text,
+  max_voucher_peruser: Text,
+  start_date: Text,
+  expired_date: Text,
+  remark: Text,
+});
+
 export const providerSchema = Yup.object().shape({
   provider_name: Text,
   image: Text,
