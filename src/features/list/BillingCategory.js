@@ -20,13 +20,16 @@ import {
   downloadBillingCategory,
   setSelectedItem,
   setSelected,
+  refresh,
+  stopAsync,
 } from "../slices/billing";
 import { endpointAdmin, endpointBilling } from "../../settings";
 import { toSentenceCase, toMoney } from "../../utils";
-import { get, post } from "../slice";
+import { get, getFile, post, setInfo } from "../slice";
 
 import Template from "./components/Template";
 import UploadModal from "../../components/UploadModal";
+import Modal from "../../components/Modal";
 import ModalWizard from "../../components/ModalWizard";
 import ButtonWizard from "../../components/ButtonWizard";
 
@@ -41,12 +44,66 @@ function Component({ view, canAdd }) {
 
   const [limit, setLimit] = useState(5);
   const [upload, setUpload] = useState(false);
+  const [download, setDownload] = useState(false);
   const [openWizard, setOpenWizard] = useState(false);
   const [wizardStep, setWizardStep] = useState(1);
+  const [buildingRelease, setBuildingRelease] = useState("");
+  const [buildingList, setBuildingList] = useState("");
 
   let dispatch = useDispatch();
   let history = useHistory();
   let { url } = useRouteMatch();
+
+  const yearnow = new Date().getFullYear();
+  const years = [];
+
+  for (let i = yearnow - 1; i <= yearnow + 1; i++) {
+    years.push({ value: i, label: i });
+  }
+
+  const [year, setYear] = useState(yearnow);
+
+  const monthnow = new Date().getMonth();
+  const months = [
+    { value: 1, label: "January" },
+    { value: 2, label: "February" },
+    { value: 3, label: "March" },
+    { value: 4, label: "April" },
+    { value: 5, label: "May" },
+    { value: 6, label: "June" },
+    { value: 7, label: "July" },
+    { value: 8, label: "August" },
+    { value: 9, label: "September" },
+    { value: 10, label: "October" },
+    { value: 11, label: "November" },
+    { value: 12, label: "December" },
+  ];
+
+  const [month, setMonth] = useState(monthnow + 1);
+
+  useEffect(() => {
+    dispatch(
+      get(
+        endpointAdmin +
+          "/building" +
+          "?limit=" +
+          9999 +
+          "&page=1" +
+          "&search=" +
+          search,
+        (res) => {
+          let data = res.data.data.items;
+
+          let formatted = data.map((el) => ({
+            label: el.name,
+            value: el.id,
+          }));
+
+          setBuildingList(formatted);
+        }
+      )
+    );
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(
@@ -936,6 +993,82 @@ function Component({ view, canAdd }) {
         uploadDataName="file_upload"
         resultComponent={uploadResult}
       />
+      <Modal
+        isOpen={download}
+        toggle={() => {
+          setDownload(false);
+        }}
+        title="Download Billing Category"
+        okLabel={"Download"}
+        onClick={() => {
+          dispatch(
+            getFile(
+              endpointBilling +
+                "/management/billing/unit/category/v2?page=1&limit=9999999&sort_field=created_on&sort_type=DESC" +
+                "&building_id=" +
+                buildingRelease +
+                "&search=" +
+                search +
+                "&month=" +
+                month +
+                "&year=" +
+                year +
+                "&export=true",
+              "billing_category.csv",
+              (res) => {
+                dispatch(
+                  setInfo({
+                    color: "success",
+                    message: `Billing category has been downloaded.`,
+                  })
+                );
+                // resultComponent ? setOpenRes(true) : toggle();
+              },
+              (err) => {
+                dispatch(
+                  setInfo({
+                    color: "error",
+                    message: `Error to download.`,
+                  })
+                );
+                console.log("error");
+              }
+            )
+          );
+
+          dispatch(refresh());
+          dispatch(stopAsync());
+          setDownload(false);
+        }}
+      >
+        <Input
+          label="Building"
+          inputValue={buildingRelease}
+          type="select"
+          options={buildingList}
+          setInputValue={setBuildingRelease}
+          title="Building List"
+          // hidden={role !== "sa"}
+        />
+
+        <Input
+          label="Month"
+          inputValue={month}
+          type="select"
+          options={months}
+          setInputValue={setMonth}
+          title="Month List"
+        />
+
+        <Input
+          label="Year"
+          inputValue={year}
+          type="select"
+          options={years}
+          setInputValue={setYear}
+          title="Year List"
+        />
+      </Modal>
       <Template
         pagetitle="Billing List Category"
         title="Category"
@@ -1003,7 +1136,8 @@ function Component({ view, canAdd }) {
                   label="Download.csv"
                   icon={<FiDownload />}
                   onClick={() =>
-                    dispatch(downloadBillingCategory(search, building))
+                    // dispatch(downloadBillingCategory(search, building))
+                    setDownload(true)
                   }
                 />,
               ]
