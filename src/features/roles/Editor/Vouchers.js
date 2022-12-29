@@ -1,9 +1,16 @@
 import React from "react";
 import { useRouteMatch, Switch, Route } from "react-router-dom";
 
-import List from "../../list/Vouchers";
-import Add from "../../form/Vouchers";
-import Details from "../../details/Vouchers";
+// V1
+// import List from "../../list/Vouchers";
+// import Add from "../../form/Vouchers";
+// import Details from "../../details/Vouchers";
+
+// V2
+import List from "../../feature/Vouchers/List/Vouchers";
+import Add from "../../feature/Vouchers/Form/Vouchers";
+import Details from "../../feature/Vouchers/Detail/index";
+
 
 function Component() {
   let { path } = useRouteMatch();
