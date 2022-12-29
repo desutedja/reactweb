@@ -11,6 +11,7 @@ import {
   FiFile,
   FiCalendar,
   FiBell,
+  FiUserCheck,
 } from "react-icons/fi";
 import {
   RiStore2Line,
@@ -20,6 +21,8 @@ import {
   RiAdvertisementLine,
   RiCoupon2Line,
   RiBankCardLine,
+  RiSurveyLine,
+  RiFileTextLine,
 } from "react-icons/ri";
 import { FaIdBadge } from "react-icons/fa";
 
@@ -58,7 +61,8 @@ const menu = [
     icon: <FiBarChart2 className="MenuItem-icon" />,
     label: "Dashboard",
     path: "/dashboard",
-    subpaths: ["/building", "/transaction", "/task", "/advertisement", "/CCTV"],
+    // subpaths: ["/building", "/transaction", "/task", "/advertisement", "/CCTV"],
+    subpaths: ["/building", "/transaction", "/task", "/advertisement"],
     component: <Dashboard />,
     group: "Overview",
   },
@@ -92,15 +96,15 @@ const menu = [
     component: <Staff />,
   },
   {
-    icon: <RiTaskLine className="MenuItem-icon" />,
+    icon: <RiSurveyLine className="MenuItem-icon" />,
     label: "Task",
     path: "/task",
     component: <Task />,
   },
   {
-    icon: <FiUsers className="MenuItem-icon" />,
-    label: "Basic User Request",
-    path: "/basicuserrequest",
+    icon: <FiUserCheck className="MenuItem-icon" />,
+    label: "Request Premium",
+    path: "/request premium user",
     component: <RequestPremium />,
     separator: true,
   },
@@ -123,7 +127,7 @@ const menu = [
   // },
 
   {
-    icon: <RiTaskLine className="MenuItem-icon" />,
+    icon: <RiFileTextLine className="MenuItem-icon" />,
     label: "Catat Meter",
     path: "/catatmeter",
     component: <CatatMeter />,

@@ -80,8 +80,8 @@ const menu = [
   },
   {
     icon: <FiUsers className="MenuItem-icon" />,
-    label: "Basic User Request",
-    path: "/basicuserrequest",
+    label: "Request Premium User",
+    path: "/request premium user",
     component: <RequestPremium />,
   },
   {
