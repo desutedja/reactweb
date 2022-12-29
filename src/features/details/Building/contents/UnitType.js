@@ -158,7 +158,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
         data={unit_type.items}
         loading={loading}
         pageCount={unit_type.total_pages}
-        totalItems={unit_type.items.length}
+        totalItems={unit_type.total_items}
         fetchData={useCallback(
           (pageIndex, pageSize, search) => {
             dispatch(
