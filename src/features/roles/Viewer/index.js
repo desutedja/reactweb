@@ -11,7 +11,8 @@ import {
 import {
     RiStore2Line, RiTaskLine,
     RiBuilding2Line, RiCustomerService2Line,
-    RiAdvertisementLine
+    RiAdvertisementLine,
+    RiSurveyLine
 } from "react-icons/ri";
 
 import Dashboard from './Dashboard';
@@ -82,7 +83,7 @@ const menu = [
         component: <Staff />,
     },
     {
-        icon: <RiTaskLine className="MenuItem-icon" />,
+        icon: <RiSurveyLine className="MenuItem-icon" />,
         label: "Task",
         path: "/task",
         component: <Task />,
