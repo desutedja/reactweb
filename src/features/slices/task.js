@@ -27,8 +27,8 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.filtered_item;
-      state.total_pages = data.filtered_page;
+      state.total_items = data.total_items;
+      state.total_pages = data.total_page;
     },
     setSelected: (state, action) => {
       state.selected = action.payload;
@@ -109,6 +109,74 @@ export const downloadTasks = (
   );
 };
 
+// V1 START
+
+// export const getTask = (
+//   pageIndex,
+//   pageSize,
+//   search = "",
+//   type,
+//   prio,
+//   status,
+//   building,
+//   unit,
+//   createdStart = "",
+//   createdEnd = "",
+//   resolvedStart = "",
+//   resolvedEnd = ""
+// ) => (dispatch) => {
+//   dispatch(startAsync());
+
+//   dispatch(
+//     get(
+//       taskEndpoint +
+//         "/list" +
+//         "?page=" +
+//         (pageIndex + 1) +
+//         "&limit=" +
+//         pageSize +
+//         "&search=" +
+//         search +
+//         //'&sort_field=created_on' +
+//         "&sort_type=DESC" +
+//         "&type=" +
+//         type +
+//         "&priority=" +
+//         prio +
+//         "&requester_building_id=" +
+//         building +
+//         "&requester_unit_id=" +
+//         unit +
+//         "&sort_field=created_on" +
+//         "&created_start_date=" +
+//         createdStart +
+//         "T00:00:00" +
+//         "&created_end_date=" +
+//         createdEnd +
+//         "T23:59:59" +
+//         "&resolved_start_date=" +
+//         (resolvedStart ? resolvedStart + "T00:00:00" : "") +
+//         "&resolved_end_date=" +
+//         (resolvedEnd ? resolvedEnd + "T23:59:59" : "") +
+//         "&status=" +
+//         status,
+
+//       (res) => {
+//         dispatch(setData(res.data.data));
+
+//         dispatch(stopAsync());
+//       },
+//       (err) => {
+//         dispatch(stopAsync());
+//       }
+//     )
+//   );
+// };
+
+// V1 END
+
+// V2 START
+
 export const getTask = (
   pageIndex,
   pageSize,
@@ -120,23 +188,19 @@ export const getTask = (
   unit,
   createdStart = "",
   createdEnd = "",
-  resolvedStart = "",
-  resolvedEnd = ""
 ) => (dispatch) => {
   dispatch(startAsync());
 
   dispatch(
     get(
       taskEndpoint +
-        "/list" +
+        "/listTask" +
         "?page=" +
         (pageIndex + 1) +
         "&limit=" +
         pageSize +
         "&search=" +
         search +
-        //'&sort_field=created_on' +
-        "&sort_type=DESC" +
         "&type=" +
         type +
         "&priority=" +
@@ -152,10 +216,6 @@ export const getTask = (
         "&created_end_date=" +
         createdEnd +
         "T23:59:59" +
-        "&resolved_start_date=" +
-        (resolvedStart ? resolvedStart + "T00:00:00" : "") +
-        "&resolved_end_date=" +
-        (resolvedEnd ? resolvedEnd + "T23:59:59" : "") +
         "&status=" +
         status,
 
@@ -170,6 +230,8 @@ export const getTask = (
     )
   );
 };
+
+// V2 END
 
 export const resolveTask = (data) => (dispatch) => {
   dispatch(startAsync());
