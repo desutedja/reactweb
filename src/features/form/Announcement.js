@@ -468,11 +468,6 @@ function Component() {
                 label="Description"
                 placeholder="Insert Announcement Description"
               />
-              <Input
-                {...props}
-                type="hidden"
-                name="modified_on"
-              />
               <SubmitButton loading={loading} errors={errors} />
             </Form>
           );
