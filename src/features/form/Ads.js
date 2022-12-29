@@ -287,6 +287,7 @@ function Component() {
                 name="content_image"
                 type="file"
                 accept="image/*"
+                hint="For maximum result, preferred ads banner size is 1280x768 pixel and 1:1 scale for ads pop-up."
               />
             )}
             {values.content_type === "video" && (
