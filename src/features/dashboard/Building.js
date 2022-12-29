@@ -209,23 +209,53 @@ function Component() {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, range, tower]);
+  // V1
+  // useEffect(() => {
+  //   setLoading(true);
+  //   dispatch(
+  //     get(
+  //       endpointBilling +
+  //         "/management/billing/statistic?building_id=" +
+  //         buildingName +
+  //         "&tower=" +
+  //         tower,
+  //       (res) => {
+  //         setLoading(false);
+  //         setBillingData(res.data.data);
+  //       }
+  //     )
+  //   );
+  // }, [dispatch, tower, buildingName]);
 
+  // V2
   useEffect(() => {
     setLoading(true);
     dispatch(
       get(
         endpointBilling +
-          "/management/billing/statistic?building_id=" +
+          "/management/billing/statisticv2?building_id=" +
           buildingName +
-          "&tower=" +
-          tower,
+          "&building_section=" +
+          tower +
+          "&filter=" +
+          (periode !== "periode" ? "all" : periode) +
+          "&start_date_from=" +
+          startDateFrom +
+          "&end_date_from=" +
+          endDateFrom +
+          "&start_date_to=" +
+          startDateTo +
+          "&end_date_to=" +
+          endDateTo +
+          "&check=" +
+          check,
         (res) => {
           setLoading(false);
           setBillingData(res.data.data);
         }
       )
     );
-  }, [dispatch, tower, buildingName]);
+  }, [dispatch, tower, buildingName, periode, check, refreshToggle]);
 
   useEffect(() => {
     dispatch(
@@ -1663,11 +1693,11 @@ function Component() {
                               </div>
                               <div className="col">
                                 <div className="text-nowrap ml-3">
-                                  Online Staff
+                                  Total Staff
                                 </div>
                                 <AnimatedNumber
                                   className="h2 font-weight-bold black ml-3"
-                                  value={staffStatistic.num_of_login_staff}
+                                  value={staffStatistic.registered_staff}
                                   // value={staffData.num_of_login_staff}
                                   formatValue={formatValue}
                                 />
@@ -1694,7 +1724,7 @@ function Component() {
                                     <AnimatedNumber
                                       className="font-weight-bold black ml-2"
                                       value={
-                                        staffStatistic.num_of_login_staff_previous
+                                        staffStatistic.registered_staff_prev
                                       }
                                       formatValue={formatValue}
                                     />
@@ -1705,27 +1735,88 @@ function Component() {
                                     style={{ fontSize: 12 }}
                                     className="text-nowrap ml-3 text-right"
                                   >
-                                    <font style={{ color: "#52A452" }}>
-                                      {staffStatistic.num_of_login_staff <
-                                      staffStatistic.num_of_login_staff_previous
-                                        ? decimal(
-                                            ((staffStatistic.num_of_login_staff -
-                                              staffStatistic.num_of_login_staff_previous) /
-                                              staffStatistic.num_of_login_staff_previous) *
-                                              100
-                                          )
-                                        : staffStatistic.num_of_login_staff >
-                                            staffStatistic.num_of_login_staff_previous &&
-                                          staffStatistic.num_of_login_staff_previous !==
+                                    {staffStatistic.registered_staff !== 0 &&
+                                    periode !== "periode" ? (
+                                      <font
+                                        style={{
+                                          color: `${
+                                            ((staffStatistic.registered_staff -
+                                              staffStatistic.registered_staff_prev) /
+                                              staffStatistic.registered_staff_prev) *
+                                              100 <
                                             0
-                                        ? decimal(
-                                            (unitStatistic.registered_unit_previous /
-                                              staffStatistic.num_of_login_staff) *
-                                              100
-                                          )
-                                        : 0}
-                                      %
-                                    </font>
+                                              ? "#E12029"
+                                              : "#52A452"
+                                          }`,
+                                        }}
+                                      >
+                                        {((staffStatistic.registered_staff -
+                                          staffStatistic.registered_staff_prev) /
+                                          staffStatistic.registered_staff_prev) *
+                                          100 <
+                                        0 ? (
+                                          <FiChevronUp
+                                            style={{
+                                              transform: "rotate(180deg)",
+                                              marginBottom: "6px",
+                                            }}
+                                          />
+                                        ) : ((staffStatistic.registered_staff -
+                                            staffStatistic.registered_staff_prev) /
+                                            staffStatistic.registered_staff_prev) *
+                                            100 >
+                                          0 ? (
+                                          <FiChevronUp
+                                            style={{ marginBottom: "6px" }}
+                                          />
+                                        ) : (
+                                          []
+                                        )}
+                                        {((staffStatistic.registered_staff -
+                                          staffStatistic.registered_staff_prev) /
+                                          staffStatistic.registered_staff_prev) *
+                                          100 <
+                                        0
+                                          ? " " +
+                                            decimal(
+                                              ((staffStatistic.registered_staff -
+                                                staffStatistic.registered_staff_prev) /
+                                                staffStatistic.registered_staff_prev) *
+                                                100 *
+                                                -1
+                                            ) +
+                                            "%" +
+                                            " ( -" +
+                                            (staffStatistic.registered_staff -
+                                              staffStatistic.registered_staff_prev) *
+                                              -1 +
+                                            " )"
+                                          : " " +
+                                            decimal(
+                                              ((staffStatistic.registered_staff -
+                                                staffStatistic.registered_staff_prev) /
+                                                staffStatistic.registered_staff_prev) *
+                                                100
+                                            ) +
+                                            "%" +
+                                            " ( +" +
+                                            (staffStatistic.registered_staff -
+                                              staffStatistic.registered_staff_prev) +
+                                            " )"}
+                                      </font>
+                                    ) : (
+                                      <font style={{ color: "#52A452" }}>
+                                        0%
+                                      </font>
+                                    )}
+                                    {/* <font style={{color:"#52A452"}}>
+                                      {
+                                      staffStatistic.registered_staff !== 0 ?
+                                      decimal((((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100)
+                                      :
+                                      0
+                                      }%
+                                    </font> */}
                                   </div>
                                 </div>
                               </div>
@@ -1898,8 +1989,7 @@ function Component() {
                                 </div>
                                 <AnimatedNumber
                                   className="h2 font-weight-bold black ml-3"
-                                  // value={staffStatistic.num_of_login_staff}
-                                  value={0}
+                                  value={residentStatistic.open_po}
                                   formatValue={formatValue}
                                 />
                               </div>
@@ -1924,7 +2014,7 @@ function Component() {
                                     </font>
                                     <AnimatedNumber
                                       className="font-weight-bold black ml-2"
-                                      value={0}
+                                      value={residentStatistic.open_po_prev}
                                       formatValue={formatValue}
                                     />
                                   </div>
@@ -1934,15 +2024,87 @@ function Component() {
                                     style={{ fontSize: 12 }}
                                     className="text-nowrap ml-3 text-right"
                                   >
-                                    <font style={{ color: "#52A452" }}>
-                                      {
-                                        // unitStatistic.registered_unit_previous !== 0 ?
-                                        // decimal((((unitStatistic.registered_unit)-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100)
-                                        // :
+                                    {residentStatistic.open_po_prev !== 0 ? (
+                                      <font
+                                        style={{
+                                          color: `${
+                                            ((residentStatistic.open_po -
+                                              residentStatistic.open_po_prev) /
+                                              residentStatistic.open_po_prev) *
+                                              100 <
+                                            0
+                                              ? "#E12029"
+                                              : "#52A452"
+                                          }`,
+                                        }}
+                                      >
+                                        {((residentStatistic.open_po -
+                                          residentStatistic.open_po_prev) /
+                                          residentStatistic.open_po_prev) *
+                                          100 <
+                                        0 ? (
+                                          <FiChevronUp
+                                            style={{
+                                              transform: "rotate(180deg)",
+                                              marginBottom: "6px",
+                                            }}
+                                          />
+                                        ) : ((residentStatistic.open_po -
+                                            residentStatistic.open_po_prev) /
+                                            residentStatistic.open_po_prev) *
+                                            100 >
+                                          0 ? (
+                                          <FiChevronUp
+                                            style={{ marginBottom: "6px" }}
+                                          />
+                                        ) : (
+                                          []
+                                        )}
+                                        {((residentStatistic.open_po -
+                                          residentStatistic.open_po_prev) /
+                                          residentStatistic.open_po_prev) *
+                                          100 <
                                         0
-                                      }
-                                      %
-                                    </font>
+                                          ? " " +
+                                            decimal(
+                                              ((residentStatistic.open_po -
+                                                residentStatistic.open_po_prev) /
+                                                residentStatistic.open_po_prev) *
+                                                100 *
+                                                -1
+                                            ) +
+                                            "%" +
+                                            " ( -" +
+                                            (residentStatistic.open_po -
+                                              residentStatistic.open_po_prev) *
+                                              -1 +
+                                            " )"
+                                          : " " +
+                                            decimal(
+                                              ((residentStatistic.open_po -
+                                                residentStatistic.open_po_prev) /
+                                                residentStatistic.open_po_prev) *
+                                                100
+                                            ) +
+                                            "%" +
+                                            " ( +" +
+                                            (residentStatistic.open_po -
+                                              residentStatistic.open_po_prev) +
+                                            " )"}
+                                      </font>
+                                    ) : (
+                                      <font style={{ color: "#52A452" }}>
+                                        0%
+                                      </font>
+                                    )}
+                                    {/* <font style={{color:"#52A452"}}>
+                                        {
+                                        staffStatistic.registered_staff !== 0 ?
+                                        decimal((((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100)
+                                        :
+                                        0
+                                        }%
+                                      </font> */}
                                   </div>
                                 </div>
                               </div>
@@ -1969,8 +2131,7 @@ function Component() {
                                 </div>
                                 <AnimatedNumber
                                   className="h2 font-weight-bold black ml-3"
-                                  // value={staffStatistic.num_of_login_staff}
-                                  value={0}
+                                  value={residentStatistic.active_open_po}
                                   formatValue={formatValue}
                                 />
                               </div>
@@ -1995,7 +2156,9 @@ function Component() {
                                     </font>
                                     <AnimatedNumber
                                       className="font-weight-bold black ml-2"
-                                      value={0}
+                                      value={
+                                        residentStatistic.active_open_po_prev
+                                      }
                                       formatValue={formatValue}
                                     />
                                   </div>
@@ -2005,15 +2168,88 @@ function Component() {
                                     style={{ fontSize: 12 }}
                                     className="text-nowrap ml-3 text-right"
                                   >
-                                    <font style={{ color: "#52A452" }}>
-                                      {
-                                        // unitStatistic.registered_unit_previous !== 0 ?
-                                        // decimal((((unitStatistic.registered_unit)-unitStatistic.registered_unit_previous)/unitStatistic.registered_unit_previous)*100)
-                                        // :
+                                    {residentStatistic.active_open_po_prev !==
+                                    0 ? (
+                                      <font
+                                        style={{
+                                          color: `${
+                                            ((residentStatistic.active_open_po -
+                                              residentStatistic.active_open_po_prev) /
+                                              residentStatistic.active_open_po_prev) *
+                                              100 <
+                                            0
+                                              ? "#E12029"
+                                              : "#52A452"
+                                          }`,
+                                        }}
+                                      >
+                                        {((residentStatistic.active_open_po -
+                                          residentStatistic.active_open_po_prev) /
+                                          residentStatistic.active_open_po_prev) *
+                                          100 <
+                                        0 ? (
+                                          <FiChevronUp
+                                            style={{
+                                              transform: "rotate(180deg)",
+                                              marginBottom: "6px",
+                                            }}
+                                          />
+                                        ) : ((residentStatistic.active_open_po -
+                                            residentStatistic.active_open_po_prev) /
+                                            residentStatistic.active_open_po_prev) *
+                                            100 >
+                                          0 ? (
+                                          <FiChevronUp
+                                            style={{ marginBottom: "6px" }}
+                                          />
+                                        ) : (
+                                          []
+                                        )}
+                                        {((residentStatistic.active_open_po -
+                                          residentStatistic.active_open_po_prev) /
+                                          residentStatistic.active_open_po_prev) *
+                                          100 <
                                         0
-                                      }
-                                      %
-                                    </font>
+                                          ? " " +
+                                            decimal(
+                                              ((residentStatistic.active_open_po -
+                                                residentStatistic.active_open_po_prev) /
+                                                residentStatistic.active_open_po_prev) *
+                                                100 *
+                                                -1
+                                            ) +
+                                            "%" +
+                                            " ( -" +
+                                            (residentStatistic.active_open_po -
+                                              residentStatistic.active_open_po_prev) *
+                                              -1 +
+                                            " )"
+                                          : " " +
+                                            decimal(
+                                              ((residentStatistic.active_open_po -
+                                                residentStatistic.active_open_po_prev) /
+                                                residentStatistic.active_open_po_prev) *
+                                                100
+                                            ) +
+                                            "%" +
+                                            " ( +" +
+                                            (residentStatistic.active_open_po -
+                                              residentStatistic.active_open_po_prev) +
+                                            " )"}
+                                      </font>
+                                    ) : (
+                                      <font style={{ color: "#52A452" }}>
+                                        0%
+                                      </font>
+                                    )}
+                                    {/* <font style={{color:"#52A452"}}>
+                                        {
+                                        staffStatistic.registered_staff !== 0 ?
+                                        decimal((((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100)
+                                        :
+                                        0
+                                        }%
+                                      </font> */}
                                   </div>
                                 </div>
                               </div>
@@ -2517,152 +2753,6 @@ function Component() {
                             )}
                           </div>
                         </div>
-                        <div className="col">
-                          <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
-                            <div
-                              className="row no-gutters align-items-center"
-                              style={{ minWidth: 220 }}
-                            >
-                              <div className="col-auto">
-                                <div className="w-auto">
-                                  <img
-                                    alt=""
-                                    src={require("./../../assets/Online Staff 1.jpg")}
-                                  />
-                                </div>
-                              </div>
-                              <div className="col">
-                                <div className="text-nowrap ml-3">
-                                  Total Staff
-                                </div>
-                                <AnimatedNumber
-                                  className="h2 font-weight-bold black ml-3"
-                                  value={staffStatistic.registered_staff}
-                                  // value={staffData.num_of_login_staff}
-                                  formatValue={formatValue}
-                                />
-                              </div>
-                            </div>
-                            {periode !== "all" && (
-                              <div className="row no-gutters align-items-center mt-2">
-                                <div className="col-auto">
-                                  <div
-                                    style={{ fontSize: 12 }}
-                                    className="text-nowrap"
-                                  >
-                                    <font style={{ color: "#C4C4C4" }}>
-                                      vs
-                                      {periode === "year"
-                                        ? " Tahun"
-                                        : periode === "month"
-                                        ? " Bulan"
-                                        : periode === "day"
-                                        ? " Hari"
-                                        : " " + toSentenceCase(periode)}{" "}
-                                      Lalu:
-                                    </font>
-                                    <AnimatedNumber
-                                      className="font-weight-bold black ml-2"
-                                      value={
-                                        staffStatistic.registered_staff_prev
-                                      }
-                                      formatValue={formatValue}
-                                    />
-                                  </div>
-                                </div>
-                                <div className="col">
-                                  <div
-                                    style={{ fontSize: 12 }}
-                                    className="text-nowrap ml-3 text-right"
-                                  >
-                                    {staffStatistic.registered_staff !== 0 &&
-                                    periode !== "periode" ? (
-                                      <font
-                                        style={{
-                                          color: `${
-                                            ((staffStatistic.registered_staff -
-                                              staffStatistic.registered_staff_prev) /
-                                              staffStatistic.registered_staff_prev) *
-                                              100 <
-                                            0
-                                              ? "#E12029"
-                                              : "#52A452"
-                                          }`,
-                                        }}
-                                      >
-                                        {((staffStatistic.registered_staff -
-                                          staffStatistic.registered_staff_prev) /
-                                          staffStatistic.registered_staff_prev) *
-                                          100 <
-                                        0 ? (
-                                          <FiChevronUp
-                                            style={{
-                                              transform: "rotate(180deg)",
-                                              marginBottom: "6px",
-                                            }}
-                                          />
-                                        ) : ((staffStatistic.registered_staff -
-                                            staffStatistic.registered_staff_prev) /
-                                            staffStatistic.registered_staff_prev) *
-                                            100 >
-                                          0 ? (
-                                          <FiChevronUp
-                                            style={{ marginBottom: "6px" }}
-                                          />
-                                        ) : (
-                                          []
-                                        )}
-                                        {((staffStatistic.registered_staff -
-                                          staffStatistic.registered_staff_prev) /
-                                          staffStatistic.registered_staff_prev) *
-                                          100 <
-                                        0
-                                          ? " " +
-                                            decimal(
-                                              ((staffStatistic.registered_staff -
-                                                staffStatistic.registered_staff_prev) /
-                                                staffStatistic.registered_staff_prev) *
-                                                100 *
-                                                -1
-                                            ) +
-                                            "%" +
-                                            " ( -" +
-                                            (staffStatistic.registered_staff -
-                                              staffStatistic.registered_staff_prev) *
-                                              -1 +
-                                            " )"
-                                          : " " +
-                                            decimal(
-                                              ((staffStatistic.registered_staff -
-                                                staffStatistic.registered_staff_prev) /
-                                                staffStatistic.registered_staff_prev) *
-                                                100
-                                            ) +
-                                            "%" +
-                                            " ( +" +
-                                            (staffStatistic.registered_staff -
-                                              staffStatistic.registered_staff_prev) +
-                                            " )"}
-                                      </font>
-                                    ) : (
-                                      <font style={{ color: "#52A452" }}>
-                                        0%
-                                      </font>
-                                    )}
-                                    {/* <font style={{color:"#52A452"}}>
-                                        {
-                                        staffStatistic.registered_staff !== 0 ?
-                                        decimal((((staffStatistic.registered_staff)-staffStatistic.registered_staff_prev)/staffStatistic.registered_staff_prev)*100)
-                                        :
-                                        0
-                                        }%
-                                      </font> */}
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </div>
                       </div>
                     )}
                   </>,
@@ -2722,6 +2812,8 @@ function Component() {
                             paddingTop: 10,
                             paddingBottom: 10,
                             borderBottom: "1px solid #f3f3fa",
+                            minHeight: 76,
+                            maxHeight: 76,
                           }}
                         >
                           <div className="row">
@@ -2730,22 +2822,120 @@ function Component() {
                             </div>
                             <div className="col BigNumber2 text-right">
                               {" "}
-                              {typeof billingData.total_settle_amount !==
+                              {typeof billingData.total_paid_amount !==
                                 "undefined" &&
-                              billingData.total_settle_amount !== null
+                              billingData.total_paid_amount !== null
                                 ? formatValuetoMoney(
-                                    billingData.total_settle_amount
+                                    billingData.total_paid_amount
                                   )
                                 : 0}
                             </div>
                           </div>
-                          {/* <div className="row">
-                        <div className="col">vs Tahun Lalu: <br /><b>{toMoney(billingData.total_settle_amount)}</b>
-                        </div>
-                        <div className="col text-right"> 
-                          10.33%
-                        </div>
-                      </div> */}
+                          {periode !== "all" && (
+                            <div
+                              className="row"
+                              style={{ alignItems: "center" }}
+                            >
+                              <div className="col">
+                                <div
+                                  style={{ fontSize: 12 }}
+                                  className="text-nowrap"
+                                >
+                                  <font style={{ color: "#C4C4C4" }}>
+                                    vs
+                                    {periode === "year"
+                                      ? " Tahun"
+                                      : periode === "month"
+                                      ? " Bulan"
+                                      : periode === "day"
+                                      ? " Hari"
+                                      : " " + toSentenceCase(periode)}{" "}
+                                    Lalu:
+                                  </font>
+                                  <br />
+                                  <AnimatedNumber
+                                    className="font-weight-bold black"
+                                    value={billingData.total_paid_amount_prev}
+                                    formatValue={formatValuetoMoney}
+                                  />
+                                </div>
+                              </div>
+                              <div className="col text-right">
+                                {billingData.total_paid_amount_prev !== 0 &&
+                                periode === "periode" ? (
+                                  <font
+                                    style={{
+                                      color: `${
+                                        ((billingData.total_paid_amount -
+                                          billingData.total_paid_amount_prev) /
+                                          billingData.total_paid_amount_prev) *
+                                          100 <
+                                        0
+                                          ? "#E12029"
+                                          : "#52A452"
+                                      }`,
+                                    }}
+                                  >
+                                    {((billingData.total_paid_amount -
+                                      billingData.total_paid_amount_prev) /
+                                      billingData.total_paid_amount_prev) *
+                                      100 <
+                                    0 ? (
+                                      <FiChevronUp
+                                        style={{
+                                          transform: "rotate(180deg)",
+                                          marginBottom: "6px",
+                                        }}
+                                      />
+                                    ) : ((billingData.total_paid_amount -
+                                        billingData.total_paid_amount_prev) /
+                                        billingData.total_paid_amount_prev) *
+                                        100 >
+                                      0 ? (
+                                      <FiChevronUp
+                                        style={{ marginBottom: "6px" }}
+                                      />
+                                    ) : (
+                                      []
+                                    )}
+                                    {((billingData.total_paid_amount -
+                                      billingData.total_paid_amount_prev) /
+                                      billingData.total_paid_amount_prev) *
+                                      100 <
+                                    0
+                                      ? " " +
+                                        decimal(
+                                          ((billingData.total_paid_amount -
+                                            billingData.total_paid_amount_prev) /
+                                            billingData.total_paid_amount_prev) *
+                                            100 *
+                                            -1
+                                        ) +
+                                        "%" +
+                                        " ( -" +
+                                        (billingData.total_paid_amount -
+                                          billingData.total_paid_amount_prev) *
+                                          -1 +
+                                        " )"
+                                      : " " +
+                                        decimal(
+                                          ((billingData.total_paid_amount -
+                                            billingData.total_paid_amount_prev) /
+                                            billingData.total_paid_amount_prev) *
+                                            100
+                                        ) +
+                                        "%" +
+                                        " ( +" +
+                                        (billingData.total_paid_amount -
+                                          billingData.total_paid_amount_prev) +
+                                        " )"}
+                                  </font>
+                                ) : (
+                                  <font style={{ color: "#52A452" }}>0%</font>
+                                )}
+                              </div>
+                            </div>
+                          )}
                           {/*                         
                         {
                             typeof billingData.total_paid_amount !== 'undefined' && billingData.total_paid_amount !== null ?
@@ -2767,70 +2957,8 @@ function Component() {
                             paddingTop: 10,
                             paddingBottom: 10,
                             borderBottom: "1px solid #f3f3fa",
-                          }}
-                        >
-                          <div className="row">
-                            <div className="col">
-                              <b>Settled Amount Billing</b>
-                            </div>
-                            <div className="col BigNumber2 text-right">
-                              {" "}
-                              {typeof billingData.total_settle_amount !==
-                                "undefined" &&
-                              billingData.total_settle_amount !== null
-                                ? formatValuetoMoney(
-                                    billingData.total_settle_amount
-                                  )
-                                : 0}
-                            </div>
-                          </div>
-                          {/* <div className="row">
-                        <div className="col">vs Tahun Lalu: <br /><b>{toMoney(billingData.total_settle_amount)}</b>
-                        </div>
-                        <div className="col text-right"> 
-                          {typeof billingData.total_settle_amount !== 'undefined' && billingData.total_settle_amount !== null ? formatValuetoMoney(billingData.total_settle_amount) : 0}
-                          10.33%
-                        </div>
-                      </div> */}
-                        </div>
-                        {auth.role === "sa" && (
-                          <div
-                            style={{
-                              paddingTop: 10,
-                              paddingBottom: 10,
-                              borderBottom: "1px solid #f3f3fa",
-                            }}
-                          >
-                            <div className="row">
-                              <div className="col">
-                                <b>Disbursed Amount Billing</b>
-                              </div>
-                              <div className="col BigNumber2 text-right">
-                                {" "}
-                                {typeof billingData.total_disburse_amount !==
-                                  "undefined" &&
-                                billingData.total_disburse_amount !== null
-                                  ? formatValuetoMoney(
-                                      billingData.total_disburse_amount
-                                    )
-                                  : 0}
-                              </div>
-                            </div>
-                            {/* <div className="row">
-                          <div className="col">vs Tahun Lalu: <br /><b>{toMoney(billingData.total_settle_amount)}</b>
-                          </div>
-                          <div className="col text-right"> 
-                            {typeof billingData.total_settle_amount !== 'undefined' && billingData.total_settle_amount !== null ? formatValuetoMoney(billingData.total_settle_amount) : 0}
-                            10.33%
-                          </div>
-                        </div> */}
-                          </div>
-                        )}
-                        <div
-                          style={{
-                            paddingTop: 10,
-                            paddingBottom: 10,
-                            borderBottom: "1px solid #f3f3fa",
+                            minHeight: 76,
+                            maxHeight: 76,
                           }}
                         >
                           <div className="row">
@@ -2848,20 +2976,398 @@ function Component() {
                                 : 0}
                             </div>
                           </div>
-                          {/* <div className="row">
-                        <div className="col">vs Tahun Lalu: <br /><b>{toMoney(billingData.total_settle_amount)}</b>
+                          {periode !== "all" && (
+                            <div
+                              className="row"
+                              style={{ alignItems: "center" }}
+                            >
+                              <div className="col">
+                                <div
+                                  style={{ fontSize: 12 }}
+                                  className="text-nowrap"
+                                >
+                                  <font style={{ color: "#C4C4C4" }}>
+                                    vs
+                                    {periode === "year"
+                                      ? " Tahun"
+                                      : periode === "month"
+                                      ? " Bulan"
+                                      : periode === "day"
+                                      ? " Hari"
+                                      : " " + toSentenceCase(periode)}{" "}
+                                    Lalu:
+                                  </font>
+                                  <br />
+                                  <AnimatedNumber
+                                    className="font-weight-bold black"
+                                    value={billingData.total_unpaid_amount_prev}
+                                    formatValue={formatValuetoMoney}
+                                  />
+                                </div>
+                              </div>
+                              <div className="col text-right">
+                                {billingData.total_unpaid_amount_prev !== 0 &&
+                                periode === "periode" ? (
+                                  <font
+                                    style={{
+                                      color: `${
+                                        ((billingData.total_unpaid_amount -
+                                          billingData.total_unpaid_amount_prev) /
+                                          billingData.total_unpaid_amount_prev) *
+                                          100 <
+                                        0
+                                          ? "#E12029"
+                                          : "#52A452"
+                                      }`,
+                                    }}
+                                  >
+                                    {((billingData.total_unpaid_amount -
+                                      billingData.total_unpaid_amount_prev) /
+                                      billingData.total_unpaid_amount_prev) *
+                                      100 <
+                                    0 ? (
+                                      <FiChevronUp
+                                        style={{
+                                          transform: "rotate(180deg)",
+                                          marginBottom: "6px",
+                                        }}
+                                      />
+                                    ) : ((billingData.total_unpaid_amount -
+                                        billingData.total_unpaid_amount_prev) /
+                                        billingData.total_unpaid_amount_prev) *
+                                        100 >
+                                      0 ? (
+                                      <FiChevronUp
+                                        style={{ marginBottom: "6px" }}
+                                      />
+                                    ) : (
+                                      []
+                                    )}
+                                    {((billingData.total_unpaid_amount -
+                                      billingData.total_unpaid_amount_prev) /
+                                      billingData.total_unpaid_amount_prev) *
+                                      100 <
+                                    0
+                                      ? " " +
+                                        decimal(
+                                          ((billingData.total_unpaid_amount -
+                                            billingData.total_unpaid_amount_prev) /
+                                            billingData.total_unpaid_amount_prev) *
+                                            100 *
+                                            -1
+                                        ) +
+                                        "%" +
+                                        " ( -" +
+                                        (billingData.total_unpaid_amount -
+                                          billingData.total_unpaid_amount_prev) *
+                                          -1 +
+                                        " )"
+                                      : " " +
+                                        decimal(
+                                          ((billingData.total_unpaid_amount -
+                                            billingData.total_unpaid_amount_prev) /
+                                            billingData.total_unpaid_amount_prev) *
+                                            100
+                                        ) +
+                                        "%" +
+                                        " ( +" +
+                                        (billingData.total_unpaid_amount -
+                                          billingData.total_unpaid_amount_prev) +
+                                        " )"}
+                                  </font>
+                                ) : (
+                                  <font style={{ color: "#52A452" }}>0%</font>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                          {/*                         
+                        {
+                            typeof billingData.total_paid_amount !== 'undefined' && billingData.total_paid_amount !== null ?
+                            //  formatValuetoMoney(billingData.total_paid_amount) 
+                        <div className="col-6 pull-right"> 
+
+                            <AnimatedNumber
+                              className="BigNumber2"
+                              value={billingData.total_paid_amount}
+                              formatValue={formatValuetoMoney}
+                            />
                         </div>
-                        <div className="col text-right"> 
-                          {typeof billingData.total_settle_amount !== 'undefined' && billingData.total_settle_amount !== null ? formatValuetoMoney(billingData.total_settle_amount) : 0}
-                          10.33%
-                        </div>
-                      </div> */}
+                            : 
+                            0
+                          } */}
                         </div>
                         <div
                           style={{
                             paddingTop: 10,
                             paddingBottom: 10,
                             borderBottom: "1px solid #f3f3fa",
+                            minHeight: 76,
+                            maxHeight: 76,
+                          }}
+                        >
+                          <div className="row">
+                            <div className="col">
+                              <b>Settled Amount Billing</b>
+                            </div>
+                            <div className="col BigNumber2 text-right">
+                              {" "}
+                              {typeof billingData.total_settle_amount !==
+                                "undefined" &&
+                              billingData.total_settle_amount !== null
+                                ? formatValuetoMoney(
+                                    billingData.total_settle_amount
+                                  )
+                                : 0}
+                            </div>
+                          </div>
+                          {periode !== "all" && (
+                            <div
+                              className="row"
+                              style={{ alignItems: "center" }}
+                            >
+                              <div className="col">
+                                <div
+                                  style={{ fontSize: 12 }}
+                                  className="text-nowrap"
+                                >
+                                  <font style={{ color: "#C4C4C4" }}>
+                                    vs
+                                    {periode === "year"
+                                      ? " Tahun"
+                                      : periode === "month"
+                                      ? " Bulan"
+                                      : periode === "day"
+                                      ? " Hari"
+                                      : " " + toSentenceCase(periode)}{" "}
+                                    Lalu:
+                                  </font>
+                                  <br />
+                                  <AnimatedNumber
+                                    className="font-weight-bold black"
+                                    value={billingData.total_settle_amount_prev}
+                                    formatValue={formatValuetoMoney}
+                                  />
+                                </div>
+                              </div>
+                              <div className="col text-right">
+                                {billingData.total_settle_amount_prev !== 0 &&
+                                periode === "periode" ? (
+                                  <font
+                                    style={{
+                                      color: `${
+                                        ((billingData.total_settle_amount -
+                                          billingData.total_settle_amount_prev) /
+                                          billingData.total_settle_amount_prev) *
+                                          100 <
+                                        0
+                                          ? "#E12029"
+                                          : "#52A452"
+                                      }`,
+                                    }}
+                                  >
+                                    {((billingData.total_settle_amount -
+                                      billingData.total_settle_amount_prev) /
+                                      billingData.total_settle_amount_prev) *
+                                      100 <
+                                    0 ? (
+                                      <FiChevronUp
+                                        style={{
+                                          transform: "rotate(180deg)",
+                                          marginBottom: "6px",
+                                        }}
+                                      />
+                                    ) : ((billingData.total_settle_amount -
+                                        billingData.total_settle_amount_prev) /
+                                        billingData.total_settle_amount_prev) *
+                                        100 >
+                                      0 ? (
+                                      <FiChevronUp
+                                        style={{ marginBottom: "6px" }}
+                                      />
+                                    ) : (
+                                      []
+                                    )}
+                                    {((billingData.total_settle_amount -
+                                      billingData.total_settle_amount_prev) /
+                                      billingData.total_settle_amount_prev) *
+                                      100 <
+                                    0
+                                      ? " " +
+                                        decimal(
+                                          ((billingData.total_settle_amount -
+                                            billingData.total_settle_amount_prev) /
+                                            billingData.total_settle_amount_prev) *
+                                            100 *
+                                            -1
+                                        ) +
+                                        "%" +
+                                        " ( -" +
+                                        (billingData.total_settle_amount -
+                                          billingData.total_settle_amount_prev) *
+                                          -1 +
+                                        " )"
+                                      : " " +
+                                        decimal(
+                                          ((billingData.total_settle_amount -
+                                            billingData.total_settle_amount_prev) /
+                                            billingData.total_settle_amount_prev) *
+                                            100
+                                        ) +
+                                        "%" +
+                                        " ( +" +
+                                        (billingData.total_settle_amount -
+                                          billingData.total_settle_amount_prev) +
+                                        " )"}
+                                  </font>
+                                ) : (
+                                  <font style={{ color: "#52A452" }}>0%</font>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        {auth.role === "sa" && (
+                          <div
+                            style={{
+                              paddingTop: 10,
+                              paddingBottom: 10,
+                              borderBottom: "1px solid #f3f3fa",
+                              minHeight: 76,
+                              maxHeight: 76,
+                            }}
+                          >
+                            <div className="row">
+                              <div className="col">
+                                <b>Disbursed Amount Billing</b>
+                              </div>
+                              <div className="col BigNumber2 text-right">
+                                {" "}
+                                {typeof billingData.total_disburse_amount !==
+                                  "undefined" &&
+                                billingData.total_disburse_amount !== null
+                                  ? formatValuetoMoney(
+                                      billingData.total_disburse_amount
+                                    )
+                                  : 0}
+                              </div>
+                            </div>
+                            {periode !== "all" && (
+                              <div
+                                className="row"
+                                style={{ alignItems: "center" }}
+                              >
+                                <div className="col">
+                                  <div
+                                    style={{ fontSize: 12 }}
+                                    className="text-nowrap"
+                                  >
+                                    <font style={{ color: "#C4C4C4" }}>
+                                      vs
+                                      {periode === "year"
+                                        ? " Tahun"
+                                        : periode === "month"
+                                        ? " Bulan"
+                                        : periode === "day"
+                                        ? " Hari"
+                                        : " " + toSentenceCase(periode)}{" "}
+                                      Lalu:
+                                    </font>
+                                    <br />
+                                    <AnimatedNumber
+                                      className="font-weight-bold black"
+                                      value={
+                                        billingData.total_disburse_amount_prev
+                                      }
+                                      formatValue={formatValuetoMoney}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="col text-right">
+                                  {billingData.total_disburse_amount_prev !==
+                                    0 && periode === "periode" ? (
+                                    <font
+                                      style={{
+                                        color: `${
+                                          ((billingData.total_disburse_amount -
+                                            billingData.total_disburse_amount_prev) /
+                                            billingData.total_disburse_amount_prev) *
+                                            100 <
+                                          0
+                                            ? "#E12029"
+                                            : "#52A452"
+                                        }`,
+                                      }}
+                                    >
+                                      {((billingData.total_disburse_amount -
+                                        billingData.total_disburse_amount_prev) /
+                                        billingData.total_disburse_amount_prev) *
+                                        100 <
+                                      0 ? (
+                                        <FiChevronUp
+                                          style={{
+                                            transform: "rotate(180deg)",
+                                            marginBottom: "6px",
+                                          }}
+                                        />
+                                      ) : ((billingData.total_disburse_amount -
+                                          billingData.total_disburse_amount_prev) /
+                                          billingData.total_disburse_amount_prev) *
+                                          100 >
+                                        0 ? (
+                                        <FiChevronUp
+                                          style={{ marginBottom: "6px" }}
+                                        />
+                                      ) : (
+                                        []
+                                      )}
+                                      {((billingData.total_disburse_amount -
+                                        billingData.total_disburse_amount_prev) /
+                                        billingData.total_disburse_amount_prev) *
+                                        100 <
+                                      0
+                                        ? " " +
+                                          decimal(
+                                            ((billingData.total_disburse_amount -
+                                              billingData.total_disburse_amount_prev) /
+                                              billingData.total_disburse_amount_prev) *
+                                              100 *
+                                              -1
+                                          ) +
+                                          "%" +
+                                          " ( -" +
+                                          (billingData.total_disburse_amount -
+                                            billingData.total_disburse_amount_prev) *
+                                            -1 +
+                                          " )"
+                                        : " " +
+                                          decimal(
+                                            ((billingData.total_disburse_amount -
+                                              billingData.total_disburse_amount_prev) /
+                                              billingData.total_disburse_amount_prev) *
+                                              100
+                                          ) +
+                                          "%" +
+                                          " ( +" +
+                                          (billingData.total_disburse_amount -
+                                            billingData.total_disburse_amount_prev) +
+                                          " )"}
+                                    </font>
+                                  ) : (
+                                    <font style={{ color: "#52A452" }}>0%</font>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        <div
+                          style={{
+                            paddingTop: 10,
+                            paddingBottom: 10,
+                            borderBottom: "1px solid #f3f3fa",
+                            minHeight: 76,
+                            maxHeight: 76,
                           }}
                         >
                           <div className="row">
@@ -2879,20 +3385,121 @@ function Component() {
                                 : 0}
                             </div>
                           </div>
-                          {/* <div className="row">
-                        <div className="col">vs Tahun Lalu: <br /><b>{toMoney(billingData.total_settle_amount)}</b>
-                        </div>
-                        <div className="col text-right"> 
-                          {typeof billingData.total_settle_amount !== 'undefined' && billingData.total_settle_amount !== null ? formatValuetoMoney(billingData.total_settle_amount) : 0}
-                          10.33%
-                        </div>
-                      </div> */}
+                          {periode !== "all" && (
+                            <div
+                              className="row"
+                              style={{ alignItems: "center" }}
+                            >
+                              <div className="col">
+                                <div
+                                  style={{ fontSize: 12 }}
+                                  className="text-nowrap"
+                                >
+                                  <font style={{ color: "#C4C4C4" }}>
+                                    vs
+                                    {periode === "year"
+                                      ? " Tahun"
+                                      : periode === "month"
+                                      ? " Bulan"
+                                      : periode === "day"
+                                      ? " Hari"
+                                      : " " + toSentenceCase(periode)}{" "}
+                                    Lalu:
+                                  </font>
+                                  <br />
+                                  <AnimatedNumber
+                                    className="font-weight-bold black"
+                                    value={
+                                      billingData.total_unsettle_amount_prev
+                                    }
+                                    formatValue={formatValuetoMoney}
+                                  />
+                                </div>
+                              </div>
+                              <div className="col text-right">
+                                {billingData.total_unsettle_amount_prev !== 0 &&
+                                periode === "periode" ? (
+                                  <font
+                                    style={{
+                                      color: `${
+                                        ((billingData.total_unsettle_amount -
+                                          billingData.total_unsettle_amount_prev) /
+                                          billingData.total_unsettle_amount_prev) *
+                                          100 <
+                                        0
+                                          ? "#E12029"
+                                          : "#52A452"
+                                      }`,
+                                    }}
+                                  >
+                                    {((billingData.total_unsettle_amount -
+                                      billingData.total_unsettle_amount_prev) /
+                                      billingData.total_unsettle_amount_prev) *
+                                      100 <
+                                    0 ? (
+                                      <FiChevronUp
+                                        style={{
+                                          transform: "rotate(180deg)",
+                                          marginBottom: "6px",
+                                        }}
+                                      />
+                                    ) : ((billingData.total_unsettle_amount -
+                                        billingData.total_unsettle_amount_prev) /
+                                        billingData.total_unsettle_amount_prev) *
+                                        100 >
+                                      0 ? (
+                                      <FiChevronUp
+                                        style={{ marginBottom: "6px" }}
+                                      />
+                                    ) : (
+                                      []
+                                    )}
+                                    {((billingData.total_unsettle_amount -
+                                      billingData.total_unsettle_amount_prev) /
+                                      billingData.total_unsettle_amount_prev) *
+                                      100 <
+                                    0
+                                      ? " " +
+                                        decimal(
+                                          ((billingData.total_unsettle_amount -
+                                            billingData.total_unsettle_amount_prev) /
+                                            billingData.total_unsettle_amount_prev) *
+                                            100 *
+                                            -1
+                                        ) +
+                                        "%" +
+                                        " ( -" +
+                                        (billingData.total_unsettle_amount -
+                                          billingData.total_unsettle_amount_prev) *
+                                          -1 +
+                                        " )"
+                                      : " " +
+                                        decimal(
+                                          ((billingData.total_unsettle_amount -
+                                            billingData.total_unsettle_amount_prev) /
+                                            billingData.total_unsettle_amount_prev) *
+                                            100
+                                        ) +
+                                        "%" +
+                                        " ( +" +
+                                        (billingData.total_unsettle_amount -
+                                          billingData.total_unsettle_amount_prev) +
+                                        " )"}
+                                  </font>
+                                ) : (
+                                  <font style={{ color: "#52A452" }}>0%</font>
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
                         {auth.role === "sa" && (
                           <div
                             style={{
                               paddingTop: 10,
                               paddingBottom: 10,
+                              minHeight: 76,
+                              maxHeight: 76,
                             }}
                           >
                             <div className="row">
@@ -2910,14 +3517,113 @@ function Component() {
                                   : 0}
                               </div>
                             </div>
-                            {/* <div className="row">
-                          <div className="col">vs Tahun Lalu: <br /><b>{toMoney(billingData.total_settle_amount)}</b>
-                          </div>
-                          <div className="col text-right"> 
-                            {typeof billingData.total_settle_amount !== 'undefined' && billingData.total_settle_amount !== null ? formatValuetoMoney(billingData.total_settle_amount) : 0}
-                            10.33%
-                          </div>
-                        </div> */}
+                            {periode !== "all" && (
+                              <div
+                                className="row"
+                                style={{ alignItems: "center" }}
+                              >
+                                <div className="col">
+                                  <div
+                                    style={{ fontSize: 12 }}
+                                    className="text-nowrap"
+                                  >
+                                    <font style={{ color: "#C4C4C4" }}>
+                                      vs
+                                      {periode === "year"
+                                        ? " Tahun"
+                                        : periode === "month"
+                                        ? " Bulan"
+                                        : periode === "day"
+                                        ? " Hari"
+                                        : " " + toSentenceCase(periode)}{" "}
+                                      Lalu:
+                                    </font>
+                                    <br />
+                                    <AnimatedNumber
+                                      className="font-weight-bold black"
+                                      value={
+                                        billingData.total_undisburse_amount_prev
+                                      }
+                                      formatValue={formatValuetoMoney}
+                                    />
+                                  </div>
+                                </div>
+                                <div className="col text-right">
+                                  {billingData.total_undisburse_amount_prev !==
+                                    0 && periode === "periode" ? (
+                                    <font
+                                      style={{
+                                        color: `${
+                                          ((billingData.total_undisburse_amount -
+                                            billingData.total_undisburse_amount_prev) /
+                                            billingData.total_undisburse_amount_prev) *
+                                            100 <
+                                          0
+                                            ? "#E12029"
+                                            : "#52A452"
+                                        }`,
+                                      }}
+                                    >
+                                      {((billingData.total_undisburse_amount -
+                                        billingData.total_undisburse_amount_prev) /
+                                        billingData.total_undisburse_amount_prev) *
+                                        100 <
+                                      0 ? (
+                                        <FiChevronUp
+                                          style={{
+                                            transform: "rotate(180deg)",
+                                            marginBottom: "6px",
+                                          }}
+                                        />
+                                      ) : ((billingData.total_undisburse_amount -
+                                          billingData.total_undisburse_amount_prev) /
+                                          billingData.total_undisburse_amount_prev) *
+                                          100 >
+                                        0 ? (
+                                        <FiChevronUp
+                                          style={{ marginBottom: "6px" }}
+                                        />
+                                      ) : (
+                                        []
+                                      )}
+                                      {((billingData.total_undisburse_amount -
+                                        billingData.total_undisburse_amount_prev) /
+                                        billingData.total_undisburse_amount_prev) *
+                                        100 <
+                                      0
+                                        ? " " +
+                                          decimal(
+                                            ((billingData.total_undisburse_amount -
+                                              billingData.total_undisburse_amount_prev) /
+                                              billingData.total_undisburse_amount_prev) *
+                                              100 *
+                                              -1
+                                          ) +
+                                          "%" +
+                                          " ( -" +
+                                          (billingData.total_undisburse_amount -
+                                            billingData.total_undisburse_amount_prev) *
+                                            -1 +
+                                          " )"
+                                        : " " +
+                                          decimal(
+                                            ((billingData.total_undisburse_amount -
+                                              billingData.total_undisburse_amount_prev) /
+                                              billingData.total_undisburse_amount_prev) *
+                                              100
+                                          ) +
+                                          "%" +
+                                          " ( +" +
+                                          (billingData.total_undisburse_amount -
+                                            billingData.total_undisburse_amount_prev) +
+                                          " )"}
+                                    </font>
+                                  ) : (
+                                    <font style={{ color: "#52A452" }}>0%</font>
+                                  )}
+                                </div>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
