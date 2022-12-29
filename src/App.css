@@ -285,6 +285,22 @@
   /* margin-top: 16px; */
 }
 
+.Container-impression {
+  background-color: white;
+  padding: 16px;
+  border-radius: 4px;
+  display: flex;
+  flex: 1;
+  /* margin-bottom: 32px;
+  margin-right: 16px; */
+  margin: 0 16px 16px 16px;
+  box-shadow: 0px 0px 10px 0px rgba(32, 91, 146, 0.12);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  /* height: fit-content; */
+  overflow: hidden;
+  /* margin-top: 16px; */
+}
+
 .Container-dashboard-ns {
   background-color: white;
   padding: 16px;
@@ -353,6 +369,15 @@
   flex: 1;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   overflow: hidden;
+}
+
+.Container-icon {
+  background-color: "#000000aa"; 
+  border: none; 
+  border-radius: 50px;
+  color: white; 
+  padding: 12px; 
+  font-size: 16px; 
 }
 
 .Details {
