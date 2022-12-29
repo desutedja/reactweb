@@ -69,6 +69,58 @@ export const {
   publish,
 } = slice.actions;
 
+// V1
+// export const getAds = (
+//   pageIndex,
+//   pageSize,
+//   search = "",
+//   sortField,
+//   sortType,
+//   os = "",
+//   gender = "",
+//   age_from = "",
+//   age_to = "",
+//   day = ""
+// ) => (dispatch) => {
+//   dispatch(startAsync());
+
+//   dispatch(
+//     get(
+//       adsEndpoint +
+//         "?page=" +
+//         (pageIndex + 1) +
+//         "&limit=" +
+//         pageSize +
+//         "&search=" +
+//         search +
+//         "&sort_field=" +
+//         sortField +
+//         "&sort_type=" +
+//         sortType +
+//         "&age_from=" +
+//         age_from +
+//         "&age_to=" +
+//         age_to +
+//         "&os=" +
+//         os +
+//         "&gender=" +
+//         gender +
+//         "&day=" +
+//         day,
+
+//       (res) => {
+//         dispatch(setData(res.data.data));
+
+//         dispatch(stopAsync());
+//       },
+//       (err) => {
+//         dispatch(stopAsync());
+//       }
+//     )
+//   );
+// };
+
+// V2
 export const getAds = (
   pageIndex,
   pageSize,
@@ -86,7 +138,7 @@ export const getAds = (
   dispatch(
     get(
       adsEndpoint +
-        "?page=" +
+        "/getadsv2?page=" +
         (pageIndex + 1) +
         "&limit=" +
         pageSize +
