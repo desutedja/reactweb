@@ -72,19 +72,28 @@ export const slice = createSlice({
     refresh: (state) => {
       state.refreshToggle = !state.refreshToggle;
     },
+    // V1
+    // setUnitData: (state, action) => {
+    //   const data = action.payload;
+
+    //   state.unit.items = data.items;
+    //   state.unit.total_items = data.filtered_item;
+    //   state.unit.total_pages = data.filtered_page;
+    // },
+    // V2
     setUnitData: (state, action) => {
       const data = action.payload;
 
       state.unit.items = data.items;
-      state.unit.total_items = data.filtered_item;
-      state.unit.total_pages = data.filtered_page;
+      state.unit.total_items = data.total_items;
+      state.unit.total_pages = data.total_pages;
     },
     setUnitTypeData: (state, action) => {
       const data = action.payload;
 
       state.unit_type.items = data.items;
-      state.unit_type.total_items = data.filtered_item;
-      state.unit_type.total_pages = data.filtered_page;
+      state.unit_type.total_items = data.total_items;
+      state.unit_type.total_pages = data.total_pages;
     },
     setSectionData: (state, action) => {
       const data = action.payload;
@@ -93,12 +102,21 @@ export const slice = createSlice({
       state.section.total_items = data.filtered_item;
       state.section.total_pages = data.filtered_page;
     },
+    // V1
+    // setServiceData: (state, action) => {
+    //   const data = action.payload;
+
+    //   state.service.items = data.items;
+    //   state.service.total_items = data.filtered_item;
+    //   state.service.total_pages = data.filtered_page;
+    // },
+    // V2
     setServiceData: (state, action) => {
       const data = action.payload;
 
       state.service.items = data.items;
-      state.service.total_items = data.filtered_item;
-      state.service.total_pages = data.filtered_page;
+      state.service.total_items = data.total_item;
+      state.service.total_pages = data.total_page;
     },
     setManagementData: (state, action) => {
       const data = action.payload;
@@ -287,8 +305,9 @@ export const getBuildingUnit = (
         "&search=" +
         search +
         "&sort_field=created_on&sort_type=DESC" +
-        "&limit=9999" +
-        // pageSize +
+        // "&limit=9999" +
+        "&limit=" +
+        pageSize +
         (hasResident ? "&has_resident=true" : ""),
 
       (res) => {
@@ -377,6 +396,45 @@ export const getBuildingSection = (
   );
 };
 
+// V1
+// export const getBuildingService = (
+//   pageIndex,
+//   pageSize,
+//   search,
+//   row,
+//   group = ""
+// ) => (dispatch) => {
+//   dispatch(startAsync());
+
+//   dispatch(
+//     get(
+//       buildingEndpoint +
+//         "/service" +
+//         "?page=" +
+//         (pageIndex + 1) +
+//         "&building_id=" +
+//         row.id +
+//         "&group=" +
+//         group +
+//         "&search=" +
+//         search +
+//         "&sort_field=created_on&sort_type=DESC" +
+//         "&limit=" +
+//         pageSize,
+
+//       (res) => {
+//         dispatch(setServiceData(res.data.data));
+
+//         dispatch(stopAsync());
+//       },
+//       (err) => {
+//         dispatch(stopAsync());
+//       }
+//     )
+//   );
+// };
+
+// V2
 export const getBuildingService = (
   pageIndex,
   pageSize,
@@ -389,7 +447,7 @@ export const getBuildingService = (
   dispatch(
     get(
       buildingEndpoint +
-        "/service" +
+        "/servicev2" +
         "?page=" +
         (pageIndex + 1) +
         "&building_id=" +
@@ -552,14 +610,44 @@ export const createBuildingSection = (data) => (dispatch) => {
   );
 };
 
-export const createBuildingManagement = (data) => (dispatch) => {
+// export const createBuildingManagement = (data) => (dispatch) => {
+//   dispatch(startAsync());
+
+//   dispatch(
+//     post(
+//       buildingEndpoint + "/management",
+//       data,
+//       (res) => {
+//         dispatch(refresh());
+
+//         dispatch(
+//           setInfo({
+//             color: "success",
+//             message: "Building management has been created.",
+//           })
+//         );
+
+//         dispatch(stopAsync());
+//       },
+//       (err) => {
+//         dispatch(stopAsync());
+//       }
+//     )
+//   );
+// };
+
+export const createBuildingManagement = (data, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(
     post(
       buildingEndpoint + "/management",
       data,
       (res) => {
+        history && history.push("/" + auth.role + "/building/" + data.building_id);
+
         dispatch(refresh());
 
         dispatch(
@@ -736,14 +824,45 @@ export const editBuildingSection = (data, id) => (dispatch) => {
   );
 };
 
-export const editBuildingManagement = (data, id) => (dispatch) => {
+// export const editBuildingManagement = (data, id) => (dispatch) => {
+//   dispatch(startAsync());
+
+//   dispatch(
+//     put(
+//       buildingEndpoint + "/management",
+//       { ...data, id: id },
+//       (res) => {
+//         dispatch(refresh());
+
+//         dispatch(
+//           setInfo({
+//             color: "success",
+//             message: "Building mangement has been updated.",
+//           })
+//         );
+
+//         dispatch(stopAsync());
+//       },
+//       (err) => {
+//         dispatch(stopAsync());
+//       }
+//     )
+//   );
+// };
+
+
+export const editBuildingManagement = (data, id, history) => (dispatch, getState) => {
   dispatch(startAsync());
+
+  const { auth } = getState();
 
   dispatch(
     put(
       buildingEndpoint + "/management",
       { ...data, id: id },
       (res) => {
+        history && history.push("/" + auth.role + "/building/" + data.building_id);
+
         dispatch(refresh());
 
         dispatch(
