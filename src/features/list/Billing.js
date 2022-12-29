@@ -43,6 +43,7 @@ import {
   toMoney,
   inputDateTimeFormatter,
   inputDateTimeFormatter24,
+  dateTimeFormatterScheduler,
 } from "../../utils";
 import { get, post, setInfo } from "../slice";
 
@@ -252,6 +253,13 @@ function Component({ view }) {
         },
         { Header: "Released", accessor: (row) => row.released },
         //{ Header: "With Image", accessor: (row) => row.with_image },
+        {
+          Header: "Release Schedule",
+          accessor: (row) =>
+            row.schedule_date
+              ? dateTimeFormatterScheduler(row.schedule_date)
+              : "-",
+        },
       ]);
     }
   }, [role]);
@@ -3119,8 +3127,10 @@ function Component({ view }) {
       <UploadModal
         open={upload}
         toggle={() => setUpload(false)}
-        templateLink={user.billing_bulk_template}
-        // templateLink={"https://api.yipy.id/yipy-assets/asset-storage/document/ABB45E5DDEC4AF95D0960C2EB88CFC57.xlsx"}
+        // templateLink={user.billing_bulk_template}
+        templateLink={
+          "https://api.yipy.id/yipy-assets/asset-storage/document/B6B611DB0E10485AC9A4CA4AA72FFE2D.xlsx"
+        }
         filename="billing_unit_template.xlsx"
         uploadLink={endpointBilling + "/management/billing/upload"}
         uploadDataName="file_upload"
