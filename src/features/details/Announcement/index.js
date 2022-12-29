@@ -290,7 +290,7 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
               ]}
             />
           </div>,
-          <Impression data={data} />,
+          <Impression view={view} id={id} />,
         ]}
       />
     </>

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
-import Table from "../../../../components/Table";
+import AnimatedNumber from "animated-number-react";
+import Table from "../../../../components/TableImpression";
 import { useDispatch, useSelector } from "react-redux";
 import { dateTimeFormatter } from "../../../../utils";
 import { endpointAdmin, endpointAds } from "../../../../settings";
@@ -17,17 +18,13 @@ function Component({ id, view }) {
   const [limit, setLimit] = useState(5);
 
   let dispatch = useDispatch();
-  
-  const { refreshToggle } = useSelector(
-    (state) => state.ads
-  );
+
+  const { refreshToggle } = useSelector((state) => state.ads);
 
   const columns = [
     {
       Header: "Resident Name",
-      accessor: (row) => (
-        <span>{row.resident_name}</span>
-      ),
+      accessor: (row) => <span>{row.resident_name}</span>,
     },
     {
       Header: "Building Name",
@@ -35,31 +32,35 @@ function Component({ id, view }) {
     },
     {
       Header: "Actual View",
-      accessor: (row) => 
-        <div  className="text-center">    
-            <span>{row.actual_view}</span>
-        </div>,
+      accessor: (row) => (
+        <div className="text-center">
+          <span>{row.actual_view}</span>
+        </div>
+      ),
     },
     {
       Header: "Repeated View",
-      accessor: (row) =>
+      accessor: (row) => (
         <div className="text-center">
-            <span>{row.repeated_view}</span>
-        </div>,
+          <span>{row.repeated_view}</span>
+        </div>
+      ),
     },
     {
       Header: "Actual Click",
-      accessor: (row) => 
+      accessor: (row) => (
         <div className="text-center">
-            <span>{row.actual_click}</span>
-        </div>,
+          <span>{row.actual_click}</span>
+        </div>
+      ),
     },
     {
       Header: "Repeated Click",
-      accessor: (row) =>
+      accessor: (row) => (
         <div className="text-center">
-            <span>{row.repeated_click}</span>
-        </div>,
+          <span>{row.repeated_click}</span>
+        </div>
+      ),
     },
     {
       Header: "First Open",
@@ -108,9 +109,154 @@ function Component({ id, view }) {
 
   return (
     <div>
+      <div
+        className=""
+        style={{
+          marginRight: 16,
+          flexDirection: "column",
+          padding: 0,
+        }}
+      >
+        <div className="row no-gutters">
+          <div className="col">
+            <div className="Container-dashboard-ns border-2 d-flex flex-column cursor-pointer">
+              <div
+                className="row no-gutters align-items-center"
+                style={{ minWidth: 150 }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  <div
+                    style={{
+                      marginRight: 16,
+                    }}
+                  >
+                    Total Actual View :
+                  </div>
+                  <div>
+                    <b>
+                      {data?.items.total_advertisement_impression
+                        ?.total_actual_view
+                        ? data?.items.total_advertisement_impression
+                            ?.total_actual_view
+                        : 0}
+                    </b>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="Container-dashboard-ns border-2 d-flex flex-column cursor-pointer">
+              <div
+                className="row no-gutters align-items-center"
+                style={{ minWidth: 150 }}
+              >
+                <div className="col">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        marginRight: 16,
+                      }}
+                    >
+                      Total Repeated View :
+                    </div>
+                    <div>
+                      <b>
+                        {data?.items.total_advertisement_impression
+                          ?.total_repeated_view
+                          ? data?.items.total_advertisement_impression
+                              ?.total_repeated_view
+                          : 0}
+                      </b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="Container-dashboard-ns border-2 d-flex flex-column cursor-pointer">
+              <div
+                className="row no-gutters align-items-center"
+                style={{ minWidth: 150 }}
+              >
+                <div className="col">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        marginRight: 16,
+                      }}
+                    >
+                      Total Actual Click :
+                    </div>
+                    <div>
+                      <b>
+                        {data?.items.total_advertisement_impression
+                          ?.total_actual_click
+                          ? data?.items.total_advertisement_impression
+                              ?.total_actual_click
+                          : 0}
+                      </b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="col">
+            <div className="Container-dashboard-ns border-2 d-flex flex-column cursor-pointer">
+              <div
+                className="row no-gutters align-items-center"
+                style={{ minWidth: 150 }}
+              >
+                <div className="col">
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        marginRight: 16,
+                      }}
+                    >
+                      Total Repeated Click :
+                    </div>
+                    <div>
+                      <b>
+                        {data?.items.total_advertisement_impression
+                          ?.total_repeated_click
+                          ? data?.items.total_advertisement_impression
+                              ?.total_repeated_click
+                          : 0}
+                      </b>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <Table
         columns={columns}
-        data={data?.items || []}
+        data={data?.items.advertisement_impression || []}
         fetchData={useCallback(
           (page, limit, searchItem, sortField, sortType) => {
             dispatch(
@@ -145,7 +291,7 @@ function Component({ id, view }) {
             hidex: building === "",
             delete: () => setBuilding(""),
             component: (toggleModal) => (
-                <>
+              <>
                 <Input
                   label="Search Building"
                   compact
@@ -174,7 +320,7 @@ function Component({ id, view }) {
                 />
               </>
             ),
-          }
+          },
         ]}
       />
     </div>

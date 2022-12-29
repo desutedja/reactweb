@@ -216,6 +216,7 @@ function Component({ view }) {
               right: 0,
               left: 0,
               zIndex: 99,
+              backgroundColor: "#fafafaaa",
               fontWeight: "bold",
               display: "flex",
             }}
@@ -227,22 +228,21 @@ function Component({ view }) {
                 left: "30px",
                 position: "absolute",
               }}
-              src={require("../../../assets/yipy-logo-white.png")}
+              src={require("../../../assets/yipy-logo-color.png")}
               alt="clinklogo"
             />
             <FiMessageSquare
               size="45"
-              style={{ top: "45px", position: "absolute", right: "145px", color: "#fff" }}
+              style={{ top: "45px", position: "absolute", right: "140px" }}
             />
             <FiBell
               size="45"
-              style={{ top: "45px", position: "absolute", right: "45px", color: "#fff" }}
+              style={{ top: "45px", position: "absolute", right: "45px" }}
             />
           </div>
           <img
             style={{
-              height: "calc(614 / 1024 * 720px)",
-              maxWidth: "700px",
+              height: "100%",
               position: "absolute",
               top: "50%",
               left: "50%",

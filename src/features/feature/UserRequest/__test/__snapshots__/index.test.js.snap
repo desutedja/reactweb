@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+Array [
+  <div
+    className="Breadcrumb"
+  >
+    <div
+      className="Crumbs"
+      onClick={[Function]}
+    >
+      
+    </div>
+    <svg
+      fill="none"
+      height="1em"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
+      style={
+        Object {
+          "color": undefined,
+          "marginLeft": 8,
+          "marginRight": 8,
+        }
+      }
+      viewBox="0 0 24 24"
+      width="1em"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <polyline
+        points="9 18 15 12 9 6"
+      />
+    </svg>
+    Test
+  </div>,
+  <h2
+    className="PageTitle"
+  >
+    
+  </h2>,
+  <div
+    className="Spinner"
+    style={
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#ffffffc5",
+        "bottom": 0,
+        "display": "flex",
+        "justifyContent": "center",
+        "left": 0,
+        "position": "fixed",
+        "right": 0,
+        "top": 0,
+        "zIndex": 2,
+      }
+    }
+  >
+    <div
+      style={
+        Object {
+          "textAlign": "left",
+        }
+      }
+    >
+      <div
+        className="clink-loader breath d-inline-block"
+      >
+        <img
+          alt="Centratama Loading - Clink"
+          src="yipy-logo-color.png"
+        />
+      </div>
+      <div
+        style={
+          Object {
+            "marginLeft": "-8px",
+            "paddingTop": "5px",
+          }
+        }
+      >
+        please wait...
+      </div>
+    </div>
+  </div>,
+]
+`;
