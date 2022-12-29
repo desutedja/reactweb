@@ -173,6 +173,8 @@ function Component({ view, title = "", pagetitle, canDelete }) {
   const [bank, setBank] = useState("");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ items: [] });
+  const [status, setStatus] = useState("");
+  const [building, setBuilding] = useState("");
   const [type, setType] = useState("");
   const [typeLabel, setTypeLabel] = useState("");
   const [toggle, setToggle] = useState(false);
@@ -324,18 +326,21 @@ function Component({ view, title = "", pagetitle, canDelete }) {
                   dispatch(
                     get(
                       endpointAdmin +
-                        "/paymentperbuilding/list?status=all" +
+                        "/paymentperbuilding/list?status=" +
+                        status +
                         "&start_date=" +
                         startdate +
                         "&end_date=" +
                         enddate +
                         "&building_id=" +
-                        buildingid +
+                        building +
                         "&bank=" +
                         bank +
                         "&sort_field=created_on&sort_type=DESC" +
                         "&limit=" +
-                        limit,
+                        limit +
+                        "&page=" +
+                        (page + 1),
 
                       (res) => {
                         console.log(res.data.data);
@@ -548,18 +553,21 @@ function Component({ view, title = "", pagetitle, canDelete }) {
                   dispatch(
                     get(
                       endpointAdmin +
-                        "/paymentperbuilding/list?status=all" +
+                        "/paymentperbuilding/list?status=" +
+                        status +
                         "&start_date=" +
                         startdate +
                         "&end_date=" +
                         enddate +
                         "&building_id=" +
-                        buildingid +
+                        building +
                         "&bank=" +
                         bank +
                         "&sort_field=created_on&sort_type=DESC" +
                         "&limit=" +
-                        limit,
+                        limit +
+                        "&page=" +
+                        (page + 1),
 
                       (res) => {
                         console.log(res.data.data);
