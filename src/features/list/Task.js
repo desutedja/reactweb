@@ -46,7 +46,7 @@ const columns = [
       <Task
         id={row.id}
         data={row}
-        items={[row.title, <small>{row.ref_code}</small>]}
+        items={[row.title, <small>{row.ref_code}</small>, row.unit_number ? <small>From unit: <b>{row.unit_number}</b></small> : []]}
       />
     ),
   },
