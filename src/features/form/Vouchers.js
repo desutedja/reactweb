@@ -7,22 +7,32 @@ import { get } from "../slice";
 
 import Template from "./components/TemplateWithFormik";
 import { Form } from "formik";
-import { voucherSchema } from "./services/schemas";
-import Input from "./input";
+import { voucherSchemaV2 } from "./services/schemas";
+import Input from "./inputVoucher";
 import SubmitButton from "./components/SubmitButton";
-import { createVoucher, editVoucher } from "../slices/vouchers";
+import {
+  createVoucher,
+  createVoucherV2,
+  editVoucher,
+} from "../slices/vouchers";
+import SectionSeparator from "../../components/SectionSeparator";
+import moment from "moment";
+
+const today = moment().format("YYYY-MM-DD");
 
 const voucherPayload = {
-  prefix: "",
+  remark: "",
+  start_date: today,
+  expired_date: today,
 };
 
 function Component() {
   const { loading, selected } = useSelector((state) => state.vouchers);
 
   const [bManagements, setBManagements] = useState([]);
-  
+
   const [merchant, setMerchant] = useState([]);
-  
+
   const [inBuildings, setBuildings] = useState([]);
   const [categories, setCategories] = useState([]);
 
@@ -33,10 +43,8 @@ function Component() {
     dispatch(
       get(endpointAdmin + "/building?page=1&limit=9999", (res) => {
         let formatted = res.data.data.items.map((el) => ({
-          label: el.name,
-          value: el.id,
-          lat: el.lat,
-          long: el.long,
+          building_name: el.name,
+          id: el.id,
         }));
         setBuildings(formatted);
       })
@@ -77,21 +85,15 @@ function Component() {
 
   useEffect(() => {
     dispatch(
-      get(
-        endpointMerchant +
-          "/admin/listmerchantname?search=",
-        (res) => {
-          
-          let formatted = res.data.data.map((el) => {
-            return {
-              id: el.id,
-              label: el.name,
-              value: el.name,
-            };
-          });
-          setMerchant(formatted);
-        }
-      )
+      get(endpointMerchant + "/admin/listmerchantname?search=", (res) => {
+        let formatted = res.data.data.map((el) => {
+          return {
+            id: el.id,
+            merchant_name: el.name,
+          };
+        });
+        setMerchant(formatted);
+      })
     );
   }, [dispatch]);
 
@@ -107,74 +109,265 @@ function Component() {
             }
           : voucherPayload
       }
-      schema={voucherSchema}
+      schema={voucherSchemaV2}
       formatValues={(values) => ({
-        
         ...values,
-        building_management_id: values.building_management_id ? values.building_management_id : 10001,
-        limit: parseInt(values.limit),
+        voucher_code: values.type === "special" ? values.voucher_code : "",
         discount: parseFloat(values.discount),
         minimum_transaction: parseFloat(values.minimum_transaction),
-        maximum_discount: parseFloat(values.maximum_discount),
+        maximum_discount:
+          values.discount_type === "percentage"
+            ? parseFloat(values.maximum_discount)
+            : 0,
+        max_voucher_peruser: parseInt(values.max_voucher_peruser),
+        total_voucher: parseInt(values.total_voucher),
+        start_date: values.start_date + " 00:00:00",
         expired_date: values.expired_date + " 23:59:59",
       })}
-      edit={(data) =>{
-        delete data[undefined];
-        dispatch(editVoucher(data, history, selected.id))}}
-      add={(data) =>{
+      add={(data) => {
         delete data[undefined];
         delete data["discount_type_label"];
-        dispatch(createVoucher(data, history))
+        delete data["target_building_label"];
+        delete data["Premium User"];
+        dispatch(createVoucherV2(data, history));
       }}
       renderChild={(props) => {
         const { setFieldValue, values, errors } = props;
         return (
           <Form className="Form">
-            <Input {...props} label="Promo Code" name="prefix" />
+            <div class="Input" style={{ marginBottom: 20, fontSize: 16 }}>
+              <label class="Input-label">Voucher Information</label>
+            </div>
             <Input
               {...props}
-              label="Building Management"
-              name="building_management_id"
-              autoComplete="off"
-              options={bManagements}
-            />
-            <Input
-              {...props}
-              type="multiselect"
-              label="Select Merchant(s)"
-              name="merchant_id"
-              autoComplete="off"
-              placeholder="Start typing to add Merchant"
-              options={[...merchant]}
-            />
-            <Input {...props} label="Total Voucher" name="limit" />
-            <Input
-              {...props}
-              label="Discount Type"
-              name="discount_type"
-              autoComplete="off"
+              type="radioVoucher"
+              label="Category Voucher"
+              name="category"
               options={[
-                { value: "percentage", label: "Percentage" },
-                { value: "value", label: "Value" },
+                {
+                  value: "billing",
+                  label: "Tagihan",
+                  desc: (
+                    <>
+                      Voucher hanya bisa digunakan untuk transaksi{" "}
+                      <b>Bayar Tagihan</b>
+                    </>
+                  ),
+                },
+                {
+                  value: "merchant",
+                  label: "Merchant",
+                  desc: (
+                    <>
+                      Voucher hanya bisa digunakan untuk transaksi{" "}
+                      <b>Menu Shop</b>
+                    </>
+                  ),
+                },
               ]}
             />
-            <Input {...props} label="Discount" name="discount" autoComplete="off" />
-            <Input {...props} label="Minimum Transaction" name="minimum_transaction" autoComplete="off" />
-            <Input {...props} label="Maximum Discount" name="maximum_discount" autoComplete="off" />
             <Input
               {...props}
-              label="Expired Date"
-              name="expired_date"
-              type="date"
+              type="radioVoucher"
+              label="Target Voucher"
+              name="type"
+              options={[
+                {
+                  value: "public",
+                  label: "Publik",
+                  desc: (
+                    <>
+                      Kupon akan ditampilkan dan dapat langsung digunakan semua
+                      user untuk bertransaksi.
+                    </>
+                  ),
+                },
+                {
+                  value: "special",
+                  label: "Khusus",
+                  desc: (
+                    <>
+                      Kode promo hanya dapat digunakan oleh user yang menerima
+                      kode khusus.
+                    </>
+                  ),
+                },
+              ]}
             />
-            {categories.length > 0 && (
-              <CategoriesTable
-                options={[...categories]}
-                values={values.categories}
-                setMaximum={(value) => setFieldValue("usage_limit", value)}
-                setFieldValue={(value) => setFieldValue("categories", value)}
+            <Input
+              {...props}
+              label="Voucher Name"
+              name="voucher_name"
+              hint="Nama voucher akan menjadi judul utama yang dilihat oleh pembeli di tokomu."
+              placeholder="Contoh: Diskon 10% Bayar Tagihan"
+            />
+            {values.type === "special" ? (
+              <Input
+                {...props}
+                label="Voucher Code"
+                name="voucher_code"
+                hint="Kode harus unik dan tidak sama dengan voucher aktif yang lain saat ini."
+                placeholder="Contoh: DISKON10"
               />
+            ) : (
+              []
             )}
+            {values.category === "billing" ? (
+              <Input
+                {...props}
+                type="multiselectbuilding"
+                label="Target Building"
+                name="target_buildings"
+                autoComplete="off"
+                placeholder="Start typing to add Building"
+                options={[...inBuildings]}
+              />
+            ) : (
+              []
+            )}
+            {values.category === "merchant" ? (
+              <Input
+                {...props}
+                type="multiselectmerchant"
+                label="Target Merchant"
+                name="target_merchants"
+                autoComplete="off"
+                placeholder="Start typing to add Merchant"
+                options={[...merchant]}
+              />
+            ) : (
+              []
+            )}
+            <Input
+              {...props}
+              type="select"
+              label="Target User"
+              name="target_user"
+              autoComplete="off"
+              placeholder="Select Target User"
+              options={[
+                { value: "all", label: "All User" },
+                { value: "premium", label: "Premium User" },
+                { value: "basic", label: "Basic User" },
+              ]}
+            />
+
+            <SectionSeparator />
+
+            <div class="Input" style={{ marginBottom: 20, fontSize: 16 }}>
+              <label class="Input-label">Voucher Settings</label>
+            </div>
+            <Input
+              {...props}
+              type="radio"
+              label="Discount Type"
+              name="discount_type"
+              options={[
+                { value: "fee", label: "Nominal" },
+                { value: "percentage", label: "Persentase" },
+              ]}
+            />
+            {values.discount_type === "fee" ? (
+              <Input
+                {...props}
+                prefix="Rp."
+                name="discount"
+                label="Nominal Discount"
+                hint="Nominal diskon tidak boleh kosong."
+                placeholder="10000"
+                onKeyPress={(event) => {
+                  if (!/[0-9]/.test(event.key)) {
+                    event.preventDefault();
+                  }
+                }}
+              />
+            ) : values.discount_type === "percentage" ? (
+              <>
+                <Input
+                  {...props}
+                  suffix="%"
+                  name="discount"
+                  label="Persentase Discount"
+                  hint="Persentase diskon tidak boleh kosong."
+                  placeholder="1-100"
+                  maxLength={5}
+                  onKeyPress={(event) => {
+                    if (!/^\d*(?:[.]\d*)?$/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
+                />
+                <Input
+                  {...props}
+                  prefix="Rp."
+                  name="maximum_discount"
+                  label="Maksimum Discount"
+                  hint="Maksimum diskon tidak boleh kosong."
+                  placeholder="10000"
+                  onKeyPress={(event) => {
+                    if (!/[0-9]/.test(event.key)) {
+                      event.preventDefault();
+                    }
+                  }}
+                />
+              </>
+            ) : (
+              []
+            )}
+            <Input
+              {...props}
+              prefix="Rp."
+              name="minimum_transaction"
+              label="Minimum Transaction"
+              hint="Harus lebih tinggi dari nominal diskon."
+              placeholder="10000"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
+            />
+            <Input
+              {...props}
+              name="total_voucher"
+              label="Total Voucher"
+              placeholder="10"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
+            />
+            <Input
+              {...props}
+              name="max_voucher_peruser"
+              label="Maximum Use of Vouchers by User"
+              placeholder="10"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
+            />
+            <Input
+              {...props}
+              type="date"
+              name="start_date"
+              label="Start Date"
+            />
+            <Input
+              {...props}
+              type="date"
+              name="expired_date"
+              label="Expired Date"
+            />
+            <Input
+              {...props}
+              label="Syarat & Ketentuan Voucher"
+              type="editor"
+              name="remark"
+            />
+
             <SubmitButton loading={loading} errors={errors} />
           </Form>
         );
@@ -182,93 +375,5 @@ function Component() {
     />
   );
 }
-
-const CategoriesTable = ({ options, setFieldValue, values, setMaximum }) => {
-  const [categoryList, setCategoryList] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [maximumLimit, setMaximumLimit] = useState(0);
-
-  useEffect(() => {
-    setCategoryList([...options]);
-  }, [options]);
-
-  useEffect(() => {
-    setFieldValue([...categories]);
-  }, [categories]);
-
-  useEffect(() => {}, [maximumLimit]);
-
-  const handleChange = (category_id, limit) => {
-    const cats = categories;
-    let max = 0;
-    if (limit === 0 || isNaN(limit)) {
-      const cateFilter = cats.filter((i) => i.category_id !== category_id);
-      max = cateFilter.reduce((a, b) => a + (b.limit || 0), 0);
-      setMaximumLimit(max);
-      setMaximum(max);
-      setCategories([...cateFilter]);
-      setFieldValue([...cats]);
-      return;
-    }
-
-    let categoryIndex = cats.findIndex((x) => x.category_id === category_id);
-    const data = {
-      category_id,
-      limit,
-    };
-    if (categoryIndex < 0) {
-      cats.push(data);
-    } else {
-      cats[categoryIndex] = data;
-    }
-
-    max = cats.reduce((a, b) => a + (b.limit || 0), 0);
-
-    setCategories([...cats]);
-    setFieldValue([...cats]);
-    setMaximumLimit(max);
-    setMaximum(max);
-  };
-  return (
-    <>
-      <div class="Input" style={{ marginBottom: 0 }}>
-        <label class="Input-label">Categories</label>
-      </div>
-      <div class="css-table">
-        <div class="css-table-header">
-          <div style={{ width: "20%", height: 50, verticalAlign: "middle" }}>
-            Categories
-          </div>
-          <div
-            style={{ width: "10%", verticalAlign: "middle", cursor: "pointer" }}
-          >
-            Limit
-          </div>
-        </div>
-
-        <div class="css-table-body">
-          {categoryList.length > 0 &&
-            categoryList.map((el, index) => {
-              return (
-                <div key={index} class="css-table-row">
-                  <div style={{ textAlign: "left" }}>{el.label}</div>
-                  <div>
-                    <input
-                      type="number"
-                      autoComplete="off"
-                      onChange={(val) => {
-                        handleChange(el.id, parseInt(val.target.value));
-                      }}
-                      // checked={moduleAccess[index].privilege.read}
-                    />
-                  </div>
-                </div>
-              );
-            })}
-        </div>
-      </div>
-    </>
-  );
-};
 
 export default Component;
