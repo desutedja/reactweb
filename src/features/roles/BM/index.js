@@ -6,12 +6,15 @@ import {
   FiVolume2,
   FiBarChart2,
   FiPlus,
+  FiUserCheck,
 } from "react-icons/fi";
 import {
   RiTaskLine,
   RiBuilding2Line,
   RiCustomerService2Line,
   RiAdvertisementLine,
+  RiSurveyLine,
+  RiFileTextLine,
 } from "react-icons/ri";
 import parser from "html-react-parser";
 import { Redirect, Route, useHistory, Link } from "react-router-dom";
@@ -64,7 +67,8 @@ const modules = [
     icon: <FiBarChart2 className="MenuItem-icon" />,
     label: "Dashboard",
     path: "/dashboard",
-    subpaths: ["/building", "/task", "/advertisement", "/CCTV"],
+    // subpaths: ["/building", "/task", "/advertisement", "/CCTV"],
+    subpaths: ["/building", "/task", "/advertisement"],
     component: <Dashboard />,
   },
   {
@@ -80,8 +84,8 @@ const modules = [
     component: <Resident />,
   },
   {
-    icon: <FiUsers className="MenuItem-icon" />,
-    label: "Basic User Request",
+    icon: <FiUserCheck className="MenuItem-icon" />,
+    label: "Request Premium",
     path: "/basicuserrequest",
     component: <RequestPremium />,
   },
@@ -93,7 +97,7 @@ const modules = [
     component: <Billing />,
   },
   {
-    icon: <RiTaskLine className="MenuItem-icon" />,
+    icon: <RiFileTextLine className="MenuItem-icon" />,
     label: "Catat Meter",
     path: "/catatmeter",
     component: <CatatMeter />,
@@ -105,17 +109,17 @@ const modules = [
     component: <Staff />,
   },
   {
-    icon: <RiTaskLine className="MenuItem-icon" />,
+    icon: <RiSurveyLine className="MenuItem-icon" />,
     label: "Task",
     path: "/task",
     component: <Task />,
   },
-  {
-    icon: <RiAdvertisementLine className="MenuItem-icon" />,
-    label: "Advertisement",
-    path: "/advertisement",
-    component: <Ads />,
-  },
+  // {
+  //   icon: <RiAdvertisementLine className="MenuItem-icon" />,
+  //   label: "Advertisement",
+  //   path: "/advertisement",
+  //   component: <Ads />,
+  // },
   {
     icon: <FiVolume2 className="MenuItem-icon" />,
     label: "Announcement",

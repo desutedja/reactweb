@@ -4,14 +4,14 @@ import { useRouteMatch, Switch, Route, Redirect } from "react-router-dom";
 import Task from "../../dashboard/Task";
 import Billing from "../../dashboard/Building";
 import Advertisement from "../../dashboard/Advertisement";
-import Cctv from "../../dashboard/Cctv";
+// import Cctv from "../../dashboard/Cctv";
 
 function Component() {
   let { path } = useRouteMatch();
 
   return (
     <Switch>
-      <Redirect exact from={path} to={`${path}/task`} />
+      <Redirect exact from={path} to={`${path}/building`} />
       <Route path={`${path}/task`}>
         <Task />
       </Route>
@@ -21,9 +21,9 @@ function Component() {
       <Route path={`${path}/building`}>
         <Billing />
       </Route>
-      <Route path={`${path}/CCTV`}>
+      {/* <Route path={`${path}/CCTV`}>
         <Cctv />
-      </Route>
+      </Route> */}
     </Switch>
   );
 }
