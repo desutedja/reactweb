@@ -52,6 +52,7 @@ export const getRequestPremium = (
   pageSize,
   search = "",
   approved_status = "",
+  building,
 ) => (dispatch) => {
   dispatch(startAsync());
 
@@ -67,7 +68,9 @@ export const getRequestPremium = (
         search +
         "&approved_status=" +
         approved_status +
-        "&sort_field=created_on&sort_type=DESC",
+        "&sort_field=created_on&sort_type=DESC" + 
+        "&building_id=" +
+        building,
       (res) => {
         dispatch(setData(res.data.data));
 
