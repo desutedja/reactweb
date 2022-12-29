@@ -44,12 +44,22 @@ export const slice = createSlice({
       state.total_items = data.TotalItemFiltered;
       state.total_pages = data.TotalPage;
     },
+    // V1
+    // setUnitData: (state, action) => {
+    //   const data = action.payload;
+
+    //   state.unit.items = data.items;
+    //   state.unit.total_items = data.filtered_item;
+    //   state.unit.total_pages = data.filtered_page;
+    // },
+
+    // V2
     setUnitData: (state, action) => {
       const data = action.payload;
 
       state.unit.items = data.items;
-      state.unit.total_items = data.filtered_item;
-      state.unit.total_pages = data.filtered_page;
+      state.unit.total_items = data.total_item;
+      state.unit.total_pages = data.total_page;
     },
     setSubaccountData: (state, action) => {
       const data = action.payload;
@@ -256,6 +266,7 @@ export const getSubaccount =
     );
   };
 
+// V1
 export const getResidentUnit =
   (pageIndex, pageSize, search, id) => (dispatch) => {
     dispatch(startAsync());
@@ -287,6 +298,38 @@ export const getResidentUnit =
     );
   };
 
+// V2
+// export const getResidentUnit =
+// (pageIndex, pageSize, search, id) => (dispatch) => {
+//   dispatch(startAsync());
+
+//   dispatch(
+//     get(
+//       residentEndpoint +
+//         "/unitv2" +
+//         "?page=" +
+//         (pageIndex + 1) +
+//         "&id=" +
+//         id +
+//         "&limit=" +
+//         pageSize +
+//         "&sort_field=created_on&sort_type=DESC" +
+//         "&search=" +
+//         search,
+
+//       (res) => {
+//         console.log(res.data.data);
+//         dispatch(setUnitData(res.data.data));
+
+//         dispatch(stopAsync());
+//       },
+//       (err) => {
+//         dispatch(stopAsync());
+//       }
+//     )
+//   );
+// };
+   
 export const addResidentUnit = (data) => (dispatch) => {
   dispatch(startAsync());
 
