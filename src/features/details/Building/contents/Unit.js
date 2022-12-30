@@ -1,6 +1,6 @@
 import React, { useCallback, useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { FiPlus, FiUpload } from "react-icons/fi";
+import { FiDownload, FiPlus, FiUpload } from "react-icons/fi";
 
 import Table from "../../../../components/Table";
 import Button from "../../../../components/Button";
@@ -17,10 +17,11 @@ import {
   getBuildingSection,
   getBuildingUnitType,
 } from "../../../slices/building";
-import { get, getErr, setConfirmDelete } from "../../../slice";
+import { get, getErr, getFile, setConfirmDelete } from "../../../slice";
 import { endpointAdmin } from "../../../../settings";
 import UploadModal from "../../../../components/UploadModal";
 import Avatar from "react-avatar";
+import { useParams } from "react-router-dom";
 
 function Component({ view, canUpdate, canDelete, canAdd, data }) {
   const [selectedRow, setRow] = useState({});
@@ -31,6 +32,7 @@ function Component({ view, canUpdate, canDelete, canAdd, data }) {
   const [unitTypeID, setUnitTypeID] = useState("");
   const [floor, setFloor] = useState("");
   const [number, setNumber] = useState("");
+  const [searchUnit, setSearchUnit] = useState("");
   const [upload, setUpload] = useState(false);
 
   const [detailResident, setDetailResident] = useState([]);
@@ -40,6 +42,8 @@ function Component({ view, canUpdate, canDelete, canAdd, data }) {
   const { selected, loading, unit, section, unit_type, refreshToggle } =
     useSelector((state) => state.building);
   const { user } = useSelector((state) => state.auth);
+
+  let { id } = useParams();
 
   const columnsUnit = [
     { Header: "ID", accessor: (row) => row.id },
@@ -141,20 +145,20 @@ function Component({ view, canUpdate, canDelete, canAdd, data }) {
         }}
       >
         <form>
-          { user.role === "sa" ?
+          {user.role === "sa" ? (
             <Input
               label="Number"
               inputValue={selectedRow.number ? selectedRow.number : number}
               setInputValue={setNumber}
             />
-            :
+          ) : (
             <Input
               label="Number"
               inputValue={selectedRow.number ? selectedRow.number : number}
               setInputValue={setNumber}
               disabled={edit}
             />
-          }
+          )}
           <Input
             label="Floor"
             inputValue={selectedRow.floor ? selectedRow.floor : floor}
@@ -368,6 +372,38 @@ function Component({ view, canUpdate, canDelete, canAdd, data }) {
                 />,
               ]
             : null
+        }
+        actionDownloads={
+          view
+            ? null
+            : [
+                <Button
+                  fontWeight={500}
+                  color="Download"
+                  label="Download Units.csv"
+                  icon={<FiDownload />}
+                  onClick={() => {
+                    dispatch(
+                      getFile(
+                        endpointAdmin +
+                          "/building/unit/v2?limit=9999&page=1" +
+                          "&building_id=" +
+                          id +
+                          "&search=" +
+                          searchUnit +
+                          "&sort_field=&sort_type=&" +
+                          "export=" +
+                          1,
+                        "Data_Unit.csv",
+                        (res) => {
+                        },
+                        (err) => {
+                        }
+                      )
+                    );
+                  }}
+                />,
+              ]
         }
         onClickList={
           view
