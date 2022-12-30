@@ -11,7 +11,7 @@ import { endpointAdmin } from "../../../../settings";
 import { get } from "../../../slice";
 
 import Template from "../../../list/components/Template";
-import { getVoucherV2, setSelected } from "../../../slices/vouchers";
+import { deleteVoucherV2, getVoucherV2, setSelected } from "../../../slices/vouchers";
 import Voucher from "../../../../components/cells/Voucher";
 
 const types = [
@@ -155,6 +155,7 @@ const columns = [
 ];
 
 function Component({ view }) {
+  const { role } = useSelector((state) => state.auth);
   const [type, setType] = useState("");
   const [typeLabel, setTypeLabel] = useState("");
 
@@ -376,6 +377,7 @@ function Component({ view }) {
           ),
         },
       ]}
+      deleteAction={view ? null : role === "sa" && deleteVoucherV2}
       actions={
         view
           ? null
