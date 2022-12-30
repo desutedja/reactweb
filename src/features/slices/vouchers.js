@@ -275,6 +275,35 @@ export const deleteVoucher = (row, history) => (dispatch, getState) => {
   );
 };
 
+export const deleteVoucherV2 = (row, history) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    del(
+      voucherEndpointV2 + "/" + row.id,
+      (res) => {
+        history && history.push("/" + auth.role + "/vouchers");
+
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Voucher has been deleted.",
+          })
+        );
+
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
 export const distributeVoucher = (id, voucherId, history) => (
   dispatch,
   getState
