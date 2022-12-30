@@ -18,6 +18,7 @@ function Component({
   actions = [],
   actionDownloads = [],
   deleteAction,
+  returnBasicAction,
   sortBy,
   pagetitle,
   withSelection = false,
@@ -73,6 +74,19 @@ function Component({
                   dispatch(
                     setConfirmDelete("Are you sure to delete this item?", () =>
                       dispatch(deleteAction(row))
+                    )
+                  );
+                }
+              : null
+          }
+          onClickToBasic={
+            view
+              ? null
+              : returnBasicAction
+              ? (row) => {
+                  dispatch(
+                    setConfirmDelete("Are you sure to return this resident to basic?", () =>
+                      dispatch(returnBasicAction(row))
                     )
                   );
                 }

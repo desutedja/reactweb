@@ -1914,7 +1914,7 @@ function Component({ view, canAdd }) {
                 />,
               ]
         }
-        deleteAction={view ? null : role === "sa" && deleteResident}
+        returnBasicAction={view ? null : role === "sa" && deleteResident}
         filterVars={[
           status,
           KYCStatus,

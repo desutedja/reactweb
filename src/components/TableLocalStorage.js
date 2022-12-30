@@ -24,6 +24,7 @@ import {
   FiCalendar,
   FiStopCircle,
 } from "react-icons/fi";
+import { AiOutlineUserSwitch } from "react-icons/ai";
 import { FaCaretRight, FaCaretDown } from "react-icons/fa";
 import IconButton from "./IconButton";
 import Input from "./Input";
@@ -63,6 +64,7 @@ function Table({
   onClickAddBilling,
   onClickApproved,
   onClickDisapproved,
+  onClickToBasic,
   renderActions,
   deleteSelection,
   sortBy = [],
@@ -434,6 +436,7 @@ function Table({
                 {(onClickDelete ||
                   onClickDetails ||
                   onClickEdit ||
+                  onClickToBasic ||
                   onClickResolve) && <th key={i} />}
               </tr>
             ))}
@@ -522,6 +525,14 @@ function Table({
                         onClick: () => onClickDelete(row.original),
                         color: "Danger",
                         icon: <FiTrash />,
+                      }
+                    : "",
+                  onClickToBasic
+                    ? {
+                        name: "Return to Basic",
+                        onClick: () => onClickToBasic(row.original),
+                        color: "Danger",
+                        icon: <AiOutlineUserSwitch />,
                       }
                     : "",
                   onClickApproved &&
