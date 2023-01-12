@@ -43,7 +43,6 @@ import Button from "../../components/Button";
 import BillingItem from "../../components/cells/BillingItem";
 import Loading from "../../components/Loading";
 import DatePicker from "react-datepicker";
-import HorizontalScrolling from "react-horizontal-scroll-container";
 import TabDashboard from "../../components/TabDashboard";
 
 const formatValue = (value) => value.toFixed(0);
