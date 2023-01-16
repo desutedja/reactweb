@@ -43,7 +43,7 @@ function Component() {
     let history = useHistory();
 
     const building = selectedItem.resident_building ? 
-          selectedItem.resident_building : selected.building_id;
+          selectedItem.building : selected.building_id;
     const unit = selectedItem.resident_unit ?
           selectedItem.resident_unit : selected.id;
     const resident = selectedItem.resident_id ? 
@@ -52,9 +52,9 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointAdmin + '/building/service' +
             '?page=1' +
-            '&building_id=' + building + 
             '&search=' +
-            '&limit=1000',
+            '&limit=1000' +
+            '&building_id=' + parseInt(selectedItem.building),
 
             res => {
                 const { items } = res.data.data;

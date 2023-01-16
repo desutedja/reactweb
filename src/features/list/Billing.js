@@ -3377,7 +3377,7 @@ function Component({ view }) {
             ? null
             : (row) => {
                 dispatch(setSelected(row));
-                dispatch(setSelectedItem({}));
+                dispatch(setSelectedItem({building}));
                 history.push(url + "/" + row.id + "/add");
               }
         }
