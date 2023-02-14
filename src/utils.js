@@ -334,8 +334,10 @@ export function getCountryFromCode(value) {
 }
 
 export function getBank(value, banks) {
-  const c = banks.find((el) => el.value === value);
-  return c === undefined ? "-" : c.label;
+  // const c = banks.find((el) => el.value === value);
+  // return c === undefined ? "-" : c.label;
+
+  return value
 }
 
 export function toEllipsis(value, limit) {

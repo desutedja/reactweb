@@ -396,7 +396,7 @@ function Component() {
                     <div className="Container flex-column pb-5 pr-4">
                         <div className="row mb-5 justify-content-between">
                             <div className="col">
-                                <h5>SOS Statistics</h5>
+                                <h5>Task Statistics</h5>
                             </div>
                             <div className="col-auto">
                                 <div style={{

@@ -26,6 +26,7 @@ const billingPayload = {
     service_label: "",
     month_label: "",
     year_label: "",
+    resident_id:"",
 }
 
 function Component() {
@@ -54,7 +55,7 @@ function Component() {
             '?page=1' +
             '&search=' +
             '&limit=1000' +
-            '&building_id=' + parseInt(selectedItem.building),
+            '&building_id=' + building,
 
             res => {
                 const { items } = res.data.data;

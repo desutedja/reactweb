@@ -23,6 +23,7 @@ import { Form } from "formik";
 import { merchantSchema } from "./services/schemas";
 import Input from "./input";
 import SubmitButton from "./components/SubmitButton";
+import Select from 'react-select'
 
 const merchantPayload = {
   name: "",
@@ -66,6 +67,8 @@ function Component() {
 
   const [inBuildings, setBuildings] = useState([]);
   const [categories, setCategories] = useState([]);
+
+  const [accbank, setAccBank] = useState("");
 
   const [address, setAddress] = useState("");
   const [freeDeliv, setFreeDeliv] = useState("");
@@ -461,11 +464,22 @@ function Component() {
 
             <SectionSeparator />
 
+            {/* <Select 
+              label="Bank Account"
+              name="account_bank"
+              options={banks}
+              defaultInputValue={values.account_bank}
+              onChange={(choise) => {
+                merchantPayload.account_bank = choise.value
+              }}
+            /> */}
+
             <Input
               {...props}
               label="Bank Account"
               name="account_bank"
               options={banks}
+              type="select"
               required
             />
             <Input {...props} label="Bank Account Number" name="account_no" />
