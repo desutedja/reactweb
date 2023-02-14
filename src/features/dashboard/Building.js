@@ -2427,7 +2427,7 @@ function Component() {
                                 <AnimatedNumber
                                   className="h2 font-weight-bold black ml-3"
                                   value={
-                                    residentStatistic.online_resident +
+                                    buildingName != "" ? residentStatistic.online_resident : residentStatistic.online_resident +
                                     residentStatistic.online_resident_basic
                                   }
                                   // value={staffData.num_of_login_resident}
@@ -2456,7 +2456,7 @@ function Component() {
                                     <AnimatedNumber
                                       className="font-weight-bold black ml-2"
                                       value={
-                                        residentStatistic.online_resident_prev +
+                                        buildingName != "" ? residentStatistic.online_resident_prev : residentStatistic.online_resident_prev +
                                         residentStatistic.online_resident_basic_prev
                                       }
                                       formatValue={formatValue}
