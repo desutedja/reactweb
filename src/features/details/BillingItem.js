@@ -318,7 +318,7 @@ function Component({ view, canUpdate, canAdd, canDelete }) {
         </Formik>
       </Modal>
       <Template
-        pagetitle="Billing Details"
+        pagetitle="Billing Detailss"
         title={id}
         loading={loadingDetails}
         labels={["Details", "Additional Charges"]}

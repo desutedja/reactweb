@@ -130,6 +130,8 @@ function Component({ view }) {
   let dispatch = useDispatch();
   let history = useHistory();
   let { url } = useRouteMatch();
+  let buildingBM = Object.keys(buildings).map((keys)=> {return buildings[keys].value});
+
 
   useEffect(() => {
     // storing input status
@@ -3145,9 +3147,9 @@ function Component({ view }) {
         }
         filename="set_as_paid_template.xlsx"
         uploadLink={
-          endpointBilling +
-          "/management/billing/setaspaidbulk?building_id=" +
-          building
+          role != "sa" && buildingBM == 19 ? 
+          endpointBilling + "/management/billing/setaspaidbulk/v2?building_id=19" : building == 19 
+            ? endpointBilling + "/management/billing/setaspaidbulk/v2?building_id=19" : endpointBilling + "/management/billing/setaspaidbulk?building_id=" + building
         }
         uploadDataName="file_upload"
         resultComponent={uploadResultSetAsPaid}

@@ -84,6 +84,7 @@ const columns = [
     sorting: "email",
   },
   { Header: "Phone", accessor: "phone", sorting: "phone" },
+  { Header: "Resident Type", accessor: (row) => (row.resident_type == "" ? "basic" : row.resident_type), sorting: "resident_type" },
   {
     Header: "KYC Status",
     accessor: (row) =>
