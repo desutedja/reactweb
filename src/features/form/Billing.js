@@ -44,7 +44,7 @@ function Component() {
     let history = useHistory();
 
     const building = selectedItem.resident_building ? 
-          selectedItem.building : selected.building_id;
+          selectedItem.resident_building : selected.building_id;
     const unit = selectedItem.resident_unit ?
           selectedItem.resident_unit : selected.id;
     const resident = selectedItem.resident_id ? 
