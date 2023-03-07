@@ -756,7 +756,7 @@ function Component() {
                   className="col-sm-2 w-100"
                   style={{ minWidth: 170, marginBottom: 8 }}
                 >
-                  <InputDash
+                   <InputDash
                     type="select"
                     options={[
                       { label: "Semua Data", value: "all" },

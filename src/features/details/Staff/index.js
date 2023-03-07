@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import Detail from "../components/Detail";
@@ -9,17 +9,33 @@ import { get, setConfirmDelete } from "../../slice";
 import Pill from "../../../components/Pill";
 import Table from "../../../components/Table";
 import TableRating from "../../../components/TableRating";
+import Task from "../../../components/cells/Task";
 import {
   dateTimeFormatter,
   toSentenceCase,
   staffRoleFormatter,
   setModuleAccess,
+  dateTimeFormatterCell,
 } from "../../../utils";
-import { endpointManagement } from "../../../settings";
+import { endpointManagement, taskStatusColor } from "../../../settings";
 import { deleteStaff, setSelected } from "../../slices/staff";
 import { setAccess } from "../../auth/slice";
-import { FaStar } from "react-icons/fa";
-import Avatar from "react-avatar";
+import Button from "../../../components/Button";
+import Filter from "../../../components/Filter";
+
+
+const stats = [
+  { label: "Created", value: "created" },
+  { label: "Assigned", value: "assigned" },
+  { label: "In Progress", value: "in_progress" },
+  { label: "Canceled", value: "canceled" },
+  { label: "Reported", value: "reported" },
+  { label: "Rejected", value: "rejected" },
+  { label: "Approved", value: "approved" },
+  { label: "Completed", value: "completed" },
+];
+
+
 
 const columnsDepartments = [
   { Header: "ID", accessor: (row) => row.id },
@@ -30,48 +46,56 @@ const columnsDepartments = [
   },
 ];
 
-const columnsRatings = [
+const columnsRatings = [ 
   {
-    Header: "Resident",
+    Header: "Created On",
+    accessor: (row) => dateTimeFormatterCell(row.created_on),
+  },
+  {
+    Header: "ID",
     accessor: (row) => (
-      <>
-        <div className="Item">
-          <Avatar
-            className="Item-avatar"
-            size="40"
-            src={""}
-            name={"Dadang Jordan"}
-            round
-          />
-          <div>
-            <b>{"Dadang Jordan"}</b>
-            <p className="Item-subtext">{"dadangjodan#1@djordan.ay"}</p>
-          </div>
-        </div>
-      </>
+      <Task
+        id={row.id}
+        data={row}
+        items={[<small>{row.ref_code}</small>, row.unit_number ? <small>From unit: <b>{row.unit_number}</b></small> : []]}
+      />
     ),
   },
   {
-    Header: "Rating",
-    accessor: (row) => (
-      <>
-        <FaStar color={"#FFCE2A"} style={{ marginRight: 2 }} />
-        <FaStar color={"#FFCE2A"} style={{ marginRight: 2 }} />
-        <FaStar color={"#FFCE2A"} style={{ marginRight: 2 }} />
-        <FaStar color={"#FFCE2A"} style={{ marginRight: 2 }} />
-        <FaStar color={"#FFCE2A"} style={{ marginRight: 2 }} />
-      </>
-    ),
+    Header: "Task",
+    accessor: (row) =>
+      row.description ? row.description : "-",
   },
   {
-    Header: "Department Type",
-    accessor: (row) => "Ulasan Resident",
+    Header: "Status",
+    accessor: (row) =>
+      row.status ? (
+        <Pill color={taskStatusColor[row.status]}>
+          {toSentenceCase(row.status) +
+            (row.status === "created" && row.priority === "emergency"
+              ? ":Searching for Security"
+              : "") +
+            (row.status === "rejected" ? " by " + row.rejected_by : "")}
+        </Pill>
+      ) : (
+        "-"
+      ),
+  },
+  {
+    Header: "Task Duration",
+    accessor: (row) =>
+      row.time_duration ? row.time_duration : "-",
   },
 ];
 
 function Component({ view, canUpdate, canDelete }) {
   const { auth } = useSelector((state) => state);
   const [data, setData] = useState({});
+  const [dataTotal, setDataTotal] = useState({});
+  const [datatasks, setDataTasks] = useState({});
+  const [stat, setStat] = useState("");
+  const [statName, setStatName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   let dispatch = useDispatch();
   let { id } = useParams();
@@ -154,7 +178,7 @@ function Component({ view, canUpdate, canDelete }) {
       phone={data.phone}
       loading={!data.id}
       // labels={["Details", "Rating Staff"]}
-      labels={["Details"]}
+      labels={["Details","Performance"]}
       contents={[
         <>
           <Detail
@@ -205,10 +229,83 @@ function Component({ view, canUpdate, canDelete }) {
         </>,
         <TableRating
           expander={false}
-          noSearch={true}
+          noSearch={false}
           pagination={false}
           columns={columnsRatings}
-          data={data.departments}
+          dataTotalTasks={dataTotal}
+          data={datatasks?.items || []}
+          filters={[
+            {
+              button: (
+                <Button
+                  key="Status: All"
+                  label={stat ? statName : "Status: All"}
+                  selected={stat}
+                />
+              ),
+              hidex: stat === "",
+              label: <p>Status: {stat ? <b>{statName}</b> : <b>All</b>}</p>,
+              delete: () => {
+                setStat("");
+              },
+              component: (toggleModal) => (
+                <Filter
+                  data={stats}
+                  onClickAll={() => {
+                    setStat("");
+                    setStatName("");
+                    toggleModal(false);
+                  }}
+                  onClick={(el) => {
+                    setStat(el.value);
+                    setStatName(el.label);
+                    toggleModal(false);
+                  }}
+                />
+              ),
+            },
+          ]}
+          fetchData={useCallback(
+            (search, periode, startDateTo, endDateTo) => {
+              setLoading(true);
+              dispatch(
+                get(
+                  endpointManagement +
+                    "/admin/staff/performance/tasks/history" +
+                    "?staff_id=" + id +
+                    "&period=" + periode +
+                    "&period_start="+ startDateTo +
+                    "&period_end=" + endDateTo +
+                    "&filter=" + stat +
+                    "&search=" + search,
+                  (res) => {
+                    console.log(res.data.data);
+                    //console.log(data.departments);
+                    setDataTasks(res.data.data);
+                    setLoading(false);
+                    console.log("===========================")
+                    dispatch(
+                      get(
+                        endpointManagement +
+                          "/admin/staff/performance/tasks/total" +
+                          "?staff_id=" + id +
+                          "&period=" + periode +
+                          "&period_start="+ startDateTo +
+                          "&period_end=" + endDateTo +
+                          "&filter=" + stat +
+                          "&search=" + search,
+                        (res2) => {
+                          console.log(res2.data.data);
+                          setDataTotal(res2.data.data)
+                        },
+                      )
+                    );
+                  },
+                )
+              );
+            },
+            [dispatch, id, stat]
+          )}
         />,
       ]}
     />
