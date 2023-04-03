@@ -90,6 +90,26 @@ function Component({ view, canUpdate, canDelete, canAdd, data }) {
     );
   }, [dispatch, idUnit]);
 
+  function uploadResult(result) {
+    return (
+      <>
+        {result.status == "Success" ? (
+          <>
+            <div>
+              <h5>{result.message}</h5>
+            </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <h5 class="red">{result.message}</h5>
+            </div>
+          </>
+        )}
+      </>
+    );
+  }
+
   return (
     <>
       <UploadModal
@@ -101,6 +121,7 @@ function Component({ view, canUpdate, canDelete, canAdd, data }) {
         filename="building_unit_template.xlsx"
         uploadLink={endpointAdmin + "/management/building/bulk_unit"}
         uploadDataName="unit"
+        resultComponent={uploadResult}
       />
       <Modal
         disableFooter={false}

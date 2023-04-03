@@ -52,13 +52,15 @@ export const getCatatmeter = (
   pageSize,
   search = "",
   building,
+  month,
+  year,
 ) => (dispatch) => {
   dispatch(startAsync());
 
   dispatch(
     get(
       managementEndpoint +
-        "/list" +
+        "/list/v2" +
         "?page=" +
         (pageIndex + 1) +
         "&limit=" +
@@ -67,6 +69,10 @@ export const getCatatmeter = (
         search +
         "&building=" +
         building +
+        "&month="+
+        month+
+        "&year="+
+        year+
         "&sort_field=created_on&sort_type=DESC&export=false",
       (res) => {
         dispatch(setData(res.data.data));

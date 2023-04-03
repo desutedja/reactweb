@@ -7,13 +7,13 @@ import {
   toMoney,
   toSentenceCase,
 } from "../../utils";
-import { endpointAdmin } from "../../settings";
-import { get, setConfirmDelete, post, del } from "../slice";
+import { endpointAdmin,endpointBookingFacility } from "../../settings";
+import { get, setConfirmDelete, post, del, getWithHeader } from "../slice";
 
 import Table from "../../components/Table";
 import Breadcrumb from "../../components/Breadcrumb";
 import Pill from "../../components/Pill";
-import { setSelected } from "../slices/vouchers";
+import { setSelected } from "../slices/facility";
 import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
@@ -25,23 +25,19 @@ import Tab from "../../components/Tab";
 import Filter from "../../components/Filter";
 import Booking from "../../components/cells/Booking";
 import Facilities from "../../components/cells/Facilities";
+import { FiSearch } from "react-icons/fi";
+// import { auth } from "firebase";
 
-const residentColumns = [
-  // { Header: "ID", accessor: "id" },
-  // {
-  //   Header: "Resident Name",
-  //   accessor: (row) =>
-  //     <b>Dadang Jordan</b>
-  // },
+const bookingColumns = [
   {
-    Header: "Resident Name",
+    Header: "Booking Number",
     accessor: (row) => (
-      <Booking
-        // id={row.id}
-        id={1}
-        data={row}
-        items={[<b>Dadang Jordan</b>]}
-      />
+      // <Booking
+      //   id={row.booking_id}
+      //   data={row}
+      //   items={[<b>{row.booking_number}</b>]}
+      // />
+      <b>{row.booking_number}</b>
     ),
   },
   {
@@ -51,22 +47,24 @@ const residentColumns = [
   {
     Header: "Status",
     accessor: (row) => (
-      // row.status === "scheduled" ?
-      //   <Pill color="secondary">
-      //     {toSentenceCase(row.status)}
-      //   </Pill>
-      //   :
-      // row.status === "ongoing" ?
-      //   <Pill color="warning">
-      //     {toSentenceCase(row.status)}
-      //   </Pill>
-      //   :
-      //   <Pill color="primary">
-      //     {toSentenceCase(row.status)}
-      //   </Pill>
-      <font style={{ color: "#FFC200" }}>
-        <b>Booked</b>
-      </font>
+      row.status === "Booked" ?
+        <Pill color="warning">
+          {toSentenceCase(row.status)}
+        </Pill>
+        :
+      row.status === "Cancel" ?
+        <Pill color="primary">
+          {toSentenceCase(row.status)}
+        </Pill>
+        :
+      row.status === "CheckedIn" ?
+      <Pill color="success">
+        {toSentenceCase(row.status)}
+      </Pill>
+        :
+      <Pill color="secondary">
+        {toSentenceCase(row.status)}
+      </Pill>
     ),
   },
   {
@@ -76,7 +74,7 @@ const residentColumns = [
         <div>
           <div>
             <b>
-              {row.created_on ? dateTimeFormatterstriped(row.created_on) : "-"}
+              {row.created_date ? dateTimeFormatterstriped(row.created_date) : "-"}
             </b>
           </div>
         </div>
@@ -93,66 +91,73 @@ const facilityColumns = [
   //     <b>Yipy Gym</b>
   // },
   {
+    Header: "Building Name",
+    accessor: (row) => "building name",
+  },
+  {
     Header: "Facility Name",
     accessor: (row) => (
       <Facilities
-        // id={row.id}
-        id={102}
+        id={row.facility_id}
         data={row}
-        items={[<b>Yipy Gym</b>]}
+        items={[row.facility_name]}
       />
     ),
   },
   {
-    Header: "Quota",
-    accessor: (row) => <b>100</b>,
+    Header: "Booking/Quota",
+    accessor: (row) => row.used_quota_per_duration +"/"+row.total_quota_per_duration,
   },
-  {
-    Header: "Duration",
-    accessor: (row) => <b>1 hour</b>,
-  },
+  // {
+  //   Header: "Quota",
+  //   accessor: (row) => <b>100</b>,
+  // },
+  // {
+  //   Header: "Duration",
+  //   accessor: (row) => <b>1 hour</b>,
+  // },
   {
     Header: "Status",
     accessor: (row) => (
-      // row.status === "scheduled" ?
-      //   <Pill color="secondary">
-      //     {toSentenceCase(row.status)}
-      //   </Pill>
-      //   :
+      row.status === "Closed" ?
+        <Pill color="secondary">
+          {toSentenceCase(row.status)}
+        </Pill>
+        :
       // row.status === "ongoing" ?
       //   <Pill color="warning">
       //     {toSentenceCase(row.status)}
       //   </Pill>
       //   :
-      //   <Pill color="primary">
-      //     {toSentenceCase(row.status)}
-      //   </Pill>
-      <font style={{ color: "#52A452" }}>
-        <b>Open</b>
-      </font>
+        <Pill color="primary">
+          {toSentenceCase(row.status)}
+        </Pill>
+      // <font style={{ color: "#52A452" }}>
+      //   <b>Open</b>
+      // </font>
     ),
   },
-  {
-    Header: "Created Date",
-    accessor: (row) => {
-      return (
-        <div>
-          <div>
-            <b>
-              {row.created_on ? dateTimeFormatterstriped(row.created_on) : "-"}
-            </b>
-          </div>
-        </div>
-      );
-    },
-  },
+  // {
+  //   Header: "Created Date",
+  //   accessor: (row) => {
+  //     return (
+  //       <div>
+  //         <div>
+  //           <b>
+  //             {row.created_on ? dateTimeFormatterstriped(row.created_on) : "-"}
+  //           </b>
+  //         </div>
+  //       </div>
+  //     );
+  //   },
+  // },
 ];
 
 const listBookingStat = [
-  { label: "Booked", value: "booked" },
-  { label: "Check-In", value: "check_in" },
-  { label: "Check-Out", value: "check_out" },
-  { label: "Canceled", value: "canceled" },
+  { label: "Booked", value: "1" },
+  { label: "Check-In", value: "2" },
+  { label: "Check-Out", value: "3" },
+  { label: "Canceled", value: "4" },
 ];
 
 const listFacilities = [
@@ -166,19 +171,21 @@ const listFacStat = [
   { label: "Closed", value: "closed" },
 ];
 
-function Component({ view, title = "", pagetitle, canDelete }) {
+function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
   const [startdate, setStartDate] = useState("");
   const [enddate, setEndDate] = useState("");
   const [buildingid, setBuildingid] = useState("");
   const [bank, setBank] = useState("");
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({ items: [] });
+  const [dataBooking, setDataBooking] = useState({ items: [] });
   const [status, setStatus] = useState("");
   const [building, setBuilding] = useState("");
   const [type, setType] = useState("");
   const [typeLabel, setTypeLabel] = useState("");
   const [toggle, setToggle] = useState(false);
   const { role } = useSelector((state) => state.auth);
+  const { auth } = useSelector((state) => state);
   const [updatePromoModal, setUpdatePromoModal] = useState(false);
   const [startPromo, setStartPromo] = useState("");
   const [endPromo, setEndPromo] = useState("");
@@ -186,6 +193,8 @@ function Component({ view, title = "", pagetitle, canDelete }) {
   const [bManagements, setBManagements] = useState([]);
   const [dataBanks, setDataBanks] = useState([]);
   const [inBuildings, setBuildings] = useState([]);
+  const [buildingLabel, setBuildingLabel] = useState("");
+  const [buildingList, setBuildingList] = useState("");
 
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(10);
@@ -204,99 +213,40 @@ function Component({ view, title = "", pagetitle, canDelete }) {
   let history = useHistory();
   let { url } = useRouteMatch();
 
-  // useEffect(() => {
-  //   dispatch(
-  //     get(endpointAdmin + "/centratama/vouchers/list?name=" + search, (res) => {
-  //       let data = res.data.data;
-  //       let formatted = data.map((el) => ({ label: el.name, value: el.name }));
-  //       let limited = formatted.slice(0, limit);
-
-  //       const restTotal = formatted.length - limited.length;
-  //       const valueLimit = 5;
-
-  //       if (limited.length < formatted.length) {
-  //         limited.push({
-  //           label:
-  //             "load " +
-  //             (restTotal > valueLimit ? valueLimit : restTotal) +
-  //             " more",
-  //           className: "load-more",
-  //           restTotal: restTotal > valueLimit ? valueLimit : restTotal,
-  //         });
-  //       }
-
-  //       setCats(limited);
-  //     })
-  //   );
-  // }, [dispatch, limit, search]);
-
-  // useEffect(() => {
-  //   if (search.length === 0) {
-  //     setLimit(5);
-  //   }
-  // }, [search]);
-
   useEffect(() => {
-    dispatch(
-      get(
-        endpointAdmin +
-          "/management/building" +
-          "?limit=10&page=1" +
-          "&search=",
-        (res) => {
-          let data = res.data.data.items;
+    (!search || search.length >= 1) &&
+      dispatch(
+        get(
+          endpointAdmin +
+            "/building" +
+            "?limit=" +
+            limit +
+            "&page=1" +
+            "&search=" +
+            search,
+          (res) => {
+            let data = res.data.data.items;
+            let totalItems = Number(res.data.data.total_items);
+            let restTotal = totalItems - data.length;
 
-          let formatted = data.map((el) => ({
-            label: el.building_name + " by " + el.management_name,
-            value: el.id,
-          }));
+            let formatted = data.map((el) => ({
+              label: el.name,
+              value: el.id,
+            }));
 
-          setBManagements(formatted);
-        }
-      )
-    );
-  }, [dispatch]);
+            if (data.length < totalItems && search.length === 0) {
+              formatted.push({
+                label: "Load " + (restTotal > 5 ? 5 : restTotal) + " more",
+                restTotal: restTotal > 5 ? 5 : restTotal,
+                className: "load-more",
+              });
+            }
 
-  useEffect(() => {
-    dispatch(
-      get(endpointAdmin + "/paymentperbuilding/list/payment_method", (res) => {
-        const banks = res.data.data.items.map((el) => ({
-          value: el.id,
-          label: toSentenceCase(el.provider),
-        }));
-
-        // console.log(banks)
-
-        dispatch(setDataBanks(banks));
-      })
-    );
-  }, [dispatch]);
-
-  useEffect(() => {
-    dispatch(
-      get(
-        endpointAdmin +
-          "/paymentperbuilding/list?status=all" +
-          "&start_date=" +
-          startdate +
-          "&end_date=" +
-          enddate +
-          "&building_id=" +
-          buildingid +
-          "&bank=" +
-          bank +
-          "&sort_field=created_on&sort_type=DESC" +
-          "&limit=" +
-          limit,
-
-        (res) => {
-          console.log(res.data.data);
-          setDataPromo(res.data.data);
-        }
-      )
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+            setBuildingList(formatted);
+          }
+        )
+      );
+  }, [dispatch, search, limit]);
 
   return (
     <>
@@ -309,8 +259,8 @@ function Component({ view, title = "", pagetitle, canDelete }) {
           activeTab={0}
           contents={[
             <Table
-              columns={residentColumns}
-              data={data?.items || []}
+              columns={bookingColumns}
+              data={dataBooking?.items || []}
               // onSelection={(selectedRows) => {
               //   const selectedRowIds = [];
               //   selectedRows.map((row) => {
@@ -321,37 +271,30 @@ function Component({ view, title = "", pagetitle, canDelete }) {
               //   });
               // }}
               fetchData={useCallback(
-                (page, limit, searchItem, sortField, sortType) => {
+                (page, limit, sortField, sortType) => {
                   setLoading(true);
                   dispatch(
                     get(
-                      endpointAdmin +
-                        "/paymentperbuilding/list?status=" +
+                      endpointBookingFacility +
+                        "/admin/bookings?status=" +
                         status +
-                        "&start_date=" +
-                        startdate +
-                        "&end_date=" +
-                        enddate +
                         "&building_id=" +
                         building +
-                        "&bank=" +
-                        bank +
-                        "&sort_field=created_on&sort_type=DESC" +
                         "&limit=" +
                         limit +
                         "&page=" +
                         (page + 1),
 
                       (res) => {
-                        console.log(res.data.data);
-                        setData(res.data.data);
+                        console.log(JSON.stringify(res.data))
+                        setDataBooking(res.data);
                         setLoading(false);
                       }
                     )
                   );
                   // eslint-disable-next-line react-hooks/exhaustive-deps
                 },
-                [dispatch, buildingid, bank, startdate, enddate]
+                [dispatch, building]
               )}
               loading={loading}
               // onClickChange={
@@ -399,76 +342,116 @@ function Component({ view, title = "", pagetitle, canDelete }) {
               // }
               // pageCount={data?.total_pages}
               // totalItems={data?.total_items}
-              filters={[
-                {
-                  label: (
-                    <p>
-                      {faci ? (
-                        <div>
-                          Facility: <b>{faciLabel}</b>
-                        </div>
-                      ) : (
-                        <div>
-                          Facility: <b>All</b>
-                        </div>
-                      )}
-                    </p>
-                  ),
-                  hidex: faci === "",
-                  delete: () => setFaci(""),
-                  component: (toggleModal) => (
-                    <>
-                      <Filter
-                        data={listFacilities}
-                        onClick={(el) => {
-                          setFaci(el.value);
-                          setFaciLabel(el.label);
-                          toggleModal(false);
-                        }}
-                        onClickAll={() => {
-                          setFaci("");
-                          setFaciLabel("");
-                          toggleModal(false);
-                        }}
-                      />
-                    </>
-                  ),
-                },
-                {
-                  label: (
-                    <p>
-                      {stat ? (
-                        <div>
-                          Status: <b>{statLabel}</b>
-                        </div>
-                      ) : (
-                        <div>
-                          Status: <b>All</b>
-                        </div>
-                      )}
-                    </p>
-                  ),
-                  hidex: stat === "",
-                  delete: () => setStat(""),
-                  component: (toggleModal) => (
-                    <>
-                      <Filter
-                        data={listBookingStat}
-                        onClick={(el) => {
-                          setStat(el.value);
-                          setStatLabel(el.label);
-                          toggleModal(false);
-                        }}
-                        onClickAll={() => {
-                          setStat("");
-                          setStatLabel("");
-                          toggleModal(false);
-                        }}
-                      />
-                    </>
-                  ),
-                },
-              ]}
+              filters={
+                role == "sa" ? 
+                [
+                  {
+                    label: "Building: ",
+                    value: building ? buildingLabel : "All",
+                    hidex: building === "",
+                    delete: () => setBuilding(""),
+                    component: (toggleModal) => (
+                      <>
+                        <Input
+                          label="Search Building"
+                          compact
+                          icon={<FiSearch />}
+                          inputValue={search}
+                          setInputValue={setSearch}
+                        />
+                        <Filter
+                          data={buildingList}
+                          onClick={(el) => {
+                            if (!el.value) {
+                              setLimit(limit + el.restTotal);
+                              return;
+                            }
+                            setBuilding(el.value);
+                            setBuildingLabel(el.label);
+                            setLimit(5);
+                            toggleModal(false);
+                          }}
+                          onClickAll={() => {
+                            setBuilding("");
+                            setBuildingLabel("");
+                            setLimit(5);
+                            toggleModal(false);
+                          }}
+                        />
+                      </>
+                    ),
+                  },
+                  {
+                    label: (
+                      <p>
+                        {stat ? (
+                          <div>
+                            Status: <b>{statLabel}</b>
+                          </div>
+                        ) : (
+                          <div>
+                            Status: <b>All</b>
+                          </div>
+                        )}
+                      </p>
+                    ),
+                    hidex: stat === "",
+                    delete: () => setStat(""),
+                    component: (toggleModal) => (
+                      <>
+                        <Filter
+                          data={listBookingStat}
+                          onClick={(el) => {
+                            setStat(el.value);
+                            setStatLabel(el.label);
+                            toggleModal(false);
+                          }}
+                          onClickAll={() => {
+                            setStat("");
+                            setStatLabel("");
+                            toggleModal(false);
+                          }}
+                        />
+                      </>
+                    ),
+                  },
+                ]:[
+                  {
+                    label: (
+                      <p>
+                        {stat ? (
+                          <div>
+                            Status: <b>{statLabel}</b>
+                          </div>
+                        ) : (
+                          <div>
+                            Status: <b>All</b>
+                          </div>
+                        )}
+                      </p>
+                    ),
+                    hidex: stat === "",
+                    delete: () => setStat(""),
+                    component: (toggleModal) => (
+                      <>
+                        <Filter
+                          data={listBookingStat}
+                          onClick={(el) => {
+                            setStat(el.value);
+                            setStatLabel(el.label);
+                            toggleModal(false);
+                          }}
+                          onClickAll={() => {
+                            setStat("");
+                            setStatLabel("");
+                            toggleModal(false);
+                          }}
+                        />
+                      </>
+                    ),
+                  },
+                ]
+              }
               // actions={[
               //   <>
               //     {view ? null : role === "bm" && !canAdd ? null : (
@@ -548,37 +531,30 @@ function Component({ view, title = "", pagetitle, canDelete }) {
               //   });
               // }}
               fetchData={useCallback(
-                (page, limit, searchItem, sortField, sortType) => {
+                (page, limit, searchItem) => {
+                  role !== "sa" ? setBuilding(auth.building_id) : setBuilding(building);
                   setLoading(true);
                   dispatch(
                     get(
-                      endpointAdmin +
-                        "/paymentperbuilding/list?status=" +
-                        status +
-                        "&start_date=" +
-                        startdate +
-                        "&end_date=" +
-                        enddate +
-                        "&building_id=" +
+                      endpointBookingFacility +
+                        "/admin/facilities" +
+                        "?building=" +
                         building +
-                        "&bank=" +
-                        bank +
-                        "&sort_field=created_on&sort_type=DESC" +
+                        "&search=" +
+                        searchItem +
                         "&limit=" +
                         limit +
                         "&page=" +
                         (page + 1),
-
                       (res) => {
-                        console.log(res.data.data);
-                        setData(res.data.data);
+                        setData(res.data);
                         setLoading(false);
                       }
                     )
                   );
                   // eslint-disable-next-line react-hooks/exhaustive-deps
                 },
-                [dispatch, buildingid, bank, startdate, enddate]
+                [dispatch, building]
               )}
               loading={loading}
               onClickDelete={
@@ -589,10 +565,9 @@ function Component({ view, title = "", pagetitle, canDelete }) {
                   : (row) => {
                       dispatch(
                         setConfirmDelete(
-                          // "Are you sure to end this promo?",
-                          "Feature still under development",
+                          "Are you sure to end this facility?",
                           () => {
-                            // dispatch(deleteVA(row));
+                           console.log(row.facility_id)
                           }
                         )
                       );
@@ -615,76 +590,47 @@ function Component({ view, title = "", pagetitle, canDelete }) {
               }
               // pageCount={data?.total_pages}
               // totalItems={data?.total_items}
-              filters={[
-                {
-                  label: (
-                    <p>
-                      {faci ? (
-                        <div>
-                          Facility: <b>{faciLabel}</b>
-                        </div>
-                      ) : (
-                        <div>
-                          Facility: <b>All</b>
-                        </div>
-                      )}
-                    </p>
-                  ),
-                  hidex: faci === "",
-                  delete: () => setFaci(""),
-                  component: (toggleModal) => (
-                    <>
-                      <Filter
-                        data={listFacilities}
-                        onClick={(el) => {
-                          setFaci(el.value);
-                          setFaciLabel(el.label);
-                          toggleModal(false);
-                        }}
-                        onClickAll={() => {
-                          setFaci("");
-                          setFaciLabel("");
-                          toggleModal(false);
-                        }}
-                      />
-                    </>
-                  ),
-                },
-                {
-                  label: (
-                    <p>
-                      {stat ? (
-                        <div>
-                          Status: <b>{statLabel}</b>
-                        </div>
-                      ) : (
-                        <div>
-                          Status: <b>All</b>
-                        </div>
-                      )}
-                    </p>
-                  ),
-                  hidex: stat === "",
-                  delete: () => setStat(""),
-                  component: (toggleModal) => (
-                    <>
-                      <Filter
-                        data={listFacStat}
-                        onClick={(el) => {
-                          setStat(el.value);
-                          setStatLabel(el.label);
-                          toggleModal(false);
-                        }}
-                        onClickAll={() => {
-                          setStat("");
-                          setStatLabel("");
-                          toggleModal(false);
-                        }}
-                      />
-                    </>
-                  ),
-                },
-              ]}
+              filters={
+                role == "sa" ?
+                [
+                  {
+                    label: "Building: ",
+                    value: building ? buildingLabel : "All",
+                    hidex: building === "",
+                    delete: () => setBuilding(""),
+                    component: (toggleModal) => (
+                      <>
+                        <Input
+                          label="Search Building"
+                          compact
+                          icon={<FiSearch />}
+                          inputValue={search}
+                          setInputValue={setSearch}
+                        />
+                        <Filter
+                          data={buildingList}
+                          onClick={(el) => {
+                            if (!el.value) {
+                              setLimit(limit + el.restTotal);
+                              return;
+                            }
+                            setBuilding(el.value);
+                            setBuildingLabel(el.label);
+                            setLimit(5);
+                            toggleModal(false);
+                          }}
+                          onClickAll={() => {
+                            setBuilding("");
+                            setBuildingLabel("");
+                            setLimit(5);
+                            toggleModal(false);
+                          }}
+                        />
+                      </>
+                    ),
+                  },
+                ] : []
+              }
               // actions={[
               //   <>
               //     {view ? null : role === "bm" && !canAdd ? null : (

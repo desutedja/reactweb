@@ -267,7 +267,8 @@ function Table({
                                 <div className="w-auto">
                                   <img
                                     alt=""
-                                    src={require("./../assets/Group 2311.jpg")}
+                                    src={"https://yipy-assets.s3.ap-southeast-1.amazonaws.com/Assets+Staff+Performance/total-task.png"}
+                                    width="40"
                                   />
                                 </div>
                               </div>
@@ -294,7 +295,8 @@ function Table({
                                 <div className="w-auto">
                                   <img
                                     alt=""
-                                    src={require("./../assets/Group 2311.jpg")}
+                                    src={"https://yipy-assets.s3.ap-southeast-1.amazonaws.com/Assets+Staff+Performance/completed-task.png"}
+                                    width="40"
                                   />
                                 </div>
                               </div>
@@ -321,7 +323,8 @@ function Table({
                                 <div className="w-auto">
                                   <img
                                     alt=""
-                                    src={require("./../assets/Group 2311.jpg")}
+                                    src={"https://yipy-assets.s3.ap-southeast-1.amazonaws.com/Assets+Staff+Performance/incomplete-task.png"}
+                                    width="40"
                                   />
                                 </div>
                               </div>

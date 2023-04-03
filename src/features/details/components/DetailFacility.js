@@ -15,6 +15,9 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
     editable = true, editPath = 'edit', onDelete, renderButtons = () => { } }) {
 
     const { banks } = useSelector(state => state.main);
+    const csl = () => {
+        console.log("data" + data);
+    }
 
     let history = useHistory();
 
@@ -24,14 +27,12 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
 
         if (label === 'id') label = type + " ID ";
         if (label.includes('pic_')) label = label.split('_')[1];
-        if (label === 'created_on') label = "Registered Date";
+        if (label === 'created_date') label = "Registered Date";
         if (label === 'name_legal') label = "Legal Name";
-        if (label === 'address') label = "Street Address";
+        if (label === 'location') label = " ";
         if (label === 'name') label = "Facility Name";
-        if (label === 'type') label = "Quota";
-        if (label === 'legal') label = "Duration";
-        if (label === 'open_at') label = "Check-In Schedule";
-        if (label === 'closed_at') label = "Check-Out Schedule";
+        if (label === 'check_in_start_minute') label = "Check In Start Minute";
+        if (label === 'status') label = "Status";
         if (label === 'description') label = " ";
         if (label === 'category') label = " ";
         if (label === 'district') label = " ";
@@ -42,27 +43,15 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
 
     function formatValue(label, value) {
         return (value == null || value === "") ? "-" :
-            label.includes('phone') ? '+' + value :
-                label === "birthdate" ? dateFormatter(value, '-') :
-                    label === "birthplace" ? value.toUpperCase() :
-                        label === "address" ? toSentenceCase(value) :
-                            label === "created_on" ? "01 Juni 2022" :
-                                label === "nationality" ? getCountryFromCode(value) :
-                                    label === "account_bank" ? getBank(value, banks) :
-                                        label === "gender" ?
-                                            (value === "L" ? "Male" :
-                                                value === "P" ? "Female" : "Undefined") :
-                                                    label === "id" ? "102" :
-                                                        label === "name" ? "Yipy Gym" :
-                                                            label === "legal" ? "1 Hour" :
-                                                                label === "type" ? "100" :  
-                                                                    label === "open_at" ? "Toilet" :  
-                                                                        label === "closed_at" ? "Wifi" :
-                                                                            label === "category" ? "Yipy Gym" :    
-                                                                                label === "description" ? "Gold's Gym Indonesia has been operating under the corporate epresentation of PT Fit and Health Indonesia since 2007. Our gyms are built to help people realize." :  
-                                                                                    label === "district" ? "1. Mengikuti aturan protokol kesehatan." :
-                                                                                        label === "city" ? "2. Dilarang membawa hewan peliharaan.":
-                                                                                value
+                    label === "address" ? data.location :
+                        label === "created_date" ? data.created_date :
+                            label === "id" ? data.id :
+                                label === "name" ? data.name :
+                                    label === "status" ? data.status :
+                                        label === "check_in_start_minute" ? data.check_in_start_minute :  
+                                            label === "description" ? data.description :  
+                                                label === "location" ? data.location :  
+                                                    value
     }
 
     return (
@@ -109,7 +98,7 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
                             {group}
                         </div>}
                         {labels[group].map((el, i) => {
-                            return !el.disabled && el !== "description" && (el !== "district" && el !== "city" && el !== "open_at" && el !== "closed_at" ) ?
+                            return !el.disabled && el !== "description" && (el !== "open_at" && el !== "closed_at" ) && el !== "rules" && el !== "location" ?
                                 <div className="row no-gutters" style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
                                     <div className="col-auto" flex={3} style={{ fontWeight: 'bold', textAlign: 'left', minWidth: 200 }}>
                                         {el.lfmt ? el.lfmt(el) : formatLabel(el)}
@@ -119,7 +108,7 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
                                             : formatValue(el, data[el])}
                                     </div>
                                 </div> : 
-                                el === "description" ?
+                                el === "description" || el === "location" ?
                                 <div className="row no-gutters" style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
                                 <div className="col" flex={9} style={{ fontWeight: 'normal' }}>
                                     {el.vfmt ? el.vfmt(data[el.label]) : el.label ? formatValue(el.label, data[el.label])
@@ -128,22 +117,6 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
                                     <div className="col-auto" flex={3} style={{ fontWeight: 'bold', textAlign: 'left', minWidth: 200 }}>
                                         {el.lfmt ? el.lfmt(el) : formatLabel(el)}
                                     </div>
-                                </div>
-                                : 
-                                el === "district" ?
-                                <div className="row no-gutters" style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
-                                <div className="col" flex={9} style={{ fontWeight: 'normal' }}>
-                                    {el.vfmt ? el.vfmt(data[el.label]) : el.label ? formatValue(el.label, data[el.label])
-                                        : formatValue(el, data[el])}
-                                </div>
-                                </div>
-                                : 
-                                el === "city" ?
-                                <div className="row no-gutters" style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
-                                <div className="col" flex={9} style={{ fontWeight: 'normal' }}>
-                                    {el.vfmt ? el.vfmt(data[el.label]) : el.label ? formatValue(el.label, data[el.label])
-                                        : formatValue(el, data[el])}
-                                </div>
                                 </div>
                                 :
                                 el === "open_at" || el === "closed_at" ?
@@ -158,16 +131,16 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
                                         : formatValue(el, data[el])}
                                 </div>
                                 </div>
-                                // :
-                                // el === "closed_at" ?
-                                // <div className="row no-gutters" style={{ padding: '4px', alignItems: 'flex-start' }} key={i} >
-                                // <div className="col" flex={9} style={{ fontWeight: 'normal' }}>
-                                //     <img src={require('./../../../assets/ic-wifi.jpg')} width="40" height="40" style={{marginRight:5}} />
-                                //     {el.vfmt ? el.vfmt(data[el.label]) : el.label ? formatValue(el.label, data[el.label])
-                                //         : formatValue(el, data[el])}
-                                // </div>
-                                // </div>
-                                : null;
+                                : 
+                                <div>
+                                    <ul>
+                                        {data.rules.map((item) => (
+                                        <li id={item.id}>
+                                            <span>{item.rule}</span>
+                                        </li>
+                                        ))}
+                                    </ul>
+                              </div>;
                         })}
                     </div>
                 )}
@@ -175,7 +148,7 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
             {!view && <div className="col-auto d-flex flex-column">
                 {editable && <Button icon={<FiEdit />} label="Edit" onClick={() => history.push({
                     pathname: editPath,
-                    // state: data,
+                    state: data,
                 })} />}
                 {renderButtons()}
                 {onDelete && <Button icon={<FiTrash />} color="Danger" label="Delete" onClick={onDelete} />}

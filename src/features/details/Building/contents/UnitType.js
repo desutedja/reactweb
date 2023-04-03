@@ -19,13 +19,17 @@ import { setConfirmDelete } from "../../../slice";
 
 const unitTypes = [
   { label: "Studio", value: "studio" },
+  { label: "Studio Besar", value: "studio besar" },
   { label: "Penthouse", value: "penthouse" },
   { label: "1BR", value: "1BR" },
   { label: "2BR", value: "2BR" },
+  { label: "2BR Besar", value: "2BR besar" },
   { label: "3BR", value: "3BR" },
   { label: "4BR", value: "4BR" },
   { label: "5BR", value: "5BR" },
   { label: "Kios", value: "kios" },
+  { label: "Sekolah", value: "sekolah" },
+  { label: "Other", value: "other" },
 ];
 
 const columnsUnitType = [

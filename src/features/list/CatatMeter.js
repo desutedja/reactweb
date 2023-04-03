@@ -7,7 +7,10 @@ import { FiDownload } from "react-icons/fi";
 import Filter from "../../components/Filter";
 import { get } from "../slice";
 import { endpointAdmin } from "../../settings";
-import { dateTimeFormatterstriped } from "../../utils";
+import { dateTimeFormatterstriped, isRangeToday } from "../../utils";
+import DateRangeFilter from "../../components/DateRangeFilter";
+import moment from "moment";
+
 
 const columns = [
   {
@@ -129,6 +132,39 @@ function Component({ view, canAdd }) {
   const [buildingName, setBuildingName] = useState("");
   const [buildings, setBuildings] = useState("");
 
+  const today = moment().format("yyyy-MM-DD", "day");
+  const monthStart = moment().startOf("month").format("yyyy-MM-DD");
+  const monthEnd = moment().endOf("month").format("yyyy-MM-DD");
+  const [startDate, setStartDate] = useState(monthStart);
+  const [endDate, setEndDate] = useState(monthEnd);
+
+  const months = [
+    { value: 1, label: "January" },
+    { value: 2, label: "February" },
+    { value: 3, label: "March" },
+    { value: 4, label: "April" },
+    { value: 5, label: "May" },
+    { value: 6, label: "June" },
+    { value: 7, label: "July" },
+    { value: 8, label: "August" },
+    { value: 9, label: "September" },
+    { value: 10, label: "October" },
+    { value: 11, label: "November" },
+    { value: 12, label: "December" },
+  ];
+
+  const monthnow = new Date().getMonth();
+  const [month, setMonth] = useState(monthnow+1);
+  const [monthName, setMonthName] = useState(months[monthnow].label);
+
+  const yearnow = new Date().getFullYear();
+  const years = [];
+  for (let i = yearnow - 2; i <= yearnow + 1; i++) {
+    years.push({ value: i, label: i });
+  }
+
+  const [year, setYear] = useState(yearnow);
+
   useEffect(() => {
     dispatch(
       get(
@@ -181,7 +217,7 @@ function Component({ view, canAdd }) {
         columns={columns}
         slice={"catatmeter"}
         getAction={getCatatmeter}
-        filterVars={[building]}
+        filterVars={[building, month, year]}
         filters={
           role === "sa"
             ? [
@@ -210,8 +246,85 @@ function Component({ view, canAdd }) {
                     </>
                   ),
                 },
+                {
+                  hidex: month == monthnow+1,
+                  label: <p>Month: {month ? monthName : months[month].label}</p>,
+                  delete: () => {
+                    setMonth(monthnow+1);
+                    setMonthName(months[monthnow].label);
+                  },
+                  component: (toggleModal) => (
+                    <>
+                      <Filter
+                        data={months}
+                        onClick={(el) => {
+                          if (!el.value) {
+                            return;
+                          }
+                          setMonth(el.value);
+                          setMonthName(el.label);
+                          toggleModal(false);
+                        }}
+                        onClickAll={() => {
+                          setMonth(monthnow+1);
+                          setMonthName(months[monthnow+1].label);
+                          toggleModal(false);
+                        }}
+                      />
+                    </>
+                  ),
+                },
+                {
+                  hidex: year == year,
+                  label: <p>Year: {year}</p>,
+                  delete: () => setYear(yearnow),
+                  component: (toggleModal) => (
+                    <>
+                      <Filter
+                        data={years}
+                        onClick={(el) => {
+                          setYear(el.value);
+                          toggleModal(false);
+                        }}
+                        onClickAll={() => {
+                          setYear(yearnow);
+                          toggleModal(false);
+                        }}
+                      />
+                    </>
+                  ),
+                },
               ]
-            : []
+            : [
+              {
+                hidex: month == monthnow+1,
+                label: <p>Month: {month ? monthName : months[month].label}</p>,
+                delete: () => {
+                  setMonth(monthnow+1);
+                  setMonthName(months[monthnow].label);
+                },
+                component: (toggleModal) => (
+                  <>
+                    <Filter
+                      data={months}
+                      onClick={(el) => {
+                        if (!el.value) {
+                          return;
+                        }
+                        setMonth(el.value);
+                        setMonthName(el.label);
+                        toggleModal(false);
+                      }}
+                      onClickAll={() => {
+                        setMonth(monthnow+1);
+                        setMonthName(months[monthnow+1].label);
+                        toggleModal(false);
+                      }}
+                    />
+                  </>
+                ),
+              },
+            ]
         }
         // onClickEdit={
         //   view

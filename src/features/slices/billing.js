@@ -231,7 +231,7 @@ export const getBillingSettlement =
     dispatch(
       get(
         billingEndpoint +
-          "/settlement" +
+          "/settlement/v2" +
           "?page=" +
           (pageIndex + 1) +
           "&limit=" +
@@ -268,7 +268,7 @@ export const downloadBillingSettlement =
     dispatch(
       getFile(
         billingEndpoint +
-          "/settlement" +
+          "/settlement/v2" +
           "?building_id=" +
           building +
           "&payment_settled=" +

@@ -283,3 +283,8 @@ export const adminSchema = Yup.object().shape({
   group: Text,
   status: Text,
 });
+
+export const facilitySchema = Yup.object().shape({
+  name: Text,
+  check_in_start_minute: Number,
+});
