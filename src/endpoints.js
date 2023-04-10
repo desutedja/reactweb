@@ -14,4 +14,3 @@ export const _endpointInternet = _endpointBase + '/' + root + '-internet';
 export const _endpointUserReqeust = _endpointBase + '/' + root + '-user-request';
 export const _endpointNotification = _endpointBase + '/' + root + '-notification';
 export const _endpointBookingFacility = _endpointBase + '/' + root + '-facilities-booking';
-// export const _endpointBookingFacility = 'http://127.0.0.1:1111';

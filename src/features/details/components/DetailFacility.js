@@ -10,6 +10,7 @@ import Button from '../../../components/Button';
 import { toSentenceCase, dateFormatter, getCountryFromCode, getBank, dateTimeFormatter } from '../../../utils';
 import { FiTrash, FiEdit } from 'react-icons/fi';
 import { useSelector } from 'react-redux';
+import { deleteFacility } from '../../slices/facility';
 
 function Component({ view = false, imgPreview = false, data, labels, type = "", horizontal=false,
     editable = true, editPath = 'edit', onDelete, renderButtons = () => { } }) {
@@ -151,7 +152,12 @@ function Component({ view = false, imgPreview = false, data, labels, type = "", 
                     state: data,
                 })} />}
                 {renderButtons()}
-                {onDelete && <Button icon={<FiTrash />} color="Danger" label="Delete" onClick={onDelete} />}
+                {/* {onDelete && <Button icon={<FiTrash />} color="Danger" label="Delete" onClick={(pathString,id) => (
+                    pathString = history.location.pathname.split("/"),
+                    id = pathString[pathString.length - 1],
+                    console.log("HARUSNYA JALANNN"),
+                    deleteFacility(id,history)
+                )} />} */}
             </div>}
         </div>
     )

@@ -3143,15 +3143,12 @@ function Component({ view }) {
         open={uploadSetAsPaid}
         toggle={() => setUploadSetAsPaid(false)}
         templateLink={
-          role != "sa" && buildingBM == 19 ? 
-          "https://api.yipy.id/yipy-assets/asset-storage/document/D591544D0A4B104DDB07717153F142D5.xlsx" : building == 19 ?
-          "https://api.yipy.id/yipy-assets/asset-storage/document/D591544D0A4B104DDB07717153F142D5.xlsx" : "https://api.yipy.id/yipy-assets/asset-storage/document/8D23E9158CBE5501CFDBD34E4B132C54.xlsx"
+          "https://api.yipy.id/yipy-assets/asset-storage/document/D591544D0A4B104DDB07717153F142D5.xlsx"
         }
         filename="set_as_paid_template.xlsx"
         uploadLink={
-          role != "sa" && buildingBM == 19 ? 
-          endpointBilling + "/management/billing/setaspaidbulk/v2?building_id=19" : building == 19 
-            ? endpointBilling + "/management/billing/setaspaidbulk/v2?building_id=19" : endpointBilling + "/management/billing/setaspaidbulk?building_id=" + building
+          role != "sa" ? 
+          endpointBilling + "/management/billing/setaspaidbulk/v2?building_id=" + buildingBM : endpointBilling + "/management/billing/setaspaidbulk/v2?building_id=" + building
         }
         uploadDataName="file_upload"
         resultComponent={uploadResultSetAsPaid}

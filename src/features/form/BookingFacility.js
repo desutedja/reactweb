@@ -5,15 +5,14 @@ import { useSelector, useDispatch } from "react-redux";
 import SectionSeparator from "../../components/SectionSeparator";
 import { get, post } from "../slice";
 import { endpointAdmin, endpointBookingFacility } from "../../settings";
-
-
+import Modal from "../../components/Modal";
 
 import Template from "./components/TemplateWithFormikBook";
 import { Form, FieldArray, Field } from "formik";
 import { facilitySchema } from "./services/schemas";
 import Input from "./inputBooking";
 import SubmitButton from "./components/SubmitButton";
-import { editFacility } from "../slices/facility";
+import { createFacility, editFacility } from "../slices/facility";
 
 import FileInput2 from "./inputBooking/File2";
 
@@ -25,55 +24,57 @@ const facilityData = {
   location:"",
   description:"",
   check_in_start_minute:0,
+  open_time:"",
+  close_time:"",
   other_facilities:[],
   rules:[],
   open_schedules:[
     {
       day: "Sunday",
-      open_time: "00:00:00",
-      close_time: "00:00:00",
+      open_time: "00:00",
+      close_time: "00:00",
       duration:0,
       quota_per_duration:0,
     },
     {
       day: "Monday",
-      open_time: "00:00:00",
-      close_time: "00:00:00",
+      open_time: "00:00",
+      close_time: "00:00",
       duration:0,
       quota_per_duration:0,
     },
     {
       day: "Tuesday",
-      open_time: "00:00:00",
-      close_time: "00:00:00",
+      open_time: "00:00",
+      close_time: "00:00",
       duration:0,
       quota_per_duration:0,
     },
     {
       day: "Wednesday",
-      open_time: "00:00:00",
-      close_time: "00:00:00",
+      open_time: "00:00",
+      close_time: "00:00",
       duration:0,
       quota_per_duration:0,
     },
     {
       day: "Thursday",
-      open_time: "00:00:00",
-      close_time: "00:00:00",
+      open_time: "00:00",
+      close_time: "00:00",
       duration:0,
       quota_per_duration:0,
     },
     {
       day: "Friday",
-      open_time: "00:00:00",
-      close_time: "00:00:00",
+      open_time: "00:00",
+      close_time: "00:00",
       duration:0,
       quota_per_duration:0,
     },
     {
       day: "Saturday",
-      open_time: "00:00:00",
-      close_time: "00:00:00",
+      open_time: "00:00",
+      close_time: "00:00",
       duration:0,
       quota_per_duration:0,
     },
@@ -93,11 +94,14 @@ function Component() {
   let dispatch = useDispatch();
   let history = useHistory();
 
-  
-  const [staffRole, setStaffRole] = useState("");
   const [otherFacility, setOtherFacility] = useState(facilityData.other_facilities);
+  const [schedules, setSchedules] = useState(facilityData.open_schedules);
   const [imageList, setImageList] = useState(facilityData.image_urls);
   const [ruleList, setRuleList] = useState(facilityData.rules);
+  const [edit, setEdit] = useState(false);
+  const [editing, setEditing] = useState("");
+
+  const [rules, setRules] = useState(facilityData.rules);
 
   const addRules = () => {
     let val = document.getElementById("rule").value
@@ -115,6 +119,33 @@ function Component() {
     }
 
     setRuleList([...ruleList]);
+  }
+
+  const editRules = (item,i) => {
+    console.log("ITEM ", item, " - INDEX ", i)
+    let dt = rules[i]
+    setEditing(dt)
+  }
+
+  const editRule = (i) => {
+    let val = document.getElementById("rules_edit").value
+    const newState = rules.map(obj => {
+      // 👇️ if id equals 2, update country property
+      if (obj.id === i) {
+        return {...obj, rule: val};
+      }
+
+      // 👇️ otherwise return the object as is
+      return obj;
+    });
+
+    const ruless = newState.map((el) => (
+      el.rule
+    ));
+
+    setRules(newState);
+    setRuleList(ruless)
+    setEdit(false);
   }
 
   const addOtherFacility = () => {
@@ -161,7 +192,7 @@ function Component() {
 
           let formatted = buildings.map((el) => ({
             label: el.building_name + " by " + el.management_name,
-            value: el.id,
+            value: el.id.toString(),
           }));
 
           setBuildings(formatted);
@@ -170,7 +201,59 @@ function Component() {
     );
   }, [dispatch]);
 
+  useEffect(()=>{
+		if(selected.id !== undefined){
+      if (history.location.state.rules.length > 0){
+        const ruless = history.location.state.rules.map((el) => (
+          el.rule
+        ));
+
+        setRules(history.location.state.rules)
+        setRuleList(ruless)
+      }
+
+      if (selected.image_urls.length > 0){
+        const images = selected.image_urls.map((el) => (
+          el.url
+        ));
+
+        setImageList(images)
+      }
+
+
+      selected.open_schedules.map((el, i) => (
+        facilityData.open_schedules[i].day = el.day,
+        facilityData.open_schedules[i].open_time = el.open_time,
+        facilityData.open_schedules[i].close_time = el.close_time,
+        facilityData.open_schedules[i].duration = el.duration,
+        facilityData.open_schedules[i].quota_per_duration = el.quota_per_duration
+      ));
+    }
+    //setSchedules(facilityData.open_schedules)
+    // console.log("SCHEDULE: ", schedules)
+	}, [])
+
   return (
+    <div>
+      <Modal title={"Edit Rules"} isOpen={edit} disableFooter={true} toggle={() => setEdit(false)}>
+        
+        <div className="Input">
+              <div>
+                <div >
+                  <div>
+                    <label className="Input-label" for="Rule">Rule</label>
+                  </div>
+                </div>
+              </div>
+              <div className="Input-containers">
+                <input name="rules_edit" rows="4" placeholder="Rules" autocomplete="off" type="text" id="rules_edit" defaultValue={editing.rule} />
+              </div>
+              <br/>
+              <button type="button" onClick={() => editRule(editing.id)}>submit</button>
+            </div>
+        
+      </Modal>
+    
     <Template
       slice="facility"
       payload={
@@ -181,51 +264,38 @@ function Component() {
             } 
           : facilityData
       }
-      schema={facilitySchema}
+      // schema={facilitySchema}
       formatValues={(values) => {
         const { ...facilityData } = values;
         return facilityData
       }}
       edit={(data) => {
         delete data[undefined];
+        data.rules = rules
+        data.building_id= data.building_id.toString();
+        console.log("DATA EDIT: ", data);
         dispatch(editFacility(data, history, selected.id));
       }}
-      // add={(data)=>{
-      //   console.log("selected" + JSON.stringify(selected))
-      //   console.log(data.facilityData)
-      // }}
       add={(data) => {
-        console.log(data);
         data.rules = ruleList;
         data.other_facilities = otherFacility;
         data.image_urls= imageList;
         if (auth.role === "bm") {
           data.building_id=user.building_id;
-          dispatch(
-            post(
-              endpointAdmin + "/josss/bm",
-              data
-            )
-          );
+          delete data[undefined];
+          console.log(data);
+          dispatch(createFacility(data, history));
           return;
         }
-        dispatch(
-          post(
-            endpointBookingFacility + "/admin/facilities",
-            data, (res) => {
-              console.log("testt=====================================", res)
-            }
-        ));
+        delete data[undefined];
+        console.log(data);
+        dispatch(createFacility(data, history));
+        ;
       }}
       renderChild={(props) => {
-        const { values, errors, setFieldValue } = props;
-        if (values.id !== undefined) {
-          const ruless = values.rules.map((el) => (
-            el.rule
-          ));
-
-          // setRuleList(ruless)
-        }
+        const {values, errors, setFieldValue } = props;
+        console.log("PROPS", props);
+        console.log("RuleList", ruleList);
         return (
           <Form className="Form">
              {role === "sa" && (
@@ -234,7 +304,7 @@ function Component() {
                 label="Building"
                 name="building_id"
                 options={buildings}
-                autocomplete="off"
+                autoComplete="off"
               />
             )}
               
@@ -248,10 +318,10 @@ function Component() {
               accept="image/*"
             />
 
-            <div class="Input">
+            <div className="Input">
               <div >
                 <div>
-                  <div><label class="Input-label" for="Image Facility">Image Facility</label></div>
+                  <div><label className="Input-label" for="Image Facility">Image Facility</label></div>
                 </div>
               </div>
               <FileInput2 name={"image_facility"} id="image_facility" placeholder="Image Facility" onClick={addImages} {...props} />
@@ -260,7 +330,7 @@ function Component() {
             {imageList.map((item) => (
               <li>
                 <span>{item}</span>
-                <button type="button" onClick={()=>{removeImages(item)}}>delete</button>
+                {props.values.id == undefined ? (<button type="button" onClick={()=>{removeImages(item)}}>delete</button>) : ""}
               </li>
             ))}
           </ul>
@@ -274,6 +344,8 @@ function Component() {
             />
 
             <Input {...props} label="Check In Start Minute" name="check_in_start_minute" type="number" placeholder="check_in_start_minute (must number)" />
+            <Input {...props} label="Open Time" name="open_time" type="text" placeholder="00:00" />
+            <Input {...props} label="Close Time" name="close_time" type="text" placeholder="21:21" />
             <Input
               {...props}
               label="Description"
@@ -284,21 +356,21 @@ function Component() {
               <div>
                 <div >
                   <div>
-                    <label class="Input-label" for="Rule">Rule</label>
+                    <label className="Input-label" for="Rule">Rule</label>
                   </div>
                 </div>
               </div>
               <div className="Input-containers">
                 <input name="rules" rows="4" placeholder="Rules" autocomplete="off" type="text" id="rule" />
-                <button type="button" onClick={addRules}>ADD</button>
+                {props.values.id == undefined ? (<button type="button" onClick={addRules}>ADD</button>) : ""}
               </div>
             </div>
             
             <ul>
-            {ruleList.map((item) => (
+            {ruleList.map((item, i) => (
               <li>
                 <span>{item}</span>
-                <button type="button" onClick={()=>{removeRules(item)}}>delete</button>
+                {props.values.id == undefined ? (<button type="button" onClick={()=>{removeRules(item)}}>delete</button>) : (<button type="button" onClick={()=>{setEdit(true);editRules(values,i)}}>edit</button>)}
               </li>
             ))}
           </ul>
@@ -359,13 +431,11 @@ function Component() {
                 
               </div>
             </div>
-            
-            
               <>
                 <SectionSeparator title="Operational Hour" />
                 <FieldArray
                   name="schedules"
-                  render={(arrayHelpers) => (
+                  render={() => (
                     <div
                       className="Input"
                       style={{
@@ -416,7 +486,7 @@ function Component() {
                             }}
                           >
                           </p>
-                          <input name={`open_schedules.${index}.duration`} type="text" placeholder="duration (hour)" 
+                          <input name={`open_schedules.${index}.duration`} type="text" placeholder="duration (hour)" defaultValue={friend.duration != 0 ? friend.duration : "" }
                           onChange={(duration)=> {
                             setFieldValue(
                               `open_schedules.${index}.duration`,
@@ -432,7 +502,7 @@ function Component() {
                             }}
                           >
                           </p>
-                          <input name={`open_schedules.${index}.quota_per_duration`} type="text" placeholder="quota" 
+                          <input name={`open_schedules.${index}.quota_per_duration`} type="text" placeholder="quota" defaultValue={friend.quota_per_duration != 0 ? friend.quota_per_duration : "" }
                           onChange={(quota)=> {
                               setFieldValue(
                                 `open_schedules.${index}.quota_per_duration`,
@@ -451,11 +521,11 @@ function Component() {
                             onClick={() => {
                               setFieldValue(
                                 `open_schedules.${index}.open_time`,
-                                "00:00:00"
+                                "00:00"
                               );
                               setFieldValue(
                                 `open_schedules.${index}.close_time`,
-                                "23:59:59"
+                                "23:59"
                               );
                             }}
                           >
@@ -470,11 +540,11 @@ function Component() {
                             onClick={() => {
                               setFieldValue(
                                 `open_schedules.${index}.open_time`,
-                                "00:00:00"
+                                "00:00"
                               );
                               setFieldValue(
                                 `open_schedules.${index}.close_time`,
-                                "00:00:00"
+                                "00:00"
                               );
                             }}
                           >
@@ -492,6 +562,7 @@ function Component() {
         );
       }}
     />
+    </div>
   );
 }
 

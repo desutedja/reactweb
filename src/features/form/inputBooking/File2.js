@@ -68,7 +68,9 @@ function FileInput2(props) {
             }}
             onClick={onClick}
         />
-        <button type="button" onClick={props.onClick}>ADD</button>
+        {
+            props.values.id == undefined ? (<button type='button' onClick={props.onClick}>ADD</button>) : ""
+        }
     </div>;
 }
 

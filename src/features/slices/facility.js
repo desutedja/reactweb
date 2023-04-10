@@ -37,10 +37,32 @@ export const slice = createSlice({
   },
 });
 
+export const createFacility = ( data, history) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(post(endpointBookingFacility + "/admin/facilities",
+    data,
+    res => {
+      history.push("/" + auth.role + "/facility%20booking");
+
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Facility has been created.'
+      }));
+
+      dispatch(stopAsync());
+    },
+    err => {
+      dispatch(stopAsync());
+    }))
+}
+
 export const editFacility = ( data, history, id) => dispatch => {
   dispatch(startAsync());
 
-  dispatch(put(endpointBookingFacility + '/josss/update', { ...data, id: id }, 
+  dispatch(put(endpointBookingFacility + '/admin/facilities/' + id, { ...data, id: id }, 
     res => {
       // dispatch(setSelected(res.data.data));
       history.push(`${id}`);
@@ -55,6 +77,39 @@ export const editFacility = ( data, history, id) => dispatch => {
     err => {
       dispatch(stopAsync());
     }))
+}
+
+
+export const deleteFacility = (id, history) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+  
+  dispatch(
+    del(endpointBookingFacility + '/admin/facilities/' + id, 
+    (res) => {
+      history && history.push('/' + auth.role + '/facility%20booking');
+      
+      dispatch(setInfo({
+        color: 'success',
+        message: 'Facility has been deleted.'
+      }));
+
+      dispatch(stopAsync())
+
+      // window.location.reload(false)
+    },
+    (err) => {
+      dispatch(setInfo({
+        color: 'warning',
+        message: 'Facility has error deleted.' + err
+      }));
+
+      dispatch(stopAsync());
+
+      // window.location.reload(false)
+    })
+  )
 }
 
 export const {

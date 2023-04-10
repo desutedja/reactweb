@@ -2,13 +2,13 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  dateTimeFormatterCell,
   dateTimeFormatterstriped,
-  toMoney,
   toSentenceCase,
 } from "../../utils";
 import { endpointAdmin,endpointBookingFacility } from "../../settings";
 import { get, setConfirmDelete, post, del, getWithHeader } from "../slice";
+
+import { deleteFacility } from "../slices/facility";
 
 import Table from "../../components/Table";
 import Breadcrumb from "../../components/Breadcrumb";
@@ -17,13 +17,9 @@ import { setSelected } from "../slices/facility";
 import { FiPlus } from "react-icons/fi";
 
 import Button from "../../components/Button";
-import { deleteVA, editVA } from "../slices/promova";
-import Modal from "../../components/Modal";
 import Input from "../../components/Input";
-import MultiSelectInput from "../form/input/MultiSelect";
 import Tab from "../../components/Tab";
 import Filter from "../../components/Filter";
-import Booking from "../../components/cells/Booking";
 import Facilities from "../../components/cells/Facilities";
 import { FiSearch } from "react-icons/fi";
 // import { auth } from "firebase";
@@ -172,8 +168,6 @@ const listFacStat = [
 ];
 
 function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
-  const [startdate, setStartDate] = useState("");
-  const [enddate, setEndDate] = useState("");
   const [buildingid, setBuildingid] = useState("");
   const [bank, setBank] = useState("");
   const [loading, setLoading] = useState(true);
@@ -186,28 +180,15 @@ function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
   const [toggle, setToggle] = useState(false);
   const { role } = useSelector((state) => state.auth);
   const { auth } = useSelector((state) => state);
-  const [updatePromoModal, setUpdatePromoModal] = useState(false);
-  const [startPromo, setStartPromo] = useState("");
-  const [endPromo, setEndPromo] = useState("");
-  const [dataPromo, setDataPromo] = useState({ items: [] });
-  const [bManagements, setBManagements] = useState([]);
-  const [dataBanks, setDataBanks] = useState([]);
-  const [inBuildings, setBuildings] = useState([]);
   const [buildingLabel, setBuildingLabel] = useState("");
   const [buildingList, setBuildingList] = useState("");
 
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(10);
 
-  const [cat, setCat] = useState("");
-  const [catName, setCatName] = useState("");
-  const [cats, setCats] = useState("");
-
   const tabs = ["Booking by Resident", "List of Facilities"];
   const [stat, setStat] = useState("");
   const [statLabel, setStatLabel] = useState("");
-  const [faci, setFaci] = useState("");
-  const [faciLabel, setFaciLabel] = useState("");
 
   let dispatch = useDispatch();
   let history = useHistory();
@@ -383,7 +364,7 @@ function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
                   },
                   {
                     label: (
-                      <p>
+                      <div>
                         {stat ? (
                           <div>
                             Status: <b>{statLabel}</b>
@@ -393,7 +374,7 @@ function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
                             Status: <b>All</b>
                           </div>
                         )}
-                      </p>
+                      </div>
                     ),
                     hidex: stat === "",
                     delete: () => setStat(""),
@@ -565,9 +546,9 @@ function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
                   : (row) => {
                       dispatch(
                         setConfirmDelete(
-                          "Are you sure to end this facility?",
+                          "Are you sure to delete this facility?",
                           () => {
-                           console.log(row.facility_id)
+                            dispatch(deleteFacility(row.facility_id, history))
                           }
                         )
                       );

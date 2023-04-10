@@ -324,6 +324,26 @@ function Component({ view, canAdd }) {
                   </>
                 ),
               },
+              {
+                hidex: year == year,
+                label: <p>Year: {year}</p>,
+                delete: () => setYear(yearnow),
+                component: (toggleModal) => (
+                  <>
+                    <Filter
+                      data={years}
+                      onClick={(el) => {
+                        setYear(el.value);
+                        toggleModal(false);
+                      }}
+                      onClickAll={() => {
+                        setYear(yearnow);
+                        toggleModal(false);
+                      }}
+                    />
+                  </>
+                ),
+              },
             ]
         }
         // onClickEdit={
