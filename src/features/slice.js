@@ -95,7 +95,7 @@ export const setNotif = data => dispatch => {
 
   setTimeout(() => dispatch(setNotifData({
     title: '',
-  })), 5000);
+  })), 10000);
 }
 
 export const setInfo = data => dispatch => {
@@ -103,7 +103,7 @@ export const setInfo = data => dispatch => {
 
   setTimeout(() => dispatch(setInfoData({
     message: '',
-  })), 3000);
+  })), 10000);
 }
 
 export const setInfoSetAsPaid = data => dispatch => {
@@ -111,7 +111,7 @@ export const setInfoSetAsPaid = data => dispatch => {
 
   setTimeout(() => dispatch(setInfoData({
     message: '',
-  })), 5000);
+  })), 10000);
 }
 
 const responseAlert = (err, link) => async dispatch => {
@@ -156,6 +156,31 @@ export const get = (
 
   Axios.get(link, {
     headers: auth.headers,
+  })
+    .then(res => {
+      // console.log(res);
+
+      ifSuccess(res);
+    })
+    .catch(err => {
+      // console.log(err);
+
+      dispatch(responseAlert(err, link));
+
+      ifError(err);
+    })
+    .finally(() => {
+      finallyDo();
+    })
+}
+
+export const getWithHeader = (
+  link, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) => (dispatch, getState) => {
+  const { auth } = getState();
+
+  Axios.get(link, {
+    headers: auth.headers
   })
     .then(res => {
       // console.log(res);

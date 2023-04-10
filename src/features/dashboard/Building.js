@@ -43,7 +43,6 @@ import Button from "../../components/Button";
 import BillingItem from "../../components/cells/BillingItem";
 import Loading from "../../components/Loading";
 import DatePicker from "react-datepicker";
-import HorizontalScrolling from "react-horizontal-scroll-container";
 import TabDashboard from "../../components/TabDashboard";
 
 const formatValue = (value) => value.toFixed(0);
@@ -757,7 +756,7 @@ function Component() {
                   className="col-sm-2 w-100"
                   style={{ minWidth: 170, marginBottom: 8 }}
                 >
-                  <InputDash
+                   <InputDash
                     type="select"
                     options={[
                       { label: "Semua Data", value: "all" },
@@ -1083,7 +1082,7 @@ function Component() {
                               </div>
                               <div className="col">
                                 <div className="text-nowrap ml-3">
-                                  Registered Unit
+                                  Total Unit
                                 </div>
                                 <AnimatedNumber
                                   className="h2 font-weight-bold black ml-3"
@@ -1409,7 +1408,7 @@ function Component() {
                                 </div>
                                 <div className="col">
                                   <div className="text-nowrap ml-3">
-                                    Onboarded Unit
+                                    Occupied Unit
                                   </div>
                                   <AnimatedNumber
                                     className="h2 font-weight-bold black ml-3"
@@ -1598,7 +1597,7 @@ function Component() {
                             </div>
                           </div>
                         </div>
-                        <div className="col">
+                        {/* <div className="col">
                           <div className="Container color-6 d-flex flex-column cursor-pointer">
                             <div
                               className="row no-gutters align-items-center"
@@ -1621,7 +1620,7 @@ function Component() {
                               </div>
                             </div>
                           </div>
-                        </div>
+                        </div> */}
                         <div className="col">
                           <div className="Container color-8 d-flex flex-column cursor-pointer">
                             <div
@@ -1661,7 +1660,7 @@ function Component() {
                                   formatValue={formatValue}
                                 />
                                 <div className="text-nowrap">
-                                  Onboarded Unit(s)
+                                  Occupied Unit(s)
                                 </div>
                               </div>
                               <div className="col-auto">
@@ -2428,7 +2427,7 @@ function Component() {
                                 <AnimatedNumber
                                   className="h2 font-weight-bold black ml-3"
                                   value={
-                                    residentStatistic.online_resident +
+                                    buildingName != "" ? residentStatistic.online_resident : residentStatistic.online_resident +
                                     residentStatistic.online_resident_basic
                                   }
                                   // value={staffData.num_of_login_resident}
@@ -2457,7 +2456,7 @@ function Component() {
                                     <AnimatedNumber
                                       className="font-weight-bold black ml-2"
                                       value={
-                                        residentStatistic.online_resident_prev +
+                                        buildingName != "" ? residentStatistic.online_resident_prev : residentStatistic.online_resident_prev +
                                         residentStatistic.online_resident_basic_prev
                                       }
                                       formatValue={formatValue}
@@ -2818,7 +2817,7 @@ function Component() {
                         >
                           <div className="row">
                             <div className="col">
-                              <b>Paid Amount Billing</b>
+                              <b>Paid Amount Billings</b>
                             </div>
                             <div className="col BigNumber2 text-right">
                               {" "}
@@ -2851,16 +2850,21 @@ function Component() {
                                       ? " Hari"
                                       : " " + toSentenceCase(periode)}{" "}
                                     Lalu:
-                                  </font>
-                                  <br />
-                                  <AnimatedNumber
-                                    className="font-weight-bold black"
-                                    value={billingData.total_paid_amount_prev}
-                                    formatValue={formatValuetoMoney}
-                                  />
+                                  </font>                                  
                                 </div>
                               </div>
-                              <div className="col text-right">
+                              <div className="col BigNumber2 text-right">
+                                  <AnimatedNumber
+                                      className="font-weight-bold black"
+                                      value={billingData.total_paid_amount_prev}
+                                      formatValue={formatValuetoMoney}
+                                    />
+		                             </div>
+                             
+                            </div>
+                          )}
+                          <div className="row">
+                          <div className="col text-right">
                                 {billingData.total_paid_amount_prev !== 0 &&
                                 periode === "periode" ? (
                                   <font
@@ -2934,8 +2938,7 @@ function Component() {
                                   <font style={{ color: "#52A452" }}>0%</font>
                                 )}
                               </div>
-                            </div>
-                          )}
+                          </div>
                           {/*                         
                         {
                             typeof billingData.total_paid_amount !== 'undefined' && billingData.total_paid_amount !== null ?
@@ -2997,15 +3000,19 @@ function Component() {
                                       : " " + toSentenceCase(periode)}{" "}
                                     Lalu:
                                   </font>
-                                  <br />
-                                  <AnimatedNumber
-                                    className="font-weight-bold black"
-                                    value={billingData.total_unpaid_amount_prev}
-                                    formatValue={formatValuetoMoney}
-                                  />
                                 </div>
                               </div>
-                              <div className="col text-right">
+                              <div className="col BigNumber2 text-right">
+                                <AnimatedNumber
+                                  className="font-weight-bold black"
+                                  value={billingData.total_unpaid_amount_prev}
+                                  formatValue={formatValuetoMoney}
+                                />
+                              </div>
+                            </div>
+                          )}
+                          <div className="row">
+                          <div className="col text-right">
                                 {billingData.total_unpaid_amount_prev !== 0 &&
                                 periode === "periode" ? (
                                   <font
@@ -3079,8 +3086,7 @@ function Component() {
                                   <font style={{ color: "#52A452" }}>0%</font>
                                 )}
                               </div>
-                            </div>
-                          )}
+                          </div>
                           {/*                         
                         {
                             typeof billingData.total_paid_amount !== 'undefined' && billingData.total_paid_amount !== null ?
@@ -3142,90 +3148,97 @@ function Component() {
                                       : " " + toSentenceCase(periode)}{" "}
                                     Lalu:
                                   </font>
-                                  <br />
+                                  
+                                </div>
+                               
+                              </div>
+                              <div className="col BigNumber2 text-right">
                                   <AnimatedNumber
                                     className="font-weight-bold black"
                                     value={billingData.total_settle_amount_prev}
                                     formatValue={formatValuetoMoney}
                                   />
-                                </div>
-                              </div>
+                                  </div>
+                              
+                              
+                            </div>
+                          )}
+                          <div className="row">
                               <div className="col text-right">
-                                {billingData.total_settle_amount_prev !== 0 &&
-                                periode === "periode" ? (
-                                  <font
-                                    style={{
-                                      color: `${
-                                        ((billingData.total_settle_amount -
+                                    {billingData.total_settle_amount_prev !== 0 &&
+                                    periode === "periode" ? (
+                                      <font
+                                        style={{
+                                          color: `${
+                                            ((billingData.total_settle_amount -
+                                              billingData.total_settle_amount_prev) /
+                                              billingData.total_settle_amount_prev) *
+                                              100 <
+                                            0
+                                              ? "#E12029"
+                                              : "#52A452"
+                                          }`,
+                                        }}
+                                      >
+                                        {((billingData.total_settle_amount -
+                                          billingData.total_settle_amount_prev) /
+                                          billingData.total_settle_amount_prev) *
+                                          100 <
+                                        0 ? (
+                                          <FiChevronUp
+                                            style={{
+                                              transform: "rotate(180deg)",
+                                              marginBottom: "6px",
+                                            }}
+                                          />
+                                        ) : ((billingData.total_settle_amount -
+                                            billingData.total_settle_amount_prev) /
+                                            billingData.total_settle_amount_prev) *
+                                            100 >
+                                          0 ? (
+                                          <FiChevronUp
+                                            style={{ marginBottom: "6px" }}
+                                          />
+                                        ) : (
+                                          []
+                                        )}
+                                        {((billingData.total_settle_amount -
                                           billingData.total_settle_amount_prev) /
                                           billingData.total_settle_amount_prev) *
                                           100 <
                                         0
-                                          ? "#E12029"
-                                          : "#52A452"
-                                      }`,
-                                    }}
-                                  >
-                                    {((billingData.total_settle_amount -
-                                      billingData.total_settle_amount_prev) /
-                                      billingData.total_settle_amount_prev) *
-                                      100 <
-                                    0 ? (
-                                      <FiChevronUp
-                                        style={{
-                                          transform: "rotate(180deg)",
-                                          marginBottom: "6px",
-                                        }}
-                                      />
-                                    ) : ((billingData.total_settle_amount -
-                                        billingData.total_settle_amount_prev) /
-                                        billingData.total_settle_amount_prev) *
-                                        100 >
-                                      0 ? (
-                                      <FiChevronUp
-                                        style={{ marginBottom: "6px" }}
-                                      />
+                                          ? " " +
+                                            decimal(
+                                              ((billingData.total_settle_amount -
+                                                billingData.total_settle_amount_prev) /
+                                                billingData.total_settle_amount_prev) *
+                                                100 *
+                                                -1
+                                            ) +
+                                            "%" +
+                                            " ( -" +
+                                            (billingData.total_settle_amount -
+                                              billingData.total_settle_amount_prev) *
+                                              -1 +
+                                            " )"
+                                          : " " +
+                                            decimal(
+                                              ((billingData.total_settle_amount -
+                                                billingData.total_settle_amount_prev) /
+                                                billingData.total_settle_amount_prev) *
+                                                100
+                                            ) +
+                                            "%" +
+                                            " ( +" +
+                                            (billingData.total_settle_amount -
+                                              billingData.total_settle_amount_prev) +
+                                            " )"}
+                                      </font>
                                     ) : (
-                                      []
+                                      <font style={{ color: "#52A452" }}>0%</font>
                                     )}
-                                    {((billingData.total_settle_amount -
-                                      billingData.total_settle_amount_prev) /
-                                      billingData.total_settle_amount_prev) *
-                                      100 <
-                                    0
-                                      ? " " +
-                                        decimal(
-                                          ((billingData.total_settle_amount -
-                                            billingData.total_settle_amount_prev) /
-                                            billingData.total_settle_amount_prev) *
-                                            100 *
-                                            -1
-                                        ) +
-                                        "%" +
-                                        " ( -" +
-                                        (billingData.total_settle_amount -
-                                          billingData.total_settle_amount_prev) *
-                                          -1 +
-                                        " )"
-                                      : " " +
-                                        decimal(
-                                          ((billingData.total_settle_amount -
-                                            billingData.total_settle_amount_prev) /
-                                            billingData.total_settle_amount_prev) *
-                                            100
-                                        ) +
-                                        "%" +
-                                        " ( +" +
-                                        (billingData.total_settle_amount -
-                                          billingData.total_settle_amount_prev) +
-                                        " )"}
-                                  </font>
-                                ) : (
-                                  <font style={{ color: "#52A452" }}>0%</font>
-                                )}
                               </div>
                             </div>
-                          )}
                         </div>
                         {auth.role === "sa" && (
                           <div
@@ -3273,7 +3286,9 @@ function Component() {
                                         : " " + toSentenceCase(periode)}{" "}
                                       Lalu:
                                     </font>
-                                    <br />
+                                  </div>
+                                </div>
+                                <div className="col BigNumber2 text-right">
                                     <AnimatedNumber
                                       className="font-weight-bold black"
                                       value={
@@ -3281,9 +3296,11 @@ function Component() {
                                       }
                                       formatValue={formatValuetoMoney}
                                     />
-                                  </div>
                                 </div>
-                                <div className="col text-right">
+                              </div>
+                            )}
+                            <div className="row">
+                            <div className="col text-right">
                                   {billingData.total_disburse_amount_prev !==
                                     0 && periode === "periode" ? (
                                     <font
@@ -3357,8 +3374,7 @@ function Component() {
                                     <font style={{ color: "#52A452" }}>0%</font>
                                   )}
                                 </div>
-                              </div>
-                            )}
+                            </div>
                           </div>
                         )}
                         <div
@@ -3406,7 +3422,9 @@ function Component() {
                                       : " " + toSentenceCase(periode)}{" "}
                                     Lalu:
                                   </font>
-                                  <br />
+                                </div>
+                              </div>
+                              <div className="col BigNumber2 text-right">
                                   <AnimatedNumber
                                     className="font-weight-bold black"
                                     value={
@@ -3414,9 +3432,11 @@ function Component() {
                                     }
                                     formatValue={formatValuetoMoney}
                                   />
-                                </div>
                               </div>
-                              <div className="col text-right">
+                            </div>
+                          )}
+                          <div className="row">
+                          <div className="col text-right">
                                 {billingData.total_unsettle_amount_prev !== 0 &&
                                 periode === "periode" ? (
                                   <font
@@ -3490,8 +3510,7 @@ function Component() {
                                   <font style={{ color: "#52A452" }}>0%</font>
                                 )}
                               </div>
-                            </div>
-                          )}
+                          </div>
                         </div>
                         {auth.role === "sa" && (
                           <div
@@ -3538,7 +3557,9 @@ function Component() {
                                         : " " + toSentenceCase(periode)}{" "}
                                       Lalu:
                                     </font>
-                                    <br />
+                                  </div>
+                                </div>
+                                <div className="col BigNumber2 text-right">
                                     <AnimatedNumber
                                       className="font-weight-bold black"
                                       value={
@@ -3546,9 +3567,11 @@ function Component() {
                                       }
                                       formatValue={formatValuetoMoney}
                                     />
-                                  </div>
                                 </div>
-                                <div className="col text-right">
+                              </div>
+                            )}
+                            <div className="row">
+                            <div className="col text-right">
                                   {billingData.total_undisburse_amount_prev !==
                                     0 && periode === "periode" ? (
                                     <font
@@ -3622,8 +3645,7 @@ function Component() {
                                     <font style={{ color: "#52A452" }}>0%</font>
                                   )}
                                 </div>
-                              </div>
-                            )}
+                            </div>
                           </div>
                         )}
                       </div>
@@ -5410,7 +5432,7 @@ function Component() {
                         </div>
                       </div>
                       <div className="col">
-                        <div className="text-nowrap ml-3">Registered Unit</div>
+                        <div className="text-nowrap ml-3">Total Unit</div>
                         <AnimatedNumber
                           className="h2 font-weight-bold black ml-3"
                           value={unitStatistic.registered_unit}
@@ -5783,106 +5805,6 @@ function Component() {
                   </div>
                 </div>
                 <div className="col">
-                  {/* <div className="Container color-6 d-flex flex-column cursor-pointer">
-                <div className="row no-gutters align-items-center">
-                  <div className="col">
-                    <AnimatedNumber
-                      className="h2 font-weight-bold white"
-                      value={staffData.num_of_login_unit}
-                      formatValue={formatValue}
-                    />
-                    <div className="text-nowrap">Online Unit(s)</div>
-                  </div>
-                  <div className="col-auto">
-                    <div className="w-auto">
-                      <RiBuilding4Line className="BigIcon white my-0" />
-                    </div>
-                  </div>
-                </div>
-              </div> */}
-                  <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
-                    <div
-                      className="row no-gutters align-items-center"
-                      style={{ minWidth: 220 }}
-                    >
-                      <div className="col-auto">
-                        <div className="w-auto">
-                          <img
-                            alt=""
-                            src={require("./../../assets/Group 2311.jpg")}
-                          />
-                        </div>
-                      </div>
-                      <div className="col">
-                        <div className="text-nowrap ml-3">Online Unit(s)</div>
-                        <AnimatedNumber
-                          className="h2 font-weight-bold black ml-3"
-                          value={staffData.num_of_login_unit}
-                          // value={staffData.num_of_login_resident}
-                          formatValue={formatValue}
-                        />
-                      </div>
-                    </div>
-                    {/* {periode !== "all" && (
-                    <div className="row no-gutters align-items-center mt-2">
-                      <div className="col-auto">
-                        <div style={{ fontSize:12 }} className="text-nowrap">
-                        <font style={{color:"#C4C4C4"}}>vs
-                        {
-                        periode === "year" ? " Tahun" 
-                        :
-                        periode === "month"? " Bulan"
-                        :
-                        periode === "day" ? " Hari"
-                        :
-                        " " + toSentenceCase(periode)} Lalu:
-                        </font>
-                        <AnimatedNumber
-                          className="font-weight-bold black ml-2"
-                          value={residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev}
-                          formatValue={formatValue}
-                        />
-                        </div>
-                      </div>
-                      <div className="col">
-                        <div style={{ fontSize:12 }} className="text-nowrap ml-3 text-right">
-                            {
-                            residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev !== 0 ?
-                            <font 
-                            style={{ 
-                              color: `${(((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
-                              '#E12029'
-                            :
-                              '#52A452'}`}}
-                            >
-                            {
-                              (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
-                              <FiChevronUp style={{transform: 'rotate(180deg)', marginBottom: "6px"}}/>
-                              :
-                              (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 > 0 ?
-                              <FiChevronUp style={{ marginBottom: "6px"}}/>
-                              :
-                              []
-                            }
-                            {
-                              (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100 < 0 ?
-                              " " + (decimal((((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100*(-1))) + "%" + " ( -" + (((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*(-1)) + " )"
-                              :
-                              " " + decimal((((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))/(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))*100) + "%" + " ( +" + ((residentStatistic.online_resident + residentStatistic.online_resident_basic)-(residentStatistic.online_resident_prev + residentStatistic.online_resident_basic_prev))
-                            }
-                            </font>
-                            :
-                            <font style={{color: "#52A452"}}>
-                            0%
-                            </font>
-                            }
-                        </div>
-                      </div>
-                    </div>
-                    )} */}
-                  </div>
-                </div>
-                <div className="col">
                   <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
                     <div
                       className="row no-gutters align-items-center"
@@ -6003,7 +5925,7 @@ function Component() {
                         </div>
                       </div>
                       <div className="col">
-                        <div className="text-nowrap ml-3">Onboarded Unit</div>
+                        <div className="text-nowrap ml-3">Occupied Unit</div>
                         <AnimatedNumber
                           className="h2 font-weight-bold black ml-3"
                           value={unitStatistic.onboard_unit}

@@ -130,6 +130,8 @@ function Component({ view }) {
   let dispatch = useDispatch();
   let history = useHistory();
   let { url } = useRouteMatch();
+  let buildingBM = Object.keys(buildings).map((keys)=> {return buildings[keys].value});
+
 
   useEffect(() => {
     // storing input status
@@ -3141,13 +3143,12 @@ function Component({ view }) {
         open={uploadSetAsPaid}
         toggle={() => setUploadSetAsPaid(false)}
         templateLink={
-          "https://api.yipy.id/yipy-assets/asset-storage/document/8D23E9158CBE5501CFDBD34E4B132C54.xlsx"
+          "https://api.yipy.id/yipy-assets/asset-storage/document/D591544D0A4B104DDB07717153F142D5.xlsx"
         }
         filename="set_as_paid_template.xlsx"
         uploadLink={
-          endpointBilling +
-          "/management/billing/setaspaidbulk?building_id=" +
-          building
+          role != "sa" ? 
+          endpointBilling + "/management/billing/setaspaidbulk/v2?building_id=" + buildingBM : endpointBilling + "/management/billing/setaspaidbulk/v2?building_id=" + building
         }
         uploadDataName="file_upload"
         resultComponent={uploadResultSetAsPaid}
@@ -3377,7 +3378,7 @@ function Component({ view }) {
             ? null
             : (row) => {
                 dispatch(setSelected(row));
-                dispatch(setSelectedItem({}));
+                dispatch(setSelectedItem({building}));
                 history.push(url + "/" + row.id + "/add");
               }
         }

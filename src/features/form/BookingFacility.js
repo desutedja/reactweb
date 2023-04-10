@@ -1,315 +1,379 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import moment from "moment";
 
 import SectionSeparator from "../../components/SectionSeparator";
-import { editAds, createAds } from "../slices/ads";
-import { get } from "../slice";
-import { endpointAdmin, endpointAds } from "../../settings";
+import { get, post } from "../slice";
+import { endpointAdmin, endpointBookingFacility } from "../../settings";
+import Modal from "../../components/Modal";
 
 import Template from "./components/TemplateWithFormikBook";
 import { Form, FieldArray, Field } from "formik";
-import { adsSchema } from "./services/schemas";
+import { facilitySchema } from "./services/schemas";
 import Input from "./inputBooking";
-import InputDash from "../../components/InputDash";
-import { days } from "../../utils";
 import SubmitButton from "./components/SubmitButton";
-import { toSentenceCase } from "../../utils";
+import { createFacility, editFacility } from "../slices/facility";
 
-const adsPayload = {
-  appear_as: "banner",
-  media: "apps",
-  media_url: "",
-  start_date: moment().format("YYYY-MM-DD"),
-  end_date: moment().format("YYYY-MM-DD"),
+import FileInput2 from "./inputBooking/File2";
 
-  click_quota: null,
-  view_quota: null,
-
-  gender: "A",
-  occupation: "all",
-  age_from: 10,
-  age_to: 85,
-  os: "all",
-
-  target_building: "allbuilding",
-  building_list: [],
-
-  content_name: "",
-  content_type: "image",
-  content_image: "",
-  content_video: "",
-  content_description: "",
-
-  default_priority_score: 0,
-  total_priority_score: 0,
-
-  schedules: [
+const facilityData = {
+  building_id:"",
+  thumbnail_url:"",
+  image_urls:[],
+  name:"",
+  location:"",
+  description:"",
+  check_in_start_minute:0,
+  open_time:"",
+  close_time:"",
+  other_facilities:[],
+  rules:[],
+  open_schedules:[
     {
-      day: 1,
-      hour_from: "00:00:00",
-      hour_to: "00:00:00",
+      day: "Sunday",
+      open_time: "00:00",
+      close_time: "00:00",
+      duration:0,
+      quota_per_duration:0,
     },
     {
-      day: 2,
-      hour_from: "00:00:00",
-      hour_to: "00:00:00",
+      day: "Monday",
+      open_time: "00:00",
+      close_time: "00:00",
+      duration:0,
+      quota_per_duration:0,
     },
     {
-      day: 3,
-      hour_from: "00:00:00",
-      hour_to: "00:00:00",
+      day: "Tuesday",
+      open_time: "00:00",
+      close_time: "00:00",
+      duration:0,
+      quota_per_duration:0,
     },
     {
-      day: 4,
-      hour_from: "00:00:00",
-      hour_to: "00:00:00",
+      day: "Wednesday",
+      open_time: "00:00",
+      close_time: "00:00",
+      duration:0,
+      quota_per_duration:0,
     },
     {
-      day: 5,
-      hour_from: "00:00:00",
-      hour_to: "00:00:00",
+      day: "Thursday",
+      open_time: "00:00",
+      close_time: "00:00",
+      duration:0,
+      quota_per_duration:0,
     },
     {
-      day: 6,
-      hour_from: "00:00:00",
-      hour_to: "00:00:00",
+      day: "Friday",
+      open_time: "00:00",
+      close_time: "00:00",
+      duration:0,
+      quota_per_duration:0,
     },
     {
-      day: 7,
-      hour_from: "00:00:00",
-      hour_to: "00:00:00",
+      day: "Saturday",
+      open_time: "00:00",
+      close_time: "00:00",
+      duration:0,
+      quota_per_duration:0,
     },
   ],
 };
 
-const target_buildings = [
-  { label: "All Building", value: "allbuilding" },
-  { label: "Specific Building(s)", value: "specificbuilding" },
-];
+
 
 function Component() {
+  const { selected, loading } = useSelector((state) => state.facility);
+  const { role,user } = useSelector((state) => state.auth);
+
   const { auth } = useSelector((state) => state);
 
-  const [score, setScore] = useState(0);
-  const [scoreDef, setScoreDef] = useState(0);
-
-  const [gender, setGender] = useState("A");
-  const [agef, setAgef] = useState("10");
-  const [aget, setAget] = useState("85");
-  const [job, setJob] = useState("all");
-  const [os, setOS] = useState("all");
-
-  const [advertiser, setAdvertiser] = useState([]);
-  const [searchAdvertiser, setSearchAdvertiser] = useState("");
-  const [selectedAdvertiser, setSelectedAdvertiser] = useState([]);
-
-  const { selected, loading } = useSelector((state) => state.ads);
-  const { role } = useSelector((state) => state.auth);
-
   const [buildings, setBuildings] = useState([]);
-  // eslint-disable-next-line no-unused-vars
-  const [selectedBuildings, setSelectedBuildings] = useState(
-    selected.building ? selected.building : []
-  );
-  const [searchbuilding, setSearchbuilding] = useState("");
 
   let dispatch = useDispatch();
   let history = useHistory();
 
-  useEffect(() => {
-    let i = 0;
+  const [otherFacility, setOtherFacility] = useState(facilityData.other_facilities);
+  const [schedules, setSchedules] = useState(facilityData.open_schedules);
+  const [imageList, setImageList] = useState(facilityData.image_urls);
+  const [ruleList, setRuleList] = useState(facilityData.rules);
+  const [edit, setEdit] = useState(false);
+  const [editing, setEditing] = useState("");
 
-    gender !== "A" && i++;
-    job !== "all" && i++;
-    (agef !== "10" || aget !== "85") && i++;
-    os !== "all" && i++;
+  const [rules, setRules] = useState(facilityData.rules);
 
-    setScore(i);
-    setScoreDef(i);
-  }, [agef, aget, gender, job, os]);
+  const addRules = () => {
+    let val = document.getElementById("rule").value
+      if (val == "") {
+        return
+      }
+      document.getElementById("rule").value='';
+      setRuleList([...ruleList, val]);
+  }
 
-  useEffect(() => {
-    searchbuilding.length > 1 &&
-      dispatch(
-        get(
-          endpointAdmin +
-            "/building" +
-            "?limit=5&page=1" +
-            "&search=" +
-            searchbuilding,
-          (res) => {
-            let data = res.data.data.items;
+  const removeRules = (item) => {
+    const index = ruleList.indexOf(item);
+    if (index > -1) { // only splice array when item is found
+      ruleList.splice(index, 1); // 2nd parameter means remove one item only
+    }
 
-            let formatted = data.map((el) => ({
-              label: el.name,
-              value: el.id,
-            }));
+    setRuleList([...ruleList]);
+  }
 
-            setBuildings(formatted);
-          }
-        )
-      );
-  }, [dispatch, searchbuilding]);
+  const editRules = (item,i) => {
+    console.log("ITEM ", item, " - INDEX ", i)
+    let dt = rules[i]
+    setEditing(dt)
+  }
 
-  //advertiser search
+  const editRule = (i) => {
+    let val = document.getElementById("rules_edit").value
+    const newState = rules.map(obj => {
+      // 👇️ if id equals 2, update country property
+      if (obj.id === i) {
+        return {...obj, rule: val};
+      }
+
+      // 👇️ otherwise return the object as is
+      return obj;
+    });
+
+    const ruless = newState.map((el) => (
+      el.rule
+    ));
+
+    setRules(newState);
+    setRuleList(ruless)
+    setEdit(false);
+  }
+
+  const addOtherFacility = () => {
+    var checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
+
+    otherFacility.splice(0, otherFacility.length);
+
+    for (var i = 0; i < checkboxes.length; i++) {
+      otherFacility.push(checkboxes[i].value)
+    }
+
+    setOtherFacility([...otherFacility])
+  }
+
+  const addImages = () => {
+    let val = document.getElementById("image_facility").value
+      if (val == "") {
+        return
+      }
+      
+      document.getElementById("image_facility").value='';
+      
+      setImageList([...imageList, val]);
+  }
+
+  const removeImages = (item) => {
+    const index = imageList.indexOf(item);
+    if (index > -1) { // only splice array when item is found
+      imageList.splice(index, 1); // 2nd parameter means remove one item only
+    }
+
+    setImageList([...imageList]);
+  }
+
   useEffect(() => {
     dispatch(
       get(
-        endpointAds +
-          "/management/ads/advertiser?" +
-          "&limit=5&page=1" +
-          "&search=" +
-          searchAdvertiser,
+        endpointAdmin +
+          "/management/building" +
+          "?limit=10&page=1" +
+          "&search=",
         (res) => {
-          let data = res.data.data.items;
+          let buildings = res.data.data.items;
 
-          let formatted = data.map((el) => {
-            return {
-              label: `${toSentenceCase(el.firstname)} ${toSentenceCase(
-                el.lastname
-              )} - ${el.email}`,
-              value: el.id,
-              email: el.email,
-              firstname: el.firstname,
-              lastname: el.lastname,
-            };
-          });
+          let formatted = buildings.map((el) => ({
+            label: el.building_name + " by " + el.management_name,
+            value: el.id.toString(),
+          }));
 
-          setAdvertiser(formatted);
+          setBuildings(formatted);
         }
       )
     );
-  }, [dispatch, searchAdvertiser]);
+  }, [dispatch]);
+
+  useEffect(()=>{
+		if(selected.id !== undefined){
+      if (history.location.state.rules.length > 0){
+        const ruless = history.location.state.rules.map((el) => (
+          el.rule
+        ));
+
+        setRules(history.location.state.rules)
+        setRuleList(ruless)
+      }
+
+      if (selected.image_urls.length > 0){
+        const images = selected.image_urls.map((el) => (
+          el.url
+        ));
+
+        setImageList(images)
+      }
+
+
+      selected.open_schedules.map((el, i) => (
+        facilityData.open_schedules[i].day = el.day,
+        facilityData.open_schedules[i].open_time = el.open_time,
+        facilityData.open_schedules[i].close_time = el.close_time,
+        facilityData.open_schedules[i].duration = el.duration,
+        facilityData.open_schedules[i].quota_per_duration = el.quota_per_duration
+      ));
+    }
+    //setSchedules(facilityData.open_schedules)
+    // console.log("SCHEDULE: ", schedules)
+	}, [])
 
   return (
+    <div>
+      <Modal title={"Edit Rules"} isOpen={edit} disableFooter={true} toggle={() => setEdit(false)}>
+        
+        <div className="Input">
+              <div>
+                <div >
+                  <div>
+                    <label className="Input-label" for="Rule">Rule</label>
+                  </div>
+                </div>
+              </div>
+              <div className="Input-containers">
+                <input name="rules_edit" rows="4" placeholder="Rules" autocomplete="off" type="text" id="rules_edit" defaultValue={editing.rule} />
+              </div>
+              <br/>
+              <button type="button" onClick={() => editRule(editing.id)}>submit</button>
+            </div>
+        
+      </Modal>
+    
     <Template
-      slice="ads"
+      slice="facility"
       payload={
-        selected.content_name
+        selected.id
           ? {
-              ...adsPayload,
-              ...selected,
-              gender: selected.gender ? selected.gender : "A",
-              content_name: selected.duplicate
-                ? "Duplicate of " + selected.content_name
-                : selected.content_name,
-              duplicate: selected.duplicate,
-              occupation: selected.occupation ? selected.occupation : "all",
-              os: selected.os ? selected.os : "all",
-              start_date: selected.start_date.split("T")[0],
-              end_date: selected.end_date.split("T")[0],
-              target_building:
-                selected.buildings && selected.buildings.length > 0
-                  ? "specificbuilding"
-                  : "allbuilding",
-              building_list:
-                selected.buildings && selected.buildings.length > 0
-                  ? selected.buildings.map((el) => ({
-                      label: el.name,
-                      value: el.id,
-                    }))
-                  : [],
-              advertiser:
-                selected.advertiser && selected.advertiser.length > 0
-                  ? selected.advertiser.map((el) => ({
-                      label: `${toSentenceCase(el.firstname)} ${toSentenceCase(
-                        el.lastname
-                      )} - ${el.email}`,
-                      value: el.id,
-                      email: el.email,
-                      firstname: el.firstname,
-                      lastname: el.lastname,
-                    }))
-                  : [],
-            }
-          : adsPayload
+              ...facilityData,
+              ...selected
+            } 
+          : facilityData
       }
-      schema={adsSchema}
+      // schema={facilitySchema}
       formatValues={(values) => {
-        const { schedules, building_list, ...ads } = values;
-
-        return {
-          ads: {
-            ...ads,
-            gender: ads.gender === "A" ? null : ads.gender,
-            occupation: ads.occupation === "all" ? null : ads.occupation,
-            os: ads.os === "all" ? null : ads.os,
-            start_date: ads.start_date + " 00:00:00",
-            end_date: ads.end_date + " 23:59:59",
-            default_priority_score: scoreDef,
-          },
-          building_list: building_list.map((el) => el.value),
-          advertiser: advertiser.map((el) => el.value),
-          schedules: schedules,
-        };
+        const { ...facilityData } = values;
+        return facilityData
       }}
       edit={(data) => {
-        // eslint-disable-next-line no-unused-vars
-        const { schedules, ads, building_list } = data;
-        dispatch(editAds({ ads, building_list }, history, selected.id, role));
+        delete data[undefined];
+        data.rules = rules
+        data.building_id= data.building_id.toString();
+        console.log("DATA EDIT: ", data);
+        dispatch(editFacility(data, history, selected.id));
       }}
       add={(data) => {
+        data.rules = ruleList;
+        data.other_facilities = otherFacility;
+        data.image_urls= imageList;
         if (auth.role === "bm") {
-          const dataBM = {
-            ...data,
-            ads: {
-              ...data.ads,
-              appear_as: "banner",
-            },
-          };
-          dispatch(createAds(dataBM, history));
+          data.building_id=user.building_id;
+          delete data[undefined];
+          console.log(data);
+          dispatch(createFacility(data, history));
           return;
         }
-        dispatch(createAds(data, history));
+        delete data[undefined];
+        console.log(data);
+        dispatch(createFacility(data, history));
+        ;
       }}
       renderChild={(props) => {
-        const { values, errors, setFieldValue } = props;
-
-        console.log(errors);
+        const {values, errors, setFieldValue } = props;
+        console.log("PROPS", props);
+        console.log("RuleList", ruleList);
         return (
           <Form className="Form">
+             {role === "sa" && (
+              <Input
+                {...props}
+                label="Building"
+                name="building_id"
+                options={buildings}
+                autoComplete="off"
+              />
+            )}
+              
+            
+            <Input {...props} label="Facility Name" name="name" />
             <Input
               {...props}
-              label="Photo Facility"
-              name="content_image"
+              label="Thumbnail Facility"
+              name="thumbnail_url"
               type="file"
               accept="image/*"
             />
-            <Input {...props} label="Facility Name" name="facility_name" />
-            {/* <InputDash
-              type="fileImages"
-              label="Attachment"
-              placeholder="Insert File"
-            /> */}
+
+            <div className="Input">
+              <div >
+                <div>
+                  <div><label className="Input-label" for="Image Facility">Image Facility</label></div>
+                </div>
+              </div>
+              <FileInput2 name={"image_facility"} id="image_facility" placeholder="Image Facility" onClick={addImages} {...props} />
+            </div>
+            <ul>
+            {imageList.map((item) => (
+              <li>
+                <span>{item}</span>
+                {props.values.id == undefined ? (<button type="button" onClick={()=>{removeImages(item)}}>delete</button>) : ""}
+              </li>
+            ))}
+          </ul>
+            
+
+            <Input
+              {...props}
+              label="Location"
+              name="location"
+              type="textarea"
+            />
+
+            <Input {...props} label="Check In Start Minute" name="check_in_start_minute" type="number" placeholder="check_in_start_minute (must number)" />
+            <Input {...props} label="Open Time" name="open_time" type="text" placeholder="00:00" />
+            <Input {...props} label="Close Time" name="close_time" type="text" placeholder="21:21" />
             <Input
               {...props}
               label="Description"
-              name="content_description"
+              name="description"
               type="textarea"
             />
-            <Input
-              {...props}
-              label="More Info"
-              name="content_description"
-              type="textarea"
-            />
-            <Input 
-              {...props}
-              label="Quota"
-              name="quota"
-            />
-            <Input 
-              {...props}
-              label="Duration"
-              name="duration"
-              type="radio"
-              options={[
-                {value: "1", label: "1 Hour"},
-                {value: "2", label: "2 Hours"},
-              ]}
-            />
+            <div className="Input">
+              <div>
+                <div >
+                  <div>
+                    <label className="Input-label" for="Rule">Rule</label>
+                  </div>
+                </div>
+              </div>
+              <div className="Input-containers">
+                <input name="rules" rows="4" placeholder="Rules" autocomplete="off" type="text" id="rule" />
+                {props.values.id == undefined ? (<button type="button" onClick={addRules}>ADD</button>) : ""}
+              </div>
+            </div>
+            
+            <ul>
+            {ruleList.map((item, i) => (
+              <li>
+                <span>{item}</span>
+                {props.values.id == undefined ? (<button type="button" onClick={()=>{removeRules(item)}}>delete</button>) : (<button type="button" onClick={()=>{setEdit(true);editRules(values,i)}}>edit</button>)}
+              </li>
+            ))}
+          </ul>
             <div className="row"
               style={{
                 width: "100%",
@@ -326,55 +390,59 @@ function Component() {
               <div className="col"
               style={{minWidth: 240}}
               >
-                <Input 
+                {/* <Input 
                   {...props}
-                  name="toilet"
-                  type="radiobook"
+                  name="other_facilities"
+                  type="checkbox"
                   options={[
                     {value: "toilet", label: "Toilet"},
                   ]}
-                />
+                /> */}
+                <input type="checkbox" id="facility1" name="other_facility" value="toilet" onChange={addOtherFacility} />
+                <label for="facility1">Toilet</label><br></br>
                 
               </div>
               <div className="col"
               style={{minWidth: 240}}>
-                <Input 
+                {/* <Input 
                   {...props}
-                  name="wifi"
-                  type="radiobook"
+                  name="other_facilities"
+                  type="checkbox"
                   options={[
                     {value: "wifi", label: "Wifi"},
                   ]}
-                />
+                /> */}
+                <input type="checkbox" id="facility2" name="other_facility" value="wifi" onChange={addOtherFacility} />
+                <label for="facility2">Wifi</label><br></br>
                 
               </div>
               <div className="col"
               style={{minWidth: 240}}>
-                <Input 
+                {/* <Input 
                   {...props}
-                  name="towel"
-                  type="radiobook"
+                  name="other_facilities"
+                  type="checkbox"
                   options={[
                     {value: "towel", label: "Towel"},
                   ]}
-                />
+                /> */}
+                <input type="checkbox" id="facility3" name="other_facility" value="towel" onChange={addOtherFacility} />
+                <label for="facility3">Towel</label><br></br>
                 
               </div>
             </div>
-            
-            {!selected.id && (
               <>
                 <SectionSeparator title="Operational Hour" />
                 <FieldArray
                   name="schedules"
-                  render={(arrayHelpers) => (
+                  render={() => (
                     <div
                       className="Input"
                       style={{
                         maxWidth: 600,
                       }}
                     >
-                      {values.schedules.map((friend, index) => (
+                      {values.open_schedules.map((friend, index) => (
                         <div
                           key={index}
                           style={{
@@ -389,10 +457,10 @@ function Component() {
                               flex: 1,
                             }}
                           >
-                            {days[values.schedules[index].day - 1]}:{" "}
+                            {values.open_schedules[index].day}:{" "}
                           </p>
                           <Field
-                            name={`schedules.${index}.hour_from`}
+                            name={`open_schedules.${index}.open_time`}
                             type="time"
                             step="1"
                           />
@@ -406,10 +474,44 @@ function Component() {
                             -
                           </p>
                           <Field
-                            name={`schedules.${index}.hour_to`}
+                            name={`open_schedules.${index}.close_time`}
                             type="time"
                             step="1"
                           />
+                          <p
+                            style={{
+                              marginLeft: 16,
+                              marginRight: 16,
+                              textAlign: "center",
+                            }}
+                          >
+                          </p>
+                          <input name={`open_schedules.${index}.duration`} type="text" placeholder="duration (hour)" defaultValue={friend.duration != 0 ? friend.duration : "" }
+                          onChange={(duration)=> {
+                            setFieldValue(
+                              `open_schedules.${index}.duration`,
+                              parseInt(duration.target.value)
+                            )
+                          }
+                          } />
+                          <p
+                            style={{
+                              marginLeft: 16,
+                              marginRight: 16,
+                              textAlign: "center",
+                            }}
+                          >
+                          </p>
+                          <input name={`open_schedules.${index}.quota_per_duration`} type="text" placeholder="quota" defaultValue={friend.quota_per_duration != 0 ? friend.quota_per_duration : "" }
+                          onChange={(quota)=> {
+                              setFieldValue(
+                                `open_schedules.${index}.quota_per_duration`,
+                                parseInt(quota.target.value)
+                              )
+                            }
+                          }
+                          />
+                          
                           <button
                             type="button"
                             style={{
@@ -418,12 +520,12 @@ function Component() {
                             }}
                             onClick={() => {
                               setFieldValue(
-                                `schedules.${index}.hour_from`,
-                                "00:00:00"
+                                `open_schedules.${index}.open_time`,
+                                "00:00"
                               );
                               setFieldValue(
-                                `schedules.${index}.hour_to`,
-                                "23:59:59"
+                                `open_schedules.${index}.close_time`,
+                                "23:59"
                               );
                             }}
                           >
@@ -437,12 +539,12 @@ function Component() {
                             }}
                             onClick={() => {
                               setFieldValue(
-                                `schedules.${index}.hour_from`,
-                                "00:00:00"
+                                `open_schedules.${index}.open_time`,
+                                "00:00"
                               );
                               setFieldValue(
-                                `schedules.${index}.hour_to`,
-                                "00:00:00"
+                                `open_schedules.${index}.close_time`,
+                                "00:00"
                               );
                             }}
                           >
@@ -454,12 +556,13 @@ function Component() {
                   )}
                 />
               </>
-            )}
+            
             <SubmitButton loading={loading} errors={errors} />
           </Form>
         );
       }}
     />
+    </div>
   );
 }
 

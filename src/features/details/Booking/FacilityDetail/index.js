@@ -7,18 +7,19 @@ import TemplateFacilities from "../../components/TemplateFacilities";
 import Modal from "../../../../components/Modal";
 import { useHistory, useParams } from "react-router-dom";
 import { get } from "../../../slice";
-import { endpointMerchant } from "../../../../settings";
-import { setSelected, deleteMerchant } from "../../../slices/merchant";
+import { endpointBookingFacility, endpointMerchant } from "../../../../settings";
+import { setSelected } from "../../../slices/facility";
 import { toMoney } from "../../../../utils";
 
 const info = {
-  Information: ["id", "created_on", "name", "type", "legal"],
+  Information: ["id", "created_date", "name", "status", "check_in_start_minute"],
   "Other Facilities": ["open_at", "closed_at"],
+  Location: ["location"],
   Description: ["description"],
-  "More Info": ["district", "city"],
+  Rules: ["rules"],
 };
 
-function Component({ view, canDelete }) {
+function Component({ view, canDelete, canUpdate }) {
   const [data, setData] = useState({});
   const [confirmDelete, setConfirmDelete] = useState(false);
   const { role } = useSelector((state) => state.auth);
@@ -29,17 +30,18 @@ function Component({ view, canDelete }) {
 
   useEffect(() => {
     dispatch(
-      get(endpointMerchant + "/admin?id=" + id, (res) => {
-        res.data.data.free_deliv = res.data.data.free_deliv.toString();
-        setData(res.data.data);
-        dispatch(setSelected(res.data.data));
+      get(endpointBookingFacility + "/admin/facilities/" + id, (res) => {
+        // res.data.data.free_deliv = res.data.data.free_deliv.toString();
+        console.log("get data list facilities")
+        setData(res.data);
+        dispatch(setSelected(res.data));
       })
     );
   }, [id, dispatch]);
 
   return (
     <>
-      <Modal
+      {/* <Modal
         isOpen={confirmDelete}
         btnDanger
         disableHeader={true}
@@ -49,10 +51,11 @@ function Component({ view, canDelete }) {
         cancelLabel={"Cancel"}
       >
         Are you sure you want to delete merchant <b>{data.name}</b>?
-      </Modal>
+      </Modal> */}
       <TemplateFacilities
         loading={!data.id}
-        image={data.logo || "placeholder"}
+        thumbnail={data.thumbnail_url || "placeholder"}
+        images={data.image_urls}
         title={data.name}
         phone={data.phone}
         pagetitle="Facility Information"
@@ -62,6 +65,7 @@ function Component({ view, canDelete }) {
             view={view}
             data={data}
             labels={info}
+            editable={canUpdate}
             onDelete={() => {
               if (role === "bm") {
                 if (canDelete) {
@@ -73,7 +77,10 @@ function Component({ view, canDelete }) {
               return setConfirmDelete(true);
             }}
           />,
-          <Schedule view={view} />,
+          <Schedule 
+            view={view} 
+            schedule={data.open_schedules}
+          />,
         ]}
       />
     </>

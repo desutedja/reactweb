@@ -126,6 +126,11 @@ const columns = [
         "-"
       ),
   },
+  {
+    Header: "Task Duration",
+    accessor: (row) =>
+      row.task_duration ? row.task_duration : "-",
+  },
 ];
 
 const types = [

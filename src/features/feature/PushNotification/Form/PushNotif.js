@@ -325,6 +325,7 @@ function Component() {
                               required
                               label="Title"
                               name="title"
+                              autoComplete="off"
                               suffix=" 50"
                               hint="Only displayed on iOS 8.4 and above and Android."
                             />
@@ -332,6 +333,7 @@ function Component() {
                             <Input
                               {...props}
                               required
+                              autoComplete="off"
                               label="Title"
                               name="title"
                               suffix=" 50"
@@ -343,6 +345,7 @@ function Component() {
                             {...props}
                             required
                             label="Caption"
+                            autoComplete="off"
                             name="body"
                             suffix="100"
                             hint="Approx. displayed characters: 80-100 characters."
@@ -354,6 +357,7 @@ function Component() {
                             label="Description"
                             name="content"
                             suffix="100"
+                            autoComplete="off"
                           />
                         </div>
                       </div>
@@ -369,12 +373,14 @@ function Component() {
                             name="image"
                             hint="Supported file formats: JPEG, JPG & PNG. File size max. 1MB with aspect ratio 2:1."
                             type="file"
+                            autoComplete="off"
                             optional
                           />
                           <Input
                             {...props}
                             label="Deep Link or Web Link"
                             name="link_url"
+                            autoComplete="off"
                             optional
                           />
                         </div>
@@ -417,6 +423,7 @@ function Component() {
                                   type="select"
                                   name="filter1"
                                   placeholder="Select Filter"
+                                  autoComplete="off"
                                   options={[
                                     { label: "Age", value: "age" },
                                     { label: "Building", value: "building" },
@@ -436,6 +443,7 @@ function Component() {
                                       name="age_from"
                                       suffix="years"
                                       preText="From"
+                                      autoComplete="off"
                                     />
                                   </div>
                                   <div
@@ -447,6 +455,7 @@ function Component() {
                                       name="age_to"
                                       suffix="years"
                                       preText="To"
+                                      autoComplete="off"
                                     />
                                   </div>
                                 </>
@@ -458,6 +467,7 @@ function Component() {
                                       name="building_id"
                                       type="select"
                                       placeholder="Select Building"
+                                      autoComplete="off"
                                       options={buildings}
                                     />
                                   </div>
@@ -485,6 +495,7 @@ function Component() {
                                       name="billing"
                                       type="select"
                                       placeholder="Select Billing Status"
+                                      autoComplete="off"
                                       options={[
                                         { label: "Paid", value: "paid" },
                                         { label: "Unpaid", value: "unpaid" },
@@ -516,6 +527,7 @@ function Component() {
                                     {...props}
                                     type="select"
                                     name="filter2"
+                                    autoComplete="off"
                                     placeholder="Select Filter"
                                     options={
                                       values.filter1 === "age"
@@ -591,6 +603,7 @@ function Component() {
                                         name="age_from"
                                         suffix="years"
                                         preText="From"
+                                        autoComplete="off"
                                       />
                                     </div>
                                     <div
@@ -602,6 +615,7 @@ function Component() {
                                         name="age_to"
                                         suffix="years"
                                         preText="To"
+                                        autoComplete="off"
                                       />
                                     </div>
                                   </>
@@ -612,6 +626,7 @@ function Component() {
                                         {...props}
                                         name="building_id"
                                         type="select"
+                                        autoComplete="off"
                                         placeholder="Select Building"
                                         options={buildings}
                                       />
@@ -622,6 +637,7 @@ function Component() {
                                     <div className="col">
                                       <Input
                                         {...props}
+                                        autoComplete="off"
                                         name="gender"
                                         type="radio"
                                         placeholder="Select Gender"
@@ -637,6 +653,7 @@ function Component() {
                                     <div className="col">
                                       <Input
                                         {...props}
+                                        autoComplete="off"
                                         name="billing"
                                         type="select"
                                         placeholder="Select Billing Status"
@@ -673,6 +690,7 @@ function Component() {
                                     type="select"
                                     name="filter3"
                                     placeholder="Select Filter"
+                                    autoComplete="off"
                                     options={
                                       (values.filter1 === "age" &&
                                         values.filter2 === "building") ||
@@ -781,6 +799,7 @@ function Component() {
                                         {...props}
                                         name="age_from"
                                         suffix="years"
+                                        autoComplete="off"
                                         preText="From"
                                       />
                                     </div>
@@ -791,6 +810,7 @@ function Component() {
                                       <Input
                                         {...props}
                                         name="age_to"
+                                        autoComplete="off"
                                         suffix="years"
                                         preText="To"
                                       />
@@ -802,6 +822,7 @@ function Component() {
                                       <Input
                                         {...props}
                                         name="building_id"
+                                        autoComplete="off"
                                         type="select"
                                         placeholder="Select Building"
                                         options={buildings}
@@ -814,6 +835,7 @@ function Component() {
                                       <Input
                                         {...props}
                                         name="gender"
+                                        autoComplete="off"
                                         type="radio"
                                         placeholder="Select Gender"
                                         options={[
@@ -830,6 +852,7 @@ function Component() {
                                         {...props}
                                         name="billing"
                                         type="select"
+                                        autoComplete="off"
                                         placeholder="Select Billing Status"
                                         options={[
                                           { label: "Paid", value: "paid" },
@@ -862,6 +885,7 @@ function Component() {
                                   <Input
                                     {...props}
                                     type="select"
+                                    autoComplete="off"
                                     name="filter4"
                                     placeholder="Select Filter"
                                     options={
@@ -977,6 +1001,7 @@ function Component() {
                                         {...props}
                                         name="age_from"
                                         suffix="years"
+                                        autoComplete="off"
                                         preText="From"
                                       />
                                     </div>
@@ -987,6 +1012,7 @@ function Component() {
                                       <Input
                                         {...props}
                                         name="age_to"
+                                        autoComplete="off"
                                         suffix="years"
                                         preText="To"
                                       />
@@ -999,6 +1025,7 @@ function Component() {
                                         {...props}
                                         name="building_id"
                                         type="select"
+                                        autoComplete="off"
                                         placeholder="Select Building"
                                         options={buildings}
                                       />
@@ -1010,6 +1037,7 @@ function Component() {
                                       <Input
                                         {...props}
                                         name="gender"
+                                        autoComplete="off"
                                         type="radio"
                                         placeholder="Select Gender"
                                         options={[
@@ -1025,6 +1053,7 @@ function Component() {
                                       <Input
                                         {...props}
                                         name="billing"
+                                        autoComplete="off"
                                         type="select"
                                         placeholder="Select Billing Status"
                                         options={[

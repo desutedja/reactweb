@@ -417,6 +417,7 @@ function Component() {
                                   type="select"
                                   name="filter1"
                                   placeholder="Select Filter"
+                                  autoComplete="off"
                                   options={[
                                     { label: "Age", value: "age" },
                                     { label: "Building", value: "building" },

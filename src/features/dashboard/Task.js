@@ -36,6 +36,7 @@ function Component() {
     const [loading, setLoading] = useState(false);
     
     const [range, setRange] = useState('ytd');
+    const [taskType, setTaskType] = useState('all');
     const [pieData, setPieData] = useState([]);
     const [taskData, setTaskData] = useState({});
     const [sosDataFormatted, setSosDataFormatted] = useState();
@@ -53,8 +54,8 @@ function Component() {
     let dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getSOS(range, tower, buildingName));
-    }, [dispatch, range, tower, buildingName]);
+        dispatch(getSOS(range, tower, buildingName, taskType));
+    }, [dispatch, range, tower, buildingName, taskType]);
 
     // useEffect(() => {
     //     setLoading(true);
@@ -395,7 +396,25 @@ function Component() {
                     <div className="Container flex-column pb-5 pr-4">
                         <div className="row mb-5 justify-content-between">
                             <div className="col">
-                                <h5>SOS Statistics</h5>
+                                <h5>Task Statistics</h5>
+                            </div>
+                            <div className="col-auto">
+                                <div style={{
+                                    display: 'flex',
+                                }}>
+                                    <div
+                                        className={taskType === 'all' ? "GroupActive color-3" : "Group"}
+                                        onClick={() => setTaskType('all') }
+                                    >
+                                        ALL
+                                    </div>
+                                    <div
+                                        className={taskType === 'sos' ? "GroupActive color-3" : "Group"}
+                                        onClick={() => setTaskType('sos')}
+                                    >
+                                        SOS
+                                    </div>
+                                </div>
                             </div>
                             <div className="col-auto">
                                 { (auth.role === "bm") ? 

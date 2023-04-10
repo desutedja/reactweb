@@ -26,6 +26,7 @@ const billingPayload = {
     service_label: "",
     month_label: "",
     year_label: "",
+    resident_id:"",
 }
 
 function Component() {
@@ -52,9 +53,9 @@ function Component() {
     useEffect(() => {
         dispatch(get(endpointAdmin + '/building/service' +
             '?page=1' +
-            '&building_id=' + building + 
             '&search=' +
-            '&limit=1000',
+            '&limit=1000' +
+            '&building_id=' + building,
 
             res => {
                 const { items } = res.data.data;

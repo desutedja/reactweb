@@ -9,32 +9,34 @@ import { getAdsSchedule, editAdsSchedule } from "../../../../slices/ads";
 import { days } from "../../../../../utils";
 
 const columns = [
-  { Header: "Day", accessor: (row) => days[row.day - 1] },
-  { Header: "Hour From", accessor: "hour_from" },
-  { Header: "Hour To", accessor: "hour_to" },
+  { Header: "Day", accessor: (row) => row.day },
+  { Header: "Open Time", accessor: (row) => row.open_time },
+  { Header: "Closed Time", accessor: (row) => row.close_time },
+  { Header: "Duration", accessor: (row) => row.duration },
+  { Header: "Quota Per Duration", accessor: (row) => row.quota_per_duration },
 ];
 
-function Component({ view }) {
+function Component({ view, schedule }) {
   const [edit, setEdit] = useState(false);
   const [editing, setEditing] = useState("");
   const [allDay, setAllDay] = useState(false);
   const [none, setNone] = useState(false);
 
-  const { selected, loading, schedule, refreshToggle } = useSelector(
-    (state) => state.ads
-  );
+  // const { selected, loading, schedule, refreshToggle } = useSelector(
+  //   (state) => state.ads
+  // );
   const { user } = useSelector((state) => state.auth);
   const { group } = user;
 
   let dispatch = useDispatch();
 
-  const fetchData = useCallback(
-    (pageIndex, pageSize, search) => {
-      dispatch(getAdsSchedule(pageIndex, pageSize, search, selected));
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    },
-    [dispatch, refreshToggle]
-  );
+  // const fetchData = useCallback(
+  //   (pageIndex, pageSize, search) => {
+  //     dispatch(getAdsSchedule(pageIndex, pageSize, search, selected));
+  //     // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   },
+  //   [dispatch, refreshToggle]
+  // );
 
   return (
     <div>
@@ -47,7 +49,8 @@ function Component({ view }) {
               data.hour_from = "00:00:00";
               data.hour_to = "23:59:59";
             }
-            dispatch(editAdsSchedule({ ...data, id: editing.int }));
+            // dispatch(editAdsSchedule({ ...data, id: editing.int }));
+            console.log("ID===========" + editing.id)
             setEdit(false);
             setAllDay(false);
           }}
@@ -105,10 +108,9 @@ function Component({ view }) {
       <Table
         noContainer={true}
         columns={columns}
-        data={schedule.items}
-        loading={loading}
-        pageCount={schedule.total_pages}
-        fetchData={fetchData}
+        data={schedule}
+        pageCount={1}
+        // fetchData={fetchData}
         filters={[]}
         onClickEdit={
           view

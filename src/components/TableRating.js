@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import AnimatedNumber from "animated-number-react";
 import { useTable, useExpanded, usePagination } from 'react-table'
 import ClinkLoader from './ClinkLoader';
 import {
@@ -16,7 +17,11 @@ import InputDash from './InputDash';
 import Modal from './Modal';
 import FilterButton from './FilterButton';
 import { UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { toSentenceCase } from '../utils';
+import { toSentenceCase, monthEnd, monthStart } from '../utils';
+
+import Button from "../components/Button";
+
+const formatValue = (value) => value.toFixed(0);
 
 function Table({
     noSearch = false,
@@ -25,6 +30,7 @@ function Table({
     pagination = true,
     columns,
     data,
+    dataTotalTasks,
     totalItems,
     fetchData,
     filters = [],
@@ -117,11 +123,14 @@ function Table({
     const [sortTypeInput, setSortTypeInput] = useState(sortType);
     const [sort, toggleSort] = useState(false);
 
+    const [startDateTo, setStartDateTo] = useState(monthStart());
+    const [endDateTo, setEndDateTo] = useState(monthEnd());
+    const [loadings, setLoadings] = useState(false);
+
     useEffect(() => {
-        fetchData && fetchData(pageIndex, pageSize, searchToggle,
+        fetchData && fetchData(search, periode, startDateTo, endDateTo,
             ...sortBy.length > 0 ? [sortField, sortType] : []);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [fetchData, pageIndex, pageSize, searchToggle, sortField, sortType]);
+    }, [fetchData, search, periode,startDateTo, endDateTo, sortField, sortType]);
 
     useEffect(() => {
         gotoPage(0);
@@ -170,54 +179,168 @@ function Table({
             </Modal>
             {tableAction && 
             <>
-                <div className="TableActionRatingTop">
-                    <div className="TableAction-new d-flex align-items-center">
-                    
-                        {actionDownloads}
-                        <div className='row' style={{ marginLeft: 8 }}>
-                        <div className='col-12'>
-                            <span style={{ fontWeight: 700, fontSize: 16 }}>Rating rata-rata</span>
+                
+                <div className="col mt-2">
+                    <h5>Overview</h5>
+                </div>
+                <div className="row no-gutters mt-2">
+            <div className="Container-dashboard flex-column">
+              <div className="row no-gutters">
+                <div
+                  className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap"
+                  style={{ minWidth: 120 }}
+                >
+                  Periode Data
+                </div>
+                <div
+                  className="col-sm-2 w-100"
+                  style={{ minWidth: 170, marginBottom: 8 }}
+                >
+                   <InputDash
+                    type="select"
+                    options={[
+                      { label: "Semua Data", value: "all" },
+                      { label: "Berdasarkan Periode", value: "periode" },
+                    ]}
+                    inputValue={periode}
+                    setInputValue={setPeriode}
+                  />
+                </div>
+                </div>
+                <div className="row no-gutters">
+                {
+                periode === "periode" ? (
+                  <>
+                    <div className="row">
+                      <div className="col-12">
+                        <div className="row">
+                          <div
+                            className="col-sm-1 mt-1 ml-3 mr-1 text-nowrap"
+                            style={{ minWidth: 120 }}
+                          >
+                            Periode Sekarang
+                          </div>
+                          <div className="col-sm-3" style={{ minWidth: 240 }}>
+                            <InputDash
+                              type="date"
+                              inputValue={startDateTo}
+                              setInputValue={setStartDateTo}
+                            />
+                          </div>
+                          <div
+                            className="col-sm-1 mt-1 mr-5 text-nowrap"
+                            style={{ maxWidth: 10 }}
+                          >
+                            s/d
+                          </div>
+                          <div className="col-sm-3" style={{ minWidth: 240 }}>
+                            <InputDash
+                              type="date"
+                              inputValue={endDateTo}
+                              setInputValue={setEndDateTo}
+                            />
+                          </div>
                         </div>
-                        <div className='col-12'>
-                            <div className='row'>
-                                <div className='col'>
-                                    <FaStar size={'3em'} color={'#FFCE2A'} style={{ marginBottom: 28, marginRight: 5 }} /><span style={{ fontWeight: 700, fontSize: 50 }}>3.0</span>
-                                    <span style={{ fontWeight: 400, fontSize: 20 }}>/5.0</span>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="col-sm-2" style={{ minWidth: 150 }}>
+                    {/* <InputDash
+                      type="date"
+                      inputValue={periodeTime}
+                      setInputValue={setPeriodeTime}
+                    /> */}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+                <div className="row no-gutters">
+                    <div className="col">
+                        <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                            <div
+                              className="row no-gutters align-items-center"
+                              style={{ minWidth: 220 }}
+                            >
+                              <div className="col-auto">
+                                <div className="w-auto">
+                                  <img
+                                    alt=""
+                                    src={"https://yipy-assets.s3.ap-southeast-1.amazonaws.com/Assets+Staff+Performance/total-task.png"}
+                                    width="40"
+                                  />
                                 </div>
-                                <div className='col' style={{ marginTop: 38 }}>
-                                    <span style={{ fontWeight: 700, fontSize: 16, marginRight: 4 }}>1</span>
-                                    <span style={{ fontWeight: 400, fontSize: 16 }}>ulasan</span>
+                              </div>
+                              <div className="col">
+                                <div className="text-nowrap ml-3">
+                                  Total Task
                                 </div>
+                                <AnimatedNumber
+                                  className="h2 font-weight-bold black ml-3"
+                                  value={dataTotalTasks.total_tasks}
+                                  formatValue={formatValue}
+                                />
+                              </div>
                             </div>
                         </div>
+                    </div>
+                    <div className="col">
+                        <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                            <div
+                              className="row no-gutters align-items-center"
+                              style={{ minWidth: 220 }}
+                            >
+                              <div className="col-auto">
+                                <div className="w-auto">
+                                  <img
+                                    alt=""
+                                    src={"https://yipy-assets.s3.ap-southeast-1.amazonaws.com/Assets+Staff+Performance/completed-task.png"}
+                                    width="40"
+                                  />
+                                </div>
+                              </div>
+                              <div className="col">
+                                <div className="text-nowrap ml-3">
+                                  Completed Task
+                                </div>
+                                <AnimatedNumber
+                                  className="h2 font-weight-bold black ml-3"
+                                  value={dataTotalTasks.completed_tasks}
+                                  formatValue={formatValue}
+                                />
+                              </div>
+                            </div>
                         </div>
                     </div>
-
-                    <div className="TableAction-new d-flex align-items-center">
-                        <div className="TableSearch d-flex align-items-center" style={{marginLeft: "4px"}}>
-                            <InputDash 
-                                type='select'
-                                options={[
-                                    { label: 'Semua Waktu', value: 'all' },
-                                    { label: '7 Hari Terakhir', value: 'week' },
-                                    { label: '30 Hari Terakhir', value: 'month' },
-                                    { label: '1 Tahun Terakhir', value: 'year' },
-                                ]} 
-                                inputValue={periode}
-                                setInputValue={setPeriode}
-                            />
-                            <Input
-                                label="Search"
-                                compact
-                                fullwidth={true}
-                                icon={<FiSearch />}
-                                inputValue={search}
-                                setInputValue={setSearch}
-                            />
+                    <div className="col">
+                        <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                            <div
+                              className="row no-gutters align-items-center"
+                              style={{ minWidth: 220 }}
+                            >
+                              <div className="col-auto">
+                                <div className="w-auto">
+                                  <img
+                                    alt=""
+                                    src={"https://yipy-assets.s3.ap-southeast-1.amazonaws.com/Assets+Staff+Performance/incomplete-task.png"}
+                                    width="40"
+                                  />
+                                </div>
+                              </div>
+                              <div className="col">
+                                <div className="text-nowrap ml-3">
+                                  Incomplete Task
+                                </div>
+                                <AnimatedNumber
+                                  className="h2 font-weight-bold black ml-3"
+                                  value={dataTotalTasks.incomplete_tasks}
+                                  formatValue={formatValue}
+                                />
+                              </div>
+                            </div>
                         </div>
-                    
                     </div>
-        
                 </div>
                 
                 <div className="TableActionRating">
@@ -230,74 +353,105 @@ function Table({
                     </div>
                 </div>
             </>}
-            {/* {tableAction && <div className="TableAction">
-                <div style={{
-                    display: 'flex',
-                }}>
-                    {actions}
-                    {renderActions != null ? renderActions(selectedRowIds, page) : []}
-                </div>
-                <div className="TableAction-right d-flex align-items-center">
-                    {countactivefilter > 0 && <span style={{ paddingRight: '10px' }}>
-                        {countactivefilter} filter{countactivefilter > 1 ? 's' : ''} applied
-                    </span>}
-                    {filters.length > 0 && <div className="Button" style={{
-                        cursor: 'pointer',
-                        color: 'white',
-                        marginRight: 8,
-                    }} onClick={() => {
-                        toggleFilter(!filter);
-                    }}>
-                        <FiFilter />
-                        <b style={{
-                            marginRight: 8,
-                            marginLeft: 8,
-                        }}>Filter</b>
-                        {filter ? <FiChevronUp /> : <FiChevronDown />}
-                    </div>}
-                    {sortBy.length > 0 && <div className="Button Secondary" style={{
-                        cursor: 'pointer',
-                        marginRight: 8,
-                    }} onClick={() => {
-                        toggleSort(!sort);
-                    }}>
-                        <FiList />
-                        <b style={{
-                            marginRight: 8,
-                            marginLeft: 8,
-                        }}>Sort by: {toSentenceCase(sortField)}</b>
-                        {sortType === 'DESC' ? <FiArrowDown /> : <FiArrowUp />}
-                    </div>}
-                    {!noSearch && <div className="TableSearch d-flex align-items-center">
-                        <Input
-                            label="Search"
-                            compact
-                            fullwidth={true}
-                            icon={<FiSearch />}
-                            inputValue={search}
-                            setInputValue={setSearch}
-                        />
-                    </div>}
-                </div>
-            </div>}
-            {filters.length > 0 && <div className={"FilterContainer" + (filter ? ' down' : '')}>
-                {filters.map((el, index) => !el.hidden &&
-                    <FilterButton
-                        key={index}
-                        label={el.label}
-                        value={el.value}
-                        hideX={el.hidex}
-                        onClick={() => {
-                            el.onClick && el.onClick();
-                            el.component && toggleModal(true);
-                            setFilter(index);
+            <div className="TableActionRatingTop">
+                <div className="TableAction-new d-flex align-items-center"><h4>Report Task</h4></div>
+                    <div className="TableAction-new d-flex align-items-center">
+                    {filters.length > 0 && (
+                        <div
+                        className="Button Download"
+                        style={{
+                            cursor: "pointer",
+                            color: "white",
                         }}
-                        onClickDelete={el.delete} />
+                        onClick={() => {
+                            toggleFilter(!filter);
+                        }}
+                        >
+                        <b
+                            style={{
+                            marginRight: 16,
+                            }}
+                        >
+                            Filter
+                        </b>
+                        {filter ? <FiChevronUp /> : <FiChevronDown />}
+                        </div>
+                    )}
+                    {sortBy.length > 0 && (
+                        <div
+                        className="Button Secondary"
+                        style={{
+                            cursor: "pointer",
+                            marginRight: 8,
+                        }}
+                        onClick={() => {
+                            toggleSort(!sort);
+                        }}
+                        >
+                        <FiList />
+                        <b
+                            style={{
+                            marginRight: 8,
+                            marginLeft: 8,
+                            }}
+                        >
+                            Sort by: {toSentenceCase(sortField)}
+                        </b>
+                        {sortType === "DESC" ? <FiArrowDown /> : <FiArrowUp />}
+                        </div>
+                    )}
+
+                    {countactivefilter > 0 && (
+                        <span style={{ paddingRight: "10px" }}>
+                        {countactivefilter} filter{countactivefilter > 1 ? "s" : ""}{" "}
+                        applied
+                        </span>
+                    )}
+
+<div
+                className="TableSearch d-flex align-items-center"
+                style={{ marginLeft: "4px" }}
+              >
+                <Input
+                  label="Search"
+                  compact
+                  fullwidth={true}
+                  icon={<FiSearch />}
+                  inputValue={search}
+                  setInputValue={setSearch}
+                />
+              </div>
+                    </div>
+
+                </div>
+                {filters.length > 0 && (
+                    <div className={"FilterContainerNew filter-right" + (filter ? " down" : "")}>
+                    {filters.map(
+                        (el, index) =>
+                        !el.hidden && (
+                            <FilterButton
+                            key={index}
+                            label={el.label}
+                            value={el.value}
+                            hideX={el.hidex}
+                            onClick={() => {
+                                el.onClick && el.onClick();
+                                el.component && toggleModal(true);
+                                setFilter(index);
+                            }}
+                            onClickDelete={el.delete}
+                            />
+                        )
+                    )}
+                    </div>
                 )}
-            </div>} */}
+            <div className="d-flex col-12">
+                
+            
+              </div>
             <div className="Table-content scroller">
                 <table {...getTableProps()}>
-                    {loading &&
+                    {loadings &&
                         <tbody className="TableLoading">
                             <tr className="Spinner">
                                 <td>

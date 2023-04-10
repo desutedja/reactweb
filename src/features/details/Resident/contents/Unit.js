@@ -383,11 +383,8 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
                 onClick={() => {
                   setChecking(true);
                   dispatch(
-                    post(
-                      endpointResident + "/management/resident/check",
-                      {
-                        email: email,
-                      },
+                    get(
+                      endpointResident + "/management/resident/check/v2?email=" + email,
                       (res) => {
                         setChecking(false);
 

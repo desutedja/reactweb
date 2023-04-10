@@ -513,7 +513,6 @@ const ModuleTable = ({ options, setFieldValue, values }) => {
         };
         return item;
       });
-      console.log("qweqwe:" + JSON.stringify(newData))
       setModuleAccess(newData);
       setFieldValue(newData);
     }

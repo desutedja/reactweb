@@ -17,7 +17,8 @@ import { Card, CardBody, CardHeader, CardTitle } from "reactstrap";
 import { FaCheckCircle } from "react-icons/fa";
 
 function Component({
-  image,
+  thumbnail,
+  images = [{}],
   title,
   website,
   phone,
@@ -77,8 +78,8 @@ function Component({
                     <img
                       alt="Avatar"
                       src={
-                        image && image !== "placeholder"
-                          ? image
+                        thumbnail && thumbnail !== "placeholder"
+                          ? thumbnail
                           : require("../../../assets/fallback.jpg")
                       }
                       style={{
@@ -107,8 +108,8 @@ function Component({
                           <img
                             alt="Avatar"
                             src={
-                              image && image !== "placeholder"
-                                ? image
+                              images[0] !== undefined
+                                ? images[0].url
                                 : require("../../../assets/fallback.jpg")
                             }
                             style={{
@@ -138,8 +139,8 @@ function Component({
                           <img
                             alt="Avatar"
                             src={
-                              image && image !== "placeholder"
-                                ? image
+                              images[1] !== undefined
+                                ? images[1].url
                                 : require("../../../assets/fallback.jpg")
                             }
                             style={{
@@ -169,8 +170,8 @@ function Component({
                           <img
                             alt="Avatar"
                             src={
-                              image && image !== "placeholder"
-                                ? image
+                              images[2] !== undefined
+                                ? images[2].url
                                 : require("../../../assets/fallback.jpg")
                             }
                             style={{
@@ -186,14 +187,6 @@ function Component({
                         </div>
                       }
                     />
-                    {/* {title && <div style={{
-                                    marginBottom: 4, fontSize: "16px", fontWeight: 700
-                                }}>Yipy Gym</div>}
-                                {phone && <div className="row">
-                                    <div className="col d-flex" style={{ fontSize: "14px", fontWeight: 400 }}>
-                                        Qty: 1
-                                    </div>
-                                </div>} */}
                   </CardBody>
                 </Card>
               </Column>

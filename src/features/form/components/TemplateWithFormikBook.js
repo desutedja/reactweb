@@ -17,7 +17,7 @@ function FormTemplate({
   let { path } = useRouteMatch();
 
   const { selected } = useSelector((state) => state[slice]);
-  const { selectedItem } = useSelector((state) => state.billing);
+  // const { selectedItem } = useSelector((state) => state.billing);
 
   return (
     <>
@@ -27,14 +27,12 @@ function FormTemplate({
           initialValues={payload}
           validationSchema={schema}
           autoComplete={"off"}
-          onSubmit={(values, bag) => {
-            console.log(values);
+          onSubmit={(values) => {
             const data = formatValues(values);
-            console.log(data);
-
+            
             selected.id
-              ? slice === "billing"
-                ? selectedItem.id
+              ? slice === "facility"
+                ? selected.id
                   ? edit(data)
                   : add(data)
                 : data.duplicate

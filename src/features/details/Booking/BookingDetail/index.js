@@ -7,7 +7,7 @@ import TemplateBooking from "../../components/TemplateBooking";
 import Modal from "../../../../components/Modal";
 import { useHistory, useParams } from "react-router-dom";
 import { get } from "../../../slice";
-import { endpointMerchant } from "../../../../settings";
+import { endpointBookingFacility } from "../../../../settings";
 import { setSelected, deleteMerchant } from "../../../slices/merchant";
 import { toMoney } from "../../../../utils";
 
@@ -35,7 +35,7 @@ function Component({ view }) {
 
   useEffect(() => {
     dispatch(
-      get(endpointMerchant + "/admin?id=" + id, (res) => {
+      get(endpointBookingFacility + "/admin/booking/" + id, (res) => {
         res.data.data.free_deliv = res.data.data.free_deliv.toString();
         setData(res.data.data);
         dispatch(setSelected(res.data.data));
