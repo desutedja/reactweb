@@ -15,6 +15,9 @@ import SubmitButton from "./components/SubmitButton";
 import { createFacility, editFacility } from "../slices/facility";
 
 import FileInput2 from "./inputBooking/File2";
+import { FiPlus } from "react-icons/fi";
+
+import Button from "../../components/Button";
 
 const facilityData = {
   building_id:"",
@@ -326,14 +329,27 @@ function Component() {
               </div>
               <FileInput2 name={"image_facility"} id="image_facility" placeholder="Image Facility" onClick={addImages} {...props} />
             </div>
-            <ul>
-            {imageList.map((item) => (
-              <li>
-                <span>{item}</span>
-                {props.values.id == undefined ? (<button type="button" onClick={()=>{removeImages(item)}}>delete</button>) : ""}
-              </li>
-            ))}
-          </ul>
+            <div className="row"
+              style={{
+                width: "100%",
+                maxWidth: "calc(100% / 1.7 - 16px)",
+                minWidth: "calc(100% / 1.7 - 16px)",
+                height: "32px",
+                marginTop: "-20px",
+                marginBottom:"30px",
+                textAlign: "left",
+              }}
+            >
+              <ul style={{width:"90%"}}>
+                {imageList.map((item) => (
+                  <li>
+                    <span>{item}</span>
+                    {props.values.id == undefined ? (<button style={{float:"right", marginLeft: 16, color: 'white'}} type="button" onClick={()=>{removeImages(item)}}>delete</button>) : ""}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            
             
 
             <Input
@@ -361,19 +377,37 @@ function Component() {
                 </div>
               </div>
               <div className="Input-containers">
+                
+                {props.values.id == undefined ? 
+                (
+                <div>
                 <input name="rules" rows="4" placeholder="Rules" autocomplete="off" type="text" id="rule" />
-                {props.values.id == undefined ? (<button type="button" onClick={addRules}>ADD</button>) : ""}
+                <Button key="Add" label="Add" icon={<FiPlus />} onClick={addRules} />
+                </div>
+                )
+                : (<div><input name="rules" rows="4" placeholder="Rules" autocomplete="off" type="text" id="rule" disabled /></div>)}
               </div>
             </div>
-            
-            <ul>
+            <div className="row"
+              style={{
+                width: "100%",
+                maxWidth: "calc(100% / 1.7 - 16px)",
+                minWidth: "calc(100% / 1.7 - 16px)",
+                height: "32px",
+                marginTop: "-20px",
+                marginBottom:"30px",
+                textAlign: "left",
+              }}
+            >
+            <ul style={{width:"90%"}}>
             {ruleList.map((item, i) => (
-              <li>
+              <li style={{height:"30px"}}>
                 <span>{item}</span>
-                {props.values.id == undefined ? (<button type="button" onClick={()=>{removeRules(item)}}>delete</button>) : (<button type="button" onClick={()=>{setEdit(true);editRules(values,i)}}>edit</button>)}
+                {props.values.id == undefined ? (<button style={{float:"right", marginLeft: 16, color: 'white'}} type="button" onClick={()=>{removeRules(item)}}>delete</button>) : (<button style={{float:"right", marginLeft: 16, color: 'white'}} type="button" onClick={()=>{setEdit(true);editRules(values,i)}}>edit</button>)}
               </li>
             ))}
           </ul>
+          </div>
             <div className="row"
               style={{
                 width: "100%",

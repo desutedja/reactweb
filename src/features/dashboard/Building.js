@@ -2802,7 +2802,7 @@ function Component() {
                         fontSize: 12,
                       }}
                       onClick={() => {
-                        history.push("/" + auth.role + "/billing/settlement");
+                        history.push("/" + auth.role + "/billing/settlement/asd");
                       }}
                     >
                       <div className="col-12">
@@ -3724,7 +3724,7 @@ function Component() {
                                     style={{ textAlign: "right" }}
                                     onClick={() => {
                                       history.push(
-                                        "/" + auth.role + "/billing/settlement"
+                                        "/" + auth.role + "/billing/settlement/asd"
                                       );
                                     }}
                                   >
@@ -6139,7 +6139,7 @@ function Component() {
                                     style={{ textAlign: "right" }}
                                     onClick={() => {
                                       history.push(
-                                        "/" + auth.role + "/billing/settlement"
+                                        "/" + auth.role + "/billing/settlement/asd3"
                                       );
                                     }}
                                   >
@@ -6167,7 +6167,7 @@ function Component() {
                   marginRight: 0,
                 }}
                 onClick={() => {
-                  history.push("/" + auth.role + "/billing/settlement");
+                  history.push("/" + auth.role + "/billing/settlement/asd4");
                 }}
               >
                 <div

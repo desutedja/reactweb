@@ -279,7 +279,7 @@ export const downloadBillingSettlement =
           dateMax +
           "&search=" +
           search +
-          "&export=true",
+          "&export=true&page=1&limit=99999999",
         "billing_settlement.csv",
         (res) => {
           dispatch(stopAsync());

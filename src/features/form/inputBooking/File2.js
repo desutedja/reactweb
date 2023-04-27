@@ -3,10 +3,11 @@ import MoonLoader from "react-spinners/MoonLoader";
 
 // import { storageRef } from '../../../firebase';
 import { Field } from 'formik';
-import { FiAlertCircle } from 'react-icons/fi';
+import { FiPlus } from 'react-icons/fi';
 import { useDispatch } from 'react-redux';
 import { post } from '../../slice';
 import { endpointAsset } from '../../../settings';
+import Button from "../../../components/Button";
 
 function FileInput2(props) {
     const {
@@ -19,7 +20,7 @@ function FileInput2(props) {
 
     const fixedName = name ? name : label.toLowerCase().replace(/ /g, '_')
 
-    return <div className="Input-container">
+    return <div><div className="Input-container">
         {uploading && <div className="InputIcon">
             <MoonLoader
                 size={14}
@@ -68,9 +69,11 @@ function FileInput2(props) {
             }}
             onClick={onClick}
         />
-        {
-            props.values.id == undefined ? (<button type='button' onClick={props.onClick}>ADD</button>) : ""
-        }
+        
+    </div>
+    {
+        props.values.id == undefined ? (<div><Button key="Add Image" label="Add Image" icon={<FiPlus />} onClick={props.onClick} /></div>) : ""
+    }
     </div>;
 }
 
