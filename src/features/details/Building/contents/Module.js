@@ -10,7 +10,6 @@ import ClinkLoader from '../../../../components/ClinkLoader';
 const modules = [
   {label: 'Merchant', value: 'merchant'},
   {label: 'Billing', value: 'billing'},
-  // {label: 'Advertisement', value: 'advertisement'},
   {label: 'Security', value: 'security'},
   {label: 'Technician', value: 'technician'},
   {label: 'Internal Courier', value: 'internal_courier'},
@@ -18,14 +17,6 @@ const modules = [
   {label: 'CCTV', value: 'cctv'},
   {label: 'Assignment Staff', value: 'staff_pertower'}
 ]
-
-// const active_modules = [
-//   // 'technician',
-//   // 'security',
-//   // 'merchant',
-//   // 'billing',
-//   // 'advertisement',
-// ]
 
 const modulesFiltered = (arrA, arrB) => {
   let res = [];
@@ -38,20 +29,6 @@ const modulesFiltered = (arrA, arrB) => {
   }
   return res;
 }
-
-    /*
-function useDidUpdateEffect(fn, inputs) {
-  const didMountRef = useRef(false);
-
-  useEffect(() => {
-    if (didMountRef.current)
-      fn();
-    else
-      didMountRef.current = true;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, inputs);
-}
-*/
 
 export default (props) => {
   const {auth} = useSelector(state => state)
@@ -75,7 +52,6 @@ export default (props) => {
       },
       err => console.log(err.response)
       ))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [auth.role, id, refresh])
 
   function submitChange() {
@@ -97,25 +73,7 @@ export default (props) => {
         }
       ))
   }
-
-   //useDidUpdateEffect(submitChange, [activeModules])
   
-  // useEffect(() => {
-  //   if (auth.role !== 'sa') return;
-  //   setIsLoading(true)
-  //   dispatch(post(endpointAdmin + '/modules/building?id=' + id,
-  //     {
-  //       active_modules: activeModules
-  //     },
-  //     res => {
-  //       setIsLoading(false)
-  //     }
-  //   ))
-
-  // // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [activeModules])
-
-
   return (
     <>
         <Modal 
