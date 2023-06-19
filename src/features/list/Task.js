@@ -37,7 +37,6 @@ import { get } from "../slice";
 
 import Template from "./components/TemplateWithSelection";
 import DateRangeFilter from "../../components/DateRangeFilter";
-import { getBuildingUnit } from "../slices/building";
 
 const columns = [
   {

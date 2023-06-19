@@ -3131,7 +3131,7 @@ function Component({ view }) {
         toggle={() => setUpload(false)}
         // templateLink={user.billing_bulk_template}
         templateLink={
-          "https://api.yipy.id/yipy-assets/asset-storage/document/B6B611DB0E10485AC9A4CA4AA72FFE2D.xlsx"
+          "https://yipy-assets.s3.ap-southeast-1.amazonaws.com/template/template_bulk_upload_billing.xlsx"
         }
         filename="billing_unit_template.xlsx"
         uploadLink={endpointBilling + "/management/billing/upload"}
@@ -3143,7 +3143,7 @@ function Component({ view }) {
         open={uploadSetAsPaid}
         toggle={() => setUploadSetAsPaid(false)}
         templateLink={
-          "https://api.yipy.id/yipy-assets/asset-storage/document/D591544D0A4B104DDB07717153F142D5.xlsx"
+          "https://yipy-assets.s3.ap-southeast-1.amazonaws.com/template/template_upload_setaspaid_bulk.xlsx"
         }
         filename="set_as_paid_template.xlsx"
         uploadLink={

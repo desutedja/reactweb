@@ -131,7 +131,7 @@ export const billingSchema = Yup.object().shape({
   service: Text,
   name: Text,
   previous_usage: Number,
-  recent_usage: Number.moreThan(Yup.ref("previous_usage")),
+  recent_usage: Number, //.moreThan(Yup.ref("previous_usage"))
   month: Text,
   year: Text,
   remarks: Text,

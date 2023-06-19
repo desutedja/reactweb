@@ -284,7 +284,7 @@ function Component() {
         data.other_facilities = otherFacility;
         data.image_urls= imageList;
         if (auth.role === "bm") {
-          data.building_id=user.building_id;
+          data.building_id=user.building_id.toString();
           delete data[undefined];
           console.log(data);
           dispatch(createFacility(data, history));

@@ -4473,7 +4473,7 @@ function Component() {
                             </div>
                             <AnimatedNumber
                               className="border-4-font font-weight-bold black"
-                              value={residentStatistic.registered_resident}
+                              value={residentStatistic.owners + residentStatistic.owners_family + residentStatistic.tenants + residentStatistic.tenants_family}
                               // value={staffData.num_of_login_staff}
                               formatValue={formatValue}
                             />
@@ -4536,7 +4536,7 @@ function Component() {
                             </div>
                             <AnimatedNumber
                               className="border-4-font font-weight-bold black"
-                              value={residentStatistic.registered_resident}
+                              value={residentStatistic.owners + residentStatistic.owners_family + residentStatistic.tenants + residentStatistic.tenants_family}
                               // value={staffData.num_of_login_staff}
                               formatValue={formatValue}
                             />

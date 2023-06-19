@@ -366,7 +366,7 @@ export const createBillingUnitItem =
 
     dispatch(
       post(
-        billingEndpoint,
+        billingEndpoint+"/v2",
         data,
         (res) => {
           const _res = res.data.data;

@@ -256,6 +256,41 @@ export const getFile = (
     })
 }
 
+export const getFileS3 = (
+  link, filename, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
+) => (dispatch, getState) => {
+  const { auth } = getState();
+
+  let newHeader = auth.headers
+  delete newHeader["Authorization"];
+
+  Axios.get(link, {
+    headers: newHeader,
+    responseType: 'blob',
+  })
+    .then(res => {
+      // console.log(res);
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+
+      ifSuccess(res);
+    })
+    .catch(err => {
+      // console.log(err);
+
+      dispatch(responseAlert(err, link));
+
+      ifError(err);
+    })
+    .finally(() => {
+      finallyDo();
+    })
+}
+
 export const post = (
   link, data, ifSuccess = () => { }, ifError = () => { }, finallyDo = () => { }
 ) => (dispatch, getState) => {

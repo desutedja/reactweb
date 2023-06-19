@@ -435,7 +435,7 @@ function Component() {
           "/management/ads?" +
           "limit=" +
           limitPopup +
-          "&appear_as=popup&published=1&for=report",
+          "&appear_as=popup&published=1&for=report&sort_field=a.created_on&sort_type=desc",
         (res) => {
           setPopups(res.data.data.items);
         },
@@ -450,7 +450,7 @@ function Component() {
           "/management/ads?" +
           "limit=" +
           limitBanner +
-          "&appear_as=banner&published=1&for=report",
+          "&appear_as=banner&published=1&for=report&sort_field=a.created_on&sort_type=desc",
         (res) => {
           setBanners(res.data.data.items);
         },
@@ -488,7 +488,8 @@ function Component() {
             limitPopup +
             "&appear_as=popup&published=1&for=report" +
             "&search=" +
-            searchValue,
+            searchValue+
+            "&sort_field=a.created_on&sort_type=desc",
           (res) => {
             setPopups(res.data.data.items);
           },
@@ -507,7 +508,8 @@ function Component() {
             limitBanner +
             "&appear_as=banner&published=1&for=report" +
             "&search=" +
-            searchValue,
+            searchValue+
+            "&sort_field=a.created_on&sort_type=desc",
           (res) => {
             setBanners(res.data.data.items);
           },

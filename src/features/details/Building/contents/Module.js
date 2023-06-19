@@ -15,7 +15,8 @@ const modules = [
   {label: 'Internal Courier', value: 'internal_courier'},
   {label: 'Separate Billing', value: 'separate_billing'},
   {label: 'CCTV', value: 'cctv'},
-  {label: 'Assignment Staff', value: 'staff_pertower'}
+  {label: 'Assignment Staff', value: 'staff_pertower'},
+  {label: 'Package', value: 'package'}
 ]
 
 const modulesFiltered = (arrA, arrB) => {
@@ -97,9 +98,7 @@ export default (props) => {
         </Modal>
       <div className="row no-gutters mt-4">
         {modulesLabel && modulesLabel.map((el, i) => (
-        <div key={i}
-        className="col-12 col-sm-6 col-md-6 col-lg
-        d-flex justify-content-center p-2">
+        <div key={i} className="col-xl-2" style={{marginBottom:"10px"}}>
           <div className={"switch-box " + (el.truthvalue ? 'switch-on' : 'switch-off')}>
             <input
               className="" type="checkbox"

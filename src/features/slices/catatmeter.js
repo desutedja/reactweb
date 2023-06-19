@@ -89,6 +89,8 @@ export const getCatatmeter = (
 export const downloadCatatMeter = (
   search,
   building,
+  year,
+  month,
 ) => (dispatch) => {
   dispatch(startAsync());
 
@@ -102,6 +104,10 @@ export const downloadCatatMeter = (
         search +
         "&building=" +
         building +
+        "&year="+
+        year +
+        "&month="+
+        month +
         "&sort_field=created_on&sort_type=DESC&export=true",
         "catat_meter.csv",
       (res) => {

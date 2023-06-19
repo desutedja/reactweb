@@ -141,7 +141,7 @@ function Component({ view, canUpdate, canDelete, canAdd, data }) {
                     unit_type: parseFloat(
                       unitTypeID ? unitTypeID : selectedRow.unit_type
                     ),
-                    floor: parseFloat(floor ? floor : selectedRow.floor),
+                    floor: floor ? floor : selectedRow.floor,
                     number: number ? number : selectedRow.number,
                   },
                   selectedRow.id
@@ -152,7 +152,7 @@ function Component({ view, canUpdate, canDelete, canAdd, data }) {
                   building_id: selected.id,
                   building_section: parseFloat(sectionID),
                   unit_type: parseFloat(unitTypeID),
-                  floor: parseFloat(floor),
+                  floor: floor,
                   number: number,
                 })
               );

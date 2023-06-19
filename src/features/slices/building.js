@@ -537,7 +537,7 @@ export const createBuildingUnit = (data) => (dispatch) => {
 
   dispatch(
     post(
-      buildingEndpoint + "/unit",
+      buildingEndpoint + "/unit/v2",
       data,
       (res) => {
         dispatch(refresh());
