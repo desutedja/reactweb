@@ -97,7 +97,7 @@ export const downloadCatatMeter = (
   dispatch(
     getFile(
       managementEndpoint +
-        "/list" +
+        "/list/v2" +
         "?page=1" +
         "&limit=10000" +
         "&search=" +

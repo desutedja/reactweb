@@ -142,7 +142,7 @@ export const createResident = (data, history) => (dispatch, getState) => {
 
   dispatch(
     post(
-      residentEndpoint + "/register/parent",
+      residentEndpoint + "/register/v2",
       data,
       (res) => {
         // history.push('/' + auth.role + "/resident");

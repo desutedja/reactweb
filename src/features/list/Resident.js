@@ -1897,12 +1897,17 @@ function Component({ view, canAdd }) {
                     dispatch(
                       getFile(
                         endpointResident +
-                          "/management/resident/downloaddd?onboarding=" +
+                          "/management/resident/read/v2?export=true"+
+                          "&onboarding=" +
                           onboardingStatus+
                           "&building="+
                           building+
                           "&resident_type="+
-                          residentType,
+                          residentType+
+                          "&page="+
+                          1+
+                          "&limit="+
+                          10000000,
                         "Data_Resident_Onboarding=" +
                           (onboardingStatus
                             ? toSentenceCase(onboardingStatus)

@@ -4,8 +4,9 @@ import { useHistory } from "react-router-dom";
 import moment from "moment";
 import parser from "html-react-parser";
 import InputDash from "../../components/InputDash";
+import ButtonInfo from "../../components/ButtonInfo";
 
-import { FiSearch, FiChevronUp } from "react-icons/fi";
+import { FiSearch, FiHelpCircle, FiChevronUp } from "react-icons/fi";
 import {
   RiBuilding4Line,
   RiUserStarLine,
@@ -982,6 +983,12 @@ function Component() {
                               history.push("/" + auth.role + "/building");
                             }}
                           >
+                            <ButtonInfo
+                              positionTooltip={"left"}
+                              color="Download"
+                              icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                              message={"Jumlah hunian yang terdaftar di Yipy"}
+                            />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -1068,6 +1075,12 @@ function Component() {
                                 : history.push("/" + auth.role + "/building");
                             }}
                           >
+                            <ButtonInfo
+                              positionTooltip={"center"}
+                              color="Download"
+                              icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                              message={"Jumlah unit dalam hunian yang terdaftar di Yipy"}
+                            />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -1214,6 +1227,12 @@ function Component() {
                                 history.push("/" + auth.role + "/building");
                               }}
                             >
+                              <ButtonInfo
+                              positionTooltip={"center"}
+                              color="Download"
+                              icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                              message={"Jumlah rata-rata unit dalam hunian yang terdaftar di Yipy. <b>Catatan: Cara perhitungan adalah Total Unit dibagi Total Building.</b>"}
+                            />
                               <div
                                 className="row no-gutters align-items-center"
                                 style={{ minWidth: 220 }}
@@ -1394,6 +1413,12 @@ function Component() {
                           </div>
                           <div className="col">
                             <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                            <ButtonInfo
+                              positionTooltip={"left"}
+                              color="Download"
+                              icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                              message={"Jumlah Unit yang sudah terisi."}
+                            />
                               <div
                                 className="row no-gutters align-items-center"
                                 style={{ minWidth: 220 }}
@@ -1408,7 +1433,7 @@ function Component() {
                                 </div>
                                 <div className="col">
                                   <div className="text-nowrap ml-3">
-                                    Occupied Unit
+                                    Occupied Unit 
                                   </div>
                                   <AnimatedNumber
                                     className="h2 font-weight-bold black ml-3"
@@ -1543,6 +1568,12 @@ function Component() {
                         <>
                           <div className="col">
                             <div className="Container color-7 d-flex flex-column cursor-pointer">
+                            <ButtonInfo
+                            positionTooltip={"left"}
+                            color="Download"
+                            icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                            message={"Jumlah staff yang telah login dan belum logout pada aplikasi Yipy Staff"}
+                          />
                               <div
                                 className="row no-gutters align-items-center"
                                 style={{ minWidth: 220 }}
@@ -1574,6 +1605,12 @@ function Component() {
                       <div className="row no-gutters">
                         <div className="col">
                           <div className="Container color-6 d-flex flex-column cursor-pointer">
+                          <ButtonInfo
+                            positionTooltip={"left"}
+                            color="Download"
+                            icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                            message={"Jumlah resident yang telah login dan belum logout pada aplikasi Yipy Resident"}
+                          />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -1623,6 +1660,12 @@ function Component() {
                         </div> */}
                         <div className="col">
                           <div className="Container color-8 d-flex flex-column cursor-pointer">
+                          <ButtonInfo
+                            positionTooltip={"center"}
+                            color="Download"
+                            icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                            message={"Resident yang telah mendaftar, melengkapi data diri dan Memiliki unit."}
+                          />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -1648,6 +1691,12 @@ function Component() {
                         </div>
                         <div className="col">
                           <div className="Container color-8 d-flex flex-column cursor-pointer">
+                          <ButtonInfo
+                            positionTooltip={"left"}
+                            color="Download"
+                            icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                            message={"Jumlah Unit yang sudah terisi."}
+                          />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -1678,6 +1727,12 @@ function Component() {
                       <div class="row no-gutters">
                         <div className="col">
                           <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                          <ButtonInfo
+                            positionTooltip={"left"}
+                            color="Download"
+                            icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                            message={"Jumlah staff dalam suatu hunian yang terdaftar di Yipy."}
+                          />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -1824,6 +1879,12 @@ function Component() {
                         </div>
                         <div className="col">
                           <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                          <ButtonInfo
+                            positionTooltip={"center"}
+                            color="Download"
+                            icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                            message={"Jumlah staff dalam suatu hunian yang terdaftar di Yipy dan sudah pernah login."}
+                          />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -1970,6 +2031,12 @@ function Component() {
                         </div>
                         <div className="col">
                           <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                          <ButtonInfo
+                            positionTooltip={"center"}
+                            color="Download"
+                            icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                            message={"Jumlah resident yang mendaftar sebagai merchant dalam suatu hunian pada Kategori My Store."}
+                          />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -2112,6 +2179,12 @@ function Component() {
                         </div>
                         <div className="col">
                           <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                          <ButtonInfo
+                            positionTooltip={"left"}
+                            color="Download"
+                            icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                            message={"Merchant (Resident) dengan status toko “open” dan sedang aktif melakukan penjualan."}
+                          />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -2263,6 +2336,12 @@ function Component() {
                       <div class="row no-gutters">
                         <div className="col">
                           <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                          <ButtonInfo
+                            positionTooltip={"left"}
+                            color="Download"
+                            icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                            message={"Jumlah resident yang terdaftar di Yipy."}
+                          />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -2408,6 +2487,12 @@ function Component() {
                         </div>
                         <div className="col">
                           <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                          <ButtonInfo
+                            positionTooltip={"center"}
+                            color="Download"
+                            icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                            message={"Jumlah resident yang telah login dan belum logout pada aplikasi Yipy Resident"}
+                          />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -2581,6 +2666,12 @@ function Component() {
                         </div>
                         <div className="col">
                           <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                          <ButtonInfo
+                            positionTooltip={"left"}
+                            color="Download"
+                            icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                            message={"Resident yang telah mendaftar, melengkapi data diri dan Memiliki unit."}
+                          />
                             <div
                               className="row no-gutters align-items-center"
                               style={{ minWidth: 220 }}
@@ -5419,6 +5510,12 @@ function Component() {
                         : history.push("/" + auth.role + "/building");
                     }}
                   >
+                    <ButtonInfo
+                      positionTooltip={"left"}
+                      color="Download"
+                      icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                      message={"Jumlah unit dalam hunian yang terdaftar di Yipy"}
+                    />
                     <div
                       className="row no-gutters align-items-center"
                       style={{ minWidth: 220 }}
@@ -5550,6 +5647,12 @@ function Component() {
                       className="row no-gutters align-items-center"
                       style={{ minWidth: 220 }}
                     >
+                      <ButtonInfo
+                      positionTooltip={"left"}
+                      color="Download"
+                      icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                      message={"Jumlah staff yang telah login dan belum logout pada aplikasi Yipy Staff"}
+                    />
                       <div className="col-auto">
                         <div className="w-auto">
                           <img
@@ -5648,6 +5751,12 @@ function Component() {
                       className="row no-gutters align-items-center"
                       style={{ minWidth: 220 }}
                     >
+                      <ButtonInfo
+                      positionTooltip={"left"}
+                      color="Download"
+                      icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                      message={"Jumlah resident yang telah login dan belum logout pada aplikasi Yipy Resident"}
+                    />
                       <div className="col-auto">
                         <div className="w-auto">
                           <img
@@ -5806,6 +5915,12 @@ function Component() {
                 </div>
                 <div className="col">
                   <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                  <ButtonInfo
+                      positionTooltip={"center"}
+                      color="Download"
+                      icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                      message={"Resident yang telah mendaftar, melengkapi data diri dan Memiliki unit."}
+                    />
                     <div
                       className="row no-gutters align-items-center"
                       style={{ minWidth: 220 }}
@@ -5912,6 +6027,12 @@ function Component() {
                 </div>
               </div> */}
                   <div className="Container-dashboard-ns border-1 d-flex flex-column cursor-pointer">
+                  <ButtonInfo
+                      positionTooltip={"left"}
+                      color="Download"
+                      icon={<FiHelpCircle style={{ fontSize: "16px" }} />}
+                      message={"Jumlah Unit yang sudah terisi."}
+                    />
                     <div
                       className="row no-gutters align-items-center"
                       style={{ minWidth: 220 }}

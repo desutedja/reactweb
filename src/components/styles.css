@@ -596,8 +596,6 @@ input[type="button"]:disabled {
   position: absolute;
   padding: 10px 20px 10px 20px;
   z-index: 1;
-  left: 50%;
-  margin-left: -100px;
   border-radius: 8px;
   background-color: hsla(0, 0%, 35%, 0.9);
   display: none;
@@ -610,12 +608,39 @@ input[type="button"]:disabled {
   content: "";
   position: absolute;
   bottom: 100%;
-  left: 50%;
-  margin-left: -5px;
   border-width: 5px;
   border-style: solid;
   border-color: transparent transparent hsla(0, 0%, 35%, 0.9) transparent;
 }
+
+.list-modal-hover-wizard.center {
+  left: 50%;
+  margin-left: -100px;
+}
+
+.list-modal-hover-wizard.center::after {
+  left: 50%;
+  margin-left: -5px;
+}
+
+.list-modal-hover-wizard.left {
+  right: 50%;
+}
+
+.list-modal-hover-wizard.left::after {
+  right: 5%;
+  margin-right: -5px;
+}
+
+.list-modal-hover-wizard.right {
+  left: 0;
+}
+
+.list-modal-hover-wizard.right::after {
+  left: 5%;
+  margin-left: -5px;
+}
+
 
 .list-modal-hover-wizard.on {
   display: block;
@@ -852,4 +877,10 @@ input[type="button"]:disabled {
 @-ms-keyframes fadeIn {
   0% { opacity: 0; }
   100% { opacity: 1; }
+}
+
+.info-modal-hover {
+  position: absolute;
+  right: 0px;
+  top: 0px;
 }
