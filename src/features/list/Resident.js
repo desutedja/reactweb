@@ -26,7 +26,7 @@ import { getResident, setSelected, deleteResident } from "../slices/resident";
 import { toSentenceCase } from "../../utils";
 
 import TemplateLocalStorage from "./components/TemplateLocalStorage";
-import { post, getFile, get } from "../slice";
+import { post, getFile,getFileS3, get } from "../slice";
 import {
   endpointResident,
   resident_statuses,
@@ -154,6 +154,14 @@ function Component({ view, canAdd }) {
   const [building, setBuilding] = useState("");
   const [buildingLabel, setBuildingLabel] = useState("");
   const [buildingList, setBuildingList] = useState("");
+
+  const residentTypes = [
+    { label: "Basic", value: "basic" },
+    { label: "Premium", value: "premium" },
+  ];
+
+  const [residentType, setResidentType] = useState("");
+  const [residentTypeLabel, setResidentTypeLabel] = useState("");
 
   const [openWizard, setOpenWizard] = useState(false);
   const [wizardStep, setWizardStep] = useState(1);
@@ -1805,16 +1813,9 @@ function Component({ view, canAdd }) {
               <button
                 onClick={() => {
                   setLoading(true);
-                  dispatch(
-                    getFile(
-                      // user.resident_bulk_template,
-                      "https://api.yipy.id/yipy-assets/asset-storage/document/ABB45E5DDEC4AF95D0960C2EB88CFC57.xlsx",
-                      "resident_template.xlsx",
-                      (res) => {
-                        setLoading(false);
-                      }
-                    )
-                  );
+                  dispatch(getFileS3("https://yipy-assets.s3.ap-southeast-1.amazonaws.com/template/template_upload_resident_bulk.xlsx", "template_upload_resident_bulk.xlsx", res => {
+                      setLoading(false);
+                  }))
                 }}
                 style={{
                   marginTop: 16,
@@ -1896,8 +1897,17 @@ function Component({ view, canAdd }) {
                     dispatch(
                       getFile(
                         endpointResident +
-                          "/management/resident/download?onboarding=" +
-                          onboardingStatus,
+                          "/management/resident/read/v2?export=true"+
+                          "&onboarding=" +
+                          onboardingStatus+
+                          "&building="+
+                          building+
+                          "&resident_type="+
+                          residentType+
+                          "&page="+
+                          1+
+                          "&limit="+
+                          10000000,
                         "Data_Resident_Onboarding=" +
                           (onboardingStatus
                             ? toSentenceCase(onboardingStatus)
@@ -1922,6 +1932,7 @@ function Component({ view, canAdd }) {
           onlineStatus,
           onboardingStatus,
           building,
+          residentType,
         ]}
         filters={[
           {
@@ -2064,6 +2075,33 @@ function Component({ view, canAdd }) {
                   }}
                 />
               </>
+            ),
+          },
+          {
+            hidex: residentType === "",
+            label: (
+              <p>
+                {residentTypeLabel ? "Resident Type: " + residentTypeLabel : "Resident Type: All"}
+              </p>
+            ),
+            delete: () => {
+              setResidentType("");
+              setResidentTypeLabel("");
+            },
+            component: (toggleModal) => (
+              <Filter
+                data={residentTypes}
+                onClick={(el) => {
+                  setResidentType(el.value);
+                  setResidentTypeLabel(el.label);
+                  toggleModal(false);
+                }}
+                onClickAll={() => {
+                  setResidentType("");
+                  setResidentTypeLabel("");
+                  toggleModal(false);
+                }}
+              />
             ),
           },
         ]}

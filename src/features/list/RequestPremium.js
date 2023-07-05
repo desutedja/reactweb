@@ -46,9 +46,9 @@ const columns = [
     sorting: "building",
   },
   {
-    Header: "ID Number",
-    accessor: "id_number",
-    sorting: "id_number",
+    Header: "Email",
+    accessor: (row) => row.email !== "" ? toSentenceCase(row.email) : "-",
+    sorting: "email",
   },
   {
     Header: "Phone",

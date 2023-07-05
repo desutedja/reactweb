@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import SectionSeparator from '../../components/SectionSeparator';
 import { createResident, editResident } from '../slices/resident';
-import { endpointResident } from '../../settings';
+import { endpointResident, endpointAdmin } from '../../settings';
 import countries from '../../countries';
 import { get, post } from '../slice';
 
@@ -14,6 +14,8 @@ import { residentSchema } from "./services/schemas";
 import Input from './input';
 import SubmitButton from './components/SubmitButton';
 import Modal from '../../components/Modal';
+
+import Input2 from '../../components/Input';
 
 const residentPayload = {
     email: "",
@@ -32,6 +34,8 @@ const residentPayload = {
     province: null,
     city: null,
     district: null,
+    building: null,
+    unit:null,
     account_bank: null,
     account_name: null,
     account_no: null,
@@ -47,6 +51,12 @@ const residentPayload = {
 }
 
 function Component() {
+
+    const { role, user } = useSelector((state) => state.auth);
+    const [buildingList, setBuildingList] = useState("");
+    const [building, setBuilding] = useState("");
+    const [unit, setUnit] = useState("");
+    const [units, setUnits] = useState([]);
 
     const { banks } = useSelector(state => state.main);
     const { selected, loading } = useSelector(state => state.resident);
@@ -69,6 +79,15 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
     let { state } = useLocation();
+
+    useEffect(() => {
+        if (role === "bm") {
+            setBuilding(user.building_id);
+        }else{
+            setBuilding("1");
+        }
+
+      }, [dispatch]);
 
     useEffect(() => {
         dispatch(get(endpointResident + '/geo/province',
@@ -114,6 +133,53 @@ function Component() {
             }
         ))
     }, [dispatch]);
+
+    
+
+    useEffect(() => {
+        dispatch(
+          get(
+            endpointAdmin +
+              "/management/building" +
+              "?limit=10&page=1" +
+              "&search=",
+            (res) => {
+              let data = res.data.data.items;
+    
+              let formatted = data.map((el) => ({
+                label: el.building_name,
+                value: el.id,
+              }));
+    
+              setBuildingList(formatted);
+            }
+          )
+        );
+      }, [dispatch, building]);
+
+      useEffect(() => {
+        dispatch(
+          get(
+            endpointAdmin +
+            "/building/unit/v2" +
+            "?page=1" +
+            "&building_id=" +
+            building +
+            "&search=" +
+            "&limit=999999999",
+            (res) => {
+                let data = res.data.data.items;
+    
+                let formatted = data.map((el) => ({
+                  label: el.number,
+                  value: el.id,
+                }));
+
+                setUnits(formatted);
+              }
+          )
+        );
+      }, [building, unit, dispatch]);
 
     return (
         <>
@@ -295,6 +361,18 @@ function Component() {
                             />}
                             {values.city && <Input {...props} optional label="District"
                                 options={districts} />}
+                            <SectionSeparator />
+
+                            {role !== "bm" && <Input {...props} label="Building" options={buildingList}
+                                onChange={el => {setBuilding(el.value)}}
+                            />}
+
+                            {building && <Input {...props} label="Unit" options={units}
+                                onChange={el => { 
+                                    setUnit(el.value)
+                                }}
+                            />}
+
                             <SectionSeparator />
 
                             <Input {...props} optional label="Account Bank" options={banks} />

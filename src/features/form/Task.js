@@ -137,22 +137,24 @@ export default function Component() {
                 value={unitValue}
                 onChange={(e) => {
                   setUnitValue(e.target.value);
+                  console.log(JSON.stringify(units));
+                  console.log(e.target.value);
                 }}
-                optionClick={(el) => {
-                  setTaskData({
-                    ...taskData,
-                    building_unit_id: Number(el.id),
-                  });
-                  setUnitValue(
-                    el.section_type +
-                      " " +
-                      el.section_name +
-                      " Floor " +
-                      el.floor +
-                      " No. " +
-                      el.number
-                  );
-                }}
+                // optionClick={(el) => {
+                //   setTaskData({
+                //     ...taskData,
+                //     building_unit_id: Number(el.id),
+                //   });
+                //   setUnitValue(
+                //     el.section_type +
+                //       " " +
+                //       el.section_name +
+                //       " Floor " +
+                //       el.floor +
+                //       " No. " +
+                //       el.number
+                //   );
+                // }}
               />
               <Radio
                 className="mb-4"

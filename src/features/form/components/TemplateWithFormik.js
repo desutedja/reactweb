@@ -28,9 +28,7 @@ function FormTemplate({
           validationSchema={schema}
           autoComplete={"off"}
           onSubmit={(values, bag) => {
-            console.log(values);
             const data = formatValues(values);
-            console.log(data);
 
             selected.id
               ? slice === "billing"

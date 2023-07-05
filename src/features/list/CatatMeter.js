@@ -368,7 +368,9 @@ function Component({ view, canAdd }) {
                 dispatch(
                   downloadCatatMeter(
                     document.getElementById("Search").value,
-                    building
+                    building,
+                    year,
+                    month,
                   )
                 );
               }}

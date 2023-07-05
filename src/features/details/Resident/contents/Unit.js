@@ -382,11 +382,9 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
                 type="button"
                 onClick={() => {
                   setChecking(true);
-                  dispatch(
-                    get(
-                      endpointResident + "/management/resident/check/v2?email=" + email,
-                      (res) => {
+                  dispatch(get(endpointResident + "/management/resident/check/v2?email=" + email, res => {
                         setChecking(false);
+                        console.log("================LOG=====================")
 
                         let data = res.data.data;
 
@@ -399,6 +397,8 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
                       }
                     )
                   );
+                  setChecking(false);
+                  setFound(false);
                 }}
                 disabled={!email}
               >

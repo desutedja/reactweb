@@ -1146,11 +1146,9 @@ function Component({ view, canUpdate, canDelete, canAdd }) {
                           search,
                           building,
                           settled,
-                          ...(settled === "1"
-                            ? [settlementStart, settlementEnd]
-                            : [])
+                          settlementStart,
+                          settlementEnd)
                         )
-                      )
                     }
                   />,
                 ]

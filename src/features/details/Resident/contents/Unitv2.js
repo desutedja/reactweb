@@ -202,6 +202,22 @@ function Component({ id, view, canAdd, canUpdate, canDelete }) {
             "&limit=10",
 
           (res) => {
+            let data = res.data.data.items;
+            let totalItems = Number(res.data.data.total_items);
+            let restTotal = totalItems - data.length;
+
+            let formatted = data.map((el) => ({
+              label: el.name,
+              value: el.id,
+            }));
+
+            if (data.length < totalItems && search.length === 0) {
+              formatted.push({
+                label: "Load " + (restTotal > 5 ? 5 : restTotal) + " more",
+                restTotal: restTotal > 5 ? 5 : restTotal,
+                className: "load-more",
+              });
+            }
             setUnits(res.data.data.items);
           }
         )

@@ -3,7 +3,7 @@ import React, { useState, useRef } from 'react';
 import Modal from './Modal';
 import Loading from './Loading';
 import { useDispatch } from 'react-redux';
-import { getFile, post } from '../features/slice';
+import { getFile, getFileS3, post } from '../features/slice';
 import exportFromJSON from 'export-from-json';
 
 const UploadModalV2 = ({
@@ -91,7 +91,7 @@ const UploadModalV2 = ({
                         />
                         <button onClick={() => {
                             setLoading(true);
-                            dispatch(getFile(templateLink, filename, res => {
+                            dispatch(getFileS3(templateLink, filename, res => {
                                 setLoading(false);
                             }))
                         }} style={{

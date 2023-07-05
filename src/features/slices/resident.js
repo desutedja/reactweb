@@ -41,8 +41,8 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.items = data.items;
-      state.total_items = data.TotalItemFiltered;
-      state.total_pages = data.TotalPage;
+      state.total_items = data.total_items;
+      state.total_pages = data.total_pages;
     },
     // V1
     // setUnitData: (state, action) => {
@@ -97,6 +97,7 @@ export const getResident =
     online = "",
     onboarding = "",
     building ="",
+    residentType="",
   ) =>
   (dispatch) => {
     dispatch(startAsync());
@@ -104,7 +105,7 @@ export const getResident =
     dispatch(
       get(
         residentEndpoint +
-          "/read" +
+          "/read/v2" +
           "?page=" +
           (pageIndex + 1) +
           "&limit=" +
@@ -121,7 +122,9 @@ export const getResident =
           "&onboarding=" +
           onboarding +
           "&building_id=" +
-          building,
+          building+
+          "&resident_type="+
+          residentType,
         (res) => {
           dispatch(setData(res.data.data));
 
@@ -139,7 +142,7 @@ export const createResident = (data, history) => (dispatch, getState) => {
 
   dispatch(
     post(
-      residentEndpoint + "/register/parent",
+      residentEndpoint + "/register/v2",
       data,
       (res) => {
         // history.push('/' + auth.role + "/resident");
@@ -274,7 +277,7 @@ export const getResidentUnit =
     dispatch(
       get(
         residentEndpoint +
-          "/unit" +
+          "/unitv2" +
           "?page=" +
           (pageIndex + 1) +
           "&id=" +

@@ -105,7 +105,6 @@ function Component() {
             add={data => dispatch(createBillingUnitItem(data, selectedItem, history, role))}
             renderChild={props => {
                 const { errors } = props;
-
                 return (
                     <Form className="Form">
                         <Input {...props} label="Service" autoComplete="off" options={services} onChange={el => {

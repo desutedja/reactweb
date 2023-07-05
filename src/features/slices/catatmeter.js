@@ -89,19 +89,25 @@ export const getCatatmeter = (
 export const downloadCatatMeter = (
   search,
   building,
+  year,
+  month,
 ) => (dispatch) => {
   dispatch(startAsync());
 
   dispatch(
     getFile(
       managementEndpoint +
-        "/list" +
+        "/list/v2" +
         "?page=1" +
         "&limit=10000" +
         "&search=" +
         search +
         "&building=" +
         building +
+        "&year="+
+        year +
+        "&month="+
+        month +
         "&sort_field=created_on&sort_type=DESC&export=true",
         "catat_meter.csv",
       (res) => {

@@ -7,6 +7,7 @@ import {
   FiBarChart2,
   FiPlus,
   FiUserCheck,
+  FiCalendar,
 } from "react-icons/fi";
 import {
   RiTaskLine,
@@ -48,6 +49,7 @@ import Resident from "./Resident";
 import RequestPremium from "./RequestPremium";
 import CatatMeter from "./CatatMeter";
 import Staff from "./Staff";
+import Booking from "./Booking";
 import Task from "./Task";
 import Details from "../../details/components/Detail";
 import Chat from "../../chat";
@@ -126,6 +128,12 @@ const modules = [
     path: "/announcement",
     component: <Announcement />,
   },
+  {
+    icon: <FiCalendar className="MenuItem-icon" />,
+    label: "Facility Booking",
+    path: "/facility booking",
+    component: <Booking />,
+  },
 ];
 
 const labels = {
@@ -187,6 +195,8 @@ export default () => {
     setRefresh(!refresh);
   };
 
+  console.log("ACTIVE MODULE ACCESS===",activeModuleAccess)
+
   useEffect(() => {
     console.log("sudah logout kah anda?", auth.relogin);
     if (!auth.relogin) {
@@ -237,6 +247,7 @@ export default () => {
         }
         return true;
       }
+
       const truthy = normalMenu?.some(
         (moduleAcc) => moduleAcc.path === menu.path
       );
