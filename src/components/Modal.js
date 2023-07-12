@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 
 function Component({
@@ -6,9 +6,16 @@ function Component({
     isOpen, toggle, title, onClick, children, okLabel = "Yes", cancelLabel = '',
     disableHeader = false, disableFooter = false, onClickSecondary = null,
     disablePrimary = false, disabledOk = false, disableSecondary = false, subtitle="", btnDanger = false,
-    className
+    className,nameval, ...props
 }) {
     const closeBtn = <button className="close" onClick={toggle}>&times;</button>;
+    const { values } = props;
+    const [disablePrimaryBtn, setDisablePrimaryBtn] = useState(disablePrimary);
+
+    useEffect(() => {
+        setDisablePrimaryBtn(values !== undefined ? values[nameval] ? false : true : true)
+    }, [values])
+
     return (
         <div>
             <Modal
@@ -30,7 +37,7 @@ function Component({
                     {children}
                 </ModalBody>
                 {!disableFooter && (<ModalFooter>
-                    {!disablePrimary && <button
+                    {!disablePrimaryBtn && <button
                         style={{ color: 'white' }}
                         disabled={disabledOk}
                         className={btnDanger ? "Button Danger" : "Button"}
