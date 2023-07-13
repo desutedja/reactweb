@@ -46,20 +46,9 @@ export default function Component() {
   });
 
   useEffect(() => {
-    const condition = new RegExp(unitValue.toString());
     setUnits(
       unit.items.filter(
-        (u) =>
-          condition.test(u.section_type + " No. " + u.number) ||
-          condition.test(
-            u.section_type +
-              " " +
-              u.section_name +
-              "Floor" +
-              u.floor +
-              " No. " +
-              u.number
-          )
+        (u) => (u.section_type + " " + u.section_name + " Floor " + u.floor + " No. " + u.number).toLocaleLowerCase().includes(unitValue.toLowerCase())
       )
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,6 +119,7 @@ export default function Component() {
               }}
             >
               <SelectOption
+                autocomplete="off"
                 className="mb-4"
                 label="Unit"
                 placeholder="Select Unit"
@@ -137,24 +127,22 @@ export default function Component() {
                 value={unitValue}
                 onChange={(e) => {
                   setUnitValue(e.target.value);
-                  console.log(JSON.stringify(units));
-                  console.log(e.target.value);
                 }}
-                // optionClick={(el) => {
-                //   setTaskData({
-                //     ...taskData,
-                //     building_unit_id: Number(el.id),
-                //   });
-                //   setUnitValue(
-                //     el.section_type +
-                //       " " +
-                //       el.section_name +
-                //       " Floor " +
-                //       el.floor +
-                //       " No. " +
-                //       el.number
-                //   );
-                // }}
+                optionClick={(el) => {
+                  setTaskData({
+                    ...taskData,
+                    building_unit_id: Number(el.id),
+                  });
+                  setUnitValue(
+                    el.section_type +
+                      " " +
+                      el.section_name +
+                      " Floor " +
+                      el.floor +
+                      " No. " +
+                      el.number
+                  );
+                }}
               />
               <Radio
                 className="mb-4"

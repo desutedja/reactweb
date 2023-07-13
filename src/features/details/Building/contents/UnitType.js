@@ -29,7 +29,7 @@ const unitTypes = [
   { label: "5BR", value: "5BR" },
   { label: "Kios", value: "kios" },
   { label: "Sekolah", value: "sekolah" },
-  { label: "Other", value: "other" },
+  { label: "Others", value: "others" },
 ];
 
 const columnsUnitType = [

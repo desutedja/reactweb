@@ -297,7 +297,7 @@ export const getBuildingUnit = (
   dispatch(
     get(
       buildingEndpoint +
-        "/unit" +
+        "/unit/v2" +
         "?page=" +
         (pageIndex + 1) +
         "&building_id=" +
