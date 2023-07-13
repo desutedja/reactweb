@@ -124,7 +124,7 @@ function Component() {
             slice="resident"
             payload={state?.email ? {
                ...state,
-               birthdate: state.birthdate.split('T')[0],
+               birthdate: state.birthdate?.split('T')[0],
                phone: state.phone.slice(2)
             } : selected.id ? {
                 ...residentPayload, ...selected,
@@ -141,7 +141,6 @@ function Component() {
             //     dispatch(editResident(data, history, selected.id))}
             renderChild={props => {
                 const { values, errors } = props;
-                console.log(props)
                 return (
                     <Form className="Form">
                         <Input {...props} label="Email" onFocus={() => setEmailRegistered(false)}
@@ -197,7 +196,7 @@ function Component() {
                             <Input {...props} optional label="Nationality" options={countries}
                             />
                             <Input {...props} optional label="Birth Place" name="birthplace" options={bcities}
-                                loading={bcloading} value={state.birthplace? state.birthplace:""}
+                                loading={bcloading}
                             />
                             <Input {...props} optional label="Birth Date" name="birthdate" type="date" />
                             <Input {...props} optional hidden name="nationality" />
@@ -237,7 +236,9 @@ function Component() {
 
                             {/* <SubmitButton loading={loading} errors={errors} /> */}
                             <Modal
+                                {...props}
                                 isOpen={modalReason}
+                                nameval='update_reason'
                                 toggle={() => { setModalReason(false) }}
                                 title="Update Reason"
                                 okLabel={"Yes, Submit"}
@@ -250,7 +251,6 @@ function Component() {
                                         update_reason: reason,
                                     }, res => {
                                         history.push(`${selected.id}`);
-
                                             dispatch(
                                             setInfo({
                                                 color: "success",
@@ -258,10 +258,8 @@ function Component() {
                                             })
                                             );
                                     }, err => {
-                                        
                                         setModalReason(false)
-                                    }))
-                                    
+                                    }))                                    
                                     :  
                                         dispatch(put(endpointResident+"/management/resident/edit", {
                                         ...residentPayload, ...selected,
@@ -270,7 +268,6 @@ function Component() {
                                         update_reason: reason,
                                     }, res => {
                                         history.push(`${selected.id}`);
-
                                             dispatch(
                                             setInfo({
                                                 color: "success",
@@ -278,14 +275,14 @@ function Component() {
                                             })
                                             );
                                     }, err => {
-                                        
                                         setModalReason(false)
                                     }))
                             
                                         setModalReason(false)
-                                    }}
+                                    }
+                                }
                             >
-                                <Inputs type="textarea" limit={120} label="Reason" name="update_reason" inputValue={reason} setInputValue={setReason} />
+                                <Input {...props} type="textarea" label="Reason" name="update_reason"/>
                             </Modal>
                             <Button
                                 label="Submit"

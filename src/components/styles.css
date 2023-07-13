@@ -12,6 +12,10 @@
   transition: .2s;
 }
 
+.Button:disabled{
+  background-color: #dddddd !important;
+}
+
 .ButtonNew {
   background-color: var(--primary-color)!important;
   min-width: 100px;
