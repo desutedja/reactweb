@@ -10,7 +10,7 @@ function Component({
 }) {
     const closeBtn = <button className="close" onClick={toggle}>&times;</button>;
     const { values } = props;
-    const [disablePrimaryBtn, setDisablePrimaryBtn] = useState(disablePrimary);
+    const [disablePrimaryBtn, setDisablePrimaryBtn] = useState(disabledOk);
 
     useEffect(() => {
         setDisablePrimaryBtn(values !== undefined ? values[nameval] ? false : true : true)
@@ -37,9 +37,9 @@ function Component({
                     {children}
                 </ModalBody>
                 {!disableFooter && (<ModalFooter>
-                    {!disablePrimaryBtn && <button
+                    {!disablePrimary && <button
                         style={{ color: 'white' }}
-                        disabled={disabledOk}
+                        disabled={disablePrimaryBtn}
                         className={btnDanger ? "Button Danger" : "Button"}
                         // color={btnDanger ? "danger" : "primary"}
                         onClick={onClick}>
