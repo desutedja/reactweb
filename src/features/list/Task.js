@@ -310,7 +310,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
       dispatch(
         get(
           endpointAdmin +
-            "/building/unit" +
+            "/building/unit/v2" +
             "?page=1" +
             "&building_id=" +
             building +
