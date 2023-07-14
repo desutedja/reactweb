@@ -125,11 +125,13 @@ function Component() {
             payload={state?.email ? {
                ...state,
                birthdate: state.birthdate?.split('T')[0],
-               phone: state.phone.slice(2)
+               phone: state.phone.slice(2),
+               update_reason: state.update_reason? state.update_reason : ""
             } : selected.id ? {
                 ...residentPayload, ...selected,
                 phone: selected.phone.slice(2),
                 birthdate: selected.birthdate?.split('T')[0],
+                update_reason: selected.update_reason? selected.update_reason : ""
             } : residentPayload}
             schema={residentSchemaWithReason}
             formatValues={values => ({
