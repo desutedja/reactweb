@@ -59,7 +59,7 @@ export const getRequestPremium = (
   dispatch(
     get(
       residentEndpoint +
-        "/get_basicuser" +
+        "/get_basicuser/v2" +
         "?page=" +
         (pageIndex + 1) +
         "&limit=" +
