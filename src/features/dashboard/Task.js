@@ -54,8 +54,8 @@ function Component() {
     let dispatch = useDispatch();
 
     useEffect(() => {
-        dispatch(getSOS(range, tower, buildingName, taskType));
-    }, [dispatch, range, tower, buildingName, taskType]);
+        dispatch(getSOS(range, buildingName, tower, taskType));
+    }, [dispatch, range, buildingName, tower, taskType]);
 
     // useEffect(() => {
     //     setLoading(true);
