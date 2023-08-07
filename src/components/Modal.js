@@ -13,7 +13,11 @@ function Component({
     const [disablePrimaryBtn, setDisablePrimaryBtn] = useState(disabledOk);
 
     useEffect(() => {
-        setDisablePrimaryBtn(values !== undefined ? values[nameval] ? false : true : true)
+        if (nameval == "update_reason"){
+            setDisablePrimaryBtn(values !== undefined ? values[nameval] ? false : true : true)
+        }else{
+            setDisablePrimaryBtn(disabledOk)
+        }
     }, [values])
 
     return (
