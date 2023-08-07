@@ -128,12 +128,12 @@ const modules = [
     path: "/announcement",
     component: <Announcement />,
   },
-  {
-    icon: <FiCalendar className="MenuItem-icon" />,
-    label: "Facility Booking",
-    path: "/facility booking",
-    component: <Booking />,
-  },
+  // {
+  //   icon: <FiCalendar className="MenuItem-icon" />,
+  //   label: "Facility Booking",
+  //   path: "/facility booking",
+  //   component: <Booking />,
+  // },
 ];
 
 const labels = {
