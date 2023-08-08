@@ -187,7 +187,7 @@ function Component({ view }) {
 
           let formatted = data.map((el) => ({
             label: el.building_name,
-            value: el.id,
+            value: el.building_id,
           }));
 
           setBuildingList(formatted);

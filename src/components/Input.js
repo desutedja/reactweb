@@ -44,6 +44,7 @@ function Component({
   accept = "image/*",
   hint = "",
   addons,
+  autocomplete="off",
 }) {
   const ch =
     new Date().getHours().toString().length < 2
@@ -368,6 +369,7 @@ function Component({
               disabled={disabled}
               type={type}
               id={label}
+              autoComplete={autocomplete}
               name={name ? name : label.toLowerCase().replace(/ /g, "_")}
               className={addons ? "withaddons" : ""}
               required={!optional}

@@ -124,7 +124,7 @@ const responseAlert = (err, link) => async dispatch => {
   } else */ if (response && response.data.error_message) {
     dispatch(openAlert({
       title: 'Server Error',
-      subtitle: link,
+      subtitle: response?.data.error_message,
       //subtitle: err,
       content: response?.data.error_message,
     }));

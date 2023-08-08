@@ -5665,7 +5665,7 @@ function Component() {
                         <div className="text-nowrap ml-3">Online Staff</div>
                         <AnimatedNumber
                           className="h2 font-weight-bold black ml-3"
-                          value={staffStatistic.num_of_login_staff}
+                          value={staffData.num_of_login_staff}
                           // value={staffData.num_of_login_staff}
                           formatValue={formatValue}
                         />
