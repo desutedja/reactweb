@@ -19,6 +19,7 @@ function Component({
   title = "",
   getAction,
   filterVars = [],
+  actionDownloads= [],
   filters = [],
   actions = [],
   approved_status,
@@ -142,6 +143,7 @@ function Component({
           filters={filters}
           sortBy={sortBy}
           actions={view ? null : actions}
+          actionDownloads={view ? null : actionDownloads}
           onClickApproved={
             view
               ? null

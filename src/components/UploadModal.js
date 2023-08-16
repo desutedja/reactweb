@@ -61,8 +61,8 @@ const UploadModal = ({
                     formData.append(uploadDataName, fileUpload);
 
                     dispatch(post(uploadLink, formData, res => {
-                        console.log(res.data.data);
-                        exportFromJSON({ data: res.data.data.errorList, fileName: 'data', exportType: exportFromJSON.types.csv })
+                        let fname = fileUpload.name.split('.').slice(0, -1).join('.')
+                        exportFromJSON({ data: res.data.data.errorList, fileName: fname, exportType: exportFromJSON.types.csv })
                         setResult(res.data.data);
                         setLoading(false);
                         if (resultComponent) {

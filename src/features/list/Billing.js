@@ -3129,7 +3129,6 @@ function Component({ view }) {
       <UploadModal
         open={upload}
         toggle={() => setUpload(false)}
-        // templateLink={user.billing_bulk_template}
         templateLink={
           "https://yipy-assets.s3.ap-southeast-1.amazonaws.com/template/template_bulk_upload_billing.xlsx"
         }

@@ -117,6 +117,11 @@ export const request_premium_status = [
   { label: "Disapprove", value: "disapprove" },
 ];
 
+export const request_premium_unit_status = [
+  { label: "own", value: "own" },
+  { label: "rent", value: "rent" },
+];
+
 export const resident_kyc_statuses = [
   { label: "Submitted", value: "submitted" },
   { label: "Unsubmitted", value: "none" },
