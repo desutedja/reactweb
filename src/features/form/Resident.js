@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Select, {components} from 'react-select';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -48,6 +49,10 @@ const residentPayload = {
     city_label: "",
     district_label: "",
     account_bank_label: "",
+
+    resident_type:null,
+    period_from:null,
+    period_to:null
 }
 
 function Component() {
@@ -71,6 +76,7 @@ function Component() {
     const [cities, setCities] = useState([]);
 
     const [province, setProvince] = useState("");
+    const [isTenant, setIsTenant] = useState(false);
     const [provinces, setProvinces] = useState([]);
 
     const [bcities, setBCities] = useState([]);
@@ -79,6 +85,110 @@ function Component() {
     let dispatch = useDispatch();
     let history = useHistory();
     let { state } = useLocation();
+
+    const colourOptions = [
+        {
+          value: 1,
+          label: "Owner",
+          description:
+            "Resident yang memiliki kepemilikan atas suatu unit hunian dan memiliki hak untuk menyewakan unit huniannya kepada tenant (penyewa) untuk jangka waktu tertentu."
+        },
+        {
+          value: 2,
+          label: "Owner Family",
+          description:
+            "Anggota keluarga dari Owner yang merupakan pemilik atau memiliki unit di suatu hunian."
+        },
+        {
+          value: 3,
+          label: "Tenant",
+          description:
+            "Resident yang menyewa atau mengontrak unit dalam suatu hunian untuk jangka waktu tertentu."
+        },
+        {
+            value: 4,
+            label: "Tenant Family",
+            description:
+              "Anggota keluarga dari Tenant (penyewa) yang tinggal bersama dalam unit hunian tersebut."
+          }
+      ];
+
+      const colourStyles = {
+        container: (styles) => { 
+            return {
+                ...styles, 
+                minWidth:'calc(100% / 1.7 - 16px);',
+                textAlign:"left"
+            }
+        },
+        control: (styles, {isFocused}) => {
+            return {
+                ...styles,
+                borderColor: isFocused ? 'black !important' : '#E9E9E9 !important',
+                boxShadow: isFocused ? '0 0 0 1px black !important' : 'none !important',
+
+                "& .option-with-description:hover > div":{
+                    color:"red !important"
+                }
+            }
+        },
+        option: (style, {isFocused}) => {
+          return {
+            ...style,
+            ':active': {
+                backgroundColor: '#E12029',
+            },
+            padding: "8px 12px",
+            backgroundColor: isFocused ? "#E12029" : "",
+      
+            color: isFocused ? "#F9FAFC" : "#191D2F",
+            display: "flex",
+
+            paddingLeft: 0,
+      
+            "& .left": {
+              display: "flex",
+              justifyContent: "left",
+              width: 60,
+              padding: "7px 17px",
+              fontSize:24,
+              color:isFocused ? "#F9FAFC" : "#E12029"
+            },
+
+            "& .right": {
+              width: "100%",
+              textAlign:"left"
+            },
+      
+            "& .right > .title": {
+              display: "block",
+              margin: "1px 0",
+              alignItems:"start"
+            },
+
+            "& .title":{
+                fontSize:"18px"
+            },
+
+            "& .description": {
+                color:isFocused ? "#F9FAFC" : "#838799"
+            }
+
+          };
+        }
+      };
+
+      const Option = (props) => {
+        return (
+          <components.Option {...props}>
+            <div className="left">{props.isSelected ? "✔" : ""}</div>
+            <div className="right">
+              <strong className="title">{props.data.label}</strong>
+              <div className="description">{props.data.description}</div>
+            </div>
+          </components.Option>
+        );
+      };
 
     useEffect(() => {
         if (role === "bm") {
@@ -148,7 +258,7 @@ function Component() {
     
               let formatted = data.map((el) => ({
                 label: el.building_name,
-                value: el.id,
+                value: el.building_id,
               }));
     
               setBuildingList(formatted);
@@ -270,7 +380,7 @@ function Component() {
                 dispatch(editResident(data, history, selected.id))}
             add={data => dispatch(createResident(data, history))}
             renderChild={props => {
-                const { values, errors } = props;
+                const { values, setFieldValue, errors } = props;
 
                 return (
                     <Form className="Form">
@@ -364,7 +474,7 @@ function Component() {
                             <SectionSeparator />
 
                             {role !== "bm" && <Input {...props} label="Building" options={buildingList}
-                                onChange={el => {setBuilding(el.value)}}
+                                onChange={el => {setBuilding(el.value);}}
                             />}
 
                             {building && <Input {...props} label="Unit" options={units}
@@ -372,6 +482,44 @@ function Component() {
                                     setUnit(el.value)
                                 }}
                             />}
+
+                            <div class="Input">
+                            <div style={{display: "flex"}}>
+                                <div style={{display: "flex", alignItems: "center"}}>
+                                <div>
+                                    <label class="Input-label" for="resident_type">Resident Type</label>
+                                </div>
+                                </div>
+                            </div>
+                            <div>
+                                <Select
+                                    defaultValue={colourOptions[0]}
+                                    label="Resident Type"
+                                    name="resident_type"
+                                    options={colourOptions}
+                                    styles={colourStyles}
+                                    components={{
+                                        Option
+                                    }}
+                                    onChange={el => {
+                                        setFieldValue("resident_type",el.value)
+
+                                        if (el.value==3 || el.value==4){
+                                            setIsTenant(true)
+                                        }else{
+                                            setIsTenant(false)
+                                        }
+                                    }}
+                                />
+                            </div>
+                            </div>
+
+                            {isTenant && <>
+                                <Input {...props} label="Period From" name="period_from" type="date" />
+                                <Input {...props} label="Period To" name="period_to" type="date" />
+                                </>
+                            }
+                            
 
                             <SectionSeparator />
 

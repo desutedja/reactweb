@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { getCatatmeter, downloadCatatMeter } from "../slices/catatmeter";
 import Template from "./components/Template";
 import Button from "../../components/Button";
-import { FiDownload } from "react-icons/fi";
+import { FiDownload, FiSearch } from "react-icons/fi";
 import Filter from "../../components/Filter";
 import { get } from "../slice";
 import { endpointAdmin } from "../../settings";
 import { dateTimeFormatterstriped, isRangeToday } from "../../utils";
 import DateRangeFilter from "../../components/DateRangeFilter";
 import moment from "moment";
+import Input from "../../components/Input";
 
 
 const columns = [
@@ -164,13 +165,15 @@ function Component({ view, canAdd }) {
   }
 
   const [year, setYear] = useState(yearnow);
+  const [limit, setLimit] = useState(5);
 
   useEffect(() => {
     dispatch(
       get(
         endpointAdmin +
           "/building" +
-          "?limit=50" +
+          "?limit=" +
+          limit +
           "&page=1" +
           "&search=" +
           search,
@@ -193,7 +196,7 @@ function Component({ view, canAdd }) {
         }
       )
     );
-  }, [dispatch, search]);
+  }, [dispatch, search, limit]);
 
   useEffect(() => {
     // console.log(file);
@@ -223,24 +226,41 @@ function Component({ view, canAdd }) {
             ? [
                 {
                   hidex: building === "",
-                  label: <p>Building: {building ? buildingName : "All"}</p>,
+                  label: (
+                    <p>
+                      Building: {building ? <b>{buildingName}</b> : <b>All</b>}
+                    </p>
+                  ),
                   delete: () => setBuilding(""),
                   component: (toggleModal) => (
                     <>
+                      <Input
+                        label="Search Building"
+                        autoComplete="off"
+                        compact
+                        icon={<FiSearch />}
+                        inputValue={search}
+                        setInputValue={setSearch}
+                      />
                       <Filter
                         data={buildings}
                         onClick={(el) => {
                           if (!el.value) {
+                            setLimit(limit + el.restTotal);
                             return;
                           }
                           setBuilding(el.value);
                           setBuildingName(el.label);
                           toggleModal(false);
+                          setSearch("");
+                          setLimit(5);
                         }}
                         onClickAll={() => {
                           setBuilding("");
                           setBuildingName("");
                           toggleModal(false);
+                          setSearch("");
+                          setLimit(5);
                         }}
                       />
                     </>
