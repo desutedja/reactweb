@@ -1900,7 +1900,7 @@ function Component({ view, canAdd }) {
                           "/management/resident/read/v2?export=true"+
                           "&onboarding=" +
                           onboardingStatus+
-                          "&building="+
+                          "&building_id="+
                           building+
                           "&resident_type="+
                           residentType+
