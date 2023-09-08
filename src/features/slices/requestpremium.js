@@ -28,7 +28,7 @@ export const slice = createSlice({
 
       state.items = data.items;
       state.total_items = data.total_items;
-      state.total_pages = data.filtered_page;
+      state.total_pages = data.filtered_pages;
     },
     setSelected: (state, action) => {
         state.selected = action.payload;

@@ -66,13 +66,14 @@ function Component({
                   period_to: to,
                 },
                 (res) => {
-                  console.log(res.data.data.items);
                   dispatch(
                     setInfo({
                       color: "success",
                       message: "Upgrade Basic User has been Approved.",
                     })
                   );
+                  
+                  dispatch(refresh());
                 },
                 (err) => {
                   dispatch(
@@ -81,12 +82,10 @@ function Component({
                       message: `Approved process error.`,
                     })
                   );
-                  console.log("error");
                 }
               )
             );
             setOpenModal(false);
-            dispatch(refresh());
           }}
         >
           <label>
@@ -134,7 +133,7 @@ function Component({
                     )
                   )
                 : dispatch(
-                    getAction(pageIndex, pageSize, search, ...filterVars)
+                    getAction(pageIndex, pageSize, search, sortField, sortType, ...filterVars)
                   );
               // eslint-disable-next-line react-hooks/exhaustive-deps
             },
