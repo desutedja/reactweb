@@ -198,6 +198,34 @@ export const deleteResident = (row, history) => (dispatch, getState) => {
 
   dispatch(
     del(
+      residentEndpoint + "/delete/v3/" + row.id,
+      (res) => {
+        history && history.push("/" + auth.role + "/resident");
+
+        dispatch(refresh());
+
+        dispatch(
+          setInfo({
+            color: "success",
+            message: "Resident has been deleted.",
+          })
+        );
+        dispatch(stopAsync());
+      },
+      (err) => {
+        dispatch(stopAsync());
+      }
+    )
+  );
+};
+
+export const residentReturnToBasic = (row, history) => (dispatch, getState) => {
+  dispatch(startAsync());
+
+  const { auth } = getState();
+
+  dispatch(
+    del(
       residentEndpoint + "/delete/" + row.id,
       (res) => {
         history && history.push("/" + auth.role + "/resident");

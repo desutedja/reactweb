@@ -22,7 +22,7 @@ import Input from "../../components/Input";
 
 import Resident from "../../components/cells/Resident";
 
-import { getResident, setSelected, deleteResident } from "../slices/resident";
+import { getResident, setSelected, deleteResident, residentReturnToBasic } from "../slices/resident";
 import { toSentenceCase } from "../../utils";
 
 import TemplateLocalStorage from "./components/TemplateLocalStorage";
@@ -1925,7 +1925,8 @@ function Component({ view, canAdd }) {
                 />,
               ]
         }
-        returnBasicAction={view ? null : role === "sa" && deleteResident}
+        deleteAction={deleteResident}
+        returnBasicAction={view ? null : role === "sa" && residentReturnToBasic}
         filterVars={[
           status,
           KYCStatus,

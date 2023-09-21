@@ -50,11 +50,7 @@ const UploadModal = ({
             okLabel={"Submit"}
             disablePrimary={loading || !fileUpload}
             disableSecondary={loading}
-            onClick={result ?
-                () => {
-                    console.log(result)
-                }
-                :
+            onClick={
                 () => {
                     setLoading(true);
                     let formData = new FormData();
@@ -68,6 +64,7 @@ const UploadModal = ({
                         if (resultComponent) {
                             setOpenRes(true)
                         }
+                        // dispatch(refresh());
                         toggle();
                         // resultComponent ? setOpenRes(true) : toggle();
                     }, err => {

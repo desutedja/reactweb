@@ -12,6 +12,7 @@ import {
   FiCalendar,
   FiBell,
   FiUserCheck,
+  FiFeather,
 } from "react-icons/fi";
 import {
   RiStore2Line,
@@ -36,6 +37,7 @@ import Vouchers from "./Vouchers";
 import PromoVA from "./PromoVA";
 import Internet from "./Internet";
 import Booking from "./Booking";
+import Membership from "./Membership";
 import Merchant from "./Merchant";
 import Product from "./Product";
 import Resident from "./Resident";
@@ -61,8 +63,8 @@ const menu = [
     icon: <FiBarChart2 className="MenuItem-icon" />,
     label: "Dashboard",
     path: "/dashboard",
-    // subpaths: ["/building", "/transaction", "/task", "/advertisement", "/CCTV"],
-    subpaths: ["/building", "/transaction", "/task", "/advertisement"],
+    subpaths: ["/building", "/transaction", "/task", "/advertisement", "/CCTV"],
+    // subpaths: ["/building", "/transaction", "/task", "/advertisement"],
     component: <Dashboard />,
     group: "Overview",
   },
@@ -189,6 +191,13 @@ const menu = [
     label: "Facility Booking",
     path: "/facility booking",
     component: <Booking />,
+  },
+  {
+    icon: <FiFeather className="MenuItem-icon" />,
+    label: "Membership",
+    path: "/membership",
+    subpaths: ["/log", "/check in"],
+    component: <Membership />,
   },
   {
     icon: <FiFile className="MenuItem-icon" />,
