@@ -45,6 +45,7 @@ function Component({
   hint = "",
   addons,
   autocomplete="off",
+  onKeyDown
 }) {
   const ch =
     new Date().getHours().toString().length < 2
@@ -378,6 +379,7 @@ function Component({
               max={max}
               value={value ? value : type === "button" ? label : ""}
               onBlur={onBlur}
+              onKeyDown={onKeyDown}
               onChange={(e) => {
                 // console.log(e.target.value);
                 if (type === "url") {

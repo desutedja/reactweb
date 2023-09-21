@@ -9,6 +9,7 @@ import Modal from "../../../components/Modal";
 import Pill from "../../../components/Pill";
 
 import Unit from "./contents/Unit";
+import Membership from "./contents/Membership";
 import { useParams, useHistory } from "react-router-dom";
 import {
   dateFormatter,
@@ -91,7 +92,7 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
         phone={data.phone}
         reason={data.update_reason}
         loading={!data.id}
-        labels={["Details", "Unit"]}
+        labels={["Details", "Unit", "Membership"]}
         activeTab={0}
         contents={[
           <Detail
@@ -111,6 +112,14 @@ function Component({ view, canAdd, canUpdate, canDelete }) {
             }}
           />,
           <Unit
+            canAdd={role === "bm" ? canAdd : true}
+            canDelete={role === "bm" ? canDelete : true}
+            canUpdate={role === "bm" ? canUpdate : true}
+            view={view}
+            id={id}
+          />,
+
+          <Membership
             canAdd={role === "bm" ? canAdd : true}
             canDelete={role === "bm" ? canDelete : true}
             canUpdate={role === "bm" ? canUpdate : true}

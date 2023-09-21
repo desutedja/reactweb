@@ -5,7 +5,7 @@ import Task from "../../dashboard/Task";
 import Transaction from "../../dashboard/Transaction";
 import Billing from "../../dashboard/Building";
 import Advertisement from "../../dashboard/Advertisement";
-// import Cctv from "../../dashboard/Cctv";
+import Cctv from "../../dashboard/Cctv";
 
 function Component() {
   let { path } = useRouteMatch();
@@ -25,9 +25,9 @@ function Component() {
       <Route path={`${path}/transaction`}>
         <Transaction />
       </Route>
-      {/* <Route path={`${path}/CCTV`}>
+      <Route path={`${path}/CCTV`}>
         <Cctv />
-      </Route> */}
+      </Route>
     </Switch>
   );
 }

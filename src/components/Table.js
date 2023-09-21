@@ -213,8 +213,18 @@ function Table({
       </Modal>
       {tableAction && (
         <>
+          {titleList && (
+            <div>
+              <h3>{titleList}</h3>
+              <br/>
+            </div>
+            
+          )}
+          
+
           <div className="TableActionBilTop">
             <div className="TableAction-new d-flex align-items-center">
+              
               <div
                 className="TableSearch d-flex align-items-center"
                 style={{ marginLeft: "4px" }}
@@ -555,7 +565,7 @@ function Table({
                     row.original.approved_status == "disapprove"
                   )
                     ? {
-                        name: "Approved",
+                        name: "Approve",
                         onClick: () => onClickApproved(row.original),
                         color: "Details",
                         icon: <FiCheck />,
