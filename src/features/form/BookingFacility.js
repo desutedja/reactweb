@@ -115,6 +115,13 @@ function Component() {
       setRuleList([...ruleList, val]);
   }
 
+  const ruleKeyPress = (event) => {
+    if (event.nativeEvent.key === 'Enter') {
+      event.preventDefault();
+      addRules()
+    }
+  }
+
   const removeRules = (item) => {
     const index = ruleList.indexOf(item);
     if (index > -1) { // only splice array when item is found
@@ -381,7 +388,7 @@ function Component() {
                 {props.values.id == undefined ? 
                 (
                 <div>
-                <input name="rules" rows="4" placeholder="Rules" autocomplete="off" type="text" id="rule" />
+                <input name="rules" rows="4" placeholder="Rules" autocomplete="off" type="text" id="rule" onKeyDown={ruleKeyPress} />
                 <Button key="Add" label="Add" icon={<FiPlus />} onClick={addRules} />
                 </div>
                 )
