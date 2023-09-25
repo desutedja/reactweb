@@ -80,16 +80,14 @@ export const editFacility = ( data, history, id) => dispatch => {
 }
 
 
-export const deleteFacility = (id, history) => (dispatch, getState) => {
+export const deleteFacility = (id) => (dispatch) => {
   dispatch(startAsync());
-
-  const { auth } = getState();
   
   dispatch(
     del(endpointBookingFacility + '/admin/facilities/' + id, 
     (res) => {
-      history && history.push('/' + auth.role + '/facility%20booking');
-      
+      dispatch(refresh());
+
       dispatch(setInfo({
         color: 'success',
         message: 'Facility has been deleted.'

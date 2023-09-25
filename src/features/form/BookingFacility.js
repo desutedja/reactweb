@@ -389,7 +389,7 @@ function Component() {
                 (
                 <div>
                 <input name="rules" rows="4" placeholder="Rules" autocomplete="off" type="text" id="rule" onKeyDown={ruleKeyPress} />
-                <Button key="Add" label="Add" icon={<FiPlus />} onClick={addRules} />
+                <Button key="Add" label="Add" btnType="button" icon={<FiPlus />} onClick={addRules}  />
                 </div>
                 )
                 : (<div><input name="rules" rows="4" placeholder="Rules" autocomplete="off" type="text" id="rule" disabled /></div>)}

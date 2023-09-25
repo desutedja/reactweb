@@ -115,8 +115,8 @@ export const slice = createSlice({
       const data = action.payload;
 
       state.service.items = data.items;
-      state.service.total_items = data.total_item;
-      state.service.total_pages = data.total_page;
+      state.service.total_items = data.total_items;
+      state.service.total_pages = data.total_pages;
     },
     setManagementData: (state, action) => {
       const data = action.payload;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 
-function MyButton({ icon, label, onClick, selected, color, disabled, className, fontWeight}) {
+function MyButton({ icon, label, onClick, selected, color, disabled, className, fontWeight, btnType}) {
     return (
         <Button
             className={('Button ' + (disabled ? 'inactive' : color ? color : '')) + (className ? ' ' + className : '')}
@@ -17,7 +17,7 @@ function MyButton({ icon, label, onClick, selected, color, disabled, className, 
                 borderRadius: 6,
                 fontWeight: fontWeight ? fontWeight : 700,
             }}
-            type="submit"
+            type={btnType?btnType:"submit"}
         >
             {icon && <span style={{
                 marginRight: 8,
@@ -26,6 +26,7 @@ function MyButton({ icon, label, onClick, selected, color, disabled, className, 
                 {icon}
             </span>}
             {label}
+            
         </Button>
     )
 }

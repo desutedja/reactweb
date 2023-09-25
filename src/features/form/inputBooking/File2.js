@@ -72,7 +72,7 @@ function FileInput2(props) {
         
     </div>
     {
-        props.values.id == undefined ? (<div><Button key="Add Image" label="Add Image" icon={<FiPlus />} onClick={props.onClick} /></div>) : ""
+        props.values.id == undefined ? (<div><Button btnType={"button"} key="Add Image" label="Add Image" icon={<FiPlus />} onClick={props.onClick} /></div>) : ""
     }
     </div>;
 }

@@ -171,7 +171,7 @@ function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
   const [buildingid, setBuildingid] = useState("");
   const [bank, setBank] = useState("");
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({ items: [] });
+  const [data, setData] = useState();
   const [dataBooking, setDataBooking] = useState({ items: [] });
   const [status, setStatus] = useState("");
   const [building, setBuilding] = useState("");
@@ -502,15 +502,6 @@ function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
             <Table
               columns={facilityColumns}
               data={data?.items || []}
-              // onSelection={(selectedRows) => {
-              //   const selectedRowIds = [];
-              //   selectedRows.map((row) => {
-              //     if (row !== undefined){
-              //       selectedRowIds.push(row.id);
-              //       setMultiActionRows([...selectedRowIds]);
-              //     }
-              //   });
-              // }}
               fetchData={useCallback(
                 (page, limit, searchItem) => {
                   role !== "sa" ? setBuilding(auth.building_id) : setBuilding(building);
@@ -529,13 +520,12 @@ function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
                         (page + 1),
                       (res) => {
                         setData(res.data);
-                        setLoading(false);
                       }
-                    )
+                    ),
+                    setLoading(false)
                   );
-                  // eslint-disable-next-line react-hooks/exhaustive-deps
                 },
-                [dispatch, building]
+                [dispatch, building, toggle]
               )}
               loading={loading}
               onClickDelete={
@@ -548,7 +538,8 @@ function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
                         setConfirmDelete(
                           "Are you sure to delete this facility?",
                           () => {
-                            dispatch(deleteFacility(row.facility_id, history))
+                            dispatch(deleteFacility(row.facility_id));
+                            setToggle(!toggle);
                           }
                         )
                       );
@@ -612,71 +603,6 @@ function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
                   },
                 ] : []
               }
-              // actions={[
-              //   <>
-              //     {view ? null : role === "bm" && !canAdd ? null : (
-              //       <Button
-              //         key="Add Billing"
-              //         label="Add Billing"
-              //         icon={<FiPlus />}
-              //         onClick={() => {
-              //           dispatch(setSelectedItem({}));
-              //           history.push({
-              //             pathname: url + "/add",
-              //             state: {
-              //               year: parseInt(bmonths[active]?.year),
-              //               month: parseInt(bmonths[active]?.month),
-              //             },
-              //           });
-              //         }}
-              //       />
-              //     )}
-              //   </>,
-              // ]}
-              // deleteSelection={(selectedRows, rows) => {
-              //   Object.keys(selectedRows).map((el) =>
-              //     dispatch(deleteBillingUnitItem(rows[el].original.id))
-              //   );
-              // }}
-              // renderActions={
-              //   view
-              //     ? null
-              //     : (selectedRowIds, page) => {
-              //         return [
-              //           <>
-              //             <Button
-              //               label="Set as Paid Selected"
-              //               disabled={
-              //                 Object.keys(selectedRowIds).length === 0
-              //               }
-              //               icon={<FiCheck />}
-              //               onClick={() => {
-              //                 confirmAlert({
-              //                   title: "Set as Paid Billing",
-              //                   message:
-              //                     "Do you want to set selected billing as Paid?",
-              //                   buttons: [
-              //                     {
-              //                       label: "Yes",
-              //                       onClick: () => {
-              //                         dispatch(
-              //                           updateSetAsPaidSelectedDetail(multiActionRows)
-              //                         );
-              //                       },
-              //                       className: "Button btn btn-secondary",
-              //                     },
-              //                     {
-              //                       label: "Cancel",
-              //                       className: "Button btn btn-cancel",
-              //                     },
-              //                   ],
-              //                 });
-              //               }}
-              //             />
-              //           </>,
-              //         ];
-              //       }
-              // }
             />,
           ]}
         />
