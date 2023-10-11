@@ -163,7 +163,7 @@ export const get = (
       ifSuccess(res);
     })
     .catch(err => {
-      // console.log(err);
+      console.log("get err",err);
 
       dispatch(responseAlert(err, link));
 
@@ -300,13 +300,11 @@ export const post = (
     headers: auth.headers
   })
     .then(res => {
-      // console.log(res);
+      console.log("RESSSSSSS1",res);
 
       ifSuccess(res);
     })
     .catch(err => {
-      // console.log(err);
-
       dispatch(responseAlert(err, link));
 
       ifError(err);

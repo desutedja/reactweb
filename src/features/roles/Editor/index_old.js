@@ -47,7 +47,6 @@ import Xenplatform from "./Xenplatform";
 import PushNotif from "./PushNotif";
 
 import Settings from "../../settings";
-import Chat from "../../chat";
 
 import Template from "../components/Template";
 import { Route, Redirect } from "react-router-dom";
@@ -206,12 +205,6 @@ function Component() {
           {el.component}
         </Route>
       ))}
-      <Route path={"/sa/chat/:rf"}>
-        <Chat />
-      </Route>
-      <Route path={"/sa/chat"}>
-        <Chat />
-      </Route>
       <Route path={"/sa/settings"}>
         <Settings />
       </Route>

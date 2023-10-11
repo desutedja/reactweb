@@ -12,8 +12,8 @@ function Component({
     const { values } = props;
     const [disablePrimaryBtn, setDisablePrimaryBtn] = useState(disabledOk);
 
-    useEffect(() => {
-        if (nameval == "update_reason"){
+    useEffect((disabledOk,nameval) => {
+        if (nameval === "update_reason"){
             setDisablePrimaryBtn(values !== undefined ? values[nameval] ? false : true : true)
         }else{
             setDisablePrimaryBtn(disabledOk)

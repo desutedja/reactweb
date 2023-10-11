@@ -26,7 +26,6 @@ import {
   post,
 } from "../../slice";
 import { setNotificationData } from "../../../features/slices/notification";
-import { setQiscus, setUnread, setReloadList } from "../../chat/slice";
 import { logout } from "../../auth/slice";
 import {
   endpointResident,
@@ -143,69 +142,6 @@ function Component({ role, children }) {
         })
       );
   }, [dispatch, notifModal]);
-
-  useEffect(() => {
-    console.log("initializing qiscus...");
-    const adminID = role === "sa" ? "admin" : user.management_id;
-    const prefix = (role === "sa" ? "centratama" : "management") + "-clink-";
-    const userKey = prefix + "key-" + adminID;
-    const userID = prefix + adminID;
-    const userDisplayName = role === "sa" ? "Centratama Admin" : "Admin";
-
-    Qiscus.init({
-      AppId: "fastel-sa-hkxoyooktyv",
-      options: {
-        newMessagesCallback: (message) => {
-          console.log("NEW MESSAGE", message[0].message);
-          dispatch(setReloadList());
-          message[0].email !== userID &&
-            dispatch(
-              setNotif({
-                title: "New Message",
-                message: message[0].username + ": " + message[0].message,
-              })
-            );
-        },
-        commentDeliveredCallback: (data) => {
-          console.log("DELIVERED CALLBACK", data);
-        },
-        commentReadCallback: function (data) {
-          // On comment has been read by user
-          console.log("READ CALLBACK", data);
-        },
-        loginErrorCallback: function (err) {
-          console.log(err);
-        },
-        loginSuccessCallback: function () {
-          // On success
-          console.log("Qiscus login: " + Qiscus.isLogin);
-          dispatch(setQiscus(Qiscus));
-        },
-      },
-    })
-      .then(() => {
-        console.log("init success");
-        console.log(Qiscus);
-
-        if (!Qiscus.isLogin) {
-          //    console.log('run because is login = ', Qiscus.isLogin)
-          console.log(
-            "setting user to " + userID + " with password " + userKey
-          );
-          Qiscus.setUser(
-            userID,
-            userKey,
-            userDisplayName,
-            "https://avatars.dicebear.com/api/male/" + user.email + ".svg",
-            user
-          );
-        }
-      })
-      .catch((err) => {
-        console.log("Qiscus init failed", err);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user]);
 
   useEffect(() => {
     qiscus &&
@@ -371,8 +307,8 @@ function Component({ role, children }) {
               }}
             />
             {role === "sa"
-              ? "Superadmin - " + toSentenceCase(user.group)
-              : "Building Manager - " + toSentenceCase(user.building_name)}
+              ? "Superadmin - " + toSentenceCase(JSON.stringify(user))
+              : "Building Manager - "}
           </IconButton>
         </div>
         <div
@@ -381,23 +317,6 @@ function Component({ role, children }) {
             alignItems: "center",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            {user.group !== "vas_advertiser" && user.group !== "vas_sales" && (
-              <IconButton onClick={() => history.push("/" + role + "/chat")}>
-                <MdChatBubble />
-              </IconButton>
-            )}
-            {!!unread &&
-              user.group !== "vas_advertiser" &&
-              user.group !== "vas_sales" && (
-                <div className="Badge">{unread}</div>
-              )}
-          </div>
           <div
             style={{
               display: "flex",

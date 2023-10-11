@@ -20,32 +20,27 @@ import Login from "./features/auth/Login";
 import OTP from "./features/auth/OTP";
 
 import Editor from "./features/roles/Editor";
-import MerchantAcquisition from "./features/roles/MerchantAcquisition";
-import Viewer from "./features/roles/Viewer";
-import Finance from "./features/roles/Finance";
-import VASSales from "./features/roles/VASSales";
-import VASAdvertiser from "./features/roles/VASAdvertiser";
 import BM from "./features/roles/BM";
 
 import { store, persistor } from "./store";
 
 function SA({ children, ...other }) {
-  const { user } = useSelector((state) => state.auth);
-
-  switch (user.group) {
-    case "merchant_acquisition":
-      return <MerchantAcquisition />;
-    case "viewer":
-      return <Viewer />;
-    case "finance":
-      return <Finance />;
-    case "vas_sales":
-      return <VASSales />;
-    case "vas_advertiser":
-      return <VASAdvertiser />;
-    default:
-      return <Editor />;
-  }
+  // const { user } = useSelector((state) => state.auth);
+  // switch (user.user_level) {
+  //   // case "merchant_acquisition":
+  //   //   return <MerchantAcquisition />;
+  //   case "admin":
+  //     return <Editor />;
+  //   // case "finance":
+  //   //   return <Finance />;
+  //   // case "vas_sales":
+  //   //   return <VASSales />;
+  //   // case "vas_advertiser":
+  //   //   return <VASAdvertiser />;
+  //   default:
+  //     return <Editor />;
+  // }
+  return <Editor />;
 }
 
 function MainRoute({ children, ...other }) {

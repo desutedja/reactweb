@@ -15,7 +15,6 @@ import {
   FiCheck,
   FiUserPlus,
   FiMessageSquare,
-  FiFilter,
   FiList,
   FiArrowDown,
   FiArrowUp,
@@ -28,7 +27,7 @@ import {
   FiEye,
 } from "react-icons/fi";
 import { FaCaretRight, FaCaretDown } from "react-icons/fa";
-import { RiPushpinFill, RiPushpinLine } from "react-icons/ri";
+import { RiPushpinLine } from "react-icons/ri";
 import IconButton from "./IconButton";
 import Input from "./Input";
 import Modal from "./Modal";
@@ -548,7 +547,7 @@ function Table({
                     ? {
                         onClick: () => onClickPin(row.original),
                         name: "Pin",
-                        icon: <RiPushpinFill />,
+                        icon: <RiPushpinLine />,
                       }
                     : "",
                   onClickUnpin
@@ -561,8 +560,8 @@ function Table({
                     : "",
                   onClickApproved &&
                   !(
-                    row.original.approved_status == "approved" ||
-                    row.original.approved_status == "disapprove"
+                    row.original.approved_status === "approved" ||
+                    row.original.approved_status === "disapprove"
                   )
                     ? {
                         name: "Approve",
@@ -573,8 +572,8 @@ function Table({
                     : "",
                   onClickDisapproved &&
                   !(
-                    row.original.approved_status == "approved" ||
-                    row.original.approved_status == "disapprove"
+                    row.original.approved_status === "approved" ||
+                    row.original.approved_status === "disapprove"
                   )
                     ? {
                         name: "Disapprove",

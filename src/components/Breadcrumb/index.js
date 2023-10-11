@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { FiChevronRight } from "react-icons/fi";
 import { toSentenceCase } from "../../utils";

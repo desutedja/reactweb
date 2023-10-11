@@ -8,28 +8,8 @@ import autoMergeLevel2 from "redux-persist/es/stateReconciler/autoMergeLevel2";
 import main from "./features/slice";
 import auth, { startAsync, stopAsync } from "./features/auth/slice";
 import dashboard from "./features/dashboard/slice";
-import chat from "./features/chat/slice";
-
-import management from "./features/slices/management";
-import building from "./features/slices/building";
-import resident from "./features/slices/resident";
 import billing from "./features/slices/billing";
-import staff from "./features/slices/staff";
-import task from "./features/slices/task";
-import merchant from "./features/slices/merchant";
-import vouchers from "./features/slices/vouchers";
-import product from "./features/slices/product";
-import transaction from "./features/slices/transaction";
-import ads from "./features/slices/ads";
-import announcement from "./features/slices/announcement";
-import admin from "./features/slices/admin";
-import notification from "./features/slices/notification";
-import requestpremium from "./features/slices/requestpremium";
-import catatmeter from "./features/slices/catatmeter";
-import internet from "./features/slices/internet";
-import userRequest from "./features/slices/userRequest";
-import pushnotification from "./features/slices/pushnotification";
-import facility from "./features/slices/facility";
+
 
 const logger = createLogger({
   predicate: (getState, action) =>
@@ -40,27 +20,7 @@ const reducers = combineReducers({
   main,
   auth,
   dashboard,
-  management,
-  building,
-  resident,
-  requestpremium,
-  catatmeter,
   billing,
-  staff,
-  task,
-  merchant,
-  product,
-  transaction,
-  announcement,
-  ads,
-  chat,
-  admin,
-  notification,
-  vouchers,
-  internet,
-  userRequest,
-  pushnotification,
-  facility,
 });
 
 const persistConfig = {

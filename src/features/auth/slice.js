@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { post } from "../slice";
 import { endpointAdmin } from "../../settings";
-import { setModuleAccess, toSentenceCase } from "../../utils";
+import { setModuleAccess } from "../../utils";
 
 export const slice = createSlice({
   name: "auth",
@@ -25,18 +25,25 @@ export const slice = createSlice({
     },
     loginSuccess: (state, action) => {
       state.loading = false;
-      state.email = action.payload;
+      
+      state.headers = {
+        Authorization: "Bearer " + action.payload.token,
+        "X-User-Id": action.payload.id,
+        "X-Session": action.payload.session,
+        "X-User-Type": action.payload.user_role,
+        "Content-Type": "application/json",
+      };
     },
     otpSuccess: (state, action) => {
       state.loading = false;
       state.isAuthenticated = true;
 
-      state.user = action.payload;
+      state.user = action.payload.data;
       state.headers = {
-        Authorization: "Bearer " + action.payload.token,
-        "X-User-Id": action.payload.id,
-        "X-Session": action.payload.session,
-        "X-User-Type": action.payload.role,
+        Authorization: "Bearer " + action.payload.data.token,
+        "X-User-Id": action.payload.data.id,
+        "X-Session": action.payload.data.session,
+        "X-User-Type": action.payload.data.user_level,
         "Content-Type": "application/json",
       };
     },
@@ -67,26 +74,27 @@ export const {
   setRelogin,
 } = slice.actions;
 
-export const login = (role, email, actionState) => (dispatch) => {
+export const login = (role, username, password, history) => (dispatch) => {
   dispatch(startAsync());
 
   dispatch(
     post(
-      endpointAdmin +
-        "/auth/" +
-        (role === "sa" ? "centratama" : "management") +
-        "/validate_user",
+      "http://86.38.203.90:1111/user/login",
       {
-        user_account: email,
+        username: username,
+        password: password
       },
       (res) => {
-        const { setStep, setUserId, setEmailUser } = actionState;
-        dispatch(loginSuccess(email));
         dispatch(setRole(role));
-
-        setStep && setStep(2);
-        setUserId && setUserId(res.data.data.id);
-        setEmailUser && setEmailUser(res.data.data.email);
+        dispatch(otpSuccess({ ...res.data, role: role }));
+        dispatch(setRelogin());
+        history && history.push("/" + role);
+        // setTimeout(
+        //   function(){
+        //     dispatch(logout());
+        //   },
+        //   5000 // 1000 = 1second
+        // );
       },
       (err) => {
         console.log("GAGAL LOGIN", err);

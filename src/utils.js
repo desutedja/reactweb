@@ -181,6 +181,15 @@ export function inputDateTimeFormatter24(serverDateTime, whenzero = "") {
   );
 }
 
+export function inputDateTimeFormatterYmd(serverDateTime, whenzero = "") {
+  if (!serverDateTime) return whenzero;
+  if (serverDateTime === "0001-01-01T00:00:00Z") return whenzero;
+
+  return (
+    moment.utc(serverDateTime).format("YYYY-MM-DD")
+  );
+}
+
 // all format is UTC with disguise as WIB (Z doesn't mean it's UTC)
 export function updateDateTimeFormatter(serverDateTime, whenzero = "-") {
   if (!serverDateTime) return whenzero;
@@ -261,7 +270,7 @@ export function toMoney(money) {
   if (typeof money === "undefined") {
     return "Rp 0,00";
   }
-  let moneyFormat = new Number(money).toLocaleString("id-ID", {
+  let moneyFormat = new money.toLocaleString("id-ID", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -276,7 +285,7 @@ export function toMoneyRP(money) {
   if (typeof money === "undefined") {
     return "Rp 0";
   }
-  let moneyFormat = new Number(money).toLocaleString("id-ID", {
+  let moneyFormat = new money.toLocaleString("id-ID", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
@@ -291,7 +300,7 @@ export function decimal(money) {
   if (typeof money === "undefined") {
     return "Rp 0";
   }
-  let moneyFormat = new Number(money).toLocaleString("id-ID", {
+  let moneyFormat = new money.toLocaleString("id-ID", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });
@@ -306,7 +315,7 @@ export function toThousand(number) {
   if (typeof number === "undefined") {
     return "0";
   }
-  let numberFormat = new Number(number).toLocaleString("id-ID", {
+  let numberFormat = new number.toLocaleString("id-ID", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });

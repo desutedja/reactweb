@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { endpointBilling } from "../../settings";
 import { get, post, put, del, getFile } from "../slice";
-import { setInfo, setInfoSetAsPaid } from "../slice";
+import { setInfo } from "../slice";
 
 const billingEndpoint = endpointBilling + "/management/billing";
 
@@ -46,10 +46,10 @@ export const slice = createSlice({
     },
     setData: (state, action) => {
       const data = action.payload;
-
-      state.items = data.items;
-      state.total_items = data.total_items;
-      state.total_pages = data.filtered_page;
+      console.log("DATA: ", data.data)
+      state.items = data.data.items;
+      state.total_items = data.data.total_items;
+      state.total_pages = data.data.filtered_page;
     },
     setSelected: (state, action) => {
       state.selected = action.payload;
@@ -103,7 +103,7 @@ export const {
 
 export default slice.reducer;
 
-export const getBillingUnit =
+export const getTransactionList =
   (
     pageIndex,
     pageSize,
@@ -118,25 +118,15 @@ export const getBillingUnit =
 
     dispatch(
       get(
-        billingEndpoint +
-          "/unit" +
+        "http://86.38.203.90:1111/transaction" +
           "?page=" +
           (pageIndex + 1) +
           "&limit=" +
           pageSize +
-          "&building_id=" +
-          building +
           "&search=" +
-          search +
-          "&startDate=" +
-          startDate +
-          "&endDate=" +
-          endDate +
-          "&released=" +
-          released,
-
+          search,
         (res) => {
-          dispatch(setData(res.data.data));
+          dispatch(setData(res.data));
 
           dispatch(stopAsync());
         },
@@ -191,7 +181,7 @@ export const downloadBillingUnit =
 
     dispatch(
       getFile(
-        billingEndpoint + "/unit/download" + "?building_id=" + building,
+        billingEndpoint + "/unit/download?building_id=" + building,
         "billing_unit.csv",
         (res) => {
           dispatch(stopAsync());

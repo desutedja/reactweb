@@ -1,129 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { get, del, setConfirmDelete, setInfo } from '../slice';
-import { FiPlus, FiSearch } from 'react-icons/fi'
+import { FiPlus } from 'react-icons/fi'
 
-import { endpointAdmin, endpointMerchant, endpointManagement } from '../../settings';
-import { toSentenceCase } from '../../utils';
+import { endpointMerchant } from '../../settings';
 import Breadcrumb from '../../components/Breadcrumb';
-import Loading from '../../components/Loading';
-import PGFee from './PGFee';
-import AdminFee from './AdminFee';
+
 import Tab from '../../components/Tab';
 import Table from '../../components/Table';
-import CellCategory from '../../components/cells/Category';
 import ModalCategory from './Category';
-import ModalDepartment from './Department';
 import Button from '../../components/Button';
-import Input from '../../components/Input';
-import Filter from '../../components/Filter';
 
 const columnsMerchantCategories = [
-    { Header: 'Icon', accessor: row => <CellCategory data={row} /> },
     { Header: 'Name', accessor: 'name' },
-    { Header: 'Type', accessor: row => toSentenceCase(row.type) }
+    { Header: 'Description', accessor: 'description' }
 ];
 
-const columnsDepartments = [
-    { Header: 'ID', accessor: row => row.id },
-    { Header: 'Department Name', accessor: 'department_name' },
-    { Header: 'Department Type', accessor: row => toSentenceCase(row.department_type) },
-    { Header: 'BM ID', accessor: 'bm_id' },
-]
-
 function Settings() {
-    const initialMount = useRef(true);
-
-    const [data, setData] = useState({});
-    const [id, setID] = useState({});
     const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(true);
     const [refresh, setRefresh] = useState(false);
 
-    const [pg, setPG] = useState(false);
-    const [pgData, setPGData] = useState({});
-    const [admin, setAdmin] = useState(false);
-    const [adminData, setAdminData] = useState('');
     const [categories, setCategories] = useState([]);
     const [modalCategory, setModalCategory] = useState(false);
     const [categoryData, setCategoryData] = useState({});
-    const [departments, setDepartments] = useState([]);
-    const [departmentData, setDepartmentData] = useState({});
-    const [modalDepartment, setModalDepartment] = useState(false);
-    const [picBmList, setPicBmList] = useState([]);
-    const [picBmListFiltered, setPicBmListFiltered] = useState([]);
-    const [limit, setLimit] = useState(5);
-    const [picBm, setPicBm] = useState('');
-    const [picBmLabel, setPicBmLabel] = useState('');
-    const [searchBm, setSearchBm] = useState('');
 
     let dispatch = useDispatch();
 
     useEffect(() => {
-        if (initialMount.current) {
-            initialMount.current = false;
-            return;
-        }
-        if (picBmLabel === 'None' || '') {
-            setDepartments([]);
-            return;
-        }
-        setLoading(true);
-        dispatch(get(endpointManagement + '/admin/department?bm_id=' + picBm,
-        res => {
-            setDepartments(res.data.data || []);
-            setLoading(false);
-        }
-        ))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [refresh, picBm])
-
-    useEffect(() => {
-        dispatch(get(endpointAdmin + '/management/building?page=1&limit=9999',
-        res => {
-            const formatted = res.data.data.items.map(el => ({
-                label: 'BM ID ' + el.id + ' (' + el.building_name + ' by ' + el.management_name + ')',
-                value: el.id
-            }))
-            setPicBmList(formatted);
-        }
-        ))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-        if (initialMount.current) {
-            initialMount.current = false;
-            return;
-        }
-        const searched = picBmList.filter(el => el.label.toLowerCase().includes(searchBm.toLowerCase()));
-        let limited = searched.slice(0, limit);
-        const restTotal = searched.length - limited.length;
-        const valueLimit = 5;
-
-        if (limited.length < searched.length) {
-            limited.push({
-                name: 'load ' + (restTotal > valueLimit ? valueLimit : restTotal) + ' more',
-                className: 'load-more',
-                restTotal: restTotal > valueLimit ? valueLimit : restTotal
-            })
-        }
-        setPicBmListFiltered(limited);
-    }, [limit, picBmList, searchBm]);
-
-    useEffect(() => {
-        setLoading(true);
-        dispatch(get(endpointAdmin + '/centratama/config', res => {
-            setData(res.data.data);
-            setLoading(false);
-        }))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [refresh]);
-
-    useEffect(() => {
         setLoading(true)
-        dispatch(get(endpointMerchant + '/admin/categories',
+        dispatch(get("http://86.38.203.90:1111/category",
         res => {
+            console.log(res.data)
             setCategories(res.data.data);
             setLoading(false);
         },
@@ -136,132 +44,19 @@ function Settings() {
 
     useEffect(() => {
         if (!modalCategory) setCategoryData({});
-        if (!modalDepartment) setDepartmentData({});
-    }, [modalCategory, modalDepartment]);
+    }, [modalCategory]);
 
     const toggle = () => {
         setRefresh(!refresh);
     }
 
-    const Item = ({ data }) => {
-        return <div className="Settings-item">
-            <div style={{
-                flex: 1
-            }}>
-                <p style={{
-                    fontWeight: 'bold',
-                    marginRight: 8,
-                }}>{data.name}</p>
-                <p style={{
-                    marginRight: 16,
-                }}>{data.category}</p>
-            </div>
-            <div style={{
-                flex: 1,
-            }}>
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                }}>
-                    <p style={{
-                        marginRight: 4
-                    }}>Fee: </p>
-                    {!!data.fee && <p>Rp {data.fee}</p>}
-
-                    {!!data.fee && !!data.percentage && <p style={{
-                        marginLeft: 16,
-                        marginRight: 16,
-                    }}>+</p>}
-                    {!!data.percentage && <p>{data.percentage} %</p>}
-                    {!data.fee && !data.percentage && <p style={{
-                        color: 'grey'
-                    }}>None</p>}
-                </div>
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                }}>
-                    <p style={{
-                        marginRight: 4
-                    }}>Markup: </p>
-                    {!!data.markup_fee ? <p>{data.markup_fee} %</p>
-                        : <p style={{
-                            color: 'grey'
-                        }}>None</p>}
-                </div>
-            </div>
-            <button style={{ color: '#FFFFFF'}} onClick={() => {
-                setID(data.id);
-                setTitle(data.name);
-                setPG(true);
-                setPGData(data);
-            }}>Change</button>
-        </div>
-    }
-
     return (
         <>
-            <PGFee
-                id={id}
-                title={title}
-                toggleRefresh={toggle}
-                modal={pg}
-                toggleModal={() => setPG(false)}
-                data={pgData}
-            />
-            <AdminFee
-                title={title}
-                toggleRefresh={toggle}
-                modal={admin}
-                toggleModal={() => setAdmin(false)}
-                data={adminData}
-            />
             <Breadcrumb />
             <div className="Container">
                 <Tab
-                labels={['Fees', 'Merchant Categories', 'Departments']}
+                labels={['Categories']}
                 contents={[
-                <>
-                    <div style={{
-                        display: 'flex',
-                        flex: 1,
-                        flexDirection: 'column',
-                        overflow: 'auto',
-                    }}>
-                        <div className="Settings-item" style={{
-                            marginBottom: 16,
-                        }}>
-                            <div style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}>
-                                <p style={{
-                                    fontWeight: 'bold',
-                                    marginRight: 8,
-                                }}>Admin Fee</p>
-                                <p style={{
-                                    marginRight: 16,
-                                }}>{data.admin_fee} %</p>
-                            </div>
-                            <button style={{ color: '#FFFFFF'}} onClick={() => {
-                                setAdmin(true);
-                                setAdminData(data.admin_fee);
-                                setTitle('Admin Fee');
-                            }}>Change</button>
-                        </div>
-                        <p style={{
-                            fontWeight: 'bold',
-                            marginRight: 8,
-                            marginBottom: 8,
-                            paddingLeft: 8,
-                            fontSize: '1.2rem',
-                        }}>PG Fee</p>
-                        {data.id && data.payment_gateway_methods.map(el => {
-                            return <Item key={el.id} data={el} />
-                        })}
-                    </div>
-                    <Loading loading={loading} />
-                </>,
                 <>        
                     <ModalCategory
                         title={title}
@@ -305,91 +100,6 @@ function Settings() {
                         ]}
                     />
                 </>,
-                <>
-                    <ModalDepartment
-                        title={title}
-                        toggleRefresh={toggle}
-                        modal={modalDepartment}
-                        toggleModal={() => setModalDepartment(false)}
-                        toggleLoading={setLoading}
-                        data={departmentData}
-                        picBmList={picBmList}
-                    />
-                    <Table
-                    expander={false}
-                    noSearch={true}
-                    pagination={false}
-                    loading={loading}
-                    columns={columnsDepartments}
-                    data={departments}
-                    onClickDelete={ row => {
-                        dispatch(setConfirmDelete("Are you sure to delete this item?", () => {
-                            setLoading(true);
-                            dispatch(del(endpointManagement + '/admin/department/' + row.id,
-                            res => {
-                                dispatch(setInfo({
-                                    color: 'success',
-                                    message: 'Item has been deleted.'
-                                }))
-                                setLoading(false);
-                                setRefresh(!refresh);
-                            }))
-                        }))
-                    }}
-                    onClickEdit={row => {
-                        setDepartmentData(row);
-                        setModalDepartment(true);
-                        setTitle('Edit Department');
-                    }}
-                    filters={[
-                        {
-                            hidex: picBm === "",
-                            label: "PIC BM: ",
-                            value: picBm ? picBmLabel : "None",
-                            delete: () => { setPicBm(''); },
-                            component: (toggleModal) =>
-                                <>
-                                    <Input
-                                        label="Search"
-                                        compact
-                                        icon={<FiSearch />}
-                                        inputValue={searchBm}
-                                        setInputValue={setSearchBm}
-                                    />
-                                    <Filter
-                                        defaultValue="None"
-                                        data={picBmListFiltered}
-                                        onClick={(el) => {
-                                            if (el.className === 'load-more') {
-                                                setLimit(limit + el.restTotal);
-                                                return;
-                                            }
-                                            setPicBm(el.value);
-                                            setPicBmLabel(el.label);
-                                            toggleModal(false);
-                                            setLimit(5);
-                                        }}
-                                        onClickAll={() => {
-                                            setPicBm("");
-                                            setPicBmLabel("");
-                                            toggleModal(false);
-                                            setLimit(5);
-                                        }}
-                                    />
-                                </>
-                        },
-                    ]}
-                    filterExpanded={true}
-                    renderActions={() => [
-                        <Button key="Add Department" label="Add Department" icon={<FiPlus />}
-                            onClick={() => {
-                                setModalDepartment(true);
-                                setTitle('Add Department');
-                            }}
-                        />
-                    ]}
-                />
-                </>
                 ]}/>
             </div>
         </>
