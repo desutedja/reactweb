@@ -1,4 +1,5 @@
 const root = 'yipy';
+export const _endpointGlobal = "http://86.38.203.90:1111"
 export const _endpointBase = 'https://api-dev.yipy.id';
 
 export const _endpointAsset = _endpointBase + '/' + root + '-assets';

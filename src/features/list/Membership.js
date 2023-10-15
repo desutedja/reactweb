@@ -288,32 +288,6 @@ function Component({ view, title = "", pagetitle, canAdd, canDelete }) {
       <Breadcrumb title={title} />
       <h2 className="PageTitle">Membership</h2>
       <div className="Container">
-        <Modal
-          isOpen={openModal}
-          toggle={() => {
-            setOpenModal(false);
-          }}
-          title="Activation Membership"
-          okLabel={"Yes, Confirm"}
-          onClick={() => {
-            // dispatch();
-            setOpenModal(false);
-          }}
-        >
-
-          <Input
-                label="Schedule Activated"
-                type="date"
-                // inputValue={from}
-                // setInputValue={setFrom}
-              />
-
-            <Input
-              label="Card Number"
-              placeholder={"Tap the card on the card reader"}
-              type="text"
-            />
-        </Modal>
         <Tab
           labels={tabs}
           setTab={setType}

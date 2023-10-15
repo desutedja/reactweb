@@ -1,4 +1,4 @@
-# Yipy Admin
+# Web Report
 
 Microservice for serving frontend admin web, both superadmin and management admin.
 

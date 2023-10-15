@@ -1,6 +1,6 @@
 {
-  "short_name": "Yipy Admin",
-  "name": "Yipy Administrator Web",
+  "short_name": "Web Report",
+  "name": "Website for report",
   "icons": [
     {
       "src": "favicon.ico",

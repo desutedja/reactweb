@@ -1,9 +1,11 @@
 import React from "react";
 import {
   FiZap,
+  FiUsers,
 } from "react-icons/fi";
 
 import Billing from "./Billing";
+import User from "./User";
 
 import Settings from "../../settings";
 
@@ -19,6 +21,13 @@ const menu = [
     subpaths: ["/list"],
     component: <Billing />,
     group: "Transaction",
+  },
+  {
+    icon: <FiUsers className="MenuItem-icon" />,
+    label: "User",
+    path: "/user",
+    component: <User />,
+    group: "User",
   },
 ];
 

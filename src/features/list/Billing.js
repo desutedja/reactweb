@@ -113,6 +113,7 @@ function Component({ view }) {
                     message: `${res.data.data} billing has been set to released.`,
                   })
                 );
+                getTransactionList();
                 // resultComponent ? setOpenRes(true) : toggle();
               },
               (err) => {

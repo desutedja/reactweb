@@ -12,7 +12,8 @@ import {
   _endpointInternet,
   _endpointUserReqeust,
   _endpointNotification,
-  _endpointBookingFacility
+  _endpointBookingFacility,
+  _endpointGlobal
 } from "./endpoints";
 
 export const endpointBase = _endpointBase;
@@ -30,6 +31,7 @@ export const endpointInternet = _endpointInternet;
 export const endpointUserRequest = _endpointUserReqeust;
 export const endpointNotification = _endpointNotification;
 export const endpointBookingFacility = _endpointBookingFacility;
+export const endpointGlobal = _endpointGlobal;
 
 export const mainColor = "#2f78e9";
 

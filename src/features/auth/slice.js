@@ -89,12 +89,12 @@ export const login = (role, username, password, history) => (dispatch) => {
         dispatch(otpSuccess({ ...res.data, role: role }));
         dispatch(setRelogin());
         history && history.push("/" + role);
-        // setTimeout(
-        //   function(){
-        //     dispatch(logout());
-        //   },
-        //   5000 // 1000 = 1second
-        // );
+        setTimeout(
+          function(){
+            dispatch(logout());
+          },
+          3500000 // 1000 = 1second
+        );
       },
       (err) => {
         console.log("GAGAL LOGIN", err);
