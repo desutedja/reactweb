@@ -270,7 +270,7 @@ export function toMoney(money) {
   if (typeof money === "undefined") {
     return "Rp 0,00";
   }
-  let moneyFormat = new money.toLocaleString("id-ID", {
+  var moneyFormat = money.toLocaleString("id-ID", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   });

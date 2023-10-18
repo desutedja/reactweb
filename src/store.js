@@ -9,6 +9,7 @@ import main from "./features/slice";
 import auth, { startAsync, stopAsync } from "./features/auth/slice";
 import dashboard from "./features/dashboard/slice";
 import billing from "./features/slices/billing";
+import bonus from "./features/slices/bonus";
 
 
 const logger = createLogger({
@@ -21,6 +22,7 @@ const reducers = combineReducers({
   auth,
   dashboard,
   billing,
+  bonus,
 });
 
 const persistConfig = {

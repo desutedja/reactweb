@@ -13,12 +13,11 @@ import Template from "../components/Template";
 import { Route, Redirect } from "react-router-dom";
 
 const menu = [
-  // Billing Start
   {
     icon: <FiZap className="MenuItem-icon" />,
     label: "Transaction",
     path: "/transaction",
-    subpaths: ["/list"],
+    subpaths: ["/list","/bonus"],
     component: <Billing />,
     group: "Transaction",
   },
