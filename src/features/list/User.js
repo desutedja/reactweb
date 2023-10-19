@@ -24,14 +24,14 @@ import { FiSearch } from "react-icons/fi";
 
 const userLoginHistoryColumn = [
   {
-    Header: "User Id",
+    Header: "Username",
     accessor: (row) => (
       // <Booking
       //   id={row.booking_id}
       //   data={row}
       //   items={[<b>{row.booking_number}</b>]}
       // />
-      row.user_id
+      row.username
     ),
   },
   {

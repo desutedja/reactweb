@@ -27,7 +27,7 @@ const menu = [
     icon: <FiBarChart2 className="MenuItem-icon" />,
     label: "Dashboard",
     path: "/dashboard",
-    subpaths: ["/advertisement"],
+    subpaths: ["/statistic"],
     // subpaths: ["/building", "/transaction", "/task", "/advertisement"],
     component: <Dashboard />,
     group: "Overview",

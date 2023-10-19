@@ -21,7 +21,7 @@ import { get, post, setInfo } from "../slice";
 import Template from "./components/Template";
 
 const columnTransaction = [
-  { Header: 'Category', accessor: `category_id` },
+  { Header: 'Category Name', accessor: `category_name` },
   { Header: 'Regis', accessor: 'regis' },
   { Header: 'Regis DP', accessor: 'regis_dp' },
   { Header: 'AP', accessor: 'active_player' },

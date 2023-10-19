@@ -79,68 +79,10 @@ function Component() {
               <h5>All Campaign</h5>
             </div> */}
             <div className="row mb-4 p-3">
-                <div className="row mt-4 mb-4 no-gutters">
-                  <div className="col-8">
-                    <div className="row mb-4">
-                      <div className="col-12">
-                        <div className="col-12">
-                          <div className="row mb-4">
-                            <div className="col-2">
-                              <ButtonDropdown
-                                className="ads-active-button"
-                                color="primary"
-                                isOpen={dropdownOpen}
-                                toggle={toggle}
-                                style={{ display: "none" }}
-                              >
-                                <Button className="ads-dropdown-button">
-                                  {selectedMonth}
-                                </Button>
-                                <DropdownToggle
-                                  split
-                                  className="ads-dropdown-button"
-                                  caret
-                                ></DropdownToggle>
-                                <DropdownMenu>
-                                  <DropdownItem
-                                    // header
-                                    onClick={() => {
-                                      setSelectedMonth("Time");
-                                    }}
-                                  >
-                                    All
-                                  </DropdownItem>
-                                  {timeline.length > 0 &&
-                                    timeline.map((el) => {
-                                      return (
-                                        <>
-                                          <DropdownItem
-                                            disabled={el.empty}
-                                            onClick={() => {
-                                              setSelectedMonth(el.month);
-                                            }}
-                                          >
-                                            {el.month}
-                                          </DropdownItem>
-                                        </>
-                                      );
-                                    })}
-                                </DropdownMenu>
-                              </ButtonDropdown>
-                            </div>
-                          </div>
-                        </div>
-                        <LineCharts
-                          data={dataStatistic.data_report}
-                          dataKeys={dataStatistic.data_key}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  {/* <div className="col-4 ads-detail-container">
-                    <Piecharts data={buildingDetail} color={colorList} />
-                  </div> */}
-                </div>
+              <LineCharts
+                data={dataStatistic.data_report}
+                dataKeys={dataStatistic.data_key}
+              />
             </div>
           </div>
         </div>

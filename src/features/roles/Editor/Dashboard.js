@@ -8,8 +8,8 @@ function Component() {
 
   return (
     <Switch>
-      <Redirect exact from={path} to={`${path}/advertisement`} />
-      <Route path={`${path}/advertisement`}>
+      <Redirect exact from={path} to={`${path}/statistic`} />
+      <Route path={`${path}/statistic`}>
         <Advertisement />
       </Route>
     </Switch>

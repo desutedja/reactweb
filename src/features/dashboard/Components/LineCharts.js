@@ -22,9 +22,9 @@ const Component = ({ data, dataKeys }) => {
   console.log("DATA CHART: ", data);
   console.log("KEY CHART: ", dtKey)
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={600}>
       <LineChart data={data}>
-        <XAxis dataKey="month" />
+        <XAxis dataKey="period" />
         <YAxis />
         <Tooltip content={<CustomTooltip />} />
         <Legend />
@@ -40,10 +40,10 @@ const Component = ({ data, dataKeys }) => {
 };
 
 const CustomTooltip = ({ active, payload, label }) => {
-  let fullYear = "",
+  let day = "",
     fullMonth = "";
   if (payload != null && payload.length > 0) {
-    fullYear = payload[0].payload.year;
+    day = payload[0].payload.day;
     fullMonth = payload[0].payload.month ? monthsArr[payload[0].payload.month] : "";
   }
   if (active) {
@@ -61,7 +61,7 @@ const CustomTooltip = ({ active, payload, label }) => {
         }}
       >
         <p className="label">
-          <strong>{`${fullMonth} ${fullYear}`}</strong>
+          <strong>{`${day} ${fullMonth}`}</strong>
         </p>
         {/* <p className="intro">{getIntroOfPage(label)}</p> */}
         {payload !== null &&
