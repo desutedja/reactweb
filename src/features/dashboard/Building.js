@@ -53,11 +53,7 @@ function Component() {
   let dispatch = useDispatch();
   const history = useHistory();
 
-  const { auth, notification } = useSelector((state) => state);
-
-  const announcementLists = notification.items.filter(
-    (item) => item.topic === "announcement"
-  );
+  const { auth } = useSelector((state) => state);
 
   const [loading, setLoading] = useState(false);
   const [range, setRange] = useState("dtd");
@@ -95,7 +91,6 @@ function Component() {
   const [endDateTo, setEndDateTo] = useState(monthEnd());
   const [selectedYear, setSelectedYear] = useState("");
   const [check, setCheck] = useState("");
-  const { refreshToggle } = useSelector((state) => state.resident);
   // const [toggle, setToggle] = useState(false)
   const toggle = () => setDropdownOpen(!dropdownOpen);
 
@@ -255,7 +250,7 @@ function Component() {
         }
       )
     );
-  }, [dispatch, tower, buildingName, periode, check, refreshToggle]);
+  }, [dispatch, tower, buildingName, periode, check, true]);
 
   useEffect(() => {
     dispatch(
@@ -375,7 +370,7 @@ function Component() {
         }
       )
     );
-  }, [dispatch, tower, buildingName, periode, check, refreshToggle]);
+  }, [dispatch, tower, buildingName, periode, check, true]);
 
   useEffect(() => {
     dispatch(
@@ -7081,50 +7076,7 @@ function Component() {
             </div>
           </div>
 
-          <div className="row">
-            <div className="col-12">
-              <div className="Container-dashboard flex-column">
-                <div className="mb-4">
-                  <h5>List of Announcements</h5>
-                </div>
-                {announcementLists.length === 0 && (
-                  <div className="text-center pb-3">No announcements</div>
-                )}
-                <div
-                  style={{
-                    maxHeight: "544px",
-                    overflow: "auto",
-                  }}
-                >
-                  {announcementLists.map(
-                    ({ title, description, image, id, created_on }, i) => {
-                      return (
-                        <div className="row no-gutters">
-                          <div className="col-12">
-                            <CardList
-                              onClick={() => {
-                                history.push(
-                                  "/" + auth.role + "/announcement/" + id
-                                );
-                              }}
-                              className="mb-4 bread"
-                              key={id}
-                              title={title}
-                              description={parser(description)}
-                              imgSrc={image}
-                              createdOn={moment(created_on).format(
-                                "DD MMM YYYY"
-                              )}
-                            />
-                          </div>
-                        </div>
-                      );
-                    }
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
+        
         </>
       )}
 

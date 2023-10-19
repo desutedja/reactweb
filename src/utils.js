@@ -315,7 +315,7 @@ export function toThousand(number) {
   if (typeof number === "undefined") {
     return "0";
   }
-  let numberFormat = new number.toLocaleString("id-ID", {
+  let numberFormat = number.toLocaleString("id-ID", {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });

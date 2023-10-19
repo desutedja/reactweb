@@ -2,10 +2,12 @@ import React from "react";
 import {
   FiZap,
   FiUsers,
+  FiBarChart2,
 } from "react-icons/fi";
 
 import Billing from "./Billing";
 import User from "./User";
+import Dashboard from "./Dashboard";
 
 import Settings from "../../settings";
 
@@ -20,6 +22,15 @@ const menu = [
     subpaths: ["/list","/bonus"],
     component: <Billing />,
     group: "Transaction",
+  },
+  {
+    icon: <FiBarChart2 className="MenuItem-icon" />,
+    label: "Dashboard",
+    path: "/dashboard",
+    subpaths: ["/advertisement"],
+    // subpaths: ["/building", "/transaction", "/task", "/advertisement"],
+    component: <Dashboard />,
+    group: "Overview",
   },
   {
     icon: <FiUsers className="MenuItem-icon" />,

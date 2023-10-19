@@ -19,6 +19,8 @@ const Component = ({ data, dataKeys }) => {
     dtKey = dataKeys;
   }
   const COLOR = ["#E12029","#254091","#F58113","#88B5E4","#52A452","#5464B6","#FFCE2A","#9F6633","#471172","#204657","#D09CB1","#D33B7E"];
+  console.log("DATA CHART: ", data);
+  console.log("KEY CHART: ", dtKey)
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>
@@ -41,8 +43,8 @@ const CustomTooltip = ({ active, payload, label }) => {
   let fullYear = "",
     fullMonth = "";
   if (payload != null && payload.length > 0) {
-    fullYear = payload[0].payload.y;
-    fullMonth = payload[0].payload.m ? monthsArr[payload[0].payload.m] : "";
+    fullYear = payload[0].payload.year;
+    fullMonth = payload[0].payload.month ? monthsArr[payload[0].payload.month] : "";
   }
   if (active) {
     return (
