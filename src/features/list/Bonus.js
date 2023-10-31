@@ -31,6 +31,7 @@ const columnBonus = [
   { Header: 'Rebate Sport', accessor: 'rb_sp' },
   { Header: 'Referall', accessor: 'refferal' },
   { Header: 'Promo Lain', accessor: 'promo' },
+  { Header: 'Total', accessor: 'total' },
   { Header: 'Trans Date', accessor: 'trans_date' }
 ];
 

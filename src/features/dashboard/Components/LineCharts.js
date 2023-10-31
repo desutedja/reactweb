@@ -19,8 +19,7 @@ const Component = ({ data, dataKeys }) => {
     dtKey = dataKeys;
   }
   const COLOR = ["#E12029","#254091","#F58113","#88B5E4","#52A452","#5464B6","#FFCE2A","#9F6633","#471172","#204657","#D09CB1","#D33B7E"];
-  console.log("DATA CHART: ", data);
-  console.log("KEY CHART: ", dtKey)
+  console.log("DATA LINE CHART: ", data);
   return (
     <ResponsiveContainer width="100%" height={600}>
       <LineChart data={data}>
@@ -76,10 +75,10 @@ const CustomTooltip = ({ active, payload, label }) => {
                   flexDirection: "row",
                 }}
               >
-                <div class="col-6">
+                <div className="col-6">
                   {toSentenceCase(item.dataKey.toLowerCase())}
                 </div>
-                <div class="col-6">
+                <div className="col-6">
                   : <strong>{toThousand(item.value)}</strong>
                 </div>
               </div>

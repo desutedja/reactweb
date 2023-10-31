@@ -1,4 +1,6 @@
 import React from "react";
+import moment from "moment";
+
 import {
   BrowserRouter as Router,
   Switch,
@@ -9,6 +11,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { Provider, useSelector } from "react-redux";
 import { defaultRole } from "./settings";
 
+
 import "./App.css";
 import "./features/auth/styles.css";
 import "./components/styles.css";
@@ -17,12 +20,25 @@ import "./components/table.css";
 import NotFound from "./components/NotFound";
 
 import Login from "./features/auth/Login";
-import OTP from "./features/auth/OTP";
 
 import Editor from "./features/roles/Editor";
 import BM from "./features/roles/BM";
 
 import { store, persistor } from "./store";
+
+
+const persistedDataJSON = localStorage.getItem('persist:root');
+
+// Step 2: Parse the JSON into a JavaScript object
+const persistedData = JSON.parse(persistedDataJSON);
+
+// Step 3: Access the "auth" property
+const authToken = persistedData.auth;
+
+const persistedData2 = JSON.parse(authToken);
+
+var Expired = moment().isSameOrBefore(moment(persistedData2.timeExpired))
+
 
 function SA({ children, ...other }) {
   // const { user } = useSelector((state) => state.auth);
@@ -67,30 +83,6 @@ function MainRoute({ children, ...other }) {
   );
 }
 
-function OTPRoute({ children, ...other }) {
-  const { email } = useSelector((state) => state.auth);
-
-  const { path } = other;
-
-  return (
-    <Route
-      {...other}
-      render={({ location }) =>
-        email ? (
-          children
-        ) : (
-          <Redirect
-            to={{
-              pathname: path + "/login",
-              state: { from: location },
-            }}
-          />
-        )
-      }
-    />
-  );
-}
-
 function AppRoute() {
   return (
     <Router>
@@ -104,11 +96,6 @@ function AppRoute() {
             </Route>
           )}
           {defaultRole === "sa" && (
-            <OTPRoute path="/sa/otp">
-              <OTP role="sa" />
-            </OTPRoute>
-          )}
-          {defaultRole === "sa" && (
             <MainRoute path="/sa">
               <SA />
             </MainRoute>
@@ -118,11 +105,6 @@ function AppRoute() {
             <Route path="/bm/login">
               <Login role="bm" />
             </Route>
-          )}
-          {defaultRole === "bm" && (
-            <OTPRoute path="/bm/otp">
-              <OTP role="bm" />
-            </OTPRoute>
           )}
           {defaultRole === "bm" && (
             <MainRoute path="/bm">

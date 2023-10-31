@@ -21,7 +21,7 @@ import { get, post, setInfo } from "../slice";
 import Template from "./components/Template";
 
 const columnTransaction = [
-  { Header: 'Category Name', accessor: `category_name` },
+  { Header: 'Category', accessor: `category_name` },
   { Header: 'Regis', accessor: 'regis' },
   { Header: 'Regis DP', accessor: 'regis_dp' },
   { Header: 'AP', accessor: 'active_player' },
@@ -34,6 +34,7 @@ const columnTransaction = [
   { Header: 'Conv TR', accessor: 'conv_tr' },
   { Header: 'SubTotal', accessor: 'sub_total' },
   { Header: 'ATS', accessor: 'ats' },
+  { Header: 'Bonus', accessor: 'bonus' },
   { Header: 'Total', accessor: 'total' },
   { Header: 'Trans Date', accessor: 'trans_date' }
 ];
@@ -59,8 +60,6 @@ function Component({ view }) {
   const [totalWD, setTotalWD] = useState();
   const [wl, setWL] = useState();
   const [transDate, setTransDate] = useState();
-
-
 
   let dispatch = useDispatch();
 
